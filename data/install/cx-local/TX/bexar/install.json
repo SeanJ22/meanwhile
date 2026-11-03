@@ -1,0 +1,835 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Bexar",
+  "countyFips": "48029",
+  "populationRank": 16,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "tx-cx-local-2026-chief-justice-court-of-appeals-4",
+      "title": "Chief Justice, 4th Court of Appeals District",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-45",
+      "title": "District Judge, 45th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:45",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-144",
+      "title": "District Judge, 144th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:144",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-150",
+      "title": "District Judge, 150th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:150",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-186",
+      "title": "District Judge, 186th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:186",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-187",
+      "title": "District Judge, 187th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:187",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-224",
+      "title": "District Judge, 224th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:224",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-225",
+      "title": "District Judge, 225th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:225",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-226",
+      "title": "District Judge, 226th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:226",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-227",
+      "title": "District Judge, 227th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:227",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-285",
+      "title": "District Judge, 285th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:285",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-288",
+      "title": "District Judge, 288th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:288",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-289",
+      "title": "District Judge, 289th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:289",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-290",
+      "title": "District Judge, 290th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:290",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-436",
+      "title": "District Judge, 436th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:436",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-437",
+      "title": "District Judge, 437th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:437",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county",
+      "title": "Bexar County Criminal District Attorney",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 3,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-county_judge",
+      "title": "County Judge",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1",
+      "title": "Judge, County Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_2",
+      "title": "Judge, County Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_3",
+      "title": "Judge, County Court at Law No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4",
+      "title": "Judge, County Court at Law No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_5",
+      "title": "Judge, County Court at Law No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_6",
+      "title": "Judge, County Court at Law No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_7",
+      "title": "Judge, County Court at Law No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8",
+      "title": "Judge, County Court at Law No. 8",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9",
+      "title": "Judge, County Court at Law No. 9",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_10",
+      "title": "Judge, County Court at Law No. 10",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_11",
+      "title": "Judge, County Court at Law No. 11",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12",
+      "title": "Judge, County Court at Law No. 12",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_13",
+      "title": "Judge, County Court at Law No. 13",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_14",
+      "title": "Judge, County Court at Law No. 14",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_15",
+      "title": "Judge, County Court at Law No. 15",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_probate_court_no_1",
+      "title": "Judge, Probate Court No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-judge_probate_court_no_2",
+      "title": "Judge, Probate Court No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-district_clerk",
+      "title": "District Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-ba01-2026-county-48029-county_clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-2",
+      "title": "County Commissioner Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-4",
+      "title": "County Commissioner Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-1",
+      "title": "Justice of the Peace Precinct 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:1",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-3",
+      "title": "Justice of the Peace Precinct 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:3",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-4",
+      "title": "Justice of the Peace Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-appraisal-director-place-1",
+      "title": "Bexar Central Appraisal District \u2014 For Director, Place No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-appraisal-director-place-2",
+      "title": "Bexar Central Appraisal District \u2014 For Director, Place No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-appraisal-director-place-3",
+      "title": "Bexar Central Appraisal District \u2014 For Director, Place No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-converse-city-council-place-2",
+      "title": "City of Converse \u2014 For City Council, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:converse",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-converse-city-council-place-4",
+      "title": "City of Converse \u2014 For City Council, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:converse",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-converse-city-council-place-6",
+      "title": "City of Converse \u2014 For City Council, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:converse",
+      "candidates": 3,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-live-oak-city-council-place-5",
+      "title": "City of Live Oak \u2014 For City Council, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:live_oak",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-sandy-oaks-mayor",
+      "title": "City of Sandy Oaks \u2014 For Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-sandy-oaks-alderman-place-2",
+      "title": "City of Sandy Oaks \u2014 For Alderman, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-sandy-oaks-alderman-place-3",
+      "title": "City of Sandy Oaks \u2014 For Alderman, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-sandy-oaks-alderman-place-4",
+      "title": "City of Sandy Oaks \u2014 For Alderman, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidates": 1,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-schertz-city-council-place-3",
+      "title": "City of Schertz \u2014 For City Council, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-schertz-city-council-place-4",
+      "title": "City of Schertz \u2014 For City Council, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-schertz-city-council-place-5",
+      "title": "City of Schertz \u2014 For City Council, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-windcrest-city-council-place-1",
+      "title": "City of Windcrest \u2014 For City Council, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+      "candidates": 3,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-windcrest-city-council-place-2",
+      "title": "City of Windcrest \u2014 For City Council, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-windcrest-city-council-place-3",
+      "title": "City of Windcrest \u2014 For City Council, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-1",
+      "title": "Edgewood Independent School District (Bexar County) \u2014 For Trustee, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-2",
+      "title": "Edgewood Independent School District (Bexar County) \u2014 For Trustee, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidates": 3,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-3",
+      "title": "Edgewood Independent School District (Bexar County) \u2014 For Trustee, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-6",
+      "title": "Edgewood Independent School District (Bexar County) \u2014 For Trustee, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-somerset-isd-trustee-district-3",
+      "title": "Somerset Independent School District \u2014 For Trustee, Single Member District 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-somerset-isd-trustee-district-7",
+      "title": "Somerset Independent School District \u2014 For Trustee, Single Member District 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+      "title": "Bexar County Municipal Utility District No. 1 \u2014 For Permanent Director",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_county_municipal_utility_district_1",
+      "candidates": 5,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    },
+    {
+      "id": "tx-cx-local-2026-edwards-aquifer-authority-director-district-1",
+      "title": "Edwards Aquifer Authority District 1 \u2014 For Director",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:edwards_aquifer_authority/director_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot"
+    }
+  ],
+  "operation": "Partial state ballot merge through existing BallotContestMerge/runBallotPublication. Preserve all unrelated Texas contests, candidate facts, explanations and measures. No production writes performed.",
+  "resolvedHeldContests": [],
+  "reusedContestIds": [
+    "tx-ba01-2026-district-judge-45",
+    "tx-ba01-2026-district-judge-144",
+    "tx-ba01-2026-district-judge-150",
+    "tx-ba01-2026-district-judge-186",
+    "tx-ba01-2026-district-judge-187",
+    "tx-ba01-2026-district-judge-224",
+    "tx-ba01-2026-district-judge-225",
+    "tx-ba01-2026-district-judge-226",
+    "tx-ba01-2026-district-judge-227",
+    "tx-ba01-2026-district-judge-285",
+    "tx-ba01-2026-district-judge-288",
+    "tx-ba01-2026-district-judge-289",
+    "tx-ba01-2026-district-judge-290",
+    "tx-ba01-2026-district-judge-436",
+    "tx-ba01-2026-district-judge-437",
+    "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county",
+    "tx-ba01-2026-county-48029-county_judge",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_2",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_3",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_5",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_6",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_7",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_10",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_11",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_13",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_14",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_15",
+    "tx-ba01-2026-county-48029-judge_probate_court_no_1",
+    "tx-ba01-2026-county-48029-judge_probate_court_no_2",
+    "tx-ba01-2026-county-48029-district_clerk",
+    "tx-ba01-2026-county-48029-county_clerk"
+  ],
+  "reusedCandidacyIds": [
+    "tx-ba01-2026-district-judge-45:mary_lou_alvarez",
+    "tx-ba01-2026-district-judge-144:michael_de_leon",
+    "tx-ba01-2026-district-judge-150:monique_diaz",
+    "tx-ba01-2026-district-judge-186:kristina_escalona",
+    "tx-ba01-2026-district-judge-187:stephanie_franco",
+    "tx-ba01-2026-district-judge-224:marisa_flores",
+    "tx-ba01-2026-district-judge-225:benjamin_robertson",
+    "tx-ba01-2026-district-judge-225:christine_vasquez_hortick",
+    "tx-ba01-2026-district-judge-226:anastacia_ana_ochoa_nelson",
+    "tx-ba01-2026-district-judge-227:christine_del_prado",
+    "tx-ba01-2026-district-judge-285:nadine_melissa_nieto",
+    "tx-ba01-2026-district-judge-288:cynthia_marie_chapa",
+    "tx-ba01-2026-district-judge-289:rose_sosa",
+    "tx-ba01-2026-district-judge-290:jennifer_pena",
+    "tx-ba01-2026-district-judge-436:raymond_a_villareal",
+    "tx-ba01-2026-district-judge-437:joel_perez",
+    "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county:ashley_foster",
+    "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county:luz_elena_chapa",
+    "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county:jason_wolff",
+    "tx-ba01-2026-county-48029-county_judge:patrick_von_dohlen",
+    "tx-ba01-2026-county-48029-county_judge:ron_nirenberg",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1:bob_behrens",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1:helen_petry_stowe",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_2:melissa_saenz",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_3:david_j_rodriguez",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4:jason_roland_garrahan",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4:alfredo_ximenez",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_5:andrea_arevalos",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_6:erica_dominguez",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_7:melanie_m_lira",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8:celeste_brown",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8:victoria_cruz",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9:daphne_previti_austin",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9:jessica_a_gonzalez",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_10:cesar_garcia",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_11:erica_pe_a",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12:deborah_dietzmann",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12:lauren_zamora",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_13:alicia_ali_perez",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_14:audrey_martinez",
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_15:melissa_vara",
+    "tx-ba01-2026-county-48029-judge_probate_court_no_1:oscar_j_kazen",
+    "tx-ba01-2026-county-48029-judge_probate_court_no_2:veronica_vasquez",
+    "tx-ba01-2026-county-48029-district_clerk:christine_chris_castillo",
+    "tx-ba01-2026-county-48029-county_clerk:lucy_adame_clark"
+  ],
+  "newContestIds": [
+    "tx-cx-local-2026-chief-justice-court-of-appeals-4",
+    "tx-cx-local-2026-bexar-county-commissioner-precinct-2",
+    "tx-cx-local-2026-bexar-county-commissioner-precinct-4",
+    "tx-cx-local-2026-bexar-justice-of-peace-precinct-1",
+    "tx-cx-local-2026-bexar-justice-of-peace-precinct-3",
+    "tx-cx-local-2026-bexar-justice-of-peace-precinct-4",
+    "tx-cx-local-2026-bexar-appraisal-director-place-1",
+    "tx-cx-local-2026-bexar-appraisal-director-place-2",
+    "tx-cx-local-2026-bexar-appraisal-director-place-3",
+    "tx-cx-local-2026-converse-city-council-place-2",
+    "tx-cx-local-2026-converse-city-council-place-4",
+    "tx-cx-local-2026-converse-city-council-place-6",
+    "tx-cx-local-2026-live-oak-city-council-place-5",
+    "tx-cx-local-2026-sandy-oaks-mayor",
+    "tx-cx-local-2026-sandy-oaks-alderman-place-2",
+    "tx-cx-local-2026-sandy-oaks-alderman-place-3",
+    "tx-cx-local-2026-sandy-oaks-alderman-place-4",
+    "tx-cx-local-2026-schertz-city-council-place-3",
+    "tx-cx-local-2026-schertz-city-council-place-4",
+    "tx-cx-local-2026-schertz-city-council-place-5",
+    "tx-cx-local-2026-windcrest-city-council-place-1",
+    "tx-cx-local-2026-windcrest-city-council-place-2",
+    "tx-cx-local-2026-windcrest-city-council-place-3",
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-1",
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-2",
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-3",
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-6",
+    "tx-cx-local-2026-somerset-isd-trustee-district-3",
+    "tx-cx-local-2026-somerset-isd-trustee-district-7",
+    "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+    "tx-cx-local-2026-edwards-aquifer-authority-director-district-1"
+  ],
+  "counts": {
+    "contests": 67,
+    "candidacies": 106,
+    "newContests": 31,
+    "refreshedContests": 36,
+    "newCandidacies": 61,
+    "preservedHeldCandidacyIds": 45,
+    "measuresInstalled": 0,
+    "originalSamplePdfs": 2
+  },
+  "coverage": [
+    "Bexar County local candidate coverage:67 complete printed office fields and106 named choices from the current official generic sample ballot. Includes21 countywide offices,15 district judges,1 regional appellate chief,5 county commissioner/justice precinct contests,3 appraisal director places,14 municipal seats,6 school trustee contests, MUD1 permanent directors and Edwards Aquifer director district1.",
+    "The36 already-held county/district-judge contest identities and all45 corresponding candidacy identities are preserved;31 local races and61 choices were missing. Federal, statewide and legislative data and existing measure texts/explainers remain outside this focused installation. Local bond/tax/charter propositions remain open candidate-independent coverage work and their complete original samples are retained.",
+    "Numbered at-large city and Edgewood school places use their whole exact government electorate. Somerset single-member districts, commissioner precincts, justice precincts, MUD1, appraisal, aquifer and regional judicial territory retain precise separate division keys. Exact unmatched reader memberships remain listed in the installation manifest; no electoral district is widened to Bexar County.",
+    "Blank write-in lines are not people. Separately named declared write-in certification remains acquisition work. This packet establishes all named candidate office blocks printed in the two linked current generic sample documents; individualized address-specific sample parity and exact district reader memberships remain open."
+  ],
+  "coverageStatus": "ALL_NAMED_LOCAL_CANDIDATE_OFFICE_BLOCKS_IN_LINKED_CURRENT_COUNTYWIDE_GENERIC_SAMPLE_VERIFIED; EXACT_READER_DISTRICT_JOINS_PENDING",
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_ALL67_FULL_OFFICE_BLOCKS_NATIVE_REPLAY_AND_ORIGINAL_RENDER_REVIEW",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PENDING_PARENT_SHARED_OFFLINE_VALIDATION",
+    "sourceHashesAndQuotes": "PASS: 11 captured sources and 173 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:2",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:4",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:1",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:3",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:4",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:4",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:144",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:150",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:186",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:187",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:224",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:225",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:226",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:227",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:285",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:288",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:289",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:290",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:436",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:437",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:45",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:3",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:7",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_county_municipal_utility_district_1",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:edwards_aquifer_authority/director_district:1",
+      "status": "EXACT_SOURCE_TERRITORY_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official territory and reader district; preserve district-specific key without county fallback."
+    }
+  ],
+  "schoolDisambiguation": {
+    "selectedOcdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+    "ncesDistrictId": "4818150",
+    "rejectedSameNamedDistrict": "4818120",
+    "evidence": "Official NCES4818150 entry locates Edgewood ISD in San Antonio; district school-board page states its trustees are elected at-large. Current Bexar official specimen explicitly labels the school jurisdiction."
+  },
+  "remainingWork": [
+    {
+      "owner": "River/registry",
+      "next": "Install precise judicial, precinct, Somerset school subdistrict, MUD1, appraisal and aquifer reader membership joins."
+    },
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Acquire named declared write-in certifications, individualized sample parity and separate local proposition records from retained full originals."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run shared offline merge/manual/source checks; install authorized data and verify source-to-reader delivery."
+    }
+  ],
+  "sourceFailures": [
+    {
+      "url": "https://elections.bexar.org/m/newsflash/home/detail/1285",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/bexar/bexar-news.source"
+    },
+    {
+      "url": "https://www.windcrest-tx.gov/232/City-Council",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/bexar/windcrest-atlarge.source"
+    },
+    {
+      "url": "https://www.liveoaktx.net/government/mayor-and-city-council",
+      "status": 403,
+      "savedArtifact": "/workspace/cx-local-work/bexar/liveoak-atlarge.source"
+    },
+    {
+      "url": "https://www.schertz.com/DocumentCenter/View/8461",
+      "status": 404,
+      "savedArtifact": "/workspace/cx-local-work/bexar/schertz-atlarge.source"
+    },
+    {
+      "url": "https://www.schertz.com/DocumentCenter/View/13333/City-of-Schertz-City-Charter-2024",
+      "status": 404,
+      "savedArtifact": "/workspace/cx-local-work/bexar/schertz-charter.source"
+    }
+  ],
+  "nextOwner": "Parent for shared offline validation; River for installation and geographic delivery. No publication performed."
+}

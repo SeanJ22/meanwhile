@@ -1,0 +1,151 @@
+[
+  {
+    "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+    "sourceCheckedAt": "2026-11-03T04:03:26.357722+00:00",
+    "sha256": "618a0dafdb6eac0f97a7fa6e9a9696cd89763786107b361928fdb3e383cdb7af",
+    "sourceFile": "sources/618a0dafdb6eac0f97a7fa6e9a9696cd89763786107b361928fdb3e383cdb7af.source",
+    "excerptFile": "sources/97570189ae4af7fb22446b7c01ce1f5fc7cde318fa7bce3aec3b5c2c9f01ea1b.txt",
+    "excerptSha256": "97570189ae4af7fb22446b7c01ce1f5fc7cde318fa7bce3aec3b5c2c9f01ea1b",
+    "fullTextFile": "sources/4acbe1a192e3e54859e943d126986cf07dfe4289d2954411d9e0244d801c3324.native.txt",
+    "fullTextSha256": "4acbe1a192e3e54859e943d126986cf07dfe4289d2954411d9e0244d801c3324",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerpt hash separately fingerprints native column extraction text.",
+    "evidence": "Complete official Bexar County November3,2026 four-page generic Joint General, Special, Charter and Bond sample ballot; nativePDF bytes retained unchanged. All67 local named candidate office blocks read in full from all3 columns of every page, including all106 choices, printed party abbreviations, unopposed people and five-seat MUD director field. Each office candidate block independently replayed against saved native column text and visually checked on original full-page renders. Federal/statewide/legislative contests and statewide15thCourt of Appeals excluded. Generic blank write-in slots are not people. Exact city/school/special/precinct/court territories retained; no district fallback to county. All printed names, accents and party abbreviations are preserved exactly; no candidate addresses appear in reader quotes.",
+    "officialLinkingPage": {
+      "url": "https://elections.bexar.gov/163/Election-Information",
+      "file": "sources/election-information.source",
+      "sha256": "266262f582e03801717d68c587f429b68a4552f0264a098d87c347e7d7499475",
+      "sourceCheckedAt": "2026-11-03T04:03:26.829000+00:00"
+    }
+  },
+  {
+    "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1864/Nov-3-2026-Generic-Sample-Ballot---Special-Improvement-Districts",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1864/Nov-3-2026-Generic-Sample-Ballot---Special-Improvement-Districts",
+    "sourceCheckedAt": "2026-11-03T04:03:26.705731+00:00",
+    "sha256": "3a269eea7891d30ebf8fec78d4b6cd2b767132ab52b14bb2fc42d77430840314",
+    "sourceFile": "sources/3a269eea7891d30ebf8fec78d4b6cd2b767132ab52b14bb2fc42d77430840314.source",
+    "excerptFile": "sources/94303683059b48a6fc9f228cbd15e9a177ebbc9a220a55c6d284ef1cb40fd48b.txt",
+    "excerptSha256": "94303683059b48a6fc9f228cbd15e9a177ebbc9a220a55c6d284ef1cb40fd48b",
+    "fullTextFile": "sources/04e79907e34d02cf0323af3614d02e4acdc72ecf71c83678d62f2b5a1a9cd7ce.native.txt",
+    "fullTextSha256": "04e79907e34d02cf0323af3614d02e4acdc72ecf71c83678d62f2b5a1a9cd7ce",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerpt hash separately fingerprints native column extraction text.",
+    "evidence": "Complete official November3,2026 four-page Special Improvement District sample ballot, nativePDF200. Read in full: printed choices are propositions/For-Against statements; no named candidate office block appears. Retained as local-measure coverage source; no proposition or absence claim installed in the focused candidate packet.",
+    "officialLinkingPage": {
+      "url": "https://elections.bexar.gov/163/Election-Information",
+      "file": "sources/election-information.source",
+      "sha256": "266262f582e03801717d68c587f429b68a4552f0264a098d87c347e7d7499475",
+      "sourceCheckedAt": "2026-11-03T04:03:26.829000+00:00"
+    },
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://elections.bexar.gov/164/Election-Notices",
+    "finalUrl": "https://elections.bexar.gov/164/Election-Notices",
+    "sourceCheckedAt": "2026-11-03T04:02:37.071674+00:00",
+    "sha256": "a90f2899febf5e66ace25284234f0344bccc26303922b4435524b130982efb75",
+    "sourceFile": "sources/a90f2899febf5e66ace25284234f0344bccc26303922b4435524b130982efb75.source",
+    "excerptFile": "sources/a90f2899febf5e66ace25284234f0344bccc26303922b4435524b130982efb75.txt",
+    "excerptSha256": "a90f2899febf5e66ace25284234f0344bccc26303922b4435524b130982efb75",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.eisd.net/page/school-board",
+    "finalUrl": "https://www.eisd.net/page/school-board",
+    "sourceCheckedAt": "2026-11-03T04:05:03.093948+00:00",
+    "sha256": "f39b14275230f06a171812e556e1ee691ce989d26d77df57d242a7664f72d585",
+    "sourceFile": "sources/f39b14275230f06a171812e556e1ee691ce989d26d77df57d242a7664f72d585.source",
+    "excerptFile": "sources/f39b14275230f06a171812e556e1ee691ce989d26d77df57d242a7664f72d585.txt",
+    "excerptSha256": "f39b14275230f06a171812e556e1ee691ce989d26d77df57d242a7664f72d585",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=4818150&Search=1",
+    "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=4818150&Search=1",
+    "sourceCheckedAt": "2026-11-03T04:05:01.749048+00:00",
+    "sha256": "93176f6a6b5f2e218a4fb23712ace9a3498c0fe3d938b813bdc160a7ebaea79d",
+    "sourceFile": "sources/93176f6a6b5f2e218a4fb23712ace9a3498c0fe3d938b813bdc160a7ebaea79d.source",
+    "excerptFile": "sources/93176f6a6b5f2e218a4fb23712ace9a3498c0fe3d938b813bdc160a7ebaea79d.txt",
+    "excerptSha256": "93176f6a6b5f2e218a4fb23712ace9a3498c0fe3d938b813bdc160a7ebaea79d",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.windcrest-tx.gov/232/City-Council",
+    "finalUrl": "https://www.windcrest-tx.gov/232/City-Council",
+    "sourceCheckedAt": "2026-11-03T04:08:18.179301+00:00",
+    "sha256": "b4988c69ad683154e74c27e5e108c14c82bc57c77142b0a84ca5b31edc19f8c5",
+    "sourceFile": "sources/b4988c69ad683154e74c27e5e108c14c82bc57c77142b0a84ca5b31edc19f8c5.source",
+    "excerptFile": "sources/b4988c69ad683154e74c27e5e108c14c82bc57c77142b0a84ca5b31edc19f8c5.txt",
+    "excerptSha256": "b4988c69ad683154e74c27e5e108c14c82bc57c77142b0a84ca5b31edc19f8c5",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.liveoaktx.net/government/mayor-and-city-council",
+    "finalUrl": "https://www.liveoaktx.net/government/mayor-and-city-council",
+    "sourceCheckedAt": "2026-11-03T04:10:59.006439+00:00",
+    "sha256": "1340ec403e8a09b04e13fe1879069d2f9c30623eeb0579d26e51f1864067e064",
+    "sourceFile": "sources/1340ec403e8a09b04e13fe1879069d2f9c30623eeb0579d26e51f1864067e064.source",
+    "excerptFile": "sources/1340ec403e8a09b04e13fe1879069d2f9c30623eeb0579d26e51f1864067e064.txt",
+    "excerptSha256": "1340ec403e8a09b04e13fe1879069d2f9c30623eeb0579d26e51f1864067e064",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.schertz.com/Document/Government/Codes%20Charter%20and%20Law/City%20Charter/City%20Charter.pdf",
+    "finalUrl": "https://www.schertz.com/Document/Government/Codes%20Charter%20and%20Law/City%20Charter/City%20Charter.pdf",
+    "sourceCheckedAt": "2026-11-03T04:12:30.948120+00:00",
+    "sha256": "18f1cef072c4b1a0bb8cf0e26792e5bd6e15c943bcf954d9b04065be7900c9df",
+    "sourceFile": "sources/18f1cef072c4b1a0bb8cf0e26792e5bd6e15c943bcf954d9b04065be7900c9df.source",
+    "excerptFile": "sources/e759978b9d80e35f5c96abab037c1b41282b69d7fa6861f349f6df2a2396f314.txt",
+    "excerptSha256": "e759978b9d80e35f5c96abab037c1b41282b69d7fa6861f349f6df2a2396f314",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1734/City-of-Sandy-Oaks---Candidates",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1734/City-of-Sandy-Oaks---Candidates",
+    "sourceCheckedAt": "2026-11-03T04:12:30.341267+00:00",
+    "sha256": "c4ff184d08654848745ede4bbb46043d8ba1b8f738479ca402686e85684b43b6",
+    "sourceFile": "sources/c4ff184d08654848745ede4bbb46043d8ba1b8f738479ca402686e85684b43b6.source",
+    "excerptFile": "sources/1c63c9c3ebe9205125388acb79989a9e0d36f1478e7d46510ee985a1bb7e7502.txt",
+    "excerptSha256": "1c63c9c3ebe9205125388acb79989a9e0d36f1478e7d46510ee985a1bb7e7502",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1692/City-of-Converse---Order-of-General-Elections-November-3-2026-PDF",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1692/City-of-Converse---Order-of-General-Elections-November-3-2026-PDF",
+    "sourceCheckedAt": "2026-11-03T04:08:16.434314+00:00",
+    "sha256": "08ae99d11b04ef6484815951c2608d7b22f5068c0e9bb206ef2aa6bbc29b0cd9",
+    "sourceFile": "sources/08ae99d11b04ef6484815951c2608d7b22f5068c0e9bb206ef2aa6bbc29b0cd9.source",
+    "excerptFile": "sources/01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b.txt",
+    "excerptSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1695/City-of-Live-Oak---Ordianace-1702-Calling-a-Special-Election-to-Fill-Vacancy-for-Council-Place-5-PDF",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1695/City-of-Live-Oak---Ordianace-1702-Calling-a-Special-Election-to-Fill-Vacancy-for-Council-Place-5-PDF",
+    "sourceCheckedAt": "2026-11-03T04:08:16.106820+00:00",
+    "sha256": "7a14188de89f34b02af9f22931a0d7b14af74f61ea70d42a04e0ce2ac5f11bb8",
+    "sourceFile": "sources/7a14188de89f34b02af9f22931a0d7b14af74f61ea70d42a04e0ce2ac5f11bb8.source",
+    "excerptFile": "sources/01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b.txt",
+    "excerptSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Supplemental jurisdiction, at-large seat structure, current election order or NCES same-name school disambiguation evidence. Candidate values depend on current complete official generic specimen. Not a separate installable candidate source."
+  }
+]

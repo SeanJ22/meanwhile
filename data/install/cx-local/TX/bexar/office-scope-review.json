@@ -1,0 +1,609 @@
+{
+  "kind": "CANDIDATE_OFFICE_SCOPE_REVIEW",
+  "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+  "fields": {
+    "tx-cx-local-2026-chief-justice-court-of-appeals-4": {
+      "page": 1,
+      "column": 3,
+      "office": "Chief Justice, 4th Court of Appeals District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:4",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-45": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 45th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:45",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-144": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 144th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:144",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-150": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 150th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:150",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-186": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 186th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:186",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-187": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 187th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:187",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-224": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 224th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:224",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-225": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 225th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:225",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-226": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 226th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:226",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-227": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 227th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:227",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-285": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 285th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:285",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-288": {
+      "page": 1,
+      "column": 3,
+      "office": "District Judge, 288th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:288",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-289": {
+      "page": 2,
+      "column": 1,
+      "office": "District Judge, 289th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:289",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-290": {
+      "page": 2,
+      "column": 1,
+      "office": "District Judge, 290th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:290",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-436": {
+      "page": 2,
+      "column": 1,
+      "office": "District Judge, 436th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:436",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-district-judge-437": {
+      "page": 2,
+      "column": 1,
+      "office": "District Judge, 437th Judicial District",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:437",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county": {
+      "page": 2,
+      "column": 1,
+      "office": "Bexar County Criminal District Attorney",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 3,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-county_judge": {
+      "page": 2,
+      "column": 1,
+      "office": "County Judge",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 1",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_2": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 2",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_3": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 3",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 4",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_5": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 5",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_6": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 6",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_7": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 7",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 8",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 9",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_10": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 10",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_11": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 11",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 12",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_13": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 13",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_14": {
+      "page": 2,
+      "column": 1,
+      "office": "Judge, County Court at Law No. 14",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_county_court_at_law_no_15": {
+      "page": 2,
+      "column": 2,
+      "office": "Judge, County Court at Law No. 15",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_probate_court_no_1": {
+      "page": 2,
+      "column": 2,
+      "office": "Judge, Probate Court No. 1",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-judge_probate_court_no_2": {
+      "page": 2,
+      "column": 2,
+      "office": "Judge, Probate Court No. 2",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-district_clerk": {
+      "page": 2,
+      "column": 2,
+      "office": "District Clerk",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-ba01-2026-county-48029-county_clerk": {
+      "page": 2,
+      "column": 2,
+      "office": "County Clerk",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-county-commissioner-precinct-2": {
+      "page": 2,
+      "column": 2,
+      "office": "County Commissioner Precinct 2",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:2",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-county-commissioner-precinct-4": {
+      "page": 2,
+      "column": 2,
+      "office": "County Commissioner Precinct 4",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:4",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-justice-of-peace-precinct-1": {
+      "page": 2,
+      "column": 2,
+      "office": "Justice of the Peace Precinct 1",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:1",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-justice-of-peace-precinct-3": {
+      "page": 2,
+      "column": 2,
+      "office": "Justice of the Peace Precinct 3",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:3",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-justice-of-peace-precinct-4": {
+      "page": 2,
+      "column": 2,
+      "office": "Justice of the Peace Precinct 4",
+      "jurisdictionHeading": null,
+      "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:4",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-appraisal-director-place-1": {
+      "page": 2,
+      "column": 2,
+      "office": "For Director, Place No. 1",
+      "jurisdictionHeading": "Bexar Central Appraisal District - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-appraisal-director-place-2": {
+      "page": 2,
+      "column": 2,
+      "office": "For Director, Place No. 2",
+      "jurisdictionHeading": "Bexar Central Appraisal District - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-appraisal-director-place-3": {
+      "page": 2,
+      "column": 2,
+      "office": "For Director, Place No. 3",
+      "jurisdictionHeading": "Bexar Central Appraisal District - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-converse-city-council-place-2": {
+      "page": 2,
+      "column": 2,
+      "office": "For City Council, Place 2",
+      "jurisdictionHeading": "City of Converse - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:converse",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-converse-city-council-place-4": {
+      "page": 2,
+      "column": 2,
+      "office": "For City Council, Place 4",
+      "jurisdictionHeading": "City of Converse - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:converse",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-converse-city-council-place-6": {
+      "page": 2,
+      "column": 2,
+      "office": "For City Council, Place 6",
+      "jurisdictionHeading": "City of Converse - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:converse",
+      "candidateCount": 3,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-live-oak-city-council-place-5": {
+      "page": 2,
+      "column": 3,
+      "office": "For City Council, Place 5",
+      "jurisdictionHeading": "City of Live Oak - Special Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:live_oak",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-sandy-oaks-mayor": {
+      "page": 3,
+      "column": 1,
+      "office": "For Mayor",
+      "jurisdictionHeading": "City of Sandy Oaks – General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-sandy-oaks-alderman-place-2": {
+      "page": 3,
+      "column": 1,
+      "office": "For Alderman, Place 2",
+      "jurisdictionHeading": "City of Sandy Oaks – General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-sandy-oaks-alderman-place-3": {
+      "page": 3,
+      "column": 1,
+      "office": "For Alderman, Place 3",
+      "jurisdictionHeading": "City of Sandy Oaks – General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-sandy-oaks-alderman-place-4": {
+      "page": 3,
+      "column": 1,
+      "office": "For Alderman, Place 4",
+      "jurisdictionHeading": "City of Sandy Oaks – General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+      "candidateCount": 1,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-schertz-city-council-place-3": {
+      "page": 3,
+      "column": 1,
+      "office": "For City Council, Place 3",
+      "jurisdictionHeading": "City of Schertz - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-schertz-city-council-place-4": {
+      "page": 3,
+      "column": 1,
+      "office": "For City Council, Place 4",
+      "jurisdictionHeading": "City of Schertz - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-schertz-city-council-place-5": {
+      "page": 3,
+      "column": 1,
+      "office": "For City Council, Place 5",
+      "jurisdictionHeading": "City of Schertz - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-windcrest-city-council-place-1": {
+      "page": 3,
+      "column": 1,
+      "office": "For City Council, Place 1",
+      "jurisdictionHeading": "City of Windcrest - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+      "candidateCount": 3,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-windcrest-city-council-place-2": {
+      "page": 3,
+      "column": 1,
+      "office": "For City Council, Place 2",
+      "jurisdictionHeading": "City of Windcrest - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-windcrest-city-council-place-3": {
+      "page": 3,
+      "column": 1,
+      "office": "For City Council, Place 3",
+      "jurisdictionHeading": "City of Windcrest - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-1": {
+      "page": 3,
+      "column": 2,
+      "office": "For Trustee, Place 1",
+      "jurisdictionHeading": "Edgewood Independent School District –",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-2": {
+      "page": 3,
+      "column": 2,
+      "office": "For Trustee, Place 2",
+      "jurisdictionHeading": "Edgewood Independent School District –",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidateCount": 3,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-3": {
+      "page": 3,
+      "column": 2,
+      "office": "For Trustee, Place 3",
+      "jurisdictionHeading": "Edgewood Independent School District –",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-edgewood-4818150-trustee-place-6": {
+      "page": 3,
+      "column": 2,
+      "office": "For Trustee, Place 6",
+      "jurisdictionHeading": "Edgewood Independent School District –",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-somerset-isd-trustee-district-3": {
+      "page": 4,
+      "column": 2,
+      "office": "For Trustee, Single Member District 3",
+      "jurisdictionHeading": "Somerset Independent School District –",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:3",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-somerset-isd-trustee-district-7": {
+      "page": 4,
+      "column": 2,
+      "office": "For Trustee, Single Member District 7",
+      "jurisdictionHeading": "Somerset Independent School District –",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:7",
+      "candidateCount": 2,
+      "voteFor": 1
+    },
+    "tx-cx-local-2026-bexar-county-mud-1-permanent-directors": {
+      "page": 4,
+      "column": 2,
+      "office": "For Permanent Director",
+      "jurisdictionHeading": "Bexar County Municipal Utility District No. 1 - Special Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_county_municipal_utility_district_1",
+      "candidateCount": 5,
+      "voteFor": 5
+    },
+    "tx-cx-local-2026-edwards-aquifer-authority-director-district-1": {
+      "page": 4,
+      "column": 3,
+      "office": "For Director",
+      "jurisdictionHeading": "Edwards Aquifer Authority District 1 - General Election",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:edwards_aquifer_authority/director_district:1",
+      "candidateCount": 2,
+      "voteFor": 1
+    }
+  }
+}

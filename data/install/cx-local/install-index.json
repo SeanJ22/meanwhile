@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:20:05.512268+00:00",
+  "preparedAt": "2026-11-03T04:20:11.540016+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -345,18 +345,37 @@
         "sharedExistingContests": 3,
         "newContests": 132
       }
+    },
+    {
+      "state": "TX",
+      "county": "Bexar",
+      "populationRank": 16,
+      "manifest": "TX/bexar/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 67,
+      "measureContests": 0,
+      "candidacies": 106,
+      "newContests": 31,
+      "refreshedContests": 36,
+      "sourceInputSha256": "43da78b5eee2f422dcb97711b87da2770651dc701f096f5094b332d5b3904ad4",
+      "coverage": [
+        "Bexar County local candidate coverage:67 complete printed office fields and106 named choices from the current official generic sample ballot. Includes21 countywide offices,15 district judges,1 regional appellate chief,5 county commissioner/justice precinct contests,3 appraisal director places,14 municipal seats,6 school trustee contests, MUD1 permanent directors and Edwards Aquifer director district1.",
+        "The36 already-held county/district-judge contest identities and all45 corresponding candidacy identities are preserved;31 local races and61 choices were missing. Federal, statewide and legislative data and existing measure texts/explainers remain outside this focused installation. Local bond/tax/charter propositions remain open candidate-independent coverage work and their complete original samples are retained.",
+        "Numbered at-large city and Edgewood school places use their whole exact government electorate. Somerset single-member districts, commissioner precincts, justice precincts, MUD1, appraisal, aquifer and regional judicial territory retain precise separate division keys. Exact unmatched reader memberships remain listed in the installation manifest; no electoral district is widened to Bexar County.",
+        "Blank write-in lines are not people. Separately named declared write-in certification remains acquisition work. This packet establishes all named candidate office blocks printed in the two linked current generic sample documents; individualized address-specific sample parity and exact district reader memberships remain open."
+      ]
     }
   ],
   "totals": {
-    "countiesPrepared": 14,
-    "packetsPrepared": 14,
-    "candidateAndRetentionContests": 1196,
+    "countiesPrepared": 15,
+    "packetsPrepared": 15,
+    "candidateAndRetentionContests": 1263,
     "measureContests": 54,
-    "candidacyEntries": 2713,
-    "newContestEntriesAgainstCheckedInBaseline": 990,
-    "distinctPreparedContestIds": 1241,
-    "distinctPreparedCandidateIds": 2692,
-    "distinctNewContestsAgainstCheckedInBaseline": 984
+    "candidacyEntries": 2819,
+    "newContestEntriesAgainstCheckedInBaseline": 1021,
+    "distinctPreparedContestIds": 1308,
+    "distinctPreparedCandidateIds": 2798,
+    "distinctNewContestsAgainstCheckedInBaseline": 1015
   },
   "remainingWork": [
     {

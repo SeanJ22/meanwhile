@@ -1,0 +1,3375 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "TX:tx-2026-11-03-general": {
+      "election": {
+        "id": "tx-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 November General Election",
+        "state": "TX"
+      },
+      "contests": [
+        {
+          "id": "tx-cx-local-2026-chief-justice-court-of-appeals-4",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:4",
+          "title": "Chief Justice, 4th Court of Appeals District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Regional Fourth Court of Appeals District; not a countywide or statewide contest. Exact court-district reader membership remains to be joined.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Chief Justice, 4th Court of Appeals District \n(Presidente, Corte de Apelaciones, Distrito Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bert Richardson           \n REP \n⬭ Antonia \"Toni\" Arteaga\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-45",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:45",
+          "divisionVintage": "2026",
+          "title": "District Judge, 45th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 45th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 45) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Mary Lou Alvarez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-144",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:144",
+          "divisionVintage": "2026",
+          "title": "District Judge, 144th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 144th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 144) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael De Leon\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-150",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:150",
+          "divisionVintage": "2026",
+          "title": "District Judge, 150th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 150th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 150) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Monique Diaz\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-186",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:186",
+          "divisionVintage": "2026",
+          "title": "District Judge, 186th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 186th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 186) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Kristina Escalona\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-187",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:187",
+          "divisionVintage": "2026",
+          "title": "District Judge, 187th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 187th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 187) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Stephanie Franco\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-224",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:224",
+          "divisionVintage": "2026",
+          "title": "District Judge, 224th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 224th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 224) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Marisa Flores\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-225",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:225",
+          "divisionVintage": "2026",
+          "title": "District Judge, 225th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 225th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 225) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Benjamin Robertson         \n REP \n⬭ Christine Vasquez Hortick\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-226",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:226",
+          "divisionVintage": "2026",
+          "title": "District Judge, 226th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 226th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 226) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Anastacia \"Ana\" Ochoa Nelson\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-227",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:227",
+          "divisionVintage": "2026",
+          "title": "District Judge, 227th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 227th Judicial District \n(Juez del Distrito, Distrito Judicial \nNúm. 227) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Christine Del Prado\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-285",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:285",
+          "divisionVintage": "2026",
+          "title": "District Judge, 285th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 285th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 285) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Nadine Melissa Nieto\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-288",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:288",
+          "divisionVintage": "2026",
+          "title": "District Judge, 288th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 288th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 288) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Cynthia Marie Chapa\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-289",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:289",
+          "divisionVintage": "2026",
+          "title": "District Judge, 289th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 289th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 289) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Rose Sosa\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-290",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:290",
+          "divisionVintage": "2026",
+          "title": "District Judge, 290th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 290th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 290) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Jennifer Pena\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-436",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:436",
+          "divisionVintage": "2026",
+          "title": "District Judge, 436th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 436th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 436) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Raymond A. Villareal\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-437",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:437",
+          "divisionVintage": "2026",
+          "title": "District Judge, 437th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 437th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 437) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Joel Perez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Bexar County Criminal District Attorney",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Bexar County Criminal District Attorney \n(Procurador Criminal del Distrito del Condado de Bexar) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Ashley Foster      \n REP \n⬭ Luz Elena Chapa\n DEM \n⬭ Jason Wolff         \n  IND"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-county_judge",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "County Judge",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Judge \n(Juez del Condado) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Patrick Von Dohlen\n REP \n⬭ Ron Nirenberg       \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 1 \n(Juez, Corte de Ley del Condado, Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bob Behrens         \n REP \n⬭ Helen Petry Stowe\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 2",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 2 \n(Juez, Corte de Ley del Condado, Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Melissa Saenz\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 3",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 3 \n(Juez, Corte de Ley del Condado, Núm. 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ David J. Rodriguez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 4",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 4 \n(Juez, Corte de Ley del Condado, Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Jason Roland Garrahan\n  REP \n⬭ Alfredo Ximenez            \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_5",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 5",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 5 \n(Juez, Corte de Ley del Condado, Núm. 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Andrea Arevalos\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_6",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 6",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 6 \n(Juez, Corte de Ley del Condado, Núm. 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Erica Dominguez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_7",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 7",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 7 \n(Juez, Corte de Ley del Condado, Núm. 7) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Melanie M. Lira\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 8",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 8 \n(Juez, Corte de Ley del Condado, Núm. 8) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Celeste Brown\n  REP \n⬭ Victoria Cruz   \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 9",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 9 \n(Juez, Corte de Ley del Condado, Núm. 9) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Daphne Previti Austin\n REP \n⬭ Jessica A. Gonzalez  \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_10",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 10",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 10 \n(Juez, Corte de Ley del Condado, Núm. 10) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Cesar Garcia\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_11",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 11",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 11 \n(Juez, Corte de Ley del Condado, Núm. 11) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Erica Peña\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 12",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 12 \n(Juez, Corte de Ley del Condado, Núm. 12) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Deborah Dietzmann\n REP \n⬭ Lauren Zamora       \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_13",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 13",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 13 \n(Juez, Corte de Ley del Condado, Núm. 13) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Alicia \"Ali\" Perez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_14",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 14",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 14 \n(Juez, Corte de Ley del Condado, Núm. 14) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Audrey Martinez\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_15",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, County Court at Law No. 15",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 15 \n(Juez, Corte de Ley del Condado, Núm. 15) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Melissa Vara\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_probate_court_no_1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, Probate Court No. 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, Probate Court No. 1 \n(Juez, Corte Testamentaria, Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Oscar J. Kazen\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_probate_court_no_2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "Judge, Probate Court No. 2",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, Probate Court No. 2 \n(Juez, Corte Testamentaria, Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Veronica Vasquez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-district_clerk",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "District Clerk",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Clerk \n(Secretario del Distrito) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Christine \"Chris\" Castillo\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-county_clerk",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar",
+          "divisionVintage": "2026",
+          "title": "County Clerk",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Clerk \n(Secretario del Condado) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Lucy Adame-Clark\n DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-2",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:2",
+          "title": "County Commissioner Precinct 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Bexar County commissioner precinct 2; distinct from justice-of-peace precincts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Commissioner Precinct 2 \n(Comisionado del Condado, Precinto Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ David Sherwood Hill\n  REP \n⬭ Justin Rodriguez      \n DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-4",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar/council_district:4",
+          "title": "County Commissioner Precinct 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Bexar County commissioner precinct 4; distinct from justice-of-peace precincts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Commissioner Precinct 4 \n(Comisionado del Condado, Precinto Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Tommy Calvert Jr.\n DEM \n⬭ Roy Anthony II      \n IND"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-1",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:1",
+          "title": "Justice of the Peace Precinct 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Bexar County justice-of-peace precinct 1; distinct from county commissioner precincts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Justice of the Peace Precinct 1 \n(Juez de Paz, Precinto Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Armando Cruz Jr.\n  DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-3",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:3",
+          "title": "Justice of the Peace Precinct 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Bexar County justice-of-peace precinct 3; distinct from county commissioner precincts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Justice of the Peace Precinct 3 \n(Juez de Paz, Precinto Núm. 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Julie Bray Patterson\n  REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-4",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/county:bexar/justice_precinct:4",
+          "title": "Justice of the Peace Precinct 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Bexar County justice-of-peace precinct 4; distinct from county commissioner precincts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Justice of the Peace Precinct 4 \n(Juez de Paz, Precinto Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Anna Campos\n  DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-1",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+          "title": "Bexar Central Appraisal District — For Director, Place No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered director place for the Bexar Central Appraisal District; no geographic district is inferred from place number.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 1 \n(Para Director, Lugar Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Susan Bayne \n⬭ Diana Arévalo"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Bexar Central Appraisal District - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-2",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+          "title": "Bexar Central Appraisal District — For Director, Place No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered director place for the Bexar Central Appraisal District; no geographic district is inferred from place number.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 2 \n(Para Director, Lugar Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Leticia Anguiano\n⬭ Erika Hizel"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Bexar Central Appraisal District - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-3",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_central_appraisal_district",
+          "title": "Bexar Central Appraisal District — For Director, Place No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered director place for the Bexar Central Appraisal District; no geographic district is inferred from place number.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 3 \n(Para Director, Lugar Núm. 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Jon Melendez"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Bexar Central Appraisal District - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-2",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:converse",
+          "title": "City of Converse — For City Council, Place 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Converse. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 2 \n(Para Ayuntamiento, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Renée Paschall \n⬭ Orlando D. Cruz"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Converse - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-4",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:converse",
+          "title": "City of Converse — For City Council, Place 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Converse. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 4 \n(Para Ayuntamiento, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bradley Heinz \n⬭ Jessica Ann Hannah"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Converse - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-6",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:converse",
+          "title": "City of Converse — For City Council, Place 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Converse. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 6 \n(Para Ayuntamiento, Lugar 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Nawid Zazai \n⬭ Nancy Droneburg\n⬭ Marc Gilbert"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Converse - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-live-oak-city-council-place-5",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:live_oak",
+          "title": "City of Live Oak — For City Council, Place 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Live Oak. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 5 \n(Para Ayuntamiento, Lugar 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Llamas \n⬭ Jasmine Johnson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Live Oak - Special Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-mayor",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+          "title": "City of Sandy Oaks — For Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Sandy Oaks. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Mayor \n(Para Alcalde) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Martinez Jr"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Sandy Oaks – General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-alderman-place-2",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+          "title": "City of Sandy Oaks — For Alderman, Place 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Sandy Oaks. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Alderman, Place 2 \n(Para Concejal, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Douglas Tomasini\n⬭ Priscilla Schmitt"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Sandy Oaks – General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-alderman-place-3",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+          "title": "City of Sandy Oaks — For Alderman, Place 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Sandy Oaks. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Alderman, Place 3 \n(Para Concejal, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Lamar McNeal"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Sandy Oaks – General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-alderman-place-4",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:sandy_oaks",
+          "title": "City of Sandy Oaks — For Alderman, Place 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Sandy Oaks. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Alderman, Place 4 \n(Para Concejal, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ CJ Walker"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Sandy Oaks – General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-3",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+          "title": "City of Schertz — For City Council, Place 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Schertz. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 3 \n(Para Concejo de la Ciudad, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Paul Macaluso\n⬭ Billie Langhus"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Schertz - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-4",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+          "title": "City of Schertz — For City Council, Place 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Schertz. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 4 \n(Para Concejo de la Ciudad, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Kenneth E. Ratcliff \n⬭ Benjamin Guerrero"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Schertz - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-5",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:schertz",
+          "title": "City of Schertz — For City Council, Place 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Schertz. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 5 \n(Para Concejo de la Ciudad, Lugar 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Robert M. Westbrook\n⬭ Jonathon A. Marquez"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Schertz - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-1",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+          "title": "City of Windcrest — For City Council, Place 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Windcrest. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 1 \n(Para Concejo de la Ciudad, Lugar 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Narquiz Cervantes\n⬭ Susie Hamilton \n⬭ Joan Pedrotti"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Windcrest - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-2",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+          "title": "City of Windcrest — For City Council, Place 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Windcrest. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 2 \n(Para Concejo de la Ciudad, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Cindy Strzelecki\n⬭ Sue Alexander"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Windcrest - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-3",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/place:windcrest",
+          "title": "City of Windcrest — For City Council, Place 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Numbered at-large municipal seat; electorate is the City of Windcrest. Place numbers label offices, not geographic districts.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 3 \n(Para Consejo de la Ciudad, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Greg Turner \n⬭ Robert Maloy"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "City of Windcrest - General Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-1",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+          "title": "Edgewood Independent School District (Bexar County) — For Trustee, Place 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "At-large trustee place in the San Antonio/Bexar Edgewood ISD, NCES4818150; not the separate same-named Edgewood district4818120.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 1 \n(Para Regente, Lugar 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Dora Maldonado \n⬭ James Hernandez"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Edgewood Independent School District –"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-2",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+          "title": "Edgewood Independent School District (Bexar County) — For Trustee, Place 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "At-large trustee place in the San Antonio/Bexar Edgewood ISD, NCES4818150; not the separate same-named Edgewood district4818120.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 2 \n(Para Regente, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Frank Espinosa \n⬭ Elias Hernandez \n⬭ Jose \"Joe\" Gallegos II"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Edgewood Independent School District –"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-3",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+          "title": "Edgewood Independent School District (Bexar County) — For Trustee, Place 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "At-large trustee place in the San Antonio/Bexar Edgewood ISD, NCES4818150; not the separate same-named Edgewood district4818120.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 3 \n(Para Regente, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Dorothy Borjas \n⬭ Richard Santoyo"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Edgewood Independent School District –"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-6",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/school_district:edgewood_independent_school_district_4818150",
+          "title": "Edgewood Independent School District (Bexar County) — For Trustee, Place 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "At-large trustee place in the San Antonio/Bexar Edgewood ISD, NCES4818150; not the separate same-named Edgewood district4818120.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 6 \n(Para Regente, Lugar 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Valdez\n⬭ Joey Cipriano"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Edgewood Independent School District –"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-somerset-isd-trustee-district-3",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:3",
+          "title": "Somerset Independent School District — For Trustee, Single Member District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Single-member trustee district 3 within Somerset ISD; exact subdistrict reader membership remains to be joined.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Single Member \nDistrict 3 \n(Para Regente, Distrito de un Solo \nMiembro 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Albert Herrera\n⬭ Doug Black"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Somerset Independent School District –"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-somerset-isd-trustee-district-7",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/school_district:somerset_independent_school_district/school_board_district:7",
+          "title": "Somerset Independent School District — For Trustee, Single Member District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Single-member trustee district 7 within Somerset ISD; exact subdistrict reader membership remains to be joined.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Single Member \nDistrict 7 \n(Para Regente, Distrito de un Solo \nMiembro 7) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Robert A. Casias\n⬭ Emilio G. Arcos"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Somerset Independent School District –"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/special_district:bexar_county_municipal_utility_district_1",
+          "title": "Bexar County Municipal Utility District No. 1 — For Permanent Director",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "candidateListComplete": true,
+          "scopeNote": "Five permanent directors elected by district voters; the MUD is not widened to Bexar County.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Permanent Director \n(Para Director Permanente) \nVote for none, one, two, three, four or five \n(Vote por ninguna, uno, dos, tres, cuatro o cinco) \n⬭ Matthew Abrahamsen\n⬭ Theodore Duano \n⬭ Andrew Macias \n⬭ Alberto Rodriguez\n⬭ Alejandro Silva"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Bexar County Municipal Utility District No. 1 - Special Election"
+            }
+          ]
+        },
+        {
+          "id": "tx-cx-local-2026-edwards-aquifer-authority-director-district-1",
+          "electionId": "tx-2026-11-03-general",
+          "divisionVintage": "2026",
+          "termYears": null,
+          "ocdId": "ocd-division/country:us/state:tx/special_district:edwards_aquifer_authority/director_district:1",
+          "title": "Edwards Aquifer Authority District 1 — For Director",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "candidateListComplete": true,
+          "scopeNote": "Edwards Aquifer Authority director district1; not the whole authority or Bexar County.",
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director \n(Para Director) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Joey Groff\n⬭ Carol G. Patterson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+              "sourceOrg": "Bexar County Elections Department",
+              "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+              "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+              "quote": "Edwards Aquifer Authority District 1 - General Election"
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "tx-cx-local-2026-chief-justice-court-of-appeals-4:bert-richardson",
+          "contestId": "tx-cx-local-2026-chief-justice-court-of-appeals-4",
+          "givenName": "",
+          "familyName": "Bert Richardson",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Chief Justice, 4th Court of Appeals District \n(Presidente, Corte de Apelaciones, Distrito Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bert Richardson           \n REP \n⬭ Antonia \"Toni\" Arteaga\n DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-chief-justice-court-of-appeals-4:antonia-toni-arteaga",
+          "contestId": "tx-cx-local-2026-chief-justice-court-of-appeals-4",
+          "givenName": "",
+          "familyName": "Antonia \"Toni\" Arteaga",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Chief Justice, 4th Court of Appeals District \n(Presidente, Corte de Apelaciones, Distrito Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bert Richardson           \n REP \n⬭ Antonia \"Toni\" Arteaga\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-45:mary_lou_alvarez",
+          "contestId": "tx-ba01-2026-district-judge-45",
+          "familyName": "Mary Lou Alvarez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 45th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 45) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Mary Lou Alvarez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-144:michael_de_leon",
+          "contestId": "tx-ba01-2026-district-judge-144",
+          "familyName": "Michael De Leon",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 144th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 144) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael De Leon\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-150:monique_diaz",
+          "contestId": "tx-ba01-2026-district-judge-150",
+          "familyName": "Monique Diaz",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 150th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 150) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Monique Diaz\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-186:kristina_escalona",
+          "contestId": "tx-ba01-2026-district-judge-186",
+          "familyName": "Kristina Escalona",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 186th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 186) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Kristina Escalona\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-187:stephanie_franco",
+          "contestId": "tx-ba01-2026-district-judge-187",
+          "familyName": "Stephanie Franco",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 187th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 187) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Stephanie Franco\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-224:marisa_flores",
+          "contestId": "tx-ba01-2026-district-judge-224",
+          "familyName": "Marisa Flores",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 224th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 224) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Marisa Flores\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-225:benjamin_robertson",
+          "contestId": "tx-ba01-2026-district-judge-225",
+          "familyName": "Benjamin Robertson",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 225th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 225) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Benjamin Robertson         \n REP \n⬭ Christine Vasquez Hortick\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-225:christine_vasquez_hortick",
+          "contestId": "tx-ba01-2026-district-judge-225",
+          "familyName": "Christine Vasquez Hortick",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 225th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 225) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Benjamin Robertson         \n REP \n⬭ Christine Vasquez Hortick\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-226:anastacia_ana_ochoa_nelson",
+          "contestId": "tx-ba01-2026-district-judge-226",
+          "familyName": "Anastacia \"Ana\" Ochoa Nelson",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 226th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 226) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Anastacia \"Ana\" Ochoa Nelson\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-227:christine_del_prado",
+          "contestId": "tx-ba01-2026-district-judge-227",
+          "familyName": "Christine Del Prado",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 227th Judicial District \n(Juez del Distrito, Distrito Judicial \nNúm. 227) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Christine Del Prado\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-285:nadine_melissa_nieto",
+          "contestId": "tx-ba01-2026-district-judge-285",
+          "familyName": "Nadine Melissa Nieto",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 285th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 285) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Nadine Melissa Nieto\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-288:cynthia_marie_chapa",
+          "contestId": "tx-ba01-2026-district-judge-288",
+          "familyName": "Cynthia Marie Chapa",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 288th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 288) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Cynthia Marie Chapa\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-289:rose_sosa",
+          "contestId": "tx-ba01-2026-district-judge-289",
+          "familyName": "Rose Sosa",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 289th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 289) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Rose Sosa\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-290:jennifer_pena",
+          "contestId": "tx-ba01-2026-district-judge-290",
+          "familyName": "Jennifer Pena",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 290th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 290) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Jennifer Pena\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-436:raymond_a_villareal",
+          "contestId": "tx-ba01-2026-district-judge-436",
+          "familyName": "Raymond A. Villareal",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 436th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 436) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Raymond A. Villareal\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-437:joel_perez",
+          "contestId": "tx-ba01-2026-district-judge-437",
+          "familyName": "Joel Perez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Judge, 437th Judicial District \n(Juez del Distrito, Distrito Judicial Núm. 437) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Joel Perez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county:ashley_foster",
+          "contestId": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county",
+          "familyName": "Ashley Foster",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Bexar County Criminal District Attorney \n(Procurador Criminal del Distrito del Condado de Bexar) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Ashley Foster      \n REP \n⬭ Luz Elena Chapa\n DEM \n⬭ Jason Wolff         \n  IND"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county:luz_elena_chapa",
+          "contestId": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county",
+          "familyName": "Luz Elena Chapa",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Bexar County Criminal District Attorney \n(Procurador Criminal del Distrito del Condado de Bexar) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Ashley Foster      \n REP \n⬭ Luz Elena Chapa\n DEM \n⬭ Jason Wolff         \n  IND"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county:jason_wolff",
+          "contestId": "tx-ba01-2026-county-48029-criminal_district_attorney_bexar_county",
+          "familyName": "Jason Wolff",
+          "givenName": "",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Bexar County Criminal District Attorney \n(Procurador Criminal del Distrito del Condado de Bexar) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Ashley Foster      \n REP \n⬭ Luz Elena Chapa\n DEM \n⬭ Jason Wolff         \n  IND"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-county_judge:patrick_von_dohlen",
+          "contestId": "tx-ba01-2026-county-48029-county_judge",
+          "familyName": "Patrick Von Dohlen",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Judge \n(Juez del Condado) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Patrick Von Dohlen\n REP \n⬭ Ron Nirenberg       \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-county_judge:ron_nirenberg",
+          "contestId": "tx-ba01-2026-county-48029-county_judge",
+          "familyName": "Ron Nirenberg",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Judge \n(Juez del Condado) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Patrick Von Dohlen\n REP \n⬭ Ron Nirenberg       \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1:bob_behrens",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1",
+          "familyName": "Bob Behrens",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 1 \n(Juez, Corte de Ley del Condado, Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bob Behrens         \n REP \n⬭ Helen Petry Stowe\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1:helen_petry_stowe",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_1",
+          "familyName": "Helen Petry Stowe",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 1 \n(Juez, Corte de Ley del Condado, Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bob Behrens         \n REP \n⬭ Helen Petry Stowe\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_2:melissa_saenz",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_2",
+          "familyName": "Melissa Saenz",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 2 \n(Juez, Corte de Ley del Condado, Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Melissa Saenz\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_3:david_j_rodriguez",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_3",
+          "familyName": "David J. Rodriguez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 3 \n(Juez, Corte de Ley del Condado, Núm. 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ David J. Rodriguez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4:jason_roland_garrahan",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4",
+          "familyName": "Jason Roland Garrahan",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 4 \n(Juez, Corte de Ley del Condado, Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Jason Roland Garrahan\n  REP \n⬭ Alfredo Ximenez            \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4:alfredo_ximenez",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_4",
+          "familyName": "Alfredo Ximenez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 4 \n(Juez, Corte de Ley del Condado, Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Jason Roland Garrahan\n  REP \n⬭ Alfredo Ximenez            \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_5:andrea_arevalos",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_5",
+          "familyName": "Andrea Arevalos",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 5 \n(Juez, Corte de Ley del Condado, Núm. 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Andrea Arevalos\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_6:erica_dominguez",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_6",
+          "familyName": "Erica Dominguez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 6 \n(Juez, Corte de Ley del Condado, Núm. 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Erica Dominguez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_7:melanie_m_lira",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_7",
+          "familyName": "Melanie M. Lira",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 7 \n(Juez, Corte de Ley del Condado, Núm. 7) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Melanie M. Lira\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8:celeste_brown",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8",
+          "familyName": "Celeste Brown",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 8 \n(Juez, Corte de Ley del Condado, Núm. 8) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Celeste Brown\n  REP \n⬭ Victoria Cruz   \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8:victoria_cruz",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_8",
+          "familyName": "Victoria Cruz",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 8 \n(Juez, Corte de Ley del Condado, Núm. 8) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Celeste Brown\n  REP \n⬭ Victoria Cruz   \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9:daphne_previti_austin",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9",
+          "familyName": "Daphne Previti Austin",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 9 \n(Juez, Corte de Ley del Condado, Núm. 9) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Daphne Previti Austin\n REP \n⬭ Jessica A. Gonzalez  \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9:jessica_a_gonzalez",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_9",
+          "familyName": "Jessica A. Gonzalez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 9 \n(Juez, Corte de Ley del Condado, Núm. 9) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Daphne Previti Austin\n REP \n⬭ Jessica A. Gonzalez  \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_10:cesar_garcia",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_10",
+          "familyName": "Cesar Garcia",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 10 \n(Juez, Corte de Ley del Condado, Núm. 10) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Cesar Garcia\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_11:erica_pe_a",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_11",
+          "familyName": "Erica Peña",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 11 \n(Juez, Corte de Ley del Condado, Núm. 11) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Erica Peña\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12:deborah_dietzmann",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12",
+          "familyName": "Deborah Dietzmann",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 12 \n(Juez, Corte de Ley del Condado, Núm. 12) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Deborah Dietzmann\n REP \n⬭ Lauren Zamora       \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12:lauren_zamora",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_12",
+          "familyName": "Lauren Zamora",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 12 \n(Juez, Corte de Ley del Condado, Núm. 12) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Deborah Dietzmann\n REP \n⬭ Lauren Zamora       \n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_13:alicia_ali_perez",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_13",
+          "familyName": "Alicia \"Ali\" Perez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 13 \n(Juez, Corte de Ley del Condado, Núm. 13) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Alicia \"Ali\" Perez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_14:audrey_martinez",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_14",
+          "familyName": "Audrey Martinez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 14 \n(Juez, Corte de Ley del Condado, Núm. 14) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Audrey Martinez\n  DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_15:melissa_vara",
+          "contestId": "tx-ba01-2026-county-48029-judge_county_court_at_law_no_15",
+          "familyName": "Melissa Vara",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, County Court at Law No. 15 \n(Juez, Corte de Ley del Condado, Núm. 15) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Melissa Vara\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_probate_court_no_1:oscar_j_kazen",
+          "contestId": "tx-ba01-2026-county-48029-judge_probate_court_no_1",
+          "familyName": "Oscar J. Kazen",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, Probate Court No. 1 \n(Juez, Corte Testamentaria, Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Oscar J. Kazen\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-judge_probate_court_no_2:veronica_vasquez",
+          "contestId": "tx-ba01-2026-county-48029-judge_probate_court_no_2",
+          "familyName": "Veronica Vasquez",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Judge, Probate Court No. 2 \n(Juez, Corte Testamentaria, Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Veronica Vasquez\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-district_clerk:christine_chris_castillo",
+          "contestId": "tx-ba01-2026-county-48029-district_clerk",
+          "familyName": "Christine \"Chris\" Castillo",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "District Clerk \n(Secretario del Distrito) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Christine \"Chris\" Castillo\n DEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48029-county_clerk:lucy_adame_clark",
+          "contestId": "tx-ba01-2026-county-48029-county_clerk",
+          "familyName": "Lucy Adame-Clark",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Clerk \n(Secretario del Condado) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Lucy Adame-Clark\n DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-2:david-sherwood-hill",
+          "contestId": "tx-cx-local-2026-bexar-county-commissioner-precinct-2",
+          "givenName": "",
+          "familyName": "David Sherwood Hill",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Commissioner Precinct 2 \n(Comisionado del Condado, Precinto Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ David Sherwood Hill\n  REP \n⬭ Justin Rodriguez      \n DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-2:justin-rodriguez",
+          "contestId": "tx-cx-local-2026-bexar-county-commissioner-precinct-2",
+          "givenName": "",
+          "familyName": "Justin Rodriguez",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Commissioner Precinct 2 \n(Comisionado del Condado, Precinto Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ David Sherwood Hill\n  REP \n⬭ Justin Rodriguez      \n DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-4:tommy-calvert-jr",
+          "contestId": "tx-cx-local-2026-bexar-county-commissioner-precinct-4",
+          "givenName": "",
+          "familyName": "Tommy Calvert Jr.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Commissioner Precinct 4 \n(Comisionado del Condado, Precinto Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Tommy Calvert Jr.\n DEM \n⬭ Roy Anthony II      \n IND"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-commissioner-precinct-4:roy-anthony-ii",
+          "contestId": "tx-cx-local-2026-bexar-county-commissioner-precinct-4",
+          "givenName": "",
+          "familyName": "Roy Anthony II",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "County Commissioner Precinct 4 \n(Comisionado del Condado, Precinto Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Tommy Calvert Jr.\n DEM \n⬭ Roy Anthony II      \n IND"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-1:armando-cruz-jr",
+          "contestId": "tx-cx-local-2026-bexar-justice-of-peace-precinct-1",
+          "givenName": "",
+          "familyName": "Armando Cruz Jr.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Justice of the Peace Precinct 1 \n(Juez de Paz, Precinto Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Armando Cruz Jr.\n  DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-3:julie-bray-patterson",
+          "contestId": "tx-cx-local-2026-bexar-justice-of-peace-precinct-3",
+          "givenName": "",
+          "familyName": "Julie Bray Patterson",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Justice of the Peace Precinct 3 \n(Juez de Paz, Precinto Núm. 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Julie Bray Patterson\n  REP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-justice-of-peace-precinct-4:anna-campos",
+          "contestId": "tx-cx-local-2026-bexar-justice-of-peace-precinct-4",
+          "givenName": "",
+          "familyName": "Anna Campos",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "Justice of the Peace Precinct 4 \n(Juez de Paz, Precinto Núm. 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Anna Campos\n  DEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-1:susan-bayne",
+          "contestId": "tx-cx-local-2026-bexar-appraisal-director-place-1",
+          "givenName": "",
+          "familyName": "Susan Bayne",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 1 \n(Para Director, Lugar Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Susan Bayne \n⬭ Diana Arévalo"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-1:diana-arevalo",
+          "contestId": "tx-cx-local-2026-bexar-appraisal-director-place-1",
+          "givenName": "",
+          "familyName": "Diana Arévalo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 1 \n(Para Director, Lugar Núm. 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Susan Bayne \n⬭ Diana Arévalo"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-2:leticia-anguiano",
+          "contestId": "tx-cx-local-2026-bexar-appraisal-director-place-2",
+          "givenName": "",
+          "familyName": "Leticia Anguiano",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 2 \n(Para Director, Lugar Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Leticia Anguiano\n⬭ Erika Hizel"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-2:erika-hizel",
+          "contestId": "tx-cx-local-2026-bexar-appraisal-director-place-2",
+          "givenName": "",
+          "familyName": "Erika Hizel",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 2 \n(Para Director, Lugar Núm. 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Leticia Anguiano\n⬭ Erika Hizel"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-appraisal-director-place-3:jon-melendez",
+          "contestId": "tx-cx-local-2026-bexar-appraisal-director-place-3",
+          "givenName": "",
+          "familyName": "Jon Melendez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director, Place No. 3 \n(Para Director, Lugar Núm. 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Jon Melendez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-2:renee-paschall",
+          "contestId": "tx-cx-local-2026-converse-city-council-place-2",
+          "givenName": "",
+          "familyName": "Renée Paschall",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 2 \n(Para Ayuntamiento, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Renée Paschall \n⬭ Orlando D. Cruz"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-2:orlando-d-cruz",
+          "contestId": "tx-cx-local-2026-converse-city-council-place-2",
+          "givenName": "",
+          "familyName": "Orlando D. Cruz",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 2 \n(Para Ayuntamiento, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Renée Paschall \n⬭ Orlando D. Cruz"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-4:bradley-heinz",
+          "contestId": "tx-cx-local-2026-converse-city-council-place-4",
+          "givenName": "",
+          "familyName": "Bradley Heinz",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 4 \n(Para Ayuntamiento, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bradley Heinz \n⬭ Jessica Ann Hannah"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-4:jessica-ann-hannah",
+          "contestId": "tx-cx-local-2026-converse-city-council-place-4",
+          "givenName": "",
+          "familyName": "Jessica Ann Hannah",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 4 \n(Para Ayuntamiento, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Bradley Heinz \n⬭ Jessica Ann Hannah"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-6:nawid-zazai",
+          "contestId": "tx-cx-local-2026-converse-city-council-place-6",
+          "givenName": "",
+          "familyName": "Nawid Zazai",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 6 \n(Para Ayuntamiento, Lugar 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Nawid Zazai \n⬭ Nancy Droneburg\n⬭ Marc Gilbert"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-6:nancy-droneburg",
+          "contestId": "tx-cx-local-2026-converse-city-council-place-6",
+          "givenName": "",
+          "familyName": "Nancy Droneburg",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 6 \n(Para Ayuntamiento, Lugar 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Nawid Zazai \n⬭ Nancy Droneburg\n⬭ Marc Gilbert"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-converse-city-council-place-6:marc-gilbert",
+          "contestId": "tx-cx-local-2026-converse-city-council-place-6",
+          "givenName": "",
+          "familyName": "Marc Gilbert",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 6 \n(Para Ayuntamiento, Lugar 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Nawid Zazai \n⬭ Nancy Droneburg\n⬭ Marc Gilbert"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-live-oak-city-council-place-5:michael-llamas",
+          "contestId": "tx-cx-local-2026-live-oak-city-council-place-5",
+          "givenName": "",
+          "familyName": "Michael Llamas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 5 \n(Para Ayuntamiento, Lugar 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Llamas \n⬭ Jasmine Johnson"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-live-oak-city-council-place-5:jasmine-johnson",
+          "contestId": "tx-cx-local-2026-live-oak-city-council-place-5",
+          "givenName": "",
+          "familyName": "Jasmine Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 5 \n(Para Ayuntamiento, Lugar 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Llamas \n⬭ Jasmine Johnson"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-mayor:michael-martinez-jr",
+          "contestId": "tx-cx-local-2026-sandy-oaks-mayor",
+          "givenName": "",
+          "familyName": "Michael Martinez Jr",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Mayor \n(Para Alcalde) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Martinez Jr"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-alderman-place-2:douglas-tomasini",
+          "contestId": "tx-cx-local-2026-sandy-oaks-alderman-place-2",
+          "givenName": "",
+          "familyName": "Douglas Tomasini",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Alderman, Place 2 \n(Para Concejal, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Douglas Tomasini\n⬭ Priscilla Schmitt"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-alderman-place-2:priscilla-schmitt",
+          "contestId": "tx-cx-local-2026-sandy-oaks-alderman-place-2",
+          "givenName": "",
+          "familyName": "Priscilla Schmitt",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Alderman, Place 2 \n(Para Concejal, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Douglas Tomasini\n⬭ Priscilla Schmitt"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-alderman-place-3:lamar-mcneal",
+          "contestId": "tx-cx-local-2026-sandy-oaks-alderman-place-3",
+          "givenName": "",
+          "familyName": "Lamar McNeal",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Alderman, Place 3 \n(Para Concejal, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Lamar McNeal"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-sandy-oaks-alderman-place-4:cj-walker",
+          "contestId": "tx-cx-local-2026-sandy-oaks-alderman-place-4",
+          "givenName": "",
+          "familyName": "CJ Walker",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Alderman, Place 4 \n(Para Concejal, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ CJ Walker"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-3:paul-macaluso",
+          "contestId": "tx-cx-local-2026-schertz-city-council-place-3",
+          "givenName": "",
+          "familyName": "Paul Macaluso",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 3 \n(Para Concejo de la Ciudad, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Paul Macaluso\n⬭ Billie Langhus"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-3:billie-langhus",
+          "contestId": "tx-cx-local-2026-schertz-city-council-place-3",
+          "givenName": "",
+          "familyName": "Billie Langhus",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 3 \n(Para Concejo de la Ciudad, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Paul Macaluso\n⬭ Billie Langhus"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-4:kenneth-e-ratcliff",
+          "contestId": "tx-cx-local-2026-schertz-city-council-place-4",
+          "givenName": "",
+          "familyName": "Kenneth E. Ratcliff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 4 \n(Para Concejo de la Ciudad, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Kenneth E. Ratcliff \n⬭ Benjamin Guerrero"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-4:benjamin-guerrero",
+          "contestId": "tx-cx-local-2026-schertz-city-council-place-4",
+          "givenName": "",
+          "familyName": "Benjamin Guerrero",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 4 \n(Para Concejo de la Ciudad, Lugar 4) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Kenneth E. Ratcliff \n⬭ Benjamin Guerrero"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-5:robert-m-westbrook",
+          "contestId": "tx-cx-local-2026-schertz-city-council-place-5",
+          "givenName": "",
+          "familyName": "Robert M. Westbrook",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 5 \n(Para Concejo de la Ciudad, Lugar 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Robert M. Westbrook\n⬭ Jonathon A. Marquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-schertz-city-council-place-5:jonathon-a-marquez",
+          "contestId": "tx-cx-local-2026-schertz-city-council-place-5",
+          "givenName": "",
+          "familyName": "Jonathon A. Marquez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 5 \n(Para Concejo de la Ciudad, Lugar 5) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Robert M. Westbrook\n⬭ Jonathon A. Marquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-1:narquiz-cervantes",
+          "contestId": "tx-cx-local-2026-windcrest-city-council-place-1",
+          "givenName": "",
+          "familyName": "Narquiz Cervantes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 1 \n(Para Concejo de la Ciudad, Lugar 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Narquiz Cervantes\n⬭ Susie Hamilton \n⬭ Joan Pedrotti"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-1:susie-hamilton",
+          "contestId": "tx-cx-local-2026-windcrest-city-council-place-1",
+          "givenName": "",
+          "familyName": "Susie Hamilton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 1 \n(Para Concejo de la Ciudad, Lugar 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Narquiz Cervantes\n⬭ Susie Hamilton \n⬭ Joan Pedrotti"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-1:joan-pedrotti",
+          "contestId": "tx-cx-local-2026-windcrest-city-council-place-1",
+          "givenName": "",
+          "familyName": "Joan Pedrotti",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 1 \n(Para Concejo de la Ciudad, Lugar 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Narquiz Cervantes\n⬭ Susie Hamilton \n⬭ Joan Pedrotti"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-2:cindy-strzelecki",
+          "contestId": "tx-cx-local-2026-windcrest-city-council-place-2",
+          "givenName": "",
+          "familyName": "Cindy Strzelecki",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 2 \n(Para Concejo de la Ciudad, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Cindy Strzelecki\n⬭ Sue Alexander"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-2:sue-alexander",
+          "contestId": "tx-cx-local-2026-windcrest-city-council-place-2",
+          "givenName": "",
+          "familyName": "Sue Alexander",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 2 \n(Para Concejo de la Ciudad, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Cindy Strzelecki\n⬭ Sue Alexander"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-3:greg-turner",
+          "contestId": "tx-cx-local-2026-windcrest-city-council-place-3",
+          "givenName": "",
+          "familyName": "Greg Turner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 3 \n(Para Consejo de la Ciudad, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Greg Turner \n⬭ Robert Maloy"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-windcrest-city-council-place-3:robert-maloy",
+          "contestId": "tx-cx-local-2026-windcrest-city-council-place-3",
+          "givenName": "",
+          "familyName": "Robert Maloy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For City Council, Place 3 \n(Para Consejo de la Ciudad, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Greg Turner \n⬭ Robert Maloy"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-1:dora-maldonado",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-1",
+          "givenName": "",
+          "familyName": "Dora Maldonado",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 1 \n(Para Regente, Lugar 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Dora Maldonado \n⬭ James Hernandez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-1:james-hernandez",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-1",
+          "givenName": "",
+          "familyName": "James Hernandez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 1 \n(Para Regente, Lugar 1) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Dora Maldonado \n⬭ James Hernandez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-2:frank-espinosa",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-2",
+          "givenName": "",
+          "familyName": "Frank Espinosa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 2 \n(Para Regente, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Frank Espinosa \n⬭ Elias Hernandez \n⬭ Jose \"Joe\" Gallegos II"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-2:elias-hernandez",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-2",
+          "givenName": "",
+          "familyName": "Elias Hernandez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 2 \n(Para Regente, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Frank Espinosa \n⬭ Elias Hernandez \n⬭ Jose \"Joe\" Gallegos II"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-2:jose-joe-gallegos-ii",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-2",
+          "givenName": "",
+          "familyName": "Jose \"Joe\" Gallegos II",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 2 \n(Para Regente, Lugar 2) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Frank Espinosa \n⬭ Elias Hernandez \n⬭ Jose \"Joe\" Gallegos II"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-3:dorothy-borjas",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-3",
+          "givenName": "",
+          "familyName": "Dorothy Borjas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 3 \n(Para Regente, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Dorothy Borjas \n⬭ Richard Santoyo"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-3:richard-santoyo",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-3",
+          "givenName": "",
+          "familyName": "Richard Santoyo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 3 \n(Para Regente, Lugar 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Dorothy Borjas \n⬭ Richard Santoyo"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-6:michael-valdez",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-6",
+          "givenName": "",
+          "familyName": "Michael Valdez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 6 \n(Para Regente, Lugar 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Valdez\n⬭ Joey Cipriano"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edgewood-4818150-trustee-place-6:joey-cipriano",
+          "contestId": "tx-cx-local-2026-edgewood-4818150-trustee-place-6",
+          "givenName": "",
+          "familyName": "Joey Cipriano",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Place 6 \n(Para Regente, Lugar 6) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Michael Valdez\n⬭ Joey Cipriano"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-somerset-isd-trustee-district-3:albert-herrera",
+          "contestId": "tx-cx-local-2026-somerset-isd-trustee-district-3",
+          "givenName": "",
+          "familyName": "Albert Herrera",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Single Member \nDistrict 3 \n(Para Regente, Distrito de un Solo \nMiembro 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Albert Herrera\n⬭ Doug Black"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-somerset-isd-trustee-district-3:doug-black",
+          "contestId": "tx-cx-local-2026-somerset-isd-trustee-district-3",
+          "givenName": "",
+          "familyName": "Doug Black",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Single Member \nDistrict 3 \n(Para Regente, Distrito de un Solo \nMiembro 3) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Albert Herrera\n⬭ Doug Black"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-somerset-isd-trustee-district-7:robert-a-casias",
+          "contestId": "tx-cx-local-2026-somerset-isd-trustee-district-7",
+          "givenName": "",
+          "familyName": "Robert A. Casias",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Single Member \nDistrict 7 \n(Para Regente, Distrito de un Solo \nMiembro 7) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Robert A. Casias\n⬭ Emilio G. Arcos"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-somerset-isd-trustee-district-7:emilio-g-arcos",
+          "contestId": "tx-cx-local-2026-somerset-isd-trustee-district-7",
+          "givenName": "",
+          "familyName": "Emilio G. Arcos",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Trustee, Single Member \nDistrict 7 \n(Para Regente, Distrito de un Solo \nMiembro 7) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Robert A. Casias\n⬭ Emilio G. Arcos"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors:matthew-abrahamsen",
+          "contestId": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+          "givenName": "",
+          "familyName": "Matthew Abrahamsen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Permanent Director \n(Para Director Permanente) \nVote for none, one, two, three, four or five \n(Vote por ninguna, uno, dos, tres, cuatro o cinco) \n⬭ Matthew Abrahamsen\n⬭ Theodore Duano \n⬭ Andrew Macias \n⬭ Alberto Rodriguez\n⬭ Alejandro Silva"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors:theodore-duano",
+          "contestId": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+          "givenName": "",
+          "familyName": "Theodore Duano",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Permanent Director \n(Para Director Permanente) \nVote for none, one, two, three, four or five \n(Vote por ninguna, uno, dos, tres, cuatro o cinco) \n⬭ Matthew Abrahamsen\n⬭ Theodore Duano \n⬭ Andrew Macias \n⬭ Alberto Rodriguez\n⬭ Alejandro Silva"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors:andrew-macias",
+          "contestId": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+          "givenName": "",
+          "familyName": "Andrew Macias",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Permanent Director \n(Para Director Permanente) \nVote for none, one, two, three, four or five \n(Vote por ninguna, uno, dos, tres, cuatro o cinco) \n⬭ Matthew Abrahamsen\n⬭ Theodore Duano \n⬭ Andrew Macias \n⬭ Alberto Rodriguez\n⬭ Alejandro Silva"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors:alberto-rodriguez",
+          "contestId": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+          "givenName": "",
+          "familyName": "Alberto Rodriguez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Permanent Director \n(Para Director Permanente) \nVote for none, one, two, three, four or five \n(Vote por ninguna, uno, dos, tres, cuatro o cinco) \n⬭ Matthew Abrahamsen\n⬭ Theodore Duano \n⬭ Andrew Macias \n⬭ Alberto Rodriguez\n⬭ Alejandro Silva"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors:alejandro-silva",
+          "contestId": "tx-cx-local-2026-bexar-county-mud-1-permanent-directors",
+          "givenName": "",
+          "familyName": "Alejandro Silva",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Permanent Director \n(Para Director Permanente) \nVote for none, one, two, three, four or five \n(Vote por ninguna, uno, dos, tres, cuatro o cinco) \n⬭ Matthew Abrahamsen\n⬭ Theodore Duano \n⬭ Andrew Macias \n⬭ Alberto Rodriguez\n⬭ Alejandro Silva"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edwards-aquifer-authority-director-district-1:joey-groff",
+          "contestId": "tx-cx-local-2026-edwards-aquifer-authority-director-district-1",
+          "givenName": "",
+          "familyName": "Joey Groff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director \n(Para Director) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Joey Groff\n⬭ Carol G. Patterson"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-edwards-aquifer-authority-director-district-1:carol-g-patterson",
+          "contestId": "tx-cx-local-2026-edwards-aquifer-authority-director-district-1",
+          "givenName": "",
+          "familyName": "Carol G. Patterson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+            "sourceOrg": "Bexar County Elections Department",
+            "collectedAt": "2026-11-03T04:03:26.357722+00:00",
+            "verifiedAt": "2026-11-03T04:03:26.357722+00:00",
+            "quote": "For Director \n(Para Director) \nVote for none or one \n(Vote por ninguno o uno) \n⬭ Joey Groff\n⬭ Carol G. Patterson"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "Bexar County local candidate coverage:67 complete printed office fields and106 named choices from the current official generic sample ballot. Includes21 countywide offices,15 district judges,1 regional appellate chief,5 county commissioner/justice precinct contests,3 appraisal director places,14 municipal seats,6 school trustee contests, MUD1 permanent directors and Edwards Aquifer director district1.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:bexar"
+            ]
+          }
+        },
+        {
+          "text": "The36 already-held county/district-judge contest identities and all45 corresponding candidacy identities are preserved;31 local races and61 choices were missing. Federal, statewide and legislative data and existing measure texts/explainers remain outside this focused installation. Local bond/tax/charter propositions remain open candidate-independent coverage work and their complete original samples are retained.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:bexar"
+            ]
+          }
+        },
+        {
+          "text": "Numbered at-large city and Edgewood school places use their whole exact government electorate. Somerset single-member districts, commissioner precincts, justice precincts, MUD1, appraisal, aquifer and regional judicial territory retain precise separate division keys. Exact unmatched reader memberships remain listed in the installation manifest; no electoral district is widened to Bexar County.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:bexar"
+            ]
+          }
+        },
+        {
+          "text": "Blank write-in lines are not people. Separately named declared write-in certification remains acquisition work. This packet establishes all named candidate office blocks printed in the two linked current generic sample documents; individualized address-specific sample parity and exact district reader memberships remain open.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:bexar"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:14:47.739038+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://elections.bexar.gov/GenSampleBallot",
+        "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1708/Generic-Sample-Ballot",
+        "httpStatus": 200,
+        "rawHash": "618a0dafdb6eac0f97a7fa6e9a9696cd89763786107b361928fdb3e383cdb7af",
+        "retrievedAt": "2026-11-03T04:03:26.357722+00:00",
+        "publisher": "Bexar County Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://elections.bexar.gov/163/Election-Information",
+        "reviewedEvidence": "Complete official Bexar County November3,2026 four-page generic Joint General, Special, Charter and Bond sample ballot; nativePDF bytes retained unchanged. All67 local named candidate office blocks read in full from all3 columns of every page, including all106 choices, printed party abbreviations, unopposed people and five-seat MUD director field. Each office candidate block independently replayed against saved native column text and visually checked on original full-page renders. Federal/statewide/legislative contests and statewide15thCourt of Appeals excluded. Generic blank write-in slots are not people. Exact city/school/special/precinct/court territories retained; no district fallback to county. All printed names, accents and party abbreviations are preserved exactly; no candidate addresses appear in reader quotes."
+      }
+    ]
+  }
+}

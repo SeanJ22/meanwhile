@@ -248,7 +248,7 @@ export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, 
   for (const [findingIndex, finding] of result.findings.entries()) {
     const subjectId = finding.subjectId ?? result.subjectId;
     const lead = finding.field && finding.value !== undefined && finding.value !== null ? leadOf({ subjectId, field: finding.field, value: finding.value,
-      recordClass: result.recordClass ?? null, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null, recordedAt: result.recordedAt, workItemId: result.workItemId }) : null;
+      recordClass: result.recordClass ?? null, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null, recordedAt: result.recordedAt, workItemId: result.workItemId, artifactIds: finding.artifactIds }) : null;
     if (lead) { links.push(lead); continue; }
     indexed.push(await indexBoxFinding(repo, {
       subjectId, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null,
@@ -269,7 +269,7 @@ export async function indexReportedFinding(repo: AggregateRepository<BoxFinding>
 }, now: string): Promise<{ readonly id: string; readonly row: BoxFinding | null }> {
   const { finding } = input;
   const lead = leadOf({ subjectId: finding.subjectId, field: finding.field, value: finding.value, recordClass: null, exactQuote: finding.exactQuote,
-    sourceUrl: finding.sourceUrl, recordedAt: now, workItemId: input.workItemId });
+    sourceUrl: finding.sourceUrl, recordedAt: now, workItemId: input.workItemId, artifactIds: finding.artifactIds });
   if (lead) { await fileLeads([lead]); return { id: workId(lead), row: null }; }
   const row = await indexBoxFinding(repo, { subjectId: finding.subjectId, exactQuote: finding.exactQuote, sourceUrl: finding.sourceUrl,
     origin: { kind: "SCOUT", resultId: input.attemptId, ...(input.obligationId ? { resultKey: input.obligationId } : {}), workItemId: input.workItemId,

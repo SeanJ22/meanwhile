@@ -1,4 +1,4 @@
-import {controlPlaneQuery,workList,type WorkList,type WorkRow} from '../core/work.ts';
+import type {WorkList,WorkRow} from '../core/work.ts';
 
 /** A link that could not be read this many times is a dead end that waits for a better way to read it. */
 const ATTEMPTS=5;
@@ -6,10 +6,6 @@ const ATTEMPTS=5;
 const REST_MS=5*24*3600000;
 export interface WalkLead {url:string;bodyId?:string}
 export interface HandedLinks {readonly leads:readonly WalkLead[];readonly claims:ReadonlyMap<string,WorkRow>}
-
-let shared:WorkList|undefined;
-/** The walk's own handle on the work list; a link it takes is its for the length of one walk. */
-export const walkList=():WorkList=>shared??=workList(controlPlaneQuery(),{owner:'site-walk',leaseMs:300_000});
 
 const host=(url:string)=>{try{return new URL(url).hostname.toLowerCase().replace(/^www\./,'');}catch{return null;}};
 

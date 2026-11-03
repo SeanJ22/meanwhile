@@ -323,7 +323,7 @@ async function publishBoxPass(input: {
     // A link is a page to go read: it goes on the work list, where its kind of website's reader or the next walk of the government's own site takes it.
     if ("handoff" in slot && slot.handoff === "site-walk") {
       const lead = leadOf({ subjectId: row.subjectId, field: raw.field, value: raw.value, recordClass: raw.recordClass, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl,
-        recordedAt: row.lastRecordedAt ?? raw.origin.recordedAt, workItemId: raw.origin.workItemId, alsoOn: otherSources(row).map(other => other.sourceUrl) });
+        recordedAt: row.lastRecordedAt ?? raw.origin.recordedAt, workItemId: raw.origin.workItemId, artifactIds: raw.origin.artifactIds, alsoOn: otherSources(row).map(other => other.sourceUrl) });
       if (!lead) { await hold(row, slot.class, "LINK_IS_NOT_AN_ADDRESS"); continue; }
       await fileLeads([lead]); await wait(row, slot.class, SITE_WALK_LEAD); report.handed++; continue;
     }

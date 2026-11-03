@@ -1,3 +1,4 @@
+import {installLeadList} from './helpers/lead-list.ts';
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -610,6 +611,7 @@ test("a meetings route with a known address is carried by what the partition wir
 });
 
 test("materialized meetings hunts keep their identities and read the government's own website for free", async () => {
+  await installLeadList();
   const empty = meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }) }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(empty.obligations.length, 0);
   assert.match(empty.emptyReason ?? "", /no registered government website/);

@@ -18,7 +18,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
 import { CAPABILITY_DDL } from "../../core/capability.ts";
-import { LEAD_DDL, WORK_DDL, WORK_RUN_DDL } from "../../core/work.ts";
+import { LEAD_DDL, LEAD_GOVERNMENT_DDL, WORK_DDL, WORK_RUN_DDL } from "../../core/work.ts";
 import { KEYS_DDL } from "../../core/keys-store.ts";
 
 export const BOOTSTRAP_VERSION = 34;
@@ -725,6 +725,7 @@ END $$;`,
   ...WORK_DDL,
   ...WORK_RUN_DDL,
   ...LEAD_DDL,
+  ...LEAD_GOVERNMENT_DDL,
   ...CAPABILITY_DDL,
   ...MODEL_CHARGE_KIND_DDL,
 

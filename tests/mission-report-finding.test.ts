@@ -68,7 +68,8 @@ test("a dropped finding lands in the Box under the reporting work item, once", a
   const repos = createMemoryRepositories();
   const finding = { subjectId: CITY, field: "name", value: "Lee Park", exactQuote: "The city of Beta's mayor is Lee Park.", sourceUrl: PAGE,
     artifactIds: ["held-page"], subjectHint: "Beta's mayor", index: 0 };
-  const row = await indexReportedFinding(repos.boxFindings, { workItemId: "wi-county", attemptId: "at-mission", missionPart: "people-money", finding }, NOW);
+  const { row } = await indexReportedFinding(repos.boxFindings, { workItemId: "wi-county", attemptId: "at-mission", missionPart: "people-money", finding }, NOW);
+  assert.ok(row);
   assert.equal(row.state, "waiting");
   assert.equal(row.subjectId, CITY);
   assert.deepEqual(row.origins[0]!.reported, { field: "name", value: "Lee Park", subjectHint: "Beta's mayor" });

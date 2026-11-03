@@ -1,3 +1,4 @@
+import {installLeadList} from './helpers/lead-list.ts';
 import test from "node:test";
 import assert from 'node:assert/strict';
 import {placeSourceExecutor} from '../lib/hunt/own-site-runtime.ts';
@@ -13,6 +14,7 @@ import {indexReportedFinding} from '../lib/control-plane/box.ts';
 import {factClocks} from '../lib/facts/clocks.ts';
 
 test("own-site calendar observations retain their parent link and platform URLs remain unrequested leads", async () => {
+  await installLeadList();
   const facts=await factDb(),repos=createMemoryRepositories(),vault=new MemoryEvidenceStore();
   const now=new Date().toISOString(),place='ocd-division/country:us/state:az/place:example',government='az:city:example',body=place+'#governing';
   for(const entity of [{id:place,kind:'place',name:'Example',state:'AZ',parentId:null},{id:government,kind:'government',name:'Example',state:'AZ',parentId:place},{id:body,kind:'body',name:'City Council',state:'AZ',parentId:government}])await ensureEntity(facts.query,entity as never);
@@ -40,6 +42,7 @@ test("own-site calendar observations retain their parent link and platform URLs 
 });
 
 test("a member page a hunter found, linked from nowhere the walk would look, is read first and its members reach the board's live page", async () => {
+  const {list}=await installLeadList();
   const facts=await factDb(),repos=createMemoryRepositories(),vault=new MemoryEvidenceStore();
   const now=new Date().toISOString(),place='ocd-division/country:us/state:al/place:example',government='al:city:city-of-example',body=government+'#governing';
   for(const entity of [{id:place,kind:'place',name:'Example',state:'AL',parentId:null},{id:government,kind:'government',name:'City of Example',state:'AL',parentId:place}])await ensureEntity(facts.query,entity as never);
@@ -58,12 +61,13 @@ test("a member page a hunter found, linked from nowhere the walk would look, is 
   const handed=await publish();
   // Intake hands the link to the walk when it arrives; the publisher spends no turn on it.
   assert.deepEqual([handed.looked,handed.handed,handed.published],[0,0,0],'the link is handed to the walk at intake, not parked or published');
-  assert.deepEqual((await repos.boxFindings.mustRead(link.id)).value.waitingFor?.reason,'SITE_WALK_TAKES_IT');
+  assert.equal(link.row,null,'the Box holds no link');
+  assert.equal((await list.ready(['lead'])),true,'the link waits on the work list');
   const run=placeSourceExecutor({repos,scope:{jurisdictionId:government,governmentId:government,bodyId:body,name:'City of Example',state:'AL',website:'https://example.gov/'},query:facts.query,now:()=>now,readHeldPage:async()=>null,spaceOut:async()=>{},vault:async(a,text)=>{const saved=await putArtifact(vault,'freshness',a,Buffer.from(text));return {stored:true,where:saved.key,why:'saved'};},open:async({url})=>{seen.push(url);const text=pages[url];assert.ok(text,'unexpected source '+url);return {status:200,body:text,bytes:Buffer.byteLength(text),contentType:url.endsWith('robots.txt')?'text/plain':'text/html',durationMs:1,transportError:null};}});
   const outcome=await run(job);
   assert.equal(outcome.kind,'DISPOSED');
   assert.ok(seen.indexOf(MEMBERS)>=0 && seen.indexOf(MEMBERS)<seen.indexOf('https://example.gov/'),'the handed page is read before the home page: '+seen.join(' '));
-  assert.equal((await repos.boxFindings.mustRead(link.id)).value.state,'built','a link that was read is done');
+  assert.equal((await list.ready(['lead'])),false,'a link that was read is done');
   await publish();
   const members=await facts.query("SELECT e.id,f.value->>'name' AS name FROM fact f JOIN entity e ON e.id=f.entity_id WHERE e.parent_id=$1 AND f.status='live' AND f.field LIKE 'member:%' ORDER BY name",[government]);
   assert.deepEqual(members.map(row=>row.name),['Jane Doe','John Smith']);

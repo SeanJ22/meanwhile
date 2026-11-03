@@ -1,3 +1,4 @@
+import {installLeadList} from './helpers/lead-list.ts';
 import {ensureHuntBodyTarget} from '../lib/hunt/body-target.ts';
 import {heldCaptureReader} from '../lib/civic-data/worker-publication-context.ts';
 import test from "node:test";
@@ -15,6 +16,7 @@ import type {SitePage} from '../lib/hunt/site-findings.ts';
 import {factClocks} from '../lib/facts/clocks.ts';
 
 test("a government source reads despite advisory robots and passes saved evidence to the existing Box publisher", async () => {
+  await installLeadList();
   const facts=await factDb(),vault=new MemoryEvidenceStore();
   let repos=createMemoryRepositories();
   let readHeldPage:(url:string)=>Promise<SitePage|null>=async()=>null;

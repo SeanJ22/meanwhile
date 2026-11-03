@@ -1,3 +1,4 @@
+import {installLeadList} from './helpers/lead-list.ts';
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -235,6 +236,7 @@ test("a packet hunter's findings publish for the subject each names, not the job
 });
 
 test("each checklist id goes where its record publishes: body links, the agenda route, an official host, a sitting, ballot navigation and campaign-site leads", async () => {
+  const { list } = await installLeadList();
   const { facts, repos, vault, hold } = await setup();
   const commission = await hold(TCCC_URL, B15, "2026-09-01T15:00:00.000Z");
   const RECORDER = "https://recorder.pima.gov/voter-registration";
@@ -279,7 +281,9 @@ test("each checklist id goes where its record publishes: body links, the agenda 
   const navigation = await readElectionFieldsForDivisions([TUCSON], { store, now: NOW });
   assert.deepEqual(navigation.fields.map(field => [field.value.fieldKind, field.value.navigationUrl]), [["registration_lookup", "https://my.arizona.vote/"]]);
   const reasons = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
-  assert.deepEqual(reasons, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "LOOKUP_KIND_NOT_STATED", "SITE_WALK_TAKES_IT", "TAKES_WHOLE_RECORDS_ONLY"]);
+  assert.deepEqual(reasons, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "LOOKUP_KIND_NOT_STATED", "TAKES_WHOLE_RECORDS_ONLY"]);
+  const [link] = await list.claim("lead", 5);
+  assert.deepEqual([link?.url, link?.subjectId, link?.reports[0]?.quote], [agenda, `${TCCC}#calendar`, "Current Agenda"], "the agenda link is on the work list, not in the Box");
 
   const hobbs: CampaignSiteSubject = { candidacyId: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs", officeTitle: "Governor",
     ocdId: "ocd-division/country:us/state:az", stateCode: "AZ", cycle: 2026, readerKeys: [], filingDomains: [] };

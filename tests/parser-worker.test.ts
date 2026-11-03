@@ -172,7 +172,7 @@ test("a page found under two governments is fetched once and its facts are filed
   const maricopa = productionLead({ subjectId: "az:county:county-of-maricopa#governing", placeId: "az:county:county-of-maricopa", source: { source: "Found by a hunter", foundOn: GOVERNMENT_PAGE } });
   await list.addMany([productionLead(), maricopa]);
   assert.equal(Number((await facts.query(`SELECT count(*) AS n FROM work WHERE kind = 'lead'`))[0]!.n), 1, "one address is one row");
-  assert.equal((await facts.query(`SELECT reports FROM work WHERE kind = 'lead'`))[0]!.reports.length, 2, "with a report for each government");
+  assert.equal(((await facts.query(`SELECT reports FROM work WHERE kind = 'lead'`))[0]!.reports as unknown[]).length, 2, "with a report for each government");
 
   const first = await run(1);
   assert.equal(first.published, 2, "the calendar's board page is a fact for each government");
@@ -180,7 +180,7 @@ test("a page found under two governments is fetched once and its facts are filed
   const entities = async () => (await facts.query(`SELECT entity_id FROM fact WHERE field = 'agenda_url' AND status = 'live' ORDER BY entity_id`)).map(row => row.entity_id);
   assert.deepEqual(await entities(), ["ocd-division/country:us/state:az/county:maricopa#governing", "ocd-division/country:us/state:az/county:pima#governing"]);
   const children = await facts.query(`SELECT reports FROM work WHERE kind = 'lead' AND url <> $1 LIMIT 1`, [URL_OF_LEAD]);
-  assert.equal(children[0]!.reports.length, 2, "each new link is found for both governments");
+  assert.equal((children[0]!.reports as unknown[]).length, 2, "each new link is found for both governments");
 
   // A third government finds the same page later: it waits again, and is filed for it too.
   await list.addMany([productionLead({ subjectId: "az:county:county-of-pinal#governing", placeId: "az:county:county-of-pinal" })]);

@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-03T09:00:57.239162+00:00",
+  "preparedAt": "2026-11-03T09:44:56.623863+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -694,7 +694,7 @@
     }
   ],
   "activeFocus": "EXPLAINERS_ONLY",
-  "explainersPreparedThroughCommit": "f09ad76e41c0be69808173cb32dc9bb53bb96b50",
+  "explainersPreparedThroughCommit": "2cfc8388571f733cf80fe6eaddb428582a4eb447",
   "states": [
     {
       "state": "AK",
@@ -764,7 +764,7 @@
     },
     {
       "state": "CA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 162,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 181,
       "dataInstalls": [
         {
           "manifest": "CA/explainer-expansion/alameda-city/install.json",
@@ -841,6 +841,54 @@
         {
           "manifest": "CA/explainer-expansion/los-angeles-schools/install.json",
           "preparedExplainers": 13,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-college-ab/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-county-p/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-healthcare-cc/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-qrs/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-schools-no/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-special-six/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-tx/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-uvw/install.json",
+          "preparedExplainers": 3,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -986,7 +1034,7 @@
     },
     {
       "state": "CO",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 201,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 213,
       "dataInstalls": [
         {
           "manifest": "CO/explainer-expansion/adams/install.json",
@@ -1027,6 +1075,12 @@
         {
           "manifest": "CO/explainer-expansion/broomfield/install.json",
           "preparedExplainers": 3,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/chaffee/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CO",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1103,6 +1157,12 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CO/explainer-expansion/judicial12/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/explainer-expansion/laplata/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:CO",
@@ -1127,8 +1187,26 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CO/explainer-expansion/montezuma/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/explainer-expansion/montrose/install.json",
           "preparedExplainers": 4,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/ouray/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/phillips/install.json",
+          "preparedExplainers": 2,
           "contractId": "ballot-contests:CO",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1147,6 +1225,12 @@
         {
           "manifest": "CO/explainer-expansion/routt/install.json",
           "preparedExplainers": 5,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/sanmiguel/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CO",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1187,6 +1271,12 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CO/explainer-expansion/yuma/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/install.json",
           "preparedExplainers": 19,
           "contractId": "ballot-contests:CO",
@@ -1196,11 +1286,17 @@
     },
     {
       "state": "CT",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 51,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 52,
       "dataInstalls": [
         {
           "manifest": "CT/explainer-expansion/coventry-supplement/install.json",
           "preparedExplainers": 2,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CT/explainer-expansion/danbury-other-supplement/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CT",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1274,7 +1370,7 @@
     },
     {
       "state": "FL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 73,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 91,
       "dataInstalls": [
         {
           "manifest": "FL/explainer-expansion/alachua/install.json",
@@ -1285,6 +1381,12 @@
         {
           "manifest": "FL/explainer-expansion/brevard/install.json",
           "preparedExplainers": 17,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/broward-county-school/install.json",
+          "preparedExplainers": 4,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1363,6 +1465,12 @@
         {
           "manifest": "FL/explainer-expansion/pasco-flagler/install.json",
           "preparedExplainers": 5,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/pinellas/install.json",
+          "preparedExplainers": 14,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1664,7 +1772,7 @@
     },
     {
       "state": "IA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 54,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 61,
       "dataInstalls": [
         {
           "manifest": "IA/explainer-expansion/bremer-keokuk/install.json",
@@ -1674,6 +1782,12 @@
         },
         {
           "manifest": "IA/explainer-expansion/burlington/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:IA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IA/explainer-expansion/central-dewitt/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:IA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
@@ -1691,7 +1805,19 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "IA/explainer-expansion/dickinson/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:IA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "IA/explainer-expansion/dubuque/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:IA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IA/explainer-expansion/emmetsburg/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:IA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
@@ -1757,6 +1883,12 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "IA/explainer-expansion/plymouth/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:IA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "IA/explainer-expansion/polk/install.json",
           "preparedExplainers": 2,
           "contractId": "ballot-contests:IA",
@@ -1765,6 +1897,12 @@
         {
           "manifest": "IA/explainer-expansion/schools-three/install.json",
           "preparedExplainers": 3,
+          "contractId": "ballot-contests:IA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IA/explainer-expansion/sergeant-bluff-luton/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:IA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -2113,12 +2251,54 @@
       ]
     },
     {
-      "state": "NE",
+      "state": "ND",
       "uniquePreparedExplanationsOrAttachmentRepairs": 20,
+      "dataInstalls": [
+        {
+          "manifest": "ND/explainer-expansion/charter-three/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:ND",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "ND/explainer-expansion/city-three/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:ND",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "ND/explainer-expansion/county-seven/install.json",
+          "preparedExplainers": 7,
+          "contractId": "ballot-contests:ND",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "ND/explainer-expansion/first-three/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:ND",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "ND/explainer-expansion/simple-four/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:ND",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "NE",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 23,
       "dataInstalls": [
         {
           "manifest": "NE/explainer-expansion/deuel/install.json",
           "preparedExplainers": 4,
+          "contractId": "ballot-contests:NE",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NE/explainer-expansion/dodge/install.json",
+          "preparedExplainers": 3,
           "contractId": "ballot-contests:NE",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -2168,11 +2348,29 @@
     },
     {
       "state": "NJ",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 8,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 17,
       "dataInstalls": [
+        {
+          "manifest": "NJ/explainer-expansion/essex-supplement/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:NJ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "NJ/explainer-expansion/install.json",
           "preparedExplainers": 6,
+          "contractId": "ballot-contests:NJ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NJ/explainer-expansion/middlesex-supplement/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:NJ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NJ/explainer-expansion/monmouth-supplement/install.json",
+          "preparedExplainers": 4,
           "contractId": "ballot-contests:NJ",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -2690,8 +2888,8 @@
     }
   ],
   "currentExplainerPreparation": {
-    "uniquePreparedExplanationsOrAttachmentRepairs": 1812,
-    "statesAndDCWithPreparedChanges": 43,
+    "uniquePreparedExplanationsOrAttachmentRepairs": 1901,
+    "statesAndDCWithPreparedChanges": 44,
     "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
     "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",
     "knownBoundedInventoriesPrepared": {
@@ -2702,13 +2900,15 @@
       "MD": "51/51 current official statewide/local master-list measures have substantive explanations after prepared correction",
       "WI": "108/108 questions in official WEC October6 current referendum list have substantive explanations, including79/79 in the school-finance report. Two advisory response-choice lists remain unacquired; Yes/No meanings are null rather than invented. Other non-WEC local inventories not independently certified.",
       "DE": "530/530 published general-election sample descriptions checked;0measurequestions found;4heading conflicts resolved with original linked ballot images; separate local elections outside directory not established",
-      "CT": "51/53 questions in current official state sample-ballot inventory prepared or already explained; Danbury2 andNewCanaan6 adopted-text followups continue.",
+      "CT": "52/53 current official master-list questions; New Canaan question6 final adopted charter report not acquired",
       "RI": "106/106 distinct measures in current official inventory prepared, including94new municipal explainers. All39 sample question-number sets match103local slots (Chariho3slots collapse toone). Combined current reader/admission replayPASS, including full Providence/Tiverton improvements. Fuller unprinted charter details remain acquisition work where actual ballot is broad.",
       "CA_Alameda": "28/28 questions on current official Alameda local-measure inventory prepared, including the shared regional measure; otherCalifornia county inventories continue.",
       "GA_Cobb": "5/5 questions on current official Cobb consolidated sample supported:3held statewide+2newlocal, including Mabletonwithactualincorporatedcityfootprint verified; otherGeorgia county inventories continue.",
       "CA_SantaClara": "19/19 current official local questionsA–S prepared, plus already-held shared regionalRTM. Includes exactElCaminoHealthcare electoral map and Cambrianfulltext/advisory-continuation disclosure. OtherCalifornia counties remain open.",
       "NE_Lancaster": "10/10 questions in current official Questions/Referenda inventory prepared, includingDentonrecall. Nebraska local inventory continues.",
-      "NE_Douglas": "3/3 local questions in current official countywide sample prepared. Othercounty/independent inventories remain open."
+      "NE_Douglas": "3/3 local questions in current official countywide sample prepared. Othercounty/independent inventories remain open.",
+      "ND": "23/24 current official yes/no question slots covered after queued packets; Cedar River Ambulance exact question/electorate remains source acquisition",
+      "CA:Marin": "19/20 county-listed local measures prepared; Upper Bay Road FF parcel electorate remains source acquisition"
     },
     "activeWork": "Continue official local-measure inventories in every state and prepare each missing source-linked neutral explainer."
   }

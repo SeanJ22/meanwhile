@@ -1,0 +1,14 @@
+{
+  "state": "IN",
+  "records": 1,
+  "checks": "PASS",
+  "readerAttachmentWithExistingTranslations": "PASS",
+  "measureRecordIssue": "PASS",
+  "sourceByteAndExactQuoteChecks": "PASS",
+  "officialSourceAuthority": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "selectedPublishedMeasureRowsAndOtherExplanations": "UNCHANGED",
+  "verificationScope": "Fresh measure-only published snapshot plus existing source receipts. Candidate rows are neither read into this packet nor modified; parent should replay full state publication before installation."
+}

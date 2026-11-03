@@ -1,0 +1,12 @@
+{
+  "kind": "OFFLINE_SOURCE_GUARDED_THREE_ROW_RETRACTION_CHECK",
+  "basis": "Held full VT repository ballot plus superseded23 branch packet; no production database read or write",
+  "sourceGuards": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "manualAuthority": true,
+  "preciseRowsRemoved": 3,
+  "unrelatedRowsAndCandidatesRetained": "PASS",
+  "readerContestAndExplainerAbsent": "PASS",
+  "conditionalNoOpOnChangedSource": "Required by withdrawal data instruction; no blind production removal",
+  "productionWrites": 0
+}

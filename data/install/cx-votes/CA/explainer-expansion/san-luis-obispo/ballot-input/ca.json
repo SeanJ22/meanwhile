@@ -1,0 +1,376 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-luis-obispo-a",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:grover_beach",
+          "title": "Grover Beach — Measure A-26",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-24-56",
+            "collectedAt": "2026-11-03T04:52:00.955316+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.955316+00:00",
+            "quote": "Shall the current appointive Office of the City Clerk be required to be an elected position?"
+          },
+          "measureTextUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-24-56",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-c",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:arroyo_grande",
+          "title": "Arroyo Grande — Measure C-26",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-045",
+            "collectedAt": "2026-11-03T04:52:00.905701+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.905701+00:00",
+            "quote": "Shall the measure to maintain Arroyo Grande City services, including public safety, road maintenance, infrastructure repair, recreational programs, and other general City services by enacting a tax of up to 10% of gross receipts on cannabis businesses operating in the city if such businesses are permitted, estimated to generate approximately $500,000 annually, with spending oversight and until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-045",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-d",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:arroyo_grande",
+          "title": "Arroyo Grande — Measure D-26",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-047",
+            "collectedAt": "2026-11-03T04:52:00.934770+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.934770+00:00",
+            "quote": "Shall the measure to repeal and replace Measure A (1990) and Measure E-16 (2016) to allow the City of Arroyo Grande to participate in the California State Water Project without requiring prior voter approval, providing another potential water supply source, be adopted?"
+          },
+          "measureTextUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-047",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-e",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:pismo_beach",
+          "title": "Pismo Beach — Measure E-26",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-r-2026-043",
+            "collectedAt": "2026-11-03T04:52:01.691489+00:00",
+            "verifiedAt": "2026-11-03T04:52:01.691489+00:00",
+            "quote": "FOUR-YEAR MAYORAL TERMS MEASURE. Shall the measure changing the Mayor’s term of office to four years, beginning with the term elected on November 7, 2028, be adopted?"
+          },
+          "measureTextUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-r-2026-043",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-f",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:grover_beach",
+          "title": "Grover Beach — Measure F-26",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-20",
+            "collectedAt": "2026-11-03T04:52:00.974909+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.974909+00:00",
+            "quote": "Grover Beach Citizen Initiative Ballot Measure. Shall the City of Grover Beach implement a building height limit and establish a minimum thirty-three percent (33%) commercial component in mixed-use development?"
+          },
+          "measureTextUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-20",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-g",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:paso_robles_joint_unified_school_district",
+          "title": "Paso Robles Joint Unified School District — Measure G-26",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-26",
+            "collectedAt": "2026-11-03T04:52:00.975259+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.975259+00:00",
+            "quote": "With funds that cannot be taken by the State and spent elsewhere, shall Paso Robles Joint Unified School District’s measure to renovate and expand classrooms and career training facilities; and repair leaky roofs and inefficient heating and air-conditioning be adopted authorizing $205 million of bonds with legal rates, average levies below $50 per $100,000 of assessed value (raising $12.2 million annually) while outstanding, audits, taxpayer oversight, no funds for administrator salaries, pensions or benefits, and full disclosure of all spending?"
+          },
+          "measureTextUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-26",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-luis-obispo-a-text",
+          "contestId": "ca-2026-san-luis-obispo-a",
+          "officialNumber": "Measure A-26",
+          "questionText": "Shall the current appointive Office of the City Clerk be required to be an elected position?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-24-56",
+            "collectedAt": "2026-11-03T04:52:00.955316+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.955316+00:00",
+            "quote": "Shall the current appointive Office of the City Clerk be required to be an elected position?"
+          }
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-c-text",
+          "contestId": "ca-2026-san-luis-obispo-c",
+          "officialNumber": "Measure C-26",
+          "questionText": "Shall the measure to maintain Arroyo Grande City services, including public safety, road maintenance, infrastructure repair, recreational programs, and other general City services by enacting a tax of up to 10% of gross receipts on cannabis businesses operating in the city if such businesses are permitted, estimated to generate approximately $500,000 annually, with spending oversight and until ended by voters, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-045",
+            "collectedAt": "2026-11-03T04:52:00.905701+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.905701+00:00",
+            "quote": "Shall the measure to maintain Arroyo Grande City services, including public safety, road maintenance, infrastructure repair, recreational programs, and other general City services by enacting a tax of up to 10% of gross receipts on cannabis businesses operating in the city if such businesses are permitted, estimated to generate approximately $500,000 annually, with spending oversight and until ended by voters, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-d-text",
+          "contestId": "ca-2026-san-luis-obispo-d",
+          "officialNumber": "Measure D-26",
+          "questionText": "Shall the measure to repeal and replace Measure A (1990) and Measure E-16 (2016) to allow the City of Arroyo Grande to participate in the California State Water Project without requiring prior voter approval, providing another potential water supply source, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-047",
+            "collectedAt": "2026-11-03T04:52:00.934770+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.934770+00:00",
+            "quote": "Shall the measure to repeal and replace Measure A (1990) and Measure E-16 (2016) to allow the City of Arroyo Grande to participate in the California State Water Project without requiring prior voter approval, providing another potential water supply source, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-e-text",
+          "contestId": "ca-2026-san-luis-obispo-e",
+          "officialNumber": "Measure E-26",
+          "questionText": "FOUR-YEAR MAYORAL TERMS MEASURE. Shall the measure changing the Mayor’s term of office to four years, beginning with the term elected on November 7, 2028, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-r-2026-043",
+            "collectedAt": "2026-11-03T04:52:01.691489+00:00",
+            "verifiedAt": "2026-11-03T04:52:01.691489+00:00",
+            "quote": "FOUR-YEAR MAYORAL TERMS MEASURE. Shall the measure changing the Mayor’s term of office to four years, beginning with the term elected on November 7, 2028, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-f-text",
+          "contestId": "ca-2026-san-luis-obispo-f",
+          "officialNumber": "Measure F-26",
+          "questionText": "Grover Beach Citizen Initiative Ballot Measure. Shall the City of Grover Beach implement a building height limit and establish a minimum thirty-three percent (33%) commercial component in mixed-use development?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-20",
+            "collectedAt": "2026-11-03T04:52:00.974909+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.974909+00:00",
+            "quote": "Grover Beach Citizen Initiative Ballot Measure. Shall the City of Grover Beach implement a building height limit and establish a minimum thirty-three percent (33%) commercial component in mixed-use development?"
+          }
+        },
+        {
+          "id": "ca-2026-san-luis-obispo-g-text",
+          "contestId": "ca-2026-san-luis-obispo-g",
+          "officialNumber": "Measure G-26",
+          "questionText": "With funds that cannot be taken by the State and spent elsewhere, shall Paso Robles Joint Unified School District’s measure to renovate and expand classrooms and career training facilities; and repair leaky roofs and inefficient heating and air-conditioning be adopted authorizing $205 million of bonds with legal rates, average levies below $50 per $100,000 of assessed value (raising $12.2 million annually) while outstanding, audits, taxpayer oversight, no funds for administrator salaries, pensions or benefits, and full disclosure of all spending?",
+          "officialStatement": "Impartial Analysis of Measure G-26\n\nBonds are financial instruments used to borrow money. Under the California Constitution,\nschool districts may issue bonds if approved by at least 55 percent of voters within the\nboundaries of the district who are voting on a measure to authorize the issuance of bonds\nVoter-approved bond financing is a common financing method in California for funding new\nschool construction and other improvements to school facilities. Bonds are sold to the public\nand constitute a debt of the district. The principal and interest on the bonds are repaid by an\nannual property tax levy on all taxable real property within the jurisdiction of the school district,\ncalculated on the current assessed value of each property (an “ad valorem” tax).\n\nThe Board of Trustees of the Paso Robles Joint Unified School District (“the District”) has\nplaced Measure G-26 on the ballot, proposing the sale of bonds in an amount not to exceed\n$205 million at interest rates not to exceed legal limits. The District's Tax Rate Statement,\nincluded in the voter information guide, which was mailed to voters of the District, reflects an\nestimate of the maximum property tax levies required to service the bonds.\n\nIn accordance with California Constitution, Article XIIIA, proceeds from the sale of the bonds\nmay only be used for the construction, reconstruction, rehabilitation, replacement, furnishing\nand equipping of school facilities or the acquisition or lease of real property for school\nfacilities. (The specific improvement projects are described in the full text of the measure.)\nThe law prohibits the use of bond proceeds to pay for teacher and administrator salaries or\nother operational expenses.\n\nApproval of the measure does not guarantee that all proposed projects to be improved with\nbond proceeds will be funded beyond the local revenues generated by the measure. The\nDistrict's proposal for the projects assumes the receipt of matching state funds, which could\nbe subject to appropriation by the Legislature or approval of a statewide bond measure.\n\nAs required by law, the District must follow certain accountability provisions to oversee the\nfunds collected and expended, including the establishment of an independent citizens’\noversight committee, the annual completion of performance and financial audits, and\nissuance of an annual report detailing the proceeds received by the sale of the bonds and the\nexpenditures made. All of these requirements are reflected in the full text of measure.\n\nThe District's Tax Rate Statement provides the District's best estimate of the average annual\ntax rate that will be required to fund the bond issue over the duration of the debt service is\n$49.59 per $100,000 of assessed valuation while the bonds are outstanding. The final fiscal\nyear in which the tax is anticipated to be collected is 2057-58.\n\nA “yes” vote on this measure is a vote in favor of the issuance of $205 million in general\nobligation bonds to be used for the purposes set forth in Measure G-26.\n\nA “no” vote on this measure is a vote against the issuance of $205 million in general obligation\nbonds for the purposes set forth in Measure G-26.\n\nJGN ANSOLABEHERE\nnty Counsel\n",
+          "provenance": {
+            "sourceOrg": "San Luis Obispo County Clerk-Recorder",
+            "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-26",
+            "collectedAt": "2026-11-03T04:52:00.975259+00:00",
+            "verifiedAt": "2026-11-03T04:52:00.975259+00:00",
+            "quote": "With funds that cannot be taken by the State and spent elsewhere, shall Paso Robles Joint Unified School District’s measure to renovate and expand classrooms and career training facilities; and repair leaky roofs and inefficient heating and air-conditioning be adopted authorizing $205 million of bonds with legal rates, average levies below $50 per $100,000 of assessed value (raising $12.2 million annually) while outstanding, audits, taxpayer oversight, no funds for administrator salaries, pensions or benefits, and full disclosure of all spending?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-luis-obispo-a",
+          "whatItDoes": "Change Grover Beach’s city clerk from an appointed to an elected office, superseding prior voter-approved appointment rules. The clerk would serve as the city’s elections official. Within 90 days after adoption, the council would have to call a special election for the next legally available established election date, which could be combined with another election. The winner would serve until the next general municipal election; that election would fill a full four-year term, with elections every four years afterward. Future amendments would require voter approval. This measure needs a majority vote.",
+          "yesMeans": "Require an elected city clerk and the stated transition elections.",
+          "noMeans": "Keep the current appointed city clerk.",
+          "parts": [],
+          "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-24-56",
+          "sourceHash": "6f1fc7dbd32aff5ef914c07a9f4e23369464de2c7fe96b5bb2704b6a2582f6e9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:14.666840+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-luis-obispo-c",
+          "whatItDoes": "Authorize a tax of up to 10% of gross receipts on cannabis businesses operating in Arroyo Grande, starting January 1, 2027. Industrial hemp is excluded. The city currently prohibits commercial cannabis sales; this tax measure would not legalize them or substitute for required permits. The ordinance also makes unlicensed businesses liable for the tax without authorizing their operation. The city estimates approximately $500,000 annually if businesses are permitted, for any general city purpose, with spending oversight and no fixed expiration. The council could adjust or temporarily suspend the tax within the authorized maximum; expanding, extending or increasing its maximum rate or tax methodology would require voter approval. The ordinance would raise the city’s constitutional spending limit by the projected tax collections. Approval requires a majority vote.",
+          "yesMeans": "Approve the cannabis-business tax and related spending authority; separate city action would still be needed to permit legal businesses.",
+          "noMeans": "Reject this proposed cannabis-business tax; the vote would not change the current rules prohibiting commercial cannabis sales.",
+          "parts": [],
+          "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-045",
+          "sourceHash": "f7a75160616b12f85d58724bea57ae6f0e1e42775eda06cd6ad7fd3c293fbdd8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:14.666840+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-luis-obispo-d",
+          "whatItDoes": "Repeal the city’s 1990 Measure A and 2016 Measure E-16 and allow Arroyo Grande to participate in the California State Water Project with approval by a majority of council members present when a quorum is present. Prior voter approval and a declaration of a local water emergency would no longer be required. The city manager or designee could bring a participation proposal to the council for authorization. Later amendment or repeal of this new rule would require a majority vote at a municipal or special election. This measure also requires a majority vote.",
+          "yesMeans": "Allow council-approved State Water Project participation without a separate voter approval or declared water emergency.",
+          "noMeans": "Keep the current rules requiring voter approval, with the existing exception for buying state water during a declared local water emergency.",
+          "parts": [],
+          "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-047",
+          "sourceHash": "a9c4851f86ba931fc422e190d55703b0e202aeb2f1664e88610b2625016d610f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:14.666840+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-luis-obispo-e",
+          "whatItDoes": "Change the Pismo Beach mayor’s term from two years to four, beginning with the mayor elected on November 7, 2028. The mayor elected in November 2026 would still serve two years. The four other council members would keep their current staggered four-year terms and election schedule. Approval requires a majority vote.",
+          "yesMeans": "Approve four-year mayoral terms beginning with the 2028 election.",
+          "noMeans": "Keep two-year mayoral terms.",
+          "parts": [],
+          "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-r-2026-043",
+          "sourceHash": "3dbfb0a92daf2d2cd3d8723fdc74ff1c584a2fb308d1bce80deccbdef0feef7f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:14.666840+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-luis-obispo-f",
+          "whatItDoes": "Limit buildings and structures in Grover Beach’s commercial zones to both three stories and 40 feet, and in industrial zones to 33 feet. Height would be measured from average natural grade to the highest point, including rooftop equipment, elevator and stair towers, chimneys, parapets and other additions. Mixed-use buildings would need at least 33% commercial or retail space. Their fronts would face the primary street, with only commercial uses on the ground floor facing that street, except access to upper floors in addition to the required commercial area. Minimum ground-floor ceiling height would be reduced to 10 feet. The city would update its standards and regulations; zoning information and maps must be updated within 90 days. All new decisions or changes must comply regardless of the original approval date. Only a majority vote could amend or repeal the ordinance, and a majority is required to adopt it.",
+          "yesMeans": "Adopt these height limits, mixed-use requirements and implementation rules.",
+          "noMeans": "Reject these proposed development rules and leave current regulations in place.",
+          "parts": [],
+          "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-20",
+          "sourceHash": "585a232e456653e33c16400ce1e9e6a12caff9581625e01cc8e1d19e2dd5709f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:14.666840+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-luis-obispo-g",
+          "whatItDoes": "Authorize up to $205 million in school-facility bonds to renovate and expand classrooms and career-training facilities, repair roofs, heating and cooling, and complete other listed facility projects. Property taxes would repay principal and interest. The district estimates $12.2 million annually, an average rate of $49.59 and highest rate of $54.90 per $100,000 of assessed value, collection through fiscal year 2057–58, and approximately $377,831,054 total repayment. These are projections, not guaranteed rates or repayment amounts. Bond interest and terms must stay within legal limits. Funds must remain local and cannot pay teacher or administrator salaries, pensions, benefits or routine operating expenses. Independent citizen oversight, annual financial and performance audits, annual reports and spending disclosure are required. Project completion may depend on state matching funds and final costs. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $205 million for the listed school facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-26",
+          "sourceHash": "861b4627ce54390f0648c74ad143017436cde3618a74b4811879ca16007d7102",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:14.666840+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:57:14.666840+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/resolution-no-24-56",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-24-56",
+        "httpStatus": 200,
+        "rawHash": "6f1fc7dbd32aff5ef914c07a9f4e23369464de2c7fe96b5bb2704b6a2582f6e9",
+        "retrievedAt": "2026-11-03T04:52:00.955316+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/resolution-no-2026-045",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-045",
+        "httpStatus": 200,
+        "rawHash": "f7a75160616b12f85d58724bea57ae6f0e1e42775eda06cd6ad7fd3c293fbdd8",
+        "retrievedAt": "2026-11-03T04:52:00.905701+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/resolution-no-2026-047",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-047",
+        "httpStatus": 200,
+        "rawHash": "a9c4851f86ba931fc422e190d55703b0e202aeb2f1664e88610b2625016d610f",
+        "retrievedAt": "2026-11-03T04:52:00.934770+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/resolution-no-r-2026-043",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-r-2026-043",
+        "httpStatus": 200,
+        "rawHash": "3dbfb0a92daf2d2cd3d8723fdc74ff1c584a2fb308d1bce80deccbdef0feef7f",
+        "retrievedAt": "2026-11-03T04:52:01.691489+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/resolution-no-26-20",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-20",
+        "httpStatus": 200,
+        "rawHash": "585a232e456653e33c16400ce1e9e6a12caff9581625e01cc8e1d19e2dd5709f",
+        "retrievedAt": "2026-11-03T04:52:00.974909+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/resolution-no-26-26",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-26",
+        "httpStatus": 200,
+        "rawHash": "861b4627ce54390f0648c74ad143017436cde3618a74b4811879ca16007d7102",
+        "retrievedAt": "2026-11-03T04:52:00.975259+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/impartial-analysis-of-measure-g-26",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/impartial-analysis-of-measure-g-26",
+        "httpStatus": 200,
+        "rawHash": "a27e1cd234421a0a1858ccebb71537523a77a4b4a909de57a6b27839237a64bd",
+        "retrievedAt": "2026-11-03T04:52:00.971510+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-04/measures/resolution-no-26-21",
+        "finalUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-21",
+        "httpStatus": 200,
+        "rawHash": "2e8ac428008a0552be6e0c63df4f93445e9930062f0d2964d6f9f34c2e872231",
+        "retrievedAt": "2026-11-03T04:52:00.843842+00:00",
+        "publisher": "San Luis Obispo County Clerk-Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official 2026 measure resolution/legal text, with bond tax-rate statements and G impartial analysis. Original documents saved. Scanned text uses deterministic OCR; no voter arguments used."
+      }
+    ]
+  }
+}

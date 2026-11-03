@@ -1,0 +1,114 @@
+[
+  {
+    "contestId": "ca-2026-la-school-up",
+    "officialContestId": "bmc10935",
+    "name": "Pasadena Area Community College District",
+    "letter": "UP",
+    "ocdId": null,
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10935.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-s",
+    "officialContestId": "bmc10911",
+    "name": "Charter Oak Unified School District",
+    "letter": "S",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:charter_oak_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-g",
+    "officialContestId": "bmc10931",
+    "name": "Glendora Unified School District",
+    "letter": "G",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:glendora_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-mm",
+    "officialContestId": "bmc10933",
+    "name": "Inglewood Unified School District",
+    "letter": "MM",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:inglewood_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-cs",
+    "officialContestId": "bmc10937",
+    "name": "Claremont Unified School District",
+    "letter": "CS",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:claremont_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-ed",
+    "officialContestId": "bmc10948",
+    "name": "El Rancho Unified School District",
+    "letter": "ED",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:el_rancho_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-sms",
+    "officialContestId": "bmc10949",
+    "name": "San Marino Unified School District",
+    "letter": "SMS",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_marino_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-tcs",
+    "officialContestId": "bmc10950",
+    "name": "Temple City Unified School District",
+    "letter": "TCS",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:temple_city_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-lv",
+    "officialContestId": "bmc10961",
+    "name": "Las Virgenes Unified School District",
+    "letter": "LV",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-sm",
+    "officialContestId": "bmc10872",
+    "name": "Bellflower Unified School District",
+    "letter": "SM",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:bellflower_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-b",
+    "officialContestId": "bmc10873",
+    "name": "Hacienda La Puente Unified School District",
+    "letter": "B",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:hacienda_la_puente_unified_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-hh",
+    "officialContestId": "bmc10884",
+    "name": "Hawthorne School District",
+    "letter": "HH",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:hawthorne_elementary_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-k",
+    "officialContestId": "bmc10874",
+    "name": "Keppel Union School District",
+    "letter": "K",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:keppel_union_elementary_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json"
+  },
+  {
+    "contestId": "ca-2026-la-school-r",
+    "officialContestId": "bmc10868",
+    "name": "Valle Lindo School District",
+    "letter": "R",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:valle_lindo_elementary_school_district",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json"
+  }
+]

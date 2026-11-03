@@ -1,0 +1,194 @@
+[
+  {
+    "contestId": "ca-2026-solano-county-b",
+    "whatItDoes": "Authorize up to $29.9 million in school-facility bonds for repairs, classroom upgrades, safety, accessibility, technology and other listed projects. Property taxes would repay principal and interest. The district estimates $1.6 million annually, an average rate of $46 and highest rate of $49 per $100,000 of assessed value, collection through fiscal year 2061–62, and $58.6 million total repayment. These are estimates, not binding caps, and actual rates and repayment could differ. State law allows issuance only within its projected $60-per-$100,000 tax-rate limit. Funds could not pay teacher or administrator salaries, pensions or other operating expenses. A separate account, independent citizen oversight, annual performance and financial audits and annual reports are required. Completion of all projects is not guaranteed and may depend on state matching funds. Approval requires 55% of votes.",
+    "yesMeans": "Authorize the district to issue up to $29.9 million in bonds and levy property taxes to repay them under these conditions.",
+    "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+    "parts": [],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Winters_Joint_USD_Bond_Measure_B_REDACTED.pdf",
+    "sourceHash": "9a1865745ace5e1f0136c0b70ae9c51f61d808e572f2612d42c0ceea11880534",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-e",
+    "whatItDoes": "Change business-license taxes on specified facilities in unincorporated Solano County, outside cities, starting January 1, 2027. Raise the wind-generation tax from $0.00003 to $0.00008 per kilowatt-hour and add taxes on commercial solar generation, grid-connected battery storage, natural-gas extraction and data centers at the rates below. From January 1, 2028, rates would increase annually with the specified consumer-price index and could not decrease. Federal and state tax exemptions would remain. Estimated additional revenue is $353,000 annually for the county general fund, available for any lawful purpose; the ordinance has no fixed expiration. It requires a majority vote.",
+    "yesMeans": "Approve the updated business-license tax categories, rates and annual inflation adjustments.",
+    "noMeans": "Keep the current business-license provisions, including the existing wind-turbine rate, without the new categories or annual inflation adjustments.",
+    "parts": [
+      {
+        "id": "ca-2026-solano-county-e#rates",
+        "number": "11-160",
+        "kind": "PROGRAM",
+        "label": "Facility tax rates",
+        "what": "Commercial solar generation would pay $0.00008 per kilowatt-hour. Front-of-the-meter battery storage would pay $1.50 per month per megawatt-hour of approved storage capacity, regardless of actual charging or discharging. Natural-gas extraction would pay $0.30 per thousand cubic feet. Data centers would pay $5 annually per square foot of gross floor area, including associated equipment-pad areas for supporting behind-the-meter batteries and natural-gas turbines."
+      },
+      {
+        "id": "ca-2026-solano-county-e#exceptions",
+        "number": "11-163",
+        "kind": "PROGRAM",
+        "label": "Covered facilities and exemptions",
+        "what": "Wind, solar and natural-gas facilities are covered when primarily producing for resale or off-site use. Grid-connected batteries primarily serving wholesale grid functions are covered. Data centers serve off-site users; computer and IT infrastructure accessory to and primarily supporting an on-site business, government, agricultural, industrial or institutional use is excluded. Federal and state business-tax exemptions remain."
+      }
+    ],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Solano_County_Measure_E_REDACTED.pdf",
+    "sourceHash": "c0d5b08c92ff2674ebb5d4ce206d0df6a35559fa0c102bc6cdc9cb1c48324cf3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-h",
+    "whatItDoes": "Increase the lodging tax in unincorporated Solano County, outside cities, from 5% to 12% of taxable rent starting January 1, 2027. It generally applies to stays of 30 days or less at hotels, motels, vacation rentals, campgrounds, RV parks and other covered lodging. Guests pay the tax, collected by operators or applicable online booking services. The ordinance updates definitions, taxable charges, collection and enforcement rules while retaining the exemptions described below. The county estimates $58,500 in additional annual revenue for any lawful general-fund purpose. There is no fixed expiration date; the official analysis says the supervisors or voters could repeal or amend it. Approval requires a majority vote.",
+    "yesMeans": "Approve the 12% lodging-tax rate and ordinance updates.",
+    "noMeans": "Keep the current 5% county lodging-tax rate.",
+    "parts": [
+      {
+        "id": "ca-2026-solano-county-h#lodging",
+        "number": "11-20",
+        "kind": "PROGRAM",
+        "label": "Lodging and charges",
+        "what": "Covered lodging includes vacation rentals, RV parks and seasonal or event-based public or private campgrounds. Hospital, clinic and care-home rooms, local-government lodging, state-park campsites and legally defined organized camps are excluded. Taxable rent includes required lodging fees and specified related charges; separately itemized optional services listed in the ordinance are excluded."
+      },
+      {
+        "id": "ca-2026-solano-county-h#exemptions",
+        "number": "11-22",
+        "kind": "PROGRAM",
+        "label": "Guest exemptions",
+        "what": "Exemptions include qualifying official government or federal-credit-union travel with the required certificate and direct official payment; nonprofit-voucher emergency housing during a disaster; free promotional rooms without non-cash payment other than advertising; and eligible timeshare or membership-campsite owners and guests accompanying them."
+      }
+    ],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Solano_County_Measure_H_REDACTED.pdf",
+    "sourceHash": "07aa4293bb19eb57304833a80c12f1cc093380b8bc33736b8ddece4f6ae7f22d",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-o",
+    "whatItDoes": "Extend Rio Vista’s existing 0.75% sales and use tax for three years, from April 1, 2027 through March 31, 2030. Estimated revenue is $1,398,000–$1,467,000 annually. It would go to the general fund for any lawful city purpose, including police, fire, parks and other services. The tax would expire after the three-year period unless a future majority vote renews it before expiration. This measure also requires a majority vote.",
+    "yesMeans": "Extend the 0.75% sales and use tax for this three-year period.",
+    "noMeans": "Do not extend the existing tax for this additional three-year period.",
+    "parts": [],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Rio_Vista_Measure_O_Extension_REDACTED.pdf",
+    "sourceHash": "8d32dda3ec9961907c063d9e6215e52ece5f6c90c673b18c69dfb664d88dc3b9",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-p",
+    "whatItDoes": "Increase Fairfield’s local sales and use tax from 1% to 2% and remove its scheduled March 31, 2033 expiration, continuing it until ended by voters. The current combined sales-tax rate would rise from 8.375% to 9.375%, subject to changes in state law. Most groceries and prescription medicines remain exempt. The city estimates $24 million in new annual revenue for any general city purpose, including public safety, streets and homelessness services. Independent citizen oversight, annual audits and public spending reports are specified. If the full 1-percentage-point increase is found invalid, the council could reduce the increase to 0.875 percentage points, for a 1.875% city tax. Approval requires a majority vote.",
+    "yesMeans": "Approve the extension and increase of the local sales and use tax, subject to the stated fallback if the full increase is invalid.",
+    "noMeans": "Do not approve this extension and increase; the existing tax ordinance would remain in place.",
+    "parts": [],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Fairfield_Measure_P_REDACTED.pdf",
+    "sourceHash": "904fff2c96d4062f94d6f2e452775759dc948f382e3dc0eeb59050568963f5be",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-q",
+    "whatItDoes": "Make Fairfield’s city clerk appointed rather than elected. The council would appoint the clerk, who would serve at its pleasure, and could delegate appointment to the city manager by ordinance. The appointee would not have to be a city resident or registered voter; the council would set compensation. The current elected clerk’s term through 2028 would remain intact unless she leaves early. Appointment would begin when that term ends or an earlier vacancy occurs, and the incumbent could be appointed. The council could later amend the ordinance, but restoring an elected clerk would require voter approval. This measure requires a majority vote.",
+    "yesMeans": "Make the city clerk an appointed office under these transition rules.",
+    "noMeans": "Keep the city clerk elected to four-year terms.",
+    "parts": [],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Fairfield_Measure_Q_REDACTED.pdf",
+    "sourceHash": "585b71748e99ea7b93cae31852ad134e326829fbdeed492ce3602e5085b1d515",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-u",
+    "whatItDoes": "Authorize up to $49 million in school-facility bonds for classroom, infrastructure, health, safety, seismic, technology and other listed projects. Property taxes would repay principal and interest. The district estimates $3 million annually, an average rate of $29 and highest rate of $30 per $100,000 of assessed value, collection through fiscal year 2061–62, and approximately $105 million total repayment. These estimates may vary and are not binding maximums. Interest rates must stay within legal limits. Funds could not pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual financial and performance audits and annual reports are required. The district would set project priorities and timing; approval does not guarantee every listed project will be completed. Approval requires 55% of votes.",
+    "yesMeans": "Authorize the district to issue up to $49 million in bonds and levy property taxes to repay them under these conditions.",
+    "noMeans": "Do not authorize these bonds through this measure.",
+    "parts": [],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Dixon_USD_Measure_U_REDACTED.pdf",
+    "sourceHash": "7e73386e41ad72cb0d8b9443c0d65496b50f1cf7cd87959275dfdf5b704b19c6",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-v",
+    "whatItDoes": "Add a 1% sales and use tax beginning April 1, 2027, increasing Vacaville’s current combined rate from 8.125% to 9.125%. It would remain until repealed by voters. This would be separate from the existing 0.75% Measure M tax, which would stay unchanged. Most food products and prescription medicine would remain exempt. The city estimates $28 million annually, locally retained in the general fund for any lawful city purpose at council discretion. Annual audits and public reporting would be required. A Citizens Oversight Committee would review revenue and spending and report annually. Approval requires a majority vote.",
+    "yesMeans": "Approve the additional 1% sales and use tax and its accountability provisions.",
+    "noMeans": "Reject this additional tax; existing taxes would remain unchanged.",
+    "parts": [],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Vacaville_Measure_V_REDACTED.pdf",
+    "sourceHash": "b6ba4fb6b0621960eef97d4d11e73165b810ced158727f70b9a4f2fb9c55f500",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-x",
+    "whatItDoes": "Set a new Benicia business-license tax schedule beginning January 1, 2027, based on annual gross receipts and business category. Businesses with $100,000 or less in receipts would be exempt. Other businesses would pay the rates below, with a $1,500 first-year annual cap that rises 10% each January 1 starting in 2028 until it reaches $25,000. Marine terminals would instead pay 3% of gross receipts without that cap. Estimated first-year revenue is $1,612,000 for the general fund, available for any lawful city purpose, until repealed by voters. The council could lower or suspend the tax and restore it within authorized limits; increases beyond the authorized amounts would need voters. Approval requires a majority vote.",
+    "yesMeans": "Approve the new business-license tax rates, exemptions and phased cap.",
+    "noMeans": "Reject this new tax schedule and keep the current business-license tax rules.",
+    "parts": [
+      {
+        "id": "ca-2026-solano-county-x#rates",
+        "number": "5.06.030",
+        "kind": "PROGRAM",
+        "label": "Rates by business category",
+        "what": "Per $1,000 in gross receipts, general and retail businesses would pay $0.25; contractors and services $0.75; industrial, professional and property-rental businesses $1; and petroleum businesses $1.25. Marine terminals would pay $3 per $100, or 3%, without the annual cap."
+      },
+      {
+        "id": "ca-2026-solano-county-x#exemptions",
+        "number": "5.04.040",
+        "kind": "PROGRAM",
+        "label": "Other exemptions",
+        "what": "Constitutional and state-law exemptions remain. Additional exemptions cover qualifying honorably discharged disabled veterans unable to earn a living through manual labor, and federally recognized 501(c)(3) organizations except for business activities subject to federal income tax."
+      }
+    ],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_X_REDACTED.pdf",
+    "sourceHash": "2d903dad140ef95d4a29f091d2089d312de3f7b26330e6c98f6e5ad1db6ea550",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-y",
+    "whatItDoes": "Adopt a limited Benicia charter giving the city new authority solely to levy and administer a tax on real-property transfers, beyond the amount permitted for general-law cities. The separate Measure Z tax could take effect only if voters approve both Y and Z. The charter itself would preserve the current council-manager government and leave other city powers under the state’s general laws. It would give the council no new power to raise its own or other officials’ compensation without voter approval. Future charter amendments or expanded authority would also require a majority vote. Existing rights, liabilities, ordinances and legal proceedings would continue. Approval requires a majority vote.",
+    "yesMeans": "Adopt the limited charter; the proposed transfer tax would still require Measure Z to pass.",
+    "noMeans": "Keep Benicia a general-law city; the proposed Measure Z tax could not take effect.",
+    "parts": [],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_Y_FINAL_REDACTED.pdf",
+    "sourceHash": "513a84078778c7afe524c79194a78dfd8a1fa388ee45a7c2ee523a023cc0dab3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-solano-county-z",
+    "whatItDoes": "Create an additional Benicia real-property transfer tax only if both this measure and the limited charter in Measure Y receive majority approval. It would apply to transfers valued above $100 after excluding encumbrances that remain on the property. For each $1,000 or fraction of taxable value, the rate would be $4 for sales up to $2 million, $6 for sales above $2 million through $10 million, and $8 for sales above $10 million. Residential improvements substantially completed before January 1, 2027 would be exempt when the sale does not exceed $2 million. Other exemptions are described below. Buyers and sellers would be jointly responsible but could agree how to split the tax. Estimated revenue is $230,000 annually, growing to $3.3–$3.8 million by 2050, for any lawful general-fund purpose. Annual audits and a Citizens Oversight Committee would be required. The tax would continue until ended by voters.",
+    "yesMeans": "Adopt the additional transfer tax and its exemptions, if Measure Y also passes.",
+    "noMeans": "Reject the additional transfer tax; the existing state-authorized transfer tax would remain in effect.",
+    "parts": [
+      {
+        "id": "ca-2026-solano-county-z#families-affordable",
+        "number": "3.17.100–120",
+        "kind": "PROGRAM",
+        "label": "Home, family and affordable-housing exemptions",
+        "what": "Transfers among parents and children, grandparents and grandchildren, siblings, and spouses or domestic partners would be exempt, including covered separation or divorce settlements. The definition of children includes sons- and daughters-in-law, stepchildren, and children adopted before age 18. Affordable housing would be exempt with a recorded, enforceable city covenant restricting ownership and occupancy to low- or moderate-income households for at least 30 years after transfer. Existing residential improvements substantially completed before January 1, 2027 would be exempt at sale values of $2 million or less."
+      },
+      {
+        "id": "ca-2026-solano-county-z#other-exemptions",
+        "number": "3.17.040–090",
+        "kind": "PROGRAM",
+        "label": "Other qualifying transfers",
+        "what": "Exemptions cover instruments securing debt, government agencies acquiring title, and specified reorganizations or identity changes filed within five years. Qualifying SEC-ordered conveyances and transfers of interests in continuing partnerships that keep the property are exempt. Foreclosure transfers to a lender are exempt only up to the unpaid debt, accrued interest and foreclosure cost; consideration above that remains taxable."
+      }
+    ],
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_Z_FINAL_REDACTED.pdf",
+    "sourceHash": "be248fcabf2a1cf133a560cf5fa0ec844ab8f64620d4f89ba6909c613ee4afb1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:50:23.518046+00:00",
+    "citation": "measure-source"
+  }
+]

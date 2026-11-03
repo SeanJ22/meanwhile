@@ -1,0 +1,82 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-orange-county-a",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-b",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-c",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-d",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-e",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-f",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-g",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-h",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-i",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-j",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-k",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-l",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-m",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-n",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf"
+    },
+    {
+      "id": "ca-2026-orange-county-o",
+      "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf"
+    }
+  ],
+  "operation": "Merge these measure-only contests, official questions and source-linked explainers through existing runBallotPublication, preserving all unrelated data. Native official documents and labeled text derivations are archived with their distinct hashes.",
+  "coverageLimit": "Only the exact included local measures. Questions awaiting exact college-district geography stay outside this install input. Broader statewide local acquisition continues.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

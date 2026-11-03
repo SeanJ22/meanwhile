@@ -1,0 +1,34 @@
+{
+  "state": "CA",
+  "county": "Los Angeles",
+  "checkedAt": "2026-11-03T05:14:19.454887+00:00",
+  "officialLocalDenominator": 68,
+  "heldLocalContestsBefore": 54,
+  "newAttached": 13,
+  "newUnscoped": 1,
+  "remainingFromOfficialList": "Pasadena Area Community College District Measure UP is drafted but still lacks source-backed district identity and reader membership.",
+  "officialSourceRoutes": [
+    "https://www.lavote.gov/home/voting-elections/current-elections/upcoming-elections",
+    "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026-v-2.pdf",
+    "https://results.lavote.gov/ElectionResults/GetElectionData?electionID=4348",
+    "https://isb.lavote.gov/parsed/4348/election.json"
+  ],
+  "status": "PREPARED_FOR_INDEPENDENT_REVIEW",
+  "scope": "New explainers address 14 measures genuinely absent from the held LA list, 13 attached and one community-college record held for identity/membership. This does not independently re-review the substance of the 54 existing LA explainers. Other California counties remain separate.",
+  "sourceNotes": [
+    {
+      "measure": "B",
+      "finding": "The public official contest publishes the complete question and impartial analysis but no separate full-text statement. Draft uses the prospective full-term language without inventing partial-term exceptions."
+    },
+    {
+      "measure": "SMS",
+      "finding": "Operative exemption says age65 before June30, while analysis says on or before. Draft follows the operative strict before wording. Annual CPI adjustment can be reduced by the board; fallback parcel definition and funding-reduction clauses are retained in parts."
+    },
+    {
+      "measure": "LV",
+      "finding": "Operative full text limits senior/disability exemption to solely owner-occupied single-family parcels and sets June15 application deadline. Draft preserves both, along with automatic continuation of prior exemptions."
+    }
+  ],
+  "productionWrites": 0,
+  "applicationChanges": 0
+}

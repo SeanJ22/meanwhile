@@ -1,0 +1,26 @@
+[
+  {
+    "nces_leaid": "0616680",
+    "school_year": "2025-2026",
+    "state": "CA",
+    "lea_name": "Hawthorne",
+    "state_leaid": "CA-1964592",
+    "website": "http://www.hawthorne.k12.ca.us"
+  },
+  {
+    "nces_leaid": "0619440",
+    "school_year": "2025-2026",
+    "state": "CA",
+    "lea_name": "Keppel Union Elementary",
+    "state_leaid": "CA-1964642",
+    "website": "http://www.keppelunion.org"
+  },
+  {
+    "nces_leaid": "0640650",
+    "school_year": "2025-2026",
+    "state": "CA",
+    "lea_name": "Valle Lindo Elementary",
+    "state_leaid": "CA-1965078",
+    "website": "http://www.vallelindo.k12.ca.us"
+  }
+]

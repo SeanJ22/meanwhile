@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "ca-2026-la-school-up",
+    "officialContestId": "bmc10935",
+    "jurisdiction": "Pasadena Area Community College District",
+    "questionText": "PASADENA CITY COLLEGE MEASURE PRESERVING AFFORDABLE HIGHER EDUCATION/CAREER TRAINING WITHOUT INCREASING TAX RATES. To construct/equip classrooms/career training facilities to prepare students for careers in nursing/healthcare, firefighting/EMS, construction, hospitality, and skilled trades; fix deteriorating roofs, plumbing/electrical systems, shall Pasadena Area Community College District's measure be adopted authorizing $485,000,000 in bonds at legal rates, without exceeding the current $9 per $100,000 assessed value (no increase), providing $27,000,000 annually while bonds are outstanding, with independent oversight/local control?",
+    "record": {
+      "contestId": "ca-2026-la-school-up",
+      "whatItDoes": "Authorize up to $485 million in school-facility bonds. Construct and equip classrooms and career-training facilities for nursing, health care, firefighting, emergency medical services, construction, hospitality and skilled trades, and repair roofs, plumbing and electrical systems. Property taxes would repay principal and interest. The district proposes maintaining its current tax rate while issuing these bonds. The district estimates $27 million annually, an average and highest rate of $9 per $100,000 of assessed property value, collection through fiscal year 2065–66, and $1,013,011,577 in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+      "yesMeans": "Authorize the district to issue up to $485 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+      "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+      "parts": [],
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10935.json",
+      "sourceHash": "85906f79f409770fa779bf283b34571b725b962628a35de02054eaa7600bdec9",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+      "citation": "measure-source"
+    },
+    "reason": "Community-college district identity and reader boundary/membership are not established in the held registry. No countywide substitution.",
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10935.json",
+    "sourceHash": "85906f79f409770fa779bf283b34571b725b962628a35de02054eaa7600bdec9",
+    "officialExcerptFile": "excerpts/ca-2026-la-school-up.txt"
+  }
+]

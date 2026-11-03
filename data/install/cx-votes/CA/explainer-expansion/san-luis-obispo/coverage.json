@@ -1,0 +1,47 @@
+{
+  "state": "CA",
+  "county": "San Luis Obispo",
+  "electionDate": "2026-11-03",
+  "checkedAt": "2026-11-03T04:57:14.666840+00:00",
+  "officialList": {
+    "url": "https://www.slocounty.ca.gov/departments/clerk-recorder/all-services/elections-and-voting/elections-conducted-by-county-of-san-luis-obispo/november-3%2C-2026%2C-general-election",
+    "retrievedAt": "2026-11-03T04:40:32.725854+00:00",
+    "rawHash": "34a301a7f41a0dcf7474d10906ebc411faea6e53d09548a24987fb5c7f005529",
+    "savedFile": "sources/34a301a7f41a0dcf7474d10906ebc411faea6e53d09548a24987fb5c7f005529.html",
+    "denominator": 7,
+    "measureLetters": [
+      "A-26",
+      "C-26",
+      "D-26",
+      "E-26",
+      "F-26",
+      "G-26",
+      "H-26"
+    ]
+  },
+  "preparedAttached": 6,
+  "preparedUnscoped": 1,
+  "excluded": "The original county Measure H-26 was officially withdrawn. Current H-26 is Allan Hancock college bond, formerly J-26, as the current county index states.",
+  "status": "PREPARED_FOR_INDEPENDENT_REVIEW",
+  "scope": "Six measures with exact existing place/K–12 district identities are attached. Community-college H remains a source-backed standing lead pending district identity and geographic membership; no countywide substitution. Other California county coverage remains separate.",
+  "sourceNotes": [
+    {
+      "measure": "A-26",
+      "finding": "Resolution 24-56 was adopted in 2024 expressly for the November 2026 election and freshly certified June 2026; this is not a stale 2024 ballot."
+    },
+    {
+      "measure": "D-26",
+      "finding": "Linked file begins with cannabis consolidation Resolution 2026-047, then contains the controlling water Resolution 2026-048 and Ordinance 2026-006. D excerpt excludes the unrelated cannabis pages."
+    },
+    {
+      "measure": "G-26",
+      "finding": "Embedded OCR reads average tax $49.S9. Direct visual inspection of original PDF page 17 confirms $49.59, as does the separate impartial analysis. Highest rate is $54.90, distinct from the average."
+    },
+    {
+      "measure": "H-26",
+      "finding": "Last two source pages have no text layer; deterministic OCR of raw PDF pages 22–23 provides the current bond label and tax-rate statement, including $618,176,000 estimated repayment."
+    }
+  ],
+  "productionWrites": 0,
+  "applicationChanges": 0
+}

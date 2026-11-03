@@ -1,0 +1,460 @@
+                                     ORDINANCE NO. 2026-
+
+
+          An Ordinance amending Article XII of Chapter 11 of the Solano County Code
+  relating to the Business License Tax imposed on Commercial Energy Production, Resource
+     Extraction Facilities, and Data Centers in the Unincorporated Areas of Solano County
+
+
+The Solano County Board of Supervisors ordains as follows:
+
+Section 1.
+
+The purpose of this Ordinance is to amend Article XII of Chapter 11 of the Solano County Code
+to modernize the business license tax applicable in the unincorporated areas of Solano County
+as it relates to commercial wind turbine generators, commercial solar energy systems, front-of-
+the-meter battery energy storage systems, natural gas extraction facilities, and data centers. The
+Ordinance amends Article XII of Chapter 11 to increase the tax rate on commercial wind turbine
+generators ($0.00003 to $0.00008 per kWh) and to extend the tax to commercial solar energy
+systems ($0.00008 per kWh), battery energy storage systems ($1.50 per MWh), natural gas
+extraction facilities ($0.30 per thousand cubic feet), and data centers ($5.00 per building square
+foot), generating approximately $353,000 of additional revenue annually, until ended by the
+voters.
+
+Section 2.
+
+Article XII of Chapter 11 of the Solano County Code is hereby amended to read as follows:
+
+
+                            ARTICLE XII. BUSINESS LICENSE TAX
+
+   Sec. 11-160.             Tax imposed
+   Pursuant to the authority granted by Revenue and Taxation Code Section 7284, as
+   amended, there is established and imposed a business license tax on those activities and
+   in those amounts specified below:
+
+   (a)       Solid waste disposal at the base rate of five dollars ($5.00) per ton of waste
+   deposited at a licensed solid waste disposal facility, which rate shall be reduced to three
+   dollars ($3.00) per ton of waste deposited upon the occurrence of the three
+   (3) conditions set forth in subdivisions (a)(1) and (2) of this section, and to remain at the
+   three dollar ($3.00) base rate until December 31, 2013, except for annual adjustments
+   based upon the Bay Area Economic Consumer Index (ECI), so long as the conditions set
+   forth in subdivisions (a)(1) and (2) of this section are in effect.
+
+   (1)      The Potrero Hills Landfill operator shall have received all necessary approvals
+   from the county, including a conditional land use permit and a marsh development permit,
+   to allow for the receipt of expanded tonnage and/or Potrero Hills and Hay Road landfills
+   reach an agreement for disposal of waste tonnage in the county which are in excess of
+   the current permitted limit at Potrero Hills; and
+   (2)      That the present exemption set forth under Section 11-163(i)(2) of this code for
+   placement of asbestos materials in landfills, under the solid waste mitigation fee shall be
+   eliminated.
+
+   (b)       Well drilling mud disposal at the base rate of twenty cents ($0.20) per ton of well
+      Ordinance No. 2026-_____
+      Page 2
+         drilling mud deposited at a licensed drilling mud disposal facility.
+
+(c)      Electrical energy produced by commercial wind turbine generators and commercial solar
+         energy systems at the base rate of eight one-thousandths of one cent ($0.00008) per
+         kilowatt-hour of electrical energy generated.
+
+         (1)     Beginning January 1, 2028, and on every January 1 of every year thereafter, the
+                 tax rate set forth in this subsection shall be adjusted to reflect changes in the
+                 annual average Consumer Price Index for All Urban Consumers (CPI-U), U.S.
+                 City Average, All Items, as published by the United States Bureau of Labor
+                 Statistics, or any successor index published by the United States Bureau of Labor
+                 Statistics.
+         (2)     The adjusted rate shall be calculated by multiplying the then-current rate by a
+                 fraction, the numerator of which is the annual average CPI-U for the most recently
+                 published calendar year preceding the adjustment date, and the denominator of
+                 which is the CPI-U for the calendar year used in the previous adjustment.
+         (3)     If application of the formula in paragraph (2) would result in a tax rate lower than
+                 the rate then in effect, the tax rate shall remain unchanged.
+         (4)     The adjusted rate shall be rounded to the nearest one ten-millionth of a dollar
+                 ($0.0000001) per kilowatt-hour.
+         (5)     The Director of Resource Management shall calculate and publish the adjusted
+                 rate, which shall take effect automatically without further action by the Board of
+                 Supervisors.
+
+(d)      Front-of-the-meter (FTM) battery energy storage system at the base rate of one dollar and
+         fifty cents ($1.50) per megawatt-hour of approved energy storage capacity.
+         (1)       Beginning January 1, 2028, and on every January 1 of every year thereafter, the
+                   tax rate set forth in this subsection shall be adjusted to reflect changes in the
+                   annual average Consumer Price Index for All Urban Consumers (CPI-U), U.S.
+                   City Average, All Items, as published by the United States Bureau of Labor
+                   Statistics, or any successor index published by the United States Bureau of Labor
+                   Statistics.
+         (2)       The adjusted rate shall be calculated by multiplying the then-current rate by a
+                   fraction, the numerator of which is the annual average CPI-U for the most recently
+                   published calendar year preceding the adjustment date, and the denominator of
+                   which is the CPI-U for the calendar year used in the previous adjustment.
+         (3)       If application of the formula in paragraph (2) would result in a tax rate lower than
+                   the rate then in effect, the tax rate shall remain unchanged.
+         (4)       The adjusted rate shall be rounded to the nearest cent per megawatt-hour.
+         (5)       The charge imposed by this subsection shall be calculated based on the
+                   approved energy storage capacity of the front-of-the-meter battery energy
+                   storage system, expressed in megawatt-hours (MWh). The monthly charge shall
+
+                  capacity. The resulting monthly charge shall constitute a flat capacity-based tax,
+                  regardless of actual charging, or discharging of the system.
+         (6)      The Director of Resource Management shall calculate and publish the adjusted
+                  rate, which shall take effect automatically without further action by the Board of
+                  Supervisors.
+
+(e)      Natural gas well extraction facility at the base rate of 30 cents ($0.30) per McF extracted.
+         (1)      Beginning January 1, 2028, and every January 1 of every year thereafter, the tax
+                  rate set forth in this subsection shall be adjusted to reflect changes in the annual
+      Ordinance No. 2026-_____
+      Page 3
+                  average Consumer Price Index for All Urban Consumers (CPI-U), U.S. City
+                  Average, All Items, as published by the United States Bureau of Labor Statistics,
+                  or any successor index published by the United States Bureau of Labor Statistics.
+         (2)      The adjusted rate shall be calculated by multiplying the then-current rate by a
+                  fraction, the numerator of which is the annual average CPI-U for the most recently
+                  published calendar year preceding the adjustment date, and the denominator of
+                  which is the CPI-U for the calendar year used in the previous adjustment.
+         (3)      If application of the formula in paragraph (2) would result in a tax rate lower than
+                  the rate then in effect, the tax rate shall remain unchanged.
+         (4)      The adjusted rate shall be rounded to the nearest cent per McF.
+         (5)      The Director of Resource Management shall calculate and publish the adjusted
+                  rate, which shall take effect automatically without further action by the Board of
+                  Supervisors.
+
+(f)      Data centers at the base rate of five dollars ($5.00) per building square foot of gross floor
+         area.
+         (1)     Beginning January 1, 2028, and on every January 1 of every year thereafter, the
+                 tax rate set forth in this subsection shall be adjusted to reflect changes in the
+                 annual average Consumer Price Index for All Urban Consumers (CPI-U), U.S.
+                 City Average, All Items, as published by the United States Bureau of Labor
+                 Statistics, or any successor index published by the United States Bureau of Labor
+                 Statistics.
+         (2)     The adjusted rate shall be calculated by multiplying the then-current rate by a
+                 fraction, the numerator of which is the annual average CPI-U for the most recently
+                 published calendar year preceding the adjustment date, and the denominator of
+                 which is the CPI-U for the calendar year used in the previous adjustment.
+         (3)     If application of the formula in paragraph (2) would result in a tax rate lower than
+                 the rate then in effect, the tax rate shall remain unchanged.
+         (4)     The adjusted rate shall be rounded to the nearest cent per square foot.
+         (5)     The Director of Resource Management shall calculate and publish the adjusted
+                 rate, which shall take effect automatically without further action by the Board of
+                 Supervisors.
+
+(g)      A marijuana business, as defined in this article, shall pay to the county fifteen (15%)
+         percent of each dollar of its gross receipts for the reporting period.
+
+                    a.      The board of supervisors, by resolution, may lower and raise this tax
+                    rate from time to time as it deems appropriate, so long as the tax does not
+                    exceed the maximum rate of fifteen (15%) percent of each dollar of gross
+                    receipts.
+
+                    b.     Payment of the marijuana business tax shall not be construed as
+                    authorizing the conduct or continuance of any illegal business or of a legal
+                    business in an illegal manner. Nothing in this section shall be applied or
+                    construed as authorizing the sale of marijuana. This section is in addition to
+                                                                                                to
+                    exempt, substitute or replace any other requirements, permits, or licenses
+                    necessary for a marijuana business to operate legally in the county.
+
+         Sec. 11-161.              Purpose of tax
+         This tax is enacted solely to raise revenue for general governmental purposes of the
+         county and not for regulation. All of the proceeds from the tax imposed by this chapter shall
+      Ordinance No. 2026-_____
+      Page 4
+         be placed in the          general fund and used for the usual current expenses of the
+         county, however incurred.
+
+         Sec. 11-162.              Effect of other ordinances
+         Persons required to pay a license tax for transacting and carrying on any business under
+         this chapter shall not be relieved from the payment of any license fee for the privilege of
+         doing such business required under any other ordinance of the county and shall remain
+         subject to the regulatory provisions of other ordinances.
+
+         Sec. 11-163.              Definitions
+(a)      Commercial wind turbine generator means a wind-driven machine that converts wind
+         energy into production of electrical power for the primary purpose of resale or off-site use.
+
+(b)      Commercial solar energy system means a solar energy system that converts sunlight
+         into the production of electrical power for the primary purpose of resale or off-site use.
+
+(c)      Front-of-the-meter (FTM) battery energy storage system means a battery energy
+         storage system (BESS) that is directly connected to the transmission or distribution grid
+         and primarily serves wholesale market functions such as grid support, frequency
+         regulation, or energy arbitrage.
+
+(d)      Natural gas well extraction facility means a drilled well or group of wells, together with
+         associated surface and subsurface equipment, that extracts natural gas for the primary
+         purpose of resale or off-site use, with production quantities reported in thousand cubic feet
+         (MCF) or other standard volumetric gas units.
+
+(e)      Data center means a building, dedicated space within a building, or group of buildings
+         used to house networked computer servers, telecommunications equipment, data storage
+         systems, and related information technology infrastructure for the primary purpose of
+         storing, processing, managing, or transmitting digital data for off-site users, customers,
+         businesses, organizations, or systems. A data center does not include computer servers,
+         telecommunications equipment, or information technology infrastructure that are
+         accessory to and primarily support on-site business, governmental, agricultural, industrial,
+         or institutional use. When calculating the gross floor area of a data center, any ancillary
+         behind-the-meter battery energy storage systems and natural gas turbines located on the
+         same legal parcel and which support use of the data center shall be included.
+
+(f)      Drilling mud waste means all drilling mud derived from the development and production
+         of oil and natural gas wells.
+
+(g)      Energy storage capacity means the maximum quantity of electrical energy, expressed
+         in megawatt-hours (MWh), that a front-of-the-meter battery energy storage system is
+         approved to store pursuant to the project's final approved plans or applicable
+         interconnection documentation.
+
+(h)      Gross receipts means the total amount actually received or receivable from all sales; the
+         total amount of compensation actually received or receivable for the performance of any
+         act or service, of whatever nature it may be, for which a charge is made or credit allowed,
+         whether or not such act or service is done as part of or in connection with the sale of
+         materials, goods, wares or merchandise; and gains realized from trading in stocks or
+         bonds, interest discounts, rents, royalties, fees, commissions, dividends, or other
+         emoluments, however designated. Included
+      Ordinance No. 2026-_____
+      Page 5
+         credits and property of any kind or nature, without any deduction therefrom on account of
+         the cost of the property sold, the cost of materials used, labor or service costs, interest paid
+         or payable, or losses or other expenses whatsoever, except that the following shall be
+         excluded therefrom:
+
+         1.       Cash discounts allowed and taken on sales;
+
+         2.       Credit allowed on property accepted as part of the purchase price and which
+         property may later be sold, at which time the sales price shall be included as gross receipts;
+
+         3.       Any tax required by law to be included in or added to the purchase price and
+         collected from the consumer or purchaser;
+
+         4.      Such part of the sale price of property returned by purchasers upon rescission of
+         a contract of sale as is refunded either in cash or by credit;
+
+         5.       Receipts of refundable deposits, except that such deposits when forfeited and
+         taken into income of the business shall not be excluded;
+
+         6.       Amounts collected for others where the business is acting as an agent or trustee
+         to the extent that such amounts are paid to those for whom collected, provided the agent
+         or trustee has furnished the administrator with the names and addresses of the others and
+         the amounts paid to them. This exclusion shall not apply to any fees, percentages, or other
+         payments retained by the agent or trustee; and
+
+         7.     Cash value of sales, trades or transactions between departments or units of the
+         same business.
+         As to any person engaged in the business of manufacturing or processing any goods,
+         wares, merchandise, article or commodity at a fixed place of business within the county
+         which does not generate gross receipts as defined in this section within the county, gross
+         receipts shall be deemed to include the total of all expenses incurred in the manufacturing
+         or processing of such goods at the business location within the county for payroll, utilities,
+         depreciation, and/or rent.
+
+         As to any person engaged in the business of operating an administrative headquarters at
+         a fixed place of business within the county who does not have gross receipts as defined
+         in this section within the county, gross receipts shall be deemed to include the total gross
+         payroll of all persons employed at such administrative headquarters.
+
+(i)      Gross floor area shall be calculated as the total area of all floors of the building, including
+         any loft or mezzanine, measured to the exterior finished surface of outside walls or to the
+         centerline of common walls, including covered and enclosed space, but not including any
+         exterior storage areas incidental to the principal use of the construction, including any
+         garage, parking structure, security quarters, unenclosed walkway, or utility or disposal
+         area. Natural gas turbines shall be measured by enclosing the extreme limits a single
+         continuous perimeter composed of squares or rectangles with no more than eight lines
+         per turbine. Behind the meter battery energy storage systems shall be measured as the
+         developed footprint required of hosting the site. Where BESS and Natural Gas turbine
+         equipment is installed on separate pads, taxable square footage shall equal the sum of
+         the individual equipment-pad areas. Where multiple pieces of equipment share one
+         continuous pad, taxable square footage shall equal the total area of that pad. All
+         measurements shall be based on the final approved construction plans and rounded to
+         the nearest whole square foot
+      Ordinance No. 2026-_____
+      Page 6
+(j)      Kilowatt-hours (kwh) means a measurement of electrical energy produced by
+         commercial wind turbine generators and commercial solar energy systems.
+
+(k)      Megawatt-hours (MWh) means a measurement of electrical energy storage capacity
+         produced by Front-of-the-meter (FTM) battery energy storage system.
+
+(l)      Thousand Cubic Feet (McF) means a unit of measurement equal to one thousand
+         (1,000) cubic feet of natural gas, used to quantify the volume of gas extracted.
+
+(m)      Licensed drilling mud waste disposal facility means any facility or location where
+         disposal of drilling mud occurs and is permitted by the local land use authority which has
+         permit authority over the use, location or operation of the facility.
+
+(n)      Licensed solid waste disposal facility means any facility or location where disposal of
+         solid waste occurs and is permitted by the local land use authority, local solid waste
+         enforcement agency and any other agency which has permit authority over the use,
+         location or operation of the facility.
+
+(o)      Marijuana                                                                       Professions
+         Code Section 19300.5(f), as may be amended from time to time.
+
+(p)      Marijuana business means a commercial marijuana activity, regardless of whether it is
+         for profit or nonprofit, including, but not limited to, planting, cultivation, harvesting,
+         donating, transporting, manufacturing, compounding, testing, converting, processing,
+         preparing, storing, packaging, distributing, making available, providing, or selling
+         wholesale and/or retail sales of marijuana, whether fixed or mobile, temporary or
+         permanent, regardless of whether for medical or nonmedical purposes.
+
+(q)      Solid waste:
+
+         8.       Means all putrescible and nonputrescible solid, semisolid, and liquid wastes,
+         including garbage, trash, refuse, paper, rubbish, ashes, industrial wastes, demolition and
+         construction wastes, abandoned vehicles and parts thereof, discarded home and industrial
+         appliances, detreated, or chemically fixed sewage sludge which is not hazardous waste,
+         manure, vegetable or animal solid and semisolid wastes, and other discarded solid and
+         semisolid wastes.
+         9.      Does not include hazardous waste or low-level radioactive waste regulated under
+         the Health and Safety Code.
+
+         10.     Does not include medical waste regulated under the Health and Safety Code;
+         provided, that the medical waste, whether treated or untreated, is not disposed of at a solid
+         waste disposal facility. Medical waste which has been treated and which is deemed to be
+         solid waste shall be regulated pursuant to this chapter.
+
+         11.     Does not include drilling mud derived from the development and production of oil
+         and gas wells.
+
+         12.    Does not include materials which are recycled as defined by Public Resources
+         Code Section 40180, as amended.
+
+(r)      Tonnage means the difference between the total weight of the solid waste or drilling mud
+         received (measured in pounds) and the total weight diverted for recycling (measured in
+      Ordinance No. 2026-_____
+      Page 7
+         pounds) divided by two thousand (2,000).
+
+(s)      Wind energy generation facility means an installation of one (1) or more commercial wind
+         turbine generators.
+
+
+         Sec. 11-164. Reporting
+         (a)      For purposes of determining the net tonnage deposited for computation of the tax,
+         each licensed solid waste facility or drilling mud facility shall make monthly reports of net
+         tonnage to the Solano County department of resource management by the twenty-fifth day
+         of the following month. The department of resource management shall verify the reports
+         and submit the data quarterly to the Solano County auditor-controller on the twenty-fifth
+         day of the month following the end of the quarter.
+
+         (b)        For purposes of determining the electrical energy produced for computation of
+         the wind and solar energy tax, each wind energy generation or commercial solar energy
+         system facility shall make monthly report of the kilowatt-hours of energy produced by the
+         facility to the Solano County department of resource management by the twenty-fifth day
+         of the following month. The department of resource management shall verify the reports
+         and submit the data quarterly to the Solano County auditor-controller.
+
+         (c)      For purposes of determining the McF extracted from a natural gas well, each
+         company shall make monthly report of volume extracted by the facility to the Solano County
+         department of resource management by the twenty-fifth day of the following month. The
+         department of resource management shall verify the reports and submit the data quarterly
+         to the Solano County auditor-controller.
+
+         (d)       For purposes of determining the electrical storage capacity for BESS, each facility
+         shall make monthly report of the approved energy storage capacity, expressed in megawatt-
+         hours of capacity to the Solano County department of resource management by the
+         twenty-fifth day of the following month. The department of resource management shall
+         verify the reports and submit the data quarterly to the Solano County auditor-controller.
+
+         (e)      For purposes of determining the gross floor area of data centers, each facility
+         shall provide a report annually by March 30. The department of resource management
+         shall verify and submit the data to the Solano County auditor-controller.
+
+         (f)      A marijuana business shall report its gross receipts quarterly to the Solano County
+         auditor-controller by the twenty-fifth day of the month following the end of the quarter.
+
+
+         Sec. 11-165.                Payment of tax
+         The Solano County auditor-controller shall issue a quarterly tax bill to each marijuana
+         business, licensed solid waste facility, licensed drilling mud disposal facility, commercial
+         solar energy system, Front-of-the-meter (FTM) battery energy storage system, natural gas
+         well extraction facility and wind energy generation facility, which shall be due and payable
+         to the Solano County auditor-controller upon receipt and delinquent at the end of the
+         month following the month issued.
+
+         The Solano County auditor-controller shall issue a yearly tax bill to each data center facility,
+         which shall be due and payable to the Solano County auditor-controller upon receipt and
+         delinquent at the end of the month following the month issued.
+Ordinance No. 2026-_____
+Page 8
+
+   Sec. 11-166.              Penalty for delinquency
+   A ten (10%) percent penalty shall be assessed on any tax not paid by the delinquent date.
+   A facility or business subject to this article that is not current in its payment of any taxes
+   pursuant to this chapter at the time of the annual renewal of its Solano County business
+   license issued pursuant to Chapter 14 may be denied a license renewal until all taxes and
+   penalties are paid.
+
+   Section 11-167. Exemption
+
+   The tax imposed by Section 11-160 shall not apply to any person or entity that is exempt
+   from business license taxes under Federal or State law.
+
+Section 3.
+
+The business license tax established by this Ordinance is a general tax within the meaning of
+Government Code section 53721 and Article XIII C, section 1(a) of the California Constitution.
+The revenue generated by this general tax shall be deposited into the County General Fund and
+is available for general governmental purposes. The revenue from this general tax shall be
+
+lawful expenditure. Nothing in this Ordinance nor in any other ordinance, advisory measure,
+resolution, or policy shall be construed as limiting, in any way, the amount or the objects of the
+appropriations and expenditures that can be made from the revenue of the tax nor be construed
+as creating a continuing appropriation.
+
+Section 4.
+
+This Ordinance is exempt from the Environmental Quality Act (Public Resources Code § 21000,
+et seq.) (CEQA) pursuant to CEQA Guidelines (Cal. Code Regs., tit. 14, § 15000 et seq.) Section
+15378(b)(4) because it creates a government funding mechanism, which is not a project subject
+to the requirements of CEQA. Prior to commencement of any project that may result from the
+expenditure of revenues from this tax increase, any necessary environmental review required by
+CEQA shall be completed.
+
+Section 5.
+
+Any portion of this Ordinance deemed invalid or unenforceable shall be severed from the
+remainder, which shall remain in full force and effect.
+
+Section 6.
+
+If approved by a majority of the electorate voting on this ordinance at the November 3, 2026
+general election, this Ordinance shall take effect on January 1, 2027.
+
+
+Passed and adopted by the Solano County Board of Supervisors at its regular meeting on July
+28, 2026 by the following vote:
+
+
+AYES:          SUPERVISORS            __________________________________________
+
+NOES:          SUPERVISORS            __________________________________________
+
+EXCUSED:       SUPERVISORS            __________________________________________
+Ordinance No. 2026-_____
+Page 9
+
+
+
+
+                                     __________________________________________
+                                     MONICA BROWN, Chair
+                                     Solano County Board of Supervisors
+
+
+ATTEST:
+IAN M. GOLDBERG, Clerk
+Solano County Board of Supervisors
+
+
+By: _______________________________
+Alicia Draves, Chief Deputy Clerk
+
+
+
+Introduced:
+Adopted:
+Effective:
+Operative:
+

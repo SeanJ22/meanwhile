@@ -1,0 +1,9 @@
+{
+  "sourcePdfUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Vacaville_Measure_V_REDACTED.pdf",
+  "sourcePdfHash": "b6ba4fb6b0621960eef97d4d11e73165b810ced158727f70b9a4f2fb9c55f500",
+  "renderedPage": 3,
+  "renderCommand": "pdftoppm -r 150 -png",
+  "renderedImage": "sources/vacaville-ballot-question-page-3.png",
+  "renderedImageSha256": "5f3a1232d83051fbf4b33e0aaa17a1587db556227c99d2b94621ea3a342589dc",
+  "verification": "Direct visual inspection of the complete official question table. Several left/right edge characters are readable in the image but were cut by automatic OCR; the question is transcribed from this page without altering the source PDF."
+}

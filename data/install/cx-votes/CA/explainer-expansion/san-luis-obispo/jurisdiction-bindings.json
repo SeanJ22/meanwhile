@@ -1,0 +1,8 @@
+{
+  "ocd-division/country:us/state:ca/county:san_luis_obispo/place:arroyo_grande_ccd": "data/derived/zip-divisions/93.json",
+  "ocd-division/country:us/state:ca/place:arroyo_grande": "data/derived/zip-divisions/93.json",
+  "ocd-division/country:us/state:ca/place:grover_beach": "data/derived/zip-divisions/93.json",
+  "ocd-division/country:us/state:ca/place:pismo_beach": "data/derived/zip-divisions/93.json",
+  "ocd-division/country:us/state:ca/school_district:paso_robles_joint_unified_school_district": "data/derived/zip-divisions/93.json",
+  "ocd-division/country:us/state:ca/school_district:paso_robles_joint_unified_school_district_9_12": "data/derived/zip-divisions/93.json"
+}

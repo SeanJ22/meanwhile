@@ -1,0 +1,66 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-solano-county-b",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Winters_Joint_USD_Bond_Measure_B_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-e",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Solano_County_Measure_E_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-h",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Solano_County_Measure_H_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-o",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Rio_Vista_Measure_O_Extension_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-p",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Fairfield_Measure_P_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-q",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Fairfield_Measure_Q_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-u",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Dixon_USD_Measure_U_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-v",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Vacaville_Measure_V_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-x",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_X_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-y",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_Y_FINAL_REDACTED.pdf"
+    },
+    {
+      "id": "ca-2026-solano-county-z",
+      "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_Z_FINAL_REDACTED.pdf"
+    }
+  ],
+  "operation": "Merge these measure-only contests, official questions and source-linked explainers through existing runBallotPublication, preserving all unrelated data. Native official documents and labeled text derivations are archived with their distinct hashes.",
+  "coverageLimit": "Only the exact included local measures. Questions awaiting exact college-district geography stay outside this install input. Broader statewide local acquisition continues.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

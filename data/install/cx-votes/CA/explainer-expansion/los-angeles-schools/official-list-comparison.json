@@ -1,0 +1,390 @@
+{
+  "checkedAt": "2026-11-03T05:15:40.979437+00:00",
+  "officialLocalDenominator": 68,
+  "heldMapped": 54,
+  "newSourceBacked": 14,
+  "allOfficialMeasuresAccountedFor": true,
+  "preparedAttachedNew": 13,
+  "preparedUnscopedNew": 1,
+  "note": "All official list entries accounted for by jurisdiction and official letter. Pasadena college remains unattached; prior54 explainer substance has not been independently reviewed here. Official \u201cLos Angeles City\u201d is matched to the existing city jurisdiction called \u201cCity Of Los Angeles,\u201d separately from the county.",
+  "heldMapping": [
+    {
+      "heldContestId": "ca-ba01-la-measure-los_angeles_county-a",
+      "heldTitle": "Los Angeles County \u2014 Measure A",
+      "officialResultContestIds": [
+        10534
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-los_angeles_county-e",
+      "heldTitle": "Los Angeles County \u2014 Measure E",
+      "officialResultContestIds": [
+        10959
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_alhambra-ht",
+      "heldTitle": "City Of Alhambra \u2014 Measure HT",
+      "officialResultContestIds": [
+        10940
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_alhambra-db",
+      "heldTitle": "City Of Alhambra \u2014 Measure DB",
+      "officialResultContestIds": [
+        10941
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_baldwin_park-cr",
+      "heldTitle": "City Of Baldwin Park \u2014 Measure CR",
+      "officialResultContestIds": [
+        10912
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_bell_gardens-w",
+      "heldTitle": "City Of Bell Gardens \u2014 Measure W",
+      "officialResultContestIds": [
+        10419
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_burbank-c",
+      "heldTitle": "City Of Burbank \u2014 Measure C",
+      "officialResultContestIds": [
+        10880
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_burbank-cc",
+      "heldTitle": "City Of Burbank \u2014 Measure CC",
+      "officialResultContestIds": [
+        10942
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_burbank-cd",
+      "heldTitle": "City Of Burbank \u2014 Measure CD",
+      "officialResultContestIds": [
+        10943
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_carson-cu",
+      "heldTitle": "City Of Carson \u2014 Measure CU",
+      "officialResultContestIds": [
+        10945
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_cudahy-ok",
+      "heldTitle": "City Of Cudahy \u2014 Measure OK",
+      "officialResultContestIds": [
+        10946
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_cudahy-h",
+      "heldTitle": "City Of Cudahy \u2014 Measure H",
+      "officialResultContestIds": [
+        10947
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_culver_city-aa",
+      "heldTitle": "City Of Culver City \u2014 Measure AA",
+      "officialResultContestIds": [
+        10908
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_culver_city-t",
+      "heldTitle": "City Of Culver City \u2014 Measure T",
+      "officialResultContestIds": [
+        10929
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_culver_city-yv",
+      "heldTitle": "City Of Culver City \u2014 Measure YV",
+      "officialResultContestIds": [
+        10907
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_diamond_bar-q",
+      "heldTitle": "City Of Diamond Bar \u2014 Measure Q",
+      "officialResultContestIds": [
+        10930
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_el_segundo-ct",
+      "heldTitle": "City Of El Segundo \u2014 Measure CT",
+      "officialResultContestIds": [
+        10883
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_hawaiian_gardens-bl",
+      "heldTitle": "City Of Hawaiian Gardens \u2014 Measure BL",
+      "officialResultContestIds": [
+        10932
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_hawthorne-o",
+      "heldTitle": "City Of Hawthorne \u2014 Measure O",
+      "officialResultContestIds": [
+        10869
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_hermosa_beach-hb",
+      "heldTitle": "City Of Hermosa Beach \u2014 Measure HB",
+      "officialResultContestIds": [
+        10951
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_huntington_park-hp",
+      "heldTitle": "City Of Huntington Park \u2014 Measure HP",
+      "officialResultContestIds": [
+        10956
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_inglewood-at",
+      "heldTitle": "City Of Inglewood \u2014 Measure AT",
+      "officialResultContestIds": [
+        10913
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_inglewood-bb",
+      "heldTitle": "City Of Inglewood \u2014 Measure BB",
+      "officialResultContestIds": [
+        10914
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-te",
+      "heldTitle": "City Of Los Angeles \u2014 Measure TE",
+      "officialResultContestIds": [
+        10921
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-la",
+      "heldTitle": "City Of Los Angeles \u2014 Measure LA",
+      "officialResultContestIds": [
+        10922
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-pl",
+      "heldTitle": "City Of Los Angeles \u2014 Measure PL",
+      "officialResultContestIds": [
+        10923
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-ee",
+      "heldTitle": "City Of Los Angeles \u2014 Measure EE",
+      "officialResultContestIds": [
+        10924
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-prk",
+      "heldTitle": "City Of Los Angeles \u2014 Measure PRK",
+      "officialResultContestIds": [
+        10925
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-prt",
+      "heldTitle": "City Of Los Angeles \u2014 Measure PRT",
+      "officialResultContestIds": [
+        10926
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-fd",
+      "heldTitle": "City Of Los Angeles \u2014 Measure FD",
+      "officialResultContestIds": [
+        10927
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_los_angeles-sc",
+      "heldTitle": "City Of Los Angeles \u2014 Measure SC",
+      "officialResultContestIds": [
+        10928
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_lynwood-l",
+      "heldTitle": "City Of Lynwood \u2014 Measure L",
+      "officialResultContestIds": [
+        10952
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_monterey_park-hom",
+      "heldTitle": "City Of Monterey Park \u2014 Measure HOM",
+      "officialResultContestIds": [
+        10960
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_monterey_park-aaa",
+      "heldTitle": "City Of Monterey Park \u2014 Measure AAA",
+      "officialResultContestIds": [
+        10909
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_palmdale-de",
+      "heldTitle": "City Of Palmdale \u2014 Measure DE",
+      "officialResultContestIds": [
+        10881
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_palos_verdes_estates-pve",
+      "heldTitle": "City Of Palos Verdes Estates \u2014 Measure PVE",
+      "officialResultContestIds": [
+        10953
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_paramount-p",
+      "heldTitle": "City Of Paramount \u2014 Measure P",
+      "officialResultContestIds": [
+        10934
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_pasadena-pfd",
+      "heldTitle": "City Of Pasadena \u2014 Measure PFD",
+      "officialResultContestIds": [
+        10954
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_rancho_palos_verdes-rs",
+      "heldTitle": "City Of Rancho Palos Verdes \u2014 Measure RS",
+      "officialResultContestIds": [
+        10936
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_redondo_beach-art",
+      "heldTitle": "City Of Redondo Beach \u2014 Measure ART",
+      "officialResultContestIds": [
+        10955
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_rosemead-rc",
+      "heldTitle": "City Of Rosemead \u2014 Measure RC",
+      "officialResultContestIds": [
+        10508
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_san_gabriel-ps",
+      "heldTitle": "City Of San Gabriel \u2014 Measure PS",
+      "officialResultContestIds": [
+        10915
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_san_marino-u",
+      "heldTitle": "City Of San Marino \u2014 Measure U",
+      "officialResultContestIds": [
+        10957
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_santa_monica-es",
+      "heldTitle": "City Of Santa Monica \u2014 Measure ES",
+      "officialResultContestIds": [
+        10916
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_santa_monica-gg",
+      "heldTitle": "City Of Santa Monica \u2014 Measure GG",
+      "officialResultContestIds": [
+        10917
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_santa_monica-rr",
+      "heldTitle": "City Of Santa Monica \u2014 Measure RR",
+      "officialResultContestIds": [
+        10918
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_santa_monica-vv",
+      "heldTitle": "City Of Santa Monica \u2014 Measure VV",
+      "officialResultContestIds": [
+        10919
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_santa_monica-tt",
+      "heldTitle": "City Of Santa Monica \u2014 Measure TT",
+      "officialResultContestIds": [
+        10958
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_south_el_monte-cl",
+      "heldTitle": "City Of South El Monte \u2014 Measure CL",
+      "officialResultContestIds": [
+        10939
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_south_el_monte-rm",
+      "heldTitle": "City Of South El Monte \u2014 Measure RM",
+      "officialResultContestIds": [
+        10938
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_south_gate-sg",
+      "heldTitle": "City Of South Gate \u2014 Measure SG",
+      "officialResultContestIds": [
+        10910
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_south_pasadena-sos",
+      "heldTitle": "City Of South Pasadena \u2014 Measure SOS",
+      "officialResultContestIds": [
+        10882
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_whittier-el",
+      "heldTitle": "City Of Whittier \u2014 Measure EL",
+      "officialResultContestIds": [
+        10877
+      ]
+    },
+    {
+      "heldContestId": "ca-ba01-la-measure-city_of_whittier-ev",
+      "heldTitle": "City Of Whittier \u2014 Measure EV",
+      "officialResultContestIds": [
+        10876
+      ]
+    }
+  ]
+}

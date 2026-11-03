@@ -1,0 +1,151 @@
+[
+  {
+    "contestId": "ca-2026-solano-county-b",
+    "letter": "B",
+    "jurisdiction": "Winters Joint Unified School District",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:winters_joint_unified_school_district",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Winters_Joint_USD_Bond_Measure_B_REDACTED.pdf",
+    "sourceHash": "9a1865745ace5e1f0136c0b70ae9c51f61d808e572f2612d42c0ceea11880534",
+    "textMethodByDocument": {
+      "text": "TESSERACT_OCR",
+      "taxrate": "TESSERACT_OCR",
+      "analysis": "TESSERACT_OCR"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-e",
+    "letter": "E",
+    "jurisdiction": "Solano County",
+    "ocdId": "ocd-division/country:us/state:ca/county:solano",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Solano_County_Measure_E_REDACTED.pdf",
+    "sourceHash": "c0d5b08c92ff2674ebb5d4ce206d0df6a35559fa0c102bc6cdc9cb1c48324cf3",
+    "textMethodByDocument": {
+      "text": "PDFTOTEXT",
+      "analysis": "PDFTOTEXT",
+      "resolution": "TESSERACT_OCR"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-h",
+    "letter": "H",
+    "jurisdiction": "Solano County",
+    "ocdId": "ocd-division/country:us/state:ca/county:solano",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Solano_County_Measure_H_REDACTED.pdf",
+    "sourceHash": "07aa4293bb19eb57304833a80c12f1cc093380b8bc33736b8ddece4f6ae7f22d",
+    "textMethodByDocument": {
+      "text": "TESSERACT_OCR",
+      "analysis": "PDFTOTEXT"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-o",
+    "letter": "O",
+    "jurisdiction": "Rio Vista",
+    "ocdId": "ocd-division/country:us/state:ca/place:rio_vista",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Rio_Vista_Measure_O_Extension_REDACTED.pdf",
+    "sourceHash": "8d32dda3ec9961907c063d9e6215e52ece5f6c90c673b18c69dfb664d88dc3b9",
+    "textMethodByDocument": {
+      "text": "TESSERACT_OCR",
+      "analysis": "TESSERACT_OCR"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-p",
+    "letter": "P",
+    "jurisdiction": "Fairfield",
+    "ocdId": "ocd-division/country:us/state:ca/place:fairfield",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Fairfield_Measure_P_REDACTED.pdf",
+    "sourceHash": "904fff2c96d4062f94d6f2e452775759dc948f382e3dc0eeb59050568963f5be",
+    "textMethodByDocument": {
+      "text": "PDFTOTEXT",
+      "analysis": "PDFTOTEXT",
+      "resolution": "TESSERACT_OCR"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-q",
+    "letter": "Q",
+    "jurisdiction": "Fairfield",
+    "ocdId": "ocd-division/country:us/state:ca/place:fairfield",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Fairfield_Measure_Q_REDACTED.pdf",
+    "sourceHash": "585b71748e99ea7b93cae31852ad134e326829fbdeed492ce3602e5085b1d515",
+    "textMethodByDocument": {
+      "text": "PDFTOTEXT",
+      "analysis": "PDFTOTEXT",
+      "resolution": "TESSERACT_OCR"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-u",
+    "letter": "U",
+    "jurisdiction": "Dixon Unified School District",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:dixon_unified_school_district",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_Dixon_USD_Measure_U_REDACTED.pdf",
+    "sourceHash": "7e73386e41ad72cb0d8b9443c0d65496b50f1cf7cd87959275dfdf5b704b19c6",
+    "textMethodByDocument": {
+      "text": "PDFTOTEXT",
+      "question": "PDFTOTEXT",
+      "taxrate": "TESSERACT_OCR",
+      "analysis": "PDFTOTEXT"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-v",
+    "letter": "V",
+    "jurisdiction": "Vacaville",
+    "ocdId": "ocd-division/country:us/state:ca/place:vacaville",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-07/Resolution_City_of_Vacaville_Measure_V_REDACTED.pdf",
+    "sourceHash": "b6ba4fb6b0621960eef97d4d11e73165b810ced158727f70b9a4f2fb9c55f500",
+    "textMethodByDocument": {
+      "text": "TESSERACT_OCR",
+      "analysis": "TESSERACT_OCR"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-x",
+    "letter": "X",
+    "jurisdiction": "Benicia",
+    "ocdId": "ocd-division/country:us/state:ca/place:benicia",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_X_REDACTED.pdf",
+    "sourceHash": "2d903dad140ef95d4a29f091d2089d312de3f7b26330e6c98f6e5ad1db6ea550",
+    "textMethodByDocument": {
+      "text": "PDFTOTEXT",
+      "analysis": "PDFTOTEXT"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-y",
+    "letter": "Y",
+    "jurisdiction": "Benicia",
+    "ocdId": "ocd-division/country:us/state:ca/place:benicia",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_Y_FINAL_REDACTED.pdf",
+    "sourceHash": "513a84078778c7afe524c79194a78dfd8a1fa388ee45a7c2ee523a023cc0dab3",
+    "textMethodByDocument": {
+      "text": "PDFTOTEXT",
+      "analysis": "PDFTOTEXT"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  },
+  {
+    "contestId": "ca-2026-solano-county-z",
+    "letter": "Z",
+    "jurisdiction": "Benicia",
+    "ocdId": "ocd-division/country:us/state:ca/place:benicia",
+    "sourceUrl": "https://content.solanocounty.gov/sites/default/files/2026-08/Resolution_City_of_Benicia_Measure_Z_FINAL_REDACTED.pdf",
+    "sourceHash": "be248fcabf2a1cf133a560cf5fa0ec844ab8f64620d4f89ba6909c613ee4afb1",
+    "textMethodByDocument": {
+      "text": "PDFTOTEXT",
+      "analysis": "PDFTOTEXT"
+    },
+    "questionTranscriptionNote": "Ballot question transcribed from the official resolution/label; whitespace, bullet layout and YES/NO side columns normalized. Vacaville’s table visually verified on PDF page 3. Original PDF bytes remain unchanged."
+  }
+]

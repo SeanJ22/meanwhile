@@ -1,0 +1,74 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-la-school-s",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json"
+    },
+    {
+      "id": "ca-2026-la-school-g",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json"
+    },
+    {
+      "id": "ca-2026-la-school-mm",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json"
+    },
+    {
+      "id": "ca-2026-la-school-cs",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json"
+    },
+    {
+      "id": "ca-2026-la-school-ed",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json"
+    },
+    {
+      "id": "ca-2026-la-school-sms",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json"
+    },
+    {
+      "id": "ca-2026-la-school-tcs",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json"
+    },
+    {
+      "id": "ca-2026-la-school-lv",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json"
+    },
+    {
+      "id": "ca-2026-la-school-sm",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json"
+    },
+    {
+      "id": "ca-2026-la-school-b",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json"
+    },
+    {
+      "id": "ca-2026-la-school-hh",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json"
+    },
+    {
+      "id": "ca-2026-la-school-k",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json"
+    },
+    {
+      "id": "ca-2026-la-school-r",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json"
+    }
+  ],
+  "operation": "Merge these measure-only contests, official questions and source-linked explainers through existing runBallotPublication, preserving all unrelated data. Native official documents and labeled text derivations are archived with their distinct hashes.",
+  "coverageLimit": "Only the exact included local measures. Questions awaiting exact college-district geography stay outside this install input. Broader statewide local acquisition continues.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

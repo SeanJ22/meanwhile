@@ -1,0 +1,11 @@
+{
+  "ocd-division/country:us/state:ca/county:solano": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/place:benicia": "data/derived/zip-divisions/94.json",
+  "ocd-division/country:us/state:ca/place:fairfield": "data/derived/zip-divisions/94.json",
+  "ocd-division/country:us/state:ca/place:rio_vista": "data/derived/zip-divisions/94.json",
+  "ocd-division/country:us/state:ca/place:vacaville": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/school_district:dixon_unified_school_district": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/place:dixon": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/place:winters": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/school_district:winters_joint_unified_school_district": "data/derived/zip-divisions/95.json"
+}

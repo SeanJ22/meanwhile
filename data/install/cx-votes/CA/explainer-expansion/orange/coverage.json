@@ -1,0 +1,36 @@
+{
+  "state": "CA",
+  "county": "Orange",
+  "electionDate": "2026-11-03",
+  "checkedAt": "2026-11-03T04:38:19.399218+00:00",
+  "officialList": {
+    "url": "https://ocvote.gov/elections/assigned-measure-letters-november-3-2026",
+    "retrievedAt": "2026-11-03T04:28:48.736036+00:00",
+    "rawHash": "fce1b076f0cb8bf98a1e6fa7e810e3b2d1ba663f5faf7d4f7e74b40f4ba596e4",
+    "savedFile": "sources/fce1b076f0cb8bf98a1e6fa7e810e3b2d1ba663f5faf7d4f7e74b40f4ba596e4.html",
+    "denominator": 15,
+    "measureLetters": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O"
+    ]
+  },
+  "prepared": 15,
+  "existingBefore": 0,
+  "status": "PREPARED_FOR_INDEPENDENT_REVIEW",
+  "scope": "All 15 measures on the official Orange County November 3, 2026 assigned-letter list. Statewide and other county coverage are separate; this is not a statewide completeness claim.",
+  "productionWrites": 0,
+  "applicationChanges": 0
+}

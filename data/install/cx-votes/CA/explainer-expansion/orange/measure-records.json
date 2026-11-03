@@ -1,0 +1,276 @@
+[
+  {
+    "contestId": "ca-2026-orange-county-a",
+    "whatItDoes": "Authorize up to $83 million in school-facility bonds for classroom, laboratory, technology, safety and infrastructure projects. Property taxes would repay the bonds while they remain outstanding. The district plans to extend existing tax rates: it estimates $5 million annually, an average $8.68 and maximum $8.85 per $100,000 of assessed property value, with collections through fiscal year 2056–57 and $157,260,047 total principal and interest. These are estimates, not binding caps; actual rates, repayment and timing may differ. Interest rates and maturity must stay within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent annual financial and performance audits and citizen oversight are required. Approval does not guarantee every listed project will be funded; some depend on other funding. The measure needs 55% approval.",
+    "yesMeans": "Authorize the district to borrow up to $83 million for the listed school facilities and levy property taxes to repay principal and interest, with the stated oversight requirements.",
+    "noMeans": "Do not authorize these $83 million in bonds or their repayment tax through this measure.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "b17106695e619dfe1e26cde338fecd5f4a01b0aa4c082dc6e94f3c6ad72d1046",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-b",
+    "whatItDoes": "Authorize up to $128 million in bonds to repair, upgrade and equip school classrooms, laboratories, technology, infrastructure and safety systems. Property taxes would repay the bonds while they remain outstanding. The district estimates $8 million annually, an average and highest rate of $30 per $100,000 of assessed property value, collections through fiscal year 2060–61, and $276 million in total principal and interest. These are estimates, not binding caps; actual rates, repayment and timing may differ. Interest rates and maturity must stay within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent annual financial and performance audits and citizen oversight are required. Listed projects depend on available funding and may be delayed or not completed. The measure needs 55% approval.",
+    "yesMeans": "Authorize the district to borrow up to $128 million for the listed school facilities and levy property taxes to repay principal and interest, with the stated oversight requirements.",
+    "noMeans": "Do not authorize these $128 million in bonds or their repayment tax through this measure.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "7f6185b58ec4000399a0149d7e3ab3171e2e729eb6cd0d3e586e6ab0fda3c9e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-c",
+    "whatItDoes": "Change Costa Mesa’s business-license tax for businesses with more than $500,000 in annual gross receipts to 50 cents per $1,000 of gross receipts, capped at $15,000 annually for businesses with $30 million or more in receipts. Businesses with $500,000 or less would keep their existing rates. This business tax is not charged to residents. The city estimates $4.6 million in additional annual revenue, or approximately $5.6 million total, for general city services, with local control, annual spending disclosures and audits. It would continue until ended by voters. The council could lower taxes for business categories when economic conditions warrant and later restore them up to the measure’s maximums.",
+    "yesMeans": "Approve the new business-license tax schedule for businesses above $500,000 in annual gross receipts, while keeping rates unchanged for smaller businesses.",
+    "noMeans": "Keep the existing business-license tax schedule and its $200 annual maximum.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "de48859e0d0c92d3872405dd2d401443e00f7f143da5efb1f11a0267d7bbfaa6",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-d",
+    "whatItDoes": "Direct Irvine to use ranked-choice voting for mayoral and council elections after January 1, 2028, only when voting equipment can support it, county-consolidated elections remain possible, and the estimated additional cost for the first ranked-choice election is no more than 0.23% of that election year’s city general-fund budget. Voters would rank candidates. If nobody has a majority of continuing votes, the lowest candidate is eliminated and ballots move to the next continuing choice until someone has a majority. After the first ranked-choice election, the system would continue unless voters replace it.",
+    "yesMeans": "Approve the transition to ranked-choice mayoral and council elections after January 1, 2028, when the specified technical and financial conditions are met.",
+    "noMeans": "Reject this transition and keep the current system in which the candidate with the most votes wins.",
+    "parts": [
+      {
+        "id": "ca-2026-orange-county-d#ballots",
+        "number": "1-2-603",
+        "kind": "PROGRAM",
+        "label": "Rankings and write-ins",
+        "what": "Ballots would allow at least five rankings and permit write-in candidates. Voters could rank as many or as few choices as they wish. Ballots without a remaining ranked candidate stop counting in later rounds."
+      },
+      {
+        "id": "ca-2026-orange-county-d#implementation",
+        "number": "1-2-611",
+        "kind": "PROGRAM",
+        "label": "Costs and later changes",
+        "what": "The additional-cost limit applies only to the first ranked-choice election. Until the city transitions, it must check the limit before each subsequent mayoral or council election. The clerk could make the minimum feasible procedural changes for equipment limits or adopt compatible new state guidelines. Five of seven council members could approve amendments that further or expand the ordinance’s goals; other amendments or repeal would require voters."
+      }
+    ],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf",
+    "sourceHash": "1d0151d897b25db8914ba12611aeeaa90d9531f28237cdebbef52cde74f3264a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-e",
+    "whatItDoes": "Limit Laguna Beach council members to two consecutive four-year terms, beginning with terms starting after the November 3, 2026 election; earlier terms would not count. A person filling a vacancy for less than two years could then serve two consecutive full terms. After a break of at least two years, someone could again serve two consecutive terms. For this rule, the break is measured between the declarations of results for successive November municipal elections in even-numbered years, even if the interval is slightly longer or shorter than two calendar years.",
+    "yesMeans": "Establish these council term limits and eligibility rules.",
+    "noMeans": "Keep the current system without city council term limits.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "0a28034aa91934b8f3d7ff4aab4fc8a9cd3aa3e9e51285449e519bf3265775c5",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-f",
+    "whatItDoes": "Replace Lake Forest’s lifetime limit of two four-year council or mayoral terms with a limit of two consecutive four-year terms. After four or more consecutive years out of office following two consecutive terms, a person could serve two more; this could repeat without a lifetime limit. Serving at least two years of a partial term would count as a full term. The change would apply to new or reelected council members beginning with the 2026 election, without giving current members additional consecutive terms.",
+    "yesMeans": "Allow repeated periods of up to two consecutive terms, separated by at least four consecutive years out of office.",
+    "noMeans": "Keep the current limit of two four-year terms, without this opportunity to return after a four-year break.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "b209bcb819b8a14618a1924d29380827297863116a79adc3441b898dc65fd97c",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-g",
+    "whatItDoes": "Increase Los Alamitos’s hotel tax from 8% to 12% of the rent paid by guests for hotel, motel or similar lodging stays of 30 consecutive days or less. The city estimates $300,000 in additional annual revenue. It would go to the general fund for any lawful city purpose, including public safety, streets, parks, facilities and community programs; it would not be restricted to one program. Approval requires a majority vote.",
+    "yesMeans": "Raise the hotel tax from 8% to 12%.",
+    "noMeans": "Keep the current 8% hotel tax.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf",
+    "sourceHash": "c661fbf51dcf5c132273b10e5e91f12cc55864390602c5bab2e38eaac45acad2",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-h",
+    "whatItDoes": "Amend Newport Beach’s general plan to set limits and affordability requirements for up to 2,900 homes: 2,160 for extremely low-, very low- and low-income households, and 740 for moderate-income households. The allocation would be 174 in Dover/Westcliff, 870 in Newport Center, 406 in West Newport Mesa, 929 in the Airport Area and 521 in Coyote Canyon. Density would be 20–50 homes per gross acre, plus additional density allowed by state law. It would not approve any specific project; normal project review would remain. Because these would be voter-approved restrictions, changing locations, density or affordability requirements could require another vote. The official analysis says that if state authorities find these limits reduce required housing capacity or constrain production, the city may need additional sites or plan changes; noncompliance could lead to state or court enforcement.",
+    "yesMeans": "Adopt these general-plan housing limits, locations and affordability requirements.",
+    "noMeans": "Do not adopt this proposed general-plan amendment.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "17381d39fc708662c87d08ad0d340e76725fa400512061d81f4b468d9d745bde",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-i",
+    "whatItDoes": "Add a 1% local sales and use tax—1 cent per taxable dollar—for 13 years from its operative date, unless voters repeal, amend or extend it. The city estimates $37 million annually. Purchases exempt from state sales and use tax, including most groceries and prescription medicines, would generally remain exempt. Revenue would enter the general fund and could pay for any lawful city purpose, without a binding dedication to the services named in the ballot question. An independent oversight committee would review revenue, spending and annual independent audits, make recommendations and issue a yearly report. Audits would be presented publicly and posted online. Approval requires a majority vote.",
+    "yesMeans": "Authorize this additional 1% general sales and use tax for 13 years and its oversight requirements.",
+    "noMeans": "Do not authorize this additional sales and use tax.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "c98eadb7139e1a260f86d163d62df6549b3585e8e9f88921ccc0e924b40787d6",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-j",
+    "whatItDoes": "Increase Orange’s hotel-guest tax from 10% to 14% for hotels with 11 or more accommodations, while keeping the rate at 10% for hotels with 10 or fewer. Apply the tax to the full amount guests pay for lodging, including amounts collected by online booking or other accommodation intermediaries. Hotel guests pay the tax, and operators would continue collecting and sending it to the city. The city estimates approximately $3 million annually for its general fund, available for any lawful city purpose without dedication to a specific program. The tax would continue until ended by voters. Approval requires a majority vote.",
+    "yesMeans": "Approve the higher rate for hotels with at least 11 accommodations and the expanded application to the full lodging charge and booking intermediaries.",
+    "noMeans": "Do not approve these changes to the existing hotel-guest tax.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "fc8d8823cdfa030b85bb4e3d61e124b1ed99dbb7136f3cffca06e06e6efdd542",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-k",
+    "whatItDoes": "Adopt a city charter for Orange, changing it from a general-law city to a charter city with authority over municipal affairs. Federal and state constitutions and state laws on matters of statewide concern would still apply. The council-manager form of government would remain. The charter sets prospective lifetime term limits, municipal contracting powers, open-space protections, restrictions on taking or regulating private property, vacancy and suspension rules, and fiscal requirements described below. Existing ordinances, contracts, rights and obligations would continue unless lawfully changed. The charter would take effect after voter approval and filing with the secretary of state.",
+    "yesMeans": "Adopt the proposed charter and authorize Orange to become a charter city under its provisions.",
+    "noMeans": "Reject the proposed charter and keep Orange a general-law city governed by existing state law.",
+    "parts": [
+      {
+        "id": "ca-2026-orange-county-k#term-limits",
+        "number": "500–503",
+        "kind": "PROGRAM",
+        "label": "Term limits and qualifications",
+        "what": "Future service would be limited to two four-year mayoral terms and three four-year council terms in a lifetime. More than two years of a partial term would count as a full term. Only terms beginning after the charter takes effect would count, and no current term would be shortened. Officeholders must be registered voters and residents of the city, and district council members of their district, for at least 30 days before filing or appointment and throughout service."
+      },
+      {
+        "id": "ca-2026-orange-county-k#contracts",
+        "number": "600–601",
+        "kind": "PROGRAM",
+        "label": "Contracting and wages",
+        "what": "The council could establish, change or waive municipal procurement and contracting procedures where legally permitted, including exemptions available to charter cities. It could set public-works and prevailing-wage procedures consistent with constitutional authority and applicable law, while retaining state wage rules where required or considered in the public interest."
+      },
+      {
+        "id": "ca-2026-orange-county-k#open-space",
+        "number": "204",
+        "kind": "PROGRAM",
+        "label": "Open-space reserve",
+        "what": "City-designated reserve land would be limited to compatible open-space, recreation, conservation, agricultural and public uses. Inconsistent residential, commercial, industrial or mixed-use development would be prohibited. Removing, selling, exchanging or using reserve property inconsistently would require a majority vote at a regular municipal election. Emergency and necessary maintenance work could continue. If voters approve removal, the city must preserve replacement open space of equal or greater value to the maximum feasible extent."
+      },
+      {
+        "id": "ca-2026-orange-county-k#private-property",
+        "number": "602–603",
+        "kind": "PROGRAM",
+        "label": "Private property",
+        "what": "The city generally could not take private property to convey it to another private party without the owner’s consent, with exceptions for mitigating a public project’s impacts and city-owned or operated facilities. It generally could not impose mandatory price or rent controls on private residential property, except as required by controlling law. Exceptions preserve land-use and building regulation, voluntary agreements, required state or federal rules, lawful city property powers, and accommodations subject to hotel tax."
+      },
+      {
+        "id": "ca-2026-orange-county-k#vacancies",
+        "number": "700–701",
+        "kind": "PROGRAM",
+        "label": "Vacancies and suspensions",
+        "what": "The council would fill a permanent vacancy by appointment within 60 days or call a special election; the replacement would serve the remaining term. An appointee later running for the office would not have to use “Appointed” in the ballot title. Where law permits, three-fourths of the full council could suspend an officer facing felony or formal corruption, fraud, misconduct or ethics proceedings. A majority could end the suspension. Acquittal, dismissal or final resolution without disqualification would automatically restore the officer; extending a suspension after a hung jury would require three-fourths and pending possible reprosecution. Removal would still require legal disqualification and all actions would be subject to legal review and due process."
+      },
+      {
+        "id": "ca-2026-orange-county-k#finances",
+        "number": "801–803",
+        "kind": "PROGRAM",
+        "label": "Budgets, audits and priorities",
+        "what": "The city must keep its ongoing operating budget balanced and publish an independent annual audit. It could spend reserves and other legally available funds on one-time projects even when total spending exceeds that year’s revenue. Additional recurring general-fund revenue would prioritize pension and benefit liabilities, infrastructure, debt, reserves and one-time investments; essential services and other lawful purposes would remain allowed with a balanced operating budget."
+      },
+      {
+        "id": "ca-2026-orange-county-k#land-use",
+        "number": "203",
+        "kind": "PROGRAM",
+        "label": "Land-use rules",
+        "what": "Existing state rules for general-law cities would continue to govern land use, zoning, subdivisions and housing compliance unless a city ordinance provides otherwise; state laws on statewide concerns would continue to apply."
+      }
+    ],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf",
+    "sourceHash": "08dfd9c63143d92de0770ffe5e96238f02608765f30f76e951cdd1a13e21dd4f",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-l",
+    "whatItDoes": "Increase Placentia’s hotel tax from 10% to 14% beginning January 1, 2027, for hotel and other short-term lodging stays of 30 consecutive days or less, including qualifying home or room rentals. The city estimates approximately $715,000 annually, continuing until ended by voters. Revenue would go to the general fund for any lawful city purpose, including police, fire, emergency response and roads. Independent annual audits would cover tax revenue and spending; the existing Citizens’ Oversight Committee would review spending and publish a yearly report. A majority vote is required, and any future increase above 14% would require voter approval.",
+    "yesMeans": "Raise the hotel tax to 14% and add the specified audit and citizen-review requirements.",
+    "noMeans": "Keep the current 10% hotel tax.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "6945d156edb523dfa1a7438e58abd34fe7afe4aa588d0d79f82c689e247726ad",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-m",
+    "whatItDoes": "Add a 1% sales and use tax for 10 years, increasing the current combined rate from 7.75% to 8.75%. The city estimates $15 million annually. Half would go to a legally restricted beach-protection fund and half to a legally restricted fire-protection and wildfire-preparedness fund. At least 70% of beach-fund spending must go to sand replenishment, nourishment, retention or erosion control. The revenue could not be transferred to the general fund or spent on unrelated services. Annual independent audits, public spending reports, council approval and oversight would be required. Voters would decide a possible single additional 10-year term in a later renewal election. This citizen-initiated measure requires a majority vote.",
+    "yesMeans": "Approve the additional 1% tax and the dedicated funds, spending restrictions and oversight rules.",
+    "noMeans": "Do not impose this additional tax or establish its dedicated funds through this measure.",
+    "parts": [
+      {
+        "id": "ca-2026-orange-county-m#beach",
+        "number": "3.22.150(A)",
+        "kind": "PROGRAM",
+        "label": "Beach fund",
+        "what": "Half of revenue would fund beach protection. At least 70% of its spending must address sand replenishment, nourishment, retention or erosion. Remaining permitted uses include the Beach Trail, public access points, pedestrian bridges, pier, beachfront restrooms and stormwater-related beach-water quality measures."
+      },
+      {
+        "id": "ca-2026-orange-county-m#fire",
+        "number": "3.22.150(B)",
+        "kind": "PROGRAM",
+        "label": "Fire and wildfire fund",
+        "what": "Half of revenue would support fire protection and emergency medical response, wildfire prevention on public and private land, and community education and vegetation management. Each fund could reimburse up to $250,000 in actual election costs attributable to this measure, with a combined $500,000 cap across both funds and the initial and renewal elections."
+      },
+      {
+        "id": "ca-2026-orange-county-m#oversight",
+        "number": "3.22.160–180",
+        "kind": "PROGRAM",
+        "label": "Plans, audits and oversight",
+        "what": "All funded programs, spending, contracts and grant applications would require council approval at a public meeting. Beach and wildfire operational plans would be due within 12 months and reviewed and adopted at least every four years. Annual independent audits and an accountability report within three months after the fiscal year ends would disclose revenue, spending, progress and unspent funds. The Investment Advisory Committee would review spending and issue a public compliance-or-concern statement; a separate operational committee could also be created."
+      },
+      {
+        "id": "ca-2026-orange-county-m#term",
+        "number": "3.22.190",
+        "kind": "PROGRAM",
+        "label": "Start, renewal and competing measures",
+        "what": "Collection would begin on the first calendar quarter starting more than 110 days after adoption. A general municipal renewal election would be held in the calendar year beginning eight years after the tax starts. A majority YES would extend it once for 10 more years; otherwise it would expire after its original 10 years. If this and another city measure imposing new or increased taxes, or otherwise conflicting with it, both pass at the same election, this measure specifies that the one receiving more YES votes controls and no part of the other takes effect."
+      }
+    ],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "c5caf8951520a2d329a8b639b5b28af7acba7f7146e7199ebefe4fa061b3d28a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-n",
+    "whatItDoes": "Keep Santa Ana’s existing 1.5% local sales and use tax indefinitely, unless voters end it. Cancel the scheduled reduction to 1% on April 1, 2029 and the tax’s scheduled end on April 1, 2039. The city estimates approximately $84 million each year for general city services, including roads, parks, public safety and emergency response, and addressing the city’s structural deficit at council discretion. Existing citizen oversight, independent annual audits and public annual spending disclosures would remain. The current tax applies to most tangible-goods and restaurant purchases, subject to existing exemptions. Approval requires a majority vote.",
+    "yesMeans": "Continue the 1.5% local tax without the scheduled rate reduction or expiration.",
+    "noMeans": "Keep the scheduled reduction to 1% on April 1, 2029 and expiration on April 1, 2039.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "66e41bda2bba12fedf6cf3bc143cfb94a7dc340ed32e64b105c1acd496f90fe7",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-orange-county-o",
+    "whatItDoes": "Increase Westminster’s hotel tax from 8% to 12% on the rent paid for hotel or motel stays of 30 consecutive days or less, beginning January 1, 2027. Existing tax definitions would stay the same. The city estimates $452,000 in additional annual revenue until ended by voters. Revenue would go to the general fund for any lawful city purpose, including public safety, disaster preparedness, parks, public-area maintenance and homelessness services. Independent annual audits and public audit reports would be required. The council could amend the ordinance, but any increase above 12% would require voter approval. This measure requires a majority vote.",
+    "yesMeans": "Increase the hotel tax to 12% with the stated audit requirements.",
+    "noMeans": "Keep the current 8% hotel tax.",
+    "parts": [],
+    "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf",
+    "sourceHash": "1b689dd5c0a1e4060791697e65fbcf18849603f75e9cf14d1f86a40200055f71",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,788 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-la-school-s",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:charter_oak_unified_school_district",
+          "title": "Charter Oak Unified School District — Measure S",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+            "collectedAt": "2026-11-03T05:06:26.908007+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.908007+00:00",
+            "quote": "To provide safe, modern neighborhood schools by repairing/upgrading/equipping aging classrooms, science labs, instructional technology, and school facilities that support math, science, engineering, literacy, arts, skilled trades, and college/career readiness, fixing deteriorating roofs, plumbing, electrical systems, and removing asbestos/lead pipes, shall Charter Oak Unified School District's measure authorizing $75,000,000 in bonds at legal rates be adopted, levying $40 per $100,000 assessed value ($5,000,000 annually) while bonds are outstanding, with independent oversight/audits, all money locally controlled?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-g",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:glendora_unified_school_district",
+          "title": "Glendora Unified School District — Measure G",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+            "collectedAt": "2026-11-03T05:06:26.958099+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.958099+00:00",
+            "quote": "Glendora Unified School District Classroom Repair Extension Measure. To repair or replace deteriorating roofs, plumbing, HVAC, electrical systems; remove asbestos and lead pipes; upgrade classrooms, labs, facilities to support college/career readiness in math, science, engineering, technology and skilled trades; shall Glendora Unified School District's measure be adopted, authorizing $86,000,000 in bonds at legal rates (without increasing current tax rates), levying approximately $33 per $100,000 assessed value ($5,000,000 annually) while bonds are outstanding, with independent oversight/audits, and funds locally controlled?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-mm",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:inglewood_unified_school_district",
+          "title": "Inglewood Unified School District — Measure MM",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+            "collectedAt": "2026-11-03T05:06:26.908863+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.908863+00:00",
+            "quote": "Inglewood Unified School District Safety, Repair, Upgrade Measure. To repair/upgrade classrooms/labs including science, engineering, career/skilled trades to help recruit/retain teachers; repair deteriorating gas lines; remove asbestos, lead paint, mold; provide safe drinking water; construct, repair equip sites, facilities; shall Inglewood Unified School District's measure authorizing $396,000,000 in bonds, at legal rates, levying $60 per $100,000 of assessed valuation ($26,000,000 annually) while bonds are outstanding, be adopted, requiring oversight, audits, spending disclosure, all funds for local schools?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-cs",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:claremont_unified_school_district",
+          "title": "Claremont Unified School District — Measure CS",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+            "collectedAt": "2026-11-03T05:06:26.948466+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.948466+00:00",
+            "quote": "CLAREMONT UNIFIED SCHOOL DISTRICT CLASSROOM SAFETY, HEALTH AND REPAIR MEASURE. To repair/upgrade aging classrooms, heating/air conditioning/electrical/plumbing systems, improve safety/security, fix leaky/deteriorating roofs, repair/construct/equip classroom sites/facilities without increasing current taxes, shall the Claremont Unified School District's measure authorizing $77,000,000 of bonds at legal rates, levying approximately $32/$100,000 of assessed value ($5,000,000 annually) while bonds are outstanding, be adopted, requiring audits/independent oversight, no money for inappropriate administrator salaries, all funds staying local?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-ed",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:el_rancho_unified_school_district",
+          "title": "El Rancho Unified School District — Measure ED",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+            "collectedAt": "2026-11-03T05:06:26.938263+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.938263+00:00",
+            "quote": "With funds that cannot be taken by the State or Federal government, shall El Rancho Unified School District's measure to update inefficient heating and air-conditioning systems; replace aging plumbing and roofs; improve school safety; and modernize and equip classrooms and facilities be adopted, authorizing $118 million in bonds with legal rates, average annual levies below $55 per $100,000 of assessed valuation ($7.9 million annually while outstanding), annual audits, no administrator salaries, independent oversight, and disclosure of all spending?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-sms",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:san_marino_unified_school_district",
+          "title": "San Marino Unified School District — Measure SMS",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+            "collectedAt": "2026-11-03T05:06:26.869473+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.869473+00:00",
+            "quote": "San Marino Unified School District Quality Education Measure Without increasing the existing rates and to protect/maintain quality education programs, classroom instruction, prevent class size increases or teaching position reductions, attract/retain high-quality teachers/employees, support advanced programs in math, science, engineering, technology, shall San Marino Unified School District's measure to combine and renew their existing parcel taxes for 6 years at $1,499 (combined) with senior exemptions, raising approximately $6,100,000 annually, annual adjustments, requiring spending disclosure be adopted?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-tcs",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:temple_city_unified_school_district",
+          "title": "Temple City Unified School District — Measure TCS",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+            "collectedAt": "2026-11-03T05:06:26.944839+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.944839+00:00",
+            "quote": "WITHOUT INCREASING EXISTING TAX RATES, to upgrade safety/security and HVAC systems; remove asbestos/lead pipes; repair/upgrade/equip aging classrooms, science labs, school/career technology facilities to support college/career readiness in math, science, technology, arts, medical science, skilled trades; shall Temple City Unified School District's measure be adopted authorizing $146,000,000 in bonds at legal rates, levying $43 per $100,000 assessed value (averaging $8,710,000 annually) while bonds are outstanding, with independent citizen oversight, audits, all money locally controlled?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-lv",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district",
+          "title": "Las Virgenes Unified School District — Measure LV",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+            "collectedAt": "2026-11-03T05:06:26.924172+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.924172+00:00",
+            "quote": "To protect the quality of education in local schools and continue funding for math, science, technology, engineering, arts, skilled trades, and advanced programs that prepare students for success in college/careers; attracting and retaining highly qualified teachers; and maintaining manageable class sizes, shall Las Virgenes Unified School District's measure renewing the existing school parcel tax at the current $98 rate (no increase) for twelve years be adopted, with senior exemptions and all funds ($2,000,000 annually) benefiting local students?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-sm",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:bellflower_unified_school_district",
+          "title": "Bellflower Unified School District — Measure SM",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+            "collectedAt": "2026-11-03T05:09:07.342869+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.342869+00:00",
+            "quote": "With funds that cannot be taken by the State and spent elsewhere, shall Bellflower Unified School District's measure to repair/replace deteriorating roofs, plumbing, heating, ventilation and electrical systems; upgrade classrooms, labs and career training facilities; and, improve access for students with disabilities be adopted, authorizing $135 million in bonds levying $49 per $100,000 assessed value ($8 million annually) while outstanding, with legal rates, audits, citizen oversight, no funds for administrator salaries and full disclosure of all spending?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-b",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:hacienda_la_puente_unified_school_district",
+          "title": "Hacienda La Puente Unified School District — Measure B",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+            "collectedAt": "2026-11-03T05:09:07.252469+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.252469+00:00",
+            "quote": "Shall members of the Board of Education of the Hacienda La Puente Unified School District be limited to serving no more than two (2) four-year terms during their lifetime regardless of the trustee area represented?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-hh",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:hawthorne_elementary_school_district",
+          "title": "Hawthorne School District — Measure HH",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+            "collectedAt": "2026-11-03T05:09:07.283847+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.283847+00:00",
+            "quote": "HAWTHORNE SCHOOL DISTRICT SCHOOL REPAIR/IMPROVEMENT MEASURE. To repair aging classrooms, ensure student health, safety and achievement and update technology, upgrade aging plumbing, electrical, lighting, heating/ventilation, safety/security systems, shall this Hawthorne School District measure be adopted to repair, construct, acquire classrooms, facilities, sites/equipment, and issue $110,000,000 in bonds, at legal rates, levy on average $30 per $100,000 assessed value (averaging $5,240,000 annually) while bonds are outstanding, require independent audits/oversight, all money for local schools?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-k",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:keppel_union_elementary_school_district",
+          "title": "Keppel Union School District — Measure K",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+            "collectedAt": "2026-11-03T05:09:07.312775+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.312775+00:00",
+            "quote": "Keppel Union School District Classroom Repair, Safety, Upgrade Measure. To repair leaky roofs, deteriorating plumbing, electrical, gas lines; provide safe drinking water; remove asbestos, lead paint, mold; improve fire safety, security, emergency communications; ensure safe children's play areas; upgrade classroom technology, science labs; shall Keppel Union School District's measure authorizing $27,000,000 in bonds at legal rates, levies averaging $30 per $100,000 assessed valuation ($1,700,000 annually) while bonds are outstanding, be adopted, requiring oversight, audits, spending disclosure, all funds for local schools?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-la-school-r",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:valle_lindo_elementary_school_district",
+          "title": "Valle Lindo School District — Measure R",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+            "collectedAt": "2026-11-03T05:09:07.324938+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.324938+00:00",
+            "quote": "To improve the quality of education; replace old heating, ventilation and air-conditioning systems; modernize outdated classrooms, restrooms and school facilities; and repair or replace leaky roofs; shall Valle Lindo School District's measure be adopted authorizing $9,200,000 of bonds at legal rates, generating on average $536,000 annually while bonds are outstanding at a rate of approximately $29 per $100,000 assessed value, with annual audits, independent citizens' oversight committee, NO money for salaries and no money taken by the State?"
+          },
+          "measureTextUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-la-school-s-text",
+          "contestId": "ca-2026-la-school-s",
+          "officialNumber": "Measure S",
+          "questionText": "To provide safe, modern neighborhood schools by repairing/upgrading/equipping aging classrooms, science labs, instructional technology, and school facilities that support math, science, engineering, literacy, arts, skilled trades, and college/career readiness, fixing deteriorating roofs, plumbing, electrical systems, and removing asbestos/lead pipes, shall Charter Oak Unified School District's measure authorizing $75,000,000 in bonds at legal rates be adopted, levying $40 per $100,000 assessed value ($5,000,000 annually) while bonds are outstanding, with independent oversight/audits, all money locally controlled?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE S\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Charter Oak Unified School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $75,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the acquisition, construction, reconstruction, rehabilitation or replacement of school facilities, including the furnishing and equipping of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The District will deposit bond proceeds into a separate account and comply with the reporting requirements of the Government Code.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $40.00 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $40.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2061-62. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is approximately $157,000,000. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+            "collectedAt": "2026-11-03T05:06:26.908007+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.908007+00:00",
+            "quote": "To provide safe, modern neighborhood schools by repairing/upgrading/equipping aging classrooms, science labs, instructional technology, and school facilities that support math, science, engineering, literacy, arts, skilled trades, and college/career readiness, fixing deteriorating roofs, plumbing, electrical systems, and removing asbestos/lead pipes, shall Charter Oak Unified School District's measure authorizing $75,000,000 in bonds at legal rates be adopted, levying $40 per $100,000 assessed value ($5,000,000 annually) while bonds are outstanding, with independent oversight/audits, all money locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-g-text",
+          "contestId": "ca-2026-la-school-g",
+          "officialNumber": "Measure G",
+          "questionText": "Glendora Unified School District Classroom Repair Extension Measure. To repair or replace deteriorating roofs, plumbing, HVAC, electrical systems; remove asbestos and lead pipes; upgrade classrooms, labs, facilities to support college/career readiness in math, science, engineering, technology and skilled trades; shall Glendora Unified School District's measure be adopted, authorizing $86,000,000 in bonds at legal rates (without increasing current tax rates), levying approximately $33 per $100,000 assessed value ($5,000,000 annually) while bonds are outstanding, with independent oversight/audits, and funds locally controlled?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE G\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Glendora Unified School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $86,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the construction, reconstruction, rehabilitation or replacement of school facilities, including the furnishing and equipping of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The District will deposit bond proceeds into a building fund to be held by the Los Angeles County Treasurer and Tax Collector as required under the Education Code. Approval of the measure does not guarantee that projects described in the measure will be funded beyond local revenues generated by the measure. The District's proposal for certain projects may assume receipt of matching State funds subject to appropriation by the Legislature or approval of a statewide bond measure.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $33.00 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $33.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2056-57. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is approximately $161,348,832. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+            "collectedAt": "2026-11-03T05:06:26.958099+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.958099+00:00",
+            "quote": "Glendora Unified School District Classroom Repair Extension Measure. To repair or replace deteriorating roofs, plumbing, HVAC, electrical systems; remove asbestos and lead pipes; upgrade classrooms, labs, facilities to support college/career readiness in math, science, engineering, technology and skilled trades; shall Glendora Unified School District's measure be adopted, authorizing $86,000,000 in bonds at legal rates (without increasing current tax rates), levying approximately $33 per $100,000 assessed value ($5,000,000 annually) while bonds are outstanding, with independent oversight/audits, and funds locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-mm-text",
+          "contestId": "ca-2026-la-school-mm",
+          "officialNumber": "Measure MM",
+          "questionText": "Inglewood Unified School District Safety, Repair, Upgrade Measure. To repair/upgrade classrooms/labs including science, engineering, career/skilled trades to help recruit/retain teachers; repair deteriorating gas lines; remove asbestos, lead paint, mold; provide safe drinking water; construct, repair equip sites, facilities; shall Inglewood Unified School District's measure authorizing $396,000,000 in bonds, at legal rates, levying $60 per $100,000 of assessed valuation ($26,000,000 annually) while bonds are outstanding, be adopted, requiring oversight, audits, spending disclosure, all funds for local schools?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE MM\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Inglewood Unified School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $396,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the acquisition, construction, reconstruction, rehabilitation, or replacement of school facilities, including the furnishing and equipping of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The District will deposit bond proceeds into a separate account and comply with reporting requirements under the Government Code. Approval of the measure does not guarantee that projects described in the measure will be funded beyond local revenues generated by the measure. The District's proposal for certain projects may assume receipt of matching State funds subject to appropriation by the Legislature or approval of a statewide bond measure.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $60.00 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $60.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2057-2058. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $813,005,302. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+            "collectedAt": "2026-11-03T05:06:26.908863+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.908863+00:00",
+            "quote": "Inglewood Unified School District Safety, Repair, Upgrade Measure. To repair/upgrade classrooms/labs including science, engineering, career/skilled trades to help recruit/retain teachers; repair deteriorating gas lines; remove asbestos, lead paint, mold; provide safe drinking water; construct, repair equip sites, facilities; shall Inglewood Unified School District's measure authorizing $396,000,000 in bonds, at legal rates, levying $60 per $100,000 of assessed valuation ($26,000,000 annually) while bonds are outstanding, be adopted, requiring oversight, audits, spending disclosure, all funds for local schools?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-cs-text",
+          "contestId": "ca-2026-la-school-cs",
+          "officialNumber": "Measure CS",
+          "questionText": "CLAREMONT UNIFIED SCHOOL DISTRICT CLASSROOM SAFETY, HEALTH AND REPAIR MEASURE. To repair/upgrade aging classrooms, heating/air conditioning/electrical/plumbing systems, improve safety/security, fix leaky/deteriorating roofs, repair/construct/equip classroom sites/facilities without increasing current taxes, shall the Claremont Unified School District's measure authorizing $77,000,000 of bonds at legal rates, levying approximately $32/$100,000 of assessed value ($5,000,000 annually) while bonds are outstanding, be adopted, requiring audits/independent oversight, no money for inappropriate administrator salaries, all funds staying local?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE CS\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Claremont Unified School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $77,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the acquisition, construction, reconstruction, rehabilitation, or replacement of school facilities, including the furnishing and equipping of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The District will deposit bond proceeds into a separate account and comply with reporting requirements under the Government Code. Approval of the measure does not guarantee that projects described in the measure will be funded beyond local revenues generated by the measure. The District's proposal for certain projects may assume receipt of matching State funds subject to appropriation by the Legislature or approval of a statewide bond measure.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $31.96 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $31.96 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2056-57. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $153,684,367. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+            "collectedAt": "2026-11-03T05:06:26.948466+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.948466+00:00",
+            "quote": "CLAREMONT UNIFIED SCHOOL DISTRICT CLASSROOM SAFETY, HEALTH AND REPAIR MEASURE. To repair/upgrade aging classrooms, heating/air conditioning/electrical/plumbing systems, improve safety/security, fix leaky/deteriorating roofs, repair/construct/equip classroom sites/facilities without increasing current taxes, shall the Claremont Unified School District's measure authorizing $77,000,000 of bonds at legal rates, levying approximately $32/$100,000 of assessed value ($5,000,000 annually) while bonds are outstanding, be adopted, requiring audits/independent oversight, no money for inappropriate administrator salaries, all funds staying local?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-ed-text",
+          "contestId": "ca-2026-la-school-ed",
+          "officialNumber": "Measure ED",
+          "questionText": "With funds that cannot be taken by the State or Federal government, shall El Rancho Unified School District's measure to update inefficient heating and air-conditioning systems; replace aging plumbing and roofs; improve school safety; and modernize and equip classrooms and facilities be adopted, authorizing $118 million in bonds with legal rates, average annual levies below $55 per $100,000 of assessed valuation ($7.9 million annually while outstanding), annual audits, no administrator salaries, independent oversight, and disclosure of all spending?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE ED\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the El Rancho Unified School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $118,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the acquisition, construction, reconstruction, rehabilitation, or replacement of school facilities, including the furnishing and equipping of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The Board will deposit bond proceeds into a separate account and comply with reporting requirements under the Government Code.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $54.19 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $60.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2057-58. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $246,500,000. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+            "collectedAt": "2026-11-03T05:06:26.938263+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.938263+00:00",
+            "quote": "With funds that cannot be taken by the State or Federal government, shall El Rancho Unified School District's measure to update inefficient heating and air-conditioning systems; replace aging plumbing and roofs; improve school safety; and modernize and equip classrooms and facilities be adopted, authorizing $118 million in bonds with legal rates, average annual levies below $55 per $100,000 of assessed valuation ($7.9 million annually while outstanding), annual audits, no administrator salaries, independent oversight, and disclosure of all spending?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-sms-text",
+          "contestId": "ca-2026-la-school-sms",
+          "officialNumber": "Measure SMS",
+          "questionText": "San Marino Unified School District Quality Education Measure Without increasing the existing rates and to protect/maintain quality education programs, classroom instruction, prevent class size increases or teaching position reductions, attract/retain high-quality teachers/employees, support advanced programs in math, science, engineering, technology, shall San Marino Unified School District's measure to combine and renew their existing parcel taxes for 6 years at $1,499 (combined) with senior exemptions, raising approximately $6,100,000 annually, annual adjustments, requiring spending disclosure be adopted?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE SMS\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the San Marino Unified School District (District). If approved by two-thirds (2/3) of the votes cast on the measure, this measure would authorize the District to combine and extend two existing special parcel taxes, known as Measure E and Measure R, into one special parcel tax of $1,499 per parcel of taxable real property (Tax).\nIf approved, the Tax will be levied annually for six years, beginning July 1, 2027, and ending June 30, 2033. Beginning July 1, 2028, the Tax would increase each year by a cost-of-living adjustment equal to the lesser of three percent or the annual average percentage change in the Los Angeles Metropolitan Statistical Area Consumer Price Index.\nThe measure defines a \"Parcel of Taxable Real Property\" (Parcel) as any parcel of land that lies wholly or partially within the District and that receives a separate tax bill for ad valorem property taxes from the Los Angeles County Treasurer and Tax Collector (County Tax Collector). Parcels that are otherwise exempt from ad valorem property taxes in any year would also be exempt from the Tax. Certain contiguous parcels under identical ownership and used solely for owner-occupied, single-family residential purposes may be treated as a single parcel under District procedures. The Tax would be collected by the County Tax Collector, with unpaid taxes to bear interest at the same rate applicable to unpaid ad valorem property taxes.\nAs stated in the full text of the Measure, proceeds from the Tax shall be used only for specified purposes, including to:\n- Retain and attract the best qualified teachers and counselors and ensure the continuation of teaching positions;\n- Maintain existing educational programs at current levels;\n- Maintain class size;\n- Maintain district-wide school library media specialists; and\n- Maintain and fund technology systems and personnel, as well as academic and college counseling positions.\nTax proceeds must be deposited into a separate account, with an annual written report to be prepared by the District detailing the collection and expenditure of the proceeds.\nIf this measure is approved, the existing Measure R tax of $415 per year would no longer be collected on or after July 1, 2027. If this measure is not approved, the Measure R tax will continue to be collected until June 30, 2031. This measure would not affect the existing Measure E tax, which is scheduled to continue at $1,084 per parcel through June 30, 2027.\nAn exemption may be applied for with the District on any Parcel owned by one or more persons who occupy such parcel as their principal residence and are: (1) 65 years of age or older on or before to June 30 of the preceding fiscal year; (2) receives Supplemental Security Income for a disability regardless of age; or (3) receives Social Security Disability Insurance benefits regardless of age and whose yearly income does not exceed 250 percent of the 2012 federal poverty guidelines. Exemptions granted under prior qualified special taxes will not require re-approval. The District's decisions regarding the Tax, including exemptions, would be final and binding.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+            "collectedAt": "2026-11-03T05:06:26.869473+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.869473+00:00",
+            "quote": "San Marino Unified School District Quality Education Measure Without increasing the existing rates and to protect/maintain quality education programs, classroom instruction, prevent class size increases or teaching position reductions, attract/retain high-quality teachers/employees, support advanced programs in math, science, engineering, technology, shall San Marino Unified School District's measure to combine and renew their existing parcel taxes for 6 years at $1,499 (combined) with senior exemptions, raising approximately $6,100,000 annually, annual adjustments, requiring spending disclosure be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-tcs-text",
+          "contestId": "ca-2026-la-school-tcs",
+          "officialNumber": "Measure TCS",
+          "questionText": "WITHOUT INCREASING EXISTING TAX RATES, to upgrade safety/security and HVAC systems; remove asbestos/lead pipes; repair/upgrade/equip aging classrooms, science labs, school/career technology facilities to support college/career readiness in math, science, technology, arts, medical science, skilled trades; shall Temple City Unified School District's measure be adopted authorizing $146,000,000 in bonds at legal rates, levying $43 per $100,000 assessed value (averaging $8,710,000 annually) while bonds are outstanding, with independent citizen oversight, audits, all money locally controlled?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE TCS\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Temple City Unified School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $146,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the acquisition, construction, reconstruction, rehabilitation, or replacement of school facilities, including the furnishing and equipping of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The District will deposit bond proceeds into a separate account and comply with reporting requirements under the Government Code.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $42.25 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $43.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2063-64. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $319,140,333. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+            "collectedAt": "2026-11-03T05:06:26.944839+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.944839+00:00",
+            "quote": "WITHOUT INCREASING EXISTING TAX RATES, to upgrade safety/security and HVAC systems; remove asbestos/lead pipes; repair/upgrade/equip aging classrooms, science labs, school/career technology facilities to support college/career readiness in math, science, technology, arts, medical science, skilled trades; shall Temple City Unified School District's measure be adopted authorizing $146,000,000 in bonds at legal rates, levying $43 per $100,000 assessed value (averaging $8,710,000 annually) while bonds are outstanding, with independent citizen oversight, audits, all money locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-lv-text",
+          "contestId": "ca-2026-la-school-lv",
+          "officialNumber": "Measure LV",
+          "questionText": "To protect the quality of education in local schools and continue funding for math, science, technology, engineering, arts, skilled trades, and advanced programs that prepare students for success in college/careers; attracting and retaining highly qualified teachers; and maintaining manageable class sizes, shall Las Virgenes Unified School District's measure renewing the existing school parcel tax at the current $98 rate (no increase) for twelve years be adopted, with senior exemptions and all funds ($2,000,000 annually) benefiting local students?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE LV\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Las Virgenes Unified School District (District). If approved by two-thirds (2/3) of the votes cast on the measure, this measure would authorize the District to raise additional revenue by levying a special parcel tax of $98 per parcel (Tax). If approved, the Tax will be levied annually for twelve years, beginning July 1, 2028. This Tax would extend an existing special parcel tax of $98 per parcel per year that is due to expire on June 30, 2028.\nThe measure defines \"Parcel\" (Parcel) as any parcel of land that lies wholly or partially within the District and that receives a separate tax bill for ad valorem property taxes from the Los Angeles County Treasurer and Tax Collector or the Ventura County Treasurer-Tax Collector (collectively, Tax Collector). Parcels that are otherwise exempt from ad valorem property taxes in any year would also be exempt from the Tax. Certain contiguous parcels under identical ownership and used solely for owner-occupied, single-family residential purposes may be treated as a single parcel under District procedures. The Tax would be collected by the applicable Tax Collector, with unpaid taxes to bear interest at the same rate applicable to unpaid ad valorem property taxes.\nProceeds from the Tax shall be used only for purposes specified in the Measure, including to:\n- Continue offering core academic programs in math, science and technology;\n- Continue funding for core programs in reading and the arts and funding for athletics;\n- Maintain class sizes;\n- Keep textbooks, technology, and instructional materials up-to-date; and\n- Attract and retain highly qualified teachers, counselors, career advisors, and technology specialists.\nTax proceeds cannot be used for administrator salaries, benefits, or pensions. Tax proceeds must be deposited into a separate account, with a Citizens' Oversight Committee to provide oversight as to the expenditure of the proceeds. The chief fiscal officer of the District will also prepare an annual written report detailing the collection and expenditure of the proceeds.\nAn exemption may be applied for with the District on any Parcel owned by one or more persons who occupy such Parcel as their principal residence and is/are: (1) 65 years of age or older on or before to June 30 of the preceding fiscal year; (2) receives Supplemental Security Income for a disability regardless of age; or (3) receives Social Security Disability Insurance benefits regardless of age and whose yearly income does not exceed 250 percent of the 2012 federal poverty guidelines. Persons currently exempted from the District's expiring special parcel tax will remain exempt and not be required to reapply for exemption. The District's decisions regarding the Tax, including exemptions, would be final and binding.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+            "collectedAt": "2026-11-03T05:06:26.924172+00:00",
+            "verifiedAt": "2026-11-03T05:06:26.924172+00:00",
+            "quote": "To protect the quality of education in local schools and continue funding for math, science, technology, engineering, arts, skilled trades, and advanced programs that prepare students for success in college/careers; attracting and retaining highly qualified teachers; and maintaining manageable class sizes, shall Las Virgenes Unified School District's measure renewing the existing school parcel tax at the current $98 rate (no increase) for twelve years be adopted, with senior exemptions and all funds ($2,000,000 annually) benefiting local students?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-sm-text",
+          "contestId": "ca-2026-la-school-sm",
+          "officialNumber": "Measure SM",
+          "questionText": "With funds that cannot be taken by the State and spent elsewhere, shall Bellflower Unified School District's measure to repair/replace deteriorating roofs, plumbing, heating, ventilation and electrical systems; upgrade classrooms, labs and career training facilities; and, improve access for students with disabilities be adopted, authorizing $135 million in bonds levying $49 per $100,000 assessed value ($8 million annually) while outstanding, with legal rates, audits, citizen oversight, no funds for administrator salaries and full disclosure of all spending?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE SM\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Bellflower Unified School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $135,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the construction, reconstruction, rehabilitation, replacement, furnishing and equipping of school facilities, or the acquisition or lease of real property for school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The Board will deposit bond proceeds into a separate account. Approval of the measure does not guarantee that projects described in the measure will be funded beyond local revenues generated by the measure. The District's proposal for certain projects may assume receipt of matching State funds subject to appropriation by the Legislature or approval of a statewide bond measure.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $45.78 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $49.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2057-58. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $240,900,000. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+            "collectedAt": "2026-11-03T05:09:07.342869+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.342869+00:00",
+            "quote": "With funds that cannot be taken by the State and spent elsewhere, shall Bellflower Unified School District's measure to repair/replace deteriorating roofs, plumbing, heating, ventilation and electrical systems; upgrade classrooms, labs and career training facilities; and, improve access for students with disabilities be adopted, authorizing $135 million in bonds levying $49 per $100,000 assessed value ($8 million annually) while outstanding, with legal rates, audits, citizen oversight, no funds for administrator salaries and full disclosure of all spending?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-b-text",
+          "contestId": "ca-2026-la-school-b",
+          "officialNumber": "Measure B",
+          "questionText": "Shall members of the Board of Education of the Hacienda La Puente Unified School District be limited to serving no more than two (2) four-year terms during their lifetime regardless of the trustee area represented?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE B\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Hacienda La Puente Unified School District (District). If approved by a majority of the votes cast on the measure, this measure will establish a limit on the number of terms an elected Board member may serve to two (2) full four-year terms during their lifetime.\nThere is currently no limit on the number of terms that an elected member may serve on the Board. This measure establishes a limit on the maximum number of terms an elected member may serve on the Board to two (2) full four-year terms during that elected member's lifetime, regardless of the trustee area represented.\nIf approved, this measure will apply prospectively and any full four-year term served on or after November 3, 2026 will count toward the term limit.\nNO ARGUMENT FOR OR AGAINST THIS MEASURE WAS SUBMITTED",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+            "collectedAt": "2026-11-03T05:09:07.252469+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.252469+00:00",
+            "quote": "Shall members of the Board of Education of the Hacienda La Puente Unified School District be limited to serving no more than two (2) four-year terms during their lifetime regardless of the trustee area represented?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-hh-text",
+          "contestId": "ca-2026-la-school-hh",
+          "officialNumber": "Measure HH",
+          "questionText": "HAWTHORNE SCHOOL DISTRICT SCHOOL REPAIR/IMPROVEMENT MEASURE. To repair aging classrooms, ensure student health, safety and achievement and update technology, upgrade aging plumbing, electrical, lighting, heating/ventilation, safety/security systems, shall this Hawthorne School District measure be adopted to repair, construct, acquire classrooms, facilities, sites/equipment, and issue $110,000,000 in bonds, at legal rates, levy on average $30 per $100,000 assessed value (averaging $5,240,000 annually) while bonds are outstanding, require independent audits/oversight, all money for local schools?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE HH\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Hawthorne School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $110,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the acquisition, construction, reconstruction, rehabilitation, or replacement of school facilities, including the furnishing and equipping of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The Board will deposit bond proceeds into a separate account and comply with reporting requirements under the Government Code. Approval of the measure does not guarantee that projects described in the measure will be funded beyond local revenues generated by the measure. The District's proposal for certain projects may assume receipt of matching State funds subject to appropriation by the Legislature or approval of a statewide bond measure.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $30.00 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $30.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2068-69. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $226,231,000. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+            "collectedAt": "2026-11-03T05:09:07.283847+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.283847+00:00",
+            "quote": "HAWTHORNE SCHOOL DISTRICT SCHOOL REPAIR/IMPROVEMENT MEASURE. To repair aging classrooms, ensure student health, safety and achievement and update technology, upgrade aging plumbing, electrical, lighting, heating/ventilation, safety/security systems, shall this Hawthorne School District measure be adopted to repair, construct, acquire classrooms, facilities, sites/equipment, and issue $110,000,000 in bonds, at legal rates, levy on average $30 per $100,000 assessed value (averaging $5,240,000 annually) while bonds are outstanding, require independent audits/oversight, all money for local schools?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-k-text",
+          "contestId": "ca-2026-la-school-k",
+          "officialNumber": "Measure K",
+          "questionText": "Keppel Union School District Classroom Repair, Safety, Upgrade Measure. To repair leaky roofs, deteriorating plumbing, electrical, gas lines; provide safe drinking water; remove asbestos, lead paint, mold; improve fire safety, security, emergency communications; ensure safe children's play areas; upgrade classroom technology, science labs; shall Keppel Union School District's measure authorizing $27,000,000 in bonds at legal rates, levies averaging $30 per $100,000 assessed valuation ($1,700,000 annually) while bonds are outstanding, be adopted, requiring oversight, audits, spending disclosure, all funds for local schools?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE K\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Keppel Union School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $27,000,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the construction, reconstruction, rehabilitation, or replacement of school facilities, including the furnishing and equipping of school facilities, and the acquisition or lease of school facilities. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The Board will deposit bond proceeds into a separate account, to be held by the Los Angeles County Treasurer and Tax Collector, as required by the Education Code. Approval of the measure does not guarantee that projects described in the measure will be funded beyond local revenues generated by the measure. The District's proposal for certain projects may assume receipt of matching State funds subject to appropriation by the Legislature or approval of a statewide bond measure.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $30.00 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $30.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2065-66. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $67,800,000. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+            "collectedAt": "2026-11-03T05:09:07.312775+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.312775+00:00",
+            "quote": "Keppel Union School District Classroom Repair, Safety, Upgrade Measure. To repair leaky roofs, deteriorating plumbing, electrical, gas lines; provide safe drinking water; remove asbestos, lead paint, mold; improve fire safety, security, emergency communications; ensure safe children's play areas; upgrade classroom technology, science labs; shall Keppel Union School District's measure authorizing $27,000,000 in bonds at legal rates, levies averaging $30 per $100,000 assessed valuation ($1,700,000 annually) while bonds are outstanding, be adopted, requiring oversight, audits, spending disclosure, all funds for local schools?"
+          }
+        },
+        {
+          "id": "ca-2026-la-school-r-text",
+          "contestId": "ca-2026-la-school-r",
+          "officialNumber": "Measure R",
+          "questionText": "To improve the quality of education; replace old heating, ventilation and air-conditioning systems; modernize outdated classrooms, restrooms and school facilities; and repair or replace leaky roofs; shall Valle Lindo School District's measure be adopted authorizing $9,200,000 of bonds at legal rates, generating on average $536,000 annually while bonds are outstanding at a rate of approximately $29 per $100,000 assessed value, with annual audits, independent citizens' oversight committee, NO money for salaries and no money taken by the State?",
+          "officialStatement": "IMPARTIAL ANALYSIS OF MEASURE R\nBy Dawyn R. Harrison, County Counsel\nThis measure was placed on the ballot by the governing board (Board) of the Valle Lindo School District (District). If approved by at least 55 percent of the votes cast on the measure, this measure will authorize the District to issue and sell up to $9,200,000 in general obligation bonds. The sale of these bonds by the District represents a debt of the District.\nProceeds from the sale of bonds authorized by this measure may only be used by the District for the construction, reconstruction, rehabilitation or replacement of school facilities, furnishing and equipping of school facilities, or the acquisition or lease of real property for school facilities in the District. A complete list of the projects and allowed expenditures is included in the full text of the measure. Bond proceeds may not be used for teacher and administrator salaries and other operating expenses.\nIf the measure is approved, the Board will be required to establish an independent Citizens' Oversight Committee and have independent performance and financial audits conducted annually to ensure that bond proceeds are spent only for projects identified in the measure. The Board will deposit bond proceeds into a separate account, to be held by the Los Angeles County Treasurer and Tax Collector, as required by the Education Code. Approval of the measure does not guarantee that projects described in the measure will be funded beyond local revenues generated by the measure. The District's proposal for certain projects may assume receipt of matching State funds subject to appropriation by the Legislature or approval of a statewide bond measure.\nAccording to the District's Tax Rate Statement, the best estimate of the average annual tax rate required to fund the bonds is $29.00 per $100,000 of assessed value. The best estimate of the highest tax rate required to fund the bonds is $30.00 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2060-61. The best estimate of the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $18,700,000. The bonds will not exceed the maximum interest rate as allowed by law.",
+          "provenance": {
+            "sourceOrg": "Los Angeles County Registrar-Recorder/County Clerk",
+            "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+            "collectedAt": "2026-11-03T05:09:07.324938+00:00",
+            "verifiedAt": "2026-11-03T05:09:07.324938+00:00",
+            "quote": "To improve the quality of education; replace old heating, ventilation and air-conditioning systems; modernize outdated classrooms, restrooms and school facilities; and repair or replace leaky roofs; shall Valle Lindo School District's measure be adopted authorizing $9,200,000 of bonds at legal rates, generating on average $536,000 annually while bonds are outstanding at a rate of approximately $29 per $100,000 assessed value, with annual audits, independent citizens' oversight committee, NO money for salaries and no money taken by the State?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-la-school-s",
+          "whatItDoes": "Authorize up to $75 million in school-facility bonds. Repair, upgrade and equip classrooms, science laboratories, instructional technology and school facilities; fix roofs, plumbing and electrical systems; and remove asbestos and lead pipes. Property taxes would repay principal and interest. The district estimates $5 million annually, an average and highest rate of $40 per $100,000 of assessed property value, collection through fiscal year 2061–62, and $157 million in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $75 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+          "sourceHash": "818c3ce0018844c6456fc4463bee88a10633189c5e77e15b85ef7deb96d788d9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-g",
+          "whatItDoes": "Authorize up to $86 million in school-facility bonds. Repair roofs, plumbing, heating, cooling and electrical systems; remove asbestos and lead pipes; and upgrade classrooms, laboratories and career-training facilities. Property taxes would repay principal and interest. The district proposes maintaining its current tax rate while issuing these bonds. The district estimates $5 million annually, an average and highest rate of $33 per $100,000 of assessed property value, collection through fiscal year 2056–57, and $161,348,832 in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $86 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+          "sourceHash": "cc12c8d871ba573df8464de5b587b705f369a6c53b7431dd7bcee9240320bf24",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-mm",
+          "whatItDoes": "Authorize up to $396 million in school-facility bonds. Repair and upgrade classrooms and science, engineering and career-training laboratories; repair gas lines; remove asbestos, lead paint and mold; provide drinking water; and construct, repair and equip school sites and facilities. Property taxes would repay principal and interest. The district estimates $26 million annually, an average and highest rate of $60 per $100,000 of assessed property value, collection through fiscal year 2057–58, and $813,005,302 in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $396 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+          "sourceHash": "305caaccaf0936d1d7b54d8c26e5bb754113bb52a6b55c1bbdc69c9121e2ff11",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-cs",
+          "whatItDoes": "Authorize up to $77 million in school-facility bonds. Repair and upgrade classrooms, heating, cooling, electrical and plumbing systems; improve safety and security; fix roofs; and repair, construct and equip school sites and facilities. Property taxes would repay principal and interest. The district proposes maintaining its current tax rate while issuing these bonds. The district estimates $5 million annually, an average and highest rate of $31.96 per $100,000 of assessed property value, collection through fiscal year 2056–57, and $153,684,367 in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $77 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+          "sourceHash": "7057900b04531a62d57735e70d0d023e0493f5480919a8666485b657b232e1cf",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-ed",
+          "whatItDoes": "Authorize up to $118 million in school-facility bonds. Update heating and air conditioning, replace plumbing and roofs, improve school safety, and modernize and equip classrooms and facilities. Property taxes would repay principal and interest. The district estimates $7.9 million annually, an average rate of $54.19 and highest rate of $60 per $100,000 of assessed property value, collection through fiscal year 2057–58, and $246.5 million in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $118 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+          "sourceHash": "156f937fa5c89d500183af3a95b9bc083f94286439aedb90774316d53cd28816",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-sms",
+          "whatItDoes": "Combine and renew San Marino Unified’s two existing school parcel taxes at their current combined rate of $1,499 per taxable parcel each year for six years, July 1, 2027 through June 30, 2033. From July 1, 2028, the annual adjustment would equal the lesser of 3% or the specified consumer-price-index change; the board could choose a lower adjustment. Estimated annual revenue is $6.1 million, restricted to the listed educational programs, teachers, counselors, class sizes, libraries and technology. Money must go into a separate fund, with annual collection and spending reports. Existing and new senior/disability exemptions and parcel-combination rules are described below. The measure would replace the $415 Measure R tax from July 2027; the $1,084 Measure E tax is already scheduled to expire that June. Approval requires two-thirds of votes.",
+          "yesMeans": "Approve the combined six-year parcel tax and its annual adjustment, restricted uses and exemption rules.",
+          "noMeans": "Do not approve the combined renewal. Measure E would expire June 30, 2027, while the existing $415 Measure R tax would continue through June 30, 2031.",
+          "parts": [
+            {
+              "id": "ca-2026-la-school-sms#exemptions",
+              "number": "B",
+              "kind": "PROGRAM",
+              "label": "Senior and disability exemptions",
+              "what": "Owner-occupants may apply under district procedures if age 65 or older before June 30 of the preceding fiscal year, receiving Supplemental Security Income for disability at any age, or receiving Social Security Disability Insurance with annual income no greater than 250% of the 2012 federal poverty guidelines. Prior exemptions would continue without a new application, subject to verification of ongoing eligibility."
+            },
+            {
+              "id": "ca-2026-la-school-sms#parcels",
+              "number": "A",
+              "kind": "PROGRAM",
+              "label": "What counts as a parcel",
+              "what": "A separately billed parcel wholly or partly in the district is taxable. Property exempt from regular property taxes remains exempt. Contiguous parcels with identical ownership used solely as an owner-occupied single-family home may be treated as one parcel under district procedures. If that definition is legally invalid, the fallback is each assessor-numbered parcel in the district, which could increase the number taxed."
+            },
+            {
+              "id": "ca-2026-la-school-sms#index-funding",
+              "number": "A, D–F",
+              "kind": "PROGRAM",
+              "label": "Inflation, reports and other funding",
+              "what": "The adjustment uses the Los Angeles metropolitan consumer-price index for the prior 12 months as of December 1; CPI-U is the fallback if that index is unavailable. The board could lower the adjustment when sufficient or appropriate, including in response to state-budget changes. The district’s spending limit would adjust by tax collections. Annual reports are due by December 31. The board could reduce the tax if needed to restore government funding affected by the local tax or improve the district’s fiscal position."
+            }
+          ],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+          "sourceHash": "663978819f7331450a382fdfcd54e0e5c1aa9c7eae2f21ea165c301968687cad",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-tcs",
+          "whatItDoes": "Authorize up to $146 million in school-facility bonds. Upgrade safety, security, heating, cooling and ventilation; remove asbestos and lead pipes; and repair, upgrade and equip classrooms, science laboratories and school and career-technology facilities. Property taxes would repay principal and interest. The district proposes maintaining its current tax rate while issuing these bonds. The district estimates $8.71 million annually, an average rate of $42.25 and highest rate of $43 per $100,000 of assessed property value, collection through fiscal year 2063–64, and $319,140,333 in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $146 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+          "sourceHash": "60fc684caf7207fa594fd0b9e55773aaac8b68c981c08d5672619403cb4a6042",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-lv",
+          "whatItDoes": "Renew Las Virgenes Unified’s existing $98-per-parcel annual school tax, without a rate increase, for 12 years beginning July 1, 2028, after the current authorization expires. Estimated annual revenue is $2 million, restricted to core academic, arts, reading, technology and athletics programs, class sizes, teachers, counselors, career advisors and instructional materials. It could not pay administrator salaries, benefits or pensions. A separate account, annual spending reports and the existing Citizens’ Oversight Committee would be required; the official text also continues annual audits. Senior/disability exemptions and eligible contiguous-parcel treatment would continue, with applications due June 15 for new claims and existing exemptions automatically retained subject to eligibility checks. Approval requires two-thirds of votes.",
+          "yesMeans": "Extend the existing $98 annual parcel tax for 12 years beginning July 1, 2028 under these spending and exemption rules.",
+          "noMeans": "Do not renew this tax; its current authorization would expire June 30, 2028.",
+          "parts": [
+            {
+              "id": "ca-2026-la-school-lv#exemptions",
+              "number": "Exemptions",
+              "kind": "PROGRAM",
+              "label": "Exemption eligibility",
+              "what": "An owner of a parcel used solely as an owner-occupied single-family home may apply if age 65 or older on or before June 30 of the preceding fiscal year, receiving Supplemental Security Income for disability, or receiving Social Security Disability Insurance with annual income no greater than 250% of the 2012 federal poverty guidelines. New applications are due June 15. Current exemptions continue automatically, subject to checks that eligibility continues."
+            },
+            {
+              "id": "ca-2026-la-school-lv#parcels",
+              "number": "DEFINITION OF PARCEL",
+              "kind": "PROGRAM",
+              "label": "Parcels and other funding",
+              "what": "Separately billed parcels wholly or partly within the district are covered; parcels exempt from ordinary property taxes remain exempt. Contiguous parcels with identical ownership used solely as an owner-occupied single-family home may be treated as one parcel on an application by June 15. If collecting the tax reduces or offsets other government revenue, the district may stop collecting it or must reduce it enough to restore that revenue."
+            }
+          ],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+          "sourceHash": "65f7c848a61e207fc38a53827ee10e456a0c9f390a82e28ac3d33bffb928b0fd",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-sm",
+          "whatItDoes": "Authorize up to $135 million in school-facility bonds. Repair roofs, plumbing, heating, ventilation and electrical systems; upgrade classrooms, laboratories and career-training facilities; and improve access for students with disabilities. Property taxes would repay principal and interest. The district estimates $8 million annually, an average rate of $45.78 and highest rate of $49 per $100,000 of assessed property value, collection through fiscal year 2057–58, and $240.9 million in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $135 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+          "sourceHash": "98d4216af14e6b16f2633ae012b5f6748ca2b6e84e7365a0685042e17380444e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-b",
+          "whatItDoes": "Limit members of the Hacienda La Puente Unified school board to two full four-year terms during their lifetime, regardless of which trustee area they represent. The rule would apply prospectively to full four-year terms served on or after November 3, 2026. There is currently no limit on the number of terms. Approval requires a majority vote.",
+          "yesMeans": "Establish this lifetime limit of two full four-year school-board terms.",
+          "noMeans": "Keep the current rules without a school-board term limit.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+          "sourceHash": "c599fcbf26e83ab27daea2e7313f2c212130e3baf3b740fe7b082add89d6b1ac",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-hh",
+          "whatItDoes": "Authorize up to $110 million in school-facility bonds. Repair, construct, acquire and equip classrooms, facilities and sites; replace aging plumbing, electrical, lighting, heating and ventilation systems; improve safety and security; and update technology. Property taxes would repay principal and interest. The district estimates $5.24 million annually, an average and highest rate of $30 per $100,000 of assessed property value, collection through fiscal year 2068–69, and $226,231,000 in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $110 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+          "sourceHash": "a2b8080885578647070e48d2290c6509bd1ccd2ff2e7aefc3404c9de73e02c1e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-k",
+          "whatItDoes": "Authorize up to $27 million in school-facility bonds. Repair roofs, plumbing, electrical and gas lines; provide drinking water; remove asbestos, lead paint and mold; improve fire safety, security, emergency communications and play areas; and upgrade classroom technology and laboratories. Property taxes would repay principal and interest. The district estimates $1.7 million annually, an average and highest rate of $30 per $100,000 of assessed property value, collection through fiscal year 2065–66, and $67.8 million in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $27 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+          "sourceHash": "58543c2605c5265a5aa1ea5f54ad15953aee78763319dd8fced6875e8a582c24",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-la-school-r",
+          "whatItDoes": "Authorize up to $9.2 million in school-facility bonds. Replace heating, ventilation and air conditioning; modernize classrooms, restrooms and other school facilities; and repair roofs. Property taxes would repay principal and interest. The district estimates $536,000 annually, an average rate of $29 and highest rate of $30 per $100,000 of assessed property value, collection through fiscal year 2060–61, and $18.7 million in total repayment. Tax-rate, repayment and timing estimates may vary and are not binding caps. Bond interest rates must remain within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight, annual performance and financial audits, a separate account or fund, and reporting are required. Listed projects depend on available money and final costs; some may rely on state matching funds. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to issue up to $9.2 million in bonds for the listed facilities and levy property taxes to repay them under these conditions.",
+          "noMeans": "Do not authorize these bonds or their repayment property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+          "sourceHash": "8b4edd9ed05dfb67a88bfa5d24f2afc9c9a55b85716266df93a6cdfe4d5ac63c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:14:19.454887+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:14:19.454887+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10935.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10935.json",
+        "httpStatus": 200,
+        "rawHash": "85906f79f409770fa779bf283b34571b725b962628a35de02054eaa7600bdec9",
+        "retrievedAt": "2026-11-03T05:02:25.487406+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+        "httpStatus": 200,
+        "rawHash": "818c3ce0018844c6456fc4463bee88a10633189c5e77e15b85ef7deb96d788d9",
+        "retrievedAt": "2026-11-03T05:06:26.908007+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+        "httpStatus": 200,
+        "rawHash": "cc12c8d871ba573df8464de5b587b705f369a6c53b7431dd7bcee9240320bf24",
+        "retrievedAt": "2026-11-03T05:06:26.958099+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+        "httpStatus": 200,
+        "rawHash": "305caaccaf0936d1d7b54d8c26e5bb754113bb52a6b55c1bbdc69c9121e2ff11",
+        "retrievedAt": "2026-11-03T05:06:26.908863+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+        "httpStatus": 200,
+        "rawHash": "7057900b04531a62d57735e70d0d023e0493f5480919a8666485b657b232e1cf",
+        "retrievedAt": "2026-11-03T05:06:26.948466+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+        "httpStatus": 200,
+        "rawHash": "156f937fa5c89d500183af3a95b9bc083f94286439aedb90774316d53cd28816",
+        "retrievedAt": "2026-11-03T05:06:26.938263+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+        "httpStatus": 200,
+        "rawHash": "663978819f7331450a382fdfcd54e0e5c1aa9c7eae2f21ea165c301968687cad",
+        "retrievedAt": "2026-11-03T05:06:26.869473+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+        "httpStatus": 200,
+        "rawHash": "60fc684caf7207fa594fd0b9e55773aaac8b68c981c08d5672619403cb4a6042",
+        "retrievedAt": "2026-11-03T05:06:26.944839+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+        "httpStatus": 200,
+        "rawHash": "65f7c848a61e207fc38a53827ee10e456a0c9f390a82e28ac3d33bffb928b0fd",
+        "retrievedAt": "2026-11-03T05:06:26.924172+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+        "httpStatus": 200,
+        "rawHash": "98d4216af14e6b16f2633ae012b5f6748ca2b6e84e7365a0685042e17380444e",
+        "retrievedAt": "2026-11-03T05:09:07.342869+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+        "httpStatus": 200,
+        "rawHash": "c599fcbf26e83ab27daea2e7313f2c212130e3baf3b740fe7b082add89d6b1ac",
+        "retrievedAt": "2026-11-03T05:09:07.252469+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+        "httpStatus": 200,
+        "rawHash": "a2b8080885578647070e48d2290c6509bd1ccd2ff2e7aefc3404c9de73e02c1e",
+        "retrievedAt": "2026-11-03T05:09:07.283847+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+        "httpStatus": 200,
+        "rawHash": "58543c2605c5265a5aa1ea5f54ad15953aee78763319dd8fced6875e8a582c24",
+        "retrievedAt": "2026-11-03T05:09:07.312775+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      },
+      {
+        "requestedUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+        "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+        "httpStatus": 200,
+        "rawHash": "8b4edd9ed05dfb67a88bfa5d24f2afc9c9a55b85716266df93a6cdfe4d5ac63c",
+        "retrievedAt": "2026-11-03T05:09:07.324938+00:00",
+        "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official public 2026 interactive ballot contest JSON. Entire official English question, full legal text when published, County Counsel impartial analysis and bond tax-rate statement saved. No name, birth date or residential-address lookup used."
+      }
+    ]
+  }
+}

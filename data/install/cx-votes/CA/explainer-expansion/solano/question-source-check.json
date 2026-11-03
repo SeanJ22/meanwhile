@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-11-03T04:51:04.194866+00:00",
+  "method": "Code compares the entire ballot question after removing layout-only punctuation, whitespace, YES/NO side columns and bullet markers. This does not normalize words or numbers. Any exception must have direct visual transcription evidence.",
+  "results": [
+    {
+      "contestId": "ca-2026-solano-county-b",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-e",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-h",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-o",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-p",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-q",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-u",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-v",
+      "layoutNormalizedQuestionInOfficialExtraction": false,
+      "visualVerification": "PDF page 3 directly inspected; OCR cuts several edge characters in the ballot table."
+    },
+    {
+      "contestId": "ca-2026-solano-county-x",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-y",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-solano-county-z",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "visualVerification": null
+    }
+  ]
+}

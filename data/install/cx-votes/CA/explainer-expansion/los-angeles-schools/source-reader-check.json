@@ -1,0 +1,85 @@
+{
+  "checkedAt": "2026-11-03T05:18:41.139Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 13,
+  "checks": [
+    {
+      "contestId": "ca-2026-la-school-s",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-g",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-mm",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-cs",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-ed",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-sms",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-la-school-tcs",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-lv",
+      "status": "PASS",
+      "parts": 2
+    },
+    {
+      "contestId": "ca-2026-la-school-sm",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-b",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-hh",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-k",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-la-school-r",
+      "status": "PASS",
+      "parts": 0
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

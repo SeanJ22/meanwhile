@@ -1,0 +1,604 @@
+[
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10935.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10935.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:02:25.487406+00:00",
+    "file": "ca-c984c546c227.html",
+    "sha256": "85906f79f409770fa779bf283b34571b725b962628a35de02054eaa7600bdec9",
+    "bytes": 1397965,
+    "savedFile": "sources/85906f79f409770fa779bf283b34571b725b962628a35de02054eaa7600bdec9.json",
+    "sourceTextFile": "sources/ca-2026-la-school-up.official-en.txt",
+    "extractedTextSha256": "dafa03c25af011f89593533df1d0d8e8295da66a7aa836aff3e7ea826665cdd5",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10935",
+    "sections": [
+      {
+        "statementID": "M0001093507E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE UP",
+        "sha256": "0acecdec076aca7387251296f264becf256b7e9048795586845f8d277273bd44",
+        "characters": 24766
+      },
+      {
+        "statementID": "M0001093510E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE UP",
+        "sha256": "02781b6a9989a3ffb6354b72bbaa85587cf3a30b832e0121a5b1d0509bc5ab57",
+        "characters": 2298
+      },
+      {
+        "statementID": "M0001093545E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE UP",
+        "sha256": "debd0eb3b3a60170d1ef237ef0795a7c823ba4118d5ed05c1355549be3305407",
+        "characters": 3344
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10911.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.908007+00:00",
+    "file": "ca-cc6e5c099a34.html",
+    "sha256": "818c3ce0018844c6456fc4463bee88a10633189c5e77e15b85ef7deb96d788d9",
+    "bytes": 920640,
+    "savedFile": "sources/818c3ce0018844c6456fc4463bee88a10633189c5e77e15b85ef7deb96d788d9.json",
+    "sourceTextFile": "sources/ca-2026-la-school-s.official-en.txt",
+    "extractedTextSha256": "afa4dcab2fe95206b033093e43c1488ab9e45a031d903b8674e1f36859053d87",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10911",
+    "sections": [
+      {
+        "statementID": "M0001091107E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE S",
+        "sha256": "96d09c55b2a3b4dc1d0e44f2b10df8d4d5214c027cd535dfe223685aa44a82f4",
+        "characters": 14008
+      },
+      {
+        "statementID": "M0001091110E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE S",
+        "sha256": "6c82100049f8268944ae28a1cb3c18c56d3cc6e5b4a303bb15fabfe8ff54d968",
+        "characters": 1907
+      },
+      {
+        "statementID": "M0001091145E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT MEASURE S",
+        "sha256": "24b6aec82c521adb66138e56d2371738da614ddbd234a5d28c1feaac78edee07",
+        "characters": 3000
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10931.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.958099+00:00",
+    "file": "ca-d1cd6f928506.html",
+    "sha256": "cc12c8d871ba573df8464de5b587b705f369a6c53b7431dd7bcee9240320bf24",
+    "bytes": 1500879,
+    "savedFile": "sources/cc12c8d871ba573df8464de5b587b705f369a6c53b7431dd7bcee9240320bf24.json",
+    "sourceTextFile": "sources/ca-2026-la-school-g.official-en.txt",
+    "extractedTextSha256": "1e13a6453a771e45032e6eeeb9ccae5eb32211e51062243f47e0699cafa08eb3",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10931",
+    "sections": [
+      {
+        "statementID": "M0001093107E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE G",
+        "sha256": "6c3230bf686ddf743804257b3bcbaf03a9dbbec8a27856a817ae538d9fa88b69",
+        "characters": 20409
+      },
+      {
+        "statementID": "M0001093110E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE G",
+        "sha256": "3ba314c4c69006a0ad863f745f8363fee329c0482d26dd2568ac5f309d111427",
+        "characters": 2242
+      },
+      {
+        "statementID": "M0001093145E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE G",
+        "sha256": "a1d2728c66c76605a97dd08cfba2afeb5c96a7f7ee2ef013c518e05db449b238",
+        "characters": 4092
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10933.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.908863+00:00",
+    "file": "ca-516c71e06ca6.html",
+    "sha256": "305caaccaf0936d1d7b54d8c26e5bb754113bb52a6b55c1bbdc69c9121e2ff11",
+    "bytes": 928393,
+    "savedFile": "sources/305caaccaf0936d1d7b54d8c26e5bb754113bb52a6b55c1bbdc69c9121e2ff11.json",
+    "sourceTextFile": "sources/ca-2026-la-school-mm.official-en.txt",
+    "extractedTextSha256": "2633de125fbc9196c13f30948132113052a50ae000f6fd7e50cf8962f2e20cc5",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10933",
+    "sections": [
+      {
+        "statementID": "M0001093307E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE MM",
+        "sha256": "15cc01b5f91b9f31908a02f55791d5a86ce1a0084449b5d5fe4162c5e6ec502f",
+        "characters": 13091
+      },
+      {
+        "statementID": "M0001093310E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE MM",
+        "sha256": "05eccd2b9bdfe09508bb0e5b8f2b2702b18a35c454456ff920dff31ee3245151",
+        "characters": 2213
+      },
+      {
+        "statementID": "M0001093345E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE MM",
+        "sha256": "47ca248cd870b4f39144049cef04c5714bdaff73c41146a35e70e8cf733f7777",
+        "characters": 3381
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10937.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.948466+00:00",
+    "file": "ca-dfb6c4af3a70.html",
+    "sha256": "7057900b04531a62d57735e70d0d023e0493f5480919a8666485b657b232e1cf",
+    "bytes": 934418,
+    "savedFile": "sources/7057900b04531a62d57735e70d0d023e0493f5480919a8666485b657b232e1cf.json",
+    "sourceTextFile": "sources/ca-2026-la-school-cs.official-en.txt",
+    "extractedTextSha256": "dab0dbdce81224d650f2f32572fb805f13cb61000d782340dec2d2527cced4ff",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10937",
+    "sections": [
+      {
+        "statementID": "M0001093707E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE CS",
+        "sha256": "a8f0ef9d91974093a368dcae021e76c069b08acc98ebcf10bd2633e14150f32e",
+        "characters": 8374
+      },
+      {
+        "statementID": "M0001093710E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE CS",
+        "sha256": "84c05bb5496196891762fc03753f459cca39e66f376b7a88bd89b716c522e5f1",
+        "characters": 2210
+      },
+      {
+        "statementID": "M0001093745E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE CS",
+        "sha256": "c893237f96b8d6bbc609f661db72e75d50de1681ec43b03981b43dd85b479c12",
+        "characters": 3017
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10948.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.938263+00:00",
+    "file": "ca-f36621cf60df.html",
+    "sha256": "156f937fa5c89d500183af3a95b9bc083f94286439aedb90774316d53cd28816",
+    "bytes": 832856,
+    "savedFile": "sources/156f937fa5c89d500183af3a95b9bc083f94286439aedb90774316d53cd28816.json",
+    "sourceTextFile": "sources/ca-2026-la-school-ed.official-en.txt",
+    "extractedTextSha256": "556dff8d2c3675ce7a6228bb9047edc0082dac65f43c8e6485f213c88d63e79f",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10948",
+    "sections": [
+      {
+        "statementID": "M0001094807E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE ED",
+        "sha256": "0c6dec7185a0b13e2021d27f2e9f959b85b0c417afbe3cefa5abb4b652c0f81a",
+        "characters": 11324
+      },
+      {
+        "statementID": "M0001094810E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE ED",
+        "sha256": "f8181194b986ec11a2a64ae1651ea0f4ba73f76930e72fd6457a56d497374529",
+        "characters": 1890
+      },
+      {
+        "statementID": "M0001094845E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE ED",
+        "sha256": "6d8213868cdd42d4e27358cde12b6f44f0754969f79fba3daa3c6b5660ab38e3",
+        "characters": 3388
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10949.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.869473+00:00",
+    "file": "ca-8ad29b91c40d.html",
+    "sha256": "663978819f7331450a382fdfcd54e0e5c1aa9c7eae2f21ea165c301968687cad",
+    "bytes": 736963,
+    "savedFile": "sources/663978819f7331450a382fdfcd54e0e5c1aa9c7eae2f21ea165c301968687cad.json",
+    "sourceTextFile": "sources/ca-2026-la-school-sms.official-en.txt",
+    "extractedTextSha256": "63f832d855bd026f93a1a6d1fa32cffdb0a5dd94eef1efecbc6a3c27f07b9cdd",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10949",
+    "sections": [
+      {
+        "statementID": "M0001094907E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE SMS",
+        "sha256": "55694b020551bc4e0ab8fa259ad72c2e36866eac7e5fd4994f85fc6fbc8ba819",
+        "characters": 11817
+      },
+      {
+        "statementID": "M0001094910E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE SMS",
+        "sha256": "146434c669457206a2d6517a5a73d72038609b686edb67c4266eee28e68ac409",
+        "characters": 3252
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10950.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.944839+00:00",
+    "file": "ca-d9a378e47daa.html",
+    "sha256": "60fc684caf7207fa594fd0b9e55773aaac8b68c981c08d5672619403cb4a6042",
+    "bytes": 967118,
+    "savedFile": "sources/60fc684caf7207fa594fd0b9e55773aaac8b68c981c08d5672619403cb4a6042.json",
+    "sourceTextFile": "sources/ca-2026-la-school-tcs.official-en.txt",
+    "extractedTextSha256": "8b670b9973e950bc91d56228a7cac9b8250478b737625a9e33c62348ee7df5c9",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10950",
+    "sections": [
+      {
+        "statementID": "M0001095007E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE TCS",
+        "sha256": "e61de5ffb4f3e4b8833756f8706751813d30ebf13c08361ca7303f436f0482ef",
+        "characters": 14653
+      },
+      {
+        "statementID": "M0001095010E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE TCS",
+        "sha256": "c1edb818901dfc54781679a973a02281e80fc67227daa1cebe4d12e92ccaa58e",
+        "characters": 1896
+      },
+      {
+        "statementID": "M0001095045E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE TCS",
+        "sha256": "48d3f31c3eb5f2bfe628f6eb363461721210da3c6fbe04c677d169fd5391af75",
+        "characters": 3443
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10961.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:06:26.924172+00:00",
+    "file": "ca-289579e791b5.html",
+    "sha256": "65f7c848a61e207fc38a53827ee10e456a0c9f390a82e28ac3d33bffb928b0fd",
+    "bytes": 645496,
+    "savedFile": "sources/65f7c848a61e207fc38a53827ee10e456a0c9f390a82e28ac3d33bffb928b0fd.json",
+    "sourceTextFile": "sources/ca-2026-la-school-lv.official-en.txt",
+    "extractedTextSha256": "45689cfbe80ed324e1d57bb89c6ff7e237e607e5f8d21035e5ad842c92af6334",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10961",
+    "sections": [
+      {
+        "statementID": "M0001096107E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE LV",
+        "sha256": "19821dff8e62254294835f41e28e68577f68adf5b1dbc2993ef6f392bca1d8db",
+        "characters": 9325
+      },
+      {
+        "statementID": "M0001096110E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE LV",
+        "sha256": "39cf098135aa8357f16888bc030cd2edb43021d31dd4071eaa3ca25e08528897",
+        "characters": 2921
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10872.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:09:07.342869+00:00",
+    "file": "ca-33e7f9c6cf0c.html",
+    "sha256": "98d4216af14e6b16f2633ae012b5f6748ca2b6e84e7365a0685042e17380444e",
+    "bytes": 1158485,
+    "savedFile": "sources/98d4216af14e6b16f2633ae012b5f6748ca2b6e84e7365a0685042e17380444e.json",
+    "sourceTextFile": "sources/ca-2026-la-school-sm.official-en.txt",
+    "extractedTextSha256": "a0224904ae7204d781f15dc631684a749bd5f00f22b553e4c32327928bd0dc30",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10872",
+    "sections": [
+      {
+        "statementID": "M0001087207E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE SM",
+        "sha256": "f471f334cb40220c5e6921fd61fee4141a29e20b5d6da1906cccb675e1fa8448",
+        "characters": 19472
+      },
+      {
+        "statementID": "M0001087210E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE SM",
+        "sha256": "a0dc0aaebfbf449e0b7f459a9703f074bf05a8e13271b075bf799f7bfe83220e",
+        "characters": 2161
+      },
+      {
+        "statementID": "M0001087245E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE SM",
+        "sha256": "353b30239b2b61dea86b6461296d3a056dd2efd7596a1892510f46c2889d9d8f",
+        "characters": 3397
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10873.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:09:07.252469+00:00",
+    "file": "ca-54816591e075.html",
+    "sha256": "c599fcbf26e83ab27daea2e7313f2c212130e3baf3b740fe7b082add89d6b1ac",
+    "bytes": 57695,
+    "savedFile": "sources/c599fcbf26e83ab27daea2e7313f2c212130e3baf3b740fe7b082add89d6b1ac.json",
+    "sourceTextFile": "sources/ca-2026-la-school-b.official-en.txt",
+    "extractedTextSha256": "07eac455daccc6a029e57c5f8a83e944f04952429367cef0121664c623c06fe7",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10873",
+    "sections": [
+      {
+        "statementID": "M0001087310E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE B",
+        "sha256": "496fc1a10568af54a8f126f90a9f85db043fe058ac27a2bde2f2c16fada372e6",
+        "characters": 928
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10884.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:09:07.283847+00:00",
+    "file": "ca-f31d8fbba6b4.html",
+    "sha256": "a2b8080885578647070e48d2290c6509bd1ccd2ff2e7aefc3404c9de73e02c1e",
+    "bytes": 874183,
+    "savedFile": "sources/a2b8080885578647070e48d2290c6509bd1ccd2ff2e7aefc3404c9de73e02c1e.json",
+    "sourceTextFile": "sources/ca-2026-la-school-hh.official-en.txt",
+    "extractedTextSha256": "d7337b6a86a613ed067a614b6b8561defa772f77f98a3095a27bab1276411cc1",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10884",
+    "sections": [
+      {
+        "statementID": "M0001088407E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE HH",
+        "sha256": "228777c23dad349509fe8c82e2292564a090dbd3c0e7076e09f7bc639908c372",
+        "characters": 13220
+      },
+      {
+        "statementID": "M0001088410E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE HH",
+        "sha256": "821116246ac5e967d5dcdf5ac46bc1b8e98cac5f37f2036d83534778bcd04071",
+        "characters": 2200
+      },
+      {
+        "statementID": "M0001088445E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE HH",
+        "sha256": "78e09ef47238178cdcb204bb6a96e3c9a5673fc39aba18d085093d72a5cad29c",
+        "characters": 3360
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10874.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:09:07.312775+00:00",
+    "file": "ca-9458bdabd147.html",
+    "sha256": "58543c2605c5265a5aa1ea5f54ad15953aee78763319dd8fced6875e8a582c24",
+    "bytes": 988557,
+    "savedFile": "sources/58543c2605c5265a5aa1ea5f54ad15953aee78763319dd8fced6875e8a582c24.json",
+    "sourceTextFile": "sources/ca-2026-la-school-k.official-en.txt",
+    "extractedTextSha256": "f5381a20a2487f7d90a3265d1003d7b1bc78df1390e0a0b68a67e59d02fd0507",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10874",
+    "sections": [
+      {
+        "statementID": "M0001087407E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE K",
+        "sha256": "397ceefeb7d208bf41c3159fcedc9638ffaf7c5fdcbdb9adaa8dc1832e06b474",
+        "characters": 15837
+      },
+      {
+        "statementID": "M0001087410E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE K",
+        "sha256": "2af5173c0f9d7a7a76097a10ec800845fcfe3a5315e8a8984941160cbf79da09",
+        "characters": 2274
+      },
+      {
+        "statementID": "M0001087445E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE K",
+        "sha256": "a22a11b71ffdba27d4f65c9497b11b050c824ac8d8564fe5f4892e30fcce3c4f",
+        "characters": 2873
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/bmc10868.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:09:07.324938+00:00",
+    "file": "ca-8ef34796cf6a.html",
+    "sha256": "8b4edd9ed05dfb67a88bfa5d24f2afc9c9a55b85716266df93a6cdfe4d5ac63c",
+    "bytes": 968513,
+    "savedFile": "sources/8b4edd9ed05dfb67a88bfa5d24f2afc9c9a55b85716266df93a6cdfe4d5ac63c.json",
+    "sourceTextFile": "sources/ca-2026-la-school-r.official-en.txt",
+    "extractedTextSha256": "3e6c158a74730d17026b68da64996293c81f54700f2ef329168620c9763a9cc1",
+    "rawFormat": "DOCUMENT_BYTES",
+    "publisher": "Los Angeles County Registrar-Recorder/County Clerk",
+    "officialContestId": "bmc10868",
+    "sections": [
+      {
+        "statementID": "M0001086807E",
+        "kind": "FULL_TEXT",
+        "heading": "FULL TEXT OF BALLOT MEASURE R",
+        "sha256": "69258ebce102ed755b0b08d7348d2f72703749955ec4a8787e106b1ac89b9953",
+        "characters": 15501
+      },
+      {
+        "statementID": "M0001086810E",
+        "kind": "IMPARTIAL_ANALYSIS",
+        "heading": "IMPARTIAL ANALYSIS OF MEASURE R",
+        "sha256": "86d36709e9d9ee60a92a940520645199dc1f31f2ff1528239e68140b74756ad4",
+        "characters": 2290
+      },
+      {
+        "statementID": "M0001086845E",
+        "kind": "TAX_RATE_STATEMENT",
+        "heading": "TAX RATE STATEMENT - MEASURE R",
+        "sha256": "ba33fd170d9c7d34656c80526f1a85ad6efa8ef14fe765318d4897d9996c8af3",
+        "characters": 3351
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://www.lavote.gov/home/voting-elections/current-elections/upcoming-elections",
+    "finalUrl": "https://www.lavote.gov/home/voting-elections/current-elections/upcoming-elections",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "retrievedAt": "2026-11-03T04:58:51.396971+00:00",
+    "file": "ca-80e41bbd7a5c.html",
+    "sha256": "4c09e63c4b5e2a0a8436571c3eba0735ba4c68c3bd3b4733d071e8346ad61297",
+    "bytes": 152231,
+    "savedFile": "sources/4c09e63c4b5e2a0a8436571c3eba0735ba4c68c3bd3b4733d071e8346ad61297.html",
+    "rawFormat": "DOCUMENT_BYTES",
+    "role": "Official current county measure/election index"
+  },
+  {
+    "state": "CA",
+    "url": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026-v-2.pdf",
+    "finalUrl": "https://content.lavote.gov/docs/rrcc/documents/final-measures-appearing-on-the-ballot-9-22-2026-v-2.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T05:00:10.831215+00:00",
+    "file": "ca-c22353000376.pdf",
+    "sha256": "1b2cd6f63495f109fde5d261ee89f4808c208df0abadf98648bcd087d616740a",
+    "bytes": 330985,
+    "savedFile": "sources/1b2cd6f63495f109fde5d261ee89f4808c208df0abadf98648bcd087d616740a.pdf",
+    "rawFormat": "DOCUMENT_BYTES",
+    "role": "Official current county measure/election index"
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/elections/list.json",
+    "finalUrl": "https://isb.lavote.gov/elections/list.json",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "retrievedAt": "2026-11-03T05:02:25.108488+00:00",
+    "file": "ca-fd4ab9564854.html",
+    "sha256": "9a14ebbae46513f8779c46c42a1b2fe7bcb442964ec2e43e1b10b9829e57afad",
+    "bytes": 775,
+    "savedFile": "sources/9a14ebbae46513f8779c46c42a1b2fe7bcb442964ec2e43e1b10b9829e57afad.json",
+    "rawFormat": "DOCUMENT_BYTES",
+    "role": "Official current county measure/election index"
+  },
+  {
+    "state": "CA",
+    "url": "https://isb.lavote.gov/parsed/4348/election.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/election.json",
+    "httpStatus": 200,
+    "contentType": "application/octet-stream",
+    "retrievedAt": "2026-11-03T05:02:25.259499+00:00",
+    "file": "ca-52cfcd0b1518.html",
+    "sha256": "06c9e97ac892186cdecf48c531c670a3ac040dd7779436101482b4138278b146",
+    "bytes": 18945,
+    "savedFile": "sources/06c9e97ac892186cdecf48c531c670a3ac040dd7779436101482b4138278b146.json",
+    "rawFormat": "DOCUMENT_BYTES",
+    "role": "Official current county measure/election index"
+  },
+  {
+    "state": "CA",
+    "url": "https://results.lavote.gov/ElectionResults/GetElectionData?electionID=4348",
+    "finalUrl": "https://results.lavote.gov/ElectionResults/GetElectionData?electionID=4348",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=utf-8",
+    "retrievedAt": "2026-11-03T05:08:25.269451+00:00",
+    "file": "ca-59d0d26d5893.html",
+    "sha256": "818c6a111e810dfa9096381a089fab53f480be4743247b9a74837c623d3646d2",
+    "bytes": 249596,
+    "savedFile": "sources/818c6a111e810dfa9096381a089fab53f480be4743247b9a74837c623d3646d2.json",
+    "rawFormat": "DOCUMENT_BYTES",
+    "role": "Official current county measure/election index"
+  }
+]

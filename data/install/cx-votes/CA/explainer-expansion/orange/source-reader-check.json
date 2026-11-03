@@ -1,0 +1,96 @@
+{
+  "checkedAt": "2026-11-03T05:28:50.428Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "advocacyExcludedFromBoundedExcerpts": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 15,
+  "checks": [
+    {
+      "contestId": "ca-2026-orange-county-a",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-b",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-c",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-d",
+      "status": "PASS",
+      "parts": 2
+    },
+    {
+      "contestId": "ca-2026-orange-county-e",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-f",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-g",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-h",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-i",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-j",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-k",
+      "status": "PASS",
+      "parts": 7
+    },
+    {
+      "contestId": "ca-2026-orange-county-l",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-m",
+      "status": "PASS",
+      "parts": 4
+    },
+    {
+      "contestId": "ca-2026-orange-county-n",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-orange-county-o",
+      "status": "PASS",
+      "parts": 0
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

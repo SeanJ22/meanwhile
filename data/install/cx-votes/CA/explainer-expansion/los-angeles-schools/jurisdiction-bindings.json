@@ -1,0 +1,54 @@
+{
+  "ocd-division/country:us/state:ca/school_district:bellflower_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/90.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:bellflower_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:el_rancho_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:el_rancho_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:hawthorne_elementary_school_district": {
+    "registryFile": "data/derived/zip-divisions/90.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:hawthorne_elementary_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:inglewood_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/90.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:inglewood_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:las_virgenes_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:charter_oak_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:charter_oak_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:claremont_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:claremont_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:glendora_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:glendora_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:hacienda_la_puente_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:hacienda_la_puente_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:san_marino_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:san_marino_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:temple_city_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:temple_city_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:valle_lindo_elementary_school_district": {
+    "registryFile": "data/derived/zip-divisions/91.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:valle_lindo_elementary_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:keppel_union_elementary_school_district": {
+    "registryFile": "data/derived/zip-divisions/93.json",
+    "exactId": "ocd-division/country:us/state:ca/school_district:keppel_union_elementary_school_district"
+  }
+}

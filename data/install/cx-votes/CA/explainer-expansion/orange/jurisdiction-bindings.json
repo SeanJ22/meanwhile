@@ -1,0 +1,67 @@
+{
+  "ocd-division/country:us/state:ca/place:los_alamitos": {
+    "registryFile": "data/derived/zip-divisions/90.json",
+    "registryFileHash": "f173332da03887701d0c528654ab322440864386e7f84ee531b7f401fdf01ead",
+    "exactId": "ocd-division/country:us/state:ca/place:los_alamitos"
+  },
+  "ocd-division/country:us/state:ca/place:costa_mesa": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:costa_mesa"
+  },
+  "ocd-division/country:us/state:ca/place:irvine": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:irvine"
+  },
+  "ocd-division/country:us/state:ca/place:laguna_beach": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:laguna_beach"
+  },
+  "ocd-division/country:us/state:ca/place:lake_forest": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:lake_forest"
+  },
+  "ocd-division/country:us/state:ca/place:newport_beach": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:newport_beach"
+  },
+  "ocd-division/country:us/state:ca/place:orange": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:orange"
+  },
+  "ocd-division/country:us/state:ca/place:placentia": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:placentia"
+  },
+  "ocd-division/country:us/state:ca/place:san_clemente": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:san_clemente"
+  },
+  "ocd-division/country:us/state:ca/place:santa_ana": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:santa_ana"
+  },
+  "ocd-division/country:us/state:ca/place:westminster": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/place:westminster"
+  },
+  "ocd-division/country:us/state:ca/school_district:laguna_beach_unified_school_district": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/school_district:laguna_beach_unified_school_district"
+  },
+  "ocd-division/country:us/state:ca/school_district:westminster_school_district": {
+    "registryFile": "data/derived/zip-divisions/92.json",
+    "registryFileHash": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
+    "exactId": "ocd-division/country:us/state:ca/school_district:westminster_school_district"
+  }
+}

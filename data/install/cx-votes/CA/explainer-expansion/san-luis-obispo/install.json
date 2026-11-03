@@ -1,0 +1,46 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-luis-obispo-a",
+      "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-24-56"
+    },
+    {
+      "id": "ca-2026-san-luis-obispo-c",
+      "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-045"
+    },
+    {
+      "id": "ca-2026-san-luis-obispo-d",
+      "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-2026-047"
+    },
+    {
+      "id": "ca-2026-san-luis-obispo-e",
+      "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-r-2026-043"
+    },
+    {
+      "id": "ca-2026-san-luis-obispo-f",
+      "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-20"
+    },
+    {
+      "id": "ca-2026-san-luis-obispo-g",
+      "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-26"
+    }
+  ],
+  "operation": "Merge these measure-only contests, official questions and source-linked explainers through existing runBallotPublication, preserving all unrelated data. Native official documents and labeled text derivations are archived with their distinct hashes.",
+  "coverageLimit": "Only the exact included local measures. Questions awaiting exact college-district geography stay outside this install input. Broader statewide local acquisition continues.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

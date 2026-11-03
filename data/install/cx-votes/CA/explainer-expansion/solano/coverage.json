@@ -1,0 +1,53 @@
+{
+  "state": "CA",
+  "county": "Solano",
+  "electionDate": "2026-11-03",
+  "checkedAt": "2026-11-03T04:50:23.518046+00:00",
+  "officialList": {
+    "url": "https://www.solanocounty.gov/government/registrar-voters/current-election-information",
+    "retrievedAt": "2026-11-03T04:40:32.685624+00:00",
+    "rawHash": "736f5187aacdff235cc46d9939338ecefb88691243de50a21ac4f589d65138c3",
+    "savedFile": "sources/736f5187aacdff235cc46d9939338ecefb88691243de50a21ac4f589d65138c3.html",
+    "denominator": 11,
+    "measureLetters": [
+      "B",
+      "E",
+      "H",
+      "O",
+      "P",
+      "Q",
+      "U",
+      "V",
+      "X",
+      "Y",
+      "Z"
+    ]
+  },
+  "prepared": 11,
+  "status": "PREPARED_FOR_INDEPENDENT_REVIEW",
+  "scope": "All 11 measures linked by the current Solano County general-election page. County measures E/H are submitted to all qualified county voters, although the taxed activities are only in unincorporated areas, as the resolutions state. Winters Joint Unified school measure spans Yolo and Solano counties. This is not a statewide completeness claim.",
+  "sourceAnomalies": [
+    {
+      "measure": "O",
+      "finding": "Official question and ordinance describe extension of existing 0.75% tax; impartial analysis uses “impose.” Draft follows controlling extension question and exact three-year dates."
+    },
+    {
+      "measure": "U",
+      "finding": "July 28, 2026 revised-question cover letter contains stale November 2024 references. The revised question, official 2026 analysis, tax-rate statement and current election index establish the current 2026 measure; draft does not repeat stale dates."
+    },
+    {
+      "measure": "X",
+      "finding": "Analysis says receipts less than $100,000; operative exemption and ballot question say $100,000 or less. Draft follows the inclusive controlling threshold."
+    },
+    {
+      "measure": "Z",
+      "finding": "Exemption heading says less than $2 million; operative body and official analysis specify sale does not exceed $2 million. Draft uses inclusive $2 million threshold."
+    },
+    {
+      "measure": "V",
+      "finding": "The question explicitly requires annual audits and public reporting. The draft retains that frequency; the analysis’s broader word “periodic” does not override it."
+    }
+  ],
+  "productionWrites": 0,
+  "applicationChanges": 0
+}

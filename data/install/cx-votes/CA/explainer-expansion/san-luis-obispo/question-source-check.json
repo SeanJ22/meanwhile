@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-03T04:57:57.256672+00:00",
+  "method": "Entire-question comparison removes punctuation, whitespace and YES/NO layout columns only; G source question and tax-rate statement separately inspected visually because the source embedded OCR misspells words and digits. C has an additional same-election official question in the D source PDF\u2019s initial consolidation resolution, preserved verbatim as auxiliary evidence.",
+  "results": [
+    {
+      "contestId": "ca-2026-san-luis-obispo-a",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "auxiliaryOfficialQuestionMatch": false,
+      "auxiliarySourceTextFile": null,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-c",
+      "layoutNormalizedQuestionInOfficialExtraction": false,
+      "auxiliaryOfficialQuestionMatch": true,
+      "auxiliarySourceTextFile": "sources/arroyo-grande-cannabis-question-auxiliary.txt",
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-d",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "auxiliaryOfficialQuestionMatch": false,
+      "auxiliarySourceTextFile": null,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-e",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "auxiliaryOfficialQuestionMatch": false,
+      "auxiliarySourceTextFile": null,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-f",
+      "layoutNormalizedQuestionInOfficialExtraction": true,
+      "auxiliaryOfficialQuestionMatch": false,
+      "auxiliarySourceTextFile": null,
+      "visualVerification": null
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-g",
+      "layoutNormalizedQuestionInOfficialExtraction": false,
+      "auxiliaryOfficialQuestionMatch": false,
+      "auxiliarySourceTextFile": null,
+      "visualVerification": "Original source PDF page 15 directly inspected; question transcribed accurately despite embedded OCR errors."
+    }
+  ]
+}

@@ -1,0 +1,945 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-orange-county-a",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:laguna_beach_unified_school_district",
+          "title": "Laguna Beach Unified School District — Measure A",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.206381+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.206381+00:00",
+            "quote": "To repair and upgrade aging classrooms, science labs, career technology and school facilities to support college/career\nreadiness in math, science, technology, arts, engineering, and skilled trades; and fix deteriorating roofs, plumbing, and\nelectrical systems; shall Laguna Beach Unified School District’s measure be adopted authorizing $83 million in bonds at\nlegal rates (without increasing current tax rates), levying $8.85 per $100,000 assessed value ($5 million annually) while\nbonds are outstanding, with independent audits, citizen oversight, all money locally controlled?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-b",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:westminster_school_district",
+          "title": "Westminster School District — Measure B",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.694217+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.694217+00:00",
+            "quote": "To provide safe, modern schools by repairing, upgrading and equipping aging classrooms, labs, instructional technology,\nand school facilities to support student achievement in math, science, technology, arts and engineering, fixing deteriorated\nroofs, plumbing, HVAC, electrical systems and improving school safety/security systems, shall Westminster School\nDistrict’s measure authorizing $128,000,000 in bonds at legal rates be adopted, levying $30 per $100,000 assessed\nvalue ($8,000,000 annually) while bonds are outstanding, with citizen oversight, independent audits, all money locally-\ncontrolled?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-c",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa",
+          "title": "Costa Mesa — Measure C",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.564800+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.564800+00:00",
+            "quote": "Without taxing residents, shall the measure be adopted, updating Costa Mesa’s 41-year-old business license tax,\nensuring large businesses pay their proportionate share and helping fund general city services including keeping public\nareas safe/clean; preventing crime/burglaries; addressing homelessness; maintaining Costa Mesa’s financial stability;\nrevising the tax rate to 50¢ per $1,000 gross receipts, with no increase for small businesses; generating approximately\n$5,600,000 annually until ended by voters, requiring audits, spending disclosure, funds locally controlled?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-d",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:irvine",
+          "title": "Irvine — Measure D",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf",
+            "collectedAt": "2026-11-03T04:29:21.626161+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.626161+00:00",
+            "quote": "Shall a measure that directs, to the extent technically and financially feasible, the use of ranked choice voting for City\nCouncil Member and Mayoral Elections occurring after January 1, 2028, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-e",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:laguna_beach",
+          "title": "Laguna Beach — Measure E",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.589474+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.589474+00:00",
+            "quote": "Shall an ordinance to amend the Laguna Beach Municipal Code by enacting a limit on consecutive years of service by\nmembers of the City Council to a combined total of two four-year consecutive terms, with the ability to again serve as a\nCouncilmember after a lapse of service of at least two years, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-f",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:lake_forest",
+          "title": "Lake Forest — Measure F",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.453218+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.453218+00:00",
+            "quote": "Shall the measure limiting city council members to two consecutive terms in office with a mandatory four-year out of\noffice period before being eligible to serve for another two consecutive terms in office, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-g",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:los_alamitos",
+          "title": "Los Alamitos — Measure G",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf",
+            "collectedAt": "2026-11-03T04:29:21.669852+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.669852+00:00",
+            "quote": "Shall the ordinance providing funding for City of Los Alamitos’ general services such as maintaining 911 emergency\nresponse and police services; providing neighborhood police patrols; maintaining parks; supporting youth, afterschool,\nand senior programs; repairing streets and potholes; by increasing the City of Los Alamitos’ transient occupancy tax,\npaid only by hotel/motel and short-term rental guests, from 8% to 12%, providing approximately $300,000 annually be\nadopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-h",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+          "title": "Newport Beach — Measure H",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.546228+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.546228+00:00",
+            "quote": "Shall the measure to amend the City of Newport Beach’s General Plan Land Use Element allowing 2,900 new affordable\nhousing units (2,160 reserved for extremely low-, very low-, and low-income households; and 740 for moderate-income\nhouseholds) with densities of 20 - 50 dwelling units per acre, plus State of California allowed housing density bonuses,\nin Dover/Westcliff (174), Newport Center (870), West Newport Mesa (406), Airport Area (929), and Coyote Canyon (521),\nbe adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-i",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:orange",
+          "title": "Orange — Measure I",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.466080+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.466080+00:00",
+            "quote": "To maintain City of Orange’s quality of life, such as 9-1-1 response; maintaining police/fire protection; preventing\ncrimes/thefts; retaining/attracting well-trained police officers/firefighters; keeping public parks safe/clean; addressing\nhomelessness; wildfire protection/prevention; repairing streets/potholes; critical infrastructure improvements; shall a\nmeasure establishing a 1¢ sales tax, providing approximately $37,000,000 annually for general revenue/government\npurposes, expiring after 13 years, with independent oversight committee, all funds benefiting Orange residents, be\nadopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-j",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:orange",
+          "title": "Orange — Measure J",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.597650+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.597650+00:00",
+            "quote": "Shall the measure updating the City of Orange’s existing Transient Occupancy Tax, a tax on persons occupying hotel\nrooms by increasing the tax rate from 10% to 14% for hotels with 11 or more rooms and applying the tax to online and\nother travel companies, generating approximately $3,000,000 annually for general City purposes including police, fire\nand emergency response, parks, and street and infrastructure maintenance, until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-k",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:orange",
+          "title": "Orange — Measure K",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf",
+            "collectedAt": "2026-11-03T04:29:22.082916+00:00",
+            "verifiedAt": "2026-11-03T04:29:22.082916+00:00",
+            "quote": "Shall the proposed Charter for the City of Orange, establishing the City as a charter city under the California Constitution\nand providing the City’s governing document for municipal affairs, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-l",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:placentia",
+          "title": "Placentia — Measure L",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.670039+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.670039+00:00",
+            "quote": "Shall the measure increasing the rate of the City of Placentia’s existing transient occupancy tax (hotel tax), paid only\nby hotel guests, to 14%, funding city services such as police patrols, fire protection, 911 response, and road repairs;\nrequiring citizen oversight and annual audits, generating about $715,000 annually, until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-m",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:san_clemente",
+          "title": "San Clemente — Measure M",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.761445+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.761445+00:00",
+            "quote": "Shall the measure establishing two funds dedicated to protecting San Clemente from natural hazards of beach erosion\nand fires and a 1% sales tax increase, providing approximately $15,000,000 annually for 10 years, requiring public\nspending disclosure, independent audits, all funds used locally for specified purposes only, including sand replenishment/\nnourishment/ retention, beach erosion control, maintaining/ restoring beach access/ water quality and supporting fire\nprotection/ prevention programs/ services, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-n",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:santa_ana",
+          "title": "Santa Ana — Measure N",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.754676+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.754676+00:00",
+            "quote": "To maintain city services, such as fixing potholes; keeping streets, sidewalks, parks, and playgrounds safe and clean;\nremoving graffiti and litter; providing fire protection, paramedic, crime prevention, and 911 emergency response, shall\nCity of Santa Ana’s ordinance be amended to maintain the 1.5 cent sales tax without sunset providing approximately\n$84,000,000 annually for services until ended by voters, with independent audits, resident oversight, and all money\nlocally controlled?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-orange-county-o",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:westminster",
+          "title": "Westminster — Measure O",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.756103+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.756103+00:00",
+            "quote": "To fund general city services such as fire, paramedic, police, 911 emergency response, disaster preparedness, keeping\npublic areas safe/clean; addressing homelessness; maintaining parks, and addressing speeding/unsafe driving; shall the\nmeasure increasing Westminster’s tax paid by hotel/motel guests (transient occupancy tax), from 8% to 12%, providing\napproximately $452,000 annually in new funds until ended by voters, requiring audits, spending disclosures, funds\ncontrolled locally, be adopted?"
+          },
+          "measureTextUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-orange-county-a-text",
+          "contestId": "ca-2026-orange-county-a",
+          "officialNumber": "Measure A",
+          "questionText": "To repair and upgrade aging classrooms, science labs, career technology and school facilities to support college/career\nreadiness in math, science, technology, arts, engineering, and skilled trades; and fix deteriorating roofs, plumbing, and\nelectrical systems; shall Laguna Beach Unified School District’s measure be adopted authorizing $83 million in bonds at\nlegal rates (without increasing current tax rates), levying $8.85 per $100,000 assessed value ($5 million annually) while\nbonds are outstanding, with independent audits, citizen oversight, all money locally controlled?",
+          "officialStatement": "Impartial Analysis\n                                                         Laguna Beach Unified School District\n                                                                    Measure A\n        This measure was placed on the ballot by the governing board (“Board”) of the Laguna Beach Unified School District (“District”). This measure,\nif approved by 55 percent of the votes cast on the measure, will authorize the District to issue and sell up to $83,000,000 in general obligation bonds.\nThe sale of these bonds by the District represents a debt of the District.\n        Voter approval of this measure will also authorize an annual tax to be levied on taxable property in the District to generate revenue to pay\nprincipal and interest on the bonds. The District’s stated best estimate in its tax rate statement of the average annual tax rate required to fund the bonds\nis $8.68 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2056-57. The best estimate\nof the total debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $157,260,047. The interest rate and\nmaturity date on any bond shall not exceed the maximums allowed by law.\n         Proceeds from the sale of bonds authorized by this measure may only be used by the District for the construction, reconstruction, rehabilitation\nor replacement of school facilities, including the furnishing and equipping of school facilities, or the acquisition or lease of interests in real property\nfor school facilities in the District. A complete list of the projects and allowed expenditures, which bonds proceeds may be spent on, is included in the\nfull text of the measure. The Board has certified that it has evaluated safety, class size, and information technology needs in developing the project list\nfor this bond measure.\n        The California Constitution provides that proceeds of school district bond measures cannot be used for teacher or administrator salaries or\nother operating expenses and requires independent annual performance and financial audits. State law requires the establishment of an independent\ncitizens’ oversight committee for ensuring that bond proceeds are expended as specified in the measure and as provided by law.\n       Approval of Measure A does not guarantee that the proposed project or projects in the District that are the subject of the bonds under\nMeasure A will be funded beyond the local revenues generated by Measure A. The District’s proposal for the project or projects may assume the receipt\nof matching state funds, which could be subject to appropriation by the Legislature or approval of a statewide bond measure.\n        A “YES” vote is a vote in favor of authorizing the District to issue and sell up to $83,000,000 in general obligation bonds.\n        A “NO” vote is a vote against authorizing the District to issue and sell up to $83,000,000 in general obligation bonds.\n\f                                                                               Section\n                                            Ballot Measures-A                  11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.206381+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.206381+00:00",
+            "quote": "To repair and upgrade aging classrooms, science labs, career technology and school facilities to support college/career\nreadiness in math, science, technology, arts, engineering, and skilled trades; and fix deteriorating roofs, plumbing, and\nelectrical systems; shall Laguna Beach Unified School District’s measure be adopted authorizing $83 million in bonds at\nlegal rates (without increasing current tax rates), levying $8.85 per $100,000 assessed value ($5 million annually) while\nbonds are outstanding, with independent audits, citizen oversight, all money locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-b-text",
+          "contestId": "ca-2026-orange-county-b",
+          "officialNumber": "Measure B",
+          "questionText": "To provide safe, modern schools by repairing, upgrading and equipping aging classrooms, labs, instructional technology,\nand school facilities to support student achievement in math, science, technology, arts and engineering, fixing deteriorated\nroofs, plumbing, HVAC, electrical systems and improving school safety/security systems, shall Westminster School\nDistrict’s measure authorizing $128,000,000 in bonds at legal rates be adopted, levying $30 per $100,000 assessed\nvalue ($8,000,000 annually) while bonds are outstanding, with citizen oversight, independent audits, all money locally-\ncontrolled?",
+          "officialStatement": "Impartial Analysis\n                                                              Westminster School District\n                                                                     Measure B\n       This measure was placed on the ballot by the governing board (“Board”) of the Westminster School District (“District”). This measure, if approved\nby 55 percent of the votes cast on the measure, will authorize the District to issue and sell up to $128,000,000 in general obligation bonds. The sale of\nthese bonds by the District represents a debt of the District.\n        Voter approval of this measure will also authorize an annual tax to be levied on taxable property in the District to generate revenue to pay\nprincipal and interest on the bonds. The District’s stated best estimate in its tax rate statement of the average annual tax rate required to fund the bonds\nis $30 per $100,000 of assessed value. The final fiscal year in which the tax is anticipated to be collected is fiscal year 2060-61. The best estimate of the\ntotal debt service, including principal and interest, required to be repaid if all bonds are issued and sold is $276,000,000. The interest rate and maturity\ndate on any bond shall not exceed the maximums allowed by law.\n         Proceeds from the sale of bonds authorized by this measure may only be used by the District for the construction, reconstruction, rehabilitation\nor replacement of school facilities, including the furnishing and equipping of school facilities, or the acquisition or lease of interests in real property\nfor school facilities in the District. A complete list of the projects and allowed expenditures, which bonds proceeds may be spent on, is included in the\nfull text of the measure. The Board has certified that it has evaluated safety, class size, and information technology needs in developing the project list\nfor this bond measure.\n        The California Constitution provides that proceeds of school district bond measures cannot be used for teacher or administrator salaries or\nother operating expenses and requires independent annual performance and financial audits. State law requires the establishment of an independent\ncitizens’ oversight committee for ensuring that bond proceeds are expended as specified in the measure and as provided by law.\n        A “YES” vote is a vote in favor of authorizing the District to issue and sell up to $128,000,000 in general obligation bonds.\n        A “NO” vote is a vote against authorizing the District to issue and sell up to $128,000,000 in general obligation bonds.\n\f                                                                              Section\n                                            Ballot Measures-B                 11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.694217+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.694217+00:00",
+            "quote": "To provide safe, modern schools by repairing, upgrading and equipping aging classrooms, labs, instructional technology,\nand school facilities to support student achievement in math, science, technology, arts and engineering, fixing deteriorated\nroofs, plumbing, HVAC, electrical systems and improving school safety/security systems, shall Westminster School\nDistrict’s measure authorizing $128,000,000 in bonds at legal rates be adopted, levying $30 per $100,000 assessed\nvalue ($8,000,000 annually) while bonds are outstanding, with citizen oversight, independent audits, all money locally-\ncontrolled?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-c-text",
+          "contestId": "ca-2026-orange-county-c",
+          "officialNumber": "Measure C",
+          "questionText": "Without taxing residents, shall the measure be adopted, updating Costa Mesa’s 41-year-old business license tax,\nensuring large businesses pay their proportionate share and helping fund general city services including keeping public\nareas safe/clean; preventing crime/burglaries; addressing homelessness; maintaining Costa Mesa’s financial stability;\nrevising the tax rate to 50¢ per $1,000 gross receipts, with no increase for small businesses; generating approximately\n$5,600,000 annually until ended by voters, requiring audits, spending disclosure, funds locally controlled?",
+          "officialStatement": "Impartial Analysis\n                                                                   City of Costa Mesa\n                                                                       Measure C\nMeasure C, known as “The Costa Mesa Fair Business License Reform, Small Business Protection Measure” (referred to herein as the “Measure”) would\namend Section 9-25 of Chapter I of Article 9 of the Costa Mesa Municipal Code, which was originally adopted in 1985 and has remained unchanged\nin the 41 years since then. This tax is charged to businesses using city services, but not to residents. Small businesses, those making $500,000 or less,\nwould not pay any more tax than they do currently. The Measure would update the business license tax for businesses making more than $500,000\nannual gross receipts, up to a maximum amount of $15,000 per year for businesses earning $30 million per year or more. The existing maximum tax is\n$200 per year no matter how much a business earns, resulting in small businesses paying a much higher proportion of their gross receipts than large\nbusinesses in the City do. Business license tax receipts in the City are currently approximately $1 million.\nThe updated business license tax structure will remain the same for over 72% of existing businesses. For those earning more than $500,000 annually,\nthe rate will be fifty cents per one thousand dollars of gross receipts, as already defined in the municipal code. The Measure was placed on the ballot\nby the City Council.\nThe Measure provides that the City Council may reduce the tax rate for specific types of businesses if it determines that economic conditions affecting\na particular type or size business justify reducing their tax. The City Council could subsequently revise the tax rate for such businesses, but not above\nthe maximum provided in the schedule.\nThe Measure is anticipated to raise an additional $4.6 million dollars annually, to be placed into the general fund to support 911 emergency, fire,\nand police response, crime prevention, homelessness prevention, street and pothole repair, park maintenance, attracting and retaining small local\nbusinesses, and other general city services. All funds received will be locally controlled and subject to annual public spending disclosures and audit,\nand will help the city maintain financial stability.\nA “no” vote would leave the existing business license tax in place and maintain the existing $200 cap adopted in 1985.\nTHE ABOVE STATEMENT IS AN IMPARTIAL ANALYSIS OF MEASURE C. IF YOU WOULD LIKE A COPY OF MEASURE C OR THE PROPOSED\nORDINANCE, PLEASE CONTACT THE COSTA MESA CITY CLERK’S OFFICE AT (714) 754-5225 AND A COPY WILL BE MAILED TO YOU AT NO\nCOST, OR IT IS AVAILABLE ONLINE AT WWW.COSTAMESACA.GOV.\nDated: July 30, 2026\n\n\ns/ Kimberly Hall Barlow, City Attorney\n\f                                                                                 Section\n                                             Ballot Measures-C                   11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.564800+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.564800+00:00",
+            "quote": "Without taxing residents, shall the measure be adopted, updating Costa Mesa’s 41-year-old business license tax,\nensuring large businesses pay their proportionate share and helping fund general city services including keeping public\nareas safe/clean; preventing crime/burglaries; addressing homelessness; maintaining Costa Mesa’s financial stability;\nrevising the tax rate to 50¢ per $1,000 gross receipts, with no increase for small businesses; generating approximately\n$5,600,000 annually until ended by voters, requiring audits, spending disclosure, funds locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-d-text",
+          "contestId": "ca-2026-orange-county-d",
+          "officialNumber": "Measure D",
+          "questionText": "Shall a measure that directs, to the extent technically and financially feasible, the use of ranked choice voting for City\nCouncil Member and Mayoral Elections occurring after January 1, 2028, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                      City of Irvine\n                                                                       Measure D\n                                                                City of Irvine\n                                Measure Directing the Use of Ranked Choice Voting for City Council Member and\n                                                   Mayoral Elections After January 1, 2028\nThe City Council of the City of Irvine has placed a measure before the voters that would amend the Irvine Municipal Code to use ranked choice voting\n(RCV) for City Council member and mayoral elections after January 1, 2028, if certain technical and financial conditions are satisfied.\nThe City of Irvine (City) currently uses a plurality voting system for City Council member and mayoral elections. Under that system, voters vote for only\none candidate and the person receiving the most votes wins the election even if they do not receive a majority of the votes.\nIn RCV elections, voters rank their choices in order of preference, such as first, second, third, and so on. If no candidate wins a majority of first-place\nvotes, the candidate with the fewest votes is eliminated, and ballots ranking that candidate are transferred to the next-ranked continuing candidate.\nThis process repeats until one candidate secures a majority of the votes counted in that round.\nUnder the proposed measure, the City would transition to RCV after January 1, 2028, once all of the following conditions are satisfied:\n    •   The available voting equipment can feasibly accommodate RCV;\n    •   Transitioning to RCV will not prevent the consolidation of City elections with elections conducted by the County of Orange; and\n    •   The additional cost for an RCV election is not more than 0.23% of the City’s general fund budget for the fiscal year during which the proposed\n        RCV election would be held (RCV Cost Cap). For reference, 0.23% of the City’s fiscal year 2026-2027 general fund budget of approximately\n        $312.1 million is approximately $717,790. However, the actual RCV Cost Cap would be calculated using the general fund budget for the fiscal\n        year in which the proposed RCV election would be held.\nWhen the above conditions are met and the City transitions to RCV, the City will continue to conduct elections by RCV at every City Council member\nand mayoral election unless the voters choose another voting system.\nThe proposed measure requires that RCV ballots allow the ranking of a minimum of five candidates, that write-in candidates be permitted, and that\nvoters receive specific instructions regarding RCV. The proposed measure also establishes procedures for tabulating votes, resolving ties, resolving\nvoting mistakes (e.g., skipping a ranking, or giving the same ranking to more than one candidate), conducting a manual vote tally, and providing reports\nfor public review. The proposed measure authorizes the City Clerk to change those procedures if (1) the voting equipment will not feasibly accommodate\nthe voting procedures, or (2) the Secretary of State changes its current RCV guidelines and adopts new guidelines that can be accommodated by the\nvoting equipment.\nA “Yes” vote is in favor of adopting the measure and transitioning to RCV elections after January 1, 2028, if the specified technical and\nfinancial conditions are met.\nA “No” vote is against adopting the measure.\nIf a majority of voters vote “Yes,” then this measure will take effect ten (10) days after election results are declared by the City Council.\n\n\nDated: July 27, 2026\n                                                                                s/ Jeffrey Melching, City Attorney\nThe above statement is an impartial analysis of the measure. If you would like to read the full text of the proposed measure, you may find\nit on the City’s website at cityofirvine.gov/election, or call the City Clerk at (949) 724-6205 and a copy will be sent at no cost to you.\n\f                                                                                                                                                    Section\n                                             Ballot Measures-D                                                                                       11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf",
+            "collectedAt": "2026-11-03T04:29:21.626161+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.626161+00:00",
+            "quote": "Shall a measure that directs, to the extent technically and financially feasible, the use of ranked choice voting for City\nCouncil Member and Mayoral Elections occurring after January 1, 2028, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-e-text",
+          "contestId": "ca-2026-orange-county-e",
+          "officialNumber": "Measure E",
+          "questionText": "Shall an ordinance to amend the Laguna Beach Municipal Code by enacting a limit on consecutive years of service by\nmembers of the City Council to a combined total of two four-year consecutive terms, with the ability to again serve as a\nCouncilmember after a lapse of service of at least two years, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                  City of Laguna Beach\n                                                                        Measure E\n         The City of Laguna Beach is governed by a five-member City Council whose members are elected by Laguna Beach voters to four-year terms\nof office. Currently, the City of Laguna Beach does not have term limits on elected City Council office.\n     Measure E was placed on the ballot by a citizens’ initiative petition. On December 9, 2025, the City Council voted to place Measure E on the\nNovember 3, 2026 General Municipal Election, in compliance with the California Elections Code.\n        If approved by a majority of voters (50% +1), Measure E would add Section 2.04.080 to the Laguna Beach Municipal Code to establish term\nlimits on City Council service. Measure E would provide that no person may serve more than two consecutive four-year terms as a Council Member. In\nthe event a person is appointed or elected to fill a vacant City Council office for less than two years of a four-year term, that individual will be eligible\nto serve two consecutive four-year terms thereafter.\n        Any person whose Council Member service has reached the term limits described above is not eligible to serve again as a Council Member,\nwhether by appointment or election, for two years following the conclusion of that person’s last term of office as a Council Member. The term “two\nyears” is defined, for purposes of re-eligibility for office, to mean the period between the date of the declaration of the results of any general municipal\nelection held in November of an even-numbered year and the date of declaration of the results of any general municipal election in November of any\nimmediately preceding or immediately succeeding even-numbered year. After this two-year period, a person may serve another two consecutive four-\nyear City Council terms, as described above.\n        Measure E will only apply to City Council terms starting as of the November 3, 2026 General Municipal Election. State law does not allow local\nterm limits to apply retroactively to prior terms. Therefore, any four-year term for any City Council office elected at the November 5, 2024 General\nMunicipal Election or at any prior election, or any prior-appointed or prior-elected partial City Council terms, will not count toward these term limits.\n        A “yes” vote on Measure E will approve the establishment of City Council term limits as described above.\n       A “no” vote on Measure E will not approve the establishment of City Council term limits as described above and the City of Laguna Beach will\ncontinue not to have City Council term limits.\nThe above statement is an impartial analysis of Measure E. If you desire a copy of the Measure, please call the Elections Official’s office at\n(949) 497-0309 and a copy will be mailed at no cost to you.\n\n\n/s/ Megan Garibaldi, City Attorney\n\f                                                                                                                                                Section\n                                            Ballot Measures-E                                                                                    11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.589474+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.589474+00:00",
+            "quote": "Shall an ordinance to amend the Laguna Beach Municipal Code by enacting a limit on consecutive years of service by\nmembers of the City Council to a combined total of two four-year consecutive terms, with the ability to again serve as a\nCouncilmember after a lapse of service of at least two years, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-f-text",
+          "contestId": "ca-2026-orange-county-f",
+          "officialNumber": "Measure F",
+          "questionText": "Shall the measure limiting city council members to two consecutive terms in office with a mandatory four-year out of\noffice period before being eligible to serve for another two consecutive terms in office, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                     City of Lake Forest\n                                                                         Measure F\nLake Forest Municipal Code Section 2.04.080 currently prohibits any person from serving as a Lake Forest City Council Member or Mayor for more than\ntwo four-year terms. The City’s current term limits have been in place since the passage of Measure S in 2018.\nMeasure F amends Section 2.04.080 to prohibit any person from serving more than two four-year terms on the Lake Forest City Council unless he or\nshe does not hold office for four or more consecutive years immediately following the conclusion of each consecutive two terms of office. After the\nrequired four-year break, a person may again serve up to two four-year terms. Each full City Council term is four years. Measure F was placed on the\nballot by the Lake Forest City Council.\nIf Measure F is approved, the new four-year break between consecutive four-year terms would apply to all new or re-elected City Council Members\nbeginning with the 2026 election. Adoption of Measure F would not increase the number of consecutive terms available to current City Council\nMembers, as the current two term limit established by Section 2.04.080 of the Lake Forest Municipal Code will continue to apply. Once a City Council\nMember has served two full four-year terms on the City Council, the two-term limit will apply and he or she would no longer be eligible to serve on the\nCity Council without a four or more consecutive years break in service.\nA “Yes” vote on Measure F will approve the Measure and prohibit City Council Members or the Mayor from serving more than two four-year terms\nwithout a four more consecutive years break in service.\nA “No” vote on Measure F will not approve the Measure and will prohibit the City Council members or Mayor from serving more than two four-year\nterms.\nMeasure F requires simple majority approval of the voters to pass.\nThe above statement is an impartial analysis of Measure F. If you desire a copy of the measure, please call the elections official’s office at\n(949) 461-3423 and a copy will be mailed at no cost to you.\n\n\n                                                               /s/                  MATTHEW E. RICHARDSON\n                                                                                    City Attorney\n\f                                                                                     Section\n                                                Ballot Measures-F                    11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.453218+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.453218+00:00",
+            "quote": "Shall the measure limiting city council members to two consecutive terms in office with a mandatory four-year out of\noffice period before being eligible to serve for another two consecutive terms in office, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-g-text",
+          "contestId": "ca-2026-orange-county-g",
+          "officialNumber": "Measure G",
+          "questionText": "Shall the ordinance providing funding for City of Los Alamitos’ general services such as maintaining 911 emergency\nresponse and police services; providing neighborhood police patrols; maintaining parks; supporting youth, afterschool,\nand senior programs; repairing streets and potholes; by increasing the City of Los Alamitos’ transient occupancy tax,\npaid only by hotel/motel and short-term rental guests, from 8% to 12%, providing approximately $300,000 annually be\nadopted?",
+          "officialStatement": "Impartial Analysis\n                                                                 City of Los Alamitos\n                                                                      Measure G\nThe City of Los Alamitos (“City”) currently imposes a transient occupancy tax (“TOT”), also generally known as a “hotel” tax, at the rate of eight percent\n(8%) of rent paid by guests to occupy a hotel room or similar lodging. The TOT is imposed upon occupancy of a hotel room or similar lodging within the\nCity for a period of thirty (30) consecutive days or less. The TOT currently provides approximately $600,000.00 annually to the General Fund to pay for\ngeneral City services and programs.\nMeasure G was placed on the ballot by the Los Alamitos City Council and, if approved by a majority of Los Alamitos voters, will amend the Los Alamitos\nMunicipal Code to increase the TOT tax rate from eight percent (8%) to twelve percent (12%) of the rent paid by guests to occupy a hotel room or similar\nlodging. It is anticipated that this rate increase will generate an additional $300,000.00 in new revenues.\nMeasure G would be a “general tax”. All revenue from this tax would be deposited into the City’s General Fund and could be used for general City\noperations and services, including public safety, infrastructure maintenance, park and facility improvements, and other community priorities identified\nby residents and the City Council. Pursuant to State Law, a “general tax” requires approval by a majority of the City’s voters voting at an election.\nA “yes” vote on Measure G is a vote to increase the TOT tax rate from 8% to 12%.\nA “no” vote on Measure G is a vote to maintain the current TOT tax rate at 8%.\nThe above statement is an impartial analysis of the measure or proposed ordinance. If you desire a copy of the measure or the ordinance,\nplease call the City Clerk’s office at (562) 431-3538 ext. 200 and a copy will be mailed at no cost to you.\n\n\ns/ Michael S. Daudt\nCity Attorney\n\f                                                                               Section\n                                            Ballot Measures-G                  11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf",
+            "collectedAt": "2026-11-03T04:29:21.669852+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.669852+00:00",
+            "quote": "Shall the ordinance providing funding for City of Los Alamitos’ general services such as maintaining 911 emergency\nresponse and police services; providing neighborhood police patrols; maintaining parks; supporting youth, afterschool,\nand senior programs; repairing streets and potholes; by increasing the City of Los Alamitos’ transient occupancy tax,\npaid only by hotel/motel and short-term rental guests, from 8% to 12%, providing approximately $300,000 annually be\nadopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-h-text",
+          "contestId": "ca-2026-orange-county-h",
+          "officialNumber": "Measure H",
+          "questionText": "Shall the measure to amend the City of Newport Beach’s General Plan Land Use Element allowing 2,900 new affordable\nhousing units (2,160 reserved for extremely low-, very low-, and low-income households; and 740 for moderate-income\nhouseholds) with densities of 20 - 50 dwelling units per acre, plus State of California allowed housing density bonuses,\nin Dover/Westcliff (174), Newport Center (870), West Newport Mesa (406), Airport Area (929), and Coyote Canyon (521),\nbe adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                    City of Newport Beach\n                                                                          Measure H\nState law requires the City of Newport Beach to maintain a Housing Element identifying adequate sites to accommodate its Regional Housing Needs\nAllocation by income category.\nIf adopted, this measure would amend the City’s General Plan (Policy LU 4.4) to impose limits and affordability requirements for up to 2,900 dwelling\nunits within five housing opportunity areas. Of those units, 2,160 would be reserved for extremely low-, very low-, and low-income households, with\nthe remainder designated for moderate-income households. The measure also establishes a density range of 20 to 50 units per gross acre, plus any\nadditional density permitted by state law, which may affect how residential development is distributed among sites.\nState housing law requires local governments to identify and address governmental constraints to housing development and to maintain sufficient\ncapacity to meet housing obligations by income category. The measure’s affordability requirements and development limitations could constrain the\nCity’s ability to satisfy these obligations. If the California Department of Housing and Community Development determines that the measure reduces\nhousing capacity or constrains housing production, or if the City is otherwise required to identify additional housing capacity under state law, the City\nmay be required to amend its Housing Element, identify additional housing sites, or take other actions to maintain compliance with state housing law.\nBecause the measure would establish voter-approved limitations on housing locations, densities, and affordability requirements, the City’s ability to\nmodify housing capacity, designate replacement sites or respond to future state housing requirements may be limited without voter approval. If the\nCity is unable to maintain compliance with state housing law, it could be subject to administrative or judicial enforcement actions authorized by state\nlaw, including limitations on certain local land use authority, court-ordered remedies and monetary penalties.\nThe measure does not approve any specific development project. Future projects would remain subject to applicable review and approval requirements.\n        A “YES” vote is a vote in favor of the amending the General Plan.\n        A “NO” vote is a vote against amending the General Plan.\nThe measure was placed on the ballot by a petition signed by the requisite number of voters\nThe above statement is an impartial analysis of Measure H. If you desire a copy of the measure, please call the elections official’s office at\n(949) 644-3005 and a copy will be mailed at no cost to you. The text of this measure is also available on the City’s website at www.newportbeachca.gov.\n\n\ns/ Aaron C. Harp\nCity Attorney for the\nCity of Newport Beach\n\f                                                                                                                                            Section\n                                              Ballot Measures-H                                                                               11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.546228+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.546228+00:00",
+            "quote": "Shall the measure to amend the City of Newport Beach’s General Plan Land Use Element allowing 2,900 new affordable\nhousing units (2,160 reserved for extremely low-, very low-, and low-income households; and 740 for moderate-income\nhouseholds) with densities of 20 - 50 dwelling units per acre, plus State of California allowed housing density bonuses,\nin Dover/Westcliff (174), Newport Center (870), West Newport Mesa (406), Airport Area (929), and Coyote Canyon (521),\nbe adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-i-text",
+          "contestId": "ca-2026-orange-county-i",
+          "officialNumber": "Measure I",
+          "questionText": "To maintain City of Orange’s quality of life, such as 9-1-1 response; maintaining police/fire protection; preventing\ncrimes/thefts; retaining/attracting well-trained police officers/firefighters; keeping public parks safe/clean; addressing\nhomelessness; wildfire protection/prevention; repairing streets/potholes; critical infrastructure improvements; shall a\nmeasure establishing a 1¢ sales tax, providing approximately $37,000,000 annually for general revenue/government\npurposes, expiring after 13 years, with independent oversight committee, all funds benefiting Orange residents, be\nadopted?",
+          "officialStatement": "Impartial Analysis\n                                                                    City of Orange\n                                                                       Measure I\nThe City Council of the City of Orange is submitting Measure I to the voters for consideration at the November 3, 2026 General Municipal Election.\nIf approved by a majority of the voters, Measure I would add Chapter 3.23 to the Orange Municipal Code to establish a one percent (1.0%) general\ntransactions and use tax, commonly referred to as a local sales tax, to generate general revenues for the City. The tax would be administered and\ncollected by the California Department of Tax and Fee Administration in accordance with California law.\nThe proposed tax generally would apply to taxable retail sales and purchases, as provided under California law. The tax generally would not apply\nto purchases exempt from state sales and use taxes, including most groceries, prescription medicines, medical services, and certain other exempt\ntransactions. The tax would be collected at the same time and in the same manner as existing state and local sales and use taxes.\nRevenue generated by the measure would be deposited into the City’s General Fund and may be used for any lawful municipal purpose. The ordinance\ndoes not dedicate revenues to any specific purpose or program. Revenues may be used for City services and other lawful governmental purposes,\nincluding public safety, 9-1-1 emergency response, street and infrastructure maintenance, parks, libraries, and homelessness services.\nThe ordinance establishes an Independent Oversight Committee and requires an annual independent audit of tax revenues and expenditures. The audit\nmust be presented to the City Council at a public meeting and posted on the City’s website. The committee reviews revenues generated by the tax and\nexpenditures of those revenues, reviews the annual audit, makes recommendations to the City Council regarding expenditures of tax revenues, and\nsubmits an annual written report. Committee meetings are subject to the Ralph M. Brown Act.\nThe City estimates that the measure would generate approximately $37 million annually, although actual revenues will depend on taxable sales. If\napproved, the tax would remain in effect for thirteen (13) years from its operative date unless earlier repealed, amended, or extended by the voters.\nA “Yes” vote on Measure I authorizes the City to establish the one percent (1.0%) general transactions and use tax for thirteen (13) years.\nA “No” vote on Measure I does not authorize the City to establish the one percent (1.0%) general transactions and use tax.\nNathalie Adourian\nCity Attorney\n\f                                                                                                                                                 Section\n                                              Ballot Measures-I                                                                                   11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.466080+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.466080+00:00",
+            "quote": "To maintain City of Orange’s quality of life, such as 9-1-1 response; maintaining police/fire protection; preventing\ncrimes/thefts; retaining/attracting well-trained police officers/firefighters; keeping public parks safe/clean; addressing\nhomelessness; wildfire protection/prevention; repairing streets/potholes; critical infrastructure improvements; shall a\nmeasure establishing a 1¢ sales tax, providing approximately $37,000,000 annually for general revenue/government\npurposes, expiring after 13 years, with independent oversight committee, all funds benefiting Orange residents, be\nadopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-j-text",
+          "contestId": "ca-2026-orange-county-j",
+          "officialNumber": "Measure J",
+          "questionText": "Shall the measure updating the City of Orange’s existing Transient Occupancy Tax, a tax on persons occupying hotel\nrooms by increasing the tax rate from 10% to 14% for hotels with 11 or more rooms and applying the tax to online and\nother travel companies, generating approximately $3,000,000 annually for general City purposes including police, fire\nand emergency response, parks, and street and infrastructure maintenance, until ended by voters, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                     City of Orange\n                                                                       Measure J\nThe City Council of the City of Orange is submitting Measure J to the voters for consideration at the November 3, 2026 General Municipal Election. If\napproved by a majority of the voters, Measure J would amend Chapter 5.16 of the Orange Municipal Code to update the City’s Transient Occupancy Tax\n(“TOT”), commonly referred to as the hotel guest tax. The TOT is imposed on the occupancy of hotel accommodations and is paid by hotel guests rather\nthan by hotel operators. The ordinance would continue to require operators to collect and remit the tax to the City.\nThe measure would increase the TOT rate from 10 percent to 14 percent for hotels with eleven (11) or more accommodations. Hotels with ten (10) or\nfewer accommodations would continue to be subject to the existing 10 percent tax rate.\nThe ordinance would also update the City’s TOT definitions and apply the tax to the full amount charged to guests for accommodations, including\namounts collected by accommodations intermediaries such as online travel or booking companies, as provided in the ordinance.\nRevenue generated by the measure would continue to be deposited into the City’s General Fund and may be used for any lawful municipal purpose. The\nordinance does not dedicate revenues to any specific purpose or program. Revenues may be used for City services, including public safety, emergency\nresponse, street and infrastructure maintenance, parks, libraries, and other municipal services.\nThe City estimates that the measure would generate approximately $3 million annually, although actual revenues will depend on hotel occupancy,\nroom rates, and related taxable charges.\nA “Yes” vote on Measure J authorizes the City to amend the Transient Occupancy Tax by increasing the tax rate from 10 percent to 14 percent for\nhotels with eleven (11) or more accommodations, applying the tax online and other travel companies, and updating the tax to apply to the full amount\ncharged to hotel guests, as provided in the ordinance.\nA “No” vote on Measure J does not authorize those changes to the City’s Transient Occupancy Tax.\nNathalie Adourian\nCity Attorney\n\f                                                                                Section\n                                             Ballot Measures-J                  11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.597650+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.597650+00:00",
+            "quote": "Shall the measure updating the City of Orange’s existing Transient Occupancy Tax, a tax on persons occupying hotel\nrooms by increasing the tax rate from 10% to 14% for hotels with 11 or more rooms and applying the tax to online and\nother travel companies, generating approximately $3,000,000 annually for general City purposes including police, fire\nand emergency response, parks, and street and infrastructure maintenance, until ended by voters, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-k-text",
+          "contestId": "ca-2026-orange-county-k",
+          "officialNumber": "Measure K",
+          "questionText": "Shall the proposed Charter for the City of Orange, establishing the City as a charter city under the California Constitution\nand providing the City’s governing document for municipal affairs, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                     City of Orange\n                                                                       Measure K\nThe City Council of the City of Orange is submitting Measure K to the voters for consideration at the November 3, 2026 General Municipal Election. If\napproved by a majority of the voters, Measure K would adopt the proposed Charter for the City of Orange, changing the City from a general law city to\na charter city pursuant to Article XI of the California Constitution. The Charter would become the City’s governing document upon voter approval and\nfiling with the California Secretary of State.\nAs a general law city, Orange is governed primarily by state law. As a charter city, Orange would continue to be subject to the United States Constitution,\nthe California Constitution, and state law on matters of statewide concern, but would have authority over municipal affairs.\nThe proposed Charter would retain the City’s Council-Manager form of government and continue governance by an elected Mayor and City Council.\nIt would establish lifetime term limits of two four-year terms for Mayor and three four-year terms for Council Members. These term limits would apply\nprospectively and would not count terms served before the Charter becomes effective. The Charter also provides that election procedures, district\nboundaries, qualifications for office, and related election matters will continue to be governed by ordinance and applicable law.\nThe proposed Charter would permit the City to exercise the authority available to charter cities over municipal contracting and procurement procedures,\nto the extent permitted by law. It would establish an Open Space Reserve consisting of City-owned properties designated by the City Council and\nwould require voter approval before property may be removed from the Reserve or used for purposes inconsistent with the Charter. The Charter also\nincludes provisions regarding eminent domain, protection of private property rights, vacancies in office, fiscal management, balanced budgets, annual\nindependent audits, and priorities for the use of additional recurring General Fund revenues.\nIf approved, the Charter would supersede conflicting provisions of general law with respect to municipal affairs to the extent authorized by the California\nConstitution. On matters of statewide concern, state law would continue to govern. Existing ordinances, resolutions, contracts, rights, obligations, and\nliabilities would remain in effect unless modified in accordance with the Charter or applicable law.\nA “Yes” vote on Measure K approves the proposed Charter and authorizes the City of Orange to become a charter city.\nA “No” vote on Measure K rejects the proposed Charter, and the City of Orange would remain a general law city governed by existing state law.\n\n\ns/ Nathalie Adourian\nCity Attorney\n\f                                                                                                                                                Section\n                                            Ballot Measures-K                                                                                    11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf",
+            "collectedAt": "2026-11-03T04:29:22.082916+00:00",
+            "verifiedAt": "2026-11-03T04:29:22.082916+00:00",
+            "quote": "Shall the proposed Charter for the City of Orange, establishing the City as a charter city under the California Constitution\nand providing the City’s governing document for municipal affairs, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-l-text",
+          "contestId": "ca-2026-orange-county-l",
+          "officialNumber": "Measure L",
+          "questionText": "Shall the measure increasing the rate of the City of Placentia’s existing transient occupancy tax (hotel tax), paid only\nby hotel guests, to 14%, funding city services such as police patrols, fire protection, 911 response, and road repairs;\nrequiring citizen oversight and annual audits, generating about $715,000 annually, until ended by voters, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                    City of Placentia\n                                                                       Measure L\nThe City of Placentia currently imposes a 10% transient occupancy tax on transients (hotel guests) who occupy a hotel room for 30 consecutive days or\nless. This tax is commonly referred to as the City’s “Hotel Tax.” It is collected by the hotel operator (or their agent) from the guest based on the “rent”\ncharged for lodging. The hotel operator then remits the collected tax to the City.\nFor purposes of the Hotel Tax, “hotel” is broadly defined to include “any structure, or any portion of any structure, which is occupied or intended or\ndesigned for occupancy by transients for dwelling, lodging or sleeping purposes.” Thus, short-term rentals of homes or of rooms in homes would be\nsubject to the tax.\nProceeds of the Hotel Tax are deposited in the general fund and available for any lawful municipal purpose. Examples of services funded through the\ngeneral fund include neighborhood police patrols, fire protection, 911 response, and road repairs. The City’s accounts, including the general fund, are\naudited annually by an independent auditor.\nMeasure L seeks voter approval of an ordinance that increases the rate of the Hotel Tax to 14%. The ordinance requires that, in addition to independent\nannual audits of tax proceeds and expenditures, the City’s existing Citizens’ Oversight Committee review expenditures of funds generated by the Hotel\nTax and prepare an annual report of such expenditures.\nThe measure was placed on the ballot by the City Council of the City of Placentia. To be adopted, this measure requires the approval of a majority of\nthe voters casting ballots.\nA YES vote approves the ordinance increasing the rate of the Hotel Tax to 14%.\nA NO vote rejects the ordinance, and would leave the Hotel Tax at 10%.\nThe above statement is an impartial analysis of Measure L . If you desire a copy of the measure, please call the elections official’s office at\n(714) 993-8231 and a copy will be mailed at no cost to you.\n\n\n/s/ Christian Bettenhausen, City Attorney\n\f                                                                                 Section\n                                              Ballot Measures-L                  11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.670039+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.670039+00:00",
+            "quote": "Shall the measure increasing the rate of the City of Placentia’s existing transient occupancy tax (hotel tax), paid only\nby hotel guests, to 14%, funding city services such as police patrols, fire protection, 911 response, and road repairs;\nrequiring citizen oversight and annual audits, generating about $715,000 annually, until ended by voters, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-m-text",
+          "contestId": "ca-2026-orange-county-m",
+          "officialNumber": "Measure M",
+          "questionText": "Shall the measure establishing two funds dedicated to protecting San Clemente from natural hazards of beach erosion\nand fires and a 1% sales tax increase, providing approximately $15,000,000 annually for 10 years, requiring public\nspending disclosure, independent audits, all funds used locally for specified purposes only, including sand replenishment/\nnourishment/ retention, beach erosion control, maintaining/ restoring beach access/ water quality and supporting fire\nprotection/ prevention programs/ services, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                  City of San Clemente\n                                                                        Measure M\n       A petition signed by the requisite number of San Clemente voters placed Measure M on the ballot for voters to decide whether a 1% transactions\nand use tax (commonly known as “sales tax”) should be added to retail sales prices (or 1 cent for an item that costs one dollar).\n        Because this measure legally restricts the use of revenue to specific purposes, it is a “special tax”. Half the proceeds must be deposited into\na new City “Beach Protection Fund” and expenditures must directly relate to: (1) sand replenishment, nourishment or retention projects; (2) beach\nerosion control measures; (3) maintenance, repair or improvement of the Beach Trail, public beach access points, pedestrian bridges, the Pier or\nbeachfront restrooms; or (4) beach water quality protection measures. At least 70% of total Beach Protection Fund expenditures must be for items (1)\nand (2) above. The other half of the proceeds must be deposited into a new City “Fire Protection and Wildfire Preparedness Fund” and expenditures\nmust directly relate to: (1) support for fire protection or emergency medical response services; (2) citywide wildfire prevention programs on public and\nprivate lands; or (3) citywide community outreach, education and engagement programs focused on wildfire prevention and vegetation management\nacross public and private property.\n        The two dedicated funds will be subject to the same independent annual audit as other City funds. Up to $250,000 from each fund ($500,000\ntotal) may reimburse the City for its actual costs incurred to the Orange County Registrar of Voters for conducting the elections to enact or extend this\ntax. The City’s Investment Advisory Committee will serve as an Oversight Committee, reviewing expenditures of all revenue collected to determine\nwhether funds are properly expended. An accounting of revenues and expenditures will be presented annually to the City Council and made available\nfor public review. The City will be required to publish an “Annual Accountability Report” including breakdowns, summary of progress and outcomes\naligned with the required Beach Protection and Wildfire Protection and Preparedness Operational Plans, performance data, unspent funds, proposed\nfuture uses, and recommendations for improvements.\n         Currently, the tax on retail sales within the City of San Clemente is 7.75%, which includes the 7.25% base tax rate and Orange County’s 0.5%\nlocal transportation tax. Of the 7.25% base tax collected by the State, the City of San Clemente receives 1% directly. The City estimates a new 1% sales\ntax would result in additional revenue of approximately $15 million annually to the City of San Clemente for 10 years and could be extended for an\nadditional 10 years by another majority vote in 8 years.\n        A “Yes” vote is a vote in favor of the tax. A “No” vote is a vote against the tax. Measure M will be approved if it receives a majority (50% + 1) of\n“Yes” votes. If approved, the total sales tax rate within the City of San Clemente will increase to 8.75%.\ns/ Elizabeth A. Mitchell\nCity Attorney, City of San Clemente\nThe above statement is an impartial analysis of Measure M. If you desire a copy of the ordinance or measure, please call the elections\nofficial’s office at 949-361-8301 and a copy will be mailed at no cost to you. You may also view the full text of Measure M at\nwww.sanclemente.gov/election.\n\f                                                                                                                                                   Section\n                                             Ballot Measures-M                                                                                      11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.761445+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.761445+00:00",
+            "quote": "Shall the measure establishing two funds dedicated to protecting San Clemente from natural hazards of beach erosion\nand fires and a 1% sales tax increase, providing approximately $15,000,000 annually for 10 years, requiring public\nspending disclosure, independent audits, all funds used locally for specified purposes only, including sand replenishment/\nnourishment/ retention, beach erosion control, maintaining/ restoring beach access/ water quality and supporting fire\nprotection/ prevention programs/ services, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-n-text",
+          "contestId": "ca-2026-orange-county-n",
+          "officialNumber": "Measure N",
+          "questionText": "To maintain city services, such as fixing potholes; keeping streets, sidewalks, parks, and playgrounds safe and clean;\nremoving graffiti and litter; providing fire protection, paramedic, crime prevention, and 911 emergency response, shall\nCity of Santa Ana’s ordinance be amended to maintain the 1.5 cent sales tax without sunset providing approximately\n$84,000,000 annually for services until ended by voters, with independent audits, resident oversight, and all money\nlocally controlled?",
+          "officialStatement": "Impartial Analysis\n                                                                   City of Santa Ana\n                                                                       Measure N\n        Measure N titled the “Santa Ana Streets, Public Safety, Essential City Services Measure” was placed on the ballot by a vote of the Santa Ana City\nCouncil. It seeks to indefinitely continue the existing sales tax past 2039, by removing both the sunset provision and the 2029 reduction, as originally\ncontained in Article VII of Chapter 35 of the Santa Ana Municipal Code. In 2018, Santa Ana’s voters enacted an ordinance creating a 20-year local\ntransactions and use tax in at a rate of one and one half (1.5) cents, until March 31, 2029 with a reduction to one (1) cent until March 31, 2039, to\nfund general city services. With the exception of those items that are exempt, the transactions and use tax applies to most over-the-counter sales of\ntangible goods and restaurant purchases.\n       Measure N amends the previously enacted local transactions and use tax by removing the rate reduction from 1.5 cents to 1 cent scheduled to\noccur on April 1, 2029 and removing the sunset provision which would have ended the local transactions and use tax altogether on April 1, 2039. If\nthe measure is approved, the local transactions and use tax would remain at 1.5 cents without an end date.\n       If approved by more than 50% of the voters, Measure N will continue the local transactions and use tax at a rate of 1.5 cents generating\napproximately $84,000,000 every year for general city services. General city services may include, but is not limited to, maintaining 9-1-1 emergency\nresponse services, fixing potholes, and removing graffiti and litter. The continued revenue from the transactions and use tax would also be used to\naddress the city’s anticipated structural deficit at the discretion of the City Council.\n        Measure N does not amend the existing requirement for a citizen oversight committee, an annual audit by an independent certified public\naccountant, or an annual disclosure by the City of expenditures made from the transactions and use tax revenue. These requirements would remain\nin place.\n       Measure N requires a majority of the Santa Ana voters that vote in the election of November 3, 2026 to vote in favor of the measure to become\nlaw.\n       In summary:\n       A “YES” vote on the measure is a vote in favor of continuing a local transactions and use tax in the City of Santa Ana at the current rate of one\nand one half (1.5) cents without a rate reduction or sunset provision to fund general city services until ended by the voters.\n        A “NO” vote on the measure is a vote against removing the rate reduction from one and one half (1.5) cents to one (1) cent scheduled to occur\non April 1, 2029 and against removing the sunset provision which would end the transactions and use tax on April 1, 2039.\n       The above statement is an impartial analysis of Measure N. If you desire a copy of the measure, please call the City Clerk at (714) 647-6250\nand a copy will be mailed at no cost to you.\n\n\n                                                                                   Santa Ana City Attorney\n\f                                                                             Section\n                                              Ballot Measures-N              11",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.754676+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.754676+00:00",
+            "quote": "To maintain city services, such as fixing potholes; keeping streets, sidewalks, parks, and playgrounds safe and clean;\nremoving graffiti and litter; providing fire protection, paramedic, crime prevention, and 911 emergency response, shall\nCity of Santa Ana’s ordinance be amended to maintain the 1.5 cent sales tax without sunset providing approximately\n$84,000,000 annually for services until ended by voters, with independent audits, resident oversight, and all money\nlocally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-orange-county-o-text",
+          "contestId": "ca-2026-orange-county-o",
+          "officialNumber": "Measure O",
+          "questionText": "To fund general city services such as fire, paramedic, police, 911 emergency response, disaster preparedness, keeping\npublic areas safe/clean; addressing homelessness; maintaining parks, and addressing speeding/unsafe driving; shall the\nmeasure increasing Westminster’s tax paid by hotel/motel guests (transient occupancy tax), from 8% to 12%, providing\napproximately $452,000 annually in new funds until ended by voters, requiring audits, spending disclosures, funds\ncontrolled locally, be adopted?",
+          "officialStatement": "Impartial Analysis\n                                                                     City of Westminster\n                                                                          Measure O\nThe City of Westminster currently imposes an 8% transient occupancy tax on transients (hotel/motel guests) who occupy a hotel in Westminster for\n30 consecutive days or less. This tax is commonly referred to as the City’s “hotel tax.” Measure O is an ordinance that increases the rate of the hotel\ntax to 12%.\nThe hotel tax is collected by the hotel operator (or their agent) from guests based on the rent charged by the hotel operator. The hotel operator then\nremits the collected taxes to the City.\nProceeds of the hotel tax are deposited in the City’s general fund and available for any lawful municipal purpose. The City Council has identified the\nfollowing as examples of services funded though the general fund: fire, paramedic, police, 911 emergency response; disaster preparedness; keeping\npublic areas safe/clean; addressing homelessness; maintaining parks; and addressing speeding/unsafe driving.\nProceeds of the tax must be audited annually by an independent certified public accountant, and the report of that audit is a public record.\nMeasure O does not change the definitions that currently apply to the hotel tax. For purposes of the hotel tax:\n        “Hotel” means “any lodginghouse, hotel, motel, roominghouse, dormitory or public or private club containing guest rooms for lodging strangers\n        or travelers, advertising or held out as a place where sleeping or rooming accommodations are furnished to the public.”\n        “Rent” means “the consideration charged, whether or not received, for the occupancy of space in a hotel valued in money, whether to be\n        received in money, goods, labor or otherwise, including all receipts, cash, credits and property and services of any kind or nature, without any\n        deduction therefrom whatsoever.”\nTo be adopted, this measure requires the approval of a majority of the voters casting ballots on the measure. The measure was placed on the ballot\nby the City Council of the City of Westminster.\nA YES vote is a vote to increase the rate of the Hotel Tax to 12%.\nA NO vote is a vote to not increase the rate of the Hotel Tax.\n\n\n/s Scott E. Porter, City Attorney",
+          "provenance": {
+            "sourceOrg": "Orange County Registrar of Voters",
+            "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf",
+            "collectedAt": "2026-11-03T04:29:21.756103+00:00",
+            "verifiedAt": "2026-11-03T04:29:21.756103+00:00",
+            "quote": "To fund general city services such as fire, paramedic, police, 911 emergency response, disaster preparedness, keeping\npublic areas safe/clean; addressing homelessness; maintaining parks, and addressing speeding/unsafe driving; shall the\nmeasure increasing Westminster’s tax paid by hotel/motel guests (transient occupancy tax), from 8% to 12%, providing\napproximately $452,000 annually in new funds until ended by voters, requiring audits, spending disclosures, funds\ncontrolled locally, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-orange-county-a",
+          "whatItDoes": "Authorize up to $83 million in school-facility bonds for classroom, laboratory, technology, safety and infrastructure projects. Property taxes would repay the bonds while they remain outstanding. The district plans to extend existing tax rates: it estimates $5 million annually, an average $8.68 and maximum $8.85 per $100,000 of assessed property value, with collections through fiscal year 2056–57 and $157,260,047 total principal and interest. These are estimates, not binding caps; actual rates, repayment and timing may differ. Interest rates and maturity must stay within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent annual financial and performance audits and citizen oversight are required. Approval does not guarantee every listed project will be funded; some depend on other funding. The measure needs 55% approval.",
+          "yesMeans": "Authorize the district to borrow up to $83 million for the listed school facilities and levy property taxes to repay principal and interest, with the stated oversight requirements.",
+          "noMeans": "Do not authorize these $83 million in bonds or their repayment tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "b17106695e619dfe1e26cde338fecd5f4a01b0aa4c082dc6e94f3c6ad72d1046",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-b",
+          "whatItDoes": "Authorize up to $128 million in bonds to repair, upgrade and equip school classrooms, laboratories, technology, infrastructure and safety systems. Property taxes would repay the bonds while they remain outstanding. The district estimates $8 million annually, an average and highest rate of $30 per $100,000 of assessed property value, collections through fiscal year 2060–61, and $276 million in total principal and interest. These are estimates, not binding caps; actual rates, repayment and timing may differ. Interest rates and maturity must stay within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent annual financial and performance audits and citizen oversight are required. Listed projects depend on available funding and may be delayed or not completed. The measure needs 55% approval.",
+          "yesMeans": "Authorize the district to borrow up to $128 million for the listed school facilities and levy property taxes to repay principal and interest, with the stated oversight requirements.",
+          "noMeans": "Do not authorize these $128 million in bonds or their repayment tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "7f6185b58ec4000399a0149d7e3ab3171e2e729eb6cd0d3e586e6ab0fda3c9e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-c",
+          "whatItDoes": "Change Costa Mesa’s business-license tax for businesses with more than $500,000 in annual gross receipts to 50 cents per $1,000 of gross receipts, capped at $15,000 annually for businesses with $30 million or more in receipts. Businesses with $500,000 or less would keep their existing rates. This business tax is not charged to residents. The city estimates $4.6 million in additional annual revenue, or approximately $5.6 million total, for general city services, with local control, annual spending disclosures and audits. It would continue until ended by voters. The council could lower taxes for business categories when economic conditions warrant and later restore them up to the measure’s maximums.",
+          "yesMeans": "Approve the new business-license tax schedule for businesses above $500,000 in annual gross receipts, while keeping rates unchanged for smaller businesses.",
+          "noMeans": "Keep the existing business-license tax schedule and its $200 annual maximum.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "de48859e0d0c92d3872405dd2d401443e00f7f143da5efb1f11a0267d7bbfaa6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-d",
+          "whatItDoes": "Direct Irvine to use ranked-choice voting for mayoral and council elections after January 1, 2028, only when voting equipment can support it, county-consolidated elections remain possible, and the estimated additional cost for the first ranked-choice election is no more than 0.23% of that election year’s city general-fund budget. Voters would rank candidates. If nobody has a majority of continuing votes, the lowest candidate is eliminated and ballots move to the next continuing choice until someone has a majority. After the first ranked-choice election, the system would continue unless voters replace it.",
+          "yesMeans": "Approve the transition to ranked-choice mayoral and council elections after January 1, 2028, when the specified technical and financial conditions are met.",
+          "noMeans": "Reject this transition and keep the current system in which the candidate with the most votes wins.",
+          "parts": [
+            {
+              "id": "ca-2026-orange-county-d#ballots",
+              "number": "1-2-603",
+              "kind": "PROGRAM",
+              "label": "Rankings and write-ins",
+              "what": "Ballots would allow at least five rankings and permit write-in candidates. Voters could rank as many or as few choices as they wish. Ballots without a remaining ranked candidate stop counting in later rounds."
+            },
+            {
+              "id": "ca-2026-orange-county-d#implementation",
+              "number": "1-2-611",
+              "kind": "PROGRAM",
+              "label": "Costs and later changes",
+              "what": "The additional-cost limit applies only to the first ranked-choice election. Until the city transitions, it must check the limit before each subsequent mayoral or council election. The clerk could make the minimum feasible procedural changes for equipment limits or adopt compatible new state guidelines. Five of seven council members could approve amendments that further or expand the ordinance’s goals; other amendments or repeal would require voters."
+            }
+          ],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf",
+          "sourceHash": "1d0151d897b25db8914ba12611aeeaa90d9531f28237cdebbef52cde74f3264a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-e",
+          "whatItDoes": "Limit Laguna Beach council members to two consecutive four-year terms, beginning with terms starting after the November 3, 2026 election; earlier terms would not count. A person filling a vacancy for less than two years could then serve two consecutive full terms. After a break of at least two years, someone could again serve two consecutive terms. For this rule, the break is measured between the declarations of results for successive November municipal elections in even-numbered years, even if the interval is slightly longer or shorter than two calendar years.",
+          "yesMeans": "Establish these council term limits and eligibility rules.",
+          "noMeans": "Keep the current system without city council term limits.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "0a28034aa91934b8f3d7ff4aab4fc8a9cd3aa3e9e51285449e519bf3265775c5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-f",
+          "whatItDoes": "Replace Lake Forest’s lifetime limit of two four-year council or mayoral terms with a limit of two consecutive four-year terms. After four or more consecutive years out of office following two consecutive terms, a person could serve two more; this could repeat without a lifetime limit. Serving at least two years of a partial term would count as a full term. The change would apply to new or reelected council members beginning with the 2026 election, without giving current members additional consecutive terms.",
+          "yesMeans": "Allow repeated periods of up to two consecutive terms, separated by at least four consecutive years out of office.",
+          "noMeans": "Keep the current limit of two four-year terms, without this opportunity to return after a four-year break.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "b209bcb819b8a14618a1924d29380827297863116a79adc3441b898dc65fd97c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-g",
+          "whatItDoes": "Increase Los Alamitos’s hotel tax from 8% to 12% of the rent paid by guests for hotel, motel or similar lodging stays of 30 consecutive days or less. The city estimates $300,000 in additional annual revenue. It would go to the general fund for any lawful city purpose, including public safety, streets, parks, facilities and community programs; it would not be restricted to one program. Approval requires a majority vote.",
+          "yesMeans": "Raise the hotel tax from 8% to 12%.",
+          "noMeans": "Keep the current 8% hotel tax.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf",
+          "sourceHash": "c661fbf51dcf5c132273b10e5e91f12cc55864390602c5bab2e38eaac45acad2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-h",
+          "whatItDoes": "Amend Newport Beach’s general plan to set limits and affordability requirements for up to 2,900 homes: 2,160 for extremely low-, very low- and low-income households, and 740 for moderate-income households. The allocation would be 174 in Dover/Westcliff, 870 in Newport Center, 406 in West Newport Mesa, 929 in the Airport Area and 521 in Coyote Canyon. Density would be 20–50 homes per gross acre, plus additional density allowed by state law. It would not approve any specific project; normal project review would remain. Because these would be voter-approved restrictions, changing locations, density or affordability requirements could require another vote. The official analysis says that if state authorities find these limits reduce required housing capacity or constrain production, the city may need additional sites or plan changes; noncompliance could lead to state or court enforcement.",
+          "yesMeans": "Adopt these general-plan housing limits, locations and affordability requirements.",
+          "noMeans": "Do not adopt this proposed general-plan amendment.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "17381d39fc708662c87d08ad0d340e76725fa400512061d81f4b468d9d745bde",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-i",
+          "whatItDoes": "Add a 1% local sales and use tax—1 cent per taxable dollar—for 13 years from its operative date, unless voters repeal, amend or extend it. The city estimates $37 million annually. Purchases exempt from state sales and use tax, including most groceries and prescription medicines, would generally remain exempt. Revenue would enter the general fund and could pay for any lawful city purpose, without a binding dedication to the services named in the ballot question. An independent oversight committee would review revenue, spending and annual independent audits, make recommendations and issue a yearly report. Audits would be presented publicly and posted online. Approval requires a majority vote.",
+          "yesMeans": "Authorize this additional 1% general sales and use tax for 13 years and its oversight requirements.",
+          "noMeans": "Do not authorize this additional sales and use tax.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "c98eadb7139e1a260f86d163d62df6549b3585e8e9f88921ccc0e924b40787d6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-j",
+          "whatItDoes": "Increase Orange’s hotel-guest tax from 10% to 14% for hotels with 11 or more accommodations, while keeping the rate at 10% for hotels with 10 or fewer. Apply the tax to the full amount guests pay for lodging, including amounts collected by online booking or other accommodation intermediaries. Hotel guests pay the tax, and operators would continue collecting and sending it to the city. The city estimates approximately $3 million annually for its general fund, available for any lawful city purpose without dedication to a specific program. The tax would continue until ended by voters. Approval requires a majority vote.",
+          "yesMeans": "Approve the higher rate for hotels with at least 11 accommodations and the expanded application to the full lodging charge and booking intermediaries.",
+          "noMeans": "Do not approve these changes to the existing hotel-guest tax.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "fc8d8823cdfa030b85bb4e3d61e124b1ed99dbb7136f3cffca06e06e6efdd542",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-k",
+          "whatItDoes": "Adopt a city charter for Orange, changing it from a general-law city to a charter city with authority over municipal affairs. Federal and state constitutions and state laws on matters of statewide concern would still apply. The council-manager form of government would remain. The charter sets prospective lifetime term limits, municipal contracting powers, open-space protections, restrictions on taking or regulating private property, vacancy and suspension rules, and fiscal requirements described below. Existing ordinances, contracts, rights and obligations would continue unless lawfully changed. The charter would take effect after voter approval and filing with the secretary of state.",
+          "yesMeans": "Adopt the proposed charter and authorize Orange to become a charter city under its provisions.",
+          "noMeans": "Reject the proposed charter and keep Orange a general-law city governed by existing state law.",
+          "parts": [
+            {
+              "id": "ca-2026-orange-county-k#term-limits",
+              "number": "500–503",
+              "kind": "PROGRAM",
+              "label": "Term limits and qualifications",
+              "what": "Future service would be limited to two four-year mayoral terms and three four-year council terms in a lifetime. More than two years of a partial term would count as a full term. Only terms beginning after the charter takes effect would count, and no current term would be shortened. Officeholders must be registered voters and residents of the city, and district council members of their district, for at least 30 days before filing or appointment and throughout service."
+            },
+            {
+              "id": "ca-2026-orange-county-k#contracts",
+              "number": "600–601",
+              "kind": "PROGRAM",
+              "label": "Contracting and wages",
+              "what": "The council could establish, change or waive municipal procurement and contracting procedures where legally permitted, including exemptions available to charter cities. It could set public-works and prevailing-wage procedures consistent with constitutional authority and applicable law, while retaining state wage rules where required or considered in the public interest."
+            },
+            {
+              "id": "ca-2026-orange-county-k#open-space",
+              "number": "204",
+              "kind": "PROGRAM",
+              "label": "Open-space reserve",
+              "what": "City-designated reserve land would be limited to compatible open-space, recreation, conservation, agricultural and public uses. Inconsistent residential, commercial, industrial or mixed-use development would be prohibited. Removing, selling, exchanging or using reserve property inconsistently would require a majority vote at a regular municipal election. Emergency and necessary maintenance work could continue. If voters approve removal, the city must preserve replacement open space of equal or greater value to the maximum feasible extent."
+            },
+            {
+              "id": "ca-2026-orange-county-k#private-property",
+              "number": "602–603",
+              "kind": "PROGRAM",
+              "label": "Private property",
+              "what": "The city generally could not take private property to convey it to another private party without the owner’s consent, with exceptions for mitigating a public project’s impacts and city-owned or operated facilities. It generally could not impose mandatory price or rent controls on private residential property, except as required by controlling law. Exceptions preserve land-use and building regulation, voluntary agreements, required state or federal rules, lawful city property powers, and accommodations subject to hotel tax."
+            },
+            {
+              "id": "ca-2026-orange-county-k#vacancies",
+              "number": "700–701",
+              "kind": "PROGRAM",
+              "label": "Vacancies and suspensions",
+              "what": "The council would fill a permanent vacancy by appointment within 60 days or call a special election; the replacement would serve the remaining term. An appointee later running for the office would not have to use “Appointed” in the ballot title. Where law permits, three-fourths of the full council could suspend an officer facing felony or formal corruption, fraud, misconduct or ethics proceedings. A majority could end the suspension. Acquittal, dismissal or final resolution without disqualification would automatically restore the officer; extending a suspension after a hung jury would require three-fourths and pending possible reprosecution. Removal would still require legal disqualification and all actions would be subject to legal review and due process."
+            },
+            {
+              "id": "ca-2026-orange-county-k#finances",
+              "number": "801–803",
+              "kind": "PROGRAM",
+              "label": "Budgets, audits and priorities",
+              "what": "The city must keep its ongoing operating budget balanced and publish an independent annual audit. It could spend reserves and other legally available funds on one-time projects even when total spending exceeds that year’s revenue. Additional recurring general-fund revenue would prioritize pension and benefit liabilities, infrastructure, debt, reserves and one-time investments; essential services and other lawful purposes would remain allowed with a balanced operating budget."
+            },
+            {
+              "id": "ca-2026-orange-county-k#land-use",
+              "number": "203",
+              "kind": "PROGRAM",
+              "label": "Land-use rules",
+              "what": "Existing state rules for general-law cities would continue to govern land use, zoning, subdivisions and housing compliance unless a city ordinance provides otherwise; state laws on statewide concerns would continue to apply."
+            }
+          ],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf",
+          "sourceHash": "08dfd9c63143d92de0770ffe5e96238f02608765f30f76e951cdd1a13e21dd4f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-l",
+          "whatItDoes": "Increase Placentia’s hotel tax from 10% to 14% beginning January 1, 2027, for hotel and other short-term lodging stays of 30 consecutive days or less, including qualifying home or room rentals. The city estimates approximately $715,000 annually, continuing until ended by voters. Revenue would go to the general fund for any lawful city purpose, including police, fire, emergency response and roads. Independent annual audits would cover tax revenue and spending; the existing Citizens’ Oversight Committee would review spending and publish a yearly report. A majority vote is required, and any future increase above 14% would require voter approval.",
+          "yesMeans": "Raise the hotel tax to 14% and add the specified audit and citizen-review requirements.",
+          "noMeans": "Keep the current 10% hotel tax.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "6945d156edb523dfa1a7438e58abd34fe7afe4aa588d0d79f82c689e247726ad",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-m",
+          "whatItDoes": "Add a 1% sales and use tax for 10 years, increasing the current combined rate from 7.75% to 8.75%. The city estimates $15 million annually. Half would go to a legally restricted beach-protection fund and half to a legally restricted fire-protection and wildfire-preparedness fund. At least 70% of beach-fund spending must go to sand replenishment, nourishment, retention or erosion control. The revenue could not be transferred to the general fund or spent on unrelated services. Annual independent audits, public spending reports, council approval and oversight would be required. Voters would decide a possible single additional 10-year term in a later renewal election. This citizen-initiated measure requires a majority vote.",
+          "yesMeans": "Approve the additional 1% tax and the dedicated funds, spending restrictions and oversight rules.",
+          "noMeans": "Do not impose this additional tax or establish its dedicated funds through this measure.",
+          "parts": [
+            {
+              "id": "ca-2026-orange-county-m#beach",
+              "number": "3.22.150(A)",
+              "kind": "PROGRAM",
+              "label": "Beach fund",
+              "what": "Half of revenue would fund beach protection. At least 70% of its spending must address sand replenishment, nourishment, retention or erosion. Remaining permitted uses include the Beach Trail, public access points, pedestrian bridges, pier, beachfront restrooms and stormwater-related beach-water quality measures."
+            },
+            {
+              "id": "ca-2026-orange-county-m#fire",
+              "number": "3.22.150(B)",
+              "kind": "PROGRAM",
+              "label": "Fire and wildfire fund",
+              "what": "Half of revenue would support fire protection and emergency medical response, wildfire prevention on public and private land, and community education and vegetation management. Each fund could reimburse up to $250,000 in actual election costs attributable to this measure, with a combined $500,000 cap across both funds and the initial and renewal elections."
+            },
+            {
+              "id": "ca-2026-orange-county-m#oversight",
+              "number": "3.22.160–180",
+              "kind": "PROGRAM",
+              "label": "Plans, audits and oversight",
+              "what": "All funded programs, spending, contracts and grant applications would require council approval at a public meeting. Beach and wildfire operational plans would be due within 12 months and reviewed and adopted at least every four years. Annual independent audits and an accountability report within three months after the fiscal year ends would disclose revenue, spending, progress and unspent funds. The Investment Advisory Committee would review spending and issue a public compliance-or-concern statement; a separate operational committee could also be created."
+            },
+            {
+              "id": "ca-2026-orange-county-m#term",
+              "number": "3.22.190",
+              "kind": "PROGRAM",
+              "label": "Start, renewal and competing measures",
+              "what": "Collection would begin on the first calendar quarter starting more than 110 days after adoption. A general municipal renewal election would be held in the calendar year beginning eight years after the tax starts. A majority YES would extend it once for 10 more years; otherwise it would expire after its original 10 years. If this and another city measure imposing new or increased taxes, or otherwise conflicting with it, both pass at the same election, this measure specifies that the one receiving more YES votes controls and no part of the other takes effect."
+            }
+          ],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "c5caf8951520a2d329a8b639b5b28af7acba7f7146e7199ebefe4fa061b3d28a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-n",
+          "whatItDoes": "Keep Santa Ana’s existing 1.5% local sales and use tax indefinitely, unless voters end it. Cancel the scheduled reduction to 1% on April 1, 2029 and the tax’s scheduled end on April 1, 2039. The city estimates approximately $84 million each year for general city services, including roads, parks, public safety and emergency response, and addressing the city’s structural deficit at council discretion. Existing citizen oversight, independent annual audits and public annual spending disclosures would remain. The current tax applies to most tangible-goods and restaurant purchases, subject to existing exemptions. Approval requires a majority vote.",
+          "yesMeans": "Continue the 1.5% local tax without the scheduled rate reduction or expiration.",
+          "noMeans": "Keep the scheduled reduction to 1% on April 1, 2029 and expiration on April 1, 2039.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "66e41bda2bba12fedf6cf3bc143cfb94a7dc340ed32e64b105c1acd496f90fe7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-orange-county-o",
+          "whatItDoes": "Increase Westminster’s hotel tax from 8% to 12% on the rent paid for hotel or motel stays of 30 consecutive days or less, beginning January 1, 2027. Existing tax definitions would stay the same. The city estimates $452,000 in additional annual revenue until ended by voters. Revenue would go to the general fund for any lawful city purpose, including public safety, disaster preparedness, parks, public-area maintenance and homelessness services. Independent annual audits and public audit reports would be required. The council could amend the ordinance, but any increase above 12% would require voter approval. This measure requires a majority vote.",
+          "yesMeans": "Increase the hotel tax to 12% with the stated audit requirements.",
+          "noMeans": "Keep the current 8% hotel tax.",
+          "parts": [],
+          "sourceUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf",
+          "sourceHash": "1b689dd5c0a1e4060791697e65fbcf18849603f75e9cf14d1f86a40200055f71",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:38:19.399218+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:38:19.399218+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/A-LBUSD%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "b17106695e619dfe1e26cde338fecd5f4a01b0aa4c082dc6e94f3c6ad72d1046",
+        "retrievedAt": "2026-11-03T04:29:21.206381+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/B-Westminster%20SD%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "7f6185b58ec4000399a0149d7e3ab3171e2e729eb6cd0d3e586e6ab0fda3c9e1",
+        "retrievedAt": "2026-11-03T04:29:21.694217+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/C-CMES%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "de48859e0d0c92d3872405dd2d401443e00f7f143da5efb1f11a0267d7bbfaa6",
+        "retrievedAt": "2026-11-03T04:29:21.564800+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/D-IRVI%20-%20LAYOUT%20(2).pdf",
+        "httpStatus": 200,
+        "rawHash": "1d0151d897b25db8914ba12611aeeaa90d9531f28237cdebbef52cde74f3264a",
+        "retrievedAt": "2026-11-03T04:29:21.626161+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/E-LBEA%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "0a28034aa91934b8f3d7ff4aab4fc8a9cd3aa3e9e51285449e519bf3265775c5",
+        "retrievedAt": "2026-11-03T04:29:21.589474+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/F-LFOR%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "b209bcb819b8a14618a1924d29380827297863116a79adc3441b898dc65fd97c",
+        "retrievedAt": "2026-11-03T04:29:21.453218+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/G-LALA%20-%20LAYOUT%20(2).pdf",
+        "httpStatus": 200,
+        "rawHash": "c661fbf51dcf5c132273b10e5e91f12cc55864390602c5bab2e38eaac45acad2",
+        "retrievedAt": "2026-11-03T04:29:21.669852+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/H-NBEA%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "17381d39fc708662c87d08ad0d340e76725fa400512061d81f4b468d9d745bde",
+        "retrievedAt": "2026-11-03T04:29:21.546228+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/I-ORAN%20Sales%20Tax%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "c98eadb7139e1a260f86d163d62df6549b3585e8e9f88921ccc0e924b40787d6",
+        "retrievedAt": "2026-11-03T04:29:21.466080+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/J-ORAN%20TOT%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "fc8d8823cdfa030b85bb4e3d61e124b1ed99dbb7136f3cffca06e06e6efdd542",
+        "retrievedAt": "2026-11-03T04:29:21.597650+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-10/Orange%20Charter%20-%20Layout.pdf",
+        "httpStatus": 200,
+        "rawHash": "08dfd9c63143d92de0770ffe5e96238f02608765f30f76e951cdd1a13e21dd4f",
+        "retrievedAt": "2026-11-03T04:29:22.082916+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/L-PLAC%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "6945d156edb523dfa1a7438e58abd34fe7afe4aa588d0d79f82c689e247726ad",
+        "retrievedAt": "2026-11-03T04:29:21.670039+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/M-SCLE%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "c5caf8951520a2d329a8b639b5b28af7acba7f7146e7199ebefe4fa061b3d28a",
+        "retrievedAt": "2026-11-03T04:29:21.761445+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/N-SANA%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "66e41bda2bba12fedf6cf3bc143cfb94a7dc340ed32e64b105c1acd496f90fe7",
+        "retrievedAt": "2026-11-03T04:29:21.754676+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      },
+      {
+        "requestedUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf",
+        "finalUrl": "https://ocvote.gov/sites/default/files/2026-09/O-WEST%20-%20LAYOUT%20(1).pdf",
+        "httpStatus": 200,
+        "rawHash": "1b689dd5c0a1e4060791697e65fbcf18849603f75e9cf14d1f86a40200055f71",
+        "retrievedAt": "2026-11-03T04:29:21.756103+00:00",
+        "publisher": "Orange County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official November 3, 2026 Orange County voter-guide PDF. Exact ballot question, legal text and impartial analysis saved; plain explanations use no voter arguments."
+      }
+    ]
+  }
+}

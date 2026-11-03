@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-11-03T04:57:15.677Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 6,
+  "checks": [
+    {
+      "contestId": "ca-2026-san-luis-obispo-a",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-c",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-d",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-e",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-f",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-san-luis-obispo-g",
+      "status": "PASS",
+      "parts": 0
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

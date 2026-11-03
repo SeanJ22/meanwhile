@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "ca-2026-san-luis-obispo-h",
+    "officialNumber": "Measure H-26 (formerly J-26)",
+    "jurisdiction": "Allan Hancock Joint Community College District",
+    "questionText": "ALLAN HANCOCK JOINT COMMUNITY COLLEGE DISTRICT AFFORDABLE HIGHER EDUCATION. To repair and upgrade Allan Hancock College’s aging classrooms, labs, career training facilities; construct classrooms to improve affordable education for students/veterans in science, math, nursing, welding, machining, skilled trades; offer local four-year degrees with Cal-Poly partnership; fix roofs, plumbing, electrical; and remove asbestos; shall Allan Hancock College’s measure authorizing $290 million in bonds at legal rates be adopted, levying $19 /$100,000 assessed value ($16 million annually while bonds are outstanding), with citizen oversight of locally controlled funding?",
+    "record": {
+      "contestId": "ca-2026-san-luis-obispo-h",
+      "whatItDoes": "Authorize up to $290 million in facility bonds for Allan Hancock College classroom, laboratory and career-training projects, including facilities supporting the proposed Cal Poly four-year-degree partnership, and roof, plumbing, electrical and asbestos work. Property taxes would repay principal and interest. The district estimates $16 million annually, an average and highest rate of $19 per $100,000 of assessed value, collection through fiscal year 2067–68, and approximately $618,176,000 total repayment. These projections may vary and are not binding tax caps. Interest rates and bond terms must stay within legal limits. Money must remain local and cannot pay teacher or administrator salaries, pensions or other operating expenses. Independent citizen oversight, annual financial and performance audits, reports and public spending disclosure are required. Listing a project does not guarantee it will be funded or completed. Approval requires 55% of votes.",
+      "yesMeans": "Authorize the district to borrow up to $290 million for the listed college facilities and levy property taxes to repay the bonds under these conditions.",
+      "noMeans": "Do not authorize these bonds through this measure.",
+      "parts": [],
+      "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-21",
+      "sourceHash": "2e8ac428008a0552be6e0c63df4f93445e9930062f0d2964d6f9f34c2e872231",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T04:57:14.666840+00:00",
+      "citation": "measure-source"
+    },
+    "reason": "No matching held community-college district identity or reader boundary/membership is established. Countywide attachment would incorrectly broaden eligibility. Exact district identity and source-backed geographic membership remain standing work.",
+    "sourceUrl": "https://www.slocounty.ca.gov/departments/clerk-recorder/forms-documents/elections-and-voting/current-elections/2026-11-03/measures/resolution-no-26-21",
+    "sourceHash": "2e8ac428008a0552be6e0c63df4f93445e9930062f0d2964d6f9f34c2e872231",
+    "officialExcerptFile": "excerpts/ca-2026-san-luis-obispo-h.txt"
+  }
+]

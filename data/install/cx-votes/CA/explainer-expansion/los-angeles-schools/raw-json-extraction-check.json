@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-11-03T05:16:50.300293+00:00",
+  "status": "PASS",
+  "records": 14,
+  "checks": [
+    {
+      "contestId": "ca-2026-la-school-up",
+      "officialContestId": "bmc10935",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-s",
+      "officialContestId": "bmc10911",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-g",
+      "officialContestId": "bmc10931",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-mm",
+      "officialContestId": "bmc10933",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-cs",
+      "officialContestId": "bmc10937",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-ed",
+      "officialContestId": "bmc10948",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-sms",
+      "officialContestId": "bmc10949",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-tcs",
+      "officialContestId": "bmc10950",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-lv",
+      "officialContestId": "bmc10961",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-sm",
+      "officialContestId": "bmc10872",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-b",
+      "officialContestId": "bmc10873",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-hh",
+      "officialContestId": "bmc10884",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-k",
+      "officialContestId": "bmc10874",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    },
+    {
+      "contestId": "ca-2026-la-school-r",
+      "officialContestId": "bmc10868",
+      "EnglishQuestionAndAllOfficialSectionsReproduced": true
+    }
+  ],
+  "credentialLikeFlags": [],
+  "applicationJavascriptIncluded": false,
+  "voterLookupUsed": false,
+  "productionWrites": 0
+}

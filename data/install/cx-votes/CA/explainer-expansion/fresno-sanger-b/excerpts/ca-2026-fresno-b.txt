@@ -1,0 +1,1166 @@
+ORIGINAL PDF PAGE 1 — DETERMINISTIC OCR
+FILED
+
+AUG, 0 7 2026
+EXHIBIT A
+ORDINANCE SUBMITTED TO THE VOTERS FRFS! RK
+By__ '
+JEPUTY
+
+ORDINANCE NO. 2026-06
+
+AN ORDINANCE OF THE CITY COUNCIL OF THE CITY OF SANGER,
+CALIFORNIA, AMENDING AND RESTATING ARTICLE V OF CHAPTER 66
+OF THE SANGER MUNICIPAL CODE RELATING TO THE TRANSIENT
+
+OCCUPANCY TAX
+
+WHEREAS, Revenue and Taxation Code section 7280 authorizes a city to levy a tax on the
+privilege of occupying a room or other living space in a hotel, inn, tourist home or house, motel, or
+
+other lodging for a period of 30 days or less; and
+
+WHEREAS, the City of Sanger currently imposes a transient occupancy tax pursuant to Article
+V of Chapter 66 of the Sanger Municipal Code; and
+
+WHEREAS, the City’s existing transient occupancy tax ordinance is based on a long-standing
+municipal tax structure and contains administrative provisions that remain useful for tax collection,
+
+enforcement, appeals, refunds, confidentiality, and successor liability; and
+
+WHEREAS, the manner in which transient lodging is advertised, reserved, paid for, and
+administered has changed substantially with the growth of short-term rentals and online booking
+platforms, including platforms commonly known as Airbnb, VRBO, and similar marketplaces; and
+
+WHEREAS, the City Council desires to amend and restate Article V in its entirety in order to
+preserve the City’s existing transient occupancy tax framework while modernizing the ordinance to
+apply expressly to short-term rentals, vacation rentals, home-sharing arrangements, and other similar
+
+transient lodging accommodations; and
+
+WHEREAS, Senate Bill 346, Chapter 751 of the Statutes of 2025, added Government Code
+section 50990 et seq., known as the Short-Term Rental Facilitator Act of 2025, and authorizes a city
+that adopts an ordinance making that Act applicable within its jurisdiction to require short-term rental
+facilitators to provide certain information, include local license and transient occupancy tax
+certification information in listings, and submit to audit or examination where the facilitator is
+
+responsible for collecting and remitting transient occupancy tax; and
+
+WHEREAS, the Legislature expressly recognized in Government Code section 50996 that the
+
+Short-Term Rental Facilitator Act does not preempt local agencies from adopting ordinances regulating
+short-term rentals, short-term rental facilitators, or the payment and collection of transient occupancy
+
+taxes in a manner different from the procedures prescribed in that Act; and
+01484,0007 2163309. 1 1
+
+
+ORIGINAL PDF PAGE 2 — DETERMINISTIC OCR
+WHEREAS, Business and Professions Code section 17568.6, added by Assembly Bill 537 and
+operative July 1, 2024, requires short-term lodging providers, internet websites, applications,
+centralized platforms, and other persons to advertise or display short-term lodging rates in a manner
+that includes all required fees and charges except government-imposed taxes and fees, and to include
+all government-imposed taxes and fees in the total price to be paid before the consumer reserves the
+
+stay; and
+
+WHEREAS, Business and Professions Code section 17568.8, added by Assembly Bill 2202
+and operative July 1, 2025, requires disclosures regarding certain additional cleaning-task fees, charges,
+or penalties for short-term lodging and authorizes enforcement by a city attorney, district attorney,
+county counsel, or the Attorney General; and
+
+WHEREAS, the City Council desires to include a limited state-law compliance provision in
+this Article to reference those short-term lodging transparency statutes; and
+
+WHEREAS, the City Council desires to increase the transient occupancy tax rate by eight
+percentage points, from four percent (4%) to twelve percent (12%), and to expand the type of short-
+term rental properties it applies to, subject to approval by the voters if and to the extent required by
+
+Article XIII C of the California Constitution; and
+
+WHEREAS, the City Council further desires to make clear that payment, collection, or
+remittance of transient occupancy tax does not authorize, legalize, establish a lawful nonconforming
+use, or otherwise permit any use of property that is prohibited by the Sanger Municipal Code or any
+
+other applicable law.
+
+NOW, THEREFORE, THE CITY COUNCIL OF THE CITY OF SANGER DOES ORDAIN
+AS FOLLOWS:
+
+SECTION 1. Amendment and Restatement of Article V of Chapter 66.
+
+Article V of Chapter 66 of the Sanger Municipal Code is hereby amended and restated in its entirety
+to read as follows:
+
+“ARTICLE V. TRANSIENT OCCUPANCY TAX
+
+Sec. 66-126. - Short title; purpose and intent.
+This article shall be known as the Transient Occupancy Tax of the City.
+
+01484.0007 2163309.1 2
+
+
+ORIGINAL PDF PAGE 3 — DETERMINISTIC OCR
+The purpose of this article is to impose a tax upon the privilege of transient occupancy in hotels and
+other lodging accommodations within the City and to provide for the collection, reporting,
+
+administration, and enforcement of that tax.
+
+This article is adopted solely for purposes of taxation and tax administration. Nothing in this article is
+intended to authorize, legalize, establish a lawful nonconforming use, expand, impair, or alter any land
+use entitlement, building permit, certificate of occupancy, business license, short-term rental permit, or
+other approval required by the Sanger Municipal Code or other applicable law.
+
+Sec. 66-126.5 — Authority; State Law.
+
+This article is adopted pursuant to Revenue and Taxation Code section 7280 et seq., Article XIII C of
+the California Constitution, Government Code section 53724, Elections Code section 9222, and all
+other applicable law. This article shall be administered consistently with applicable state law. If any
+provision of this article conflicts with state law, state law shall control.
+
+Sec. 66-127. - Definitions.
+
+Except where the context otherwise requires, the following definitions govern the construction of this
+article:
+
+“Booking transaction” means any reservation, booking, payment, payment processing, listing,
+advertising, offer, acceptance, or other transaction involving transient occupancy that is facilitated,
+directly or indirectly, by a short-term rental facilitator or marketplace.
+
+“City” means the City of Sanger.
+
+“Electronic notice” means notice transmitted by electronic mail or through an electronic filing,
+payment, or reporting system approved by the tax administrator, to the extent permitted by law.
+
+“Hotel” means any structure, or any portion of any structure, occupied or intended or designed for
+occupancy by transients for dwelling, lodging, or sleeping purposes, including any hotel, inn, tourist
+home or house, motel, studio hotel, bachelor hotel, lodging house, rooming house, apartment house,
+dormitory, public or private club, mobile home or house trailer at a fixed location, campground,
+campsite, recreational vehicle space, bed and breakfast establishment, single-family residence,
+dwelling unit, condominium, townhouse, accessory dwelling unit, guest house, home-sharing unit,
+vacation rental, short-term rental, or other lodging or living accommodation, or portion thereof, offered
+for transient occupancy for consideration. For purposes of this article, the term hotel is used as a tax
+term and shall not determine whether a use is permitted under any zoning, building, housing, business
+license, or other regulatory provision. “Hotel” does not include any facility, occupancy lodging,
+campsite, space, interest or transaction that the City is prohibited from taxing under Revenue and
+Taxation Code Section 7280 et seq. or other applicable law, including, without limitation, any campsite
+in a unit of the state park system to the extent exempt from transient occupancy tax under Revenue and
+
+Taxation Code Section 7282.
+“Legislative body” means the City Council of the City.
+
+“Marketplace” has the meaning set forth in Government Code section 50991, as that section may be
+amended, supplemented, renumbered, or succeeded, and includes an internet website, application,
+software application, online platform, or other physical or electronic place through which the
+
+occupancy of a short-term rental is facilitated.
+
+01484.0007 2163309.1 3
+
+
+ORIGINAL PDF PAGE 4 — DETERMINISTIC OCR
+“Occupancy” means the use or possession, or the right to use or possess, any room, rooms, dwelling
+unit, lodging, campsite, space, accommodation, or portion thereof in any hotel for dwelling, lodging,
+
+or sleeping purposes.
+
+“Operator” means the person who is proprietor of the hotel, whether in the capacity of owner, lessee,
+sublessee, mortgagee in possession, licensee, host, property manager, managing agent, or any other
+capacity. Where the operator performs functions through a managing agent of any type or character
+other than an employee, the managing agent shall also be deemed an operator for purposes of this
+article and shall have the same duties and liabilities as the principal. Compliance with this article by
+either the principal or the managing agent shall be considered compliance by both to the extent of the
+
+compliance actually made.
+
+“Person” means any individual, firm, partnership, joint venture, association, social club, fraternal
+organization, joint stock company, corporation, limited liability company, estate, trust, business trust,
+receiver, trustee, syndicate, or any other group or combination acting as a unit.
+
+“Rent” means the total consideration charged, whether or not received, for occupancy of space in a
+hotel, valued in money, whether to be received in money, goods, labor, credits, property, services, or
+otherwise, without deduction. Rent includes all mandatory fees and charges required as a condition of
+occupancy, including mandatory cleaning fees, mandatory resort fees, mandatory linen fees, required
+utility charges, booking fees charged by the operator, and other mandatory charges imposed by the
+operator or collected on behalf of the operator as a condition of occupancy. Rent does not include
+refundable security deposits to the extent actually refundable, separately stated taxes or assessments
+imposed by a governmental agency on the stay, or separately stated service fees charged by a short-
+term rental facilitator for marketplace services if the service fee is not paid to or retained by the operator
+as consideration for occupancy. “Rent” does not include any amount subject to tax under the Sales and
+Use Tax Law with respect to the sale of food products, including food and beverage products, to the
+extent excluded from transient occupancy taxation by Revenue and Taxation Code Section 7282.3 or
+
+any successor statute.
+
+“Short-term rental” means the occupancy of a home, house, room in a home or house, campsite,
+dwelling unit, accessory dwelling unit, guest house, condominium, apartment, or other lodging that is
+not a commercially operated hotel, motel, bed and breakfast inn, or similar transient lodging
+establishment, for a period of 30 consecutive calendar days or less, and under any other circumstances
+specified in this article, when facilitated by a short-term rental facilitator or otherwise offered for
+
+transient occupancy.
+
+“Short-term rental facilitator” means a person or entity that satisfies the definition of short-term rental
+facilitator in Government Code section 50991, as that section may be amended, supplemented,
+renumbered, or succeeded.
+
+“Tax administrator” means the Director of Administrative Services of the City, or the Director’s
+designee, and includes any officer, employee, agent, or contractor authorized by the City to administer
+or enforce this article.
+
+“Transient” means any person who exercises occupancy or is entitled to occupancy in a hotel by reason
+of a lease, concession, permit, right of access, license, booking transaction, reservation, or other
+agreement for a period of 30 consecutive calendar days or less, counting portions of calendar days as
+
+full days. Any such person occupying space in a hotel shall be deemed to be a transient until the period
+of 30 days has expired, unless there is an agreement in writing between the operator and the occupant
+
+01484.0007 2163309.1 4
+
+
+ORIGINAL PDF PAGE 5 — DETERMINISTIC OCR
+providing for a longer period of occupancy and the occupancy is actually for a period longer than 30
+consecutive calendar days. In determining whether a person is a transient, uninterrupted periods of time
+extending both before and after the effective date of this article may be considered.
+
+“Transient occupancy tax review committee” means the committee established pursuant to section
+66-155.
+
+Sec. 66-128. - Imposition generally; tax deemed debt to City.
+
+For the privilege of occupancy in any hotel, each transient is subject to and shall pay a tax in the amount
+of twelve percent (12%) of the rent charged by the operator.
+
+The tax constitutes a debt owed by the transient to the City. The debt is extinguished only by payment
+to the operator, a short-term rental facilitator authorized or required to collect the tax, or the City.
+
+The tax imposed by this article is a general tax, the proceeds of which shall be deposited in the City’s
+general fund and may be used for any lawful municipal purpose.
+
+The increased rate of the tax and expanded coverage approved by the voters at the November 3, 2026
+election shall become operative on the first day of the first calendar quarter beginning after the date on
+which the ordinance increasing the rate is approved by the voters, unless the City Council establishes
+
+a later operative date by resolution.
+The tax imposed hereunder shall continue until ended by voters.
+Sec. 66-129. - Exemptions from tax; written claim for exemption.
+
+No tax imposed under this article shall be imposed upon:
+
+(1) Any person as to whom, or any occupancy as to which, it is beyond the power of the City to
+impose the tax provided in this article;
+
+(2) Any officer or employee of a foreign government who is exempt by reason of express provision
+of federal law or international treaty;
+
+(3) Any occupant for more than 30 successive calendar days, provided that the requirements of this
+article for nontransient occupancy are satisfied; or
+
+(4) Any occupant whose rent is paid for a hospital room or to a medical clinic, convalescent home, or
+home for aged people; or
+
+(5) Any occupancy of a campsite in a unit of the state park system to the extent prohibited by Revenue
+& Taxation Code Section 7282 or any successor statute.
+
+No exemption shall be granted under subsections (1) or (2) except upon a claim made at the time rent
+is collected, under penalty of perjury, upon a form prescribed by the tax administrator.
+
+Sec. 66-130. - When and to whom payable.
+
+The transient shall pay the tax to the operator or to a short-term rental facilitator that is required or
+authorized to collect the tax at the time rent is paid. If the rent is paid in installments, a proportionate
+share of the tax shall be paid with each installment. Any unpaid tax shall be due upon the transient’s
+
+ceasing to occupy space in the hotel.
+
+If for any reason the tax due is not paid to the operator or short-term rental facilitator, the tax
+administrator may require that the tax be paid directly to the tax administrator.
+
+01484.0007 2163309.1 5
+
+
+ORIGINAL PDF PAGE 6 — DETERMINISTIC OCR
+Sec. 66-131. - Enforcement of article; administrative rules; schedules for payment.
+
+The tax administrator shall enforce this article and may adopt rules, regulations, forms, instructions,
+schedules, and procedures, not inconsistent with this article, as may be necessary or desirable to aid in
+
+the administration and enforcement of this article.
+
+The tax administrator shall provide schedules for payment of the tax, and such schedules shall eliminate
+fractions of one cent.
+
+Sec. 66-132. - Security may be required to ensure compliance.
+
+The tax administrator, whenever deemed necessary to ensure compliance with this article, may require
+any person subject to this article to deposit security in the form of cash, bond, or other security as the
+
+tax administrator may determine.
+
+The amount of the security shall be fixed by the tax administrator but shall not be greater than twice
+the person’s estimated average liability for the period for which returns are filed, determined in such
+manner as the tax administrator deems proper, or $10,000.00, whichever amount is less. The amount
+of security may be increased or decreased by the tax administrator subject to the limitations in this
+
+section.
+Sec. 66-133. - Registration of operators required; information to be provided.
+
+Every person engaging, or about to engage, in business as an operator of a hotel in the City shall register
+with the tax administrator on a form prescribed by the tax administrator within 15 days after
+commencing business or before accepting transient occupancy, whichever occurs first.
+
+Registration after the effective date of the tax shall not relieve any person from the obligation to pay,
+collect, report, or remit tax on and after the date on which the obligation arises, regardless of
+
+registration.
+
+The registration shall set forth the name under which the person transacts or intends to transact business,
+the location of each place of business or lodging accommodation, any short-term rental permit or
+license number required by the City, any platform listing identification numbers known to the operator,
+and such other information as the tax administrator may require to facilitate collection and enforcement
+
+of the tax.
+
+The registration shall be signed by the owner if a natural person; in the case of an association or
+partnership, by a member or partner; in the case of a corporation or limited liability company, by an
+officer, manager, member, or other person specifically authorized to sign the registration; and in the
+case of any other entity, by a person authorized to bind the entity.
+
+Sec. 66-134. - Certificate of authority.
+
+The tax administrator shall, within ten (10) days after registration, issue without charge a certificate of
+authority to each registrant to collect the tax from the occupant, together with a duplicate for each
+additional place of business or lodging accommodation of the registrant as determined by the tax
+
+administrator.
+
+The certificate shall be no assignable and nontransferable and shall be surrendered immediately to the
+tax administrator upon cessation of business at the location named, upon sale or transfer of the business,
+
+or upon demand by the tax administrator as authorized by this article.
+
+01484.0007 2163309.1 6
+
+
+ORIGINAL PDF PAGE 7 — DETERMINISTIC OCR
+Each certificate and duplicate shall state the place of business or lodging accommodation to which it is
+applicable and shall be displayed or made available in the manner prescribed by the tax administrator.
+For a short-term rental, the tax administrator may allow or require electronic display or inclusion of the
+certificate number in listings, booking materials, or other records.
+
+Each certificate shall state substantially the following:
+(1) The name of the operator;
+(2) The address of the hotel or lodging accommodation;
+(3) The date upon which the certificate was issued; and
+
+(4) That the transient occupancy registration certificate signifies that the person named on the
+certificate has registered with the tax administrator for purposes of collecting from transients the
+transient occupancy tax imposed by the City and remitting the tax to the tax administrator. The
+certificate does not authorize any person to conduct any unlawful business, conduct any lawful
+business in an unlawful manner, operate a hotel or short-term rental without complying with all
+applicable laws, or engage in any use requiring a permit, license, entitlement, or other approval
+from the City or any other governmental agency. The certificate is not a land use permit, short-
+term rental permit, building permit, certificate of occupancy, or business license.
+
+The payment, collection, or remittance of tax under this article, and the issuance of any certificate under
+this article, shall not authorize, legalize, establish a lawful nonconforming use, or otherwise permit any
+use of property that is prohibited by this Code or any other applicable law.
+
+Sec. 66-135. - Collection by operators required; liability of operators.
+
+Every operator maintaining a place of business or offering transient occupancy in the City, the
+occupancy of which is not exempt under this article, shall collect the tax from the occupant unless the
+tax is collected and remitted by a short-term rental facilitator pursuant to this article, a collection
+
+agreement, or other applicable law.
+The tax required to be collected by the operator constitutes a debt owed by the operator to the City.
+
+In all cases of transactions upon credit or deferred payment, the payment of tax to the operator may be
+deferred in accordance with the credit or deferred payment arrangement, and the operator shall be liable
+for the tax at the time and to the extent that credits are paid or deferred payments are made in accordance
+
+with the rate of tax owing on the amount paid.
+
+Sec. 66-136. - Collection by short-term rental facilitators; operator liability preserved.
+
+A short-term rental facilitator that collects payment for occupancy on behalf of an operator, or that is
+otherwise responsible for collecting or remitting transient occupancy tax pursuant to this article, a
+collection agreement, or applicable law, shall collect the tax imposed by this article from the transient
+and remit the tax to the tax administrator in the manner prescribed by the tax administrator.
+
+A short-term rental facilitator that collects and remits tax under this article shall separately state the tax
+to the transient to the extent required by this article and applicable law.
+
+An operator remains liable for any tax, penalty, or interest not collected and remitted by a short-term
+rental facilitator, except to the extent the tax administrator determines that the tax has actually been
+paid to the City. The City may proceed against the transient, operator, short-term rental facilitator, or
+any other liable person, singly or in any combination, to collect amounts due.
+
+01484.0007 2163309.1 7
+
+
+ORIGINAL PDF PAGE 8 — DETERMINISTIC OCR
+Sec. 66-137. - Collection practices; separate statement of tax; advertising tax not to be collected
+or to be refunded.
+
+Each operator and short-term rental facilitator required or authorized to collect tax shall collect the tax
+imposed by this article to the same extent and at the same time as rent is collected from every transient.
+
+The amount of tax shall be separately stated from the amount of rent charged, and each transient shall
+receive a receipt, invoice, or other written or electronic statement showing payment of the tax, except
+to the extent the tax administrator authorizes another method consistent with applicable law.
+
+No operator or short-term rental facilitator shall advertise or state in any manner, whether directly or
+indirectly, that the tax or any part thereof will be assumed or absorbed by the operator or facilitator,
+that it will not be added to the rent, or that, if added, any part will be refunded, except in the manner
+
+provided by this article.
+Sec. 66-138. - Quarterly remittances and returns generally; electronic filing.
+
+The tax imposed by this article shall become due and payable from the occupant at the time of
+occupancy. All amounts of tax collectible or collected by any operator or short-term rental facilitator
+are due and payable to the tax administrator quarterly on the first day of the months of April, July,
+October, and January next succeeding each respective quarterly period and are delinquent after the last
+
+day of such months.
+
+On or before the last day of the month following each quarterly period of three months, a return for the
+preceding quarterly period shall be filed with the tax administrator. The return shall be filed in such
+form as the tax administrator may prescribe by every operator, short-term rental facilitator, and every
+person liable for payment of tax under this article during such quarterly period who has not paid the
+tax and who has not made return regarding the related occupancy that is the subject of tax.
+
+The tax administrator may authorize or require electronic filing of returns, electronic payment of tax,
+electronic signatures, and electronic submission of supporting records and reports, subject to
+
+procedures prescribed by the tax administrator.
+Sec. 66-139. - Contents of returns.
+
+Returns shall show the amount of tax collected or otherwise due for the related period and such other
+information as is required by the tax administrator.
+
+The tax administrator may require returns to show total rents upon which tax was collected or otherwise
+due, gross receipts of a registered returnee for the period, exemptions claimed, tax collected and
+remitted by a short-term rental facilitator, deductions authorized by the tax administrator, and an
+
+explanation in detail of any discrepancy among such amounts.
+
+Sec. 66-140. - Delivery of returns and remittances.
+
+The person required to file the return shall deliver the return, together with the remittance of the amount
+of tax due, to the tax administrator at the tax administrator’s office or by an electronic method
+
+prescribed by the tax administrator.
+Sec. 66-141. - Extension of time for filing return and remitting tax.
+
+For good cause, the tax administrator may extend for not more than one month the time for making any
+return or payment of tax. No further extension shall be granted except by the transient occupancy tax
+
+review committee.
+
+01484.0007 2163309.1 8
+
+
+ORIGINAL PDF PAGE 9 — DETERMINISTIC OCR
+Any person to whom an extension is granted who makes return and pays the tax within the period of
+the extension shall pay, in addition to the tax, interest on the amount thereof at the rate of one-half of
+one percent per month or fraction thereof on the unpaid balance for the period of the extension to the
+time of return and payment, which interest shall become a part of the tax.
+
+Sec. 66-142. - Other than quarterly returns and tax payments may be required.
+
+The tax administrator, if deemed necessary to ensure payment or facilitate collection by the City of the
+amount of taxes in any individual case, may require returns and payment of the amount of taxes for
+periods other than quarterly periods, to the extent consistent with applicable law.
+
+Sec. 66-143. - Deficiency determinations.
+
+(a) If the tax administrator is not satisfied with any return or returns of the tax or the amount of tax
+required to be paid to the City by any person, the tax administrator may compute and determine
+the amount required to be paid upon the basis of facts contained in the return or returns or upon
+the basis of any information within the tax administrator’s possession or that may come into the
+tax administrator’s possession. One or more deficiency determinations may be made for one or
+
+more periods.
+
+(b) In making a determination, the tax administrator may offset overpayments, if any, previously
+made for a period or periods, together with interest on the overpayments, against any
+underpayment for a subsequent period or periods or against penalties and interest on the
+underpayments. Interest on underpayments and overpayments shall be computed in the manner
+set forth in this article.
+
+(c) The tax administrator shall give the operator, occupant, short-term rental facilitator, or other liable
+person written notice of the determination. Notice may be served personally, by mail, or by
+electronic notice where authorized by law or by written consent. If by mail, the notice shall be
+enclosed in a sealed envelope, postage prepaid, and addressed to the person at the address that
+appears in the records of the tax administrator. Service by mail is complete at the time of deposit
+
+in the United States mail.
+
+(d) Except in the case of fraud, intent to evade this article or authorized rules and regulations, or
+failure to make a timely return, every deficiency determination shall be made and notice thereof
+mailed or served within four years after the last day of the month following the close of the
+quarterly period for which the amount is proposed to be determined or within four years after the
+
+return is filed, whichever period expires later.
+
+(e) If any operator, short-term rental facilitator, or other liable person fails or refuses to collect the
+tax, make any report and remittance within the time provided in this article, makes a fraudulent
+return, or otherwise willfully attempts to evade this article, the tax administrator shall proceed in
+such manner as deemed best to obtain facts and information on which to base an estimate of the
+tax due. The tax administrator shall determine and assess against the liable person the tax, interest,
+and penalties provided for by this article. Notice of the determination shall be given in the manner
+provided in this section. Such determination and notice shall be made and mailed or served at any
+time permitted by law in the case of fraud, intent to evade this article or authorized rules and
+regulations, or failure to file a required return. Any determination shall become final within 30
+days after giving notice thereof as provided in this article unless a timely petition for
+
+redetermination is filed.
+
+01484.0007 2163309.1 9
+
+
+ORIGINAL PDF PAGE 10 — DETERMINISTIC OCR
+(f) If the tax administrator believes that collection of any tax or any amount of tax required to be
+collected and paid to the City will be jeopardized by delay, or if any determination will be
+jeopardized by delay, the tax administrator shall make a jeopardy determination of the tax or
+amount of tax required to be collected, noting that fact upon the determination. The amount
+determined is immediately due and payable. If the amount specified in the determination is not
+paid within ten days after service of notice upon the person against whom the determination is
+made, the amount becomes final at the expiration of the ten days unless a petition for
+redetermination is filed within the ten days, and the delinquency penalty and interest provided in
+this article shall attach to the amount of the tax or the amount of tax required to be collected.
+
+Sec. 66-144. - Redetermination upon petition of aggrieved person.
+
+(a) Any person against whom a determination is made under section 66-143, or any person directly
+interested, may petition for redetermination within 15 days after service upon the person of notice
+thereof. If a petition for redetermination is not filed within the applicable period, the determination
+becomes final at the expiration of the period; provided, however, a petition for redetermination
+under subsection (f) of section 66-143 shall be filed within ten days after notice.
+
+(b) If a petition for redetermination is filed within the allowable period, the tax administrator shall
+reconsider the determination and, if the person has requested an oral hearing in the petition, shall
+grant the person an oral hearing and give the person ten days’ notice of the time and place of the
+hearing. The tax administrator may continue the hearing from time to time as necessary.
+
+(c) The tax administrator may decrease or increase the amount of the determination before it becomes
+final, but the amount may be increased only if a claim for the increase is asserted by the tax
+administrator at or before the hearing.
+
+(d) The order or decision of the tax administrator upon a petition for redetermination becomes final
+15 days after service upon the petitioner of notice thereof unless appeal of such order or decision
+is filed with the transient occupancy tax review committee within 15 days after service of such
+
+notice.
+
+(e) No petition for redetermination or appeal therefrom shall be effective for any purpose unless, at
+or before the filing thereof, the amount found due in the original determination is paid or a bond
+or other security satisfactory to the tax administrator is filed with the tax administrator
+guaranteeing payment of any amount finally determined to be due.
+
+Sec. 66-145. - Refunds for overpayment of tax, penalties, or interest.
+
+Whenever the amount of any tax, penalty, or interest has been paid more than once or has been
+erroneously or illegally collected or received by the tax administrator under this article, it may be
+refunded; provided, a verified claim in writing, stating the specific ground upon which the claim is
+founded, is filed with the tax administrator within three years from the date of payment.
+
+The claim shall be made on forms provided by the tax administrator. If the claim is approved by the
+tax administrator, the excess amount collected or paid may be refunded or credited against any amounts
+then due and payable from the person from whom it was collected or by whom it was paid, and the
+balance may be refunded to such person or the person’s administrators, executors, successors, or
+
+assigns as appropriate.
+Sec. 66-145.5. — Claims; Exhaustion; Judicial Actions.
+
+01484.0007 2163309.1 10
+
+
+ORIGINAL PDF PAGE 11 — DETERMINISTIC OCR
+(a) No action or proceeding shall be maintained in any court to recover any tax, penalty, interest, fee
+or other amount paid under this article unless the person seeking recovery first pays the amount alleged
+to be due and files a written claim for refund with the tax administrator in accordance with this article
+
+and all other applicable law.
+
+(b) No action or proceeding shall be maintained in any court to challenge, invalidate, reduce, prevent
+or enjoin the collection of any tax, penalty, interest, fee, or other amount imposed or collected under
+this article, except an action for refund after payment of the amount due and exhaustion of the
+
+administrative remedies provided by this article.
+
+(c) Failure to file a timely and sufficient claim for refund shall bar any action against the City for
+recovery of the tax, penalty, interest or other paid amount.
+
+Sec. 66-145.6. — Collection Not Enjoined.
+
+No injunction, writ of mandate or other legal or equitable process shall issue in any suit, action or
+proceeding to prevent or enjoin the collection of any tax, penalty, interest, fee or other amount required
+to be paid under this article.
+
+Sec. 66-146. - Confidential nature of returns and business information.
+
+Neither the tax administrator nor any person having an administrative duty under this article shall make
+known in any manner the business affairs, operations, or information obtained by an investigation of
+records and equipment of any operator, short-term rental facilitator, or other person visited or examined
+in the discharge of official duty, or the amount or source of income, profits, losses, expenditures, or
+any particular thereof set forth or disclosed in any return, or permit any return or copy thereof or any
+book containing any abstract or particulars thereof to be seen or examined by any person except as
+
+authorized by this article or other applicable law.
+
+Successors, receivers, trustees, executors, administrators, assignees, and guarantors, if directly
+interested and upon submitting written proof of their interest, may be given information as to the items
+included in the measure and amount of any unpaid tax or amounts of tax required to be collected,
+
+interest, and penalties.
+Sec. 66-147. - Delinquency in remittance of tax collected; penalties and interest.
+
+(a) Original delinquency. Any operator, short-term rental facilitator, or other person who fails to remit
+any tax imposed by this article within the time required shall pay a penalty of ten percent (10%)
+of the amount of the tax in addition to the amount of the tax.
+
+(b) Continued delinquency. Any operator, short-term rental facilitator, or other person who fails to
+remit any delinquent remittance on or before a period of 30 days following the date on which the
+remittance first became delinquent shall pay a second delinquency penalty of ten percent (10%)
+of the amount of the tax in addition to the amount of the tax and the ten percent penalty first
+
+imposed.
+
+(c) Fraud. If the tax administrator determines that nonpayment of any remittance due under this article
+is due to fraud or intent to evade this article, a penalty of twenty-five percent (25%) of the amount
+of the tax shall be added in addition to the penalties stated in subsections (a) and (b).
+
+(d) Interest. In addition to the penalties imposed, any operator, short-term rental facilitator, or other
+person who fails to remit any tax imposed by this article shall pay interest at the rate of one-half
+
+01484,0007 2163309.1 11
+
+
+ORIGINAL PDF PAGE 12 — DETERMINISTIC OCR
+of one percent per month or fraction thereof on the amount of the tax, exclusive of penalties, from
+the date on which the remittance first became delinquent until paid.
+
+(e) Penalties merged with tax. Every penalty imposed and such interest as accrues under this article
+shall be merged with and become a part of the tax required to be paid.
+
+Sec. 66-148. - Procedure for collection of delinquent taxes.
+
+If any person is delinquent in payment of the amount required to be paid, or ifa determination has been
+made against the person that remains unpaid, the tax administrator may, not later than four years after
+the payment becomes delinquent, give notice thereof by registered mail to all persons in the county
+having in their possession or under their control any credits or other personal property belonging to the
+delinquent or owing any debts to the delinquent. After receiving the notice, the persons so notified shall
+neither transfer nor make any other disposition of the credits, other personal property, or debts in their
+possession or under their control at the time they receive the notice until the tax administrator consents
+to a transfer or disposition or until 20 days elapse after receipt of the notice. All persons so notified
+shall, within five days after receipt of the notice, advise the tax administrator of all such credits, other
+personal property, or debts in their possession, under their control, or owing by them.
+
+Except in cases of fraud, intent to evade this article or authorized rules and regulations, or failure to
+file a required return, the tax administrator may bring an action in the courts of this State or the United
+
+States in the name of the City, to collect any tax, penalty, interest, fee or other amount due under this
+Article within four years after the date the amount was required to be paid. In case of fraud, intent to
+evade or failure to file a required return the City may bring an action at any time permitted by law.
+
+Sec. 66-149. — Successor Liability; tax certificate clearance.
+
+(a) If any operator liable for any amount under this article sells, transfers, quits, or otherwise disposes
+of the hotel, lodging business, short-term rental, or other business subject to this article, the operator
+
+shall notify the tax administrator in writing not less than thirty (30) days before the sale, transfer,
+cessation, or disposition, or as soon as practicable if thirty (30) days’ prior notice is not feasible.
+
+(b) A purchaser, transferee, successor, or assignee of a hotel, lodging business, short-term rental, or
+other business subject to this article may request from the tax administrator a transient occupancy tax
+clearance certificate in accordance with Revenue and Taxation Code section 7283.5, as it may be
+
+amended, renumbered, or succeeded.
+
+(c) Upon receipt of a written request for a transient occupancy tax clearance certificate, the tax
+administrator may require the current or former owner or operator to make available transient
+occupancy tax records for the purpose of conducting an audit to determine any tax, penalties, interest,
+
+or other amounts due and owing under this article.
+
+(d) The tax administrator shall issue the transient occupancy tax clearance certificate, request records
+for an audit, complete any audit, and issue any certificate following the audit within the time periods
+
+required by Revenue and Taxation Code section 7283.5, as it may be amended, renumbered, or
+succeeded.
+
+(e) If the tax administrator determines that transient occupancy tax, penalties, interest, or other
+amounts are due and owing, the tax administrator may issue a tax clearance certificate stating the
+
+amount of liability associated with the hotel, lodging business, short-term rental, or other business
+subject to this article. If records made available for audit are insufficient, incomplete, or unavailable,
+the tax administrator may estimate the liability based on the facts and information available.
+
+01484.0007 2163309.1 12
+
+
+ORIGINAL PDF PAGE 13 — DETERMINISTIC OCR
+(f) A purchaser, transferee, successor, or assignee shall withhold from the purchase price or
+consideration an amount sufficient to satisfy any tax, penalties, interest, or other amounts due under
+this article unless and until the tax administrator issues a tax clearance certificate stating that no
+amount is due, or the purchaser, transferee, successor, or assignee is otherwise relieved from liability
+
+under Revenue and Taxation Code section 7283.5.
+
+(g) If a purchaser, transferee, successor, or assignee fails to withhold from the purchase price or
+consideration as required by this section, the purchaser, transferee, successor, or assignee shall be
+personally liable for payment of the amount required to be withheld to the extent provided by
+Revenue and Taxation Code section 7283.5.
+
+(h) The tax administrator may charge a reasonable fee for the issuance of a transient occupancy tax
+clearance certificate to the extent authorized by Revenue and Taxation Code section 7283.5 or other
+applicable law.
+
+(i) This section shall be administered consistently with Revenue and Taxation Code section 7283.5. If
+there is any conflict between this section and Revenue and Taxation Code section 7283.5, the state
+statute shall control.
+
+Sec. 66-149.5. - Lien.
+(a) Any tax, penalty, interest, fee or other amount required to be paid under this Article shall
+constitute a debt owed to the City.
+
+(b) If any amount required to be paid under this Article remains unpaid after it becomes final, the tax
+
+administrator may record with the county recorder a certificate of lien specifying the amount of the
+tax, penalties, interest, fees, and other charges due, the name and last known address of the person
+
+liable for the amount, and such other information as the tax administrator determines is appropriate.
+
+(c) From the time of recording, the amount required to be paid shall constitute a lien upon all real
+property in the county of Fresno owned by the person liable or thereafter acquired by that person
+before the lien expires. The lien shall have the force and effect, and priority of a judgment lien and
+shall continue for ten (10) years from the time of recording unless sooner released or otherwise
+
+discharged, and may be extended in the manner provided by law.
+
+(d) The Tax Administrator may release the lien when the amount due has been paid or when the lien
+was recorded in error.
+
+Sec. 66-150. - Disposition of tax proceeds.
+
+The tax administrator shall deposit all moneys collected pursuant to this article to the credit of the
+general fund of the City.
+
+Sec. 66-151. - Records; examination by tax administrator.
+
+Every operator, short-term rental facilitator, and other person liable for tax or required to collect or
+remit tax under this article shall keep records, receipts, invoices, booking records, platform reports,
+exemption certificates, tax collection records, payment records, and other pertinent papers in such form
+
+as the tax administrator may require.
+
+All records shall be retained for a period of not less than four years and six months after they come into
+being, or for such longer period as may be required by written notice from the tax administrator, this
+
+article, or other applicable law.
+
+01484.0007 2163309.1 13
+
+
+ORIGINAL PDF PAGE 14 — DETERMINISTIC OCR
+The tax administrator or any person authorized in writing by the tax administrator may examine the
+books, papers, records, and equipment of any person liable for the tax and may investigate the character
+of the business of the person in order to verify the accuracy of any return made or, if no return is made,
+
+to ascertain and determine the amount required to be paid.
+
+Audit or examination of a short-term rental facilitator shall be conducted in accordance with
+
+Government Code section 50995 and any other applicable law. Costs associated with an audit or
+examination of a short-term rental facilitator under Government Code section 50995 shall be paid by
+
+the City to the extent required by that section.
+Sec. 66-152. - Reports relating to rental charges, occupancy, and short-term rental listings.
+
+In administration of the tax, the tax administrator may require the filing of reports by any person or
+class of persons having in their possession or custody information relating to rentals, rent, booking
+transactions, occupancy, or guest rooms or other lodging accommodations subject to the tax. The
+reports shall be filed when the tax administrator requires and shall set forth the rental charged for each
+occupancy, the date or dates of occupancy, the tax collected, the tax remitted, the property address, and
+such other information as the tax administrator may require consistent with applicable law.
+
+Pursuant to Government Code section 50990 et seq., as amended from time to time, each short-term
+rental facilitator shall, upon request by the City and in the form and manner prescribed by the tax
+administrator, report the physical address, including nine-digit ZIP Code, of each short-term rental
+
+during the reporting period.
+
+If the information provided by a short-term rental facilitator is not sufficient for the City to identify a
+specific short-term rental at the provided address, the tax administrator may request the assessor parcel
+number, the URL associated with the specific short-term rental listing, and information exclusively
+related to the identification of an accessory dwelling unit, guest house, or single unit of a timeshare or
+multifamily housing project located at the single address or assessor parcel number requested, to the
+extent authorized by Government Code section 50993 or any successor statute.
+
+The reporting period for reports required pursuant to Government Code section 50993 shall be no more
+frequent than every three months within a 12-month period, unless the City requires monthly remittance
+of transient occupancy tax, in which case monthly reporting may be required to the extent authorized
+
+by state law.
+
+A short-term rental facilitator shall include in the listing of a short-term rental any applicable local
+license, permit, or registration number associated with the short-term rental and any transient
+occupancy tax certification issued by the City, to the extent required by Government Code section
+
+50994 or any successor statute.
+See. 66-153. - Confidential nature of required records and reports; exceptions.
+
+It is unlawful for the tax administrator or any person having an administrative duty under this article to
+make known in any manner the business affairs, operations, or information obtained by an investigation
+of records and equipment of any person required to obtain a transient occupancy registration certificate,
+pay a transient occupancy tax, collect or remit a transient occupancy tax, or any other person visited or
+examined in the discharge of official duty, or the amount or source of income, profits, losses,
+expenditures, or any particular thereof set forth in any statement or application, or to permit any
+statement or application or copy of either or any book containing any abstract or particulars thereof to
+be seen or examined by any person; provided, that nothing in this section shall be construed to prevent:
+
+01484.0007 2163309.1 14
+
+
+ORIGINAL PDF PAGE 15 — DETERMINISTIC OCR
+(1) Disclosure to or examination of records and equipment by another City official, employee, agent,
+consultant, or contractor for the sole purpose of administering or enforcing this article or
+collecting taxes imposed hereunder;
+
+(2) Disclosure of information to or examination of records by federal or state officials or the tax
+officials of another city, county, or city and county ifa reciprocal arrangement exists, or to a grand
+
+jury or court of law upon subpoena;
+
+(3) Disclosure of information and results of examination of records of particular taxpayers or relating
+to particular taxpayers to a court of law in a proceeding brought to determine the existence or
+
+amount of any tax liability of the particular taxpayers to the City;
+
+(4) Disclosure, after the filing of a written request to that effect, to the taxpayer or to the taxpayer’s
+successors, receivers, trustees, executors, administrators, assignees, and guarantors, if directly
+interested, of information as to the items included in the measure of any paid tax, any unpaid tax,
+or amounts of tax required to be collected, interest, and penalties; provided, however, that the City
+Attorney approves each such disclosure and that the tax administrator may refuse to make any
+disclosure referred to in this paragraph when, in the tax administrator’s opinion, the public interest
+
+would suffer thereby;
+
+(5) Disclosure of the names and addresses of persons to whom transient occupancy registration
+certificates have been issued, the names and addresses of officers of corporations and members
+of partnerships to whom such certificates have been issued, and the general type or nature of their
+
+business;
+
+(6) Disclosure to the legislative body by way of public meeting or otherwise of such information as
+may be necessary to permit it to be fully advised as to the facts when a taxpayer files a claim for
+refund of taxes, submits an offer of compromise regarding a claim asserted against the taxpayer
+by the City for taxes, or when acting upon any other matter;
+
+(7) Disclosure of general statistics regarding taxes collected or business done in the City; or
+
+(8) Disclosure authorized or required by Government Code section 50990 et seq., Business and
+Professions Code sections 17568.6 and 17568.8, the California Public Records Act, a court order,
+
+subpoena, or other applicable law.
+Sec. 66-154. - Appeal from decisions of tax administrator.
+
+Any person aggrieved by any decision of the tax administrator may appeal to the transient occupancy
+tax review committee by filing a notice of appeal with the tax administrator within 15 days after service
+or mailing of the notice of the decision. The tax administrator shall fix a time and place for hearing
+such appeal as prescribed by the transient occupancy tax review committee in its rules and regulations
+and shall give the appellant ten days’ notice of the time and place of hearing.
+
+Sec. 66-155. - Transient occupancy tax review committee created; chairman; acting members;
+quorum; compensation.
+
+A transient occupancy tax review committee is created. The committee shall be composed of the mayor,
+city manager, and city clerk. The committee shall select from its members a chair who shall serve at its
+
+pleasure.
+
+01484.0007 2163309.1 15
+
+
+ORIGINAL PDF PAGE 16 — DETERMINISTIC OCR
+Any member of the committee may deputize in writing filed with the committee any member of that
+member’s office, or in the case of the mayor, a member of the City Council, to serve in the member’s
+place on the committee for such period or hearing as the member may desire.
+
+A majority of the members of the committee shall constitute a quorum. The committee shall keep a
+record of its transactions. The committee shall be deemed to be in the office of the City Manager, shall
+meet and keep its files in that office, and all filings with the committee relating to appeals or otherwise
+
+shall be made at that office.
+
+Neither the members of the committee nor persons deputized to serve in their places shall receive
+compensation as members or acting members for their services on the committee.
+
+Sec. 66-156. - Powers and duties of committee.
+
+The committee shall have the power and duty:
+
+(1) To hear and determine appeals of orders or decisions of the tax administrator made upon petitions
+for redetermination of tax. The committee may affirm, modify, or reverse such orders or decisions
+or dismiss the appeals therefrom, as may be just, and shall prescribe forms, rules, and regulations
+relating to appeals as it may deem necessary. In reviewing the tax administrator’s decision or
+order, the committee may take evidence and make such investigation as it deems necessary. It
+shall give notice of its determinations in the manner prescribed for service of notice of a tax
+administrator’s decision and shall file a copy of each determination with the tax administrator
+with certification thereon of the date of service thereof. Such determination shall become final ten
+
+days thereafter and shall thereupon become due and payable, subject to interest and penalties, and
+enforceable by the tax administrator in like manner as an order or decision of the tax administrator;
+
+(2) To approve, modify, or disapprove forms, rules, and regulations prescribed by the tax
+administrator in the administration and enforcement of this article, and such forms, rules, and
+
+regulations shall be subject to and become effective only upon such approval to the extent
+committee approval is required by this article;
+
+(3) To hear and determine in such manner as shall be just any protest made by any person interested
+in any form, rule, or regulation approved or prescribed by the committee;
+
+(4) To grant for good cause applications for extensions of time in excess of one month for making
+any return or payment of tax and to prescribe rules therefor; and
+
+(5) To make such investigations as it deems advisable regarding the imposition and administration of
+the transient occupancy tax, report its findings to the legislative body, act in an advisory capacity
+to the legislative body on matters pertaining to the transient occupancy tax and enforcement
+problems, and recommend to the legislative body the adoption, amendment, or repeal of
+
+legislation pertaining thereto.
+Sec. 66-157. - Violations; administrative penalties; civil remedies.
+
+It is unlawful for any operator, short-term rental facilitator, or other person required to do so to fail or
+refuse to register, furnish any return required to be made, fail or refuse to furnish a supplemental return
+or other data required by the tax administrator, or render a false or fraudulent return. No person required
+to make, render, sign, or verify any report shall make any false or fraudulent report with intent to defeat
+
+or evade the determination of an amount due required by this article.
+
+01484.0007 2163309.1 16
+
+
+ORIGINAL PDF PAGE 17 — DETERMINISTIC OCR
+A failure by a short-term rental facilitator to report information required pursuant to Government Code
+section 50993, or any successor statute, may be made subject to an administrative fine or penalty
+
+pursuant to Government Code section 53069.4.
+
+The remedies provided in this article are cumulative and in addition to any other remedies available at
+law or in equity, including civil actions, administrative citations, collection actions, injunctions, and
+any remedies authorized by the Sanger Municipal Code or state law.
+
+Sec. 66-158. - Short-Term Rental Facilitator Act; future amendments; no change to tax without
+required approval.
+
+The provisions of Government Code section 50990 et seq., known as the Short-Term Rental Facilitator
+Act of 2025, as amended, renumbered or succeeded, from time to time, are hereby incorporated into
+this article to the fullest extent permitted by law and made applicable within the jurisdictional
+
+boundaries of the City to the fullest extent permitted by law.
+
+The reporting, collection, remittance, audit, examination, listing, administrative, and enforcement
+provisions of Government Code section 50990 et seq., as amended, supplemented, renumbered, or
+succeeded from time to time, are incorporated into this article to the extent they relate to transient
+
+occupancy tax administration and short-term rental facilitators.
+
+No future amendment, supplement, renumbering, or successor statute to Government Code section
+50990 et seq. shall, without further action by the City and any voter approval required by applicable
+law, alter the rate of tax imposed by this article, or expand the transactions or persons subject to tax
+
+beyond those authorized by this article.
+Sec. 66-159. - State short-term lodging disclosure laws.
+
+Each operator, short-term rental facilitator, marketplace, internet website, application, or other similar
+centralized platform, and any other person advertising, displaying, offering, facilitating, or processing
+payment for transient occupancy within the City shall comply with Business and Professions Code
+section 17568.6, Business and Professions Code section 17568.8, and any successor or related state
+law governing short-term lodging price transparency, disclosure of government-imposed taxes and fees
+before reservation, and disclosures regarding cleaning-task fees, charges, or penalties.
+
+This section is declaratory of independently applicable state law and is intended to support local
+administration and enforcement. Nothing in this section shall alter the rate of tax imposed by this
+article, expand the tax base, impose a tax not otherwise imposed by this article, or require voter
+
+approval separate from any approval required for the tax imposed by this article.
+
+The City Attorney is authorized to enforce Business and Professions Code sections 17568.6 and
+17568.8, and any successor provisions, to the extent authorized by state law.
+
+Sec. 66-160. Amendments.
+
+The City Council may amend this article without further voter approval to the extent permitted by
+Article XIII C of the California Constitution and other applicable law. Without limiting the
+foregoing, the City Council may amend this article to clarify, administer, enforce, or implement the
+tax; to conform this article to state or federal law; to adopt or amend reporting, collection, audit,
+appeal, refund, electronic filing, or administrative procedures; and to implement or conform to
+Government Code section 50990 et seq., as amended, supplemented, renumbered, or succeeded. No
+such amendment shall increase the rate of tax, impose the tax on occupancy not previously subject to
+
+01484.0007 2163309.1 17
+
+
+ORIGINAL PDF PAGE 18 — DETERMINISTIC OCR
+the tax, or otherwise constitute a tax increase requiring voter approval unless approved in accordance
+with applicable law.”
+
+SECTION 2. Voter Approval; Effective Date of Tax Increase.
+
+The increase in the transient occupancy tax to twelve percent (12%) shall take effect only upon approval
+by a majority of the voters of the City to the extent required by Article XIII C of the California
+
+Constitution.
+SECTION 3. CEQA.
+
+The City Council finds that this Ordinance is not a project within the meaning of the California
+Environmental Quality Act pursuant to State CEQA Guidelines sections 15060(c)(2), 15060(c)(3), and
+15378 because it involves fiscal and administrative governmental activity that will not result in a direct
+or reasonably foreseeable indirect physical change in the environment. To the extent this Ordinance is
+deemed a project, it is exempt from CEQA pursuant to State CEQA Guidelines section 15061(b)(3).
+
+SECTION 4. Severability.
+
+If any section, subsection, sentence, clause, phrase, or portion of this Ordinance is held invalid or
+unconstitutional by a court of competent jurisdiction, that decision shall not affect the validity of the
+remaining portions of this Ordinance. The City Council declares that it would have adopted this
+Ordinance and each section, subsection, sentence, clause, phrase, and portion thereof irrespective of
+the fact that any one or more sections, subsections, sentences, clauses, phrases, or portions may be
+
+declared invalid or unconstitutional.
+
+SECTION 5. Publication and Codification.
+
+The City Clerk shall certify to the adoption of this Ordinance and shall cause the same to be published
+or posted in the manner required by law. The City Clerk is authorized to make non-substantive
+formatting, numbering, and typographical corrections necessary for codification.
+
+SECTION 6. Effective Date.
+
+This Ordinance shall take effect only if approved by a majority of the voters voting on the measure at
+the November 3, 2026 election and upon certification of the election results by the City Council. The
+increased tax rate shall become operative on the first day of the first calendar quarter beginning after
+certification of the election results, unless the City Council establishes a later operative date by
+
+resolution.
+
+01484.0007 2163309.1 18
+
+
+ORIGINAL PDF PAGE 3 — DETERMINISTIC OCR
+and Implementing Short-Term Rental Facilitator Reporting and Collection Requirements Pursuant
+to Government Code Section 50990 et seq.”
+
+SECTION 4. Ballot Question.
+The exact form of the question to be submitted to the voters shall be as follows:
+
+Shall the measure increasing the | YES
+City of Sanger transient
+occupancy tax on hotel, motel,
+short-term rental, and similar
+lodging guests staying 30 days
+or less, generally not paid by
+MEASURE ___ Sanger residents, to 12%, until
+ended by voters, providing
+approximately $55,037 annually NO
+for general City services and
+deposited into the City’s general
+fund, be adopted?
+
+SECTION 5. Passage of Measure.
+
+The measure shall be deemed approved if it receives the affirmative vote of a majority of the voters
+voting on the measure. If approved by the voters, the ordinance shall be enacted in accordance
+with applicable law and shall take effect as provided therein.
+
+SECTION 6. General Tax.
+
+The measure is submitted as a general tax measure. Revenues from the tax shall be deposited in
+the City's General Fund and may be used for any lawful municipal purpose. The measure does not
+
+legally restrict the use of revenues to any specific purpose.
+SECTION 7. Consolidation with Statewide General Election.
+
+Pursuant to Elections Code sections 10400, 10403, and 10418, the City Council hereby requests
+that the Fresno County Board of Supervisors consolidate the General Municipal Election called by
+this Resolution with the statewide general election to be held on Tuesday, November 3, 2026. The
+City Council further requests that the election on the measure be held in all respects as if there
+were only one election, and that the Fresno County Clerk/Registrar of Voters canvass the returns
+and certify the results to the City Council. The City Council hereby specifically acknowledges
+that the election will be held and conducted per Elections Code 10418.
+
+SECTION 8. Services of County Elections Official.
+
+The City Council hereby requests that the Fresno County Clerk/Registrar of Voters provide all
+services necessary to conduct the election on the measure, including but not limited to publication
+
+of notices to the extent required or customary, preparation and mailing of voter information
+materials, printing of ballots, furnishing vote centers and election officers, tabulation of ballots,
+
+canvass of returns, and all other election services necessary or appropriate for the conduct of the
+consolidated election.
+
+01484,0007 2166330.1
+
+
+ORIGINAL PDF PAGE 1 — DETERMINISTIC OCR
+CITY ATTORNEY'S IMPARTIAL ANALYSIS OF MEASURE B
+
+The City of Sanger currently imposes a transient occupancy tax at a rate of 4% of the rent charged for
+stays of 30 consecutive days or less. This measure would increase the tax rate to 12% and amend and
+restate the City's transient occupancy tax ordinance to apply to most short term lodging (30 days or less).
+
+The tax is paid by persons occupying hotels or other lodging within the City, rather than by the lodging
+operator. The amended ordinance expressly applies to traditional hotels and motels and to short-term
+lodging such as vacation rentals, home-sharing units, houses, apartments, accessory dwelling units, guest
+houses, campgrounds, recreational vehicle spaces, and similar accommodations. The tax would apply to
+the total rent charged, including mandatory cleaning, resort, linen, utility, and operator booking fees. The
+ordinance excludes refundable security deposits, separately stated government taxes, certain separately
+stated online-platform service fees, and certain charges for food and beverages. It also retains exemptions
+required by law and exemptions for certain longer-term, governmental, medical, and elder-care
+
+occupancies.
+Hotel and short-term-rental operators must register with the City, collect the tax from guests, file returns,
+and remit the tax. Online short-term-rental platforms may also be required to collect and remit the tax
+
+and provide specified listing and property information. The ordinance authorizes the City to audit records,
+determine unpaid taxes, impose penalties and interest, record liens, and use other collection remedies. It
+
+also establishes procedures for administrative appeals and refund claims.
+
+The measure is a general tax. Its proceeds would be deposited in the City's general fund and could be used
+for any lawful municipal purpose. The tax would continue until ended by the voters.
+
+Payment of the tax or issuance of a tax registration certificate would not legalize or authorize a short-term
+rental or other lodging use that is otherwise prohibited by City zoning, licensing, building, or other laws.
+
+The City Council could amend the ordinance without further voter approval for administrative,
+enforcement, or legal-compliance purposes, but could not increase the tax rate or extend the tax to
+
+occupancies not already covered without any voter approval required by law.
+
+A "yes" vote is a vote to increase the transient occupancy tax rate from 4% to 12%, expand and modernize
+its application to short-term rentals and online platforms, and adopt the amended ordinance.
+
+A "no" vote is a vote against the measure. The existing 4% transient occupancy tax ordinance would
+remain in effect.
+
+The above statement is an impartial analysis of the Measure. If you desire a copy of the ordinance or
+measure, please call the elections official's office (City Clerk) at 559-876-6300 and a copy will be mailed
+at no cost to you or visit or visit https://sangerca.portal.civicclerk.com/event/3/files/attachment/2207.
+
+ILED
+
+Dated: August 24, 2026
+
+2
+
+Shannon Chattin AUG 24 2026
+Aleshire & Wynder, LLP, City Attorney core’ AfMIUTY CLERK
+By DEPUTY
+
+01484.0007 2181934.1 1

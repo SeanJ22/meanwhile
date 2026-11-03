@@ -1,0 +1,78 @@
+[
+  {
+    "whatItDoes": "Raises Sanger's tax on short lodging stays from 4% to 12% of taxable rent, expressly covers short-term rentals and online booking platforms, and updates collection and enforcement rules. The ballot estimates $55,037 a year for any general City purpose, with no scheduled expiration.",
+    "yesMeans": "Approve the 12% lodging tax and the updated rules for taxable stays, mandatory fees, exemptions, operator and booking-platform duties, collection, appeals and refunds.",
+    "noMeans": "Keep the existing 4% lodging-tax ordinance rather than adopt this increase and rewrite.",
+    "contestId": "ca-2026-fresno-b",
+    "parts": [
+      {
+        "id": "ca-2026-fresno-b#covered-stays",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Covered lodging and longer stays",
+        "what": "Guests pay the tax on stays of 30 consecutive calendar days or less, including part-days counted as full days. Covered lodging includes hotels and motels, vacation rentals, home-sharing, houses, apartments, accessory units, guest houses, campgrounds and RV spaces. A longer stay qualifies as nontransient only under the ordinance's requirements, including a written agreement for more than 30 days and actual occupancy longer than 30 days."
+      },
+      {
+        "id": "ca-2026-fresno-b#rent",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "What counts as taxable rent",
+        "what": "Taxable rent includes mandatory cleaning, resort, linen, utility, operator booking and similar required charges. It excludes genuinely refundable security deposits, separately stated government taxes, qualifying separately stated platform fees not retained by the operator, and food or beverage charges that state law excludes from lodging taxation."
+      },
+      {
+        "id": "ca-2026-fresno-b#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exempt stays",
+        "what": "Exemptions include occupancies the City legally cannot tax, federally or treaty-exempt foreign-government personnel, qualifying longer stays, hospital/medical/convalescent/elder-care rooms, and protected state-park campsites. Claims for the legal-power and foreign-government exemptions must be made under penalty of perjury on the City's form when rent is collected."
+      },
+      {
+        "id": "ca-2026-fresno-b#collection",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Operator and platform duties",
+        "what": "Operators must register before accepting a stay or within 15 days after starting business, whichever comes first, and collect and remit the guest tax unless an authorized platform does so. The tax is generally paid with rent and separately shown. Returns and remittances are generally quarterly, due the following month, though lawful alternative schedules or electronic filing can be required. Operators remain liable for amounts a platform has not actually paid to the City. The City may require security up to twice estimated average filing-period liability or $10,000, whichever is less."
+      },
+      {
+        "id": "ca-2026-fresno-b#records",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Records, listings and privacy",
+        "what": "Operators and platforms must retain records for at least four years and six months, or longer when lawfully required. The City may audit and require lodging/listing information and applicable permit or tax-certificate numbers in listings. State limits govern platform reporting frequency and audits. Tax and business records are generally confidential, subject to specified administration, court, taxpayer and other legal exceptions. Existing state rules on full-price and cleaning-task disclosures also apply."
+      },
+      {
+        "id": "ca-2026-fresno-b#penalties",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Unpaid taxes and business transfers",
+        "what": "Late remittances carry a 10% penalty, another 10% after the specified additional 30 days, 25% for fraud or evasion, and 0.5% monthly interest on unpaid tax. The City can assess deficiencies, sue and record liens; ordinary assessment and collection periods have fraud, evasion and nonfiling exceptions. A recorded lien generally lasts ten years and may be extended by law. A seller must give advance notice where practicable, and a business buyer must withhold enough for unpaid taxes unless a tax-clearance certificate or law releases that duty; failure can create personal liability."
+      },
+      {
+        "id": "ca-2026-fresno-b#appeals",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Challenges and refunds",
+        "what": "The ordinance provides redetermination petitions and appeals, generally within 15 days, with a ten-day deadline for jeopardy determinations. A petition or appeal requires payment or acceptable security. Appeals go to an unpaid committee of the mayor, city manager and city clerk or their authorized substitutes. Written refund claims generally must be filed within three years of payment. Court recovery actions require payment and exhaustion of the prescribed administrative remedies; the ordinance bars orders stopping collection."
+      },
+      {
+        "id": "ca-2026-fresno-b#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "General fund and lawful-use rules",
+        "what": "Receipts enter the general fund for any lawful municipal purpose and are not earmarked for particular services. Paying the tax or receiving a tax registration certificate does not legalize a rental or other use prohibited by zoning, building, licensing or other law."
+      },
+      {
+        "id": "ca-2026-fresno-b#start",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval, start and future changes",
+        "what": "A majority of votes cast must approve the measure. The final effective-date clause starts the increased rate on the first calendar quarter after Council certifies the results, unless Council sets a later date. The tax continues until voters end it. Council can amend administration, enforcement and legal-compliance rules, but rate increases or newly taxed occupancies still need any legally required voter approval. Later state facilitator-law changes do not themselves expand this tax's voter-approved rate or coverage. Valid portions remain if another provision is struck down."
+      }
+    ],
+    "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/exhibit-a-ordinance_redacted.pdf",
+    "sourceHash": "4cae6b27c565be8e335891c0ee5c5b4bddffb63263ba73a401da6d89b2527014",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T10:08:33.307716+00:00",
+    "citation": "measure-source"
+  }
+]

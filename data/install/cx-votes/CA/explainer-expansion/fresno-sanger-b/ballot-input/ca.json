@@ -1,0 +1,185 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-fresno-b",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:sanger",
+          "title": "Sanger lodging tax — Measure B",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:33.013878+00:00",
+            "verifiedAt": "2026-11-03T10:08:33.307716+00:00",
+            "quote": "Shall the measure increasing the City of Sanger transient occupancy tax on hotel, motel, short-term rental, and similar lodging guests staying 30 days or less, generally not paid by Sanger residents, to 12%, until ended by voters, providing approximately $55,037 annually for general City services and deposited into the City’s general fund, be adopted?"
+          },
+          "measureTextUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/exhibit-a-ordinance_redacted.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-fresno-b-text",
+          "contestId": "ca-2026-fresno-b",
+          "officialNumber": "Measure B",
+          "questionText": "Shall the measure increasing the City of Sanger transient occupancy tax on hotel, motel, short-term rental, and similar lodging guests staying 30 days or less, generally not paid by Sanger residents, to 12%, until ended by voters, providing approximately $55,037 annually for general City services and deposited into the City’s general fund, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/resolution_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:33.013878+00:00",
+            "verifiedAt": "2026-11-03T10:08:33.307716+00:00",
+            "quote": "Shall the measure increasing the City of Sanger transient occupancy tax on hotel, motel, short-term rental, and similar lodging guests staying 30 days or less, generally not paid by Sanger residents, to 12%, until ended by voters, providing approximately $55,037 annually for general City services and deposited into the City’s general fund, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Raises Sanger's tax on short lodging stays from 4% to 12% of taxable rent, expressly covers short-term rentals and online booking platforms, and updates collection and enforcement rules. The ballot estimates $55,037 a year for any general City purpose, with no scheduled expiration.",
+          "yesMeans": "Approve the 12% lodging tax and the updated rules for taxable stays, mandatory fees, exemptions, operator and booking-platform duties, collection, appeals and refunds.",
+          "noMeans": "Keep the existing 4% lodging-tax ordinance rather than adopt this increase and rewrite.",
+          "contestId": "ca-2026-fresno-b",
+          "parts": [
+            {
+              "id": "ca-2026-fresno-b#covered-stays",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Covered lodging and longer stays",
+              "what": "Guests pay the tax on stays of 30 consecutive calendar days or less, including part-days counted as full days. Covered lodging includes hotels and motels, vacation rentals, home-sharing, houses, apartments, accessory units, guest houses, campgrounds and RV spaces. A longer stay qualifies as nontransient only under the ordinance's requirements, including a written agreement for more than 30 days and actual occupancy longer than 30 days."
+            },
+            {
+              "id": "ca-2026-fresno-b#rent",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "What counts as taxable rent",
+              "what": "Taxable rent includes mandatory cleaning, resort, linen, utility, operator booking and similar required charges. It excludes genuinely refundable security deposits, separately stated government taxes, qualifying separately stated platform fees not retained by the operator, and food or beverage charges that state law excludes from lodging taxation."
+            },
+            {
+              "id": "ca-2026-fresno-b#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exempt stays",
+              "what": "Exemptions include occupancies the City legally cannot tax, federally or treaty-exempt foreign-government personnel, qualifying longer stays, hospital/medical/convalescent/elder-care rooms, and protected state-park campsites. Claims for the legal-power and foreign-government exemptions must be made under penalty of perjury on the City's form when rent is collected."
+            },
+            {
+              "id": "ca-2026-fresno-b#collection",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Operator and platform duties",
+              "what": "Operators must register before accepting a stay or within 15 days after starting business, whichever comes first, and collect and remit the guest tax unless an authorized platform does so. The tax is generally paid with rent and separately shown. Returns and remittances are generally quarterly, due the following month, though lawful alternative schedules or electronic filing can be required. Operators remain liable for amounts a platform has not actually paid to the City. The City may require security up to twice estimated average filing-period liability or $10,000, whichever is less."
+            },
+            {
+              "id": "ca-2026-fresno-b#records",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Records, listings and privacy",
+              "what": "Operators and platforms must retain records for at least four years and six months, or longer when lawfully required. The City may audit and require lodging/listing information and applicable permit or tax-certificate numbers in listings. State limits govern platform reporting frequency and audits. Tax and business records are generally confidential, subject to specified administration, court, taxpayer and other legal exceptions. Existing state rules on full-price and cleaning-task disclosures also apply."
+            },
+            {
+              "id": "ca-2026-fresno-b#penalties",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Unpaid taxes and business transfers",
+              "what": "Late remittances carry a 10% penalty, another 10% after the specified additional 30 days, 25% for fraud or evasion, and 0.5% monthly interest on unpaid tax. The City can assess deficiencies, sue and record liens; ordinary assessment and collection periods have fraud, evasion and nonfiling exceptions. A recorded lien generally lasts ten years and may be extended by law. A seller must give advance notice where practicable, and a business buyer must withhold enough for unpaid taxes unless a tax-clearance certificate or law releases that duty; failure can create personal liability."
+            },
+            {
+              "id": "ca-2026-fresno-b#appeals",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Challenges and refunds",
+              "what": "The ordinance provides redetermination petitions and appeals, generally within 15 days, with a ten-day deadline for jeopardy determinations. A petition or appeal requires payment or acceptable security. Appeals go to an unpaid committee of the mayor, city manager and city clerk or their authorized substitutes. Written refund claims generally must be filed within three years of payment. Court recovery actions require payment and exhaustion of the prescribed administrative remedies; the ordinance bars orders stopping collection."
+            },
+            {
+              "id": "ca-2026-fresno-b#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "General fund and lawful-use rules",
+              "what": "Receipts enter the general fund for any lawful municipal purpose and are not earmarked for particular services. Paying the tax or receiving a tax registration certificate does not legalize a rental or other use prohibited by zoning, building, licensing or other law."
+            },
+            {
+              "id": "ca-2026-fresno-b#start",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval, start and future changes",
+              "what": "A majority of votes cast must approve the measure. The final effective-date clause starts the increased rate on the first calendar quarter after Council certifies the results, unless Council sets a later date. The tax continues until voters end it. Council can amend administration, enforcement and legal-compliance rules, but rate increases or newly taxed occupancies still need any legally required voter approval. Later state facilitator-law changes do not themselves expand this tax's voter-approved rate or coverage. Valid portions remain if another provision is struck down."
+            }
+          ],
+          "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/exhibit-a-ordinance_redacted.pdf",
+          "sourceHash": "4cae6b27c565be8e335891c0ee5c5b4bddffb63263ba73a401da6d89b2527014",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:08:33.307716+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:08:33.307716+00:00",
+    "reviewedBy": "CX-VOTES current Fresno official source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "httpStatus": 200,
+        "rawHash": "4bebce1ec5f55b0f783263909e0afeeeabcc387f488f4afd09b072d6e36abfd1",
+        "retrievedAt": "2026-11-03T09:50:35.448457+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election inventory"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "httpStatus": 200,
+        "rawHash": "f60c8f84772377222fb4934ada6e7b4410289716165a44f095b9a49998cea87f",
+        "retrievedAt": "2026-11-03T09:51:13.425713+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current amended nine-measure designation list"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/exhibit-a-ordinance_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/exhibit-a-ordinance_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "4cae6b27c565be8e335891c0ee5c5b4bddffb63263ba73a401da6d89b2527014",
+        "retrievedAt": "2026-11-03T09:52:33.488747+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/resolution_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/resolution_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "494750cf8ce34e8396eaae23526b3f55da707b774b6299e6ad6a28fc8cda8a5d",
+        "retrievedAt": "2026-11-03T09:52:33.013878+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/impartial-analysis_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/sanger-transient-tax/impartial-analysis_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "91e331ab912c8f979ad78e9ac38bde8ecfd730a3d9e8c8c4d242ede6713e9b54",
+        "retrievedAt": "2026-11-03T09:51:13.001989+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      }
+    ]
+  }
+}

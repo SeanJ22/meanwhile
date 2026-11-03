@@ -1,0 +1,80 @@
+[
+  {
+    "contestId": "ma-cx-local-2026-district-attorney-middle",
+    "officeHeader": {
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+      "sourceOrg": "Town of Charlton Clerk",
+      "collectedAt": "2026-11-03T06:38:31.281328+00:00",
+      "verifiedAt": "2026-11-03T06:38:31.281328+00:00",
+      "quote": "DISTRICT ATTORNEY\nMIDDLE DISTRICT\nVote for not more than ONE"
+    },
+    "printedName": {
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+      "sourceOrg": "Town of Charlton Clerk",
+      "collectedAt": "2026-11-03T06:38:31.281328+00:00",
+      "verifiedAt": "2026-11-03T06:38:31.281328+00:00",
+      "quote": "JOSEPH D. EARLY, JR."
+    },
+    "printedParty": {
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+      "sourceOrg": "Town of Charlton Clerk",
+      "collectedAt": "2026-11-03T06:38:31.281328+00:00",
+      "verifiedAt": "2026-11-03T06:38:31.281328+00:00",
+      "quote": "Democratic"
+    },
+    "completeNamedCandidateCount": 1,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-district-attorney-northwestern",
+    "officeHeader": {
+      "sourceUrl": "https://www.athol-ma.gov/DocumentCenter/View/1216/ATHOL_ENG_268_ICP?bidId=",
+      "sourceOrg": "Town of Athol Clerk",
+      "collectedAt": "2026-11-03T06:44:19.619471+00:00",
+      "verifiedAt": "2026-11-03T06:44:19.619471+00:00",
+      "quote": "DISTRICT ATTORNEY\nNORTHWESTERN DISTRICT\nVote for not more than ONE"
+    },
+    "printedName": {
+      "sourceUrl": "https://www.athol-ma.gov/DocumentCenter/View/1216/ATHOL_ENG_268_ICP?bidId=",
+      "sourceOrg": "Town of Athol Clerk",
+      "collectedAt": "2026-11-03T06:44:19.619471+00:00",
+      "verifiedAt": "2026-11-03T06:44:19.619471+00:00",
+      "quote": "DAVID E. SULLIVAN"
+    },
+    "printedParty": {
+      "sourceUrl": "https://www.athol-ma.gov/DocumentCenter/View/1216/ATHOL_ENG_268_ICP?bidId=",
+      "sourceOrg": "Town of Athol Clerk",
+      "collectedAt": "2026-11-03T06:44:19.619471+00:00",
+      "verifiedAt": "2026-11-03T06:44:19.619471+00:00",
+      "quote": "Democratic"
+    },
+    "completeNamedCandidateCount": 1,
+    "readerQuotesExcludePrintedResidenceFields": true
+  },
+  {
+    "contestId": "ma-cx-local-2026-worcester-register-of-probate",
+    "officeHeader": {
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+      "sourceOrg": "Town of Charlton Clerk",
+      "collectedAt": "2026-11-03T06:38:31.281328+00:00",
+      "verifiedAt": "2026-11-03T06:38:31.281328+00:00",
+      "quote": "REGISTER OF PROBATE\nWORCESTER COUNTY\nVote for not more than ONE"
+    },
+    "printedName": {
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+      "sourceOrg": "Town of Charlton Clerk",
+      "collectedAt": "2026-11-03T06:38:31.281328+00:00",
+      "verifiedAt": "2026-11-03T06:38:31.281328+00:00",
+      "quote": "STEPHANIE K. FATTMAN"
+    },
+    "printedParty": {
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+      "sourceOrg": "Town of Charlton Clerk",
+      "collectedAt": "2026-11-03T06:38:31.281328+00:00",
+      "verifiedAt": "2026-11-03T06:38:31.281328+00:00",
+      "quote": "Republican"
+    },
+    "completeNamedCandidateCount": 1,
+    "readerQuotesExcludePrintedResidenceFields": true
+  }
+]

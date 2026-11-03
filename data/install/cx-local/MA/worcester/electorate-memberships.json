@@ -1,0 +1,780 @@
+{
+  "currentElectionLaw": {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+    "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+    "collectedAt": "2026-11-03T06:45:10.532784+00:00",
+    "verifiedAt": "2026-11-03T06:45:10.532784+00:00",
+    "quote": "Section 12. There shall be a district attorney for each district set forth in the following section, who shall be a resident therein and a member of the bar of the commonwealth and shall be elected as provided by section one hundred and fifty-four of chapter fifty-four. He shall serve for four years beginning with the first Wednesday of January after his election and until his successor is qualified."
+  },
+  "currentTerritorialLaw": {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+    "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+    "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+    "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+  },
+  "middle": {
+    "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+    "definition": "Worcester County excluding Athol",
+    "canonicalCountyMunicipalSubdivisions": 60,
+    "wholeMunicipalMembers": 59
+  },
+  "northwestern": {
+    "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:northwestern",
+    "definition": "Franklin and Hampshire counties including Athol",
+    "wholeCountyMembers": [
+      "ocd-division/country:us/state:ma/county:franklin",
+      "ocd-division/country:us/state:ma/county:hampshire"
+    ],
+    "wholeMunicipalMembers": [
+      "ocd-division/country:us/state:ma/county:worcester/place:athol_town"
+    ]
+  },
+  "districtMemberships": [
+    {
+      "id": "ma-cx-local-middle-whole-ashburnham_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:ashburnham_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-auburn_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:auburn_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-barre_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:barre_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-berlin_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:berlin_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-blackstone_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:blackstone_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-bolton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:bolton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-boylston_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:boylston_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-brookfield_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:brookfield_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-charlton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:charlton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-clinton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:clinton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-douglas_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:douglas_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-dudley_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:dudley_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-east_brookfield_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:east_brookfield_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-fitchburg_city",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:fitchburg_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-gardner_city",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:gardner_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-grafton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:grafton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-hardwick_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:hardwick_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-harvard_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:harvard_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-holden_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:holden_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-hopedale_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:hopedale_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-hubbardston_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:hubbardston_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-lancaster_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:lancaster_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-leicester_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:leicester_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-leominster_city",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:leominster_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-lunenburg_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:lunenburg_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-mendon_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:mendon_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-milford_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:milford_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-millbury_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:millbury_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-millville_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:millville_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-new_braintree_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:new_braintree_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-north_brookfield_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:north_brookfield_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-northborough_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:northborough_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-northbridge_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:northbridge_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-oakham_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:oakham_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-oxford_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:oxford_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-paxton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:paxton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-petersham_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:petersham_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-phillipston_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:phillipston_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-princeton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:princeton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-royalston_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:royalston_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-rutland_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:rutland_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-shrewsbury_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:shrewsbury_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-southborough_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:southborough_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-southbridge_town_city",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:southbridge_town_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-spencer_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:spencer_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-sterling_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:sterling_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-sturbridge_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:sturbridge_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-sutton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:sutton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-templeton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:templeton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-upton_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:upton_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-uxbridge_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:uxbridge_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-warren_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:warren_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-webster_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:webster_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-west_boylston_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:west_boylston_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-west_brookfield_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:west_brookfield_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-westborough_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:westborough_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-westminster_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:westminster_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-winchendon_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:winchendon_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-middle-whole-worcester_city",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:worcester_city",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-northwestern-whole-franklin",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:franklin",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:northwestern",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-northwestern-whole-hampshire",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:northwestern",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    },
+    {
+      "id": "ma-cx-local-northwestern-whole-athol_town",
+      "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:athol_town",
+      "districtOcdId": "ocd-division/country:us/state:ma/prosecutorial_district:northwestern",
+      "provenance": {
+        "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+        "sourceOrg": "The General Court of the Commonwealth of Massachusetts",
+        "collectedAt": "2026-11-03T06:40:23.205046+00:00",
+        "verifiedAt": "2026-11-03T06:40:23.205046+00:00",
+        "quote": "Section 13. For the administration of the criminal law, or for the defense of civil actions brought pursuant to chapter two hundred and fifty-eight, Suffolk county shall constitute the Suffolk district; Middlesex county, the northern district; Essex county, the eastern district; Norfolk county, the Norfolk district; Plymouth county, the Plymouth district; Bristol county, the Bristol district; Barnstable, Nantucket and Dukes counties, the Cape and Islands district; Worcester county, excluding the town of Athol, the middle district; Berkshire county, the Berkshire district; Hampden county, the Hampden district; and Franklin county, including the town of Athol, and Hampshire county, the northwestern district."
+      }
+    }
+  ],
+  "noWholeWorcesterCountyDistrictAttorneyMembership": true
+}

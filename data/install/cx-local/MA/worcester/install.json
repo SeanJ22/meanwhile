@@ -1,0 +1,91 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MA",
+  "county": "Worcester County",
+  "countyFips": "25027",
+  "populationRank": 67,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ma-cx-local-2026-district-attorney-middle",
+      "title": "District Attorney \u2014 Middle District",
+      "ocdId": "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "charlton-sample-a.pdf",
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId="
+    },
+    {
+      "id": "ma-cx-local-2026-district-attorney-northwestern",
+      "title": "District Attorney \u2014 Northwestern District",
+      "ocdId": "ocd-division/country:us/state:ma/prosecutorial_district:northwestern",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "athol-sample.pdf",
+      "sourceUrl": "https://www.athol-ma.gov/DocumentCenter/View/1216/ATHOL_ENG_268_ICP?bidId="
+    },
+    {
+      "id": "ma-cx-local-2026-worcester-register-of-probate",
+      "title": "Register of Probate \u2014 Worcester County",
+      "ocdId": "ocd-division/country:us/state:ma/county:worcester",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "primarySample": "charlton-sample-a.pdf",
+      "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId="
+    }
+  ],
+  "sourceKind": "ACTUAL_OFFICIAL_MUNICIPAL_SPECIMEN_BALLOTS_PLUS_CURRENT_ELECTORATE_STATUTES",
+  "operation": "Prepareddataonly.Threecompleteactualsamplelocalofficeblocks/threeprintedpeople. MiddleDistrict excludesAthol; NorthwesternincludesAthol plusFranklin/Hampshire. Exact62legalwholememberlinks; allheld232state/federal/councillor/legislativeand9measurerowsremainunchanged. No production or git.",
+  "counts": {
+    "contests": 3,
+    "candidacies": 3,
+    "newContests": 3,
+    "refreshedContests": 0,
+    "portableNativeSamplePdfs": 5,
+    "sourceFiles": 12,
+    "middleWholeMunicipalities": 59,
+    "northwesternWholeCounties": 2,
+    "northwesternWholeMunicipalities": 1,
+    "newWholeMemberLinks": 62,
+    "measures": 0
+  },
+  "coverage": {
+    "individuallyCompleteCandidateOffices": 3,
+    "allNamedChoicesInImportedOfficeBlocks": true,
+    "fullCountyBallotParity": false,
+    "publishedStyleAcquisitionExhaustive": false,
+    "actualSampleScope": "Athol,Charlton(twoofficialstyles),Shrewsbury,Leominster(currentcityPDFcontainsmultipleformats/styles). NativeCharlton/Atholprimarytextgoverns;ShrewsburyembeddedOCRimperfect.",
+    "electorate": "MGLc12\u00a7\u00a712/13:notthewholecountyfortheDAfield.AtholvotesNorthwestern,other59municipalitiesMiddle.RegisterofProbatecountywide.",
+    "remaining": [
+      "Remaining Worcester city/town/regional-school/special election candidate sample audit is open.",
+      "No independently administered municipal or regional-school absence is asserted from these5PDFs.",
+      "Named write-in/cancelled/declared-elected statuses have not been established by separate current sources; no blank slot becomes a person.",
+      "Reader must install/verify the two precise prosecutorial districts with62source-backedmemberships.",
+      "Existingstatelegislativeandmeasuredataremainpreserved;noquestioninstallfromthiscandidatepacket."
+    ]
+  },
+  "unmatchedDivisions": [
+    "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+    "ocd-division/country:us/state:ma/prosecutorial_district:northwestern"
+  ],
+  "readerApplicability": {
+    "status": "RIVER_SOURCE_BACKED_MEMBERSHIP_INSTALL_AND_LIVE_CHECK_REQUIRED",
+    "unmatchedDivisions": [
+      "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+      "ocd-division/country:us/state:ma/prosecutorial_district:northwestern"
+    ],
+    "newWholeMembers": 62,
+    "noCountyFallbackForMiddleDistrict": true
+  },
+  "validation": {
+    "focusedChecker": "/workspace/cx-local-work/validate.mts",
+    "productionWrites": "NONE",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 12 captured sources and 68 exact saved-source quotes"
+  }
+}

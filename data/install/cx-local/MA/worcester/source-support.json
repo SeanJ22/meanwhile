@@ -1,0 +1,134 @@
+[
+  {
+    "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926",
+    "finalUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:38:31.281328+00:00",
+    "sha256": "b78b8ffdd59c4f5243149c266cbf844be60f0c4806995ee4af9f559da16faff9",
+    "sourceFile": "sources/b78b8ffdd59c4f5243149c266cbf844be60f0c4806995ee4af9f559da16faff9.source",
+    "excerptFile": "sources/a47cdbfad837325f9dfb221a330c2284256776acb0f3c1df9fefa7d28ebabdb1.txt",
+    "excerptSha256": "a47cdbfad837325f9dfb221a330c2284256776acb0f3c1df9fefa7d28ebabdb1",
+    "evidence": "Actual current November3,2026 official published specimen ballot. Complete local office fields are independently reviewed; the native sample prints residence addresses, which are retained in original source bytes/extraction but excluded from every reader-facing provenance quote. Shrewsbury has imperfect embedded OCR, so clean Charlton/Athol native text governs imported names. These5PDFs do not establish all60municipalities or full county style parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5927",
+    "finalUrl": "https://www.townofcharlton.net/DocumentCenter/View/5927/State-Election-Sample-Ballot---Precinct-4-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:38:30.663204+00:00",
+    "sha256": "7d47b607d50149a97838850869d15ac982447292e0960d703c7042f6986c90c5",
+    "sourceFile": "sources/7d47b607d50149a97838850869d15ac982447292e0960d703c7042f6986c90c5.source",
+    "excerptFile": "sources/20fc6d21ae5c88428671e7a3b14399e2c8bb4021d1a66dc3c7274c63bb2f645a.txt",
+    "excerptSha256": "20fc6d21ae5c88428671e7a3b14399e2c8bb4021d1a66dc3c7274c63bb2f645a",
+    "evidence": "Actual current November3,2026 official published specimen ballot. Complete local office fields are independently reviewed; the native sample prints residence addresses, which are retained in original source bytes/extraction but excluded from every reader-facing provenance quote. Shrewsbury has imperfect embedded OCR, so clean Charlton/Athol native text governs imported names. These5PDFs do not establish all60municipalities or full county style parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.shrewsburyma.gov/DocumentCenter/View/21674/Specimen-Ballot-State-Election-November-3-2026",
+    "finalUrl": "https://www.shrewsburyma.gov/DocumentCenter/View/21674/Specimen-Ballot-State-Election-November-3-2026",
+    "sourceCheckedAt": "2026-11-03T06:38:31.027476+00:00",
+    "sha256": "6625e4d0c8559b843ef0ab71f680528fccaa3785fa9ba1356ca0c95835e809ad",
+    "sourceFile": "sources/6625e4d0c8559b843ef0ab71f680528fccaa3785fa9ba1356ca0c95835e809ad.source",
+    "excerptFile": "sources/5865adea1c30c8bce5d1bca1e102aef22af54512a5c72d05f6a21ef5f6feb60a.txt",
+    "excerptSha256": "5865adea1c30c8bce5d1bca1e102aef22af54512a5c72d05f6a21ef5f6feb60a",
+    "evidence": "Actual current November3,2026 official published specimen ballot. Complete local office fields are independently reviewed; the native sample prints residence addresses, which are retained in original source bytes/extraction but excluded from every reader-facing provenance quote. Shrewsbury has imperfect embedded OCR, so clean Charlton/Athol native text governs imported names. These5PDFs do not establish all60municipalities or full county style parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.athol-ma.gov/DocumentCenter/View/1216",
+    "finalUrl": "https://www.athol-ma.gov/DocumentCenter/View/1216/ATHOL_ENG_268_ICP?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:44:19.619471+00:00",
+    "sha256": "931b1a8bb9e7cdee766ad67ad8ad7682513c7e1953085f1d62cf315390d326f9",
+    "sourceFile": "sources/931b1a8bb9e7cdee766ad67ad8ad7682513c7e1953085f1d62cf315390d326f9.source",
+    "excerptFile": "sources/3a08a664588470cc1ba62503bf630c1d3f700a257034fa9624c74402c211cb97.txt",
+    "excerptSha256": "3a08a664588470cc1ba62503bf630c1d3f700a257034fa9624c74402c211cb97",
+    "evidence": "Actual current November3,2026 official published specimen ballot. Complete local office fields are independently reviewed; the native sample prints residence addresses, which are retained in original source bytes/extraction but excluded from every reader-facing provenance quote. Shrewsbury has imperfect embedded OCR, so clean Charlton/Athol native text governs imported names. These5PDFs do not establish all60municipalities or full county style parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.leominster-ma.gov/DocumentCenter/View/4715/Nov-Sample-Ballot",
+    "finalUrl": "https://www.leominster-ma.gov/DocumentCenter/View/4715/Nov-Sample-Ballot",
+    "sourceCheckedAt": "2026-11-03T06:42:04.571830+00:00",
+    "sha256": "659704e4c7295f669209d569cd76fabd800314af5e491038be0d70968f7bf277",
+    "sourceFile": "sources/659704e4c7295f669209d569cd76fabd800314af5e491038be0d70968f7bf277.source",
+    "excerptFile": "sources/249aecbd0fa35289cd727e661c62a906272404ab138b6467a68194dd687dd1d0.txt",
+    "excerptSha256": "249aecbd0fa35289cd727e661c62a906272404ab138b6467a68194dd687dd1d0",
+    "evidence": "Actual current November3,2026 official published specimen ballot. Complete local office fields are independently reviewed; the native sample prints residence addresses, which are retained in original source bytes/extraction but excluded from every reader-facing provenance quote. Shrewsbury has imperfect embedded OCR, so clean Charlton/Athol native text governs imported names. These5PDFs do not establish all60municipalities or full county style parity.",
+    "sourceKind": "OFFICIAL_CURRENT_PUBLISHED_SPECIMEN_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.townofcharlton.net/176/Elections",
+    "finalUrl": "https://www.townofcharlton.net/176/Elections",
+    "sourceCheckedAt": "2026-11-03T06:37:13.140622+00:00",
+    "sha256": "8280cf889cc8832fbecc01a40c5f7415adf885f400be27a939cc8350b4f8087a",
+    "sourceFile": "sources/8280cf889cc8832fbecc01a40c5f7415adf885f400be27a939cc8350b4f8087a.source",
+    "excerptFile": "sources/8c0393a77763d713aa41667483a7ac1e229cefe4b72ac71cee9b706e4238007b.txt",
+    "excerptSha256": "8c0393a77763d713aa41667483a7ac1e229cefe4b72ac71cee9b706e4238007b",
+    "evidence": "Current official local election page explicitly identifies November3,2026 and links the acquired specimen ballot(s). Generic link text here on Athol’s current page leads directly toDocumentCenter1216.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://www.shrewsburyma.gov/1235/State-Election-November-3-2026",
+    "finalUrl": "https://www.shrewsburyma.gov/1235/State-Election-November-3-2026",
+    "sourceCheckedAt": "2026-11-03T06:37:13.150215+00:00",
+    "sha256": "41b67bcd7f192c5b40c9dd7d2b17cd301c62ae0fa2204f645f21577ceb49cbc5",
+    "sourceFile": "sources/41b67bcd7f192c5b40c9dd7d2b17cd301c62ae0fa2204f645f21577ceb49cbc5.source",
+    "excerptFile": "sources/ef313cee91bb0863d35bf15aa7efecd3912d89088951c9ac2f000222568a02b4.txt",
+    "excerptSha256": "ef313cee91bb0863d35bf15aa7efecd3912d89088951c9ac2f000222568a02b4",
+    "evidence": "Current official local election page explicitly identifies November3,2026 and links the acquired specimen ballot(s). Generic link text here on Athol’s current page leads directly toDocumentCenter1216.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://www.athol-ma.gov/494/Election-Information",
+    "finalUrl": "https://www.athol-ma.gov/494/Election-Information",
+    "sourceCheckedAt": "2026-11-03T06:42:56.977736+00:00",
+    "sha256": "ab859351b67cd28da93b41116be10711e8befb67df2551b06fb38ce8ef67add0",
+    "sourceFile": "sources/ab859351b67cd28da93b41116be10711e8befb67df2551b06fb38ce8ef67add0.source",
+    "excerptFile": "sources/5d9ee4f7f16896b9418123e24f0ee3501da533c2e2f6ac4f44e24782e5c021e3.txt",
+    "excerptSha256": "5d9ee4f7f16896b9418123e24f0ee3501da533c2e2f6ac4f44e24782e5c021e3",
+    "evidence": "Current official local election page explicitly identifies November3,2026 and links the acquired specimen ballot(s). Generic link text here on Athol’s current page leads directly toDocumentCenter1216.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://www.leominster-ma.gov/506/Sample-Ballots",
+    "finalUrl": "https://www.leominster-ma.gov/506/Sample-Ballots",
+    "sourceCheckedAt": "2026-11-03T06:40:45.360208+00:00",
+    "sha256": "dc67987b99e753032928a9012b9ccff76561fab0b33903f16417e83b87031712",
+    "sourceFile": "sources/dc67987b99e753032928a9012b9ccff76561fab0b33903f16417e83b87031712.source",
+    "excerptFile": "sources/d8655918a4c1679d1238dafa8158ae44c5f8c21d05898edfa54c8eb402072dd2.txt",
+    "excerptSha256": "d8655918a4c1679d1238dafa8158ae44c5f8c21d05898edfa54c8eb402072dd2",
+    "evidence": "Current official local election page explicitly identifies November3,2026 and links the acquired specimen ballot(s). Generic link text here on Athol’s current page leads directly toDocumentCenter1216.",
+    "sourceKind": "SOURCE_AUTHORITY_LINKING_PAGE"
+  },
+  {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section13",
+    "sourceCheckedAt": "2026-11-03T06:40:23.205046+00:00",
+    "sha256": "5a57d8eecea077b3d7ab9311be58814cb1f1f9e7079054dd32f7986425633578",
+    "sourceFile": "sources/5a57d8eecea077b3d7ab9311be58814cb1f1f9e7079054dd32f7986425633578.source",
+    "excerptFile": "sources/970c4a812c13e71100f911d645fb59b4632f87b797efa41c9997bb1283ee409d.txt",
+    "excerptSha256": "970c4a812c13e71100f911d645fb59b4632f87b797efa41c9997bb1283ee409d",
+    "evidence": "Current native MassachusettsGeneralLawsChapter12§§12/13:oneelectedDAforeachdistrict;MiddleisWorcesterCountyEXCLUDINGAthol;NorthwesternisFranklinandHampshirecountiesINCLUDINGAthol. This establishes exact source-backed whole-municipality memberships; no wholeWorcesterCountyDistrictAttorneyfallback.",
+    "sourceKind": "OFFICIAL_CURRENT_ELECTORATE_STATUTE"
+  },
+  {
+    "sourceUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+    "finalUrl": "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleII/Chapter12/Section12",
+    "sourceCheckedAt": "2026-11-03T06:45:10.532784+00:00",
+    "sha256": "9f2f7659a9d630cc7f4639efdf3150b9b2a58c6a9ce19c2a7139553936a7e5e3",
+    "sourceFile": "sources/9f2f7659a9d630cc7f4639efdf3150b9b2a58c6a9ce19c2a7139553936a7e5e3.source",
+    "excerptFile": "sources/3bd258e6865463eb9059dc6aa30a1a5b97b9ff594182b94f07629ad8128609a6.txt",
+    "excerptSha256": "3bd258e6865463eb9059dc6aa30a1a5b97b9ff594182b94f07629ad8128609a6",
+    "evidence": "Current native MassachusettsGeneralLawsChapter12§§12/13:oneelectedDAforeachdistrict;MiddleisWorcesterCountyEXCLUDINGAthol;NorthwesternisFranklinandHampshirecountiesINCLUDINGAthol. This establishes exact source-backed whole-municipality memberships; no wholeWorcesterCountyDistrictAttorneyfallback.",
+    "sourceKind": "OFFICIAL_CURRENT_ELECTORATE_STATUTE"
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "finalUrl": "https://r.jina.ai/https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+    "sourceCheckedAt": "2026-11-03T06:37:13.708298+00:00",
+    "sha256": "e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382",
+    "sourceFile": "sources/e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382.source",
+    "excerptFile": "sources/e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382.txt",
+    "excerptSha256": "e7db6b1f566f3b7dd7adafc4055e99ce9336e7aaef5fb81db9927c48bf316382",
+    "evidence": "Current SecretaryofCommonwealth2026StateElectionCandidates publication capturedthroughreader, accuratelylabeledas such. Supplemental source only: all3importednames/parties are actualnative town/citysamplefacts. Native state ballot endpoint returned anIncapsulapage(200≠sample); no personal voterlookuporlogin attempted. Original roster has mailingaddresses; no reader quote includes them.",
+    "sourceKind": "CAPTURED_OFFICIAL_CANDIDATE_LIST_SUPPLEMENT"
+  }
+]

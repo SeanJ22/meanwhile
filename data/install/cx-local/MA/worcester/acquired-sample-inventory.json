@@ -1,0 +1,102 @@
+[
+  {
+    "sample": "charlton-sample-a.pdf",
+    "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5926/State-Election-Sample-Ballot---Precincts-1234a-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:38:31.281328+00:00",
+    "sha256": "b78b8ffdd59c4f5243149c266cbf844be60f0c4806995ee4af9f559da16faff9",
+    "verifiedLocalNames": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-middle",
+        "printedName": "JOSEPH D. EARLY, JR.",
+        "partyLabel": "Democratic"
+      },
+      {
+        "contestId": "ma-cx-local-2026-worcester-register-of-probate",
+        "printedName": "STEPHANIE K. FATTMAN",
+        "partyLabel": "Republican"
+      }
+    ],
+    "regionalSchoolNamedFieldFound": false,
+    "sourceTextQuality": "Native clean text"
+  },
+  {
+    "sample": "charlton-sample-b.pdf",
+    "sourceUrl": "https://www.townofcharlton.net/DocumentCenter/View/5927/State-Election-Sample-Ballot---Precinct-4-PDF?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:38:30.663204+00:00",
+    "sha256": "7d47b607d50149a97838850869d15ac982447292e0960d703c7042f6986c90c5",
+    "verifiedLocalNames": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-middle",
+        "printedName": "JOSEPH D. EARLY, JR.",
+        "partyLabel": "Democratic"
+      },
+      {
+        "contestId": "ma-cx-local-2026-worcester-register-of-probate",
+        "printedName": "STEPHANIE K. FATTMAN",
+        "partyLabel": "Republican"
+      }
+    ],
+    "regionalSchoolNamedFieldFound": false,
+    "sourceTextQuality": "Native clean text"
+  },
+  {
+    "sample": "shrewsbury-sample.pdf",
+    "sourceUrl": "https://www.shrewsburyma.gov/DocumentCenter/View/21674/Specimen-Ballot-State-Election-November-3-2026",
+    "sourceCheckedAt": "2026-11-03T06:38:31.027476+00:00",
+    "sha256": "6625e4d0c8559b843ef0ab71f680528fccaa3785fa9ba1356ca0c95835e809ad",
+    "verifiedLocalNames": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-middle",
+        "printedName": "JOSEPH D. EARLY, JR.",
+        "partyLabel": "Democratic"
+      },
+      {
+        "contestId": "ma-cx-local-2026-worcester-register-of-probate",
+        "printedName": "STEPHANIE K. FATTMAN",
+        "partyLabel": "Republican"
+      }
+    ],
+    "regionalSchoolNamedFieldFound": false,
+    "sourceTextQuality": "Imperfect embedded OCR; other clean samples govern."
+  },
+  {
+    "sample": "athol-sample.pdf",
+    "sourceUrl": "https://www.athol-ma.gov/DocumentCenter/View/1216/ATHOL_ENG_268_ICP?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:44:19.619471+00:00",
+    "sha256": "931b1a8bb9e7cdee766ad67ad8ad7682513c7e1953085f1d62cf315390d326f9",
+    "verifiedLocalNames": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-northwestern",
+        "printedName": "DAVID E. SULLIVAN",
+        "partyLabel": "Democratic"
+      },
+      {
+        "contestId": "ma-cx-local-2026-worcester-register-of-probate",
+        "printedName": "STEPHANIE K. FATTMAN",
+        "partyLabel": "Republican"
+      }
+    ],
+    "regionalSchoolNamedFieldFound": false,
+    "sourceTextQuality": "Native clean text"
+  },
+  {
+    "sample": "leominster-sample.pdf",
+    "sourceUrl": "https://www.leominster-ma.gov/DocumentCenter/View/4715/Nov-Sample-Ballot",
+    "sourceCheckedAt": "2026-11-03T06:42:04.571830+00:00",
+    "sha256": "659704e4c7295f669209d569cd76fabd800314af5e491038be0d70968f7bf277",
+    "verifiedLocalNames": [
+      {
+        "contestId": "ma-cx-local-2026-district-attorney-middle",
+        "printedName": "JOSEPH D. EARLY, JR.",
+        "partyLabel": "Democratic"
+      },
+      {
+        "contestId": "ma-cx-local-2026-worcester-register-of-probate",
+        "printedName": "STEPHANIE K. FATTMAN",
+        "partyLabel": "Republican"
+      }
+    ],
+    "regionalSchoolNamedFieldFound": false,
+    "sourceTextQuality": "Native clean text"
+  }
+]

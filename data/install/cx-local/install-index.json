@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:04:37.673953+00:00",
+  "preparedAt": "2026-11-03T07:04:46.460786+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1661,6 +1661,34 @@
         "status": "Empty NoPetitionFiled field held. Generic PersonalChoice/NoNominationMade blanks excluded. Final named-write-in certification and cancelled-office census not acquired; no zero or countywide absence claim.",
         "sourceReview": "NativePDF raw hashes, full native text and geometric reading-order extraction independently fingerprinted. All49 unique local office blocks visually checked; zero unassigned candidate-font spans. Original question linewraps retained with an explicitly labelled readable dehyphenation transcription."
       }
+    },
+    {
+      "state": "MA",
+      "county": "Worcester County",
+      "populationRank": 67,
+      "manifest": "MA/worcester/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 3,
+      "measureContests": 0,
+      "candidacies": 3,
+      "newContests": 3,
+      "refreshedContests": 0,
+      "sourceInputSha256": "2b1b053e9e20869a7b08ce5bfcfcfea377a677076c1b28f110301a852c0fa059",
+      "coverage": {
+        "individuallyCompleteCandidateOffices": 3,
+        "allNamedChoicesInImportedOfficeBlocks": true,
+        "fullCountyBallotParity": false,
+        "publishedStyleAcquisitionExhaustive": false,
+        "actualSampleScope": "Athol,Charlton(twoofficialstyles),Shrewsbury,Leominster(currentcityPDFcontainsmultipleformats/styles). NativeCharlton/Atholprimarytextgoverns;ShrewsburyembeddedOCRimperfect.",
+        "electorate": "MGLc12\u00a7\u00a712/13:notthewholecountyfortheDAfield.AtholvotesNorthwestern,other59municipalitiesMiddle.RegisterofProbatecountywide.",
+        "remaining": [
+          "Remaining Worcester city/town/regional-school/special election candidate sample audit is open.",
+          "No independently administered municipal or regional-school absence is asserted from these5PDFs.",
+          "Named write-in/cancelled/declared-elected statuses have not been established by separate current sources; no blank slot becomes a person.",
+          "Reader must install/verify the two precise prosecutorial districts with62source-backedmemberships.",
+          "Existingstatelegislativeandmeasuredataremainpreserved;noquestioninstallfromthiscandidatepacket."
+        ]
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1686,17 +1714,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 64,
-    "packetsPrepared": 65,
-    "candidateAndRetentionContests": 3408,
+    "countiesPrepared": 65,
+    "packetsPrepared": 66,
+    "candidateAndRetentionContests": 3411,
     "measureContests": 115,
-    "candidacyEntries": 7590,
-    "newContestEntriesAgainstCheckedInBaseline": 2848,
-    "distinctPreparedContestIds": 3477,
-    "distinctPreparedCandidateIds": 7493,
-    "distinctNewContestsAgainstCheckedInBaseline": 2823,
+    "candidacyEntries": 7593,
+    "newContestEntriesAgainstCheckedInBaseline": 2851,
+    "distinctPreparedContestIds": 3480,
+    "distinctPreparedCandidateIds": 7496,
+    "distinctNewContestsAgainstCheckedInBaseline": 2826,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 65
+    "distinctCountyHandoffs": 66
   },
   "remainingWork": [
     {

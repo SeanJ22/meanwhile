@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T07:04:44.722Z",
+  "state": "MA",
+  "sources": 12,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 68,
+  "newContests": 3,
+  "refreshedContests": 0,
+  "candidacies": 3,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 232,
+  "unrelatedCandidateCoreFieldsPreserved": 304,
+  "unrelatedCandidateAliasEnrichments": 307,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+    "ocd-division/country:us/state:ma/prosecutorial_district:northwestern"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ma/prosecutorial_district:middle",
+    "ocd-division/country:us/state:ma/prosecutorial_district:northwestern"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

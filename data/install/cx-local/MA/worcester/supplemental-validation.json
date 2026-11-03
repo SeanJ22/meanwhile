@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-03T06:49:53.688650+00:00",
+  "nativeSourceHashesAndAllPrimaryAndSupplementalQuotes": "PASS",
+  "sourceQuotes": 148,
+  "noResidenceOrMailingAddressesInReaderQuotes": "PASS",
+  "middleWholeMunicipalities": 59,
+  "atholExcludedFromMiddle": "PASS",
+  "northwesternWholeCounties": [
+    "Franklin",
+    "Hampshire"
+  ],
+  "northwesternWholeTown": "Athol",
+  "totalWholeMemberLinks": 62,
+  "completeIndividualOfficeBlocks": 3,
+  "printedNames": 3,
+  "fullCountySampleParity": false,
+  "productionWrites": false
+}

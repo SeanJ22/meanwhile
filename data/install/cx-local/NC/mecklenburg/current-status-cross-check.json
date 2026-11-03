@@ -1,0 +1,317 @@
+{
+  "status": "ALL_31_PRINTED_SAMPLE_CANDIDATES_MATCH_CURRENT_OFFICIAL_GENERAL_CSV",
+  "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+  "sourceCheckedAt": "2026-11-03T05:10:20.104439+00:00",
+  "rows": [
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 13",
+      "name_on_ballot": "Roderick G. Davis",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 14",
+      "name_on_ballot": "Alyssa M. Levine",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 15",
+      "name_on_ballot": "Jennifer L. Fleet",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 16",
+      "name_on_ballot": "Matt Newton",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 17",
+      "name_on_ballot": "Paige McThenia",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 18",
+      "name_on_ballot": "Habekah Cannon",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 19",
+      "name_on_ballot": "Samantha C. Mobley",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 20",
+      "name_on_ballot": "Karen D. McCallum",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 21",
+      "name_on_ballot": "Rhonda L. Patterson-Wrighten",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 06 (UNEXPIRED)",
+      "name_on_ballot": "Kimberly Y. Best",
+      "party_candidate": "DEM",
+      "is_unexpired": "TRUE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "DISTRICT ATTORNEY DISTRICT 26",
+      "name_on_ballot": "Spencer Merriweather",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+      "name_on_ballot": "Leigh Altman",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "3",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+      "name_on_ballot": "Yvette Townsend-Ingram",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "3",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+      "name_on_ballot": "Arthur Griffin, Jr.",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "3",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 04",
+      "name_on_ballot": "Mark Jerrell",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY CLERK OF SUPERIOR COURT",
+      "name_on_ballot": "Elisa Chinn Gary",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY SHERIFF",
+      "name_on_ballot": "Garry L. McFadden",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+      "name_on_ballot": "Barbara Bleiweis",
+      "party_candidate": "",
+      "is_unexpired": "FALSE",
+      "vote_for": "2",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+      "name_on_ballot": "Michael Betterly",
+      "party_candidate": "",
+      "is_unexpired": "FALSE",
+      "vote_for": "2",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+      "name_on_ballot": "Long Tran",
+      "party_candidate": "",
+      "is_unexpired": "FALSE",
+      "vote_for": "2",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+      "name_on_ballot": "Makenzie Pearce",
+      "party_candidate": "",
+      "is_unexpired": "FALSE",
+      "vote_for": "2",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+      "name_on_ballot": "Jillian King",
+      "party_candidate": "",
+      "is_unexpired": "FALSE",
+      "vote_for": "2",
+      "term": "4"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 05",
+      "name_on_ballot": "Charles DeLoach",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 03",
+      "name_on_ballot": "George Dunlap",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC SUPERIOR COURT JUDGE DISTRICT 26H SEAT 01",
+      "name_on_ballot": "Elizabeth Thornton Trosch",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "8"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC SUPERIOR COURT JUDGE DISTRICT 26F SEAT 01",
+      "name_on_ballot": "Karen Eady-Williams",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "8"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 02",
+      "name_on_ballot": "Angela White Edwards",
+      "party_candidate": "REP",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 02",
+      "name_on_ballot": "Monifa (Mo) Drayton",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 06",
+      "name_on_ballot": "Susan Rodriguez-McDowell",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "2"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "NC SUPERIOR COURT JUDGE DISTRICT 26C SEAT 01",
+      "name_on_ballot": "George Guise",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "8"
+    },
+    {
+      "election_dt": "11/03/2026",
+      "county_name": "MECKLENBURG",
+      "contest_name": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 01",
+      "name_on_ballot": "Morris (Mac) McAdoo",
+      "party_candidate": "DEM",
+      "is_unexpired": "FALSE",
+      "vote_for": "1",
+      "term": "2"
+    }
+  ]
+}

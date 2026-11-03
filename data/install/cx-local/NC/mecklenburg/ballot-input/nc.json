@@ -1,0 +1,2335 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "NC:nc-2026-11-03": {
+      "election": {
+        "id": "nc-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NC"
+      },
+      "contests": [
+        {
+          "id": "nc-local-2026-4c94a0195ad44da62d2f",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 13",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 13\nYou may vote for ONE\nRoderick G. Davis\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-b25056539252dae91e9a",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 14",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 14\nYou may vote for ONE\nAlyssa M. Levine\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-239d1c7b8b1da776c79e",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 15",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 15\nYou may vote for ONE\nJennifer L. Fleet\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-790fb23614e3de45ca7e",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 16",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 16\nYou may vote for ONE\nMatt Newton\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-1561c74456f50446cb8f",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 17",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 17\nYou may vote for ONE\nPaige McThenia\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-5b2cb791d48fbca92d4c",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 18",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 18\nYou may vote for ONE\nHabekah Cannon\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-0f5c7f2134da5fdbf361",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 19",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 19\nYou may vote for ONE\nSamantha C. Mobley\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-2c3ca85ee806e8445f09",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 20",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 20\nYou may vote for ONE\nKaren D. McCallum\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-6ac74de0484e7bc92ad0",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 21",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 21\nYou may vote for ONE\nRhonda L. Patterson-Wrighten\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-0dfc6383464eaf10c679",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 06 (UNEXPIRED)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles. Seat 6 is the unexpired term ending 2029 as printed.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 6\nUnexpired term ending 2029\nYou may vote for ONE\nKimberly Y. Best\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-15a738593de735556386",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "DISTRICT ATTORNEY DISTRICT 26",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "District Attorney\nDistrict 26\nYou may vote for ONE\nSpencer Merriweather\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-e3a563996d7aee616fdf",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners At-Large\nYou may vote for THREE\nLeigh Altman\nDemocratic Party\nYvette Townsend-Ingram\nDemocratic Party\nArthur Griffin, Jr.\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-70e587cc118caf18e6c8",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:4",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 04",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific county commissioner district.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 4\nYou may vote for ONE\nMark Jerrell\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-7043672c1fed02f56eff",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "MECKLENBURG COUNTY CLERK OF SUPERIOR COURT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nClerk of Superior Court\nYou may vote for ONE\nElisa Chinn Gary\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-a57601223a74f264eff6",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "MECKLENBURG COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSheriff\nYou may vote for ONE\nGarry L. McFadden\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-local-2026-a8f89a34677769d8a1b6",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "MECKLENBURG SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. The same field appears in all 90 Mecklenburg styles.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSoil and Water Conservation\nDistrict Supervisor\nYou may vote for TWO\nBarbara Bleiweis\nMichael Betterly\nLong Tran\nMakenzie Pearce\nJillian King\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-05",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:5",
+          "divisionVintage": "2026",
+          "title": "Mecklenburg County Board of Commissioners District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific county commissioner district.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1433_60_B0001.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.780119+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.780119+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 5\nYou may vote for ONE\nCharles DeLoach\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-03",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:3",
+          "divisionVintage": "2026",
+          "title": "Mecklenburg County Board of Commissioners District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific county commissioner district.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1434_60_B0003.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.640788+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.640788+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 3\nYou may vote for ONE\nGeorge Dunlap\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26h-seat-01",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26h",
+          "divisionVintage": "2026",
+          "title": "NC Superior Court Judge District 26H Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 8,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific superior court subdistrict, not the whole county.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1436_60_B0005.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:51.893776+00:00",
+            "verifiedAt": "2026-11-03T05:05:51.893776+00:00",
+            "quote": "NC Superior Court Judge\nDistrict 26H Seat 1\nYou may vote for ONE\nElizabeth Thornton Trosch\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26f-seat-01",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26f",
+          "divisionVintage": "2026",
+          "title": "NC Superior Court Judge District 26F Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 8,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific superior court subdistrict, not the whole county.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1440_60_B0009.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:52.850989+00:00",
+            "verifiedAt": "2026-11-03T05:05:52.850989+00:00",
+            "quote": "NC Superior Court Judge\nDistrict 26F Seat 1\nYou may vote for ONE\nKaren Eady-Williams\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Mecklenburg County Board of Commissioners District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific county commissioner district.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:52.730258+00:00",
+            "verifiedAt": "2026-11-03T05:05:52.730258+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 2\nYou may vote for ONE\nAngela White Edwards\nRepublican Party\nMonifa (Mo) Drayton\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-06",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:6",
+          "divisionVintage": "2026",
+          "title": "Mecklenburg County Board of Commissioners District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific county commissioner district.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1470_60_B0038.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:59.187590+00:00",
+            "verifiedAt": "2026-11-03T05:05:59.187590+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 6\nYou may vote for ONE\nSusan Rodriguez-McDowell\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26c-seat-01",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26c",
+          "divisionVintage": "2026",
+          "title": "NC Superior Court Judge District 26C Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 8,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific superior court subdistrict, not the whole county.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:03:47.109232+00:00",
+            "verifiedAt": "2026-11-03T05:03:47.109232+00:00",
+            "quote": "NC Superior Court Judge\nDistrict 26C Seat 1\nYou may vote for ONE\nGeorge Guise\nDemocratic Party"
+          }
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-01",
+          "electionId": "nc-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:1",
+          "divisionVintage": "2026",
+          "title": "Mecklenburg County Board of Commissioners District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Complete printed candidate field verified against all 90 currently published official Mecklenburg sample styles. This electorate is the specific county commissioner district.",
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:03:47.109232+00:00",
+            "verifiedAt": "2026-11-03T05:03:47.109232+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 1\nYou may vote for ONE\nMorris (Mac) McAdoo\nDemocratic Party"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "nc-local-2026-4c94a0195ad44da62d2f:57f2c2300019ccb3",
+          "contestId": "nc-local-2026-4c94a0195ad44da62d2f",
+          "givenName": "",
+          "familyName": "Roderick G. Davis",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 13\nYou may vote for ONE\nRoderick G. Davis\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Roderick G. Davis"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-b25056539252dae91e9a:2ecbf26b368ace12",
+          "contestId": "nc-local-2026-b25056539252dae91e9a",
+          "givenName": "",
+          "familyName": "Alyssa M. Levine",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 14\nYou may vote for ONE\nAlyssa M. Levine\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Alyssa M. Levine"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-239d1c7b8b1da776c79e:64d062b4d4152b97",
+          "contestId": "nc-local-2026-239d1c7b8b1da776c79e",
+          "givenName": "",
+          "familyName": "Jennifer L. Fleet",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 15\nYou may vote for ONE\nJennifer L. Fleet\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Jennifer L. Fleet"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-790fb23614e3de45ca7e:ce16f415b7341bf0",
+          "contestId": "nc-local-2026-790fb23614e3de45ca7e",
+          "givenName": "",
+          "familyName": "Matt Newton",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 16\nYou may vote for ONE\nMatt Newton\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Matt Newton"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-1561c74456f50446cb8f:a34207ce30e5b4c4",
+          "contestId": "nc-local-2026-1561c74456f50446cb8f",
+          "givenName": "",
+          "familyName": "Paige McThenia",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 17\nYou may vote for ONE\nPaige McThenia\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Paige McThenia"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-5b2cb791d48fbca92d4c:30c82f4a6d2606ef",
+          "contestId": "nc-local-2026-5b2cb791d48fbca92d4c",
+          "givenName": "",
+          "familyName": "Habekah Cannon",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 18\nYou may vote for ONE\nHabekah Cannon\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Habekah Cannon"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-0f5c7f2134da5fdbf361:1927c38c20feaea3",
+          "contestId": "nc-local-2026-0f5c7f2134da5fdbf361",
+          "givenName": "",
+          "familyName": "Samantha C. Mobley",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 19\nYou may vote for ONE\nSamantha C. Mobley\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Samantha C. Mobley"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-2c3ca85ee806e8445f09:cc3131ce0b692d45",
+          "contestId": "nc-local-2026-2c3ca85ee806e8445f09",
+          "givenName": "",
+          "familyName": "Karen D. McCallum",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 20\nYou may vote for ONE\nKaren D. McCallum\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Karen D. McCallum"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-6ac74de0484e7bc92ad0:76979d2d48fb034e",
+          "contestId": "nc-local-2026-6ac74de0484e7bc92ad0",
+          "givenName": "",
+          "familyName": "Rhonda L. Patterson-Wrighten",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 21\nYou may vote for ONE\nRhonda L. Patterson-Wrighten\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Rhonda L. Patterson-Wrighten"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-0dfc6383464eaf10c679:29f98669bee054f7",
+          "contestId": "nc-local-2026-0dfc6383464eaf10c679",
+          "givenName": "",
+          "familyName": "Kimberly Y. Best",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "NC District Court Judge\nDistrict 26 Seat 6\nUnexpired term ending 2029\nYou may vote for ONE\nKimberly Y. Best\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Kimberly Y. Best"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-15a738593de735556386:041ff47a7841693a",
+          "contestId": "nc-local-2026-15a738593de735556386",
+          "givenName": "",
+          "familyName": "Spencer Merriweather",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "District Attorney\nDistrict 26\nYou may vote for ONE\nSpencer Merriweather\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Spencer Merriweather"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-e3a563996d7aee616fdf:4886372516c06b57",
+          "contestId": "nc-local-2026-e3a563996d7aee616fdf",
+          "givenName": "",
+          "familyName": "Leigh Altman",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners At-Large\nYou may vote for THREE\nLeigh Altman\nDemocratic Party\nYvette Townsend-Ingram\nDemocratic Party\nArthur Griffin, Jr.\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Leigh Altman"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-e3a563996d7aee616fdf:11e88ec859416b10",
+          "contestId": "nc-local-2026-e3a563996d7aee616fdf",
+          "givenName": "",
+          "familyName": "Yvette Townsend-Ingram",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners At-Large\nYou may vote for THREE\nLeigh Altman\nDemocratic Party\nYvette Townsend-Ingram\nDemocratic Party\nArthur Griffin, Jr.\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Yvette Townsend-Ingram"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-e3a563996d7aee616fdf:a71ffc18b221e958",
+          "contestId": "nc-local-2026-e3a563996d7aee616fdf",
+          "givenName": "",
+          "familyName": "Arthur Griffin, Jr.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners At-Large\nYou may vote for THREE\nLeigh Altman\nDemocratic Party\nYvette Townsend-Ingram\nDemocratic Party\nArthur Griffin, Jr.\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Arthur Griffin, Jr."
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-70e587cc118caf18e6c8:92c17da370c16249",
+          "contestId": "nc-local-2026-70e587cc118caf18e6c8",
+          "givenName": "",
+          "familyName": "Mark Jerrell",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 4\nYou may vote for ONE\nMark Jerrell\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Mark Jerrell"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-7043672c1fed02f56eff:5d5db6408b5b8955",
+          "contestId": "nc-local-2026-7043672c1fed02f56eff",
+          "givenName": "",
+          "familyName": "Elisa Chinn Gary",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nClerk of Superior Court\nYou may vote for ONE\nElisa Chinn Gary\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Elisa Chinn Gary"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-a57601223a74f264eff6:04f045b164c431c1",
+          "contestId": "nc-local-2026-a57601223a74f264eff6",
+          "givenName": "",
+          "familyName": "Garry L. McFadden",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSheriff\nYou may vote for ONE\nGarry L. McFadden\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Garry L. McFadden"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-a8f89a34677769d8a1b6:391daa20548b37c8",
+          "contestId": "nc-local-2026-a8f89a34677769d8a1b6",
+          "givenName": "",
+          "familyName": "Barbara Bleiweis",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSoil and Water Conservation\nDistrict Supervisor\nYou may vote for TWO\nBarbara Bleiweis\nMichael Betterly\nLong Tran\nMakenzie Pearce\nJillian King\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Barbara Bleiweis"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-a8f89a34677769d8a1b6:c92319bf30753281",
+          "contestId": "nc-local-2026-a8f89a34677769d8a1b6",
+          "givenName": "",
+          "familyName": "Michael Betterly",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSoil and Water Conservation\nDistrict Supervisor\nYou may vote for TWO\nBarbara Bleiweis\nMichael Betterly\nLong Tran\nMakenzie Pearce\nJillian King\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Michael Betterly"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-a8f89a34677769d8a1b6:aaada58064964020",
+          "contestId": "nc-local-2026-a8f89a34677769d8a1b6",
+          "givenName": "",
+          "familyName": "Long Tran",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSoil and Water Conservation\nDistrict Supervisor\nYou may vote for TWO\nBarbara Bleiweis\nMichael Betterly\nLong Tran\nMakenzie Pearce\nJillian King\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Long Tran"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-a8f89a34677769d8a1b6:fa295b39d091ddbd",
+          "contestId": "nc-local-2026-a8f89a34677769d8a1b6",
+          "givenName": "",
+          "familyName": "Makenzie Pearce",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSoil and Water Conservation\nDistrict Supervisor\nYou may vote for TWO\nBarbara Bleiweis\nMichael Betterly\nLong Tran\nMakenzie Pearce\nJillian King\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Makenzie Pearce"
+            }
+          ]
+        },
+        {
+          "id": "nc-local-2026-a8f89a34677769d8a1b6:59260d576ec83dcb",
+          "contestId": "nc-local-2026-a8f89a34677769d8a1b6",
+          "givenName": "",
+          "familyName": "Jillian King",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.843268+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.843268+00:00",
+            "quote": "Mecklenburg County\nSoil and Water Conservation\nDistrict Supervisor\nYou may vote for TWO\nBarbara Bleiweis\nMichael Betterly\nLong Tran\nMakenzie Pearce\nJillian King\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Jillian King"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-05:charles-deloach",
+          "contestId": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-05",
+          "givenName": "",
+          "familyName": "Charles DeLoach",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1433_60_B0001.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.780119+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.780119+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 5\nYou may vote for ONE\nCharles DeLoach\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Charles DeLoach"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-03:george-dunlap",
+          "contestId": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-03",
+          "givenName": "",
+          "familyName": "George Dunlap",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1434_60_B0003.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:50.640788+00:00",
+            "verifiedAt": "2026-11-03T05:05:50.640788+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 3\nYou may vote for ONE\nGeorge Dunlap\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "George Dunlap"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26h-seat-01:elizabeth-thornton-trosch",
+          "contestId": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26h-seat-01",
+          "givenName": "",
+          "familyName": "Elizabeth Thornton Trosch",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1436_60_B0005.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:51.893776+00:00",
+            "verifiedAt": "2026-11-03T05:05:51.893776+00:00",
+            "quote": "NC Superior Court Judge\nDistrict 26H Seat 1\nYou may vote for ONE\nElizabeth Thornton Trosch\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Elizabeth Thornton Trosch"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26f-seat-01:karen-eady-williams",
+          "contestId": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26f-seat-01",
+          "givenName": "",
+          "familyName": "Karen Eady-Williams",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1440_60_B0009.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:52.850989+00:00",
+            "verifiedAt": "2026-11-03T05:05:52.850989+00:00",
+            "quote": "NC Superior Court Judge\nDistrict 26F Seat 1\nYou may vote for ONE\nKaren Eady-Williams\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Karen Eady-Williams"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02:angela-white-edwards",
+          "contestId": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02",
+          "givenName": "",
+          "familyName": "Angela White Edwards",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:52.730258+00:00",
+            "verifiedAt": "2026-11-03T05:05:52.730258+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 2\nYou may vote for ONE\nAngela White Edwards\nRepublican Party\nMonifa (Mo) Drayton\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Angela White Edwards"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02:monifa-mo-drayton",
+          "contestId": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02",
+          "givenName": "",
+          "familyName": "Monifa (Mo) Drayton",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:52.730258+00:00",
+            "verifiedAt": "2026-11-03T05:05:52.730258+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 2\nYou may vote for ONE\nAngela White Edwards\nRepublican Party\nMonifa (Mo) Drayton\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Monifa (Mo) Drayton"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-06:susan-rodriguez-mcdowell",
+          "contestId": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-06",
+          "givenName": "",
+          "familyName": "Susan Rodriguez-McDowell",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1470_60_B0038.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:05:59.187590+00:00",
+            "verifiedAt": "2026-11-03T05:05:59.187590+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 6\nYou may vote for ONE\nSusan Rodriguez-McDowell\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Susan Rodriguez-McDowell"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26c-seat-01:george-guise",
+          "contestId": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26c-seat-01",
+          "givenName": "",
+          "familyName": "George Guise",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:03:47.109232+00:00",
+            "verifiedAt": "2026-11-03T05:03:47.109232+00:00",
+            "quote": "NC Superior Court Judge\nDistrict 26C Seat 1\nYou may vote for ONE\nGeorge Guise\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "George Guise"
+            }
+          ]
+        },
+        {
+          "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-01:morris-mac-mcadoo",
+          "contestId": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-01",
+          "givenName": "",
+          "familyName": "Morris (Mac) McAdoo",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+            "sourceOrg": "North Carolina State Board of Elections",
+            "collectedAt": "2026-11-03T05:03:47.109232+00:00",
+            "verifiedAt": "2026-11-03T05:03:47.109232+00:00",
+            "quote": "Mecklenburg County\nBoard of Commissioners District 1\nYou may vote for ONE\nMorris (Mac) McAdoo\nDemocratic Party"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+              "sourceOrg": "North Carolina State Board of Elections",
+              "collectedAt": "2026-11-03T05:10:20.104439+00:00",
+              "verifiedAt": "2026-11-03T05:10:20.104439+00:00",
+              "quote": "Morris (Mac) McAdoo"
+            }
+          ]
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "All 90 published official Mecklenburg County November 3, 2026 sample styles B0001–B0090 were acquired from the public NCSBE sample bucket, without voter identity. Complete native candidate blocks were compared in all 90. The county union contains 24 local candidate fields and 31 printed names; repeated office blocks agree in all styles. Eight representative original pages were visually checked to cover all 24 unique local fields.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:nc/county:mecklenburg"
+            ]
+          }
+        },
+        {
+          "text": "Coverage includes three Superior Court subdistrict seats (26C, 26F, 26H), ten District Court District 26 seats (nine regular plus Seat 6 unexpired ending 2029), District Attorney 26, county commissioner at-large and districts 1–6, clerk, sheriff, and Soil and Water Conservation supervisors. The current official county inventory places municipal and Charlotte-Mecklenburg school board candidate elections in 2027; no such candidate field appears in the complete 2026 sample set.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:nc/county:mecklenburg"
+            ]
+          }
+        },
+        {
+          "text": "All 31 printed names and their exact office/vote limits independently match the current official state general-election CSV. Every incoming field has actual sample evidence; there are no roster-only supplement fields. The 16 held office IDs and all 22 held person IDs/core fields are reused. Existing statewide, legislative and measure records/explanations are preserved.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:nc/county:mecklenburg"
+            ]
+          }
+        },
+        {
+          "text": "Precise electorates are retained. County commissioner districts 1–6 and Superior Court districts 26C/26F/26H need reader geography matching. Their candidate facts are data ready; reader delivery is not established by this packet. No city or entire county is substituted for a subdistrict.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:nc/county:mecklenburg"
+            ]
+          }
+        },
+        {
+          "text": "The 23 local partisan office fields print no write-in slot. Official 2026 NCSBE rules tie partisan write-in slots to qualification. Soil and Water prints two unnamed write-in slots and automatically permits eligible write-ins without a petition. No unnamed slot is a person; no certified named write-in is added as an ordinary candidacy.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:nc/county:mecklenburg"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:16:15.918060+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1433_60_B0001.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1433_60_B0001.pdf",
+        "httpStatus": 200,
+        "rawHash": "8ea6de131cba324ad37669dbd7ade2e6486c253f9da1b1eb5bd21f1faec3902b",
+        "retrievedAt": "2026-11-03T05:05:50.780119+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0001, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+        "httpStatus": 200,
+        "rawHash": "d396ef5b0addf599e1c98871835875a90a35f4a2c9860aeaf4e44d3d5dc9bf61",
+        "retrievedAt": "2026-11-03T05:05:50.843268+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0002, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1434_60_B0003.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1434_60_B0003.pdf",
+        "httpStatus": 200,
+        "rawHash": "85b0d2177902473d5297d458df36d5ee5f2b2bb4040b5382eadb2a47c3c6109f",
+        "retrievedAt": "2026-11-03T05:05:50.640788+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0003, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1435_60_B0004.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1435_60_B0004.pdf",
+        "httpStatus": 200,
+        "rawHash": "62f3469ae1eac3d6b08015736e020935addae03f1eee6d1816be893e32c9f7cd",
+        "retrievedAt": "2026-11-03T05:05:50.725921+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0004, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1436_60_B0005.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1436_60_B0005.pdf",
+        "httpStatus": 200,
+        "rawHash": "810c8386210f967b22be5cc5791f179a4eb2dd69e99e19d90995b1853cbb8973",
+        "retrievedAt": "2026-11-03T05:05:51.893776+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0005, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1437_60_B0006.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1437_60_B0006.pdf",
+        "httpStatus": 200,
+        "rawHash": "8b897114746089c52e698a1f4ce3d053cf42fd4720160273fed46034e698ad3c",
+        "retrievedAt": "2026-11-03T05:05:51.815995+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0006, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1438_60_B0007.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1438_60_B0007.pdf",
+        "httpStatus": 200,
+        "rawHash": "9e3399a0064b89e38e8b21efe0a8fd5bf48037cdf8653ada2a9fe2eba15a82d8",
+        "retrievedAt": "2026-11-03T05:05:51.947433+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0007, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1439_60_B0008.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1439_60_B0008.pdf",
+        "httpStatus": 200,
+        "rawHash": "61c2c3c1b881e001b089b423da8bff93f4bfe486f8432da8ed1435a0c93f281a",
+        "retrievedAt": "2026-11-03T05:05:51.890663+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0008, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1440_60_B0009.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1440_60_B0009.pdf",
+        "httpStatus": 200,
+        "rawHash": "30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0",
+        "retrievedAt": "2026-11-03T05:05:52.850989+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0009, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+        "httpStatus": 200,
+        "rawHash": "8a9b65d74b736ca14aa7391225b4b5027e542bd51b61dcb8db0923a31e30332c",
+        "retrievedAt": "2026-11-03T05:05:52.730258+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0010, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1442_60_B0011.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1442_60_B0011.pdf",
+        "httpStatus": 200,
+        "rawHash": "6cbb6577a07f3e770c67d11b6a373d28135fcd239ebeebd134aebb27b676a7bd",
+        "retrievedAt": "2026-11-03T05:05:53.164454+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0011, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1443_60_B0012.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1443_60_B0012.pdf",
+        "httpStatus": 200,
+        "rawHash": "328e77de2d24e6468dd408c46000c168c1cbb580a5360c6f99d1520224ea1218",
+        "retrievedAt": "2026-11-03T05:05:53.003929+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0012, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1444_60_B0013.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1444_60_B0013.pdf",
+        "httpStatus": 200,
+        "rawHash": "21f15b55673a27806a7a435c89203b319af51c2fc4b54c4abf55ee5024515bf9",
+        "retrievedAt": "2026-11-03T05:05:53.563506+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0013, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1445_60_B0014.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1445_60_B0014.pdf",
+        "httpStatus": 200,
+        "rawHash": "23c7c927d19bea3df0858f3e2795f87ded8a66ae7d1b98118a78c091e73fc422",
+        "retrievedAt": "2026-11-03T05:05:53.530012+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0014, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1446_60_B0015.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1446_60_B0015.pdf",
+        "httpStatus": 200,
+        "rawHash": "607d896e2f2779e65884059ea3ca7df4e5452b2ed08dce8f6c5f0ba2fe6cd8de",
+        "retrievedAt": "2026-11-03T05:05:53.706709+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0015, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1447_60_B0016.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1447_60_B0016.pdf",
+        "httpStatus": 200,
+        "rawHash": "d864c82787f2ab8b9f67efd85b9dce17e36c8915d1ef13fee653dc8a7431129e",
+        "retrievedAt": "2026-11-03T05:05:54.202804+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0016, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1448_60_B0017.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1448_60_B0017.pdf",
+        "httpStatus": 200,
+        "rawHash": "aacea0114ff62ac3680e790bb6e9be426bcd46b4a86844d7ad1f35139774c3e7",
+        "retrievedAt": "2026-11-03T05:05:54.198711+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0017, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1449_60_B0018.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1449_60_B0018.pdf",
+        "httpStatus": 200,
+        "rawHash": "b730571642dc8c4107df7ef939c91855045497468d285c65818b4c1046ac2ae5",
+        "retrievedAt": "2026-11-03T05:05:54.297024+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0018, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1450_60_B0019.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1450_60_B0019.pdf",
+        "httpStatus": 200,
+        "rawHash": "decbf0b82b9f79463f01b09c21e0f4cc09e2554185f4f9b5f58c51ff7607fb17",
+        "retrievedAt": "2026-11-03T05:05:54.348736+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0019, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1451_60_B0020.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1451_60_B0020.pdf",
+        "httpStatus": 200,
+        "rawHash": "a88ce19687ea46c59c6ae8123efefeddda0362254b204fad8c1ef4aca6f534bd",
+        "retrievedAt": "2026-11-03T05:05:54.861611+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0020, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1452_60_B0021.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1452_60_B0021.pdf",
+        "httpStatus": 200,
+        "rawHash": "53a1437721024c04387fa5c961adfe076f5c1bfcd1079433b738c6d9a62de46c",
+        "retrievedAt": "2026-11-03T05:05:55.230524+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0021, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1453_60_B0022.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1453_60_B0022.pdf",
+        "httpStatus": 200,
+        "rawHash": "4439cf551457b0010ffb202e2b18d402ad257c794fbe633ee62487c35ac97731",
+        "retrievedAt": "2026-11-03T05:05:55.398509+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0022, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1454_60_B0023.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1454_60_B0023.pdf",
+        "httpStatus": 200,
+        "rawHash": "f5c54bb7a909513a28f9d28fa0a03f55ed94a38b303818f5b50d74a095232b71",
+        "retrievedAt": "2026-11-03T05:05:55.011545+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0023, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1455_60_B0024.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1455_60_B0024.pdf",
+        "httpStatus": 200,
+        "rawHash": "47900fb8180f70bd81cec3f63aeb29e5cf58af8659117b779018908752218f2f",
+        "retrievedAt": "2026-11-03T05:05:56.006748+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0024, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1456_60_B0025.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1456_60_B0025.pdf",
+        "httpStatus": 200,
+        "rawHash": "6f928ad880b956f0a620a934e9771f7f8eaba5e7517b6f99152b324d2c95b155",
+        "retrievedAt": "2026-11-03T05:05:56.102541+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0025, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1457_60_B0026.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1457_60_B0026.pdf",
+        "httpStatus": 200,
+        "rawHash": "a5b49b7de15ac6d5983a4871808d182ea55a5d5fc7beb39c3aee4e9e8a46c0fb",
+        "retrievedAt": "2026-11-03T05:05:56.337753+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0026, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1458_60_B0027.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1458_60_B0027.pdf",
+        "httpStatus": 200,
+        "rawHash": "1126e92d2f79f19c17e3f0ae9713c0a3bd1914a6c5542e21aa0b1e4b8c7ebb76",
+        "retrievedAt": "2026-11-03T05:05:56.453220+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0027, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1460_60_B0028.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1460_60_B0028.pdf",
+        "httpStatus": 200,
+        "rawHash": "eadafa3d67ad1118d81dc53cf13116cc9c321b13b0c4d15f6e24904a834e9afe",
+        "retrievedAt": "2026-11-03T05:05:56.945786+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0028, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1461_60_B0029.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1461_60_B0029.pdf",
+        "httpStatus": 200,
+        "rawHash": "f2b0b01f336d5a8aae9b2601d1499873728b731bc94dfaf4d444648ed7c79a87",
+        "retrievedAt": "2026-11-03T05:05:57.457762+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0029, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1462_60_B0030.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1462_60_B0030.pdf",
+        "httpStatus": 200,
+        "rawHash": "56d6fa5150b558dffb18cb44fe02411c5951dc0204f0ce7481140c05a4c6dc7d",
+        "retrievedAt": "2026-11-03T05:05:57.107321+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0030, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1463_60_B0031.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1463_60_B0031.pdf",
+        "httpStatus": 200,
+        "rawHash": "02ac03e6cfe6be4739fe1aef1a5a01df1ffb0c82c850ad7832bb90ed5ab86e15",
+        "retrievedAt": "2026-11-03T05:05:57.139869+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0031, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1464_60_B0032.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1464_60_B0032.pdf",
+        "httpStatus": 200,
+        "rawHash": "368669f8eaddc763be8287c743fd72fd06ac1180dbdf60b1e9c01cefd5933634",
+        "retrievedAt": "2026-11-03T05:05:57.723505+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0032, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1465_60_B0033.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1465_60_B0033.pdf",
+        "httpStatus": 200,
+        "rawHash": "23a8495446f24fbaf3d19fe00ff414e98ee657f921b6cb55b40b1d397e44ef49",
+        "retrievedAt": "2026-11-03T05:05:58.223571+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0033, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1466_60_B0034.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1466_60_B0034.pdf",
+        "httpStatus": 200,
+        "rawHash": "33722137c6669a994c2fbba5336d083d74f02745c22b71ccf5845c0a3ec31916",
+        "retrievedAt": "2026-11-03T05:03:47.221535+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0034, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1467_60_B0035.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1467_60_B0035.pdf",
+        "httpStatus": 200,
+        "rawHash": "758b4d88337ad690063213865e6350375d1cb4354de6df495cff1abee268da66",
+        "retrievedAt": "2026-11-03T05:05:58.001474+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0035, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1468_60_B0036.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1468_60_B0036.pdf",
+        "httpStatus": 200,
+        "rawHash": "4a3a954c9d4d94613412407a458534cfe67599ed42b5be84dde0b1e7d6e72313",
+        "retrievedAt": "2026-11-03T05:05:58.478815+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0036, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1469_60_B0037.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1469_60_B0037.pdf",
+        "httpStatus": 200,
+        "rawHash": "db7946c24b3e3d1c58f05eaf78e6cedfac21776816be7e9da9dfde357f3aa1eb",
+        "retrievedAt": "2026-11-03T05:05:58.418495+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0037, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1470_60_B0038.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1470_60_B0038.pdf",
+        "httpStatus": 200,
+        "rawHash": "8bb8533885b9630fb60660abbf841988c38fa3c2bfab6d223174cdb742449ece",
+        "retrievedAt": "2026-11-03T05:05:59.187590+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0038, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1471_60_B0039.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1471_60_B0039.pdf",
+        "httpStatus": 200,
+        "rawHash": "eedd166c90b04d9b299d4e7326b86d8a6b6e94441e2f75c34c8f90d8cdb1e136",
+        "retrievedAt": "2026-11-03T05:05:58.863173+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0039, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1472_60_B0040.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1472_60_B0040.pdf",
+        "httpStatus": 200,
+        "rawHash": "055f370c5948932166d50637d2150f0c2c4077c5a1354133a11021d7c9f8d869",
+        "retrievedAt": "2026-11-03T05:05:59.313419+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0040, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1473_60_B0041.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1473_60_B0041.pdf",
+        "httpStatus": 200,
+        "rawHash": "572422ac32f3f1cf360ce3b3cdbeb4ca56d10df0d43e8acb2456d6115b8e4e5d",
+        "retrievedAt": "2026-11-03T05:05:59.184420+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0041, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1474_60_B0042.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1474_60_B0042.pdf",
+        "httpStatus": 200,
+        "rawHash": "fe300bae2d9e1122d43725ccaa54041794db5f1e5aed81b7d7cfd512d7c96854",
+        "retrievedAt": "2026-11-03T05:06:00.018839+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0042, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1475_60_B0043.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1475_60_B0043.pdf",
+        "httpStatus": 200,
+        "rawHash": "78f8f1df5a7710ccd0219960c58d3ab759031f50631da6cf94c74dbccc6edd57",
+        "retrievedAt": "2026-11-03T05:06:00.498304+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0043, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1476_60_B0044.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1476_60_B0044.pdf",
+        "httpStatus": 200,
+        "rawHash": "2cced14a427538c91d6b1e987200b5aa7444608a1ce42dc3d964f081ea97bbaa",
+        "retrievedAt": "2026-11-03T05:06:00.277198+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0044, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1477_60_B0045.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1477_60_B0045.pdf",
+        "httpStatus": 200,
+        "rawHash": "68658a518f6d841c2bb1eeae63a6ac16708e5e5eb00b3f69d19146f86d1b04f0",
+        "retrievedAt": "2026-11-03T05:06:00.380413+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0045, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1478_60_B0046.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1478_60_B0046.pdf",
+        "httpStatus": 200,
+        "rawHash": "901943a8949d3b5b172613eacd45fa26f36aa02208001459cdcc89067763c9cd",
+        "retrievedAt": "2026-11-03T05:06:00.866924+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0046, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1479_60_B0047.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1479_60_B0047.pdf",
+        "httpStatus": 200,
+        "rawHash": "5adb6d94e2dc97847bb386b55f61068b9d79ab18e4feb3d720dc023969df6364",
+        "retrievedAt": "2026-11-03T05:06:01.145816+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0047, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1480_60_B0048.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1480_60_B0048.pdf",
+        "httpStatus": 200,
+        "rawHash": "a99d161facc13288512ea66c12731d5f3daf8aa88a5708307679f9b358b16e4d",
+        "retrievedAt": "2026-11-03T05:06:01.381338+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0048, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1481_60_B0049.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1481_60_B0049.pdf",
+        "httpStatus": 200,
+        "rawHash": "1813154bbe752fe33b66e57acd1717833d9fff768b9481f34d3145aa9bdf0df9",
+        "retrievedAt": "2026-11-03T05:06:01.165957+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0049, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1482_60_B0050.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1482_60_B0050.pdf",
+        "httpStatus": 200,
+        "rawHash": "f116e097981ac069c0881e69b7f922161d30a521ec3e62c3d717cc7cbb2af77d",
+        "retrievedAt": "2026-11-03T05:06:01.884934+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0050, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+        "httpStatus": 200,
+        "rawHash": "221a743a8ee99580ef2032d6e620f25d8dc2db61e2d9b90bb36daed3c6336653",
+        "retrievedAt": "2026-11-03T05:03:47.109232+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0051, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1484_60_B0052.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1484_60_B0052.pdf",
+        "httpStatus": 200,
+        "rawHash": "4f0761250b63f1226ef8b70b09792d70e63c62258c69f0c57e67e3b2887f2510",
+        "retrievedAt": "2026-11-03T05:06:01.995262+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0052, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1485_60_B0053.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1485_60_B0053.pdf",
+        "httpStatus": 200,
+        "rawHash": "474113cd81be16f4ea9e6eeeabe6506c56dd9a1981937dc489752c49a5d616f5",
+        "retrievedAt": "2026-11-03T05:06:02.066695+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0053, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1486_60_B0054.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1486_60_B0054.pdf",
+        "httpStatus": 200,
+        "rawHash": "d351e05a0d4835ea53fbe8f81501303dc95a660ce8fd6e553a54f3b9dd77cc46",
+        "retrievedAt": "2026-11-03T05:06:02.276525+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0054, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1487_60_B0055.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1487_60_B0055.pdf",
+        "httpStatus": 200,
+        "rawHash": "58d9cb275cf64fdb6fb9e624031d3d2078807c76020f701d07611c53aee04ae1",
+        "retrievedAt": "2026-11-03T05:06:02.529222+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0055, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1488_60_B0056.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1488_60_B0056.pdf",
+        "httpStatus": 200,
+        "rawHash": "ec83a21e9fbc5635008f2baded6bbbfed96c8f665cfe886e657a092a11953728",
+        "retrievedAt": "2026-11-03T05:06:03.071202+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0056, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1489_60_B0057.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1489_60_B0057.pdf",
+        "httpStatus": 200,
+        "rawHash": "7ef5e789a326d35df01994ab912611aac9d4520cf1a2891109c6cd9b2d65bd48",
+        "retrievedAt": "2026-11-03T05:03:47.445325+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0057, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1490_60_B0058.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1490_60_B0058.pdf",
+        "httpStatus": 200,
+        "rawHash": "f49aa5e3da8a80097d24ed4feb66f7d175ffad1e441f74008c39f423f7413d47",
+        "retrievedAt": "2026-11-03T05:06:02.745983+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0058, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1491_60_B0059.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1491_60_B0059.pdf",
+        "httpStatus": 200,
+        "rawHash": "7f1671944f95990b0e630a36f807055a807787bd8c1ca457a3acf3af2e5a8d3b",
+        "retrievedAt": "2026-11-03T05:06:03.240317+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0059, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1492_60_B0060.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1492_60_B0060.pdf",
+        "httpStatus": 200,
+        "rawHash": "514c5478c932dfae03fb02873d965d2ed00c1486b1031997b934514ea23f6b1e",
+        "retrievedAt": "2026-11-03T05:06:03.302879+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0060, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1493_60_B0061.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1493_60_B0061.pdf",
+        "httpStatus": 200,
+        "rawHash": "ec0a2ee6009a3cacd25429976fcf4d9fe0bd02a55552ff1000bf5f1822b04880",
+        "retrievedAt": "2026-11-03T05:06:03.864242+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0061, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1494_60_B0062.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1494_60_B0062.pdf",
+        "httpStatus": 200,
+        "rawHash": "84b41f3557814bd933e1b853eae77265946df829fab9598dc5c07aa0dd3f22a4",
+        "retrievedAt": "2026-11-03T05:06:04.124263+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0062, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1495_60_B0063.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1495_60_B0063.pdf",
+        "httpStatus": 200,
+        "rawHash": "f28f508fce9d8c65b3787cd15d12ec6c3e7a7cd252652d437881f68a22569380",
+        "retrievedAt": "2026-11-03T05:06:04.288533+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0063, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1496_60_B0064.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1496_60_B0064.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2aea99fdace05e4af0b22d0067286594b3d4d15798b0bcb7399bff003c85400",
+        "retrievedAt": "2026-11-03T05:06:04.552887+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0064, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1497_60_B0065.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1497_60_B0065.pdf",
+        "httpStatus": 200,
+        "rawHash": "9ef738a0d2666722c820bed7ede12c7604256bc14284e96114d998e47f9fc0a6",
+        "retrievedAt": "2026-11-03T05:06:04.978652+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0065, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1498_60_B0066.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1498_60_B0066.pdf",
+        "httpStatus": 200,
+        "rawHash": "0af17758ec382780cf39be6e15f059aec29560b3fefdf23fae9c85b7ffe07dca",
+        "retrievedAt": "2026-11-03T05:06:05.281554+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0066, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1499_60_B0067.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1499_60_B0067.pdf",
+        "httpStatus": 200,
+        "rawHash": "c25262e8e09a601d054a567d075cafad2c1ead55c17868543c44571f3cca1e78",
+        "retrievedAt": "2026-11-03T05:06:05.204400+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0067, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1500_60_B0068.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1500_60_B0068.pdf",
+        "httpStatus": 200,
+        "rawHash": "962f17e5da28589c8c8ccd02862223b2bac1526a18722cf801c5230b75ed1965",
+        "retrievedAt": "2026-11-03T05:06:05.381878+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0068, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1501_60_B0069.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1501_60_B0069.pdf",
+        "httpStatus": 200,
+        "rawHash": "b4177f19bd1c6117e57a9feed89a93d9381795ed92b6b29fb460f38ceb1816aa",
+        "retrievedAt": "2026-11-03T05:06:05.654383+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0069, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1502_60_B0070.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1502_60_B0070.pdf",
+        "httpStatus": 200,
+        "rawHash": "38d385c6348c5a16204d684827226d53c309624c0aba3570b962398f3bf61ebd",
+        "retrievedAt": "2026-11-03T05:06:05.995766+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0070, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1503_60_B0071.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1503_60_B0071.pdf",
+        "httpStatus": 200,
+        "rawHash": "44d0e15ff4dc77f2612479911aed66acbe8e4c600f143e509205fa722e2f2a54",
+        "retrievedAt": "2026-11-03T05:06:06.348452+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0071, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1504_60_B0072.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1504_60_B0072.pdf",
+        "httpStatus": 200,
+        "rawHash": "083100d02713347118fe5c8e1edd71f7ea9b3e8cbac5b9b823738b83883d9c48",
+        "retrievedAt": "2026-11-03T05:06:06.415516+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0072, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1505_60_B0073.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1505_60_B0073.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2509bddd4f482bd20d9b270c8206f1a9d308144821c9e5f4ad0f0a4fcf5af21",
+        "retrievedAt": "2026-11-03T05:06:06.448901+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0073, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1506_60_B0074.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1506_60_B0074.pdf",
+        "httpStatus": 200,
+        "rawHash": "9d0cb99154d3dd88ada8b8e0517d98ce993f5c79766159eaa5a480926faaa5a8",
+        "retrievedAt": "2026-11-03T05:06:06.722313+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0074, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1507_60_B0075.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1507_60_B0075.pdf",
+        "httpStatus": 200,
+        "rawHash": "5564d3e6da3cb7f12db22d0aa76e0994436a1363ea735754dc00a8904fb14ad0",
+        "retrievedAt": "2026-11-03T05:06:07.045843+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0075, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1508_60_B0076.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1508_60_B0076.pdf",
+        "httpStatus": 200,
+        "rawHash": "c99cb78121f89db88b8965a954176969dbfa85316b2d2c8f0e044d57c872f62c",
+        "retrievedAt": "2026-11-03T05:06:07.467437+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0076, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1509_60_B0077.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1509_60_B0077.pdf",
+        "httpStatus": 200,
+        "rawHash": "cd1ab9e1a88435dd32106ebadcb3fe1ca6345b60500ccb2efe409b6f610ca4b3",
+        "retrievedAt": "2026-11-03T05:06:07.174997+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0077, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1510_60_B0078.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1510_60_B0078.pdf",
+        "httpStatus": 200,
+        "rawHash": "2f3201c9f35130b4e71f2df17a6a90bba5b55b9e287edb34e4c3d619cc33baf7",
+        "retrievedAt": "2026-11-03T05:06:07.718810+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0078, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1511_60_B0079.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1511_60_B0079.pdf",
+        "httpStatus": 200,
+        "rawHash": "7986515ed8e2cb23de396eabd6757fd84791466ba5003376e9864e4b2b0c4408",
+        "retrievedAt": "2026-11-03T05:06:08.088029+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0079, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1512_60_B0080.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1512_60_B0080.pdf",
+        "httpStatus": 200,
+        "rawHash": "1088facd37542de2bec212c102466fdb725b8838a12501c1f9972a0badffce41",
+        "retrievedAt": "2026-11-03T05:06:08.257478+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0080, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1513_60_B0081.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1513_60_B0081.pdf",
+        "httpStatus": 200,
+        "rawHash": "55929d942bbe1a4ef0c621cde47edb3e945ab98626b3b79a372595902b02eb07",
+        "retrievedAt": "2026-11-03T05:06:08.629810+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0081, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1514_60_B0082.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1514_60_B0082.pdf",
+        "httpStatus": 200,
+        "rawHash": "040eea78e2857598de42db58d231f15b68f1d1a48180ecd0b68ec96ed8340810",
+        "retrievedAt": "2026-11-03T05:06:08.802908+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0082, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1515_60_B0083.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1515_60_B0083.pdf",
+        "httpStatus": 200,
+        "rawHash": "d72646548388d60155e6f8eab4b14d6cc26fe41c3701fb0ed5302ef51256bb16",
+        "retrievedAt": "2026-11-03T05:06:09.226992+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0083, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1516_60_B0084.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1516_60_B0084.pdf",
+        "httpStatus": 200,
+        "rawHash": "285fae969d038560fa5fea89020a5a416bf959034ef4f2812701c83272fb360b",
+        "retrievedAt": "2026-11-03T05:06:09.370049+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0084, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1517_60_B0085.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1517_60_B0085.pdf",
+        "httpStatus": 200,
+        "rawHash": "492214e3ec7c233c0e1dd35c53f333d58d4c24d531d0583305e6ca129fe267a1",
+        "retrievedAt": "2026-11-03T05:06:09.269082+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0085, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1518_60_B0086.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1518_60_B0086.pdf",
+        "httpStatus": 200,
+        "rawHash": "e3c84587d341bffb6c2b709e0ec7a81afdb7ec7657fdb53637a42d927cfef77a",
+        "retrievedAt": "2026-11-03T05:06:09.529638+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0086, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1519_60_B0087.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1519_60_B0087.pdf",
+        "httpStatus": 200,
+        "rawHash": "7d09113dd2e82304f8477e4b5965e76c029edf18793ceec186abe26d0486e517",
+        "retrievedAt": "2026-11-03T05:06:10.540407+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0087, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1520_60_B0088.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1520_60_B0088.pdf",
+        "httpStatus": 200,
+        "rawHash": "bda08324d258b3468141d6002762294f1658c09fa6b1fa2d8177feb9614fa378",
+        "retrievedAt": "2026-11-03T05:06:10.386543+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0088, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1521_60_B0089.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1521_60_B0089.pdf",
+        "httpStatus": 200,
+        "rawHash": "4eedd8faa0c8209fbd809df45dda77024ddca88e5cce824bd09f09bc37fe9422",
+        "retrievedAt": "2026-11-03T05:06:10.655864+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0089, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1522_60_B0090.pdf",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1522_60_B0090.pdf",
+        "httpStatus": 200,
+        "rawHash": "9118c598317750d6c029734c78c17dbcfee6cbf4241beca53af79994c047545a",
+        "retrievedAt": "2026-11-03T05:06:10.593325+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native official November 3, 2026 Mecklenburg County sample B0090, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000",
+        "httpStatus": 200,
+        "rawHash": "2d976dfd87e91b0be779cba3827cb6f773695b7c92878d3ab97c480a3be47b33",
+        "retrievedAt": "2026-11-03T05:03:48.274041+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete public NCSBE sample-ballot bucket catalog pagination for election prefix 20261103. Exactly 90 Mecklenburg County (_60_) PDFs, styles B0001 through B0090; final IsTruncated=false. Public listing requires neither voter identity nor authentication."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1aipk2GWpUozX%2FEe5cBBKuWtvKAPo5DkkJI7E48oTajiWECaRJn%2F8Mc01Y1l%2FsfNT",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1aipk2GWpUozX%2FEe5cBBKuWtvKAPo5DkkJI7E48oTajiWECaRJn%2F8Mc01Y1l%2FsfNT",
+        "httpStatus": 200,
+        "rawHash": "e836257cd48ad08388cd32a4c9ca15b9fb36b6c68d04956756fa1b57b93ad54c",
+        "retrievedAt": "2026-11-03T05:06:43.811644+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete public NCSBE sample-ballot bucket catalog pagination for election prefix 20261103. Exactly 90 Mecklenburg County (_60_) PDFs, styles B0001 through B0090; final IsTruncated=false. Public listing requires neither voter identity nor authentication."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1NwLyu2mRtCYl4pNBgK1vp7NeK%2F6W1pxQ09dUEWXzzrnKJExXnT7%2FfMvEJJrOOdeN",
+        "finalUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1NwLyu2mRtCYl4pNBgK1vp7NeK%2F6W1pxQ09dUEWXzzrnKJExXnT7%2FfMvEJJrOOdeN",
+        "httpStatus": 200,
+        "rawHash": "df3419c7e93f0da344061127d91e87a59f26b804bd4be5fe80eb728fef3fdff8",
+        "retrievedAt": "2026-11-03T05:06:45.057902+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete public NCSBE sample-ballot bucket catalog pagination for election prefix 20261103. Exactly 90 Mecklenburg County (_60_) PDFs, styles B0001 through B0090; final IsTruncated=false. Public listing requires neither voter identity nor authentication."
+      },
+      {
+        "requestedUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=154",
+        "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=154",
+        "httpStatus": 200,
+        "rawHash": "3297c432c41823e09548529e68bac0b771595bfa50a120198a4dd373bbdb753e",
+        "retrievedAt": "2026-11-03T05:03:10.741744+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public NCSBE polling-place result page; current 11/03/2026 election embeds direct official sample PDF URLs in its public Kendo data. No registered-voter identity, login or CAPTCHA submitted."
+      },
+      {
+        "requestedUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=168",
+        "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=168",
+        "httpStatus": 200,
+        "rawHash": "475368e6c11ce20fef8a57f92644a55321ff050d7d8ad9831043a5e0eed835d4",
+        "retrievedAt": "2026-11-03T05:03:10.626056+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public NCSBE polling-place result page; current 11/03/2026 election embeds direct official sample PDF URLs in its public Kendo data. No registered-voter identity, login or CAPTCHA submitted."
+      },
+      {
+        "requestedUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=87",
+        "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=87",
+        "httpStatus": 200,
+        "rawHash": "b3bfc76aaf59e33b32a06df7ea2fea16b263255a2ba88623f0981d4509ea6de9",
+        "retrievedAt": "2026-11-03T05:03:10.548936+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public NCSBE polling-place result page; current 11/03/2026 election embeds direct official sample PDF URLs in its public Kendo data. No registered-voter identity, login or CAPTCHA submitted."
+      },
+      {
+        "requestedUrl": "https://vote.mecknc.gov/2026-offices-ballot-and-filing-fees",
+        "finalUrl": "https://vote.mecknc.gov/2026-offices-ballot-and-filing-fees",
+        "httpStatus": 200,
+        "rawHash": "5e53a94933080d36a714ddb1b5991814cd1239805ce349d528114fc7425a6dd7",
+        "retrievedAt": "2026-11-03T05:03:46.942831+00:00",
+        "publisher": "Mecklenburg County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "County election-cycle inventory corroborates all 2026 local office classes and superior districts 26-C/26-F/26-H. Its nine regular district-court seats are supplemented by the actual samples' additional unexpired Seat 6, ending 2029. City, town and Charlotte-Mecklenburg school board candidate elections are listed under 2027, not the 2026 sample set."
+      },
+      {
+        "requestedUrl": "https://www.ncsbe.gov/results-data/candidate-lists",
+        "finalUrl": "https://www.ncsbe.gov/results-data/candidate-lists",
+        "httpStatus": 200,
+        "rawHash": "2dbdaadbbb6bc2553a5e53e0ad2ae15f59fb3ff773c5ee0b31de5ab08cc40955",
+        "retrievedAt": "2026-11-03T05:09:16.353326+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official source linking the 2026 candidate CSV; independent current printed-name cross-check only. Actual samples are primary for every incoming field."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+        "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+        "httpStatus": 200,
+        "rawHash": "2f1c1b932dff920bc690c3e5fc1813ff4389cb5a28ef0b99d4bb06c9fef09cbe",
+        "retrievedAt": "2026-11-03T05:10:20.104439+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November 3 general-election CSV independently matches all 31 printed local names, exact office labels and vote limits in the 90 actual samples. Selected safe fields saved separately; contact/address columns are never quoted to readers. This is corroboration, not a roster-only supplement."
+      },
+      {
+        "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Candidate%20Filing/2026_Fact_Sheet_Petition_Write_In_Candidate.pdf",
+        "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Candidate%20Filing/2026_Fact_Sheet_Petition_Write_In_Candidate.pdf",
+        "httpStatus": 200,
+        "rawHash": "7d5f66047fc1874b625e7bc60f0197560a98f3297d577e022b88ffc8fb33439a",
+        "retrievedAt": "2026-11-03T05:13:19.716765+00:00",
+        "publisher": "North Carolina State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 write-in rules: partisan candidate qualification controls whether a write-in slot appears; Soil and Water automatically allows write-ins without a qualification petition. All 23 local partisan fields have no write-in slot on all 90 published styles. Soil and Water prints two blank slots; blank slots are not named candidates. No separate named certification is inferred from a blank."
+      }
+    ]
+  }
+}

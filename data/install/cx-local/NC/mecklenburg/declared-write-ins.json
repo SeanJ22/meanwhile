@@ -1,0 +1,19 @@
+{
+  "electionId": "nc-2026-11-03",
+  "county": "Mecklenburg",
+  "status": "NO_NAMED_LOCAL_WRITE_INS_ACQUIRED;BLANK_SLOTS_SEPARATE_FROM_PEOPLE",
+  "candidates": [],
+  "partisanFields": 23,
+  "partisanWriteInSlotsInPublishedSamples": 0,
+  "nonpartisanOffice": "Mecklenburg County Soil and Water Conservation District Supervisor",
+  "nonpartisanBlankSlots": 2,
+  "basis": "All 90 actual current county sample styles reviewed by native text. No local partisan field prints a write-in slot. Soil and Water blank slots are automatically provided without a petition and name no person. This is not a separately acquired named certification list.",
+  "rulesProvenance": {
+    "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Candidate%20Filing/2026_Fact_Sheet_Petition_Write_In_Candidate.pdf",
+    "sourceOrg": "North Carolina State Board of Elections",
+    "collectedAt": "2026-11-03T05:13:19.716765+00:00",
+    "verifiedAt": "2026-11-03T05:13:19.716765+00:00",
+    "quote": "If no person is qualified as a write-in candidate for such a contest, the ballot will not\ninclude a write-in option for that office.\n\nThe option for a write-in is automatically included on municipal, Soil &\nWater, and nonpartisan Board of Education contests."
+  },
+  "remainingGap": "No separate named write-in certification inventory acquired. Do not convert unnamed Soil and Water slots into candidacy records."
+}

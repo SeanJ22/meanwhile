@@ -1,0 +1,408 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NC",
+  "county": "Mecklenburg",
+  "countyFips": "37119",
+  "populationRank": 37,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NC",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial state merge through existing candidate APIs. Reuse held local identities/core fields, add missing exact local fields, preserve statewide/legislative races and all measures. No production writes.",
+  "subjects": [
+    {
+      "id": "nc-local-2026-4c94a0195ad44da62d2f",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 13",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-b25056539252dae91e9a",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 14",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-239d1c7b8b1da776c79e",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 15",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-790fb23614e3de45ca7e",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 16",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-1561c74456f50446cb8f",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 17",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-5b2cb791d48fbca92d4c",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 18",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-0f5c7f2134da5fdbf361",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 19",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-2c3ca85ee806e8445f09",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 20",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-6ac74de0484e7bc92ad0",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 21",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-0dfc6383464eaf10c679",
+      "title": "NC DISTRICT COURT JUDGE DISTRICT 26 SEAT 06 (UNEXPIRED)",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-15a738593de735556386",
+      "title": "DISTRICT ATTORNEY DISTRICT 26",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-e3a563996d7aee616fdf",
+      "title": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-70e587cc118caf18e6c8",
+      "title": "MECKLENBURG COUNTY BOARD OF COMMISSIONERS DISTRICT 04",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-7043672c1fed02f56eff",
+      "title": "MECKLENBURG COUNTY CLERK OF SUPERIOR COURT",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-a57601223a74f264eff6",
+      "title": "MECKLENBURG COUNTY SHERIFF",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-local-2026-a8f89a34677769d8a1b6",
+      "title": "MECKLENBURG SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-05",
+      "title": "Mecklenburg County Board of Commissioners District 5",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1433_60_B0001.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-03",
+      "title": "Mecklenburg County Board of Commissioners District 3",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1434_60_B0003.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26h-seat-01",
+      "title": "NC Superior Court Judge District 26H Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26h",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1436_60_B0005.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26f-seat-01",
+      "title": "NC Superior Court Judge District 26F Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26f",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1440_60_B0009.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02",
+      "title": "Mecklenburg County Board of Commissioners District 2",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-06",
+      "title": "Mecklenburg County Board of Commissioners District 6",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:6",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1470_60_B0038.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26c-seat-01",
+      "title": "NC Superior Court Judge District 26C Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26c",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    },
+    {
+      "id": "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-01",
+      "title": "Mecklenburg County Board of Commissioners District 1",
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT_COMPLETE_FIELD"
+    }
+  ],
+  "newContestIds": [
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-05",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-03",
+    "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26h-seat-01",
+    "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26f-seat-01",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-06",
+    "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26c-seat-01",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-01"
+  ],
+  "reusedContestIds": [
+    "nc-local-2026-4c94a0195ad44da62d2f",
+    "nc-local-2026-b25056539252dae91e9a",
+    "nc-local-2026-239d1c7b8b1da776c79e",
+    "nc-local-2026-790fb23614e3de45ca7e",
+    "nc-local-2026-1561c74456f50446cb8f",
+    "nc-local-2026-5b2cb791d48fbca92d4c",
+    "nc-local-2026-0f5c7f2134da5fdbf361",
+    "nc-local-2026-2c3ca85ee806e8445f09",
+    "nc-local-2026-6ac74de0484e7bc92ad0",
+    "nc-local-2026-0dfc6383464eaf10c679",
+    "nc-local-2026-15a738593de735556386",
+    "nc-local-2026-e3a563996d7aee616fdf",
+    "nc-local-2026-70e587cc118caf18e6c8",
+    "nc-local-2026-7043672c1fed02f56eff",
+    "nc-local-2026-a57601223a74f264eff6",
+    "nc-local-2026-a8f89a34677769d8a1b6"
+  ],
+  "newCandidacyIds": [
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-05:charles-deloach",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-03:george-dunlap",
+    "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26h-seat-01:elizabeth-thornton-trosch",
+    "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26f-seat-01:karen-eady-williams",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02:angela-white-edwards",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-02:monifa-mo-drayton",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-06:susan-rodriguez-mcdowell",
+    "nc-cx-local-2026-mecklenburg-nc-superior-court-judge-district-26c-seat-01:george-guise",
+    "nc-cx-local-2026-mecklenburg-county-board-of-commissioners-district-01:morris-mac-mcadoo"
+  ],
+  "reusedCandidacyIds": [
+    "nc-local-2026-4c94a0195ad44da62d2f:57f2c2300019ccb3",
+    "nc-local-2026-b25056539252dae91e9a:2ecbf26b368ace12",
+    "nc-local-2026-239d1c7b8b1da776c79e:64d062b4d4152b97",
+    "nc-local-2026-790fb23614e3de45ca7e:ce16f415b7341bf0",
+    "nc-local-2026-1561c74456f50446cb8f:a34207ce30e5b4c4",
+    "nc-local-2026-5b2cb791d48fbca92d4c:30c82f4a6d2606ef",
+    "nc-local-2026-0f5c7f2134da5fdbf361:1927c38c20feaea3",
+    "nc-local-2026-2c3ca85ee806e8445f09:cc3131ce0b692d45",
+    "nc-local-2026-6ac74de0484e7bc92ad0:76979d2d48fb034e",
+    "nc-local-2026-0dfc6383464eaf10c679:29f98669bee054f7",
+    "nc-local-2026-15a738593de735556386:041ff47a7841693a",
+    "nc-local-2026-e3a563996d7aee616fdf:4886372516c06b57",
+    "nc-local-2026-e3a563996d7aee616fdf:11e88ec859416b10",
+    "nc-local-2026-e3a563996d7aee616fdf:a71ffc18b221e958",
+    "nc-local-2026-70e587cc118caf18e6c8:92c17da370c16249",
+    "nc-local-2026-7043672c1fed02f56eff:5d5db6408b5b8955",
+    "nc-local-2026-a57601223a74f264eff6:04f045b164c431c1",
+    "nc-local-2026-a8f89a34677769d8a1b6:391daa20548b37c8",
+    "nc-local-2026-a8f89a34677769d8a1b6:c92319bf30753281",
+    "nc-local-2026-a8f89a34677769d8a1b6:aaada58064964020",
+    "nc-local-2026-a8f89a34677769d8a1b6:fa295b39d091ddbd",
+    "nc-local-2026-a8f89a34677769d8a1b6:59260d576ec83dcb"
+  ],
+  "identityInputsCompared": [
+    "data/ballot/2026-general/nc.json",
+    "data/install/cx-local/NC/wake/ballot-input/nc.json"
+  ],
+  "coverageStatus": "COMPLETE_CURRENT_PUBLISHED_COUNTY_SAMPLE_CANDIDATE_SET;90_OF_90_STYLES",
+  "coverage": [
+    "All 90 published official Mecklenburg County November 3, 2026 sample styles B0001\u2013B0090 were acquired from the public NCSBE sample bucket, without voter identity. Complete native candidate blocks were compared in all 90. The county union contains 24 local candidate fields and 31 printed names; repeated office blocks agree in all styles. Eight representative original pages were visually checked to cover all 24 unique local fields.",
+    "Coverage includes three Superior Court subdistrict seats (26C, 26F, 26H), ten District Court District 26 seats (nine regular plus Seat 6 unexpired ending 2029), District Attorney 26, county commissioner at-large and districts 1\u20136, clerk, sheriff, and Soil and Water Conservation supervisors. The current official county inventory places municipal and Charlotte-Mecklenburg school board candidate elections in 2027; no such candidate field appears in the complete 2026 sample set.",
+    "All 31 printed names and their exact office/vote limits independently match the current official state general-election CSV. Every incoming field has actual sample evidence; there are no roster-only supplement fields. The 16 held office IDs and all 22 held person IDs/core fields are reused. Existing statewide, legislative and measure records/explanations are preserved.",
+    "Precise electorates are retained. County commissioner districts 1\u20136 and Superior Court districts 26C/26F/26H need reader geography matching. Their candidate facts are data ready; reader delivery is not established by this packet. No city or entire county is substituted for a subdistrict.",
+    "The 23 local partisan office fields print no write-in slot. Official 2026 NCSBE rules tie partisan write-in slots to qualification. Soil and Water prints two unnamed write-in slots and automatically permits eligible write-ins without a petition. No unnamed slot is a person; no certified named write-in is added as an ordinary candidacy."
+  ],
+  "counts": {
+    "contests": 24,
+    "candidacies": 31,
+    "newContests": 8,
+    "reusedContests": 16,
+    "newCandidates": 9,
+    "reusedCandidates": 22,
+    "actualGovernmentSampleFiles": 90,
+    "publishedCountyStyles": 90,
+    "downloadedAndComparedStyles": 90,
+    "completeLocalBlockComparisons": 1477,
+    "uniqueCompleteLocalFields": 24,
+    "primaryVisuallyReviewedPages": 8,
+    "officialListOnlyFields": 0,
+    "pendingGovernmentSampleFields": 0,
+    "measures": 0
+  },
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:1",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:2",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:3",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:4",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:5",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:6",
+    "ocd-division/country:us/state:nc/superior_court_district:26c",
+    "ocd-division/country:us/state:nc/superior_court_district:26f",
+    "ocd-division/country:us/state:nc/superior_court_district:26h"
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:1",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:2",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:3",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:4",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:5",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:6",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26c",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26f",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:26h",
+      "status": "UNMATCHED_EXACT_DISTRICT",
+      "owner": "River/registry",
+      "next": "Acquire exact official district boundary/reader membership; retain subdistrict scope, with no county or city-wide substitution."
+    }
+  ],
+  "sampleSourceGaps": [],
+  "heldContests": [],
+  "declaredWriteIns": "declared-write-ins.json",
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS_100_CAPTURES_86_EXACT_QUOTES_ALL_90_NATIVE_SAMPLE_STYLES_1477_COMPLETE_LOCAL_BLOCKS",
+    "allPublishedStyles": "NATIVE_PDF_BLOCKS_COMPARED_90_OF_90;ALL_24_UNIQUE_FIELDS_VISUALLY_REVIEWED",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 100 captured sources and 55 exact saved-source quotes"
+  },
+  "remainingWork": [
+    {
+      "owner": "Parent/River",
+      "next": "Run focused shared offline checks, install verified local facts using existing APIs, resolve nine precise reader geography keys, and verify reader delivery."
+    }
+  ],
+  "nextOwner": "Parent: focused validation. River: geography resolution and installation. No publication performed."
+}

@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "sources": 100,
+  "exactQuotes": 86,
+  "nativeOfficialSamples": 90,
+  "completeLocalBlockComparisons": 1477,
+  "unclassifiedCandidateHeadings": 0,
+  "contests": 24,
+  "candidates": 31,
+  "reusedContestCoreFieldsPreserved": 16,
+  "reusedCandidateCoreFieldsPreserved": 22,
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:1",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:2",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:3",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:4",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:5",
+    "ocd-division/country:us/state:nc/county:mecklenburg/council_district:6",
+    "ocd-division/country:us/state:nc/superior_court_district:26c",
+    "ocd-division/country:us/state:nc/superior_court_district:26f",
+    "ocd-division/country:us/state:nc/superior_court_district:26h"
+  ],
+  "sharedOfflineCheck": "PENDING_PARENT",
+  "productionWrites": "NONE"
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:46:42.473272+00:00",
+  "preparedAt": "2026-11-03T05:46:51.381927+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -864,6 +864,26 @@
         "Federal, statewide Supreme/Appellate and legislative contests, held measures and explainers remain preserved by omission. County/Raleigh/Knightdale bond questions visible on the full source set are ancillary source coverage; no new measure is installed in this candidate-first packet.",
         "All171 original sample PDFs and the original current state candidateCSV are included with hashes. Filed address/contact columns are excluded from reader excerpts/quotes. The county352-page combined booklet original is210MB and remains in task scratch; honestly labelled derived first10 cover/key pages are included, with original URL/hash/byte count. Helpers remain in scratch and no production publication or git operation was performed."
       ]
+    },
+    {
+      "state": "NC",
+      "county": "Mecklenburg",
+      "populationRank": 37,
+      "manifest": "NC/mecklenburg/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 24,
+      "measureContests": 0,
+      "candidacies": 31,
+      "newContests": 8,
+      "refreshedContests": 16,
+      "sourceInputSha256": "9a447c03b5cce891bad5ae8ef30697cf1e178aeef5a82b4c714fe0ec6a17f263",
+      "coverage": [
+        "All 90 published official Mecklenburg County November 3, 2026 sample styles B0001\u2013B0090 were acquired from the public NCSBE sample bucket, without voter identity. Complete native candidate blocks were compared in all 90. The county union contains 24 local candidate fields and 31 printed names; repeated office blocks agree in all styles. Eight representative original pages were visually checked to cover all 24 unique local fields.",
+        "Coverage includes three Superior Court subdistrict seats (26C, 26F, 26H), ten District Court District 26 seats (nine regular plus Seat 6 unexpired ending 2029), District Attorney 26, county commissioner at-large and districts 1\u20136, clerk, sheriff, and Soil and Water Conservation supervisors. The current official county inventory places municipal and Charlotte-Mecklenburg school board candidate elections in 2027; no such candidate field appears in the complete 2026 sample set.",
+        "All 31 printed names and their exact office/vote limits independently match the current official state general-election CSV. Every incoming field has actual sample evidence; there are no roster-only supplement fields. The 16 held office IDs and all 22 held person IDs/core fields are reused. Existing statewide, legislative and measure records/explanations are preserved.",
+        "Precise electorates are retained. County commissioner districts 1\u20136 and Superior Court districts 26C/26F/26H need reader geography matching. Their candidate facts are data ready; reader delivery is not established by this packet. No city or entire county is substituted for a subdistrict.",
+        "The 23 local partisan office fields print no write-in slot. Official 2026 NCSBE rules tie partisan write-in slots to qualification. Soil and Water prints two unnamed write-in slots and automatically permits eligible write-ins without a petition. No unnamed slot is a person; no certified named write-in is added as an ordinary candidacy."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -889,17 +909,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 35,
-    "packetsPrepared": 36,
-    "candidateAndRetentionContests": 2346,
+    "countiesPrepared": 36,
+    "packetsPrepared": 37,
+    "candidateAndRetentionContests": 2370,
     "measureContests": 109,
-    "candidacyEntries": 5389,
-    "newContestEntriesAgainstCheckedInBaseline": 1947,
-    "distinctPreparedContestIds": 2434,
-    "distinctPreparedCandidateIds": 5328,
-    "distinctNewContestsAgainstCheckedInBaseline": 1936,
+    "candidacyEntries": 5420,
+    "newContestEntriesAgainstCheckedInBaseline": 1955,
+    "distinctPreparedContestIds": 2458,
+    "distinctPreparedCandidateIds": 5359,
+    "distinctNewContestsAgainstCheckedInBaseline": 1944,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 36
+    "distinctCountyHandoffs": 37
   },
   "remainingWork": [
     {

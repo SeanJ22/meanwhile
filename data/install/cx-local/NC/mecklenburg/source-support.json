@@ -1,0 +1,2000 @@
+[
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1433_60_B0001.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1433_60_B0001.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:50.780119+00:00",
+    "sha256": "8ea6de131cba324ad37669dbd7ade2e6486c253f9da1b1eb5bd21f1faec3902b",
+    "sourceFile": "sources/8ea6de131cba324ad37669dbd7ade2e6486c253f9da1b1eb5bd21f1faec3902b.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0001, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/b8b4ecd7d2d57aaf3cb06b22219074d20e724dd618abbe31c504dcfd0465d09c.txt",
+    "excerptSha256": "b8b4ecd7d2d57aaf3cb06b22219074d20e724dd618abbe31c504dcfd0465d09c",
+    "fullTextFile": "sources/2a8b9075994518e23d31e9d2a79c504586c8e587e2592c53acd88b791d2e178b.native.txt",
+    "fullTextSha256": "2a8b9075994518e23d31e9d2a79c504586c8e587e2592c53acd88b791d2e178b",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/45a7fc7ed26b850e6439df396b5e208b794bed4ff89627aa3378caf5fb46f915.png",
+        "sha256": "45a7fc7ed26b850e6439df396b5e208b794bed4ff89627aa3378caf5fb46f915"
+      }
+    ],
+    "ballotStyle": "B0001",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1432_60_B0002.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:50.843268+00:00",
+    "sha256": "d396ef5b0addf599e1c98871835875a90a35f4a2c9860aeaf4e44d3d5dc9bf61",
+    "sourceFile": "sources/d396ef5b0addf599e1c98871835875a90a35f4a2c9860aeaf4e44d3d5dc9bf61.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0002, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/5647835340782b041caf0d08fad4540040118a16e26fa5e6ae1261f16c11a379.txt",
+    "excerptSha256": "5647835340782b041caf0d08fad4540040118a16e26fa5e6ae1261f16c11a379",
+    "fullTextFile": "sources/e1aaadc7fd287d02aa7399b5999afe511ac5f49b66fc86f0cfd32da3421823d4.native.txt",
+    "fullTextSha256": "e1aaadc7fd287d02aa7399b5999afe511ac5f49b66fc86f0cfd32da3421823d4",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/be243a4851a776cef3a631b4fca411538ad91bcf3b9ae58929824eb28a711cbb.png",
+        "sha256": "be243a4851a776cef3a631b4fca411538ad91bcf3b9ae58929824eb28a711cbb"
+      }
+    ],
+    "ballotStyle": "B0002",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1434_60_B0003.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1434_60_B0003.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:50.640788+00:00",
+    "sha256": "85b0d2177902473d5297d458df36d5ee5f2b2bb4040b5382eadb2a47c3c6109f",
+    "sourceFile": "sources/85b0d2177902473d5297d458df36d5ee5f2b2bb4040b5382eadb2a47c3c6109f.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0003, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/2db3406611616214e880ccb9cdf5aad6a261785f2d2531833e2cdd28d6afa722.txt",
+    "excerptSha256": "2db3406611616214e880ccb9cdf5aad6a261785f2d2531833e2cdd28d6afa722",
+    "fullTextFile": "sources/4920be172131c2b5f1e890ff7abb1844da4ea07f928a8928721e1a1182b27ebf.native.txt",
+    "fullTextSha256": "4920be172131c2b5f1e890ff7abb1844da4ea07f928a8928721e1a1182b27ebf",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/c4e001f1b58a6707c904572d7a6c016c2d0f6ba504b3bd5dcb0d4e5b12d7fa83.png",
+        "sha256": "c4e001f1b58a6707c904572d7a6c016c2d0f6ba504b3bd5dcb0d4e5b12d7fa83"
+      }
+    ],
+    "ballotStyle": "B0003",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1435_60_B0004.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1435_60_B0004.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:50.725921+00:00",
+    "sha256": "62f3469ae1eac3d6b08015736e020935addae03f1eee6d1816be893e32c9f7cd",
+    "sourceFile": "sources/62f3469ae1eac3d6b08015736e020935addae03f1eee6d1816be893e32c9f7cd.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0004, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/48175ec6a6e0a96d93dbc2ef239e59edfa911d7f54681abd7a334896e67983a9.txt",
+    "excerptSha256": "48175ec6a6e0a96d93dbc2ef239e59edfa911d7f54681abd7a334896e67983a9",
+    "fullTextFile": "sources/7f2de87bca92e75949824ad65529b47f304345f3b58f9006696f65853178ace2.native.txt",
+    "fullTextSha256": "7f2de87bca92e75949824ad65529b47f304345f3b58f9006696f65853178ace2",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0004",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1436_60_B0005.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1436_60_B0005.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:51.893776+00:00",
+    "sha256": "810c8386210f967b22be5cc5791f179a4eb2dd69e99e19d90995b1853cbb8973",
+    "sourceFile": "sources/810c8386210f967b22be5cc5791f179a4eb2dd69e99e19d90995b1853cbb8973.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0005, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/a74f2b87c4030d2b42ac096193eba142c840ca2dcedf30db03211dbba4b3e9c6.txt",
+    "excerptSha256": "a74f2b87c4030d2b42ac096193eba142c840ca2dcedf30db03211dbba4b3e9c6",
+    "fullTextFile": "sources/a3b8f5c8c42fc003e8064b1b1f8441775d1e54a3ea997081264169bedd06563a.native.txt",
+    "fullTextSha256": "a3b8f5c8c42fc003e8064b1b1f8441775d1e54a3ea997081264169bedd06563a",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/23569d4aa5a5f18de4b29cb18ccd1ca308272613394c393f58a7dea6e4dffc93.png",
+        "sha256": "23569d4aa5a5f18de4b29cb18ccd1ca308272613394c393f58a7dea6e4dffc93"
+      }
+    ],
+    "ballotStyle": "B0005",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1437_60_B0006.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1437_60_B0006.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:51.815995+00:00",
+    "sha256": "8b897114746089c52e698a1f4ce3d053cf42fd4720160273fed46034e698ad3c",
+    "sourceFile": "sources/8b897114746089c52e698a1f4ce3d053cf42fd4720160273fed46034e698ad3c.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0006, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/b2c5f647cbe218cbba3d3c830c54e176ef2bb11bcb42218bed13092e1f6dc8eb.txt",
+    "excerptSha256": "b2c5f647cbe218cbba3d3c830c54e176ef2bb11bcb42218bed13092e1f6dc8eb",
+    "fullTextFile": "sources/1b78635b14ca94180530642dd7a2155646d7438dc7053495f90c2b41d7a68e11.native.txt",
+    "fullTextSha256": "1b78635b14ca94180530642dd7a2155646d7438dc7053495f90c2b41d7a68e11",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0006",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1438_60_B0007.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1438_60_B0007.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:51.947433+00:00",
+    "sha256": "9e3399a0064b89e38e8b21efe0a8fd5bf48037cdf8653ada2a9fe2eba15a82d8",
+    "sourceFile": "sources/9e3399a0064b89e38e8b21efe0a8fd5bf48037cdf8653ada2a9fe2eba15a82d8.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0007, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/5669c0d54de49bb37c96dd85fef4caaa04885a58de21ac88525a75d203495189.txt",
+    "excerptSha256": "5669c0d54de49bb37c96dd85fef4caaa04885a58de21ac88525a75d203495189",
+    "fullTextFile": "sources/bc08e2e56831fa8b18dbd63595c582d3169b695abc53cd24d9eaa749ef0326c8.native.txt",
+    "fullTextSha256": "bc08e2e56831fa8b18dbd63595c582d3169b695abc53cd24d9eaa749ef0326c8",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0007",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1439_60_B0008.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1439_60_B0008.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:51.890663+00:00",
+    "sha256": "61c2c3c1b881e001b089b423da8bff93f4bfe486f8432da8ed1435a0c93f281a",
+    "sourceFile": "sources/61c2c3c1b881e001b089b423da8bff93f4bfe486f8432da8ed1435a0c93f281a.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0008, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/68eb7c3ea184c38961d09557540cce224644626999e917a3dc717ccf4318b074.txt",
+    "excerptSha256": "68eb7c3ea184c38961d09557540cce224644626999e917a3dc717ccf4318b074",
+    "fullTextFile": "sources/7f379a148bff2b44fd998c86803268ab4d0e862bc0e7e67a76d6d071c8396da4.native.txt",
+    "fullTextSha256": "7f379a148bff2b44fd998c86803268ab4d0e862bc0e7e67a76d6d071c8396da4",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0008",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1440_60_B0009.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1440_60_B0009.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:52.850989+00:00",
+    "sha256": "30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0",
+    "sourceFile": "sources/30636270b64efcd1b54fc64adbe2e0da231caf1cd024cd1738cd491c247caed0.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0009, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/cfe6a9e9137dde1207b8625c31d8324697f4aa408278a93bbb8c0aae66d2f161.txt",
+    "excerptSha256": "cfe6a9e9137dde1207b8625c31d8324697f4aa408278a93bbb8c0aae66d2f161",
+    "fullTextFile": "sources/e8a95d4e3617591a446a7960879aaa548c02282c744ab293406e0ef5459b5068.native.txt",
+    "fullTextSha256": "e8a95d4e3617591a446a7960879aaa548c02282c744ab293406e0ef5459b5068",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/2bc45848934cfe2fb5a002289be581ca730efafb216580b8558c1bf1a12d56a3.png",
+        "sha256": "2bc45848934cfe2fb5a002289be581ca730efafb216580b8558c1bf1a12d56a3"
+      }
+    ],
+    "ballotStyle": "B0009",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1441_60_B0010.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:52.730258+00:00",
+    "sha256": "8a9b65d74b736ca14aa7391225b4b5027e542bd51b61dcb8db0923a31e30332c",
+    "sourceFile": "sources/8a9b65d74b736ca14aa7391225b4b5027e542bd51b61dcb8db0923a31e30332c.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0010, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/d9c3bb90d3f66c69ca6bddd4be38630a0b0c5c73da0dc42684516f1b27db371d.txt",
+    "excerptSha256": "d9c3bb90d3f66c69ca6bddd4be38630a0b0c5c73da0dc42684516f1b27db371d",
+    "fullTextFile": "sources/19d7ed52dad26c6f8700fcb4eb0f3764d8c28a7986c1acf284d0a5f4f9344d00.native.txt",
+    "fullTextSha256": "19d7ed52dad26c6f8700fcb4eb0f3764d8c28a7986c1acf284d0a5f4f9344d00",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/a25a9edeb4741bf3c8bb94e4a9d347e6ee40f1f311e192a9b159df48642707a5.png",
+        "sha256": "a25a9edeb4741bf3c8bb94e4a9d347e6ee40f1f311e192a9b159df48642707a5"
+      }
+    ],
+    "ballotStyle": "B0010",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1442_60_B0011.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1442_60_B0011.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:53.164454+00:00",
+    "sha256": "6cbb6577a07f3e770c67d11b6a373d28135fcd239ebeebd134aebb27b676a7bd",
+    "sourceFile": "sources/6cbb6577a07f3e770c67d11b6a373d28135fcd239ebeebd134aebb27b676a7bd.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0011, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/5dc0398ef53fbf1f29f27f545f7c5d778c6bff8a626ea5e360dd2e99c87680a5.txt",
+    "excerptSha256": "5dc0398ef53fbf1f29f27f545f7c5d778c6bff8a626ea5e360dd2e99c87680a5",
+    "fullTextFile": "sources/56761d3127deb34d6d4b95d081e39f1c850df06c6602fdec7d8c0ba6af2d6777.native.txt",
+    "fullTextSha256": "56761d3127deb34d6d4b95d081e39f1c850df06c6602fdec7d8c0ba6af2d6777",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0011",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1443_60_B0012.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1443_60_B0012.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:53.003929+00:00",
+    "sha256": "328e77de2d24e6468dd408c46000c168c1cbb580a5360c6f99d1520224ea1218",
+    "sourceFile": "sources/328e77de2d24e6468dd408c46000c168c1cbb580a5360c6f99d1520224ea1218.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0012, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/58371934a1bd95380fd259ed4d9e8fadbe0f7bc022613be105a2cba99a86a6b5.txt",
+    "excerptSha256": "58371934a1bd95380fd259ed4d9e8fadbe0f7bc022613be105a2cba99a86a6b5",
+    "fullTextFile": "sources/d56d59987db028cf4d0706fe264d8ca6f56dea01b0888cb97100f355ffe93a8b.native.txt",
+    "fullTextSha256": "d56d59987db028cf4d0706fe264d8ca6f56dea01b0888cb97100f355ffe93a8b",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0012",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1444_60_B0013.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1444_60_B0013.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:53.563506+00:00",
+    "sha256": "21f15b55673a27806a7a435c89203b319af51c2fc4b54c4abf55ee5024515bf9",
+    "sourceFile": "sources/21f15b55673a27806a7a435c89203b319af51c2fc4b54c4abf55ee5024515bf9.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0013, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/ee217a17b6ca8aa32a4d456491d7fda22925d1c85edb94d99ab5fb227907227f.txt",
+    "excerptSha256": "ee217a17b6ca8aa32a4d456491d7fda22925d1c85edb94d99ab5fb227907227f",
+    "fullTextFile": "sources/8b74856a586fbebb2baced084089150dfa031afca4382e0610141c7f7a18b3aa.native.txt",
+    "fullTextSha256": "8b74856a586fbebb2baced084089150dfa031afca4382e0610141c7f7a18b3aa",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0013",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1445_60_B0014.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1445_60_B0014.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:53.530012+00:00",
+    "sha256": "23c7c927d19bea3df0858f3e2795f87ded8a66ae7d1b98118a78c091e73fc422",
+    "sourceFile": "sources/23c7c927d19bea3df0858f3e2795f87ded8a66ae7d1b98118a78c091e73fc422.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0014, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/f42ff170e77a44059d6f4ed7ad9f4fab047b92b1671f37932fcc11248cd42606.txt",
+    "excerptSha256": "f42ff170e77a44059d6f4ed7ad9f4fab047b92b1671f37932fcc11248cd42606",
+    "fullTextFile": "sources/c0b2a6b0166e4220c121d0cf4d196dbe1e76313b5c89fbd52c835a590d4d3139.native.txt",
+    "fullTextSha256": "c0b2a6b0166e4220c121d0cf4d196dbe1e76313b5c89fbd52c835a590d4d3139",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0014",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1446_60_B0015.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1446_60_B0015.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:53.706709+00:00",
+    "sha256": "607d896e2f2779e65884059ea3ca7df4e5452b2ed08dce8f6c5f0ba2fe6cd8de",
+    "sourceFile": "sources/607d896e2f2779e65884059ea3ca7df4e5452b2ed08dce8f6c5f0ba2fe6cd8de.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0015, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/510bbebd458319f6e4cca20a3fd7739e676e2d52220f204fb96ff3b9d3fb7f7e.txt",
+    "excerptSha256": "510bbebd458319f6e4cca20a3fd7739e676e2d52220f204fb96ff3b9d3fb7f7e",
+    "fullTextFile": "sources/6dcc0272aed0772f049a5cc84275e64d512d8e7f7c2df27b0ae60286cc8377d4.native.txt",
+    "fullTextSha256": "6dcc0272aed0772f049a5cc84275e64d512d8e7f7c2df27b0ae60286cc8377d4",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0015",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1447_60_B0016.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1447_60_B0016.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:54.202804+00:00",
+    "sha256": "d864c82787f2ab8b9f67efd85b9dce17e36c8915d1ef13fee653dc8a7431129e",
+    "sourceFile": "sources/d864c82787f2ab8b9f67efd85b9dce17e36c8915d1ef13fee653dc8a7431129e.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0016, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/3e7d3ef2e63c94f1679dc4da899277beaed5865e4c94070bc39247ea5bfc608d.txt",
+    "excerptSha256": "3e7d3ef2e63c94f1679dc4da899277beaed5865e4c94070bc39247ea5bfc608d",
+    "fullTextFile": "sources/9877690196def0cc04f056f444d178d9a11c004522af4a8b00c5d96d2f3637b7.native.txt",
+    "fullTextSha256": "9877690196def0cc04f056f444d178d9a11c004522af4a8b00c5d96d2f3637b7",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0016",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1448_60_B0017.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1448_60_B0017.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:54.198711+00:00",
+    "sha256": "aacea0114ff62ac3680e790bb6e9be426bcd46b4a86844d7ad1f35139774c3e7",
+    "sourceFile": "sources/aacea0114ff62ac3680e790bb6e9be426bcd46b4a86844d7ad1f35139774c3e7.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0017, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/2d40fa778901db69ce5bab4be9b823b96634b82fe0aaa4582d20a86cff2c1c54.txt",
+    "excerptSha256": "2d40fa778901db69ce5bab4be9b823b96634b82fe0aaa4582d20a86cff2c1c54",
+    "fullTextFile": "sources/06a5afb48843cdab2f8000fb04858ebca113e1e2bcc7b3ebadbe0ace86f95603.native.txt",
+    "fullTextSha256": "06a5afb48843cdab2f8000fb04858ebca113e1e2bcc7b3ebadbe0ace86f95603",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0017",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1449_60_B0018.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1449_60_B0018.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:54.297024+00:00",
+    "sha256": "b730571642dc8c4107df7ef939c91855045497468d285c65818b4c1046ac2ae5",
+    "sourceFile": "sources/b730571642dc8c4107df7ef939c91855045497468d285c65818b4c1046ac2ae5.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0018, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/6cb581b6e3389105298faea775476c2bbd8cb3b83ab16d40873f97c8e93921d1.txt",
+    "excerptSha256": "6cb581b6e3389105298faea775476c2bbd8cb3b83ab16d40873f97c8e93921d1",
+    "fullTextFile": "sources/999ce51e1775b1dc0b8d0a5e5dfcfbddff6a231df97cb4e1656111bac2bfe14b.native.txt",
+    "fullTextSha256": "999ce51e1775b1dc0b8d0a5e5dfcfbddff6a231df97cb4e1656111bac2bfe14b",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0018",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1450_60_B0019.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1450_60_B0019.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:54.348736+00:00",
+    "sha256": "decbf0b82b9f79463f01b09c21e0f4cc09e2554185f4f9b5f58c51ff7607fb17",
+    "sourceFile": "sources/decbf0b82b9f79463f01b09c21e0f4cc09e2554185f4f9b5f58c51ff7607fb17.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0019, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/f5280f659114c184b53be4f3aea717d23da928fdf79dac9ea7b6492c4695666e.txt",
+    "excerptSha256": "f5280f659114c184b53be4f3aea717d23da928fdf79dac9ea7b6492c4695666e",
+    "fullTextFile": "sources/2bc6e51e03c7f924be94f76bddb0f1a048145e7d2df24b92affcf11fdf46ee53.native.txt",
+    "fullTextSha256": "2bc6e51e03c7f924be94f76bddb0f1a048145e7d2df24b92affcf11fdf46ee53",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0019",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1451_60_B0020.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1451_60_B0020.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:54.861611+00:00",
+    "sha256": "a88ce19687ea46c59c6ae8123efefeddda0362254b204fad8c1ef4aca6f534bd",
+    "sourceFile": "sources/a88ce19687ea46c59c6ae8123efefeddda0362254b204fad8c1ef4aca6f534bd.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0020, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/8a38bfbaf15ee513eedfab416169af5f8f01df572815a60c3883366053bb175a.txt",
+    "excerptSha256": "8a38bfbaf15ee513eedfab416169af5f8f01df572815a60c3883366053bb175a",
+    "fullTextFile": "sources/dc7d373e730f47d291a9d60a844ecb7bec39ad19a185d076eab5bd9199fef2f0.native.txt",
+    "fullTextSha256": "dc7d373e730f47d291a9d60a844ecb7bec39ad19a185d076eab5bd9199fef2f0",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0020",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1452_60_B0021.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1452_60_B0021.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:55.230524+00:00",
+    "sha256": "53a1437721024c04387fa5c961adfe076f5c1bfcd1079433b738c6d9a62de46c",
+    "sourceFile": "sources/53a1437721024c04387fa5c961adfe076f5c1bfcd1079433b738c6d9a62de46c.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0021, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/ff95ab4539cedbfac45bfeedfb132eae2499f2b9977460b98144b054a1f250ca.txt",
+    "excerptSha256": "ff95ab4539cedbfac45bfeedfb132eae2499f2b9977460b98144b054a1f250ca",
+    "fullTextFile": "sources/ef1079c7eeac351857e7ee12ea1e2fc52f6a3b443f8fbab963d6017cdad5cef0.native.txt",
+    "fullTextSha256": "ef1079c7eeac351857e7ee12ea1e2fc52f6a3b443f8fbab963d6017cdad5cef0",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0021",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1453_60_B0022.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1453_60_B0022.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:55.398509+00:00",
+    "sha256": "4439cf551457b0010ffb202e2b18d402ad257c794fbe633ee62487c35ac97731",
+    "sourceFile": "sources/4439cf551457b0010ffb202e2b18d402ad257c794fbe633ee62487c35ac97731.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0022, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/cf62192f605d77a6d1fbc1d8bc36e3358f6e88e7550c9361ddb5bb156ff72364.txt",
+    "excerptSha256": "cf62192f605d77a6d1fbc1d8bc36e3358f6e88e7550c9361ddb5bb156ff72364",
+    "fullTextFile": "sources/28f18362a24a26778d4306a256c1d61fb06806d262b092df899c91deeef56990.native.txt",
+    "fullTextSha256": "28f18362a24a26778d4306a256c1d61fb06806d262b092df899c91deeef56990",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0022",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1454_60_B0023.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1454_60_B0023.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:55.011545+00:00",
+    "sha256": "f5c54bb7a909513a28f9d28fa0a03f55ed94a38b303818f5b50d74a095232b71",
+    "sourceFile": "sources/f5c54bb7a909513a28f9d28fa0a03f55ed94a38b303818f5b50d74a095232b71.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0023, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/32bb207a02fffc4265b807347e193456bc89d78a31cdb565530ccc461c1cf86e.txt",
+    "excerptSha256": "32bb207a02fffc4265b807347e193456bc89d78a31cdb565530ccc461c1cf86e",
+    "fullTextFile": "sources/f3c86664bc7409e6111a31b6b5acee6c71b7c37ae8e40b20a80726eee40fd99e.native.txt",
+    "fullTextSha256": "f3c86664bc7409e6111a31b6b5acee6c71b7c37ae8e40b20a80726eee40fd99e",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0023",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1455_60_B0024.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1455_60_B0024.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:56.006748+00:00",
+    "sha256": "47900fb8180f70bd81cec3f63aeb29e5cf58af8659117b779018908752218f2f",
+    "sourceFile": "sources/47900fb8180f70bd81cec3f63aeb29e5cf58af8659117b779018908752218f2f.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0024, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/edced08ec0e6e27415216e2e1488b38af03e344603049635efbdff63f91734b1.txt",
+    "excerptSha256": "edced08ec0e6e27415216e2e1488b38af03e344603049635efbdff63f91734b1",
+    "fullTextFile": "sources/38304c694a79fcabea658459029aaeb8c257984bebb3c4e4e01dca904eada4aa.native.txt",
+    "fullTextSha256": "38304c694a79fcabea658459029aaeb8c257984bebb3c4e4e01dca904eada4aa",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0024",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1456_60_B0025.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1456_60_B0025.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:56.102541+00:00",
+    "sha256": "6f928ad880b956f0a620a934e9771f7f8eaba5e7517b6f99152b324d2c95b155",
+    "sourceFile": "sources/6f928ad880b956f0a620a934e9771f7f8eaba5e7517b6f99152b324d2c95b155.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0025, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/930e99fc49b2d66acb7c7d797e06b89cbefc215a60f3da4306a2c520d8a987f1.txt",
+    "excerptSha256": "930e99fc49b2d66acb7c7d797e06b89cbefc215a60f3da4306a2c520d8a987f1",
+    "fullTextFile": "sources/c1b719faa16e03144621ed0404b3cc9ebcb2b278ee102de710712cad828d3bbe.native.txt",
+    "fullTextSha256": "c1b719faa16e03144621ed0404b3cc9ebcb2b278ee102de710712cad828d3bbe",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0025",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1457_60_B0026.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1457_60_B0026.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:56.337753+00:00",
+    "sha256": "a5b49b7de15ac6d5983a4871808d182ea55a5d5fc7beb39c3aee4e9e8a46c0fb",
+    "sourceFile": "sources/a5b49b7de15ac6d5983a4871808d182ea55a5d5fc7beb39c3aee4e9e8a46c0fb.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0026, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/9bd981f0ab63e21ec81c6a757246e46c1ff7313fc1e6a63efc2f0b10200b3f46.txt",
+    "excerptSha256": "9bd981f0ab63e21ec81c6a757246e46c1ff7313fc1e6a63efc2f0b10200b3f46",
+    "fullTextFile": "sources/d9bf50e4b2987ca473230efb3aae033625934e472d6e024bc96f74c5ecc03175.native.txt",
+    "fullTextSha256": "d9bf50e4b2987ca473230efb3aae033625934e472d6e024bc96f74c5ecc03175",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0026",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1458_60_B0027.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1458_60_B0027.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:56.453220+00:00",
+    "sha256": "1126e92d2f79f19c17e3f0ae9713c0a3bd1914a6c5542e21aa0b1e4b8c7ebb76",
+    "sourceFile": "sources/1126e92d2f79f19c17e3f0ae9713c0a3bd1914a6c5542e21aa0b1e4b8c7ebb76.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0027, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/e21cf21cca938f32d362e77eb435cdb4877ca9437c0caeb5d593f1649fd73cbe.txt",
+    "excerptSha256": "e21cf21cca938f32d362e77eb435cdb4877ca9437c0caeb5d593f1649fd73cbe",
+    "fullTextFile": "sources/26b9912939fe7249f6ad10af40a551ddba0e3c30e4b9392a4bedab83440401bb.native.txt",
+    "fullTextSha256": "26b9912939fe7249f6ad10af40a551ddba0e3c30e4b9392a4bedab83440401bb",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0027",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1460_60_B0028.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1460_60_B0028.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:56.945786+00:00",
+    "sha256": "eadafa3d67ad1118d81dc53cf13116cc9c321b13b0c4d15f6e24904a834e9afe",
+    "sourceFile": "sources/eadafa3d67ad1118d81dc53cf13116cc9c321b13b0c4d15f6e24904a834e9afe.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0028, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/1174428f1c077f274f113edf7d64bbed53170d00e291a33e15e6913b185f5067.txt",
+    "excerptSha256": "1174428f1c077f274f113edf7d64bbed53170d00e291a33e15e6913b185f5067",
+    "fullTextFile": "sources/16449ff853b4b6f54325262bd6bc3aab6cac926c9487bbd80b59185af4a499ff.native.txt",
+    "fullTextSha256": "16449ff853b4b6f54325262bd6bc3aab6cac926c9487bbd80b59185af4a499ff",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0028",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1461_60_B0029.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1461_60_B0029.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:57.457762+00:00",
+    "sha256": "f2b0b01f336d5a8aae9b2601d1499873728b731bc94dfaf4d444648ed7c79a87",
+    "sourceFile": "sources/f2b0b01f336d5a8aae9b2601d1499873728b731bc94dfaf4d444648ed7c79a87.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0029, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/12154f22f5b18ba8e33181e68aa2dc1f7d1d2767ec0e204b5d18848b7a71c3b3.txt",
+    "excerptSha256": "12154f22f5b18ba8e33181e68aa2dc1f7d1d2767ec0e204b5d18848b7a71c3b3",
+    "fullTextFile": "sources/c297888dbc8790ade4e7c08b0be4fa5d60564934dfc7f8e27eea76e353630252.native.txt",
+    "fullTextSha256": "c297888dbc8790ade4e7c08b0be4fa5d60564934dfc7f8e27eea76e353630252",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0029",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1462_60_B0030.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1462_60_B0030.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:57.107321+00:00",
+    "sha256": "56d6fa5150b558dffb18cb44fe02411c5951dc0204f0ce7481140c05a4c6dc7d",
+    "sourceFile": "sources/56d6fa5150b558dffb18cb44fe02411c5951dc0204f0ce7481140c05a4c6dc7d.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0030, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/83fa24bb7e2629d6b9f1a5c411da90180d79f3e705c5252cc4ac185926023095.txt",
+    "excerptSha256": "83fa24bb7e2629d6b9f1a5c411da90180d79f3e705c5252cc4ac185926023095",
+    "fullTextFile": "sources/225666fb5536bd2087e646a3605121c124b2d9a37f22dcd6b31accf6cb753856.native.txt",
+    "fullTextSha256": "225666fb5536bd2087e646a3605121c124b2d9a37f22dcd6b31accf6cb753856",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0030",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1463_60_B0031.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1463_60_B0031.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:57.139869+00:00",
+    "sha256": "02ac03e6cfe6be4739fe1aef1a5a01df1ffb0c82c850ad7832bb90ed5ab86e15",
+    "sourceFile": "sources/02ac03e6cfe6be4739fe1aef1a5a01df1ffb0c82c850ad7832bb90ed5ab86e15.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0031, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/dd9e5529e08f5ff54311e9168d69f8cf0558166225c6d4bc789c83f9d16bed5e.txt",
+    "excerptSha256": "dd9e5529e08f5ff54311e9168d69f8cf0558166225c6d4bc789c83f9d16bed5e",
+    "fullTextFile": "sources/78dc2f3eba9809d4d1bb9cecdea6952362359683037ca75ae83de76a07feaf7b.native.txt",
+    "fullTextSha256": "78dc2f3eba9809d4d1bb9cecdea6952362359683037ca75ae83de76a07feaf7b",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0031",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1464_60_B0032.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1464_60_B0032.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:57.723505+00:00",
+    "sha256": "368669f8eaddc763be8287c743fd72fd06ac1180dbdf60b1e9c01cefd5933634",
+    "sourceFile": "sources/368669f8eaddc763be8287c743fd72fd06ac1180dbdf60b1e9c01cefd5933634.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0032, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/56c329f153274d4bc047ad2fba1596473eefdf92cdfebf47c9da5ade1040dc33.txt",
+    "excerptSha256": "56c329f153274d4bc047ad2fba1596473eefdf92cdfebf47c9da5ade1040dc33",
+    "fullTextFile": "sources/89597f4385d062ffce788ca96e8d6e3d08fbe73597e8f02fb12652b3d49f2cf1.native.txt",
+    "fullTextSha256": "89597f4385d062ffce788ca96e8d6e3d08fbe73597e8f02fb12652b3d49f2cf1",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0032",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1465_60_B0033.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1465_60_B0033.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:58.223571+00:00",
+    "sha256": "23a8495446f24fbaf3d19fe00ff414e98ee657f921b6cb55b40b1d397e44ef49",
+    "sourceFile": "sources/23a8495446f24fbaf3d19fe00ff414e98ee657f921b6cb55b40b1d397e44ef49.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0033, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/18a6f64855e0ebe123ed8ac75d7e8d0dab51bff8990b20dfbff02cc1eb028d05.txt",
+    "excerptSha256": "18a6f64855e0ebe123ed8ac75d7e8d0dab51bff8990b20dfbff02cc1eb028d05",
+    "fullTextFile": "sources/9843e07bc4bd0988e28a3409f37889c1d528cd81b23448673decc3b254790eff.native.txt",
+    "fullTextSha256": "9843e07bc4bd0988e28a3409f37889c1d528cd81b23448673decc3b254790eff",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0033",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1466_60_B0034.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1466_60_B0034.pdf",
+    "sourceCheckedAt": "2026-11-03T05:03:47.221535+00:00",
+    "sha256": "33722137c6669a994c2fbba5336d083d74f02745c22b71ccf5845c0a3ec31916",
+    "sourceFile": "sources/33722137c6669a994c2fbba5336d083d74f02745c22b71ccf5845c0a3ec31916.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0034, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/c2e05e96c756c628b2849aaac718842fdd833db2405578eac7d51dd99a499b7f.txt",
+    "excerptSha256": "c2e05e96c756c628b2849aaac718842fdd833db2405578eac7d51dd99a499b7f",
+    "fullTextFile": "sources/9a01466719444c88ebe08baebe3e1ba028afeab35be58a959fad2ddd4589d5fd.native.txt",
+    "fullTextSha256": "9a01466719444c88ebe08baebe3e1ba028afeab35be58a959fad2ddd4589d5fd",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0034",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1467_60_B0035.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1467_60_B0035.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:58.001474+00:00",
+    "sha256": "758b4d88337ad690063213865e6350375d1cb4354de6df495cff1abee268da66",
+    "sourceFile": "sources/758b4d88337ad690063213865e6350375d1cb4354de6df495cff1abee268da66.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0035, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/7473b04b8bde44d198c721789eb26641c89465728e74422e31f62cb5ccef0dc4.txt",
+    "excerptSha256": "7473b04b8bde44d198c721789eb26641c89465728e74422e31f62cb5ccef0dc4",
+    "fullTextFile": "sources/89d4592215349833f723becffb1e20615cc4b3ca1d7e080dada3ca878942bffa.native.txt",
+    "fullTextSha256": "89d4592215349833f723becffb1e20615cc4b3ca1d7e080dada3ca878942bffa",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0035",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1468_60_B0036.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1468_60_B0036.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:58.478815+00:00",
+    "sha256": "4a3a954c9d4d94613412407a458534cfe67599ed42b5be84dde0b1e7d6e72313",
+    "sourceFile": "sources/4a3a954c9d4d94613412407a458534cfe67599ed42b5be84dde0b1e7d6e72313.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0036, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/b87e8a0cd81189c54429bda24834215cb6de27d85b6dd05c3cfea6f378602f98.txt",
+    "excerptSha256": "b87e8a0cd81189c54429bda24834215cb6de27d85b6dd05c3cfea6f378602f98",
+    "fullTextFile": "sources/5b2fef34fe16622250d4885fcb1c59557229d73f8c8ba8b146a9f91a78390924.native.txt",
+    "fullTextSha256": "5b2fef34fe16622250d4885fcb1c59557229d73f8c8ba8b146a9f91a78390924",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0036",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1469_60_B0037.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1469_60_B0037.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:58.418495+00:00",
+    "sha256": "db7946c24b3e3d1c58f05eaf78e6cedfac21776816be7e9da9dfde357f3aa1eb",
+    "sourceFile": "sources/db7946c24b3e3d1c58f05eaf78e6cedfac21776816be7e9da9dfde357f3aa1eb.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0037, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/7a31216cb56e00e90e5bba30d949048f1b3c35b28c849bcb916b1887f484b761.txt",
+    "excerptSha256": "7a31216cb56e00e90e5bba30d949048f1b3c35b28c849bcb916b1887f484b761",
+    "fullTextFile": "sources/2d11a2d920744e289e8c5b1325e01ba518daebcb0c17d9f32f30463b548663c6.native.txt",
+    "fullTextSha256": "2d11a2d920744e289e8c5b1325e01ba518daebcb0c17d9f32f30463b548663c6",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0037",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1470_60_B0038.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1470_60_B0038.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:59.187590+00:00",
+    "sha256": "8bb8533885b9630fb60660abbf841988c38fa3c2bfab6d223174cdb742449ece",
+    "sourceFile": "sources/8bb8533885b9630fb60660abbf841988c38fa3c2bfab6d223174cdb742449ece.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0038, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/8c6477544a419d346dde8f2b3d8234b56e0029293a0c90e8478761462fbd916c.txt",
+    "excerptSha256": "8c6477544a419d346dde8f2b3d8234b56e0029293a0c90e8478761462fbd916c",
+    "fullTextFile": "sources/4b7358e7db3dcceedaa408e954f8f6342d31be65c50ab24a0bf5ccfc915b6636.native.txt",
+    "fullTextSha256": "4b7358e7db3dcceedaa408e954f8f6342d31be65c50ab24a0bf5ccfc915b6636",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/71d5fd43032235f58c5069db7f24d773be5484c6cc4cf135d064d89d605336ee.png",
+        "sha256": "71d5fd43032235f58c5069db7f24d773be5484c6cc4cf135d064d89d605336ee"
+      }
+    ],
+    "ballotStyle": "B0038",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1471_60_B0039.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1471_60_B0039.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:58.863173+00:00",
+    "sha256": "eedd166c90b04d9b299d4e7326b86d8a6b6e94441e2f75c34c8f90d8cdb1e136",
+    "sourceFile": "sources/eedd166c90b04d9b299d4e7326b86d8a6b6e94441e2f75c34c8f90d8cdb1e136.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0039, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/b55daf3d58f5b96a2562a41df719c6ff4ae7cc3e7561594b84c810922793590d.txt",
+    "excerptSha256": "b55daf3d58f5b96a2562a41df719c6ff4ae7cc3e7561594b84c810922793590d",
+    "fullTextFile": "sources/a2d5e5005433b7c299cfae94772ae6619f503382c87a993cc9002fa5e76d81e8.native.txt",
+    "fullTextSha256": "a2d5e5005433b7c299cfae94772ae6619f503382c87a993cc9002fa5e76d81e8",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0039",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1472_60_B0040.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1472_60_B0040.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:59.313419+00:00",
+    "sha256": "055f370c5948932166d50637d2150f0c2c4077c5a1354133a11021d7c9f8d869",
+    "sourceFile": "sources/055f370c5948932166d50637d2150f0c2c4077c5a1354133a11021d7c9f8d869.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0040, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/b748e1fba3c0bc2001194dbc8fa1c73d73ba864a115e58c27703157e38175b0b.txt",
+    "excerptSha256": "b748e1fba3c0bc2001194dbc8fa1c73d73ba864a115e58c27703157e38175b0b",
+    "fullTextFile": "sources/a6e607d900b95869f0d98767a946290748653f0c08107c67a807f323b215ca5b.native.txt",
+    "fullTextSha256": "a6e607d900b95869f0d98767a946290748653f0c08107c67a807f323b215ca5b",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0040",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1473_60_B0041.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1473_60_B0041.pdf",
+    "sourceCheckedAt": "2026-11-03T05:05:59.184420+00:00",
+    "sha256": "572422ac32f3f1cf360ce3b3cdbeb4ca56d10df0d43e8acb2456d6115b8e4e5d",
+    "sourceFile": "sources/572422ac32f3f1cf360ce3b3cdbeb4ca56d10df0d43e8acb2456d6115b8e4e5d.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0041, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/c17801bc4b6ffc43f6b57171c1155e789d130e7d39018eb597fae2ea9802124f.txt",
+    "excerptSha256": "c17801bc4b6ffc43f6b57171c1155e789d130e7d39018eb597fae2ea9802124f",
+    "fullTextFile": "sources/7c1ce83e6327dcb9f1dd40bf25e94a343a46c52f06f42944d282f3303c520012.native.txt",
+    "fullTextSha256": "7c1ce83e6327dcb9f1dd40bf25e94a343a46c52f06f42944d282f3303c520012",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0041",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1474_60_B0042.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1474_60_B0042.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:00.018839+00:00",
+    "sha256": "fe300bae2d9e1122d43725ccaa54041794db5f1e5aed81b7d7cfd512d7c96854",
+    "sourceFile": "sources/fe300bae2d9e1122d43725ccaa54041794db5f1e5aed81b7d7cfd512d7c96854.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0042, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/832de6c89c5fd24f9ed13b649b242bf9bafee9b42782716eaeca81596c235be1.txt",
+    "excerptSha256": "832de6c89c5fd24f9ed13b649b242bf9bafee9b42782716eaeca81596c235be1",
+    "fullTextFile": "sources/78d15152b0242319cb1c32d88c0fb4ecf2887578acfd69df701d704f0efc10bf.native.txt",
+    "fullTextSha256": "78d15152b0242319cb1c32d88c0fb4ecf2887578acfd69df701d704f0efc10bf",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0042",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1475_60_B0043.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1475_60_B0043.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:00.498304+00:00",
+    "sha256": "78f8f1df5a7710ccd0219960c58d3ab759031f50631da6cf94c74dbccc6edd57",
+    "sourceFile": "sources/78f8f1df5a7710ccd0219960c58d3ab759031f50631da6cf94c74dbccc6edd57.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0043, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/9fa4df513879d3bf263020209cf493760a3c0055248262ca7fa319428b34ec3b.txt",
+    "excerptSha256": "9fa4df513879d3bf263020209cf493760a3c0055248262ca7fa319428b34ec3b",
+    "fullTextFile": "sources/fcda90ccb07918cddc007f7a44706b255fa1b6af720d86e9432592db321e299d.native.txt",
+    "fullTextSha256": "fcda90ccb07918cddc007f7a44706b255fa1b6af720d86e9432592db321e299d",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0043",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1476_60_B0044.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1476_60_B0044.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:00.277198+00:00",
+    "sha256": "2cced14a427538c91d6b1e987200b5aa7444608a1ce42dc3d964f081ea97bbaa",
+    "sourceFile": "sources/2cced14a427538c91d6b1e987200b5aa7444608a1ce42dc3d964f081ea97bbaa.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0044, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/e0d3d72d6f60cf75abef1b9f9ad312302262db350ae93c302823565910fda54d.txt",
+    "excerptSha256": "e0d3d72d6f60cf75abef1b9f9ad312302262db350ae93c302823565910fda54d",
+    "fullTextFile": "sources/8804de323efc08100bed77b0b894a18d586b6ee614e865de94b5de2468958e1b.native.txt",
+    "fullTextSha256": "8804de323efc08100bed77b0b894a18d586b6ee614e865de94b5de2468958e1b",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0044",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1477_60_B0045.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1477_60_B0045.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:00.380413+00:00",
+    "sha256": "68658a518f6d841c2bb1eeae63a6ac16708e5e5eb00b3f69d19146f86d1b04f0",
+    "sourceFile": "sources/68658a518f6d841c2bb1eeae63a6ac16708e5e5eb00b3f69d19146f86d1b04f0.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0045, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/7b17144f0ff0b3769386aa55551873433670f536ebf15fcb778c42a0d7d6817f.txt",
+    "excerptSha256": "7b17144f0ff0b3769386aa55551873433670f536ebf15fcb778c42a0d7d6817f",
+    "fullTextFile": "sources/a4221090a5cda780bf0ae11382d4d8f5e00b02d257032f57e8676ed16cd21149.native.txt",
+    "fullTextSha256": "a4221090a5cda780bf0ae11382d4d8f5e00b02d257032f57e8676ed16cd21149",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0045",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1478_60_B0046.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1478_60_B0046.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:00.866924+00:00",
+    "sha256": "901943a8949d3b5b172613eacd45fa26f36aa02208001459cdcc89067763c9cd",
+    "sourceFile": "sources/901943a8949d3b5b172613eacd45fa26f36aa02208001459cdcc89067763c9cd.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0046, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/254c47abdf8fb7a16cee958762e0afbd13d783510c3ef501c987003ace726dba.txt",
+    "excerptSha256": "254c47abdf8fb7a16cee958762e0afbd13d783510c3ef501c987003ace726dba",
+    "fullTextFile": "sources/afdabceabaf05f301919abf2ea2606672e5aab08a6f564ccc90945c99c57f752.native.txt",
+    "fullTextSha256": "afdabceabaf05f301919abf2ea2606672e5aab08a6f564ccc90945c99c57f752",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0046",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1479_60_B0047.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1479_60_B0047.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:01.145816+00:00",
+    "sha256": "5adb6d94e2dc97847bb386b55f61068b9d79ab18e4feb3d720dc023969df6364",
+    "sourceFile": "sources/5adb6d94e2dc97847bb386b55f61068b9d79ab18e4feb3d720dc023969df6364.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0047, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/46143de95e8e2c96eeeed2b41adb4e4a5649fa4797a1884f7488c424629aa1f0.txt",
+    "excerptSha256": "46143de95e8e2c96eeeed2b41adb4e4a5649fa4797a1884f7488c424629aa1f0",
+    "fullTextFile": "sources/78cef598a576f6996b0a95c061af900bed7f4b7e17da20fd98842b8c86f1f44f.native.txt",
+    "fullTextSha256": "78cef598a576f6996b0a95c061af900bed7f4b7e17da20fd98842b8c86f1f44f",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0047",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1480_60_B0048.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1480_60_B0048.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:01.381338+00:00",
+    "sha256": "a99d161facc13288512ea66c12731d5f3daf8aa88a5708307679f9b358b16e4d",
+    "sourceFile": "sources/a99d161facc13288512ea66c12731d5f3daf8aa88a5708307679f9b358b16e4d.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0048, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/69a279dbc6dfcacadd77163327e651c63ecf43f9ec3d39f8721025f5d23645e4.txt",
+    "excerptSha256": "69a279dbc6dfcacadd77163327e651c63ecf43f9ec3d39f8721025f5d23645e4",
+    "fullTextFile": "sources/89c3d04532a48afcc3d0614fa7007d4e5a8556dcd81ff62a8fa6cf7ef8bb1635.native.txt",
+    "fullTextSha256": "89c3d04532a48afcc3d0614fa7007d4e5a8556dcd81ff62a8fa6cf7ef8bb1635",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0048",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1481_60_B0049.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1481_60_B0049.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:01.165957+00:00",
+    "sha256": "1813154bbe752fe33b66e57acd1717833d9fff768b9481f34d3145aa9bdf0df9",
+    "sourceFile": "sources/1813154bbe752fe33b66e57acd1717833d9fff768b9481f34d3145aa9bdf0df9.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0049, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/0f780ee4d0d50340a8486251e40ebf3f94d124d9e6870af7ef2042c0bf0860fc.txt",
+    "excerptSha256": "0f780ee4d0d50340a8486251e40ebf3f94d124d9e6870af7ef2042c0bf0860fc",
+    "fullTextFile": "sources/a444a3b5f9037d5b323018c278d872e9f4bd3d2796254b0d2fc99984ac8b5bd6.native.txt",
+    "fullTextSha256": "a444a3b5f9037d5b323018c278d872e9f4bd3d2796254b0d2fc99984ac8b5bd6",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0049",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1482_60_B0050.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1482_60_B0050.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:01.884934+00:00",
+    "sha256": "f116e097981ac069c0881e69b7f922161d30a521ec3e62c3d717cc7cbb2af77d",
+    "sourceFile": "sources/f116e097981ac069c0881e69b7f922161d30a521ec3e62c3d717cc7cbb2af77d.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0050, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/578f40087bb8708d67cbfa352254305c420818d1152f264b9b07c995f9bc1226.txt",
+    "excerptSha256": "578f40087bb8708d67cbfa352254305c420818d1152f264b9b07c995f9bc1226",
+    "fullTextFile": "sources/c55362336ff956ae599cf3fc841b68c9dd222ade3d9914bc2c511c7ca6378fe1.native.txt",
+    "fullTextSha256": "c55362336ff956ae599cf3fc841b68c9dd222ade3d9914bc2c511c7ca6378fe1",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0050",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1483_60_B0051.pdf",
+    "sourceCheckedAt": "2026-11-03T05:03:47.109232+00:00",
+    "sha256": "221a743a8ee99580ef2032d6e620f25d8dc2db61e2d9b90bb36daed3c6336653",
+    "sourceFile": "sources/221a743a8ee99580ef2032d6e620f25d8dc2db61e2d9b90bb36daed3c6336653.source",
+    "role": "PRIMARY_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0051, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/27b5934cf9cbb6774a358ba13fec91128f61a4844814193b3a149226bd9ab214.txt",
+    "excerptSha256": "27b5934cf9cbb6774a358ba13fec91128f61a4844814193b3a149226bd9ab214",
+    "fullTextFile": "sources/52e1e5c352d68826b15879827b4363062ab909e187da03f6cd88a7a2022424f6.native.txt",
+    "fullTextSha256": "52e1e5c352d68826b15879827b4363062ab909e187da03f6cd88a7a2022424f6",
+    "visualReview": {
+      "status": "ALL_UNIQUE_LOCAL_CANDIDATE_BLOCKS_VISUALLY_VERIFIED_ACROSS_EIGHT_PRIMARY_STYLES",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/7c482116cb68c5a570efe819429202546ee2a033c0266a2dcc36a14f37577312.png",
+        "sha256": "7c482116cb68c5a570efe819429202546ee2a033c0266a2dcc36a14f37577312"
+      }
+    ],
+    "ballotStyle": "B0051",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1484_60_B0052.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1484_60_B0052.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:01.995262+00:00",
+    "sha256": "4f0761250b63f1226ef8b70b09792d70e63c62258c69f0c57e67e3b2887f2510",
+    "sourceFile": "sources/4f0761250b63f1226ef8b70b09792d70e63c62258c69f0c57e67e3b2887f2510.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0052, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/28c0a146ebcfa3cd482effb2150af558d1dd0968a6af2f045700a9a6dd0362b8.txt",
+    "excerptSha256": "28c0a146ebcfa3cd482effb2150af558d1dd0968a6af2f045700a9a6dd0362b8",
+    "fullTextFile": "sources/d77438ed6fa6d64493c924d9ebe5aaf3fe402bb93ec1275d200ef4e64fd63583.native.txt",
+    "fullTextSha256": "d77438ed6fa6d64493c924d9ebe5aaf3fe402bb93ec1275d200ef4e64fd63583",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0052",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1485_60_B0053.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1485_60_B0053.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:02.066695+00:00",
+    "sha256": "474113cd81be16f4ea9e6eeeabe6506c56dd9a1981937dc489752c49a5d616f5",
+    "sourceFile": "sources/474113cd81be16f4ea9e6eeeabe6506c56dd9a1981937dc489752c49a5d616f5.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0053, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/03ca44a40e9d489b98adbb84d232aff8313ba4d1ca89c144470173b3075a7e86.txt",
+    "excerptSha256": "03ca44a40e9d489b98adbb84d232aff8313ba4d1ca89c144470173b3075a7e86",
+    "fullTextFile": "sources/393c0972b81c2230a8fca5ec9bcc6a4879be6d0f6f379abf018f070450cd1a33.native.txt",
+    "fullTextSha256": "393c0972b81c2230a8fca5ec9bcc6a4879be6d0f6f379abf018f070450cd1a33",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0053",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1486_60_B0054.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1486_60_B0054.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:02.276525+00:00",
+    "sha256": "d351e05a0d4835ea53fbe8f81501303dc95a660ce8fd6e553a54f3b9dd77cc46",
+    "sourceFile": "sources/d351e05a0d4835ea53fbe8f81501303dc95a660ce8fd6e553a54f3b9dd77cc46.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0054, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/011df73a8dbe9892977f253e62ee061d5da449d18a618dd3e1fed034228e55d6.txt",
+    "excerptSha256": "011df73a8dbe9892977f253e62ee061d5da449d18a618dd3e1fed034228e55d6",
+    "fullTextFile": "sources/15916b9bd6926abbc765a1ed814162c3a6454cd2f2d011f8bceab3a0170fc9fc.native.txt",
+    "fullTextSha256": "15916b9bd6926abbc765a1ed814162c3a6454cd2f2d011f8bceab3a0170fc9fc",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0054",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1487_60_B0055.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1487_60_B0055.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:02.529222+00:00",
+    "sha256": "58d9cb275cf64fdb6fb9e624031d3d2078807c76020f701d07611c53aee04ae1",
+    "sourceFile": "sources/58d9cb275cf64fdb6fb9e624031d3d2078807c76020f701d07611c53aee04ae1.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0055, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/543e47149c520d30f6f90c9ac63d5eb92d9faf14005f4304183a9288b6993578.txt",
+    "excerptSha256": "543e47149c520d30f6f90c9ac63d5eb92d9faf14005f4304183a9288b6993578",
+    "fullTextFile": "sources/8c0bdd1d3f0201a0fcde020e05fc5271299698a28bd4cb494acbcbe84a269bea.native.txt",
+    "fullTextSha256": "8c0bdd1d3f0201a0fcde020e05fc5271299698a28bd4cb494acbcbe84a269bea",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0055",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1488_60_B0056.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1488_60_B0056.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:03.071202+00:00",
+    "sha256": "ec83a21e9fbc5635008f2baded6bbbfed96c8f665cfe886e657a092a11953728",
+    "sourceFile": "sources/ec83a21e9fbc5635008f2baded6bbbfed96c8f665cfe886e657a092a11953728.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0056, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/fc9f54f8624935a08be56be40d7ae8007c7bc7e17f4749fd71dd28ce90209265.txt",
+    "excerptSha256": "fc9f54f8624935a08be56be40d7ae8007c7bc7e17f4749fd71dd28ce90209265",
+    "fullTextFile": "sources/9fadb0fc2844a4ba19160bf2f4b6f6fa7b4076814c5cbba83529fd63cd33bade.native.txt",
+    "fullTextSha256": "9fadb0fc2844a4ba19160bf2f4b6f6fa7b4076814c5cbba83529fd63cd33bade",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0056",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1489_60_B0057.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1489_60_B0057.pdf",
+    "sourceCheckedAt": "2026-11-03T05:03:47.445325+00:00",
+    "sha256": "7ef5e789a326d35df01994ab912611aac9d4520cf1a2891109c6cd9b2d65bd48",
+    "sourceFile": "sources/7ef5e789a326d35df01994ab912611aac9d4520cf1a2891109c6cd9b2d65bd48.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0057, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/21550a3608b5477a3afce125db6619def126cd2fe8e6a7457cfca5492d19339b.txt",
+    "excerptSha256": "21550a3608b5477a3afce125db6619def126cd2fe8e6a7457cfca5492d19339b",
+    "fullTextFile": "sources/99967c3feb291aeb8e389eebcedd3e6b9e9cb8526d026197892230170f4c78f8.native.txt",
+    "fullTextSha256": "99967c3feb291aeb8e389eebcedd3e6b9e9cb8526d026197892230170f4c78f8",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0057",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1490_60_B0058.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1490_60_B0058.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:02.745983+00:00",
+    "sha256": "f49aa5e3da8a80097d24ed4feb66f7d175ffad1e441f74008c39f423f7413d47",
+    "sourceFile": "sources/f49aa5e3da8a80097d24ed4feb66f7d175ffad1e441f74008c39f423f7413d47.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0058, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/705fb6cee31bfd649d3c219e13d272cab89de19ddc7141a9b84f922892ce4244.txt",
+    "excerptSha256": "705fb6cee31bfd649d3c219e13d272cab89de19ddc7141a9b84f922892ce4244",
+    "fullTextFile": "sources/1b4c1a846f5f235e85c62f499e622beca52877c01ecdcb1c918e49800a58398f.native.txt",
+    "fullTextSha256": "1b4c1a846f5f235e85c62f499e622beca52877c01ecdcb1c918e49800a58398f",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0058",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1491_60_B0059.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1491_60_B0059.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:03.240317+00:00",
+    "sha256": "7f1671944f95990b0e630a36f807055a807787bd8c1ca457a3acf3af2e5a8d3b",
+    "sourceFile": "sources/7f1671944f95990b0e630a36f807055a807787bd8c1ca457a3acf3af2e5a8d3b.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0059, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/c30cdd24c1c32658d266e70c30326dae270eaf57ed54e8d15b2989cfd6c1021a.txt",
+    "excerptSha256": "c30cdd24c1c32658d266e70c30326dae270eaf57ed54e8d15b2989cfd6c1021a",
+    "fullTextFile": "sources/bf8b763cf20527188869a6f9ea045d929c14cf72261954b2a344fc5f8bd68092.native.txt",
+    "fullTextSha256": "bf8b763cf20527188869a6f9ea045d929c14cf72261954b2a344fc5f8bd68092",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0059",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1492_60_B0060.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1492_60_B0060.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:03.302879+00:00",
+    "sha256": "514c5478c932dfae03fb02873d965d2ed00c1486b1031997b934514ea23f6b1e",
+    "sourceFile": "sources/514c5478c932dfae03fb02873d965d2ed00c1486b1031997b934514ea23f6b1e.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0060, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/bd10bcda84753b7d53593d3105f58e6d85fee7c9b683c955098e10ba1255abd9.txt",
+    "excerptSha256": "bd10bcda84753b7d53593d3105f58e6d85fee7c9b683c955098e10ba1255abd9",
+    "fullTextFile": "sources/52740f5fa65126327409827dfa4c345ce764239d7c635ef3b68274d6ce3f9d42.native.txt",
+    "fullTextSha256": "52740f5fa65126327409827dfa4c345ce764239d7c635ef3b68274d6ce3f9d42",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0060",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1493_60_B0061.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1493_60_B0061.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:03.864242+00:00",
+    "sha256": "ec0a2ee6009a3cacd25429976fcf4d9fe0bd02a55552ff1000bf5f1822b04880",
+    "sourceFile": "sources/ec0a2ee6009a3cacd25429976fcf4d9fe0bd02a55552ff1000bf5f1822b04880.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0061, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/0dca12bf0de2fe419accacdf4095ec4d7bcb30dace1db167fdd6663df3656bcd.txt",
+    "excerptSha256": "0dca12bf0de2fe419accacdf4095ec4d7bcb30dace1db167fdd6663df3656bcd",
+    "fullTextFile": "sources/86c52d223629e299d0e40d413875f4b76fbd53a208afed4146e6f6e1ce8e16d3.native.txt",
+    "fullTextSha256": "86c52d223629e299d0e40d413875f4b76fbd53a208afed4146e6f6e1ce8e16d3",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0061",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1494_60_B0062.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1494_60_B0062.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.124263+00:00",
+    "sha256": "84b41f3557814bd933e1b853eae77265946df829fab9598dc5c07aa0dd3f22a4",
+    "sourceFile": "sources/84b41f3557814bd933e1b853eae77265946df829fab9598dc5c07aa0dd3f22a4.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0062, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/d7fa83dad73d4f563c3865c57c6293ce1ef883bbf7f0eef715a3cfca7df40893.txt",
+    "excerptSha256": "d7fa83dad73d4f563c3865c57c6293ce1ef883bbf7f0eef715a3cfca7df40893",
+    "fullTextFile": "sources/c2fa4ec0aa4a772b2e24e3a69468e06b590571a2a25868c06dc904a6b9d0ee68.native.txt",
+    "fullTextSha256": "c2fa4ec0aa4a772b2e24e3a69468e06b590571a2a25868c06dc904a6b9d0ee68",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0062",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1495_60_B0063.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1495_60_B0063.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.288533+00:00",
+    "sha256": "f28f508fce9d8c65b3787cd15d12ec6c3e7a7cd252652d437881f68a22569380",
+    "sourceFile": "sources/f28f508fce9d8c65b3787cd15d12ec6c3e7a7cd252652d437881f68a22569380.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0063, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/e7b2ee6802ab521c948dbdcf9b77239aef32bb0ff2a63c796e1c818171590817.txt",
+    "excerptSha256": "e7b2ee6802ab521c948dbdcf9b77239aef32bb0ff2a63c796e1c818171590817",
+    "fullTextFile": "sources/857d1fd57cde3266952cf312a87faee957535c59cb173dc17aa7ee863d04fc67.native.txt",
+    "fullTextSha256": "857d1fd57cde3266952cf312a87faee957535c59cb173dc17aa7ee863d04fc67",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0063",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1496_60_B0064.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1496_60_B0064.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.552887+00:00",
+    "sha256": "d2aea99fdace05e4af0b22d0067286594b3d4d15798b0bcb7399bff003c85400",
+    "sourceFile": "sources/d2aea99fdace05e4af0b22d0067286594b3d4d15798b0bcb7399bff003c85400.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0064, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/793f948b58586984220fe522486d2c4e9fb5404cf26afdeea373bcdaefd82982.txt",
+    "excerptSha256": "793f948b58586984220fe522486d2c4e9fb5404cf26afdeea373bcdaefd82982",
+    "fullTextFile": "sources/9850b9680b53893b88897042a405bfc79dc03bdb18be442efb945e26e7098059.native.txt",
+    "fullTextSha256": "9850b9680b53893b88897042a405bfc79dc03bdb18be442efb945e26e7098059",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0064",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1497_60_B0065.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1497_60_B0065.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:04.978652+00:00",
+    "sha256": "9ef738a0d2666722c820bed7ede12c7604256bc14284e96114d998e47f9fc0a6",
+    "sourceFile": "sources/9ef738a0d2666722c820bed7ede12c7604256bc14284e96114d998e47f9fc0a6.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0065, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/661d33b6cf9566ff842fb1782fba545ca29d81e14047fe226b03452d5a840af9.txt",
+    "excerptSha256": "661d33b6cf9566ff842fb1782fba545ca29d81e14047fe226b03452d5a840af9",
+    "fullTextFile": "sources/dc20b2999bd60db9ff55708cea5a778ea1b104ccbae9cd16bab77ac11b930ef5.native.txt",
+    "fullTextSha256": "dc20b2999bd60db9ff55708cea5a778ea1b104ccbae9cd16bab77ac11b930ef5",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0065",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1498_60_B0066.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1498_60_B0066.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.281554+00:00",
+    "sha256": "0af17758ec382780cf39be6e15f059aec29560b3fefdf23fae9c85b7ffe07dca",
+    "sourceFile": "sources/0af17758ec382780cf39be6e15f059aec29560b3fefdf23fae9c85b7ffe07dca.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0066, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/aaf9c8e899e79a6af8b29c1b88e64244fcc22160cc5f1a16c4311a60a3e3c9dd.txt",
+    "excerptSha256": "aaf9c8e899e79a6af8b29c1b88e64244fcc22160cc5f1a16c4311a60a3e3c9dd",
+    "fullTextFile": "sources/0cd820984313b443ae950740055eb7bf04c7a974e73920b80934fa8bddf77b10.native.txt",
+    "fullTextSha256": "0cd820984313b443ae950740055eb7bf04c7a974e73920b80934fa8bddf77b10",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0066",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1499_60_B0067.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1499_60_B0067.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.204400+00:00",
+    "sha256": "c25262e8e09a601d054a567d075cafad2c1ead55c17868543c44571f3cca1e78",
+    "sourceFile": "sources/c25262e8e09a601d054a567d075cafad2c1ead55c17868543c44571f3cca1e78.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0067, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/2d943bc032b633e65368b8d85a843e5467b854ce958d4d0afc7225a8ed7d9f89.txt",
+    "excerptSha256": "2d943bc032b633e65368b8d85a843e5467b854ce958d4d0afc7225a8ed7d9f89",
+    "fullTextFile": "sources/dfef30b758650ef569687ec2db1405de2db97a4cf68a7861c99badb5659699d6.native.txt",
+    "fullTextSha256": "dfef30b758650ef569687ec2db1405de2db97a4cf68a7861c99badb5659699d6",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0067",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1500_60_B0068.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1500_60_B0068.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.381878+00:00",
+    "sha256": "962f17e5da28589c8c8ccd02862223b2bac1526a18722cf801c5230b75ed1965",
+    "sourceFile": "sources/962f17e5da28589c8c8ccd02862223b2bac1526a18722cf801c5230b75ed1965.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0068, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/10d5bfc0cf2ba8c6156be3d2c4cc5609c284f710eec6048aba24f4841978a25d.txt",
+    "excerptSha256": "10d5bfc0cf2ba8c6156be3d2c4cc5609c284f710eec6048aba24f4841978a25d",
+    "fullTextFile": "sources/2d6bb136efcbaaaca350e5675a02f4e42b7603da0368a0283f763720f6ece354.native.txt",
+    "fullTextSha256": "2d6bb136efcbaaaca350e5675a02f4e42b7603da0368a0283f763720f6ece354",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0068",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1501_60_B0069.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1501_60_B0069.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.654383+00:00",
+    "sha256": "b4177f19bd1c6117e57a9feed89a93d9381795ed92b6b29fb460f38ceb1816aa",
+    "sourceFile": "sources/b4177f19bd1c6117e57a9feed89a93d9381795ed92b6b29fb460f38ceb1816aa.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0069, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/049a6dac8544b9c9987d7dbecff42d14be66bfc63906334b412d7281a2f037d4.txt",
+    "excerptSha256": "049a6dac8544b9c9987d7dbecff42d14be66bfc63906334b412d7281a2f037d4",
+    "fullTextFile": "sources/3a89622d2551f1b212509416003e6076a458b76bd5b29229ebc52394b7430c9b.native.txt",
+    "fullTextSha256": "3a89622d2551f1b212509416003e6076a458b76bd5b29229ebc52394b7430c9b",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0069",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1502_60_B0070.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1502_60_B0070.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:05.995766+00:00",
+    "sha256": "38d385c6348c5a16204d684827226d53c309624c0aba3570b962398f3bf61ebd",
+    "sourceFile": "sources/38d385c6348c5a16204d684827226d53c309624c0aba3570b962398f3bf61ebd.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0070, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/074821a867af759656a1a382fea693746c7410e3978562b1e62019bd1bf4379f.txt",
+    "excerptSha256": "074821a867af759656a1a382fea693746c7410e3978562b1e62019bd1bf4379f",
+    "fullTextFile": "sources/ade7cf85dea08b9c198434b763e29a87f28cb9d86f66c267f52b70e37de60b0a.native.txt",
+    "fullTextSha256": "ade7cf85dea08b9c198434b763e29a87f28cb9d86f66c267f52b70e37de60b0a",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0070",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1503_60_B0071.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1503_60_B0071.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:06.348452+00:00",
+    "sha256": "44d0e15ff4dc77f2612479911aed66acbe8e4c600f143e509205fa722e2f2a54",
+    "sourceFile": "sources/44d0e15ff4dc77f2612479911aed66acbe8e4c600f143e509205fa722e2f2a54.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0071, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/a96423187feae74066b40b10ffc8f83e23b1e9b4157d486dfbf3363a474d23b9.txt",
+    "excerptSha256": "a96423187feae74066b40b10ffc8f83e23b1e9b4157d486dfbf3363a474d23b9",
+    "fullTextFile": "sources/b5916352b5a4bfc26f5adab87e041a6d7a0abc94fa6ab61d8603514655fb2034.native.txt",
+    "fullTextSha256": "b5916352b5a4bfc26f5adab87e041a6d7a0abc94fa6ab61d8603514655fb2034",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0071",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1504_60_B0072.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1504_60_B0072.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:06.415516+00:00",
+    "sha256": "083100d02713347118fe5c8e1edd71f7ea9b3e8cbac5b9b823738b83883d9c48",
+    "sourceFile": "sources/083100d02713347118fe5c8e1edd71f7ea9b3e8cbac5b9b823738b83883d9c48.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0072, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/13eeea47b5e67ca751812973e6bf428d57b5d4e87d22dde67c76b445aa83c834.txt",
+    "excerptSha256": "13eeea47b5e67ca751812973e6bf428d57b5d4e87d22dde67c76b445aa83c834",
+    "fullTextFile": "sources/6fa2bd44072643f46fe4a2eaf517b1750f3d1eca11ba40b5eba801ab038ab9ba.native.txt",
+    "fullTextSha256": "6fa2bd44072643f46fe4a2eaf517b1750f3d1eca11ba40b5eba801ab038ab9ba",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0072",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1505_60_B0073.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1505_60_B0073.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:06.448901+00:00",
+    "sha256": "d2509bddd4f482bd20d9b270c8206f1a9d308144821c9e5f4ad0f0a4fcf5af21",
+    "sourceFile": "sources/d2509bddd4f482bd20d9b270c8206f1a9d308144821c9e5f4ad0f0a4fcf5af21.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0073, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/cea0dbbd4e55dd7778644de9ba6c7dbcef09748fab9ff81bc4d3d95b0067ae45.txt",
+    "excerptSha256": "cea0dbbd4e55dd7778644de9ba6c7dbcef09748fab9ff81bc4d3d95b0067ae45",
+    "fullTextFile": "sources/0a2b707e33a0134b62e68df90290af2307f17cdd28d34f52349d36e24e22728d.native.txt",
+    "fullTextSha256": "0a2b707e33a0134b62e68df90290af2307f17cdd28d34f52349d36e24e22728d",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0073",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1506_60_B0074.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1506_60_B0074.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:06.722313+00:00",
+    "sha256": "9d0cb99154d3dd88ada8b8e0517d98ce993f5c79766159eaa5a480926faaa5a8",
+    "sourceFile": "sources/9d0cb99154d3dd88ada8b8e0517d98ce993f5c79766159eaa5a480926faaa5a8.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0074, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/6b393a7bcb6aae42be6bf8c5c0124a1b8aea3b2e675035201996d62f12ed0ecc.txt",
+    "excerptSha256": "6b393a7bcb6aae42be6bf8c5c0124a1b8aea3b2e675035201996d62f12ed0ecc",
+    "fullTextFile": "sources/558c3a6ca43e5f914f7927621deff970fe57b4ee4937a2dbb74c77f92eca9c9f.native.txt",
+    "fullTextSha256": "558c3a6ca43e5f914f7927621deff970fe57b4ee4937a2dbb74c77f92eca9c9f",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0074",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1507_60_B0075.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1507_60_B0075.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:07.045843+00:00",
+    "sha256": "5564d3e6da3cb7f12db22d0aa76e0994436a1363ea735754dc00a8904fb14ad0",
+    "sourceFile": "sources/5564d3e6da3cb7f12db22d0aa76e0994436a1363ea735754dc00a8904fb14ad0.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0075, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/3ba2b9c16117e1963df0f19620e6d580b12f315bbe631d8d7a87e9fa7b27d677.txt",
+    "excerptSha256": "3ba2b9c16117e1963df0f19620e6d580b12f315bbe631d8d7a87e9fa7b27d677",
+    "fullTextFile": "sources/bc749ca04dc5e5eac1c53c8a6ff5216a78026de4b659884dbc54d6b5bdd28598.native.txt",
+    "fullTextSha256": "bc749ca04dc5e5eac1c53c8a6ff5216a78026de4b659884dbc54d6b5bdd28598",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0075",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1508_60_B0076.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1508_60_B0076.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:07.467437+00:00",
+    "sha256": "c99cb78121f89db88b8965a954176969dbfa85316b2d2c8f0e044d57c872f62c",
+    "sourceFile": "sources/c99cb78121f89db88b8965a954176969dbfa85316b2d2c8f0e044d57c872f62c.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0076, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/7e09047cd47a17acb7c270107d59326afe7e9411a1a2b065cbf1b0860f68f288.txt",
+    "excerptSha256": "7e09047cd47a17acb7c270107d59326afe7e9411a1a2b065cbf1b0860f68f288",
+    "fullTextFile": "sources/297d5ce942a6ee2dbf66b25e0bf7015b8199ea7df43e2959831df298d7eff212.native.txt",
+    "fullTextSha256": "297d5ce942a6ee2dbf66b25e0bf7015b8199ea7df43e2959831df298d7eff212",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0076",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1509_60_B0077.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1509_60_B0077.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:07.174997+00:00",
+    "sha256": "cd1ab9e1a88435dd32106ebadcb3fe1ca6345b60500ccb2efe409b6f610ca4b3",
+    "sourceFile": "sources/cd1ab9e1a88435dd32106ebadcb3fe1ca6345b60500ccb2efe409b6f610ca4b3.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0077, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/1a9be0fec86bfc650096066ff6356bcdebf83c4b39ea3cabcb8731303da12158.txt",
+    "excerptSha256": "1a9be0fec86bfc650096066ff6356bcdebf83c4b39ea3cabcb8731303da12158",
+    "fullTextFile": "sources/a651dbc433a4de5c53184a561ca7f3f3a4549171471fad4ba644bbfb72d472a7.native.txt",
+    "fullTextSha256": "a651dbc433a4de5c53184a561ca7f3f3a4549171471fad4ba644bbfb72d472a7",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0077",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1510_60_B0078.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1510_60_B0078.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:07.718810+00:00",
+    "sha256": "2f3201c9f35130b4e71f2df17a6a90bba5b55b9e287edb34e4c3d619cc33baf7",
+    "sourceFile": "sources/2f3201c9f35130b4e71f2df17a6a90bba5b55b9e287edb34e4c3d619cc33baf7.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0078, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/a9f158295286655179e0b880b607883deb2384d3a29b0a5e2d0ac13eec8b446f.txt",
+    "excerptSha256": "a9f158295286655179e0b880b607883deb2384d3a29b0a5e2d0ac13eec8b446f",
+    "fullTextFile": "sources/bb6b1578e150ce8ca95f8f9d37809c934912a586ed2725d68fae523c6280c6ef.native.txt",
+    "fullTextSha256": "bb6b1578e150ce8ca95f8f9d37809c934912a586ed2725d68fae523c6280c6ef",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0078",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1511_60_B0079.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1511_60_B0079.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:08.088029+00:00",
+    "sha256": "7986515ed8e2cb23de396eabd6757fd84791466ba5003376e9864e4b2b0c4408",
+    "sourceFile": "sources/7986515ed8e2cb23de396eabd6757fd84791466ba5003376e9864e4b2b0c4408.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0079, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/c345c6917a575bb68d21fd6ed79fc94589138200b7c55fe78c092b43b3f6c249.txt",
+    "excerptSha256": "c345c6917a575bb68d21fd6ed79fc94589138200b7c55fe78c092b43b3f6c249",
+    "fullTextFile": "sources/1447bc657b3c1ce5c993c736b5e66b267a6a1d2a72985ca4b261a8a676a5fd57.native.txt",
+    "fullTextSha256": "1447bc657b3c1ce5c993c736b5e66b267a6a1d2a72985ca4b261a8a676a5fd57",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0079",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1512_60_B0080.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1512_60_B0080.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:08.257478+00:00",
+    "sha256": "1088facd37542de2bec212c102466fdb725b8838a12501c1f9972a0badffce41",
+    "sourceFile": "sources/1088facd37542de2bec212c102466fdb725b8838a12501c1f9972a0badffce41.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0080, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/a3fb21ae071eb400633392055351dba96fc4be711a28e2026f625d9f5b20a361.txt",
+    "excerptSha256": "a3fb21ae071eb400633392055351dba96fc4be711a28e2026f625d9f5b20a361",
+    "fullTextFile": "sources/4b909d17cf34f23b7c2bbfd8242ec2b6b7e6493f9bc5082c65864940fc6c52a9.native.txt",
+    "fullTextSha256": "4b909d17cf34f23b7c2bbfd8242ec2b6b7e6493f9bc5082c65864940fc6c52a9",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0080",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1513_60_B0081.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1513_60_B0081.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:08.629810+00:00",
+    "sha256": "55929d942bbe1a4ef0c621cde47edb3e945ab98626b3b79a372595902b02eb07",
+    "sourceFile": "sources/55929d942bbe1a4ef0c621cde47edb3e945ab98626b3b79a372595902b02eb07.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0081, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/b9d260947113708f5b7c3c7f09047a5b1d4bb95526f9f408da18da6c6551ced7.txt",
+    "excerptSha256": "b9d260947113708f5b7c3c7f09047a5b1d4bb95526f9f408da18da6c6551ced7",
+    "fullTextFile": "sources/a225ea8bba943fff474507acdf00e49f678c397492aededae7a85dcf890569e0.native.txt",
+    "fullTextSha256": "a225ea8bba943fff474507acdf00e49f678c397492aededae7a85dcf890569e0",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0081",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1514_60_B0082.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1514_60_B0082.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:08.802908+00:00",
+    "sha256": "040eea78e2857598de42db58d231f15b68f1d1a48180ecd0b68ec96ed8340810",
+    "sourceFile": "sources/040eea78e2857598de42db58d231f15b68f1d1a48180ecd0b68ec96ed8340810.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0082, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/dc5c0671af5b03b36521fd7d7803ed9d0ab342973241a626c469aac226535177.txt",
+    "excerptSha256": "dc5c0671af5b03b36521fd7d7803ed9d0ab342973241a626c469aac226535177",
+    "fullTextFile": "sources/cfff036843ff69571d09402500d6f4f05c466ad15442e9158783844eef589feb.native.txt",
+    "fullTextSha256": "cfff036843ff69571d09402500d6f4f05c466ad15442e9158783844eef589feb",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0082",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1515_60_B0083.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1515_60_B0083.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:09.226992+00:00",
+    "sha256": "d72646548388d60155e6f8eab4b14d6cc26fe41c3701fb0ed5302ef51256bb16",
+    "sourceFile": "sources/d72646548388d60155e6f8eab4b14d6cc26fe41c3701fb0ed5302ef51256bb16.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0083, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/73af760e2fcd2e851afbb4ff69adfe82d72c467276b16a0fc4e254fb265a7193.txt",
+    "excerptSha256": "73af760e2fcd2e851afbb4ff69adfe82d72c467276b16a0fc4e254fb265a7193",
+    "fullTextFile": "sources/9832e4a2aa7cd8449184d837505c9b5697ea1150c3a48553ff77ead5763ef28d.native.txt",
+    "fullTextSha256": "9832e4a2aa7cd8449184d837505c9b5697ea1150c3a48553ff77ead5763ef28d",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0083",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1516_60_B0084.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1516_60_B0084.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:09.370049+00:00",
+    "sha256": "285fae969d038560fa5fea89020a5a416bf959034ef4f2812701c83272fb360b",
+    "sourceFile": "sources/285fae969d038560fa5fea89020a5a416bf959034ef4f2812701c83272fb360b.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0084, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/52d703350e8dd4fbf342978b9070030945c187c020a60c79de1242c0a3c6fd5d.txt",
+    "excerptSha256": "52d703350e8dd4fbf342978b9070030945c187c020a60c79de1242c0a3c6fd5d",
+    "fullTextFile": "sources/19e3582832a30706d96bb8b772df278e73c193a2a5a45eb96d875c9f8c561316.native.txt",
+    "fullTextSha256": "19e3582832a30706d96bb8b772df278e73c193a2a5a45eb96d875c9f8c561316",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0084",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1517_60_B0085.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1517_60_B0085.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:09.269082+00:00",
+    "sha256": "492214e3ec7c233c0e1dd35c53f333d58d4c24d531d0583305e6ca129fe267a1",
+    "sourceFile": "sources/492214e3ec7c233c0e1dd35c53f333d58d4c24d531d0583305e6ca129fe267a1.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0085, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/1aba81f52e26f1cba927d2134ed6f4429a3e2e26e672a58698786ba11b8c51c0.txt",
+    "excerptSha256": "1aba81f52e26f1cba927d2134ed6f4429a3e2e26e672a58698786ba11b8c51c0",
+    "fullTextFile": "sources/79f5cdee91b6ef01ec1f67e61d72adc00d3214b0ad5cb96a5910836baee0ed01.native.txt",
+    "fullTextSha256": "79f5cdee91b6ef01ec1f67e61d72adc00d3214b0ad5cb96a5910836baee0ed01",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0085",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1518_60_B0086.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1518_60_B0086.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:09.529638+00:00",
+    "sha256": "e3c84587d341bffb6c2b709e0ec7a81afdb7ec7657fdb53637a42d927cfef77a",
+    "sourceFile": "sources/e3c84587d341bffb6c2b709e0ec7a81afdb7ec7657fdb53637a42d927cfef77a.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0086, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/5dc50737641232529b350fc59fd029709c75390c26444635e7a7bd778e5068cb.txt",
+    "excerptSha256": "5dc50737641232529b350fc59fd029709c75390c26444635e7a7bd778e5068cb",
+    "fullTextFile": "sources/88800fd540165910731d0a32bb1e3a22ec43939d170e8d69e019a7227636420a.native.txt",
+    "fullTextSha256": "88800fd540165910731d0a32bb1e3a22ec43939d170e8d69e019a7227636420a",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0086",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1519_60_B0087.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1519_60_B0087.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:10.540407+00:00",
+    "sha256": "7d09113dd2e82304f8477e4b5965e76c029edf18793ceec186abe26d0486e517",
+    "sourceFile": "sources/7d09113dd2e82304f8477e4b5965e76c029edf18793ceec186abe26d0486e517.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0087, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/67d41cbd9950659085e00db3e59c55ff0d4d9727e463883e8458f4e029769beb.txt",
+    "excerptSha256": "67d41cbd9950659085e00db3e59c55ff0d4d9727e463883e8458f4e029769beb",
+    "fullTextFile": "sources/0a8669002be8cddf294025dc40d1e5d8fa2feb838a63d1c7dfbad12ecdc06b29.native.txt",
+    "fullTextSha256": "0a8669002be8cddf294025dc40d1e5d8fa2feb838a63d1c7dfbad12ecdc06b29",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0087",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1520_60_B0088.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1520_60_B0088.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:10.386543+00:00",
+    "sha256": "bda08324d258b3468141d6002762294f1658c09fa6b1fa2d8177feb9614fa378",
+    "sourceFile": "sources/bda08324d258b3468141d6002762294f1658c09fa6b1fa2d8177feb9614fa378.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0088, two pages. All 16 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/f4c3de37b85f824786f43d9b389c17c8c7b761451bf553af88a96ab52f2ec907.txt",
+    "excerptSha256": "f4c3de37b85f824786f43d9b389c17c8c7b761451bf553af88a96ab52f2ec907",
+    "fullTextFile": "sources/1c30a84b2669adf5f762be0224856f76903fa3ef65e41293b3f5371f596307a1.native.txt",
+    "fullTextSha256": "1c30a84b2669adf5f762be0224856f76903fa3ef65e41293b3f5371f596307a1",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0088",
+    "localFieldCount": 16
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1521_60_B0089.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1521_60_B0089.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:10.655864+00:00",
+    "sha256": "4eedd8faa0c8209fbd809df45dda77024ddca88e5cce824bd09f09bc37fe9422",
+    "sourceFile": "sources/4eedd8faa0c8209fbd809df45dda77024ddca88e5cce824bd09f09bc37fe9422.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0089, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/858becd59f82893ddd0e1e385acc3011c8adbd15f69a81f131f328946f0c91da.txt",
+    "excerptSha256": "858becd59f82893ddd0e1e385acc3011c8adbd15f69a81f131f328946f0c91da",
+    "fullTextFile": "sources/7b5e4bf1166c44672cf23f449acb38d4a71860837b0a659f4249cac70bfc8138.native.txt",
+    "fullTextSha256": "7b5e4bf1166c44672cf23f449acb38d4a71860837b0a659f4249cac70bfc8138",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0089",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1522_60_B0090.pdf",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1522_60_B0090.pdf",
+    "sourceCheckedAt": "2026-11-03T05:06:10.593325+00:00",
+    "sha256": "9118c598317750d6c029734c78c17dbcfee6cbf4241beca53af79994c047545a",
+    "sourceFile": "sources/9118c598317750d6c029734c78c17dbcfee6cbf4241beca53af79994c047545a.source",
+    "role": "COMPLETE_STYLE_AUDIT_ONLY",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Entire native official November 3, 2026 Mecklenburg County sample B0090, two pages. All 17 complete local candidate blocks were extracted from native PDF text and compared against every published Mecklenburg style. All candidates on this style are represented in the 24-field county union; statewide, legislative and measure rows are outside this local change.",
+    "excerptFile": "sources/7b91cf7411406209a0c539c21aed8a846ab1b6a91011fa3e65fde08789dec2ff.txt",
+    "excerptSha256": "7b91cf7411406209a0c539c21aed8a846ab1b6a91011fa3e65fde08789dec2ff",
+    "fullTextFile": "sources/bff9bd81c50852e139162a618942ee78fb3a6d303ab9b2b0364bf199f75d9914.native.txt",
+    "fullTextSha256": "bff9bd81c50852e139162a618942ee78fb3a6d303ab9b2b0364bf199f75d9914",
+    "visualReview": {
+      "status": "NATIVE_TEXT_COMPLETE_LOCAL_BLOCK_COMPARISON;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    },
+    "ballotStyle": "B0090",
+    "localFieldCount": 17
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000",
+    "sourceCheckedAt": "2026-11-03T05:03:48.274041+00:00",
+    "sha256": "2d976dfd87e91b0be779cba3827cb6f773695b7c92878d3ab97c480a3be47b33",
+    "sourceFile": "sources/2d976dfd87e91b0be779cba3827cb6f773695b7c92878d3ab97c480a3be47b33.source",
+    "role": "PUBLISHED_STYLE_UNIVERSE",
+    "captureFormat": "ORIGINAL_XML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Complete public NCSBE sample-ballot bucket catalog pagination for election prefix 20261103. Exactly 90 Mecklenburg County (_60_) PDFs, styles B0001 through B0090; final IsTruncated=false. Public listing requires neither voter identity nor authentication."
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1aipk2GWpUozX%2FEe5cBBKuWtvKAPo5DkkJI7E48oTajiWECaRJn%2F8Mc01Y1l%2FsfNT",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1aipk2GWpUozX%2FEe5cBBKuWtvKAPo5DkkJI7E48oTajiWECaRJn%2F8Mc01Y1l%2FsfNT",
+    "sourceCheckedAt": "2026-11-03T05:06:43.811644+00:00",
+    "sha256": "e836257cd48ad08388cd32a4c9ca15b9fb36b6c68d04956756fa1b57b93ad54c",
+    "sourceFile": "sources/e836257cd48ad08388cd32a4c9ca15b9fb36b6c68d04956756fa1b57b93ad54c.source",
+    "role": "PUBLISHED_STYLE_UNIVERSE",
+    "captureFormat": "ORIGINAL_XML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Complete public NCSBE sample-ballot bucket catalog pagination for election prefix 20261103. Exactly 90 Mecklenburg County (_60_) PDFs, styles B0001 through B0090; final IsTruncated=false. Public listing requires neither voter identity nor authentication."
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1NwLyu2mRtCYl4pNBgK1vp7NeK%2F6W1pxQ09dUEWXzzrnKJExXnT7%2FfMvEJJrOOdeN",
+    "finalUrl": "https://s3.amazonaws.com/ncsbesb/?list-type=2&prefix=20261103%2F&max-keys=1000&continuation-token=1NwLyu2mRtCYl4pNBgK1vp7NeK%2F6W1pxQ09dUEWXzzrnKJExXnT7%2FfMvEJJrOOdeN",
+    "sourceCheckedAt": "2026-11-03T05:06:45.057902+00:00",
+    "sha256": "df3419c7e93f0da344061127d91e87a59f26b804bd4be5fe80eb728fef3fdff8",
+    "sourceFile": "sources/df3419c7e93f0da344061127d91e87a59f26b804bd4be5fe80eb728fef3fdff8.source",
+    "role": "PUBLISHED_STYLE_UNIVERSE",
+    "captureFormat": "ORIGINAL_XML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Complete public NCSBE sample-ballot bucket catalog pagination for election prefix 20261103. Exactly 90 Mecklenburg County (_60_) PDFs, styles B0001 through B0090; final IsTruncated=false. Public listing requires neither voter identity nor authentication."
+  },
+  {
+    "sourceUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=154",
+    "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=154",
+    "sourceCheckedAt": "2026-11-03T05:03:10.741744+00:00",
+    "sha256": "3297c432c41823e09548529e68bac0b771595bfa50a120198a4dd373bbdb753e",
+    "sourceFile": "sources/3297c432c41823e09548529e68bac0b771595bfa50a120198a4dd373bbdb753e.source",
+    "role": "PUBLIC_SOURCE_AUTHORITY_AND_DISCOVERY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Public NCSBE polling-place result page; current 11/03/2026 election embeds direct official sample PDF URLs in its public Kendo data. No registered-voter identity, login or CAPTCHA submitted."
+  },
+  {
+    "sourceUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=168",
+    "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=168",
+    "sourceCheckedAt": "2026-11-03T05:03:10.626056+00:00",
+    "sha256": "475368e6c11ce20fef8a57f92644a55321ff050d7d8ad9831043a5e0eed835d4",
+    "sourceFile": "sources/475368e6c11ce20fef8a57f92644a55321ff050d7d8ad9831043a5e0eed835d4.source",
+    "role": "PUBLIC_SOURCE_AUTHORITY_AND_DISCOVERY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Public NCSBE polling-place result page; current 11/03/2026 election embeds direct official sample PDF URLs in its public Kendo data. No registered-voter identity, login or CAPTCHA submitted."
+  },
+  {
+    "sourceUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=87",
+    "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=60&PollingPlaceID=87",
+    "sourceCheckedAt": "2026-11-03T05:03:10.548936+00:00",
+    "sha256": "b3bfc76aaf59e33b32a06df7ea2fea16b263255a2ba88623f0981d4509ea6de9",
+    "sourceFile": "sources/b3bfc76aaf59e33b32a06df7ea2fea16b263255a2ba88623f0981d4509ea6de9.source",
+    "role": "PUBLIC_SOURCE_AUTHORITY_AND_DISCOVERY",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Public NCSBE polling-place result page; current 11/03/2026 election embeds direct official sample PDF URLs in its public Kendo data. No registered-voter identity, login or CAPTCHA submitted."
+  },
+  {
+    "sourceUrl": "https://vote.mecknc.gov/2026-offices-ballot-and-filing-fees",
+    "finalUrl": "https://vote.mecknc.gov/2026-offices-ballot-and-filing-fees",
+    "sourceCheckedAt": "2026-11-03T05:03:46.942831+00:00",
+    "sha256": "5e53a94933080d36a714ddb1b5991814cd1239805ce349d528114fc7425a6dd7",
+    "sourceFile": "sources/5e53a94933080d36a714ddb1b5991814cd1239805ce349d528114fc7425a6dd7.source",
+    "role": "OFFICIAL_OFFICE_AND_CYCLE_CONTEXT",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "County election-cycle inventory corroborates all 2026 local office classes and superior districts 26-C/26-F/26-H. Its nine regular district-court seats are supplemented by the actual samples' additional unexpired Seat 6, ending 2029. City, town and Charlotte-Mecklenburg school board candidate elections are listed under 2027, not the 2026 sample set.",
+    "excerptFile": "sources/dc8742b85f1b1538ed9c86344332da17f0f8274fa11a34ae4d566a57072d9f05.txt",
+    "excerptSha256": "dc8742b85f1b1538ed9c86344332da17f0f8274fa11a34ae4d566a57072d9f05"
+  },
+  {
+    "sourceUrl": "https://www.ncsbe.gov/results-data/candidate-lists",
+    "finalUrl": "https://www.ncsbe.gov/results-data/candidate-lists",
+    "sourceCheckedAt": "2026-11-03T05:09:16.353326+00:00",
+    "sha256": "2dbdaadbbb6bc2553a5e53e0ad2ae15f59fb3ff773c5ee0b31de5ab08cc40955",
+    "sourceFile": "sources/2dbdaadbbb6bc2553a5e53e0ad2ae15f59fb3ff773c5ee0b31de5ab08cc40955.source",
+    "role": "CURRENT_STATUS_LINKING_PAGE",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Current official source linking the 2026 candidate CSV; independent current printed-name cross-check only. Actual samples are primary for every incoming field."
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+    "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+    "sourceCheckedAt": "2026-11-03T05:10:20.104439+00:00",
+    "sha256": "2f1c1b932dff920bc690c3e5fc1813ff4389cb5a28ef0b99d4bb06c9fef09cbe",
+    "sourceFile": "sources/2f1c1b932dff920bc690c3e5fc1813ff4389cb5a28ef0b99d4bb06c9fef09cbe.source",
+    "role": "CURRENT_OFFICIAL_LIST_CROSS_CHECK_ONLY",
+    "captureFormat": "ORIGINAL_CSV",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Current official November 3 general-election CSV independently matches all 31 printed local names, exact office labels and vote limits in the 90 actual samples. Selected safe fields saved separately; contact/address columns are never quoted to readers. This is corroboration, not a roster-only supplement.",
+    "excerptFile": "sources/7e07f894ce11f257008504d91dad168923c00b58679d90aff727b64a035a08f6.txt",
+    "excerptSha256": "7e07f894ce11f257008504d91dad168923c00b58679d90aff727b64a035a08f6"
+  },
+  {
+    "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Candidate%20Filing/2026_Fact_Sheet_Petition_Write_In_Candidate.pdf",
+    "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Candidate%20Filing/2026_Fact_Sheet_Petition_Write_In_Candidate.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:19.716765+00:00",
+    "sha256": "7d5f66047fc1874b625e7bc60f0197560a98f3297d577e022b88ffc8fb33439a",
+    "sourceFile": "sources/7d5f66047fc1874b625e7bc60f0197560a98f3297d577e022b88ffc8fb33439a.source",
+    "role": "OFFICIAL_WRITE_IN_RULES",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified source bytes; separately hashed extracted text where present.",
+    "evidence": "Official 2026 write-in rules: partisan candidate qualification controls whether a write-in slot appears; Soil and Water automatically allows write-ins without a qualification petition. All 23 local partisan fields have no write-in slot on all 90 published styles. Soil and Water prints two blank slots; blank slots are not named candidates. No separate named certification is inferred from a blank.",
+    "excerptFile": "sources/089d53ccb4889af76aabfba9fb1e041118d4ce0138a3577ffa9747685c61f57c.txt",
+    "excerptSha256": "089d53ccb4889af76aabfba9fb1e041118d4ce0138a3577ffa9747685c61f57c",
+    "fullTextFile": "sources/51ca8ba01e469d5c9c77969e1f7d283e025742b03c0f9e73a23c75fde449a786.native.txt",
+    "fullTextSha256": "51ca8ba01e469d5c9c77969e1f7d283e025742b03c0f9e73a23c75fde449a786"
+  }
+]

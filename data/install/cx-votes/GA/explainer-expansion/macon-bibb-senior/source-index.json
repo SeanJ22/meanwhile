@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1538/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1538/download",
+      "rawPath": "sources/a025f1e91c884d5f68d59fcbf525b04f93801ecef988a31d81e4cdca324ca64d.source",
+      "rawHash": "a025f1e91c884d5f68d59fcbf525b04f93801ecef988a31d81e4cdca324ca64d",
+      "textPath": "sources/65dd41c19e9d56dedf878322c29721e10103f75c098cd4a0322577b57d46129a.txt",
+      "textSha256": "65dd41c19e9d56dedf878322c29721e10103f75c098cd4a0322577b57d46129a",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:macon-bibb-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

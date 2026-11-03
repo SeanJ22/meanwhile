@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1492/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1492/download",
+      "rawPath": "sources/9956076506aba53b3cf65f7d27f8436c9799f26e1f76c876ed1c2401fb5dfc10.source",
+      "rawHash": "9956076506aba53b3cf65f7d27f8436c9799f26e1f76c876ed1c2401fb5dfc10",
+      "textPath": "sources/9f4ec11bae637bc41b6d84e08ec6fa7fdb5823863fd0e6b668fcb58b44845e80.txt",
+      "textSha256": "9f4ec11bae637bc41b6d84e08ec6fa7fdb5823863fd0e6b668fcb58b44845e80",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:hampton-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

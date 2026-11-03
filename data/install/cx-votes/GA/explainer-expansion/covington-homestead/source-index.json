@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1503/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1503/download",
+      "rawPath": "sources/4923b3e30d8081a82218524e90e1410525af52039d95552c846495dcbe0a21d8.source",
+      "rawHash": "4923b3e30d8081a82218524e90e1410525af52039d95552c846495dcbe0a21d8",
+      "textPath": "sources/05a547626668f161baee249835a57c68cfe7d0c47722a8418e3e01604b709d1d.txt",
+      "textSha256": "05a547626668f161baee249835a57c68cfe7d0c47722a8418e3e01604b709d1d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:covington-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

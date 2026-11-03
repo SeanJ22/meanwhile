@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:lee-school-bond-senior",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:lee_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Lee County schools — senior exemption from school bond taxes",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:06.401773+00:00",
+            "verifiedAt": "2026-11-03T07:40:09.055384+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Lee County school district ad valorem taxes for school bond purposes in the amount of the full assessed value of the homestead for residents of that school district who are 67 years of age or older?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:lee-school-bond-senior#question",
+          "contestId": "ga-local-2026:lee-school-bond-senior",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Lee County school district ad valorem taxes for school bond purposes in the amount of the full assessed value of the homestead for residents of that school district who are 67 years of age or older?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:06.401773+00:00",
+            "verifiedAt": "2026-11-03T07:40:09.055384+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Lee County school district ad valorem taxes for school bond purposes in the amount of the full assessed value of the homestead for residents of that school district who are 67 years of age or older?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:lee-school-bond-senior",
+          "whatItDoes": "Exempts the full assessed value of a qualifying homestead from Lee County school-district taxes used to pay principal and interest on school bonds, beginning January 1, 2027 if voters approve. The resident must be at least 67 on January 1 of the application year. This proposal covers school bond taxes, and it adds to other school-tax homestead exemptions; it does not exempt state, county, city or independent-school-district taxes. The resident or an agent must apply to the county tax commissioner; the exemption then renews while the home remains the resident’s homestead, and recipients must report loss of eligibility.",
+          "yesMeans": "Approve the full exemption from school bond taxes for qualifying residents age 67 or older.",
+          "noMeans": "Reject this proposed exemption from school bond taxes.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+          "sourceHash": "72c33aa26e7b5db85778ade7375fbd6b26a0f2af42c25f3cee60adb410fbca75",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:40:09.055384+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:40:09.055384+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+        "httpStatus": 200,
+        "rawHash": "72c33aa26e7b5db85778ade7375fbd6b26a0f2af42c25f3cee60adb410fbca75",
+        "retrievedAt": "2026-11-03T07:27:06.401773+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

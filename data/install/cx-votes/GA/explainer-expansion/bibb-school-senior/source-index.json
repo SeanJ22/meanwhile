@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+      "rawPath": "sources/fef1ddc4e989fa6ad295d5423fa6a4468a32fbce6b1f3b7f70edf5561bd5ee1b.source",
+      "rawHash": "fef1ddc4e989fa6ad295d5423fa6a4468a32fbce6b1f3b7f70edf5561bd5ee1b",
+      "textPath": "sources/34de5c86594e2f6da14ae69eaefe40a88524d165a90c7543ef1fe7900a88303d.txt",
+      "textSha256": "34de5c86594e2f6da14ae69eaefe40a88524d165a90c7543ef1fe7900a88303d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:bibb-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

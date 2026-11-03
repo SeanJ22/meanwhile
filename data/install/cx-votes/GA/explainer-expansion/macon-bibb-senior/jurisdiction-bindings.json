@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ga-local-2026:macon-bibb-senior",
+    "ocdId": "ocd-division/country:us/state:ga/place:macon_bibb_county",
+    "registeredDivisionIndex": 1121,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ga/place:macon_bibb_county",
+      "place",
+      "1349008",
+      "Macon-Bibb County"
+    ],
+    "registryPath": "data/derived/registration/ga.json",
+    "registrySha256": "bd1db4a62ae32bbf870e70d68d5a483f6da6cd6c8e58171615dcf30cdd0f4d0e",
+    "government": [
+      "102163",
+      "ga:city:county-of-macon-bibb",
+      "COUNTY OF MACON-BIBB",
+      "MUNICIPAL",
+      1121,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing registered government and its primary division; source explicitly calls the referendum for these electors."
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge this independent partial ballot input through the existing runBallotPublication({state:\"GA\",directory}) admission. Retain every unrelated held contest, candidate, question and explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "Georgia local universe remains open; this independently installable input contains one verified question."
+  },
+  "subjects": [
+    {
+      "id": "ga-local-2026:ware-school-senior",
+      "ocdId": "ocd-division/country:us/state:ga/school_district:ware_county_school_district",
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1566/download"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original native official PDF bytes with complete unmodified text and exact normalized full question. Signed-Act questions are explicitly identified as statutory November 3, 2026 election calls; county final-sample status is asserted only for the Cobb consolidated sample.",
+  "reviewedScratchPacketSha256": "76a932c5676381a49b3ff6c22c248c64e0f5d267be366e723e10e15daeaed047",
+  "canonicalInputSha256": "5158434e7320ae937553396c2de86c328919d28ac3775c5911a8a5075066edd8",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ballot-input/ga.json"
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

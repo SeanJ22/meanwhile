@@ -1,0 +1,36 @@
+{
+  "state": "GA",
+  "heldBallotIdentityMatches": true,
+  "contests": 1,
+  "questions": 1,
+  "measureRecords": 1,
+  "usableReaderRecords": 1,
+  "packetSha256": "0caec4ed318359e4147623ef10facb02ce4de2a2264174aba2225ae3a78bad3b",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "ga-local-2026:covington-homestead",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "0caec4ed318359e4147623ef10facb02ce4de2a2264174aba2225ae3a78bad3b",
+  "canonicalInputSha256": "55a5c01bb14bc3753b1f257c5803f73fe8ab31a006a41067d6939cd9dba3e092"
+}

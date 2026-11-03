@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:bibb-school-senior",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:bibb_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Bibb County — senior homestead exemption tiers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:55.554685+00:00",
+            "verifiedAt": "2026-11-03T07:40:09.055384+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Bibb County school district ad valorem taxes for educational purposes: (1) In the amount of $17,000.00 of the assessed value of the homestead for residents of that county who are between the ages of 65 and 74; (2) In the amount of $32,000.00 of the assessed value of the homestead for residents of that county who are between the ages of 75 and 84; and (3) In the amount of the full assessed value of the homestead for residents who are 85 years of age and older?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:bibb-school-senior#question",
+          "contestId": "ga-local-2026:bibb-school-senior",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Bibb County school district ad valorem taxes for educational purposes: (1) In the amount of $17,000.00 of the assessed value of the homestead for residents of that county who are between the ages of 65 and 74; (2) In the amount of $32,000.00 of the assessed value of the homestead for residents of that county who are between the ages of 75 and 84; and (3) In the amount of the full assessed value of the homestead for residents who are 85 years of age and older?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:55.554685+00:00",
+            "verifiedAt": "2026-11-03T07:40:09.055384+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Bibb County school district ad valorem taxes for educational purposes: (1) In the amount of $17,000.00 of the assessed value of the homestead for residents of that county who are between the ages of 65 and 74; (2) In the amount of $32,000.00 of the assessed value of the homestead for residents of that county who are between the ages of 75 and 84; and (3) In the amount of the full assessed value of the homestead for residents who are 85 years of age and older?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:bibb-school-senior",
+          "whatItDoes": "Creates age-based homestead exemptions from Bibb County school-district property taxes, including bond taxes, beginning January 1, 2027 if voters approve. Residents ages 65 through 74 would receive a $17,000 exemption from assessed homestead value; residents ages 75 through 84 would receive $32,000; residents 85 or older would receive an exemption for the full assessed value. Assessed value above a partial exemption remains taxable. The exemption replaces other homestead exemptions for these school-district taxes and does not apply to state, county, city or independent-school-district property taxes. The resident or an agent must apply to the county tax commissioner; the exemption then renews while the home remains the resident’s homestead, and recipients must report loss of eligibility.",
+          "yesMeans": "Approve the proposed $17,000, $32,000 and full-value homestead exemptions for the three senior age groups.",
+          "noMeans": "Reject these proposed senior homestead exemptions.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+          "sourceHash": "fef1ddc4e989fa6ad295d5423fa6a4468a32fbce6b1f3b7f70edf5561bd5ee1b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:40:09.055384+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:40:09.055384+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+        "httpStatus": 200,
+        "rawHash": "fef1ddc4e989fa6ad295d5423fa6a4468a32fbce6b1f3b7f70edf5561bd5ee1b",
+        "retrievedAt": "2026-11-03T07:26:55.554685+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

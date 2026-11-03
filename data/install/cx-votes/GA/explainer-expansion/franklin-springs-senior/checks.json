@@ -1,0 +1,36 @@
+{
+  "state": "GA",
+  "heldBallotIdentityMatches": true,
+  "contests": 1,
+  "questions": 1,
+  "measureRecords": 1,
+  "usableReaderRecords": 1,
+  "packetSha256": "ce30733e7aa49a60f7e697809991d0b5808461c3d8499f908dd6d3b5410123c0",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "ga-local-2026:franklin-springs-senior",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "ce30733e7aa49a60f7e697809991d0b5808461c3d8499f908dd6d3b5410123c0",
+  "canonicalInputSha256": "71055741ec5d11654bfd6a4ae997ba57fa93ec36378be59368437ebf89efe41a"
+}

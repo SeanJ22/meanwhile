@@ -1,0 +1,36 @@
+{
+  "state": "GA",
+  "heldBallotIdentityMatches": true,
+  "contests": 1,
+  "questions": 1,
+  "measureRecords": 1,
+  "usableReaderRecords": 1,
+  "packetSha256": "5ad1df5b8ec049de53185aa6c4ce50e42971c633c4ba01bc3ab124e7ad841c0b",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "ga-local-2026:lee-school-bond-senior",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "5ad1df5b8ec049de53185aa6c4ce50e42971c633c4ba01bc3ab124e7ad841c0b",
+  "canonicalInputSha256": "f93e9247df8a15472aaf8db9422bbf1f92ab1fd417de26fc1f0040d0672ac8fc"
+}

@@ -1,0 +1,36 @@
+{
+  "state": "GA",
+  "heldBallotIdentityMatches": true,
+  "contests": 1,
+  "questions": 1,
+  "measureRecords": 1,
+  "usableReaderRecords": 1,
+  "packetSha256": "21568e9436949e5596f26d8b342046a11169bc4efbe02b4cd05dda3745470f16",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "ga-local-2026:hampton-homestead",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "21568e9436949e5596f26d8b342046a11169bc4efbe02b4cd05dda3745470f16",
+  "canonicalInputSha256": "6a2e913f28f98ac9685a38d1ee4c08b9795bc42a438a2069e506fb9022484789"
+}

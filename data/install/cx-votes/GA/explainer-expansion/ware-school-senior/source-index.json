@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1566/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1566/download",
+      "rawPath": "sources/18b5de93a52667f7f9e98e15bbf6708e9811ce5300686d3dfdcc14e68370e3b1.source",
+      "rawHash": "18b5de93a52667f7f9e98e15bbf6708e9811ce5300686d3dfdcc14e68370e3b1",
+      "textPath": "sources/c5532abff388e4ba08ed59d8b354431225ca7ac60a8eb26fd8259e6f9ff49807.txt",
+      "textSha256": "c5532abff388e4ba08ed59d8b354431225ca7ac60a8eb26fd8259e6f9ff49807",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:ware-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

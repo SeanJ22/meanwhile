@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1598/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1598/download",
+      "rawPath": "sources/a356df239ed178c2a75aabc88b45dc01baaa1534eb9fc5e665c67d2f09709204.source",
+      "rawHash": "a356df239ed178c2a75aabc88b45dc01baaa1534eb9fc5e665c67d2f09709204",
+      "textPath": "sources/b22bceddbacd6616e9db174da69818fed2a5f7df952d9a47274b8d5e2c254d26.txt",
+      "textSha256": "b22bceddbacd6616e9db174da69818fed2a5f7df952d9a47274b8d5e2c254d26",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:laurens-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

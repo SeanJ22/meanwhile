@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1527/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1527/download",
+      "rawPath": "sources/3a48e5ab47df27a7b5abfdee1a22b94c3fbf3ddac97dd625237c41baa305fabc.source",
+      "rawHash": "3a48e5ab47df27a7b5abfdee1a22b94c3fbf3ddac97dd625237c41baa305fabc",
+      "textPath": "sources/1045bf894931c59f9d425c8d66ec7cb47ea45035134eed8996ea45531f23ebd2.txt",
+      "textSha256": "1045bf894931c59f9d425c8d66ec7cb47ea45035134eed8996ea45531f23ebd2",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:franklin-springs-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

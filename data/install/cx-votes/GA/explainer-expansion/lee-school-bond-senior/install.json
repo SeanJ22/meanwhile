@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge this independent partial ballot input through the existing runBallotPublication({state:\"GA\",directory}) admission. Retain every unrelated held contest, candidate, question and explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "Georgia local universe remains open; this independently installable input contains one verified question."
+  },
+  "subjects": [
+    {
+      "id": "ga-local-2026:lee-school-bond-senior",
+      "ocdId": "ocd-division/country:us/state:ga/school_district:lee_county_school_district",
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original native official PDF bytes with complete unmodified text and exact normalized full question. Signed-Act questions are explicitly identified as statutory November 3, 2026 election calls; county final-sample status is asserted only for the Cobb consolidated sample.",
+  "reviewedScratchPacketSha256": "5ad1df5b8ec049de53185aa6c4ce50e42971c633c4ba01bc3ab124e7ad841c0b",
+  "canonicalInputSha256": "f93e9247df8a15472aaf8db9422bbf1f92ab1fd417de26fc1f0040d0672ac8fc",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ballot-input/ga.json"
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

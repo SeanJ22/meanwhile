@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+      "rawPath": "sources/72c33aa26e7b5db85778ade7375fbd6b26a0f2af42c25f3cee60adb410fbca75.source",
+      "rawHash": "72c33aa26e7b5db85778ade7375fbd6b26a0f2af42c25f3cee60adb410fbca75",
+      "textPath": "sources/b60f3f3519ffcf26210b51f9295af9a1dd818bb7259f0eda701f8d9e7f12131d.txt",
+      "textSha256": "b60f3f3519ffcf26210b51f9295af9a1dd818bb7259f0eda701f8d9e7f12131d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:lee-school-bond-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

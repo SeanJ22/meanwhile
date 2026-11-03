@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-03T05:29:31.944152+00:00",
+  "preparedAt": "2026-11-03T05:32:51.972254+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -666,7 +666,7 @@
     }
   ],
   "activeFocus": "EXPLAINERS_ONLY",
-  "explainersPreparedThroughCommit": "67b944f5b1bb38b2199245375ac1cd4855c08f33",
+  "explainersPreparedThroughCommit": "823a21f5e4e22b87ca4d6fce9b3a4fe7b718145e",
   "states": [
     {
       "state": "AK",
@@ -730,8 +730,32 @@
     },
     {
       "state": "CA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 46,
       "dataInstalls": [
+        {
+          "manifest": "CA/explainer-expansion/los-angeles-schools/install.json",
+          "preparedExplainers": 13,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/orange/install.json",
+          "preparedExplainers": 15,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/san-luis-obispo/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/solano/install.json",
+          "preparedExplainers": 11,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "CA/install.json",
           "preparedExplainers": 1,
@@ -742,10 +766,70 @@
     },
     {
       "state": "CO",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 29,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 132,
       "dataInstalls": [
         {
+          "manifest": "CO/explainer-expansion/adams/install.json",
+          "preparedExplainers": 13,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/arapahoe/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/boulder/install.json",
+          "preparedExplainers": 23,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/broomfield-re8/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/broomfield/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/district-geography/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/douglas/install.json",
+          "preparedExplainers": 17,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/explainer-expansion/install.json",
+          "preparedExplainers": 10,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/jefferson/install.json",
+          "preparedExplainers": 19,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/larimer/install.json",
+          "preparedExplainers": 8,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/weld/install.json",
           "preparedExplainers": 10,
           "contractId": "ballot-contests:CO",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
@@ -784,8 +868,14 @@
     },
     {
       "state": "FL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 12,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 15,
       "dataInstalls": [
+        {
+          "manifest": "FL/explainer-expansion/hernando-duval-walton/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "FL/explainer-expansion/install.json",
           "preparedExplainers": 8,
@@ -796,6 +886,18 @@
           "manifest": "FL/install.json",
           "preparedExplainers": 4,
           "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "GA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "dataInstalls": [
+        {
+          "manifest": "GA/explainer-expansion/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -813,13 +915,73 @@
       ]
     },
     {
+      "state": "IL",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 14,
+      "dataInstalls": [
+        {
+          "manifest": "IL/explainer-expansion/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:IL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IL/explainer-expansion/will/install.json",
+          "preparedExplainers": 10,
+          "contractId": "ballot-contests:IL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
       "state": "IN",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 42,
       "dataInstalls": [
         {
           "manifest": "IN/explainer-expansion/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:IN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IN/explainer-expansion/ipec/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:IN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IN/explainer-expansion/lebanon/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:IN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IN/explainer-expansion/reorganization-town/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:IN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IN/explainer-expansion/school-aliases/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:IN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IN/explainer-expansion/schools/install.json",
+          "preparedExplainers": 36,
+          "contractId": "ballot-contests:IN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "LA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 33,
+      "dataInstalls": [
+        {
+          "manifest": "LA/explainer-expansion/install.json",
+          "preparedExplainers": 33,
+          "contractId": "ballot-contests:LA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -862,12 +1024,30 @@
     },
     {
       "state": "MD",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 6,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 7,
       "dataInstalls": [
+        {
+          "manifest": "MD/explainer-expansion/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:MD",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "MD/install.json",
           "preparedExplainers": 6,
           "contractId": "ballot-contests:MD",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "ME",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 3,
+      "dataInstalls": [
+        {
+          "manifest": "ME/explainer-expansion/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:ME",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -927,6 +1107,18 @@
       ]
     },
     {
+      "state": "MT",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 2,
+      "dataInstalls": [
+        {
+          "manifest": "MT/explainer-expansion/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:MT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
       "state": "NC",
       "uniquePreparedExplanationsOrAttachmentRepairs": 50,
       "dataInstalls": [
@@ -963,6 +1155,24 @@
       ]
     },
     {
+      "state": "NJ",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 8,
+      "dataInstalls": [
+        {
+          "manifest": "NJ/explainer-expansion/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:NJ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NJ/explainer-expansion/park-ridge-warren-supplement/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:NJ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
       "state": "NM",
       "uniquePreparedExplanationsOrAttachmentRepairs": 1,
       "dataInstalls": [
@@ -970,6 +1180,18 @@
           "manifest": "NM/explainer-expansion/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:NM",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "NV",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 3,
+      "dataInstalls": [
+        {
+          "manifest": "NV/explainer-expansion/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:NV",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -988,8 +1210,26 @@
     },
     {
       "state": "OH",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 4,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 45,
       "dataInstalls": [
+        {
+          "manifest": "OH/explainer-expansion/wayne-more/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:OH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "OH/explainer-expansion/wayne/install.json",
+          "preparedExplainers": 29,
+          "contractId": "ballot-contests:OH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "OH/explainer-expansion/wyandot/install.json",
+          "preparedExplainers": 7,
+          "contractId": "ballot-contests:OH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "OH/install.json",
           "preparedExplainers": 4,
@@ -1024,8 +1264,14 @@
     },
     {
       "state": "PA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 8,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 12,
       "dataInstalls": [
+        {
+          "manifest": "PA/explainer-expansion/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:PA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "PA/install.json",
           "preparedExplainers": 1,
@@ -1036,6 +1282,18 @@
           "manifest": "PA/lehigh-measures/install.json",
           "preparedExplainers": 7,
           "contractId": "ballot-contests:PA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "RI",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 7,
+      "dataInstalls": [
+        {
+          "manifest": "RI/explainer-expansion/install.json",
+          "preparedExplainers": 7,
+          "contractId": "ballot-contests:RI",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -1066,6 +1324,24 @@
           "manifest": "TN/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:TN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "TX",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 27,
+      "dataInstalls": [
+        {
+          "manifest": "TX/explainer-expansion/austin-final/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:TX",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "TX/explainer-expansion/travis/install.json",
+          "preparedExplainers": 25,
+          "contractId": "ballot-contests:TX",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -1113,6 +1389,24 @@
       ]
     },
     {
+      "state": "WV",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 15,
+      "dataInstalls": [
+        {
+          "manifest": "WV/explainer-expansion/grafton-supplement/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:WV",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WV/explainer-expansion/install.json",
+          "preparedExplainers": 14,
+          "contractId": "ballot-contests:WV",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
       "state": "WY",
       "uniquePreparedExplanationsOrAttachmentRepairs": 1,
       "dataInstalls": [
@@ -1126,8 +1420,8 @@
     }
   ],
   "currentExplainerPreparation": {
-    "uniquePreparedExplanationsOrAttachmentRepairs": 769,
-    "statesAndDCWithPreparedChanges": 29,
+    "uniquePreparedExplanationsOrAttachmentRepairs": 1120,
+    "statesAndDCWithPreparedChanges": 39,
     "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
     "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",
     "knownBoundedInventoriesPrepared": {

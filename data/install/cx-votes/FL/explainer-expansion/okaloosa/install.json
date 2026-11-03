@@ -1,0 +1,54 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T07:10:39.703065+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-okaloosa-half-cent-surtax-renewal",
+      "title": "Okaloosa County — Ten-year half-cent infrastructure sales surtax renewal",
+      "ocdId": "ocd-division/country:us/state:fl/county:okaloosa"
+    },
+    {
+      "id": "fl-2026-mary-esther-november-elections",
+      "title": "Mary Esther — Ballot Question 1: November election dates",
+      "ocdId": "ocd-division/country:us/state:fl/place:mary_esther"
+    },
+    {
+      "id": "fl-2026-valparaiso-appointed-officer-residency",
+      "title": "Valparaiso — Ballot Question 1: Residency rules for appointed officers",
+      "ocdId": "ocd-division/country:us/state:fl/place:valparaiso"
+    }
+  ],
+  "operation": "Merge three positively verified city/county questions and neutral explanations, preserving prior candidate and measure facts.",
+  "coverageLimit": "The current official booklet also has a Holt Fire District impact-fee question. Its exact district electorate still needs a source-backed reader scope; this packet contains only the three verified county/city questions and does not claim statewide completeness.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T07:10:41.621Z",
+    "preparedRecords": 3,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all three official question regions visually checked against native source renders",
+    "officialAuthority": "PASS; county .gov election page delegates the original Okaloosa delivery CDN; saved HTML sanitized with native hash separate",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/okaloosa",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "7f7dfd73776274e661f0809cf9df727ce6ee24ec78f8bbf510d16b770896a055",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

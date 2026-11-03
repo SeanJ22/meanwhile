@@ -1,0 +1,158 @@
+{
+  "preparedAt": "2026-11-03T07:10:39.703065+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sha256": "6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f",
+      "bytes": 1962853,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_ELECTION_SOURCE",
+      "sourceUrl": "https://okaloosa-soe.s3.amazonaws.com/uploads/2026/09/28150910/2026-General-Sample-Ballot-Booklet-web.pdf",
+      "retrievedAt": "2026-11-03T06:09:35.222543+00:00"
+    },
+    {
+      "file": "sources/2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf.txt",
+      "sha256": "2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf",
+      "bytes": 159814,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf"
+    },
+    {
+      "file": "sources/a32ca3588781850797b4c6df5c87d387c734ea32117dbb664a502f105ac233e7.txt",
+      "sha256": "a32ca3588781850797b4c6df5c87d387c734ea32117dbb664a502f105ac233e7",
+      "bytes": 742,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 7,
+      "bbox": [
+        378,
+        129,
+        558,
+        453
+      ]
+    },
+    {
+      "file": "sources/f136889b58957a4147c8345c4db2e4b55d6ad28c4de5e3d6ba510d455e332dd4.txt",
+      "sha256": "f136889b58957a4147c8345c4db2e4b55d6ad28c4de5e3d6ba510d455e332dd4",
+      "bytes": 509,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 7,
+      "bbox": [
+        378,
+        129,
+        558,
+        453
+      ]
+    },
+    {
+      "file": "sources/73a4f39cc264beb8cda50d06e8b2c26fa43a091eba34d5a5b296d7dfe5e288b9.png",
+      "sha256": "73a4f39cc264beb8cda50d06e8b2c26fa43a091eba34d5a5b296d7dfe5e288b9",
+      "bytes": 94145,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 7,
+      "bbox": [
+        378,
+        129,
+        558,
+        453
+      ]
+    },
+    {
+      "file": "sources/83c37e5751a1390fb57883fd4cf83bc98663087583b6d8876e321390dd95dbc5.txt",
+      "sha256": "83c37e5751a1390fb57883fd4cf83bc98663087583b6d8876e321390dd95dbc5",
+      "bytes": 308,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        52,
+        436,
+        237,
+        657
+      ]
+    },
+    {
+      "file": "sources/7ab62dc13faef6492e5f7e0a8c154295e23280f554f5d5079fa00d5706b4ae5e.txt",
+      "sha256": "7ab62dc13faef6492e5f7e0a8c154295e23280f554f5d5079fa00d5706b4ae5e",
+      "bytes": 184,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        52,
+        436,
+        237,
+        657
+      ]
+    },
+    {
+      "file": "sources/c43907179097f7e564fcad3a0727695a78a9c5a41e7c8aa9f82dc45cad3b3721.png",
+      "sha256": "c43907179097f7e564fcad3a0727695a78a9c5a41e7c8aa9f82dc45cad3b3721",
+      "bytes": 52252,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        52,
+        436,
+        237,
+        657
+      ]
+    },
+    {
+      "file": "sources/867e162fd9b2f757dabc5114fa20ac50193d79983384f466f1a2edb7b284c252.txt",
+      "sha256": "867e162fd9b2f757dabc5114fa20ac50193d79983384f466f1a2edb7b284c252",
+      "bytes": 533,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        378,
+        122,
+        558,
+        385
+      ]
+    },
+    {
+      "file": "sources/c1b3ec3fb125920f8b3e49e0d7a5481aa3c362543fd6ebfd1fcd296c6db687b3.txt",
+      "sha256": "c1b3ec3fb125920f8b3e49e0d7a5481aa3c362543fd6ebfd1fcd296c6db687b3",
+      "bytes": 391,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        378,
+        122,
+        558,
+        385
+      ]
+    },
+    {
+      "file": "sources/5da349935a874d0ff23335fb28e1fa013f7248213c1cf8df49387bef6a11fe76.png",
+      "sha256": "5da349935a874d0ff23335fb28e1fa013f7248213c1cf8df49387bef6a11fe76",
+      "bytes": 74791,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        378,
+        122,
+        558,
+        385
+      ]
+    },
+    {
+      "file": "sources/5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d.html",
+      "sha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "bytes": 123200,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.voteokaloosa.gov/voters/sample-ballots/",
+      "retrievedAt": "2026-11-03T05:13:28.748482+00:00",
+      "nativeCaptureSha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official linking HTML; native original retained only in acquisition scratch. Stored hash identifies sanitized bytes, not a raw original."
+    }
+  ]
+}

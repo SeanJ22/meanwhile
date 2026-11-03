@@ -1,0 +1,134 @@
+[
+  {
+    "contestId": "fl-2026-okaloosa-half-cent-surtax-renewal",
+    "ocdId": "ocd-division/country:us/state:fl/county:okaloosa",
+    "sourceUrl": "https://okaloosa-soe.s3.amazonaws.com/uploads/2026/09/28150910/2026-General-Sample-Ballot-Booklet-web.pdf",
+    "rawPdfFile": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+    "rawPdfSha256": "6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f",
+    "nativeTextFile": "sources/2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf.txt",
+    "boundedTextFile": "sources/a32ca3588781850797b4c6df5c87d387c734ea32117dbb664a502f105ac233e7.txt",
+    "textFilePerMeasure": "sources/f136889b58957a4147c8345c4db2e4b55d6ad28c4de5e3d6ba510d455e332dd4.txt",
+    "imageFile": "sources/73a4f39cc264beb8cda50d06e8b2c26fa43a091eba34d5a5b296d7dfe5e288b9.png",
+    "sourcePage": 7,
+    "bbox": [
+      378,
+      129,
+      558,
+      453
+    ],
+    "jurisdictionQuote": "Okaloosa County Referendum",
+    "fields": {
+      "whatItDoes": [
+        "Shall the County continue to levy a half-cent sales surtax on taxable transactions countywide for ten years, effective January 1, 2029, for funding critical needs including essential law enforcement/public safety facilities; land acquisitions; reduce traffic congestion; construction and repairing roads, bridges, and sidewalks; flood control and water quality improvements; associated equipment; and construct other public facility improvements and pay debt, subject to oversight by a citizens’ committee?"
+      ],
+      "yesMeans": [
+        "Shall the County continue to levy a half-cent sales surtax on taxable transactions countywide for ten years, effective January 1, 2029, for funding critical needs including essential law enforcement/public safety facilities; land acquisitions; reduce traffic congestion; construction and repairing roads, bridges, and sidewalks; flood control and water quality improvements; associated equipment; and construct other public facility improvements and pay debt, subject to oversight by a citizens’ committee?"
+      ],
+      "noMeans": [
+        "Shall the County continue to levy a half-cent sales surtax on taxable transactions countywide for ten years, effective January 1, 2029, for funding critical needs including essential law enforcement/public safety facilities; land acquisitions; reduce traffic congestion; construction and repairing roads, bridges, and sidewalks; flood control and water quality improvements; associated equipment; and construct other public facility improvements and pay debt, subject to oversight by a citizens’ committee?"
+      ]
+    },
+    "choices": [
+      "For the one-half cent sales tax",
+      "Against the one-half cent sales tax"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "Exact printed scope, date, duration, permitted uses and retained residency conditions preserved. No unprinted transition term extensions or implementation details are inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.voteokaloosa.gov/voters/sample-ballots/",
+      "file": "sources/5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d.html",
+      "sha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "nativeCaptureSha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "retrievedAt": "2026-11-03T05:13:28.748482+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    }
+  },
+  {
+    "contestId": "fl-2026-mary-esther-november-elections",
+    "ocdId": "ocd-division/country:us/state:fl/place:mary_esther",
+    "sourceUrl": "https://okaloosa-soe.s3.amazonaws.com/uploads/2026/09/28150910/2026-General-Sample-Ballot-Booklet-web.pdf",
+    "rawPdfFile": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+    "rawPdfSha256": "6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f",
+    "nativeTextFile": "sources/2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf.txt",
+    "boundedTextFile": "sources/83c37e5751a1390fb57883fd4cf83bc98663087583b6d8876e321390dd95dbc5.txt",
+    "textFilePerMeasure": "sources/7ab62dc13faef6492e5f7e0a8c154295e23280f554f5d5079fa00d5706b4ae5e.txt",
+    "imageFile": "sources/c43907179097f7e564fcad3a0727695a78a9c5a41e7c8aa9f82dc45cad3b3721.png",
+    "sourcePage": 9,
+    "bbox": [
+      52,
+      436,
+      237,
+      657
+    ],
+    "jurisdictionQuote": "City of Mary Esther Referendum",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City Charter be amended to move the election dates for the mayor and city council to coincide with the November statewide general election cycle, which occurs in even years?"
+      ],
+      "yesMeans": [
+        "Shall the City Charter be amended to move the election dates for the mayor and city council to coincide with the November statewide general election cycle, which occurs in even years?"
+      ],
+      "noMeans": [
+        "Shall the City Charter be amended to move the election dates for the mayor and city council to coincide with the November statewide general election cycle, which occurs in even years?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "Exact printed scope, date, duration, permitted uses and retained residency conditions preserved. No unprinted transition term extensions or implementation details are inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.voteokaloosa.gov/voters/sample-ballots/",
+      "file": "sources/5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d.html",
+      "sha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "nativeCaptureSha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "retrievedAt": "2026-11-03T05:13:28.748482+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    }
+  },
+  {
+    "contestId": "fl-2026-valparaiso-appointed-officer-residency",
+    "ocdId": "ocd-division/country:us/state:fl/place:valparaiso",
+    "sourceUrl": "https://okaloosa-soe.s3.amazonaws.com/uploads/2026/09/28150910/2026-General-Sample-Ballot-Booklet-web.pdf",
+    "rawPdfFile": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+    "rawPdfSha256": "6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f",
+    "nativeTextFile": "sources/2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf.txt",
+    "boundedTextFile": "sources/867e162fd9b2f757dabc5114fa20ac50193d79983384f466f1a2edb7b284c252.txt",
+    "textFilePerMeasure": "sources/c1b3ec3fb125920f8b3e49e0d7a5481aa3c362543fd6ebfd1fcd296c6db687b3.txt",
+    "imageFile": "sources/5da349935a874d0ff23335fb28e1fa013f7248213c1cf8df49387bef6a11fe76.png",
+    "sourcePage": 9,
+    "bbox": [
+      378,
+      122,
+      558,
+      385
+    ],
+    "jurisdictionQuote": "City of Valparaiso Referendum",
+    "fields": {
+      "whatItDoes": [
+        "Shall Article II, Section 3 of the City Charter be amended to remove the requirement that appointed officers for City Clerk, Tax Assessor, Tax Collector, Treasurer, Municipal Judge, and Chief of Police must reside within the corporate limits of the City of Valparaiso for six (6) months prior to appointment, while preserving this residency requirement for the Mayor and City Commissioners?"
+      ],
+      "yesMeans": [
+        "Shall Article II, Section 3 of the City Charter be amended to remove the requirement that appointed officers for City Clerk, Tax Assessor, Tax Collector, Treasurer, Municipal Judge, and Chief of Police must reside within the corporate limits of the City of Valparaiso for six (6) months prior to appointment, while preserving this residency requirement for the Mayor and City Commissioners?"
+      ],
+      "noMeans": [
+        "Shall Article II, Section 3 of the City Charter be amended to remove the requirement that appointed officers for City Clerk, Tax Assessor, Tax Collector, Treasurer, Municipal Judge, and Chief of Police must reside within the corporate limits of the City of Valparaiso for six (6) months prior to appointment, while preserving this residency requirement for the Mayor and City Commissioners?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "Exact printed scope, date, duration, permitted uses and retained residency conditions preserved. No unprinted transition term extensions or implementation details are inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.voteokaloosa.gov/voters/sample-ballots/",
+      "file": "sources/5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d.html",
+      "sha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "nativeCaptureSha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "retrievedAt": "2026-11-03T05:13:28.748482+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    }
+  }
+]

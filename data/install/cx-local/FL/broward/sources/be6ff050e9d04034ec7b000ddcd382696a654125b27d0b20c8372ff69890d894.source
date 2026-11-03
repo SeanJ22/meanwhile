@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#FFFFFF"/>
+    <title>Election Information | City of Fort Lauderdale, FL</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content=" Section 7.07 of the City Charter provides that beginning in the year 2020, and every fourth year thereafter, a regular municipal election shall be held on the first Tuesday after the first Monday in November for the purpose of electing a mayor and four (4) city commissioners..." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information" />
+    <meta property="og:title" content="Election Information" />
+    <meta property="og:description" content=" Section 7.07 of the City Charter provides that beginning in the year 2020, and every fourth year thereafter, a regular municipal election shall be held on the first Tuesday after the first Monday in November for the purpose of electing a mayor and four (4) city commissioners..." />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Election Information" />
+    <meta property="twitter:description" content=" Section 7.07 of the City Charter provides that beginning in the year 2020, and every fourth year thereafter, a regular municipal election shall be held on the first Tuesday after the first Monday in November for the purpose of electing a mayor and four (4) city commissioners..." />
+    <link rel="canonical" href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information" />
+
+    
+    <link rel="icon" type="image/png" href="/files/ocfavicon/Public/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/files/ocfavicon/Public/favicon.svg" />
+<link rel="shortcut icon" href="/files/ocfavicon/Public/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/Public/apple-touch-icon.png" />
+<link rel="manifest" href="/files/ocfavicon/Public/site.webmanifest" />
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/jquery-3.7.1.min.js?seamlessts=639263251405213898" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyBJHGTlPHpOxw1Q_f9T_9SYRgZhHI8dkhw",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/modernizr.custom.710f3bf.js?seamlessts=639263251405213898" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/'
+        };
+    </script>
+    <script src='/ocapi/d14be02d-f67f-4daf-87e9-388f985afc78/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/oc_head.js?applied=20260826052925"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20260826052925" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20260826052925" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".content-outer-container","EnableFade":false,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20260826052925" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20260826052925" defer="true"></script>
+    <!--BING Verification-->
+<meta name="msvalidate.01" content="721BC5FD238506D49166EE28E46FA0D3" />
+
+<!--Google Search Console Verification-->
+<meta name="google-site-verification" content="kDMjk8cPEp1XRmhV7TNT6fjyMrLkkDob_n8eWm7yfpU" />
+
+<!--OG: IMAGE-->
+<meta property="og:image" content="https://fortlauderdale.gov/files/assets/public/v/2/ftl-dev-resources/images/ftl-og-image.png">
+<script defer="defer">
+
+window.addEventListener('load', (event) => {
+
+document.querySelector('meta[property="og:image"]').setAttribute("content", "https://fortlauderdale.gov/files/assets/public/v/2/ftl-dev-resources/images/ftl-og-image.png" );
+
+});
+
+</script> 
+
+<!--USERWAY CODE--> 
+<script>
+    (function(d){
+      var s = d.createElement("script");
+      /* uncomment the following line to override default position*/
+      /* s.setAttribute("data-position", 3);*/
+      /* uncomment the following line to override default size (values: small, large)*/
+      /* s.setAttribute("data-size", "small");*/
+      /* uncomment the following line to override default language (e.g., fr, de, es, he, nl, etc.)*/
+      /* s.setAttribute("data-language", "language");*/
+      /* uncomment the following line to override color set via widget (e.g., #053f67)*/
+      /* s.setAttribute("data-color", "#053e67");*/
+      /* uncomment the following line to override type set via widget (1=person, 2=chair, 3=eye, 4=text)*/
+      /* s.setAttribute("data-type", "1");*/
+      /* s.setAttribute("data-statement_text:", "Our Accessibility Statement");*/
+      /* s.setAttribute("data-statement_url", "http://www.example.com/accessibility")";*/
+      /* uncomment the following line to override support on mobile devices*/
+      /* s.setAttribute("data-mobile", true);*/
+      /* uncomment the following line to set custom trigger action for accessibility menu*/
+      /* s.setAttribute("data-trigger", "triggerId")*/
+      s.setAttribute("data-account", "XYfKYKg9G5");
+      s.setAttribute("src", "https://cdn.userway.org/widget.js");
+      (d.body || d.head).appendChild(s);
+    })(document)
+    </script>
+<noscript>
+Please ensure Javascript is enabled for purposes of <a href="https://userway.org">website accessibility</a>
+</noscript>
+
+<!--CITIBOT-->
+
+<script id="citibot-chatscript" type="text/javascript" src="https://webchat-ui.citibot.net/script.js?account_id=67ae78e18727ab099601e84e"></script>
+
+<!--OG: TOP TASKS BUTTONS-->
+
+<style>
+	
+	
+@media (min-width: 992px) {
+/* Home buttons */
+
+div#main-content section.row-index-1 div.row-container.full-width.clearfix div.row-content-container.fixed-width.clearfix div.profile-hero-container div.profile-video-listing div.ocp-video-banner.ocp-override.mobile-enabled {
+    min-height: 500px;
+}
+div#main-content section.row-index-2 div.row-container.full-width.clearfix div.row-content-container.fixed-width.clearfix {
+    margin-top: -146px;
+}
+/*Home page - Meetings tab section - height adjust*/
+	
+div#tabs-body.tab-group-body div#panel-2.tabs-panel.clearfix.tab-type-default.total-results-unknown.selected div.wysiwyg-content.body-content div div.profile-listing-container.profile-meetings-listing-container.profile-meetings-listing-option-1.clearfix div.profile-events-listing.without-images.clearfix div.grid div.col-xs-12.col-m-6.col-lg-4 a.profile-list {
+    min-height: 350px;
+}
+	
+
+/*	Home Page - Meeting Tiles*/
+	
+.profile-events-listing a {
+    min-height: 310px;
+}
+}
+/*----------------------END MQ-- min-width: 992px --------------------	*/
+	
+/* Home page - Pinned Story display workaround ------------------- 768PX TO 1024PX -- */
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+.profile-news-listing .grid .list-first-item a.profile-list {
+    display: block;
+}
+.profile-news-listing .grid .list-first-item a.profile-list picture::after {
+    display: none;
+}
+}
+/*------------------------------------------*/
+
+/*Removes border from iframes*/
+iframe {
+    border: none;
+}
+/*Back to Top Scroll button*/
+#back-to-top {
+    bottom: 166px !important;
+}
+/*USERWAY WIDGET*/
+body .uwy.userway_p5 .userway_buttons_wrapper {
+    bottom: 21px !important;
+}
+/*Calendar*/
+
+.calendar-body-content-day.today {
+    background-color: #F4F8FC;
+}
+.calendar-day-dialog .calendar-btn, .calendar-item-dialog .calendar-btn, .calendar-nav .calendar-btn {
+    background-color: #F4F8FC;
+}
+/* --- Responsive Tables ---*/	
+table.sc-responsive-table thead tr th, table.sc-responsive-table-heading thead tr th {
+    border-color: #fff !important;
+}
+table.sc-responsive-table thead tr th p strong, table.sc-responsive-table thead tr th p {
+    color: #fff !important;
+}
+/*pdf link file info*/
+a.featured-link.document.ext-pdf.opens-in-new-tab span.file-info, a.document.ext-pdf span.file-info {
+    display: none;
+}
+	
+/*	Home Page - Event Tiles*/
+
+.tabs-panel .large-thumbnail-image, .tabs-panel .more-than-3-items .item-0 .large-thumbnail-image {
+    display: block !important;
+}
+
+
+</style>
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqloddilzsfs2xjmciq-f-361006138-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"2022589","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":162,"ak.ipv":4,"ak.proto":"h2","ak.rid":"ca9bf5a","ak.r":32304,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":55504,"ak.gh":"104.94.100.79","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793679505","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==AXrwnQcyNG3fyZzXGvALfb9Vi/lB1kxqBFCYxxpBOHrD+XUz+oJ8HNhiaxIUEF6rTdaqKWD0fiUT77DeGNnYxumzDzhlc/LSrkt7sXkEztCrOKZixcG+xW38duR31ONR85wQcMtUNY4Isot27DSAn8mGzKKjn/EJyrx2/iD3cWbLUVbGFySMt7T4Jc+6picmHfsDLhgPnuFMuUazaH9+FEuJFTWfHlxdwicSzseBJ3gtXkgfeYj7okSqHbtaqqdHpkrovNQD700GLB97yrAL6DiltbSWa7Iw0ljHE6KDCw9O9ipH8sEmLCU4Bha9xUoYNbHLtZbvPoAF5euOi1rK9agXQDA8l1+V7LThB1Ny+oS7nm4Mh2PsHT98yCZ4/SZZySSBvhTW7Oss20ab484Rzrrv8q6khCGM5fCJCQgcmOs=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern  site-search-always-visble  content-type-oc-general content-template-oc-2-column-without-image group-template-oc-2-column-with-default-header page-name-election-information page-sequence-5 page-depth-4 page-section-4 website-type-primary device-desktop featured-site-section   " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Government/Departments/City-Clerks-Office/Election-Information" id="mainForm">
+<div>
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['mainForm'];
+if (!theForm) {
+    theForm = document.mainForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZEwxevNHYVPiVa1Imd_CfwV7Ab8FE1aS0qMo2VVt5LKJo2QwSrlAqlF7-BPzzVxibA2&amp;t=639190689332169432" type="text/javascript"></script>
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3ab25378d2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl04$seamless_script_manager', 'mainForm', [], [], [], 90, '');
+//]]>
+</script>
+
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://www.fortlauderdale.gov/Government/Departments/Fire-Rescue/Beach-Conditions" class="oc-icon-b oc-i--none link-type-internal"><span>Beach Conditions</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/Alert-FTL" class="oc-icon-b oc-i--none link-type-internal"><span>Emergency Alerts</span></a></li><li><a href="https://www.facebook.com/CityofFortLauderdale" class="oc-icon-b oc-i-facebook link-type-external link-hide-text" target="_blank"><span>Facebook</span></a></li><li><a href="https://www.instagram.com/cityoffortlauderdale/" class="oc-icon-b oc-i-instagram link-type-external link-hide-text" target="_blank"><span>Instagram</span></a></li><li><a href="https://nextdoor.com/agency-detail/fl/fort-lauderdale/city-of-fort-lauderdale/" class="oc-icon-b oc-i-nextdoor link-type-external link-hide-text" target="_blank"><span>Nextdoor</span></a></li><li><a href="https://x.com/FTLCityNews" class="oc-icon-b oc-i-x link-type-external link-hide-text" target="_blank"><span>X</span></a></li><li><a href="https://www.linkedin.com/company/city-of-fort-lauderdale" class="oc-icon-b oc-i-linkedin link-type-external link-hide-text" target="_blank"><span>LinkedIn</span></a></li><li><a href="https://www.youtube.com/@CityofFortLauderdale" class="oc-icon-b oc-i-youtube link-type-external link-hide-text"><span>YouTube</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ht-noscript"><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information?oc_lang=ht" class="lang-item lang-ht" data-translate-to="ht" lang="en">Haitian Creole<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ht" role="option" aria-selected="false" href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information?oc_lang=ht" class="lang-item lang-ht" data-translate-to="ht" lang="en">Haitian Creole<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container">
+    <div class="header-container header-layout-4  clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.fortlauderdale.gov/Home" lang="en-US" aria-label=" - Home - Logo">
+				</a>
+			</div>
+      
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>
+		    <div class="header-website-settings">
+                <button id="btn-mob-nav" type="button" aria-expanded="false" aria-controls="nav">
+                    <i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span>
+                </button>
+        	</div>
+          <div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container  navigation-container-option-8" data-menu-type="horizontal" aria-label="primary">
+        <div class="grid">
+            <div class="col-xs-12">              
+                <ul class="sf-menu mega-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.fortlauderdale.gov/Residents" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">Residents</span>
+</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-1" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-1" class="second-level-container ch-29">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Resident Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/City-News" class="navigation-top-task-icon" target="_self" ><span>News</span></a></li><li><a href="https://www.fortlauderdale.gov/Residents/Public-Notices" class="navigation-top-task-icon" target="_self" ><span>Public Notices</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Election-Information" class=""  target="_self">Election Information</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Emergency-Alerts" class=""  target="_self">Emergency Alerts</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/E-News-Sign-Up" class=""  target="_self">E-News Sign Up</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Event-Calendar" class=""  target="_self">Event Calendar</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/FixIt-FTL-Report-a-Concern" class=""  target="_self">FixIt FTL: Report a Concern</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Floods-and-Flood-Insurance" class=""  target="_self">Floods and Flood Insurance</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/FTL-Connect-Magazine" class=""  target="_self">FTL Connect Magazine</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/High-Tides-and-King-Tides" class=""  target="_self">High Tides and King Tides</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Historic-Preservation" class=""  target="_self">Historic Preservation</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Housing" class=""  target="_self">Housing</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Large-Projects-Partnerships" class=""  target="_blank">Large Projects & Partnerships</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Neighborhood-Associations" class=""  target="_self">Neighborhood Associations</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Neighbor-Support" class=""  target="_self">Neighbor Support</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Neighbor-Survey" class=""  target="_self">Neighbor Survey</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/News" class=""  target="_self">News</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Parking-Services-Permits" class=""  target="_self">Parking Services & Permits</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Property-Search" class=""  target="_blank">Property Search</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Public-Notices" class=""  target="">Public Notices</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Public-Records-Request" class=""  target="_blank">Public Records Request</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Recycling" class=""  target="_self">Recycling</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Sea-Turtles" class=""  target="_self">Sea Turtles</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Service-Directory" class=""  target="">Service Directory</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Sustainability" class=""  target="_self">Sustainability</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Utilities" class=""  target="_self">Utilities</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Utility-Billing" class=""  target="_self">Utility Billing</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Volunteer-Opportunities" class=""  target="_self">Volunteer Opportunities</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Water-Quality-Report" class="nav-has-children"  target="_self">Water Quality Report</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-27" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-27" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Water-Quality-Report/Request-a-copy-of-Water-Quality-Report"  target="_self">Request a copy of Water Quality Report</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Waterway-Quality" class=""  target="_self">Waterway Quality</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Waterways" class=""  target="_self">Waterways</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-2">
+<a href="https://www.fortlauderdale.gov/Business" class="nav-level-1 nav-has-children"  target="">Business</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-2" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-2" class="second-level-container ch-11">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Menu Top Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Development-Services/Permitting-Services" class="navigation-top-task-icon" target="_self" ><span>Permits</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Development-Services/LauderBuild" class="navigation-top-task-icon" target="_self" ><span>LauderBuild</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Bid-Solicitation-Results" class=""  target="_self">Bid Solicitation Results</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Building-Permits" class=""  target="_self">Building Permits</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Business" class=""  target="">Business</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Business-Tax-Applications-and-Forms" class=""  target="_self">Business Tax Applications and Forms</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Economic-Development" class=""  target="_self">Economic Development</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Fort-Lauderdale-Executive-Airport" class=""  target="_blank">Fort Lauderdale Executive Airport</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/LauderBuild" class=""  target="_blank">LauderBuild</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Lobbyist-Registration" class=""  target="_self">Lobbyist Registration</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Permits" class=""  target="_self">Permits</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Real-Estate" class=""  target="_self">Real Estate</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Zoning" class=""  target="_self">Zoning</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3 nav-active-path  nav-item-seq-3">
+<a href="https://www.fortlauderdale.gov/Government" class="nav-level-1 nav-has-children"  target="">Government</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-3" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-3" class="second-level-container ch-7">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Menu Top Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Police" class="navigation-top-task-icon" target="_blank" ><span>Police</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Fire-Rescue" class="navigation-top-task-icon" target="_self" ><span>Fire Rescue</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/About-Fort-Lauderdale" class=""  target="">About Fort Lauderdale</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/Boards-Committees-and-Authorities" class=""  target="_self">Boards, Committees, and Authorities</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission" class="nav-has-children"  target="">City Commission</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Mayor-Dean-J-Trantalis"  target="">Mayor Dean J. Trantalis</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/District-1-Commissioner"  target="">District 1 Commissioner</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Commissioner-Steven-Glassman-District-2"  target="">Commissioner Steven Glassman</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Commissioner-Pamela-Beasley-Pittman-District-3"  target="">Commissioner Pamela Beasley-Pittman</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Vice-MayorCommissioner-Ben-Sorensen-District-4"  target="">Vice Mayor/Commissioner Ben Sorensen</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Office-of-the-Mayor-City-Commission"  target="">Office of the Mayor & City Commission</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission-Meetings" class="nav-has-children"  target="">City Commission Meetings</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission-Meetings/LauderBriefs"  target="">LauderBriefs</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission-Meetings/Commission-Meeting-Agenda-Information"  target="">Commission Meeting Agenda Information</a></li></ul></li><li class="second-level-item nav-active-path "><a href="https://www.fortlauderdale.gov/Government/Departments" class="nav-has-children"  target="">Departments</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Capital-Projects"  target="">Capital Projects</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Attorneys-Office"  target="">City Attorney's Office</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Auditors-Office"  target="">City Auditor's Office</a></li><li  class="third-level-item nav-active-path "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office"  target="">City Clerk's Office</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Managers-Office"  target="">City Manager's Office</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Community-Redevelopment-Agency"  target="">Community Redevelopment Agency</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Community-Services"  target="">Community Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Development-Services"  target="">Development Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Finance"  target="">Finance</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Fire-Rescue"  target="">Fire Rescue</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Fort-Lauderdale-Executive-Airport-FXE"  target="_blank">Fort Lauderdale Executive Airport (FXE)</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Human-Resources"  target="">Human Resources</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Information-Technology-Services"  target="">Information Technology Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Office-of-Management-and-Budget"  target="">Office of Management and Budget</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Parks-Recreation"  target="">Parks & Recreation</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Police"  target="_blank">Police</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Procurement-Services"  target="">Procurement Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Public-Works"  target="">Public Works</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications"  target="">Strategic Communications</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Transportation-and-Mobility"  target="">Transportation and Mobility</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Utility-Services"  target="">Utility Services</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety" class="nav-has-children"  target="">Public Safety</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Alert-FTL"  target="_self">Alert FTL</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Emergency-Resources"  target="_self">Emergency Resources</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Fire-Rescue"  target="_self">Fire Rescue</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Police"  target="_blank">Police</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links" class="nav-has-children"  target="">Useful Links</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/City-Ordinances-Municode"  target="_blank">City Ordinances (Municode)</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Commission-Meeting-Agendas"  target="_blank">Commission Meeting Agendas</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Community-Enhancement-and-Compliance"  target="_self">Community Enhancement and Compliance</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Emergency-Management"  target="_self">Emergency Management</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Financial-Transparency-Portal"  target="_self">Financial Transparency Portal</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Geographic-Information-Systems-GIS"  target="_blank">Geographic Information Systems (GIS)</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Housing-Community-Development-and-Homelessness"  target="_self">Housing & Community Development and Homelessness</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Intergovernmental-Affairs"  target="_self">Intergovernmental Affairs</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Large-Projects-Partnerships"  target="_blank">Large Projects & Partnerships</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Marine-Facilities"  target="_blank">Marine Facilities</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Master-Plans"  target="_self">Master Plans</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Neighbor-Support"  target="_self">Neighbor Support</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Open-Data-Portal"  target="_self">Open Data Portal</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Parking-Services"  target="_self">Parking Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Public-Reporting-and-Transparency"  target="_self">Public Reporting and Transparency</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Sister-Cities"  target="_self">Sister Cities</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Strategic-Plan"  target="_self">Strategic Plan</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Sustainability"  target="_self">Sustainability</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Upcoming-Public-Meetings"  target="_self">Upcoming Public Meetings</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Vision-Plan"  target="_self">Vision Plan</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-4">
+<a href="https://www.fortlauderdale.gov/Explore-FTL" class="nav-level-1 nav-has-children"  target="">Explore FTL</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-4" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-4" class="second-level-container ch-15">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Menu Top Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Transportation-and-Mobility/Parking-Services" class="navigation-top-task-icon" target="_self" ><span>Parking</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/Event-Calendar" class="navigation-top-task-icon" target="_self" ><span>Event Calendar</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/About-Fort-Lauderdale" class=""  target="_self">About Fort Lauderdale</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Beach-Conditions" class=""  target="_self">Beach Conditions</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Boat-Show" class=""  target="_blank">Boat Show</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Convention-Visitors-Bureau" class=""  target="_blank">Convention & Visitors Bureau</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Discover-FTL-Beach" class=""  target="_blank">Discover FTL Beach</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar" class=""  target="">Event Calendar</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Fort-Lauderdale-Executive-Airport" class=""  target="_blank">Fort Lauderdale Executive Airport</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Go-Riverwalk" class=""  target="">Go Riverwalk</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/LauderGO-Mobility-Services" class=""  target="_self">LauderGO! Mobility Services</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Parking" class=""  target="_self">Parking</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Parking-Locations" class=""  target="_self">Parking Locations</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Parks-Recreation" class=""  target="_self">Parks & Recreation</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Port-Everglades" class=""  target="_blank">Port Everglades</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Sea-Turtles" class=""  target="">Sea Turtles</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Visit-Lauderdale" class=""  target="_blank">Visit Lauderdale</a></li></ul></li>
+          
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl08_btnSearch&#39;)">
+	<label for="ctl08_txtSearch" id="ctl08_lblSearch" class="sc-search-label">Search</label><input name="ctl08$txtSearch" type="text" id="ctl08_txtSearch" class="sc-search-text" placeholder="Search..." /><input type="submit" name="ctl08$btnSearch" value="Search" id="ctl08_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+    </div>
+</div>
+
+            
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.fortlauderdale.gov/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.fortlauderdale.gov/Government" >Government</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.fortlauderdale.gov/Government/Departments" >
+		Departments
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span role="listitem">
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office" >
+		City Clerk's Office
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >Election Information</span>
+          
+          </span>
+						            </nav>
+					            </div>
+                      <div class='col-xs-12'>
+                                                <div class='featured-section-header-outer clearfix'><div class='featured-section-header-inner clearfix'><div class='featured-section-header-logo'><a href='https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office' class='featured-section-header-logo-link'><span class='featured-section-header-logo-text'>City Clerk's Office</span></a></div><div class="section-menu-btn js-element" >
+		    <button><i aria-hidden="true"></i><span class="section-menu-btn-text" >Menu</span></button>
+		    </div></div></div><div class="section-nav-outer-container clearfix" ><div id="section-nav" role ="navigation" class="navigation-container" aria-label="secondary"><ul class="featured-section-menu" id="fs-menu"><li class="  nav-item-seq-1">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/About-the-City-Clerks-Office" class="nav-level-1 "   target="">About the City Clerk's Office</a>
+</li>
+          
+          <li class="  nav-item-seq-2">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-Authorities-Information" class="nav-level-1 "   target="">Advisory Boards / Committees / Authorities Information</a>
+</li>
+          
+          <li class="  nav-item-seq-3">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Upcoming-Public-Meetings" class="nav-level-1 "   target="">Upcoming Public Meetings</a>
+</li>
+          
+          <li class="  nav-item-seq-4">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes" class="nav-level-1 nav-has-children"   target="">Advisory Boards, Committees, and Authorities Agendas and Minutes</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Affordable-Housing-Advisory-Committee" class="" >Affordable Housing Advisory Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Audit-Advisory-Board" class="" >Audit Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Aviation-Advisory-Board" class="" >Aviation Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Beach-Business-Improvement-District-Advisory-Committee" class="" >Beach Business Improvement District Advisory Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Board-of-Adjustment" class="" >Board of Adjustment</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Budget-Advisory-Board" class="" >Budget Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Cemetery-System-Board-of-Trustees" class="" >Cemetery System Board of Trustees</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Central-City-Redevelopment-Advisory-Board" class="" >Central City Redevelopment Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Charter-Revision-Board" class="" >Charter Revision Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Citizens-Committee-of-Recognition" class="" >Citizens Committee of Recognition</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/City-Attorney-Search-Committee" class="" >City Attorney Search Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/City-Manager-Search-Committee" class="" >City Manager Search Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Civil-Service-Board" class="" >Civil Service Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Code-Enforcement-Board" class="" >Code Enforcement Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Community-Appearance-Board" class="" >Community Appearance Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Community-Services-Board" class="" >Community Services Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Development-Review-Committee" class="" >Development Review Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Economic-Development-Advisory-Board" class="" >Economic Development Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Education-Advisory-Board" class="" >Education Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Fire-Rescue-Advisory-Committee" class="" >Fire-Rescue Advisory Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Fire-Rescue-Facilities-Bond-Issue-Blue-Ribbon-Committee" class="" >Fire-Rescue Facilities Bond Issue Blue Ribbon Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Historic-Preservation-Board" class="" >Historic Preservation Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Homeless-Advisory-Committee" class="" >Homeless Advisory Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Housing-Authority" class="" >Housing Authority</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Infrastructure-Advisory-Board" class="" >Infrastructure Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Infrastructure-Task-Force-Advisory-Committee" class="" >Infrastructure Task Force Advisory Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Insurance-Advisory-Board" class="" >Insurance Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Invest-Fort-Lauderdale-Inc" class="" >Invest Fort Lauderdale, Inc.</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Marine-Advisory-Board" class="" >Marine Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Northwest-Progresso-Flagler-Heights-Redevelopment-Advisory-Board" class="" >Northwest-Progresso-Flagler Heights Redevelopment Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Nuisance-Abatement-Board" class="" >Nuisance Abatement Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Parks-Recreation-and-Beaches-Board" class="" >Parks, Recreation, and Beaches Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Planning-and-Zoning-Board" class="" >Planning and Zoning Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Public-Art-and-Placement-Advisory-Board" class="" >Public Art and Placement Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Revenue-Estimating-Conference-Committee" class="" >Revenue Estimating Conference Committee</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Special-Magistrate" class="" >Special Magistrate</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Special-Magistrate-Building" class="" >Special Magistrate Building</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Special-Magistrate-Lien-Reduction" class="" >Special Magistrate Lien Reduction</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Sustainability-Advisory-Board" class="" >Sustainability Advisory Board</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Walk-of-Fame-Committee" class="nav-has-children" >Walk of Fame Committee</a><button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Walk-of-Fame-Committee/Walk-of-Fame-Nominations-Form" >Walk of Fame Nominations Form</a></li></ul></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes/Wastewater-Large-User-Advisory-Board" class="" >Wastewater Large User Advisory Board</a></li></ul></li>
+          
+          <li class="nav-active-path nav-active-page nav-item-seq-5">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information" class="nav-level-1 nav-has-children"   target="">Election Information</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/Campaign-Treasurer-Reports-for-2028-Election" class="" >Campaign Treasurer Reports for 2028 Election</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/Campaign-Treasurer-Reports-for-2026-Election" class="" >Campaign Treasurer Reports for Commission District 1 Special Election</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/Campaign-Treasurer-Reports-for-2024-Election" class="" >Campaign Treasurer Reports for 2024 Election</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/City-Clerk-Archives" class="" >City Clerk Archives</a></li></ul></li>
+          
+          <li class="  nav-item-seq-6">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Ethics" class="nav-level-1 nav-has-children"   target="">Ethics</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Ethics/Elected-Officials-Disclosures-Search" class="" >Elected Officials Disclosures Search</a></li></ul></li>
+          
+          <li class="  nav-item-seq-7">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Forms-and-Guides" class="nav-level-1 "   target="">Forms and Guides</a>
+</li>
+          
+          <li class="  nav-item-seq-8">
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Lobbyist-Information" class="nav-level-1 nav-has-children"   target="">Lobbyist Information</a>
+<button class="fs-nav-subarrow"><i aria-hidden="true"></i><span class="visuallyhidden text">Sub-menu</span></button>
+<ul>
+          
+          <li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Lobbyist-Information/Lobby-Meeting-Log" class="" >Lobby Meeting Log</a></li><li class=" "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Lobbyist-Information/Registered-Lobbyists" class="" >Registered Lobbyists</a></li></ul></li>
+          
+          </ul></div></div> </div>
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+                                        <div class="grid">							
+								            <div class="col-lg-4">								
+									            <div id="sub-navigation-outter-container" role="navigation" aria-label="Section Navigation">
+									            &nbsp;
+									            <div id="sub-navigation-container">
+                                <p class="sub-nav-header" role="heading" aria-level="2" id="in-this-section" >
+	In This Section
+</p>
+<ul><li class='nav-level-1   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/About-the-City-Clerks-Office"  target="">About the City Clerk's Office</a>
+	
+</li><li class='nav-level-1   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-Authorities-Information"  target="">Advisory Boards / Committees / Authorities Information</a>
+	
+</li><li class='nav-level-1   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Upcoming-Public-Meetings"  target="">Upcoming Public Meetings</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Advisory-Boards-Committees-and-Authorities-Agendas-and-Minutes"  target="">Advisory Boards, Committees, and Authorities Agendas and Minutes</a>
+	
+</li><li class='nav-level-1 nav-active-path nav-active-page nav-has-children'>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information"  target="">Election Information</a>
+	<ul><li class='nav-level-2   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/Campaign-Treasurer-Reports-for-2028-Election"  target="">Campaign Treasurer Reports for 2028 Election</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/Campaign-Treasurer-Reports-for-2026-Election"  target="">Campaign Treasurer Reports for Commission District 1 Special Election</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/Campaign-Treasurer-Reports-for-2024-Election"  target="">Campaign Treasurer Reports for 2024 Election</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/City-Clerk-Archives"  target="_self">City Clerk Archives</a>
+	
+</li></ul>
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Ethics"  target="">Ethics</a>
+	
+</li><li class='nav-level-1   '>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Forms-and-Guides"  target="">Forms and Guides</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Lobbyist-Information"  target="">Lobbyist Information</a>
+	
+</li></ul>
+									            </div>
+									            </div>
+								            </div>
+								            <div class="col-xs-12 col-lg-8">
+							                <div id="main-content" class="main-container clearfix">
+							                  
+                                <!-- OC Layout Element Conent Template -->
+							                  <!--normalTemplateStart--><h1 class='oc-page-title '>Election Information</h1>
+
+      
+<p>Section 7.07 of the City Charter provides that beginning in the year 2020, and every fourth year thereafter, a regular municipal election shall be held on the first Tuesday after the first Monday in November for the purpose of electing a mayor and four (4) city commissioners. However, should only one (1) candidate qualify for the office of mayor or city commissioner, then, and in that event, no regular election for that office shall be held and the city clerk shall certify such fact to the city commission and the city commission shall declare such person(s) to be elected to the office of mayor or city commissioner.</p>
+<h3><span class="emphasis-box-1"><strong class="">Next Quadrennial Municipal General Election<br />
+Tuesday, November 7, 2028</strong></span></h3>
+<h5><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information/Campaign-Treasurer-Reports-for-2028-Election" class="styled-button-calltoaction"><span style="text-decoration: underline;">November 7, 2028 Election Candidates &amp; Campaign Treasurer Reports</span></a></h5>
+<p><span>&nbsp;</span></p>
+<h3 class=""><span class="emphasis-box-1">District 1 Special Election Tuesday, November 3, 2026</span></h3>
+<h4><strong><span class="emphasis-box-1">Qualifying Period for 2026</span></strong></h4>
+<h5><a title="RESOLUTION-NO-26-88.pdf" href="/files/assets/public/v/1/city-clerk/documents/elections/resolution-no-26-88.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Noon, Monday, June 8, 2026 &ndash; Noon, Friday, June 12, 2026<span class="file-info">(PDF,&nbsp;275KB)</span></a></h5>
+<h5><a href="https://www.voterfocus.com/CampaignFinance/candidate_pr.php?el=3&amp;c=munfortlauderdale">November 3rd, 2026 Election Candidate &amp; Campaign Treasurer Reports</a></h5>
+<p>&nbsp;</p>
+<h2>Candidate Qualifying Information</h2>
+<p><strong>In order to accommodate candidates seeking to qualify for office in an efficient manner, please schedule an appointment with the City of Fort Lauderdale &ndash;City Clerk&rsquo;s Office by emailing David Soloman at <a href="mailto:dsoloman@fortlauderdale.gov">dsoloman@fortlauderdale.gov</a>, or by calling 954-828-5006 or 954-828-5002.</strong></p>
+<hr role="none" style="clear:both;" />
+<h2>Resources</h2>
+<ul>
+<li><a href="https://www.voterfocus.com/CampaignFinance/candidate_login.php?county=munfortlauderdale" target="_blank">Candidate Log-In &ndash; Candidate Financial Reporting System</a></li>
+<li><a href="/files/assets/public/v/1/city-clerk/documents/2028-candidate-campaign-finance-reporting-schedule-complete.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>2028 Candidate Campaign Finance Reporting Schedule-View<span class="file-info">(PDF,&nbsp;219KB)</span></a></li>
+<li><a title="2026-Candidate-Campaign-Finance-Reporting-Schedule.pdf" href="/files/assets/public/v/1/city-clerk/documents/elections/2026-candidate-campaign-finance-reporting-schedule.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>2026 Candidate Campaign Finance Reporting Schedule-View<span class="file-info">(PDF,&nbsp;178KB)</span></a></li>
+<li><a href="/files/assets/public/v/1/city-clerk/documents/usage-and-removal-of-signs-view-information.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Usage and Removal of Signs-Information<span class="file-info">(PDF,&nbsp;669KB)</span></a></li>
+</ul>
+<h3>Campaign Financing Ordinance</h3>
+<ul>
+<li><a href="/files/assets/public/v/1/city-clerk/documents/ordinance-no-c1912.pdf" target="_blank" class="document ext-pdf"><i aria-hidden="true"></i>Campaign Financing Ordinance<span class="file-info">(PDF,&nbsp;134KB)</span></a></li>
+</ul>
+<h3>Broward County Supervisor of Elections</h3>
+<ul>
+<li><a href="https://browardvotes.gov/" target="_blank">Broward County Supervisor of Elections</a> - For voter registration, absentee ballots, how to vote, etc.</li>
+<li><a href="https://enr.electionsfl.org/BRO/3746/Summary/" target="_blank">Election Results</a> are available on the Broward County Supervisor of Elections' website</li>
+<li><a href="https://browardvotes.gov/election-information/polling-places-sample-ballot-information" target="_blank">Precincts &amp; Polling Places</a> are available on the Broward County Supervisor of Elections' website</li>
+<li><a href="https://browardvotes.gov/voter-information/sample-ballot-lookup" target="_blank">Sample Ballots</a> are available on the Broward County Supervisor of Elections' website</li>
+</ul>
+<h3>Florida Division of Elections</h3>
+<ul>
+<li><a href="https://dos.fl.gov/elections/" target="_blank">Florida Division of Elections</a></li>
+</ul>
+<hr role="none" style="clear:both;" />
+<h2>Frequently Asked Questions</h2>
+<div data-type="0" data-title-level="3" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h3>What role does the City Clerk's Office play in municipal elections?</h3>
+<div class="oc-wysiwyg-container-panel-content">
+<p>The City Clerk serves as the qualifying officer for candidates for the offices of mayor-commissioner and commissioner. Qualification documents and all campaign financial reports are filed with the City Clerk. The City Clerk's Office works in cooperation with the Broward County Supervisor of Elections on other election matters.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h3>What offices are elected in the City of Fort Lauderdale?</h3>
+<div class="oc-wysiwyg-container-panel-content">
+<p>The Mayor and four City Commissioners are the elected officials of the City of Fort Lauderdale. The Mayor is elected at-large and the City Commissioners are elected from each of the four districts. The four-year terms run concurrently, and all are up for election at the same time.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h3>What are the requirements to run for office?</h3>
+<div class="oc-wysiwyg-container-panel-content">
+<p>The requirements to run for office may be viewed in <a href="https://library.municode.com/fl/fort_lauderdale/codes/code_of_ordinances?nodeId=CHFOLAFL_ARTIIIGOFOGO_S3.03QUMEFOOF" target="_blank">Charter Section 3.03</a>.</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h3>Are parties of candidates mentioned in elections?</h3>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Please see <a href="https://library.municode.com/fl/fort_lauderdale/codes/code_of_ordinances?nodeId=CHFOLAFL_ARTVIIEL_S7.01NOEL" target="_blank">Charter Section 7.01</a>.</p>
+</div>
+</div>
+</div>
+
+
+      
+
+
+<!--normalTemplateEnd-->
+                                
+                                
+                                
+							                </div>
+							                </div>
+							             </div>
+						            </div>
+						            </div>
+                        
+					                  </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-4 col-lg-4 visuallyhidden" >
+	
+	<h2>Site Footer</h2>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-12 col-m-12 col-lg-12 footer-logo-section" >
+	
+	<div><img alt="Fort Lauderdale Footer Logo" src="/files/assets/public/v/1/_dev/footer-logo.png" class="footer-logo" /></div>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	<ul class="footer-links without-icons">
+<li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/FixIt-FTL" target="_self" title="FixIt FTL">Customer Service:</a></li>
+<li><a href="tel:954-828-8000">Call&nbsp;&nbsp;954-828-8000</a></li>
+</ul>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Get Involved</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Human-Resources/Talent-Management/Employment-with-the-City-of-Fort-Lauderdale" target="_self"  >Careers</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar" target="_self"  >Events</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Managers-Office/Neighbor-Support/Neighbor-Volunteer-Office" target="_self"  >Volunteering</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/FixIt-FTL" target="_self"  >Provide Feedback</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/E-News-Sign-Up" target="_self"  >E-News Sign-Up</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Quick Links</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.fortlauderdale.gov/Residents" target="_self"  >Residents</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Business" target="_self"  >Business</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Explore-FTL" target="_self"  >Visitors</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Finance/Utility-Billing-and-Collections" target="_self"  >Utility Billing</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Explore-FTL/About-Fort-Lauderdale" target="_self"  >About FTL</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-2" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Follow Us</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/CityofFortLauderdale" target="_blank"  >
+<i aria-hidden="true"></i>Facebook
+</a>
+</li>
+          <li class="footer-link-x">
+	<a href="https://twitter.com/FTLCityNews" target="_self"  >
+<i aria-hidden="true"></i>X
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/cityoffortlauderdale/" target="_self"  >
+<i aria-hidden="true"></i>Instagram
+</a>
+</li>
+          <li class="footer-link-linkedin">
+	<a href="https://www.linkedin.com/company/city-of-fort-lauderdale" target="_blank"  >
+<i aria-hidden="true"></i>Linkedin
+</a>
+</li>
+          <li class="footer-link-nextdoor">
+	<a href="https://nextdoor.com/agency-detail/fl/fort-lauderdale/city-of-fort-lauderdale/" target="_blank"  >
+<i aria-hidden="true"></i>Nextdoor
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/@CityofFortLauderdale" target="_blank"  >
+<i aria-hidden="true"></i>YouTube
+</a>
+</li>
+           </ul>
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.fortlauderdale.gov/Government/Website-Policies" target="_self"  >Website Policies</a>&nbsp;| <a href="https://www.fortlauderdale.gov/Government/Departments/Human-Resources/Risk-Management/Accessibility" target="_self"  >Accessibility Statement</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 &nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/e9a4d813-2c25-4b53-952f-104f40656af1/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    <!-- GovDelivery Subscription Overlay -->
+<script src="https://content.govdelivery.com/overlay/js/17582.js"></script>
+<!-- End GovDelivery Overlay -->
+    <!-- Global site tag (gtag.js) GOOGLE ANALYTICS -- - GA4 -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-5MQ00E8GD8"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() { dataLayer.push(arguments); }
+	gtag('js', new Date());
+
+	gtag('config', 'G-5MQ00E8GD8', {
+        
+            cookie_flags: 'secure;'
+        
+    });
+</script>
+<!-- End Global site tag (gtag.js) - GA4 -->
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K9JHSFN');</script>
+<!-- End Google Tag Manager -->
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

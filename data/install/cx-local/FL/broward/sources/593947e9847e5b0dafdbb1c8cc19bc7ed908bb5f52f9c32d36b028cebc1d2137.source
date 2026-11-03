@@ -1,0 +1,3329 @@
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'html' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ html--node--page.html.twig
+   ▪️ html--node--41.html.twig
+   ▪️ html--node--%.html.twig
+   ▪️ html--node.html.twig
+   ✅ html.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/layout/html.html.twig' -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta charset="utf-8" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SHF7XRKP7P"></script>
+<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments)};gtag("js", new Date());gtag("set", "developer_id.dMDhkMT", true);gtag("config", "G-SHF7XRKP7P", {"groups":"default","page_placeholder":"PLACEHOLDER_page_location"});gtag("config", "UA-100568383-1", {"groups":"default","anonymize_ip":true,"page_placeholder":"PLACEHOLDER_page_path"});</script>
+<link rel="canonical" href="https://browardvotes.gov/results-information/municipal-election" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://browardvotes.gov/results-information/municipal-election" />
+<meta property="og:title" content="Municipal Election" />
+<meta property="og:image:url" content="https://browardvotes.gov/sites/default/files/elections-social-logo.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Broward County Supervisor of Elections, Fort Lauderdale, Florida" />
+<meta name="twitter:title" content="Municipal Election" />
+<meta name="twitter:image" content="https://browardvotes.gov/sites/default/files/elections-social-logo.jpg" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<link rel="icon" href="/themes/custom/broward2/favicon.ico" type="image/vnd.microsoft.icon" />
+<script>window.a2a_config=window.a2a_config||{};a2a_config.callbacks=[];a2a_config.overlays=[];a2a_config.templates={};a2a_config.icon_color = "#002F63";
+a2a_config.track_links = 'ga';</script>
+
+    <title>Municipal Election | Broward County Supervisor of Elections</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_UmUhROxDZst1v9vP0QYivKk5tOZRrLaoFZ5o8xh12E4.css?delta=0&amp;language=en&amp;theme=broward2&amp;include=eJxljlGOwzAIRC_kxNJeyMKGptZiYwFp17ffVG0Vqf1jZmAegOgCfUZ4DetFpXvIIm6uMFIG1SpxY8nAi_nk2rfvvAtSyCp3UPyJZ1ywn_Znydu3osK8QK8NvEq3UEQpFmlDOnW39ZO3LFkJsOjecjg2qs9ELRPGAuNREejPD8hvRN0H8PqSgWHK7gmrFbmRzngAinAYoLAd_Vd7X5zOuvexZ652JQxKdjxl9UbJITNZulR20vhUcF-eOpiUCpwaYYX0YFv8tla_UqNg05xazGD0D3henmE" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_VCNixASf0gtzzpY8feuuO4NO6NYkJ9ATHDnt3oYtPiU.css?delta=1&amp;language=en&amp;theme=broward2&amp;include=eJxljlGOwzAIRC_kxNJeyMKGptZiYwFp17ffVG0Vqf1jZmAegOgCfUZ4DetFpXvIIm6uMFIG1SpxY8nAi_nk2rfvvAtSyCp3UPyJZ1ywn_Znydu3osK8QK8NvEq3UEQpFmlDOnW39ZO3LFkJsOjecjg2qs9ELRPGAuNREejPD8hvRN0H8PqSgWHK7gmrFbmRzngAinAYoLAd_Vd7X5zOuvexZ652JQxKdjxl9UbJITNZulR20vhUcF-eOpiUCpwaYYX0YFv8tla_UqNg05xazGD0D3henmE" />
+<link rel="stylesheet" media="all" href="//cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_3jdsFGgFEy-feqhoAQtg44Juio7wRg-eFiJC7Udgdfg.css?delta=3&amp;language=en&amp;theme=broward2&amp;include=eJxljlGOwzAIRC_kxNJeyMKGptZiYwFp17ffVG0Vqf1jZmAegOgCfUZ4DetFpXvIIm6uMFIG1SpxY8nAi_nk2rfvvAtSyCp3UPyJZ1ywn_Znydu3osK8QK8NvEq3UEQpFmlDOnW39ZO3LFkJsOjecjg2qs9ELRPGAuNREejPD8hvRN0H8PqSgWHK7gmrFbmRzngAinAYoLAd_Vd7X5zOuvexZ652JQxKdjxl9UbJITNZulR20vhUcF-eOpiUCpwaYYX0YFv8tla_UqNg05xazGD0D3henmE" />
+<link rel="stylesheet" media="all" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_9-FZfExMJtjeFAGU-K9kEmmylZ-EpfFUOf-HIxmrx1c.css?delta=5&amp;language=en&amp;theme=broward2&amp;include=eJxljlGOwzAIRC_kxNJeyMKGptZiYwFp17ffVG0Vqf1jZmAegOgCfUZ4DetFpXvIIm6uMFIG1SpxY8nAi_nk2rfvvAtSyCp3UPyJZ1ywn_Znydu3osK8QK8NvEq3UEQpFmlDOnW39ZO3LFkJsOjecjg2qs9ELRPGAuNREejPD8hvRN0H8PqSgWHK7gmrFbmRzngAinAYoLAd_Vd7X5zOuvexZ652JQxKdjxl9UbJITNZulR20vhUcF-eOpiUCpwaYYX0YFv8tla_UqNg05xazGD0D3henmE" />
+<link rel="stylesheet" media="print" href="/sites/default/files/css/css_855G3aPqEh-J5JOPX3M16nO7D6fQM2XlorTwwtDPyeQ.css?delta=6&amp;language=en&amp;theme=broward2&amp;include=eJxljlGOwzAIRC_kxNJeyMKGptZiYwFp17ffVG0Vqf1jZmAegOgCfUZ4DetFpXvIIm6uMFIG1SpxY8nAi_nk2rfvvAtSyCp3UPyJZ1ywn_Znydu3osK8QK8NvEq3UEQpFmlDOnW39ZO3LFkJsOjecjg2qs9ELRPGAuNREejPD8hvRN0H8PqSgWHK7gmrFbmRzngAinAYoLAd_Vd7X5zOuvexZ652JQxKdjxl9UbJITNZulR20vhUcF-eOpiUCpwaYYX0YFv8tla_UqNg05xazGD0D3henmE" />
+
+    <script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
+<script src="/modules/contrib/jquery_deprecated_functions/js/jquery.deprecated.functions.js?v=1.x"></script>
+<script src="https://use.fontawesome.com/releases/v6.4.0/js/all.js" defer crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v6.4.0/js/v4-shims.js" defer crossorigin="anonymous"></script>
+
+  </head>
+  <body class="role-anonymous theme-broward2 layout-one-sidebar layout-sidebar-first page-node-41 path-node node--type-page">
+    <a href="#main-content" class="visually-hidden-focusable">
+      Skip to main content
+    </a>
+    
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'off_canvas_page_wrapper' -->
+<!-- BEGIN OUTPUT from 'core/modules/system/templates/off-canvas-page-wrapper.html.twig' -->
+  <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'page' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ page--node--page.html.twig
+   ▪️ page--node--page.html.twig
+   ▪️ page--node--41.html.twig
+   ▪️ page--node--%.html.twig
+   ▪️ page--node.html.twig
+   ✅ page.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/layout/page.html.twig' -->
+
+<div id="page-wrapper">
+  <div id="page">
+
+    <div class="content-header">
+      <header id="header" class="header" role="banner" aria-label="Site header">
+        
+                                <div class="top-header">
+              <div class="container">
+                <div class="top-header-wrapper">
+                                      <div class="top-header-left">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--top-header-left.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="row region region-top-header-left">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--social-media-links-block--top-header-left.html.twig
+   ▪️ block--social-media-links--top-header-left.html.twig
+   ▪️ block--top-header-left--broward2-socialmedialinks.html.twig
+   ▪️ block--top-header-left.html.twig
+   ▪️ block--broward2-socialmedialinks.html.twig
+   ▪️ block--social-media-links-block.html.twig
+   ▪️ block--social-media-links.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-broward2-socialmedialinks" class="block-social-media-links block block-social-media-links-block">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'social_media_links_platforms' -->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/misc/social-media-links-platforms.html.twig' -->
+
+
+<ul class="social-media-links--platforms platforms inline horizontal">
+      <li>
+      <a class="social-media-link-icon--facebook" aria-label="Link for Facebook" href="https://www.facebook.com//BrowardVotes/"  target="_blank" >
+        <span class='fab fa-facebook fa-lg'></span>
+      </a>
+
+          </li>
+      <li>
+      <a class="social-media-link-icon--youtube" aria-label="Link for Youtube" href="https://www.youtube.com//c/BrowardVotes"  target="_blank" >
+        <span class='fab fa-youtube fa-lg'></span>
+      </a>
+
+          </li>
+      <li>
+      <a class="social-media-link-icon--instagram" aria-label="Link for Instagram" href="https://www.instagram.com//browardvotes/"  target="_blank" >
+        <span class='fab fa-instagram fa-lg'></span>
+      </a>
+
+          </li>
+      <li>
+      <a class="social-media-link-icon--nextdoor" aria-label="Link for NextDoor" href="https://nextdoor.com/agency-detail/fl/broward-county/broward-county-supervisor-of-elections-office-1/"  target="_blank" >
+        <span class='fab fa-nextdoor fa-lg'></span>
+      </a>
+
+          </li>
+  </ul>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/misc/social-media-links-platforms.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+</div>
+                                                        <div class="top-header-right">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--top-header-right.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="row region region-top-header-right">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--custom-google-translate-block--top-header-right.html.twig
+   ▪️ block--custom-module--top-header-right.html.twig
+   ▪️ block--top-header-right--broward2-customgoogletranslate.html.twig
+   ▪️ block--top-header-right.html.twig
+   ▪️ block--broward2-customgoogletranslate.html.twig
+   ▪️ block--custom-google-translate-block.html.twig
+   ▪️ block--custom-module.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-broward2-customgoogletranslate" class="block block-custom-module block-custom-google-translate-block">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'custom_google_translate_block' -->
+<!-- BEGIN OUTPUT from 'modules/custom/custom_module/templates/custom-google-translate-block.html.twig' -->
+<div id="translate" class="">
+  <div id="google_translate_element"></div>
+</div>
+<!-- END OUTPUT from 'modules/custom/custom_module/templates/custom-google-translate-block.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+</div>
+                                  </div>
+              </div>
+            </div>
+          
+                    
+                                <nav class="navbar navbar-expand-lg" id="navbar-main">
+              <div class="container">
+                
+
+                                                      <div class="site-branding">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--header-branding.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="region region-header-branding">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--system-branding-block--header-branding.html.twig
+   ▪️ block--system--header-branding.html.twig
+   ▪️ block--header-branding--broward2-sitebranding.html.twig
+   ▪️ block--header-branding.html.twig
+   ▪️ block--broward2-sitebranding.html.twig
+   ✅ block--system-branding-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--system-branding-block.html.twig' -->
+      <a href="/" title="Home" rel="home" class="navbar-brand">
+              <img src="/themes/custom/broward2/logo.svg" alt="Home" class="img-fluid d-inline-block align-top" />
+            
+    </a>
+    
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--system-branding-block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+</div>
+                  
+                  <div class="header-navigation collapse navbar-collapse justify-content-end" id="CollapsingNavbar">
+                    
+                      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--header-navigation.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="region region-header-navigation">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--system-menu-block--main--header-navigation.html.twig
+   ▪️ block--system--main--header-navigation.html.twig
+   ▪️ block--system-menu-block--header-navigation.html.twig
+   ▪️ block--system--header-navigation.html.twig
+   ▪️ block--header-navigation--broward2-main-menu.html.twig
+   ▪️ block--header-navigation.html.twig
+   ▪️ block--broward2-main-menu.html.twig
+   ▪️ block--system-menu-block--main.html.twig
+   ✅ block--system-menu-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--system-menu-block.html.twig' -->
+<nav role="navigation" aria-labelledby="block-broward2-main-menu-menu" id="block-broward2-main-menu" class="block block-menu navigation menu--main">
+            
+  <h2 class="visually-hidden" id="block-broward2-main-menu-menu">Main navigation</h2>
+  
+
+        
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'menu__main' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ menu--main.html.twig
+   ✅ menu--main.html.twig
+   ▪️ menu.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/navigation/menu--main.html.twig' -->
+
+
+
+  
+      <ul class="clearfix nav navbar-nav" data-component-id="bootstrap_barrio:menu_main">
+    
+          
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <a
+            class="nav-link dropdown-toggle  nav-link--voters"
+            data-bs-toggle="dropdown"
+            href="/voters"
+            aria-haspopup="true"
+            aria-expanded="false">
+            Voters
+            <i class="fa-solid fa-chevron-down"></i>
+          </a>
+            
+        <ul class="dropdown-menu">
+    
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://registertovoteflorida.gov/home"
+            class="dropdown-item   nav-link--register-or-update"
+            
+            target="_blank" rel="noreferrer">
+            Register or Update
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://my.browardvotes.gov/Portals/ElectionLink/Launchpad.aspx"
+            class="dropdown-item   nav-link--voter-info"
+            
+            target="_blank" rel="noreferrer">
+            Voter Info
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/vote-mail-information"
+            class="dropdown-item   nav-link--vote-by-mail-information"
+            
+            >
+            Vote By Mail Information
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/early-voting-ballot-return"
+            class="dropdown-item   nav-link--early-voting--ballot-return"
+            
+            >
+            Early Voting &amp; Ballot Return
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/precinct-finder"
+            class="dropdown-item   nav-link--election-day-precinct"
+            
+            >
+            Election Day Precinct
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://fl.omniballot.us/sites/12011/default/app/sb/vr"
+            class="dropdown-item   nav-link--sample-ballot"
+            
+            target="_blank" rel="noreferrer">
+            Sample Ballot
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/ballot-status-notifications"
+            class="dropdown-item   nav-link--ballot-status-notifications"
+            
+            >
+            Ballot Status Notifications
+          </a>
+              </li>
+          
+      
+      <li class="nav-item menu-item--expanded dropdown has-submenu">
+                          <a
+            href=""
+            class="dropdown-item  has-submenu-trigger nav-link--voter-resources"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >
+            Voter Resources
+            <i class="fa-solid fa-chevron-right submenu-arrow"></i>
+          </a>
+            
+        <ul class="dropdown-menu dropdown-menu--level-3">
+    
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-resources/how-register"
+            class="dropdown-item   nav-link--how-to-register"
+            
+            >
+            How to Register
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-resources/voter-guide-rights-and-responsibilities"
+            class="dropdown-item   nav-link--voter-guide-rights-and-responsibilities"
+            
+            >
+            Voter Guide, Rights and Responsibilities
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-resources/vote-mail-request-bifold-mailer"
+            class="dropdown-item   nav-link--vote-by-mail-request-bifold-mailer"
+            
+            >
+            Vote-by-Mail Request Bifold Mailer
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-resources/voter-registration-bifold-mailer"
+            class="dropdown-item   nav-link--voter-registration-bifold-mailer"
+            
+            >
+            Voter Registration Bifold Mailer
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/Cancellation-request-form"
+            class="dropdown-item   nav-link--cancellation-request-form"
+            
+            >
+            Cancellation Request Form
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-resources/special-needsada-accessibility-options"
+            class="dropdown-item   nav-link--special-needs-ada-accessibility-options"
+            
+            >
+            Special Needs/ADA Accessibility Options
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/cure-your-signature"
+            class="dropdown-item   nav-link--cure-your-signature"
+            
+            >
+            Cure Your Signature
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-information/election-complaints"
+            class="dropdown-item   nav-link--election-complaints"
+            
+            >
+            Election Complaints
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-information/voter-fraud"
+            class="dropdown-item   nav-link--voter-fraud"
+            
+            >
+            Voter Fraud
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-resources/militaryoverseas-voting"
+            class="dropdown-item   nav-link--military-overseas-voting"
+            
+            >
+            Military/Overseas Voting
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-resources/provisional-ballot-voting"
+            class="dropdown-item   nav-link--provisional-ballot-voting"
+            
+            >
+            Provisional Ballot Voting
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-information/political-parties"
+            class="dropdown-item   nav-link--political-parties"
+            
+            >
+            Political Parties
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voters"
+            class="dropdown-item   nav-link--general-information"
+            
+            >
+            General Information
+          </a>
+              </li>
+    
+  </ul>
+  
+
+                      </li>
+    
+  </ul>
+  
+
+                      </li>
+          
+      
+      <li class="nav-item menu-item--expanded dropdown active">
+                          <a
+            class="nav-link dropdown-toggle  nav-link--results--information"
+            data-bs-toggle="dropdown"
+            href="/results-information"
+            aria-haspopup="true"
+            aria-expanded="false">
+            Results &amp; Information
+            <i class="fa-solid fa-chevron-down"></i>
+          </a>
+            
+        <ul class="dropdown-menu">
+    
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/register-vote/when-register"
+            class="dropdown-item   nav-link--election-information"
+            
+            >
+            Election Information
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information/election-results-information"
+            class="dropdown-item   nav-link--election-results-information"
+            
+            >
+            Election Results Information
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/Election-Information/Voter-Statistics/Voter-Statistics/Voter-Registration-Stats-Summary"
+            class="dropdown-item   nav-link--voter-registration-statistics-summary-"
+            
+            >
+            Voter Registration Statistics Summary 
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information/voter-statistics"
+            class="dropdown-item   nav-link--voter-statistics"
+            
+            >
+            Voter Statistics
+          </a>
+              </li>
+          
+      
+      <li class="nav-item active">
+                          <a
+            href="/results-information/municipal-election"
+            class="dropdown-item   nav-link--municipal-election"
+            
+            >
+            Municipal Election
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voting-methods/voting-equipment-interactive-demo"
+            class="dropdown-item   nav-link--voting-equipment-interactive-demo"
+            
+            >
+            Voting Equipment Interactive Demo
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/list-maintenance_rev-052025_.pdf"
+            class="dropdown-item   nav-link--list-maintenance-definitions-and-procedures"
+            
+            target="_blank" rel="noreferrer">
+            List Maintenance Definitions and Procedures
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/polling-location-license-t_c-1034579.6-psj-clean-1.21.26.pdf"
+            class="dropdown-item   nav-link--polling-location-terms-and-conditions"
+            
+            target="_blank" rel="noreferrer">
+            Polling Location Terms and Conditions
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/2021Elections/list-of-all-elections.pdf"
+            class="dropdown-item   nav-link--list-of-elections"
+            
+            target="_blank" rel="noreferrer">
+            List of Elections
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information/important-forms-elections"
+            class="dropdown-item   nav-link--important-forms-for-elections"
+            
+            >
+            Important Forms for Elections
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information"
+            class="dropdown-item   nav-link--general-results--resources"
+            
+            >
+            General Results &amp; Resources
+          </a>
+              </li>
+    
+  </ul>
+  
+
+                      </li>
+          
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <a
+            class="nav-link dropdown-toggle  nav-link--candidates"
+            data-bs-toggle="dropdown"
+            href="/candidates"
+            aria-haspopup="true"
+            aria-expanded="false">
+            Candidates
+            <i class="fa-solid fa-chevron-down"></i>
+          </a>
+            
+        <ul class="dropdown-menu">
+    
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidate-information/announced-candidates"
+            class="dropdown-item   nav-link--announced-candidates"
+            
+            >
+            Announced Candidates
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/become-candidate"
+            class="dropdown-item   nav-link--become-a-candidate"
+            
+            >
+            Become a Candidate
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://www.voterfocus.com/ws/WScand/candidate_login.php?county=broward"
+            class="dropdown-item   nav-link--candidate--committee-finance-login"
+            
+            target="_blank" rel="noreferrer">
+            Candidate/ Committee Finance Login
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://dos.fl.gov/elections/"
+            class="dropdown-item   nav-link--division-of-elections"
+            
+            target="_blank" rel="noreferrer">
+            Division of Elections
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/calendar-reporting-dates"
+            class="dropdown-item   nav-link--calendar-of-reporting-dates"
+            
+            >
+            Calendar of Reporting Dates
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/candidate-reporting-guidelines"
+            class="dropdown-item   nav-link--candidate-reporting-guidelines"
+            
+            >
+            Candidate Reporting Guidelines
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/committee-reporting-guidelines"
+            class="dropdown-item   nav-link--committee-reporting-guidelines"
+            
+            >
+            Committee Reporting Guidelines
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/executive-committee"
+            class="dropdown-item   nav-link--executive-committee"
+            
+            >
+            Executive Committee
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidate-information/political-committees"
+            class="dropdown-item   nav-link--political-committees"
+            
+            >
+            Political Committees
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/elected-officials"
+            class="dropdown-item   nav-link--elected-officials"
+            
+            >
+            Elected Officials
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates"
+            class="dropdown-item   nav-link--general-candidate-information"
+            
+            >
+            General Candidate Information
+          </a>
+              </li>
+    
+  </ul>
+  
+
+                      </li>
+          
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <a
+            class="nav-link dropdown-toggle  nav-link--get-involved"
+            data-bs-toggle="dropdown"
+            href="/get-involved"
+            aria-haspopup="true"
+            aria-expanded="false">
+            Get Involved
+            <i class="fa-solid fa-chevron-down"></i>
+          </a>
+            
+        <ul class="dropdown-menu">
+    
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/get-involved"
+            class="dropdown-item   nav-link--how-to-get-involved"
+            
+            >
+            How to Get Involved
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-engagement/just-kids"
+            class="dropdown-item   nav-link--just-for-kids"
+            
+            >
+            Just For Kids
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/get-involved/what-election-day-worker"
+            class="dropdown-item   nav-link--what-is-an-election-day-worker"
+            
+            >
+            What is an Election Day Worker
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-engagement/facts-about-voting"
+            class="dropdown-item   nav-link--facts-about-voting"
+            
+            >
+            Facts About Voting
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-engagement/help-america-vote-act"
+            class="dropdown-item   nav-link--help-america-vote-act"
+            
+            >
+            Help America Vote Act
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/hsvrd"
+            class="dropdown-item   nav-link--high-school-voter-registration-drive"
+            
+            >
+            High School Voter Registration Drive
+          </a>
+              </li>
+    
+  </ul>
+  
+
+                      </li>
+          
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <a
+            class="nav-link dropdown-toggle  nav-link--about-us"
+            data-bs-toggle="dropdown"
+            href="/about-us"
+            aria-haspopup="true"
+            aria-expanded="false">
+            About Us
+            <i class="fa-solid fa-chevron-down"></i>
+          </a>
+            
+        <ul class="dropdown-menu">
+    
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us"
+            class="dropdown-item   nav-link--about-broward-votes"
+            
+            >
+            About Broward Votes
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/join-our-team"
+            class="dropdown-item   nav-link--join-our-team"
+            
+            >
+            Join Our Team
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/our-history"
+            class="dropdown-item   nav-link--our-history"
+            
+            >
+            Our History
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/find-my-representative-view-broward-county-maps"
+            class="dropdown-item   nav-link--find-my-representative--view-broward-county-maps"
+            
+            >
+            Find My Representative &amp; View Broward County Maps
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/faq"
+            class="dropdown-item   nav-link--faq"
+            
+            >
+            FAQ
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/meet-our-directors"
+            class="dropdown-item   nav-link--meet-our-directors"
+            
+            >
+            Meet Our Directors
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/supervisor-elections"
+            class="dropdown-item   nav-link--supervisor-of-elections"
+            
+            >
+            Supervisor of Elections
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/2026-holiday-schedule.pdf"
+            class="dropdown-item   nav-link--_026-holiday-schedule"
+            
+            target="_blank" rel="noreferrer">
+            2026 Holiday Schedule
+          </a>
+              </li>
+          
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/contact-our-office"
+            class="dropdown-item   nav-link--contact-our-office"
+            
+            >
+            Contact Our Office
+          </a>
+              </li>
+    
+  </ul>
+  
+
+                      </li>
+    
+  </ul>
+  
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/navigation/menu--main.html.twig' -->
+
+
+  </nav>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--system-menu-block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+
+                                        </div>
+                                            <div class="site-form form-inline navbar-form justify-content-end">
+                            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--header-form.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="region region-header-form">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--search-form-block--header-form.html.twig
+   ▪️ block--search--header-form.html.twig
+   ▪️ block--header-form--broward2-searchform.html.twig
+   ▪️ block--header-form.html.twig
+   ▪️ block--broward2-searchform.html.twig
+   ✅ block--search-form-block.html.twig
+   ▪️ block--search.html.twig
+   ▪️ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--search-form-block.html.twig' -->
+<div id="block-broward2-searchform" role="search" class="block block-search block-search-form-block">
+  
+    
+    <div class="content container-inline">
+        <div class="content container-inline">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'form' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ form--search-block-form.html.twig
+   ✅ form--search-block-form.html.twig
+   ✅ form--search-block-form.html.twig
+   ▪️ form.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/form--search-block-form.html.twig' -->
+<form class="search-block-form search-form form-row" data-drupal-selector="search-block-form" action="/search/node" method="get" id="search-block-form" accept-charset="UTF-8">
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'form_element' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ form-element--search.html.twig
+   ▪️ form-element--edit-keys.html.twig
+   ✅ form-element.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element.html.twig' -->
+
+
+
+
+
+        
+  <div class="js-form-item js-form-type-search form-type-search js-form-item-keys form-item-keys form-no-label mb-3">
+          
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'form_element_label' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element-label.html.twig' -->
+<label for="edit-keys" class="visually-hidden">Search</label>
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element-label.html.twig' -->
+
+
+                    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'input__search' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ input--search.html.twig
+   ▪️ input--edit-keys.html.twig
+   ✅ input.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/input.html.twig' -->
+<input title="Enter the terms you wish to search for." placeholder="Search" data-drupal-selector="edit-keys" type="search" id="edit-keys" name="keys" value="" size="15" maxlength="128" class="form-search form-control" />
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/input.html.twig' -->
+
+
+                      </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'container' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ container--actions.html.twig
+   ▪️ container--has-parent.html.twig
+   ✅ container.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/container.html.twig' -->
+<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper mb-3" id="edit-actions">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'input__submit' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ input--submit.html.twig
+   ▪️ input--edit-submit.html.twig
+   ✅ input.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/input.html.twig' -->
+<input data-drupal-selector="edit-submit" type="submit" id="edit-submit" value="Search" class="button js-form-submit form-submit btn btn-primary form-control" />
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/input.html.twig' -->
+
+</div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/container.html.twig' -->
+
+
+</form>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/form--search-block-form.html.twig' -->
+
+
+    </div>
+  
+  </div>
+</div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--search-form-block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+                        </div>
+                                                        <button class="navbar-toggler collapsed" type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#CollapsingNavbar" aria-controls="CollapsingNavbar"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                
+                </div>            </nav>
+          
+              </header>
+
+            <div class="title-wrapper container">
+        
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ region--nowrap.html.twig
+   ▪️ region--breadcrumb.html.twig
+   ▪️ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--page-title-block--breadcrumb.html.twig
+   ▪️ block--core--breadcrumb.html.twig
+   ▪️ block--breadcrumb--broward2-pagetitle.html.twig
+   ✅ block--breadcrumb.html.twig
+   ▪️ block--broward2-pagetitle.html.twig
+   ▪️ block--page-title-block.html.twig
+   ▪️ block--core.html.twig
+   ▪️ block.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/blocks/block--breadcrumb.html.twig' -->
+  <div class="content">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'page_title' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/content/page-title.html.twig' -->
+
+  <h1 class="title">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--node--page--title--full.html.twig
+   ▪️ field--node--title--full.html.twig
+   ▪️ field--title--full.html.twig
+   ▪️ field--node--title--page.html.twig
+   ✅ field--node--title.html.twig
+   ▪️ field--node--page.html.twig
+   ▪️ field--title.html.twig
+   ▪️ field--string.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--node--title.html.twig' -->
+<span class="field field--name-title field--type-string field--label-hidden">Municipal Election</span>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--node--title.html.twig' -->
+
+</h1>
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/content/page-title.html.twig' -->
+
+
+  </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/blocks/block--breadcrumb.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--system-breadcrumb-block--breadcrumb.html.twig
+   ▪️ block--system--breadcrumb.html.twig
+   ▪️ block--breadcrumb--broward2-breadcrumbs.html.twig
+   ✅ block--breadcrumb.html.twig
+   ▪️ block--broward2-breadcrumbs.html.twig
+   ▪️ block--system-breadcrumb-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/blocks/block--breadcrumb.html.twig' -->
+  <div class="content">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'breadcrumb' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/navigation/breadcrumb.html.twig' -->
+
+  <!-- 🥮 Component start: bootstrap_barrio:breadcrumb --><nav role="navigation" aria-label="breadcrumb" style="">
+  <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+                <li class="breadcrumb-item">
+        <a href="/results-information">Results &amp; Information</a>
+      </li>
+                <li class="breadcrumb-item active">
+        Municipal Election
+      </li>
+        </ol>
+</nav>
+<!-- 🥮 Component end: bootstrap_barrio:breadcrumb -->
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/navigation/breadcrumb.html.twig' -->
+
+
+  </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/blocks/block--breadcrumb.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+
+
+      </div>
+    </div>
+
+        
+        
+        
+        <div id="main-wrapper" class="layout-main-wrapper clearfix">
+              <div id="main" class="container">
+          <div class="row row-offcanvas row-offcanvas-left clearfix">
+            <main class="main-content col order-first" id="content" role="main">
+              <section class="section" id="main-content">
+                
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ region--nowrap.html.twig
+   ▪️ region--content.html.twig
+   ▪️ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--system-messages-block--content.html.twig
+   ▪️ block--system--content.html.twig
+   ▪️ block--content--broward2-messages.html.twig
+   ▪️ block--content.html.twig
+   ▪️ block--broward2-messages.html.twig
+   ✅ block--system-messages-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'core/modules/system/templates/block--system-messages-block.html.twig' -->
+<div data-drupal-messages-fallback class="hidden"></div>
+
+<!-- END OUTPUT from 'core/modules/system/templates/block--system-messages-block.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--legacy-url-block--content.html.twig
+   ▪️ block--kwall-migrate--content.html.twig
+   ▪️ block--content--broward2-blocktolinklegacyurltolegacydomain.html.twig
+   ▪️ block--content.html.twig
+   ▪️ block--broward2-blocktolinklegacyurltolegacydomain.html.twig
+   ▪️ block--legacy-url-block.html.twig
+   ▪️ block--kwall-migrate.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-broward2-blocktolinklegacyurltolegacydomain" class="block block-kwall-migrate block-legacy-url-block">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'legacy_url_block' -->
+<!-- BEGIN OUTPUT from 'modules/custom/kwall_migrate/templates/legacy-url-block.html.twig' -->
+
+<!-- END OUTPUT from 'modules/custom/kwall_migrate/templates/legacy-url-block.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--system-main-block--content.html.twig
+   ▪️ block--system--content.html.twig
+   ▪️ block--content--broward2-content.html.twig
+   ▪️ block--content.html.twig
+   ▪️ block--broward2-content.html.twig
+   ▪️ block--system-main-block.html.twig
+   ▪️ block--system.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-broward2-content" class="block block-system block-system-main-block">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'node' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ node--41--full.html.twig
+   ▪️ node--41.html.twig
+   ▪️ node--page--full.html.twig
+   ▪️ node--page.html.twig
+   ▪️ node--full.html.twig
+   ✅ node.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/content/node.html.twig' -->
+
+
+<article class="node node--type-page node--view-mode-full clearfix">
+  <header>
+    
+        
+      </header>
+  <div class="node__content clearfix">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--node--page--field-paragraphs--full.html.twig
+   ▪️ field--node--field-paragraphs--full.html.twig
+   ▪️ field--field-paragraphs--full.html.twig
+   ▪️ field--node--field-paragraphs--page.html.twig
+   ▪️ field--node--field-paragraphs.html.twig
+   ▪️ field--node--page.html.twig
+   ▪️ field--field-paragraphs.html.twig
+   ▪️ field--entity-reference-type--paragraph.html.twig
+   ▪️ field--entity-reference-revisions.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+  <div class="field field--name-field-paragraphs field--type-entity-reference-revisions field--label-hidden field__items">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--layout--default.html.twig
+   ✅ paragraph--layout.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--layout.html.twig' -->
+
+            
+
+  
+  <div class="paragraph paragraph--type--layout paragraph--id--248 entity_248 paragraph--view-mode--default margin-bottom-3">
+                                  <div class="container-lg">
+                  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'layout__onecol' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ layout--onecol.html.twig
+   ✅ layout--onecol.html.twig
+   ▪️ layout.html.twig
+-->
+<!-- BEGIN OUTPUT from 'core/modules/layout_discovery/layouts/onecol/layout--onecol.html.twig' -->
+  <div class="layout layout--onecol">
+    <div  class="layout__region layout__region--content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--wysiwyg--default.html.twig
+   ✅ paragraph--wysiwyg.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--wysiwyg.html.twig' -->
+
+
+  
+  <div class="paragraph paragraph--type--wysiwyg paragraph--id--249 entity_249 paragraph--view-mode--default">
+                  <h2 class="section-title">
+        
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--wysiwyg--field-heading--default.html.twig
+   ▪️ field--paragraph--field-heading--default.html.twig
+   ▪️ field--field-heading--default.html.twig
+   ▪️ field--paragraph--field-heading--wysiwyg.html.twig
+   ▪️ field--paragraph--field-heading.html.twig
+   ▪️ field--paragraph--wysiwyg.html.twig
+   ▪️ field--field-heading.html.twig
+   ▪️ field--string.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+WHAT IS A MUNICIPAL ELECTION?
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+        </h2>
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--wysiwyg--field-body--default.html.twig
+   ▪️ field--paragraph--field-body--default.html.twig
+   ▪️ field--field-body--default.html.twig
+   ▪️ field--paragraph--field-body--wysiwyg.html.twig
+   ▪️ field--paragraph--field-body.html.twig
+   ▪️ field--paragraph--wysiwyg.html.twig
+   ▪️ field--field-body.html.twig
+   ✅ field--text-long.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-long.html.twig' -->
+
+  <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__items">
+        <div class="field__item"><p data-pm-slice="1 1 []">Broward County has 31 cities and each has a governing body with members elected by their voters. Each city has a Charter which stipulates the term of the office and the frequency of the elections.</p><p>March Election Options – If your city has elections in March, you have the option to vote-by-mail or in-person at your assigned polling place on Election Day.&nbsp; <a href="/voters/vote-mail-information" data-entity-type="node" data-entity-uuid="24fc2f0c-9a37-4e10-aa26-b08b6a43641e" data-entity-substitution="canonical" title="Vote By Mail">Click Here</a> to request Vote-by-Mail ballot</p><p>Candidate Qualifying - Candidates running for Municipal office will qualify with the City Clerk. All campaign documents are filed with and fees are paid to the City Clerk. Aspiring candidates should check with their City Clerk for qualifying dates and other pertinent information.</p><p><strong>*MUNICIPAL ELECTION DATE: </strong><em><strong>November 3, 2026 General Elections</strong></em><br><strong>Voter Registration Deadline</strong> – Monday, October 5, 2026<br><strong>Deadline to request that a VBM ballot be mailed to you –&nbsp;</strong><br>5:00 p.m. on Thursday, October 22, 2026</p><p><strong>*MUNICIPAL ELECTION DATE: </strong><em><strong>March 9, 2027 Municipal Elections</strong></em><br><strong>Voter Registration Deadline</strong> – Monday, February 8, 2027<br><strong>Deadline to request that a VBM ballot be mailed to you –&nbsp;</strong><br>5:00 p.m. on Thursday, February 25, 2027</p><style>td {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+}</style></div>
+  </div>
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-long.html.twig' -->
+
+
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--wysiwyg.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'core/modules/layout_discovery/layouts/onecol/layout--onecol.html.twig' -->
+
+
+              </div>
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--layout.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--layout--default.html.twig
+   ✅ paragraph--layout.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--layout.html.twig' -->
+
+            
+
+  
+  <div class="paragraph paragraph--type--layout paragraph--id--608 entity_608 paragraph--view-mode--default margin-bottom-3">
+                                  <div class="container-lg">
+                  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'layout__onecol' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ layout--onecol.html.twig
+   ✅ layout--onecol.html.twig
+   ▪️ layout.html.twig
+-->
+<!-- BEGIN OUTPUT from 'core/modules/layout_discovery/layouts/onecol/layout--onecol.html.twig' -->
+  <div class="layout layout--onecol">
+    <div  class="layout__region layout__region--content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--wysiwyg--default.html.twig
+   ✅ paragraph--wysiwyg.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--wysiwyg.html.twig' -->
+
+
+
+  <div class="paragraph paragraph--type--wysiwyg paragraph--id--609 entity_609 paragraph--view-mode--default">
+                  <h2 class="section-title">
+        
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--wysiwyg--field-heading--default.html.twig
+   ▪️ field--paragraph--field-heading--default.html.twig
+   ▪️ field--field-heading--default.html.twig
+   ▪️ field--paragraph--field-heading--wysiwyg.html.twig
+   ▪️ field--paragraph--field-heading.html.twig
+   ▪️ field--paragraph--wysiwyg.html.twig
+   ▪️ field--field-heading.html.twig
+   ▪️ field--string.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+Broward County Municipal General Election Schedule 2026-2027
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+        </h2>
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--wysiwyg--field-body--default.html.twig
+   ▪️ field--paragraph--field-body--default.html.twig
+   ▪️ field--field-body--default.html.twig
+   ▪️ field--paragraph--field-body--wysiwyg.html.twig
+   ▪️ field--paragraph--field-body.html.twig
+   ▪️ field--paragraph--wysiwyg.html.twig
+   ▪️ field--field-body.html.twig
+   ✅ field--text-long.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-long.html.twig' -->
+
+  <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__items">
+        <div class="field__item"><table class="table tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-minimap=""><thead><tr><th role="columnheader" data-tablesaw-priority="persist">City Name</th><th role="columnheader"># of Precincts</th><th role="columnheader">Next Election Date</th><th role="columnheader">Positions on the Ballot</th><th role="columnheader">Election Type</th></tr></thead><tbody><tr><td>Coconut Creek</td><td>8</td><td>2029</td><td>To be Determined </td><td>TBD</td></tr><tr><td>Cooper City</td><td>8</td><td>11/03/2026</td><td><p>Commissioner Seats 1 &amp; 2</p><p><strong>*Candidates unopposed after qualifying period.</strong></p></td><td>At Large</td></tr><tr><td>Coral Springs</td><td>17</td><td>11/03/2026</td><td>Commissioner Seats 2 &amp; 4</td><td>At Large</td></tr><tr><td>Dania Beach</td><td>5</td><td>11/03/2026</td><td>Mayor &amp; Vice Mayor (2 Seats)</td><td>At Large</td></tr><tr><td>Davie </td><td>23</td><td>11/03/2026</td><td><p>Mayor</p><p>Council Members</p></td><td><p>At Large</p><p>Districts 1, 2, 3 &amp; 4</p></td></tr><tr><td>Deerfield Beach</td><td>15</td><td>03/09/2027</td><td>Commissioners</td><td>Districts 1 &amp; 2</td></tr><tr><td>Fort Lauderdale</td><td>42</td><td>2028</td><td>To be Determined</td><td>TBD</td></tr><tr><td>Hallandale Beach</td><td>5</td><td>11/03/2026</td><td>Commissioner Seats 1 &amp; 2</td><td>At Large</td></tr><tr><td>Hillsboro Beach</td><td>1</td><td>03/10/2026</td><td>Unopposed Candidates</td><td>At Large</td></tr><tr><td>Hollywood</td><td>29</td><td>11/03/2026</td><td>Commissioner</td><td>Districts 1, 3 &amp; 5</td></tr><tr><td>Laud-by-the-Sea</td><td>3</td><td>11/03/2026</td><td><p>Mayor</p><p>Commissioner Seats 1 &amp; 2</p></td><td><p>At Large</p><p>At Large</p></td></tr><tr><td>Lauderdale Lakes</td><td>6</td><td>11/03/2026</td><td><p>Commissioner Seats 1 &amp; 2</p><p><strong>*Candidates unopposed after qualifying period.</strong></p></td><td>At Large</td></tr><tr><td>Lauderhill</td><td>10</td><td><p>3/10/2026</p><p>11/03/2026</p></td><td><p>*(SE) Referendum</p><p>Mayor-Seat 5, Commissioner Seat 4</p></td><td>At Large</td></tr><tr><td>Lazy Lake </td><td>1</td><td>3/10/2026</td><td>Unopposed Candidates</td><td>At Large</td></tr><tr><td>Lighthouse Point</td><td>2</td><td>3/10/2026</td><td>Unopposed Candidates</td><td>At Large</td></tr><tr><td>Margate </td><td>10</td><td>11/03/2026</td><td>Commissioner Seats 3 &amp; 5</td><td>At Large</td></tr><tr><td>Miramar</td><td>19</td><td>03/09/2027</td><td>Commissioner Seats 4 &amp; 5</td><td>At Large</td></tr><tr><td>North Lauderdale</td><td>7</td><td>11/03/2026</td><td><p>Mayor</p><p>Commissioner</p></td><td><p>At Large</p><p>Districts A &amp; B</p></td></tr><tr><td>Oakland Park</td><td>9</td><td>11/03/2026</td><td>2 Commissioner Seats</td><td>At Large</td></tr><tr><td>Parkland </td><td>4</td><td>11/03/2026</td><td><p>Mayor, Commissioner Districts 1 &amp; 2</p><p><strong>*Candidates unopposed after qualifying period.</strong></p></td><td>At Large</td></tr><tr><td>Pembroke Park</td><td>2</td><td>03/09/2027</td><td>Commissioner Districts 1, 2, 3, 4 &amp; 5</td><td>By District</td></tr><tr><td>Pembroke Pines</td><td>29</td><td>03/10/2026</td><td>Commissioner</td><td>Districts 1 &amp; 4</td></tr><tr><td>Plantation</td><td>16</td><td>11/03/2026</td><td>Mayor, &amp; Council Groups 1 &amp; 2</td><td>At Large</td></tr><tr><td>Pompano Beach</td><td>22</td><td>11/03/2026</td><td>Commissioner </td><td>Districts 1, 2, 3, 4 &amp; 5</td></tr><tr><td>Sea Ranch Lakes </td><td>1</td><td><p>03/10/2026</p><p>03/09/2027</p></td><td><p>Unopposed Candidates</p><p>3 Council Seats</p></td><td>At Large</td></tr><tr><td>Southwest Ranches</td><td>4</td><td>11/03/2026</td><td><p>Council Member Districts 1 &amp; 2</p><p><strong>*Candidates unopposed after qualifying period.</strong></p></td><td>At Large</td></tr><tr><td>Sunrise </td><td>18</td><td>11/03/2026</td><td>Commissioner Seats C &amp; D</td><td>At Large</td></tr><tr><td>Tamarac</td><td>13</td><td>11/03/2026</td><td><p>Mayor</p><p>Commissioner</p></td><td><p>At Large</p><p>Districts 2 &amp; 4</p></td></tr><tr><td>West Park</td><td>3</td><td>11/03/2026</td><td>Commissioner Seats 1 &amp; 2</td><td>At Large</td></tr><tr><td>Weston</td><td>9</td><td>11/03/2026</td><td>Commissioner Seats 3 &amp; 4</td><td>At Large</td></tr><tr><td>Wilton Manors</td><td>1</td><td>11/03/2026</td><td>Mayor, &amp; 2 Commissioner Seats</td><td>At Large</td></tr><tr><td colspan="5"><p>*SE = Special Election (Unscheduled)</p><p>TBD = To be Determined</p><p>rev. 06/10/2026</p></td></tr></tbody></table></div>
+  </div>
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-long.html.twig' -->
+
+
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--wysiwyg.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'core/modules/layout_discovery/layouts/onecol/layout--onecol.html.twig' -->
+
+
+              </div>
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--layout.html.twig' -->
+
+
+  </div>
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+  </div>
+</article>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/content/node.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--block-content--content.html.twig
+   ▪️ block--content--broward2-chatjs-2.html.twig
+   ▪️ block--content.html.twig
+   ▪️ block--bundle--basic--content.html.twig
+   ▪️ block--bundle--basic.html.twig
+   ▪️ block--broward2-chatjs-2.html.twig
+   ▪️ block--block-content--dfc4d0be-0b47-40a9-9a71-68b8219836c3.html.twig
+   ▪️ block--block-content--id-view--broward2-chatjs-2--full.html.twig
+   ▪️ block--block-content--id--broward2-chatjs-2.html.twig
+   ▪️ block--block-content--view-type--basic--full.html.twig
+   ▪️ block--block-content--type--basic.html.twig
+   ▪️ block--block-basic.html.twig
+   ▪️ block--block-content--view--full.html.twig
+   ▪️ block--block-content.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-broward2-chatjs-2" class="block-content-basic block block-block-content block-block-contentdfc4d0be-0b47-40a9-9a71-68b8219836c3">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--block-content--basic--body--full.html.twig
+   ▪️ field--block-content--body--full.html.twig
+   ▪️ field--body--full.html.twig
+   ▪️ field--block-content--body--basic.html.twig
+   ▪️ field--block-content--body.html.twig
+   ▪️ field--block-content--basic.html.twig
+   ▪️ field--body.html.twig
+   ✅ field--text-with-summary.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+  <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__items"><!-- Broward Votes AI Assistant Styles -->
+<style>
+  #chat-window {
+    display: none;
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 420px;
+    height: 620px;
+    max-height: 85vh;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+  }
+
+  #chat-window iframe {
+    display: block; /* kill the inline-baseline gap below the iframe */
+  }
+
+  /* Mobile Responsive Rule */
+  @media (max-width: 768px) {
+    #chat-window {
+      position: fixed;
+      bottom: 90px;
+      right: 15px;
+      left: 15px;
+      width: auto;
+      height: 75dvh;
+      max-height: none;
+    }
+  }
+</style>
+
+<!-- Broward Votes AI Assistant Widget -->
+<div
+  id="bv-chat-widget"
+  style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999999;
+    font-family: sans-serif;
+  "
+>
+  <!-- The Floating Toggle Button (closed = LIVE CHAT icon, open = blue circle with X) -->
+  <button
+    id="chat-toggle"
+    style="
+      background: transparent;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 18%;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    "
+  >
+    <span
+      id="toggle-icon"
+      style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%"
+    >
+      <img
+        src="https://chat.browardvotes.gov/chatbot_blue.png"
+        alt="Live chat"
+        style="width: 100%; height: 100%; display: block"
+      />
+    </span>
+  </button>
+
+  <!-- The Hidden Chat Window -->
+  <div id="chat-window">
+    <iframe
+      src="https://chat.browardvotes.gov"
+      width="100%"
+      height="100%"
+      frameborder="0"
+      title="Broward Votes AI Assistant"
+      allow="clipboard-write"
+    ></iframe>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const btn = document.getElementById("chat-toggle");
+    const win = document.getElementById("chat-window");
+    const icon = document.getElementById("toggle-icon");
+
+    // Pure strings to prevent Character Encoding issues in CMS systems
+    const chatImg =
+      '<img src="https://chat.browardvotes.gov/chatbot_blue.png" alt="Live chat" style="width:100%;height:100%;display:block;">';
+    const closeSvg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+
+    btn.onclick = () => {
+      // Toggle logic
+      const isHidden = window.getComputedStyle(win).display === "none";
+      win.style.display = isHidden ? "block" : "none";
+      icon.innerHTML = isHidden ? closeSvg : chatImg;
+      // Open: blue circle with white X. Closed: the icon supplies its own
+      // rounded-square background, so the button goes transparent.
+      btn.style.background = isHidden ? "#004a98" : "transparent";
+      btn.style.borderRadius = isHidden ? "50%" : "18%";
+      btn.style.transform = isHidden
+        ? "scale(0.9) rotate(90deg)"
+        : "scale(1) rotate(0deg)";
+
+      if (isHidden) {
+        // Send a 'ready' signal to the iframe
+        win.querySelector("iframe").contentWindow.focus();
+      }
+    };
+  })();
+</script>
+
+  </div>
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+
+
+              </section>
+            </main>
+
+                          <div class="sidebar_first sidebar col-md-3" id="sidebar_first">
+                <aside class="section" role="complementary">
+                  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--sidebar-first.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="region region-sidebar-first">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--broward2-mainnavigation.html.twig
+   ▪️ block--menu-block--main--sidebar-first.html.twig
+   ▪️ block--menu-block--sidebar-first.html.twig
+   ▪️ block--sidebar-first--broward2-mainnavigation.html.twig
+   ▪️ block--sidebar-first.html.twig
+   ▪️ block--menu-block--sidebar-navigation.html.twig
+   ▪️ block--menu-block--main.html.twig
+   ▪️ block--menu-block.html.twig
+   ✅ block--system-menu-block.html.twig
+   ▪️ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--system-menu-block.html.twig' -->
+<nav role="navigation" aria-labelledby="block-broward2-mainnavigation-menu" id="block-broward2-mainnavigation" class="block block-menu navigation menu--main">
+      
+  <h2 id="block-broward2-mainnavigation-menu">Site Section</h2>
+  
+
+        
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'menu' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ menu--sidebar-navigation.html.twig
+   ▪️ menu--main.html.twig
+   ▪️ menu.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/navigation/menu--sidebar-navigation.html.twig' -->
+
+
+
+  
+      <ul class="clearfix nav navbar-nav sidebar-nav" data-component-id="sidebar_navigation">
+    
+                
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <div class="sidebar-link-wrapper ">
+            <a
+              class="nav-link dropdown-toggle  nav-link--voters "
+              href="/voters"
+              >
+              Voters
+            </a>
+            <button
+              type="button"
+              class="sidebar-toggle-btn "
+              data-sidebar-toggle="sidebar-item-828918140"
+              aria-expanded="false"
+              aria-controls="sidebar-item-828918140"
+              aria-label="Toggle submenu for Voters">
+              <i class="fa-solid fa-chevron-down sidebar-chevron"></i>
+            </button>
+          </div>
+          <div class="sidebar-submenu-wrapper " id="sidebar-item-828918140">
+              
+        <ul class="dropdown-menu sidebar-submenu">
+    
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://registertovoteflorida.gov/home"
+            class="dropdown-item   nav-link--register-or-update "
+            
+            target="_blank" rel="noreferrer">
+            Register or Update
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://my.browardvotes.gov/Portals/ElectionLink/Launchpad.aspx"
+            class="dropdown-item   nav-link--voter-info "
+            
+            target="_blank" rel="noreferrer">
+            Voter Info
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/vote-mail-information"
+            class="dropdown-item   nav-link--vote-by-mail-information "
+            
+            >
+            Vote By Mail Information
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/early-voting-ballot-return"
+            class="dropdown-item   nav-link--early-voting--ballot-return "
+            
+            >
+            Early Voting &amp; Ballot Return
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/precinct-finder"
+            class="dropdown-item   nav-link--election-day-precinct "
+            
+            >
+            Election Day Precinct
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://fl.omniballot.us/sites/12011/default/app/sb/vr"
+            class="dropdown-item   nav-link--sample-ballot "
+            
+            target="_blank" rel="noreferrer">
+            Sample Ballot
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voters/ballot-status-notifications"
+            class="dropdown-item   nav-link--ballot-status-notifications "
+            
+            >
+            Ballot Status Notifications
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <a
+            href=""
+            class="dropdown-item   nav-link--voter-resources "
+            >
+            Voter Resources
+          </a>
+            
+        <ul class="dropdown-menu sidebar-submenu sidebar-submenu--level-3">
+    
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-resources/how-register"
+            class="dropdown-item  dropdown-item--level-3 nav-link--how-to-register "
+            
+            >
+            How to Register
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-resources/voter-guide-rights-and-responsibilities"
+            class="dropdown-item  dropdown-item--level-3 nav-link--voter-guide-rights-and-responsibilities "
+            
+            >
+            Voter Guide, Rights and Responsibilities
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-resources/vote-mail-request-bifold-mailer"
+            class="dropdown-item  dropdown-item--level-3 nav-link--vote-by-mail-request-bifold-mailer "
+            
+            >
+            Vote-by-Mail Request Bifold Mailer
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-resources/voter-registration-bifold-mailer"
+            class="dropdown-item  dropdown-item--level-3 nav-link--voter-registration-bifold-mailer "
+            
+            >
+            Voter Registration Bifold Mailer
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/Cancellation-request-form"
+            class="dropdown-item  dropdown-item--level-3 nav-link--cancellation-request-form "
+            
+            >
+            Cancellation Request Form
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-resources/special-needsada-accessibility-options"
+            class="dropdown-item  dropdown-item--level-3 nav-link--special-needs-ada-accessibility-options "
+            
+            >
+            Special Needs/ADA Accessibility Options
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/cure-your-signature"
+            class="dropdown-item  dropdown-item--level-3 nav-link--cure-your-signature "
+            
+            >
+            Cure Your Signature
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-information/election-complaints"
+            class="dropdown-item  dropdown-item--level-3 nav-link--election-complaints "
+            
+            >
+            Election Complaints
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-information/voter-fraud"
+            class="dropdown-item  dropdown-item--level-3 nav-link--voter-fraud "
+            
+            >
+            Voter Fraud
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-resources/militaryoverseas-voting"
+            class="dropdown-item  dropdown-item--level-3 nav-link--military-overseas-voting "
+            
+            >
+            Military/Overseas Voting
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-resources/provisional-ballot-voting"
+            class="dropdown-item  dropdown-item--level-3 nav-link--provisional-ballot-voting "
+            
+            >
+            Provisional Ballot Voting
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voter-information/political-parties"
+            class="dropdown-item  dropdown-item--level-3 nav-link--political-parties "
+            
+            >
+            Political Parties
+          </a>
+              </li>
+                
+      
+      <li class="nav-item menu-item--level-3">
+                          <a
+            href="/voters"
+            class="dropdown-item  dropdown-item--level-3 nav-link--general-information "
+            
+            >
+            General Information
+          </a>
+              </li>
+    
+  </ul>
+  
+
+                      </li>
+    
+  </ul>
+  
+          </div>
+
+                      </li>
+                
+      
+      <li class="nav-item menu-item--expanded dropdown active">
+                          <div class="sidebar-link-wrapper is-active">
+            <a
+              class="nav-link dropdown-toggle  nav-link--results--information active"
+              href="/results-information"
+              >
+              Results &amp; Information
+            </a>
+            <button
+              type="button"
+              class="sidebar-toggle-btn show"
+              data-sidebar-toggle="sidebar-item-745091736"
+              aria-expanded="true"
+              aria-controls="sidebar-item-745091736"
+              aria-label="Toggle submenu for Results &amp; Information">
+              <i class="fa-solid fa-chevron-down sidebar-chevron"></i>
+            </button>
+          </div>
+          <div class="sidebar-submenu-wrapper is-open" id="sidebar-item-745091736">
+              
+        <ul class="dropdown-menu sidebar-submenu">
+    
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/register-vote/when-register"
+            class="dropdown-item   nav-link--election-information "
+            
+            >
+            Election Information
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information/election-results-information"
+            class="dropdown-item   nav-link--election-results-information "
+            
+            >
+            Election Results Information
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/Election-Information/Voter-Statistics/Voter-Statistics/Voter-Registration-Stats-Summary"
+            class="dropdown-item   nav-link--voter-registration-statistics-summary- "
+            
+            >
+            Voter Registration Statistics Summary 
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information/voter-statistics"
+            class="dropdown-item   nav-link--voter-statistics "
+            
+            >
+            Voter Statistics
+          </a>
+              </li>
+                
+      
+      <li class="nav-item active">
+                          <a
+            href="/results-information/municipal-election"
+            class="dropdown-item   nav-link--municipal-election active"
+            
+            >
+            Municipal Election
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voting-methods/voting-equipment-interactive-demo"
+            class="dropdown-item   nav-link--voting-equipment-interactive-demo "
+            
+            >
+            Voting Equipment Interactive Demo
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/list-maintenance_rev-052025_.pdf"
+            class="dropdown-item   nav-link--list-maintenance-definitions-and-procedures "
+            
+            target="_blank" rel="noreferrer">
+            List Maintenance Definitions and Procedures
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/polling-location-license-t_c-1034579.6-psj-clean-1.21.26.pdf"
+            class="dropdown-item   nav-link--polling-location-terms-and-conditions "
+            
+            target="_blank" rel="noreferrer">
+            Polling Location Terms and Conditions
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/2021Elections/list-of-all-elections.pdf"
+            class="dropdown-item   nav-link--list-of-elections "
+            
+            target="_blank" rel="noreferrer">
+            List of Elections
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information/important-forms-elections"
+            class="dropdown-item   nav-link--important-forms-for-elections "
+            
+            >
+            Important Forms for Elections
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/results-information"
+            class="dropdown-item   nav-link--general-results--resources "
+            
+            >
+            General Results &amp; Resources
+          </a>
+              </li>
+    
+  </ul>
+  
+          </div>
+
+                      </li>
+                
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <div class="sidebar-link-wrapper ">
+            <a
+              class="nav-link dropdown-toggle  nav-link--candidates "
+              href="/candidates"
+              >
+              Candidates
+            </a>
+            <button
+              type="button"
+              class="sidebar-toggle-btn "
+              data-sidebar-toggle="sidebar-item-1517513870"
+              aria-expanded="false"
+              aria-controls="sidebar-item-1517513870"
+              aria-label="Toggle submenu for Candidates">
+              <i class="fa-solid fa-chevron-down sidebar-chevron"></i>
+            </button>
+          </div>
+          <div class="sidebar-submenu-wrapper " id="sidebar-item-1517513870">
+              
+        <ul class="dropdown-menu sidebar-submenu">
+    
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidate-information/announced-candidates"
+            class="dropdown-item   nav-link--announced-candidates "
+            
+            >
+            Announced Candidates
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/become-candidate"
+            class="dropdown-item   nav-link--become-a-candidate "
+            
+            >
+            Become a Candidate
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://www.voterfocus.com/ws/WScand/candidate_login.php?county=broward"
+            class="dropdown-item   nav-link--candidate--committee-finance-login "
+            
+            target="_blank" rel="noreferrer">
+            Candidate/ Committee Finance Login
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://dos.fl.gov/elections/"
+            class="dropdown-item   nav-link--division-of-elections "
+            
+            target="_blank" rel="noreferrer">
+            Division of Elections
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/calendar-reporting-dates"
+            class="dropdown-item   nav-link--calendar-of-reporting-dates "
+            
+            >
+            Calendar of Reporting Dates
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/candidate-reporting-guidelines"
+            class="dropdown-item   nav-link--candidate-reporting-guidelines "
+            
+            >
+            Candidate Reporting Guidelines
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/committee-reporting-guidelines"
+            class="dropdown-item   nav-link--committee-reporting-guidelines "
+            
+            >
+            Committee Reporting Guidelines
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/executive-committee"
+            class="dropdown-item   nav-link--executive-committee "
+            
+            >
+            Executive Committee
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidate-information/political-committees"
+            class="dropdown-item   nav-link--political-committees "
+            
+            >
+            Political Committees
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates/elected-officials"
+            class="dropdown-item   nav-link--elected-officials "
+            
+            >
+            Elected Officials
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/candidates"
+            class="dropdown-item   nav-link--general-candidate-information "
+            
+            >
+            General Candidate Information
+          </a>
+              </li>
+    
+  </ul>
+  
+          </div>
+
+                      </li>
+                
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <div class="sidebar-link-wrapper ">
+            <a
+              class="nav-link dropdown-toggle  nav-link--get-involved "
+              href="/get-involved"
+              >
+              Get Involved
+            </a>
+            <button
+              type="button"
+              class="sidebar-toggle-btn "
+              data-sidebar-toggle="sidebar-item-1570386209"
+              aria-expanded="false"
+              aria-controls="sidebar-item-1570386209"
+              aria-label="Toggle submenu for Get Involved">
+              <i class="fa-solid fa-chevron-down sidebar-chevron"></i>
+            </button>
+          </div>
+          <div class="sidebar-submenu-wrapper " id="sidebar-item-1570386209">
+              
+        <ul class="dropdown-menu sidebar-submenu">
+    
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/get-involved"
+            class="dropdown-item   nav-link--how-to-get-involved "
+            
+            >
+            How to Get Involved
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-engagement/just-kids"
+            class="dropdown-item   nav-link--just-for-kids "
+            
+            >
+            Just For Kids
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/get-involved/what-election-day-worker"
+            class="dropdown-item   nav-link--what-is-an-election-day-worker "
+            
+            >
+            What is an Election Day Worker
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-engagement/facts-about-voting"
+            class="dropdown-item   nav-link--facts-about-voting "
+            
+            >
+            Facts About Voting
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/voter-engagement/help-america-vote-act"
+            class="dropdown-item   nav-link--help-america-vote-act "
+            
+            >
+            Help America Vote Act
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/hsvrd"
+            class="dropdown-item   nav-link--high-school-voter-registration-drive "
+            
+            >
+            High School Voter Registration Drive
+          </a>
+              </li>
+    
+  </ul>
+  
+          </div>
+
+                      </li>
+                
+      
+      <li class="nav-item menu-item--expanded dropdown">
+                          <div class="sidebar-link-wrapper ">
+            <a
+              class="nav-link dropdown-toggle  nav-link--about-us "
+              href="/about-us"
+              >
+              About Us
+            </a>
+            <button
+              type="button"
+              class="sidebar-toggle-btn "
+              data-sidebar-toggle="sidebar-item-642047138"
+              aria-expanded="false"
+              aria-controls="sidebar-item-642047138"
+              aria-label="Toggle submenu for About Us">
+              <i class="fa-solid fa-chevron-down sidebar-chevron"></i>
+            </button>
+          </div>
+          <div class="sidebar-submenu-wrapper " id="sidebar-item-642047138">
+              
+        <ul class="dropdown-menu sidebar-submenu">
+    
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us"
+            class="dropdown-item   nav-link--about-broward-votes "
+            
+            >
+            About Broward Votes
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/join-our-team"
+            class="dropdown-item   nav-link--join-our-team "
+            
+            >
+            Join Our Team
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/our-history"
+            class="dropdown-item   nav-link--our-history "
+            
+            >
+            Our History
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/find-my-representative-view-broward-county-maps"
+            class="dropdown-item   nav-link--find-my-representative--view-broward-county-maps "
+            
+            >
+            Find My Representative &amp; View Broward County Maps
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/faq"
+            class="dropdown-item   nav-link--faq "
+            
+            >
+            FAQ
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/meet-our-directors"
+            class="dropdown-item   nav-link--meet-our-directors "
+            
+            >
+            Meet Our Directors
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/supervisor-elections"
+            class="dropdown-item   nav-link--supervisor-of-elections "
+            
+            >
+            Supervisor of Elections
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="https://browardvotes.gov/sites/default/files/2026-holiday-schedule.pdf"
+            class="dropdown-item   nav-link--_026-holiday-schedule "
+            
+            target="_blank" rel="noreferrer">
+            2026 Holiday Schedule
+          </a>
+              </li>
+                
+      
+      <li class="nav-item">
+                          <a
+            href="/about-us/contact-our-office"
+            class="dropdown-item   nav-link--contact-our-office "
+            
+            >
+            Contact Our Office
+          </a>
+              </li>
+    
+  </ul>
+  
+          </div>
+
+                      </li>
+    
+  </ul>
+  
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/navigation/menu--sidebar-navigation.html.twig' -->
+
+
+  </nav>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--system-menu-block.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--entity-view--sidebar-first.html.twig
+   ▪️ block--ctools--sidebar-first.html.twig
+   ▪️ block--sidebar-first--broward2-entityviewcontent-4.html.twig
+   ▪️ block--sidebar-first.html.twig
+   ▪️ block--broward2-entityviewcontent-4.html.twig
+   ▪️ block--entity-view--node.html.twig
+   ▪️ block--entity-view.html.twig
+   ▪️ block--ctools.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-broward2-entityviewcontent-4" class="block block-ctools block-entity-viewnode">
+  
+    
+      <div class="content">
+      
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+                </aside>
+              </div>
+            
+                      </div>
+        </div>
+          </div>
+
+        
+        <footer class="site-footer">
+                        <div class="site-footer-inner">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--footer-first.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="region region-footer-first">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--block-content--footer-first.html.twig
+   ▪️ block--footer-first--broward2-browardfooter.html.twig
+   ▪️ block--footer-first.html.twig
+   ▪️ block--bundle--footer-block--footer-first.html.twig
+   ▪️ block--bundle--footer-block.html.twig
+   ✅ block--broward2-browardfooter.html.twig
+   ▪️ block--block-content--5b329c81-e1e8-433f-9dd3-1ff9361c86e5.html.twig
+   ▪️ block--block-content--id-view--broward2-browardfooter--full.html.twig
+   ▪️ block--block-content--id--broward2-browardfooter.html.twig
+   ▪️ block--block-content--view-type--footer-block--full.html.twig
+   ▪️ block--block-content--type--footer-block.html.twig
+   ▪️ block--block-footer-block.html.twig
+   ▪️ block--block-content--view--full.html.twig
+   ▪️ block--block-content.html.twig
+   ▪️ block.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/blocks/block--broward2-browardfooter.html.twig' -->
+
+            <div class="footer-inner-wrapper container">
+            <div class="footer-left">
+                
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--block-content--footer-block--field-sections--full.html.twig
+   ▪️ field--block-content--field-sections--full.html.twig
+   ▪️ field--field-sections--full.html.twig
+   ▪️ field--block-content--field-sections--footer-block.html.twig
+   ▪️ field--block-content--field-sections.html.twig
+   ▪️ field--block-content--footer-block.html.twig
+   ▪️ field--field-sections.html.twig
+   ▪️ field--entity-reference-type--paragraph.html.twig
+   ▪️ field--entity-reference-revisions.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+  <div class="field field--name-field-sections field--type-entity-reference-revisions field--label-hidden field__items">
+        <div class="field__item">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--layout--footer.html.twig
+   ✅ paragraph--layout.html.twig
+   ▪️ paragraph--footer.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--layout.html.twig' -->
+
+            
+
+
+  <div class="paragraph paragraph--type--layout paragraph--id--437 entity_437 paragraph--view-mode--footer">
+                                  <div class="container-lg">
+                  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'layout__onecol' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ layout--onecol.html.twig
+   ✅ layout--onecol.html.twig
+   ▪️ layout.html.twig
+-->
+<!-- BEGIN OUTPUT from 'core/modules/layout_discovery/layouts/onecol/layout--onecol.html.twig' -->
+  <div class="layout layout--onecol">
+    <div  class="layout__region layout__region--content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--wysiwyg--footer.html.twig
+   ✅ paragraph--wysiwyg.html.twig
+   ▪️ paragraph--footer.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--wysiwyg.html.twig' -->
+
+
+
+  <div class="paragraph paragraph--type--wysiwyg paragraph--id--438 entity_438 paragraph--view-mode--footer">
+                
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--wysiwyg--field-body--footer.html.twig
+   ▪️ field--paragraph--field-body--footer.html.twig
+   ▪️ field--field-body--footer.html.twig
+   ▪️ field--paragraph--field-body--wysiwyg.html.twig
+   ▪️ field--paragraph--field-body.html.twig
+   ▪️ field--paragraph--wysiwyg.html.twig
+   ▪️ field--field-body.html.twig
+   ✅ field--text-long.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-long.html.twig' -->
+
+  <div class="clearfix text-formatted field field--name-field-body field--type-text-long field--label-hidden field__items">
+        <div class="field__item">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'entity_embed_container' -->
+<!-- BEGIN OUTPUT from 'modules/contrib/entity_embed/templates/entity-embed-container.html.twig' -->
+<div data-entity-type="media" data-entity-uuid="314247a3-0bef-4d40-80b1-0c9bb9b9e23c" data-langcode="en" class="embedded-entity">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'media' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ media--source-image.html.twig
+   ▪️ media--image--full.html.twig
+   ▪️ media--image.html.twig
+   ▪️ media--full.html.twig
+   ✅ media.html.twig
+-->
+<!-- BEGIN OUTPUT from 'core/modules/media/templates/media.html.twig' -->
+<div>
+  
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--media--image--image--full.html.twig
+   ▪️ field--media--image--full.html.twig
+   ▪️ field--image--full.html.twig
+   ▪️ field--media--image--image.html.twig
+   ▪️ field--media--image.html.twig
+   ▪️ field--media--image.html.twig
+   ▪️ field--image.html.twig
+   ▪️ field--entity-reference-type--file.html.twig
+   ▪️ field--image.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+  <div class="field field--name-image field--type-image field--label-hidden field__items">
+        <div class="field__item">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image_formatter' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+<img loading="lazy" src="/sites/default/files/group-287.png" width="200" height="82" alt="broward logo">
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+
+</div>
+  </div>
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+</div>
+
+<!-- END OUTPUT from 'core/modules/media/templates/media.html.twig' -->
+
+</div>
+
+<!-- END OUTPUT from 'modules/contrib/entity_embed/templates/entity-embed-container.html.twig' -->
+
+<p class="footer-address"><a href="https://maps.app.goo.gl/rKn85LUBdbnXoEFH6" target="_blank">4650 NW 21st Avenue</a><br><a href="https://maps.app.goo.gl/rKn85LUBdbnXoEFH6" target="_blank">Fort Lauderdale, FL 33309</a></p><p class="footer-hours">Hours: Mon - Fri, 9:00am - 5:00pm<br>Phone: 954-357-VOTE (8683)</p></div>
+  </div>
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-long.html.twig' -->
+
+
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--wysiwyg.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'core/modules/layout_discovery/layouts/onecol/layout--onecol.html.twig' -->
+
+
+              </div>
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--layout.html.twig' -->
+
+</div>
+  </div>
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+            </div>
+            <div class="footer-center">
+                
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--block-content--footer-block--field-links--full.html.twig
+   ▪️ field--block-content--field-links--full.html.twig
+   ▪️ field--field-links--full.html.twig
+   ✅ field--block-content--field-links--footer-block.html.twig
+   ▪️ field--block-content--field-links.html.twig
+   ▪️ field--block-content--footer-block.html.twig
+   ▪️ field--field-links.html.twig
+   ▪️ field--link.html.twig
+   ▪️ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field--block-content--field-links--footer-block.html.twig' -->
+
+<div class="links-wrapper">
+      <div class="links col-6">
+                  <a href="/">Home</a>
+                  <a href="/about-us/join-our-team">Careers</a>
+                  <a href="/about-us/contact-our-office">Contact</a>
+                  <a href="/voter-resources/special-needsada-accessibility-options">Accessibility</a>
+              </div>
+      <div class="links col-6">
+                  <a href="/social-media-policy">Social Media Policy</a>
+                  <a href="/privacy-policy">Privacy Policy</a>
+                  <a href="/disclaimer">Disclaimer</a>
+              </div>
+    </div>
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field--block-content--field-links--footer-block.html.twig' -->
+
+
+            </div>
+            <div class="footer-right">
+                
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--block-content--footer-block--field-social-links--full.html.twig
+   ▪️ field--block-content--field-social-links--full.html.twig
+   ▪️ field--field-social-links--full.html.twig
+   ▪️ field--block-content--field-social-links--footer-block.html.twig
+   ▪️ field--block-content--field-social-links.html.twig
+   ▪️ field--block-content--footer-block.html.twig
+   ▪️ field--field-social-links.html.twig
+   ▪️ field--entity-reference-type--paragraph.html.twig
+   ▪️ field--entity-reference-revisions.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+  <div class="social-icon-links field field--name-field-social-links field--type-entity-reference-revisions field--label-hidden field__items">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--icon-link--default.html.twig
+   ✅ paragraph--icon-link.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+
+  <div class="paragraph paragraph--type--icon-link paragraph--id--17 entity_17 paragraph--view-mode--default">
+            <a href="https://www.facebook.com/BrowardVotes/" alt="link_title">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--icon-link--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--default.html.twig
+   ▪️ field--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--icon-link.html.twig
+   ▪️ field--paragraph--field-image.html.twig
+   ▪️ field--paragraph--icon-link.html.twig
+   ▪️ field--field-image.html.twig
+   ▪️ field--entity-reference-type--media.html.twig
+   ▪️ field--entity-reference.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image_formatter' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+<img loading="lazy" src="/sites/default/files/fb_circle_white_60x60.png" width="60" height="60" alt="Facebook icon" />
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+        </a>
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--icon-link--default.html.twig
+   ✅ paragraph--icon-link.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+
+  <div class="paragraph paragraph--type--icon-link paragraph--id--23 entity_23 paragraph--view-mode--default">
+            <a href="https://www.youtube.com/c/BrowardVotes" alt="link_title">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--icon-link--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--default.html.twig
+   ▪️ field--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--icon-link.html.twig
+   ▪️ field--paragraph--field-image.html.twig
+   ▪️ field--paragraph--icon-link.html.twig
+   ▪️ field--field-image.html.twig
+   ▪️ field--entity-reference-type--media.html.twig
+   ▪️ field--entity-reference.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image_formatter' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+<img loading="lazy" src="/sites/default/files/youtube_circle_60x60.png" width="60" height="60" alt="YouTube" />
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+        </a>
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--icon-link--default.html.twig
+   ✅ paragraph--icon-link.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+
+  <div class="paragraph paragraph--type--icon-link paragraph--id--24 entity_24 paragraph--view-mode--default">
+            <a href="https://www.instagram.com/browardvotes/" alt="link_title">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--icon-link--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--default.html.twig
+   ▪️ field--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--icon-link.html.twig
+   ▪️ field--paragraph--field-image.html.twig
+   ▪️ field--paragraph--icon-link.html.twig
+   ▪️ field--field-image.html.twig
+   ▪️ field--entity-reference-type--media.html.twig
+   ▪️ field--entity-reference.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image_formatter' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+<img loading="lazy" src="/sites/default/files/instagram_60x60_color_circle.png" width="60" height="60" alt="Instagram" />
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+        </a>
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'paragraph' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ paragraph--icon-link--default.html.twig
+   ✅ paragraph--icon-link.html.twig
+   ▪️ paragraph--default.html.twig
+   ▪️ paragraph.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+
+  <div class="paragraph paragraph--type--icon-link paragraph--id--25 entity_25 paragraph--view-mode--default">
+            <a href="https://nextdoor.com/agency/broward-county-supervisor-of-elections-office-1" alt="link_title">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--paragraph--icon-link--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--default.html.twig
+   ▪️ field--field-image--default.html.twig
+   ▪️ field--paragraph--field-image--icon-link.html.twig
+   ▪️ field--paragraph--field-image.html.twig
+   ▪️ field--paragraph--icon-link.html.twig
+   ▪️ field--field-image.html.twig
+   ▪️ field--entity-reference-type--media.html.twig
+   ▪️ field--entity-reference.html.twig
+   ✅ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image_formatter' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'image' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+<img loading="lazy" src="/sites/default/files/nextdoor_color_200x200.png" width="200" height="200" alt="Next Door" />
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/image-formatter.html.twig' -->
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+        </a>
+      </div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/paragraphs/paragraph--icon-link.html.twig' -->
+
+
+  </div>
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/fields/field.html.twig' -->
+
+
+            </div>
+        </div>
+    
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/blocks/block--broward2-browardfooter.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+          </div>
+                  </footer>
+
+  </div> </div> 
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/layout/page.html.twig' -->
+
+
+  </div>
+
+<!-- END OUTPUT from 'core/modules/system/templates/off-canvas-page-wrapper.html.twig' -->
+
+
+    
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/41","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"google_analytics":{"account":"G-SHF7XRKP7P","trackOutbound":true,"trackMailto":true,"trackTel":true,"trackDownload":true,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip"},"data":{"extlink":{"extTarget":false,"extTargetAppendNewWindowDisplay":false,"extTargetAppendNewWindowLabel":"(opens in a new window)","extTargetNoOverride":true,"extNofollow":false,"extTitleNoOverride":false,"extNoreferrer":true,"extFollowNoOverride":true,"extClass":"0","extLabel":"(link is external)","extImgClass":false,"extSubdomains":false,"extExclude":"","extInclude":"","extCssExclude":"","extCssInclude":"","extCssExplicit":"","extAlert":false,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","extHideIcons":false,"mailtoClass":"0","telClass":"","mailtoLabel":"(link sends email)","telLabel":"(link is a phone number)","extUseFontAwesome":false,"extIconPlacement":"append","extPreventOrphan":false,"extFaLinkClasses":"fa fa-external-link","extFaMailtoClasses":"fa fa-envelope-o","extAdditionalLinkClasses":"","extAdditionalMailtoClasses":"","extAdditionalTelClasses":"","extFaTelClasses":"fa fa-phone","allowedDomains":null,"extExcludeNoreferrer":""}},"ajaxTrustedUrl":{"\/search\/node":true},"user":{"uid":0,"permissionsHash":"9ae6ddbdc15c956320c66bc0279d8bd36a5eb8878b00f3812645b56d551697bd"}}</script>
+<script src="/sites/default/files/js/js_qIa4wM06Q_rSw7A6LDLj52inTX5q_KwMmm2m0GalLBk.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=broward2&amp;include=eJx9j1FuxCAMRC9EgtQLIQNOSmswtc2muf2ibtStKrV_fuPReAw5G0M7PVzDugk3c5HZ1AR6iCBS2O_EEWhRO6m03UXhAyS_-Kcx5faU_7JrEiZaoJUKVripS0ONa6icB6G_aGfeCcPMbUpg6PDTZtC7zzI60Hqh22ZXOFC5ov8xr3rb_9ut-lqqu45AAzqtJPW_Bff2MVDOkLELplkjh2209NX7-8MkpZs6Qe1TLrfZGiKhhq2QofgHwbE8-A5h6JKK"></script>
+<script src="https://static.addtoany.com/menu/page.js" defer></script>
+<script src="/sites/default/files/js/js_Wt51t5E8oF8hYIrl9HRK_IsS5tuQYMBOzEEHUz0y0OE.js?scope=footer&amp;delta=2&amp;language=en&amp;theme=broward2&amp;include=eJx9j1FuxCAMRC9EgtQLIQNOSmswtc2muf2ibtStKrV_fuPReAw5G0M7PVzDugk3c5HZ1AR6iCBS2O_EEWhRO6m03UXhAyS_-Kcx5faU_7JrEiZaoJUKVripS0ONa6icB6G_aGfeCcPMbUpg6PDTZtC7zzI60Hqh22ZXOFC5ov8xr3rb_9ut-lqqu45AAzqtJPW_Bff2MVDOkLELplkjh2209NX7-8MkpZs6Qe1TLrfZGiKhhq2QofgHwbE8-A5h6JKK"></script>
+<script src="//cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/sites/default/files/js/js_Qy6KcwdFPHuk3p7fOELqKueZHikFSILeuDRTk0Zd6es.js?scope=footer&amp;delta=4&amp;language=en&amp;theme=broward2&amp;include=eJx9j1FuxCAMRC9EgtQLIQNOSmswtc2muf2ibtStKrV_fuPReAw5G0M7PVzDugk3c5HZ1AR6iCBS2O_EEWhRO6m03UXhAyS_-Kcx5faU_7JrEiZaoJUKVripS0ONa6icB6G_aGfeCcPMbUpg6PDTZtC7zzI60Hqh22ZXOFC5ov8xr3rb_9ut-lqqu45AAzqtJPW_Bff2MVDOkLELplkjh2209NX7-8MkpZs6Qe1TLrfZGiKhhq2QofgHwbE8-A5h6JKK"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="/sites/default/files/js/js_v1BVVBwCG7GpA3Yso7ZTLP1birr8gQ30HztahRPWAlo.js?scope=footer&amp;delta=6&amp;language=en&amp;theme=broward2&amp;include=eJx9j1FuxCAMRC9EgtQLIQNOSmswtc2muf2ibtStKrV_fuPReAw5G0M7PVzDugk3c5HZ1AR6iCBS2O_EEWhRO6m03UXhAyS_-Kcx5faU_7JrEiZaoJUKVripS0ONa6icB6G_aGfeCcPMbUpg6PDTZtC7zzI60Hqh22ZXOFC5ov8xr3rb_9ut-lqqu45AAzqtJPW_Bff2MVDOkLELplkjh2209NX7-8MkpZs6Qe1TLrfZGiKhhq2QofgHwbE8-A5h6JKK"></script>
+
+  </body>
+</html>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/broward2/templates/layout/html.html.twig' -->
+

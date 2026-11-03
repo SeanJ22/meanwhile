@@ -1,0 +1,469 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Broward",
+  "populationRank": 17,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-fl-broward-2026-circuit-judge-17th-judicial-circuit-group-52",
+      "title": "Circuit Judge, 17th Judicial Circuit, Group 52",
+      "ocdId": "ocd-division/country:us/state:fl/county:broward",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-school-board-district-6",
+      "title": "Broward County School Board \u2014 District 6",
+      "ocdId": "ocd-division/country:us/state:fl/county:broward/school_board_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-coral-springs-mayor",
+      "title": "Coral Springs \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:coral_springs",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-coral-springs-commissioner-seat-3",
+      "title": "Coral Springs \u2014 Commissioner, Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:coral_springs",
+      "candidates": 5,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-coral-springs-commissioner-seat-4",
+      "title": "Coral Springs \u2014 Commissioner, Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:coral_springs",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-dania-beach-commissioner",
+      "title": "Dania Beach \u2014 Commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:dania_beach",
+      "candidates": 6,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-davie-mayor-at-large",
+      "title": "Davie \u2014 Mayor, At-Large",
+      "ocdId": "ocd-division/country:us/state:fl/place:davie",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-davie-councilmember-district-1",
+      "title": "Davie \u2014 Councilmember, District 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:davie/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-davie-councilmember-district-3",
+      "title": "Davie \u2014 Councilmember, District 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:davie/council_district:3",
+      "candidates": 4,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-davie-councilmember-district-4",
+      "title": "Davie \u2014 Councilmember, District 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:davie/council_district:4",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-fort-lauderdale-commissioner-district-1",
+      "title": "Fort Lauderdale \u2014 Commissioner, District 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-hallandale-beach-commissioner-seat-1",
+      "title": "Hallandale Beach \u2014 Commissioner, Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:hallandale_beach",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-hallandale-beach-commissioner-seat-2",
+      "title": "Hallandale Beach \u2014 Commissioner, Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:hallandale_beach",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-hollywood-commissioner-district-1",
+      "title": "Hollywood \u2014 Commissioner, District 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:hollywood/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-hollywood-commissioner-district-3",
+      "title": "Hollywood \u2014 Commissioner, District 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:hollywood/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-hollywood-commissioner-district-5",
+      "title": "Hollywood \u2014 Commissioner, District 5",
+      "ocdId": "ocd-division/country:us/state:fl/place:hollywood/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-lauderdale-by-the-sea-mayor",
+      "title": "Lauderdale-by-the-Sea \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-lauderdale-by-the-sea-commissioner-seat-1",
+      "title": "Lauderdale-by-the-Sea \u2014 Commissioner, Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-lauderdale-by-the-sea-commissioner-seat-2",
+      "title": "Lauderdale-by-the-Sea \u2014 Commissioner, Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderdale_by_the_sea",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-lauderhill-mayor",
+      "title": "Lauderhill \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderhill",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-lauderhill-commissioner-seat-4",
+      "title": "Lauderhill \u2014 Commissioner, Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:lauderhill",
+      "candidates": 4,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-margate-commissioner-seat-3",
+      "title": "Margate \u2014 Commissioner, Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:margate",
+      "candidates": 4,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-margate-commissioner-seat-5",
+      "title": "Margate \u2014 Commissioner, Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/place:margate",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-north-lauderdale-mayor-at-large",
+      "title": "North Lauderdale \u2014 Mayor, At-Large",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_lauderdale",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-oakland-park-commissioner",
+      "title": "Oakland Park \u2014 Commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:oakland_park",
+      "candidates": 4,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-plantation-mayor",
+      "title": "Plantation \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:plantation_1257425",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-plantation-councilmember-group-4",
+      "title": "Plantation \u2014 Councilmember, Group 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:plantation_1257425",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-pompano-beach-commissioner-district-1",
+      "title": "Pompano Beach \u2014 Commissioner, District 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-pompano-beach-commissioner-district-2",
+      "title": "Pompano Beach \u2014 Commissioner, District 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:2",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-pompano-beach-commissioner-district-3",
+      "title": "Pompano Beach \u2014 Commissioner, District 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-pompano-beach-commissioner-district-4",
+      "title": "Pompano Beach \u2014 Commissioner, District 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:4",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-sunrise-commissioner-seat-c",
+      "title": "Sunrise \u2014 Commissioner, Seat C",
+      "ocdId": "ocd-division/country:us/state:fl/place:sunrise",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-sunrise-commissioner-seat-d",
+      "title": "Sunrise \u2014 Commissioner, Seat D",
+      "ocdId": "ocd-division/country:us/state:fl/place:sunrise",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-tamarac-commissioner-district-2",
+      "title": "Tamarac \u2014 Commissioner, District 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:tamarac/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-tamarac-commissioner-district-4",
+      "title": "Tamarac \u2014 Commissioner, District 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:tamarac/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-west-park-commissioner-seat-1",
+      "title": "West Park \u2014 Commissioner, Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:west_park",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-west-park-commissioner-seat-2",
+      "title": "West Park \u2014 Commissioner, Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:west_park",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-weston-commissioner-seat-3",
+      "title": "Weston \u2014 Commissioner, Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:weston",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-weston-commissioner-seat-4",
+      "title": "Weston \u2014 Commissioner, Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:weston",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-wilton-manors-mayor",
+      "title": "Wilton Manors \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:wilton_manors",
+      "candidates": 3,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-wilton-manors-commissioner",
+      "title": "Wilton Manors \u2014 Commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:wilton_manors",
+      "candidates": 4,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-central-broward-water-control-district-zone-6",
+      "title": "Central Broward Water Control District, Zone 6",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:central_broward_water_control_district/zone:6",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-coral-springs-improvement-district-seat-4",
+      "title": "Coral Springs Improvement District, Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:coral_springs_improvement_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-coral-springs-improvement-district-seat-5",
+      "title": "Coral Springs Improvement District, Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:coral_springs_improvement_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-monterra-community-development-district-seat-2",
+      "title": "Monterra Community Development District, Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:monterra_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-orchid-grove-community-development-district-seat-5",
+      "title": "Orchid Grove Community Development District, Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:orchid_grove_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-south-broward-drainage-district-zone-2",
+      "title": "South Broward Drainage District, Zone 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:2",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-south-broward-drainage-district-zone-4",
+      "title": "South Broward Drainage District, Zone 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:4",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-south-broward-drainage-district-zone-5",
+      "title": "South Broward Drainage District, Zone 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:5",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-sunshine-water-control-district-seat-4",
+      "title": "Sunshine Water Control District, Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:sunshine_water_control_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-sunshine-water-control-district-seat-5",
+      "title": "Sunshine Water Control District, Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:sunshine_water_control_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-turtle-run-community-development-district-seat-1",
+      "title": "Turtle Run Community Development District, Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:turtle_run_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-turtle-run-community-development-district-seat-2",
+      "title": "Turtle Run Community Development District, Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:turtle_run_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-turtle-run-community-development-district-seat-3",
+      "title": "Turtle Run Community Development District, Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:turtle_run_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-walnut-creek-community-development-district-seat-1",
+      "title": "Walnut Creek Community Development District, Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:walnut_creek_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "cx-local-fl-broward-2026-walnut-creek-community-development-district-seat-3",
+      "title": "Walnut Creek Community Development District, Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:walnut_creek_community_development_district",
+      "candidates": 2,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90364",
+      "title": "District Court of Appeal District 4 \u2014 Alan O. Forst",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90232",
+      "title": "District Court of Appeal District 4 \u2014 Mark W. Klingensmith",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90266",
+      "title": "District Court of Appeal District 4 \u2014 Johnathan D. Lott",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90259",
+      "title": "District Court of Appeal District 4 \u2014 Shannon K. Shaw",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-4-90264",
+      "title": "District Court of Appeal District 4 \u2014 Caroline Cahill Shepherd",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:4",
+      "candidates": 1,
+      "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf"
+    }
+  ],
+  "operation": "Prepared-only merge:preserve5existingFourthDCAretentioncontest/candidateIDs;add56localcandidatefields141printednames. Precise source-backed district scopes;Riverbindsdistrictmembership before readerplacement. No production publication.",
+  "resolvedHeldContests": [],
+  "coverage": "Complete current official final local named-candidate lists:56CANDIDACY races141names plus5RETENTION questions5judges=61fields146names. Actual November sample verification PARTIAL:Hollywood3races7names,Hallandale2races5names. Full county ballot/style census, remaining actualsamples, local measures, write-ins and3multimembervote limits pending.",
+  "summary": {
+    "preparedContests": 61,
+    "preparedCandidacies": 146,
+    "newContests": 56,
+    "newCandidacies": 141,
+    "recheckedExistingContests": 5,
+    "recheckedExistingCandidacies": 5,
+    "sourceCandidateRaceCount": 56,
+    "sourceCandidateNameCount": 141,
+    "sourceRetentionCount": 5,
+    "sourceRetentionJudgeCount": 5,
+    "actualSampleVerifiedRaces": 5,
+    "actualSampleVerifiedNames": 12,
+    "actualSamplePendingCandidateRaces": 51,
+    "actualSamplePendingCandidateNames": 129,
+    "fullCountyBallotCoverage": false,
+    "readerDivisionMappingsPending": 24,
+    "productionWrites": 0
+  },
+  "nextOwner": "River/CX-LOCAL lead:focused data check, source review, precise district mapping; continue actual sample acquisition. No production writes.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 17 captured sources and 207 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

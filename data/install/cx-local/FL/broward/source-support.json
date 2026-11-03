@@ -1,0 +1,174 @@
+[
+  {
+    "sourceUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf",
+    "finalUrl": "https://browardvotes.gov/sites/default/files/list-of-candidates-for-november-elections.pdf",
+    "sourceCheckedAt": "2026-11-03T04:03:36.826417+00:00",
+    "sha256": "5e31d0ba2f2e10675ae2d4daf411d661fdf4111bcb93b195da2d09c8a2640157",
+    "sourceFile": "sources/5e31d0ba2f2e10675ae2d4daf411d661fdf4111bcb93b195da2d09c8a2640157.source",
+    "excerptFile": "sources/06690357cbb22668c1d1045881c47e6bd531eca227d554600ddc23ba9adf1b7c.txt",
+    "excerptSha256": "06690357cbb22668c1d1045881c47e6bd531eca227d554600ddc23ba9adf1b7c",
+    "evidence": "Current official six-page LIST OF CANDIDATES AND CONTESTS, November3,2026 GeneralElection. All130contest groups303printed rows parsed;56local candidate races141printed names plus5FourthDCA retention questions5judges. Yes/No responses and generic Write-in blanks are not people. Complete local named-candidate lists preserved; actual sample coverage separately partial."
+  },
+  {
+    "sourceUrl": "https://www.hollywoodfl.org/Archive/ViewFile/Item/9662",
+    "finalUrl": "https://www.hollywoodfl.org/Archive/ViewFile/Item/9662",
+    "sourceCheckedAt": "2026-11-03T04:06:59.758326+00:00",
+    "sha256": "8ddafc6df7511bc926a6b11d7e6c93923dada6c17dd9436fc69b1fab63e7c0f9",
+    "sourceFile": "sources/8ddafc6df7511bc926a6b11d7e6c93923dada6c17dd9436fc69b1fab63e7c0f9.source",
+    "excerptFile": "sources/c89783315c639912c37a2391aa58f3b399b2df534d01c3d5566d8710a48c41ad.txt",
+    "excerptSha256": "c89783315c639912c37a2391aa58f3b399b2df534d01c3d5566d8710a48c41ad",
+    "evidence": "Actual official City of Hollywood SAMPLE BALLOT, November3,2026. Three district commissioner races,7printed names; every name matches county final list. VoteForONE printed separately for each district. Two full measures retained as pending evidence. Coappearance never treated as citywide electorate."
+  },
+  {
+    "sourceUrl": "https://www.cohb.org/DocumentCenter/View/40408",
+    "finalUrl": "https://www.cohb.org/DocumentCenter/View/40408/2026-General-Election-Sample-Ballot?bidId=",
+    "sourceCheckedAt": "2026-11-03T04:06:59.759088+00:00",
+    "sha256": "9506e231f057f7b3b36b3101ee4da16d30af98aaffb28e293995ca9212796ab8",
+    "sourceFile": "sources/9506e231f057f7b3b36b3101ee4da16d30af98aaffb28e293995ca9212796ab8.source",
+    "excerptFile": "sources/af76ceef7c84291eee7df65dca172135db53514746947494c043c86ffb217456.txt",
+    "excerptSha256": "af76ceef7c84291eee7df65dca172135db53514746947494c043c86ffb217456",
+    "evidence": "Actual official NOTICE OF GENERAL ELECTION AND SAMPLE BALLOT, November3,2026;CommissionerSeats1/2 each VoteFor1,fiveprinted names. Explicit all qualified city electors may vote. All5names independently match county final list."
+  },
+  {
+    "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+    "finalUrl": "https://browardvotes.gov/results-information/municipal-election",
+    "sourceCheckedAt": "2026-11-03T04:03:08.619314+00:00",
+    "sha256": "593947e9847e5b0dafdbb1c8cc19bc7ed908bb5f52f9c32d36b028cebc1d2137",
+    "sourceFile": "sources/593947e9847e5b0dafdbb1c8cc19bc7ed908bb5f52f9c32d36b028cebc1d2137.source",
+    "excerptFile": "sources/48845418a1df7efc8aaa2f060f0e43b30bb4a2a9874fe8df892565f10301e6e1.txt",
+    "excerptSha256": "48845418a1df7efc8aaa2f060f0e43b30bb4a2a9874fe8df892565f10301e6e1",
+    "evidence": "Official municipal schedule explicitly distinguishes atlarge and district election methods. Used only for electorate method, not final office/candidate roster: preliminary schedule office list differs from final November list in some cities. Final current candidate PDF controls installed office fields."
+  },
+  {
+    "sourceUrl": "https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information",
+    "finalUrl": "https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information",
+    "sourceCheckedAt": "2026-11-03T04:18:23.801408+00:00",
+    "sha256": "be6ff050e9d04034ec7b000ddcd382696a654125b27d0b20c8372ff69890d894",
+    "sourceFile": "sources/be6ff050e9d04034ec7b000ddcd382696a654125b27d0b20c8372ff69890d894.source",
+    "excerptFile": "sources/70e7a644c05683883b36b18006431154ce4d2493767d634e3796ac0c7be57e05.txt",
+    "excerptSha256": "70e7a644c05683883b36b18006431154ce4d2493767d634e3796ac0c7be57e05",
+    "evidence": "Current official city election page explicitly calls November3,2026 District1SpecialElection and says Mayor elected atlarge,CityCommissioners elected from each of four districts. Confirms precise District1scope rather than using obsolete municipal schedule nextregular2028 entry."
+  },
+  {
+    "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+    "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+    "sourceCheckedAt": "2026-11-03T04:06:32.374479+00:00",
+    "sha256": "a67618348cc3570d3e73df05d6709d5b161e4b5b7e66506b3f9966753dd4c854",
+    "sourceFile": "sources/a67618348cc3570d3e73df05d6709d5b161e4b5b7e66506b3f9966753dd4c854.source",
+    "excerptFile": "sources/f0cb36ffb188e6d0bd8894f1eb9659c8eb8746ca047feb4981b4b3444b3edf34.txt",
+    "excerptSha256": "f0cb36ffb188e6d0bd8894f1eb9659c8eb8746ca047feb4981b4b3444b3edf34",
+    "evidence": "Florida Statutes26.021(17):The seventeenth circuit is composed of BrowardCounty. The exact county electorate for CircuitJudge17Group52 is source-backed."
+  },
+  {
+    "sourceUrl": "https://www.browardschools.com/bcps-departments/strategy-innovation/demographics-enrollment-planning/redistricting/overview",
+    "finalUrl": "https://www.browardschools.com/bcps-departments/strategy-innovation/demographics-enrollment-planning/redistricting/overview",
+    "sourceCheckedAt": "2026-11-03T04:14:24.796267+00:00",
+    "sha256": "2c0be714401b401a99c39b020fa5fca68feeec3b43d892a05c8707122d7a2aa3",
+    "sourceFile": "sources/2c0be714401b401a99c39b020fa5fca68feeec3b43d892a05c8707122d7a2aa3.source",
+    "excerptFile": "sources/6e21c02a54fd8f1e0d3213f05fbacc998e7eb8f1f65fae78ede9a4b289857fc1.txt",
+    "excerptSha256": "6e21c02a54fd8f1e0d3213f05fbacc998e7eb8f1f65fae78ede9a4b289857fc1",
+    "evidence": "Current official redistricting overview describes the adopted seven single-member voting districts. SchoolBoardDistrict6 is a distinct voting electorate, never the countywide school district."
+  },
+  {
+    "sourceUrl": "https://www.broward.k12.fl.us/redistricting/Principles.shtml",
+    "finalUrl": "https://www.broward.k12.fl.us/redistricting/Principles.shtml",
+    "sourceCheckedAt": "2026-11-03T04:14:24.796844+00:00",
+    "sha256": "4c44ef3a350317637f40ecf6f0204ff9b2ec8c6ca12bccc5d7768d9742e6e079",
+    "sourceFile": "sources/4c44ef3a350317637f40ecf6f0204ff9b2ec8c6ca12bccc5d7768d9742e6e079.source",
+    "excerptFile": "sources/28c5690c6ab91671cb40b88206106312217ee6ad92cdf35b6c6614454b672096.txt",
+    "excerptSha256": "28c5690c6ab91671cb40b88206106312217ee6ad92cdf35b6c6614454b672096",
+    "evidence": "Official district guiding principles explicitly say seven members elected from single-member residence areas by electors residing in each area only;two members elected atlarge. Used for electorate rule only, not a claim that historical boundary geometry is current."
+  },
+  {
+    "sourceUrl": "https://centralbrowardwcd.org/wp-content/uploads/CHARTER-Final-2023-00566757xC4B6A.pdf",
+    "finalUrl": "https://centralbrowardwcd.org/wp-content/uploads/CHARTER-Final-2023-00566757xC4B6A.pdf",
+    "sourceCheckedAt": "2026-11-03T04:09:03.349493+00:00",
+    "sha256": "f36a96a3502327f1dade15a854b70221bf331734433b9f2c4866d778a7e16ef2",
+    "sourceFile": "sources/f36a96a3502327f1dade15a854b70221bf331734433b9f2c4866d778a7e16ef2.source",
+    "excerptFile": "sources/dd144efede2e8cb62c9d2f3b6da34d09ec5bc3e370894857b6b2a71db19ef04d.txt",
+    "excerptSha256": "dd144efede2e8cb62c9d2f3b6da34d09ec5bc3e370894857b6b2a71db19ef04d",
+    "evidence": "Official charter requires qualified electors residing within district and zone for the commissioner election. Current final county candidate list calls Zone6. Precise Zone6 identity only; no districtwide or countywide fallback."
+  },
+  {
+    "sourceUrl": "https://www.sbdd.org/pdfs/SBDDCHARTER.pdf",
+    "finalUrl": "https://www.sbdd.org/pdfs/SBDDCHARTER.pdf",
+    "sourceCheckedAt": "2026-11-03T04:13:42.357619+00:00",
+    "sha256": "9a298468d0ac0d6b9ca3791ad8580aefe37331204feb3a9ead6e71d669fbf06e",
+    "sourceFile": "sources/9a298468d0ac0d6b9ca3791ad8580aefe37331204feb3a9ead6e71d669fbf06e.source",
+    "excerptFile": "sources/65da51c776dbfa1dd773dd68a48fdd57d036f8428a4b62ef6f6a3424c4e64e83.txt",
+    "excerptSha256": "65da51c776dbfa1dd773dd68a48fdd57d036f8428a4b62ef6f6a3424c4e64e83",
+    "evidence": "Official district charter sections4(4)-(6) require seven single-member zones elected by registered voters of each respective zone. Current final county list calls Zones2,4,5;each prepared under a separate precise source-backed division."
+  },
+  {
+    "sourceUrl": "https://www.csidfl.org/wp-content/uploads/2026/03/2026.03.16_csid_agenda_package.pdf",
+    "finalUrl": "https://www.csidfl.org/wp-content/uploads/2026/03/2026.03.16_csid_agenda_package.pdf",
+    "sourceCheckedAt": "2026-11-03T04:09:03.351930+00:00",
+    "sha256": "bc93be760e44778d8915dead8845a8dd44d6969197205454ede9038874eb7bd9",
+    "sourceFile": "sources/bc93be760e44778d8915dead8845a8dd44d6969197205454ede9038874eb7bd9.source",
+    "excerptFile": "sources/113b69f06d3984d62dc69dc0b695ca51f84aa77ff14a7fa5aa17b257164df04d.txt",
+    "excerptSha256": "113b69f06d3984d62dc69dc0b695ca51f84aa77ff14a7fa5aa17b257164df04d",
+    "evidence": "Official March16,2026 agenda resolution calls November3,2026 general election Seats4/5 for qualified district voters;seats are districtwide numbered seats, not geographic subdistricts."
+  },
+  {
+    "sourceUrl": "https://www.sunshinewcd.net/_assets/documents/fy-2024/2024-04-10-SWCD-agenda.pdf?v=1763484101",
+    "finalUrl": "https://www.sunshinewcd.net/_assets/documents/fy-2024/2024-04-10-SWCD-agenda.pdf?v=1763484101",
+    "sourceCheckedAt": "2026-11-03T04:13:42.360901+00:00",
+    "sha256": "dd625a5da6be03e6f332d203509873f021133fcfd94ff1b88372b0984728419c",
+    "sourceFile": "sources/dd625a5da6be03e6f332d203509873f021133fcfd94ff1b88372b0984728419c.source",
+    "excerptFile": "sources/c697441dabc73180768af8831f293d12b39c63eb469b42f413d1d7f644be52fa.txt",
+    "excerptSha256": "c697441dabc73180768af8831f293d12b39c63eb469b42f413d1d7f644be52fa",
+    "evidence": "Official charter implementation memorandum/resolution describes districtwide qualified electors voting individual numbered Seats1..5, with Seats4/5initial2024two-year terms then2026four-year terms. Used for stable electorate method only;2024 candidate facts not used. Current final2026 county list supplies all current names."
+  },
+  {
+    "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+    "finalUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+    "sourceCheckedAt": "2026-11-03T04:13:42.652398+00:00",
+    "sha256": "7ccb0d3d7ddc28e9ddd40e9756d1325f03bf59cf8518fb5108786ffd140b12b2",
+    "sourceFile": "sources/7ccb0d3d7ddc28e9ddd40e9756d1325f03bf59cf8518fb5108786ffd140b12b2.source",
+    "excerptFile": "sources/cae76ee18a813c83207f803165829b821ecc8f1cfa5a4901d1f650cfbc8dcc29.txt",
+    "excerptSha256": "cae76ee18a813c83207f803165829b821ecc8f1cfa5a4901d1f650cfbc8dcc29",
+    "evidence": "FloridaStatutes190.006(3) explicitly requires qualified elector elections for individual CDD supervisor seats by qualified electors of the district. County current final list identifies named CDDs and individual seats; no citywide or countywide fallback."
+  },
+  {
+    "sourceUrl": "https://www.turtleruncdd.com/faq",
+    "finalUrl": "https://www.turtleruncdd.com/faq",
+    "sourceCheckedAt": "2026-11-03T04:13:42.359503+00:00",
+    "sha256": "5d27129f340a0002898a135daac05f522d1a02c09fb685b94120a73630b91afa",
+    "sourceFile": "sources/5d27129f340a0002898a135daac05f522d1a02c09fb685b94120a73630b91afa.source",
+    "excerptFile": "sources/ca8784da49136ee0533d3d1e837b408f8c79b07af1f3e3d1d98dce6ac080e442.txt",
+    "excerptSha256": "ca8784da49136ee0533d3d1e837b408f8c79b07af1f3e3d1d98dce6ac080e442",
+    "evidence": "Official FAQ explicitly says supervisors elected during a general election of registered voters within the District, serving4-year terms. Confirms districtwide CDD electorate, not seat subdistricts."
+  },
+  {
+    "sourceUrl": "https://browardvotes.gov/sites/default/files/qualified-voters-by-districtxprecinct-modified_2026-05-05.pdf",
+    "finalUrl": "https://browardvotes.gov/sites/default/files/qualified-voters-by-districtxprecinct-modified_2026-05-05.pdf",
+    "sourceCheckedAt": "2026-11-03T04:14:35.523836+00:00",
+    "sha256": "9387b920528ba04a43dfb3b9bd070659e05ac64e36747b4fa7d41610dda9437e",
+    "sourceFile": "sources/9387b920528ba04a43dfb3b9bd070659e05ac64e36747b4fa7d41610dda9437e.source",
+    "excerptFile": "sources/1ce127fccbce25c19cc3c5730ce3906b1c995b86fadf1ba258cccb79ce5f1ff0.txt",
+    "excerptSha256": "1ce127fccbce25c19cc3c5730ce3906b1c995b86fadf1ba258cccb79ce5f1ff0",
+    "evidence": "Official May5,2026 eligible voters by district/precinct report independently names school/municipal/special district electorates and contains district-specific precinct registration counts. Preserved as reference; precinct coappearance does not establish that all voters in a precinct belong to a district. No complete precinct assignment or geometry claimed."
+  },
+  {
+    "sourceUrl": "https://browardvotes.gov/",
+    "finalUrl": "https://browardvotes.gov/",
+    "sourceCheckedAt": "2026-11-03T04:03:08.618232+00:00",
+    "sha256": "f5a0d48bf3d1607f18f2499ab325b42d16de84457d77d91f05148d74a1bb8702",
+    "sourceFile": "sources/f5a0d48bf3d1607f18f2499ab325b42d16de84457d77d91f05148d74a1bb8702.source",
+    "excerptFile": "sources/1998917af0791b6712e9778dca90574187fab24a025112201a5eaea76cda9cfe.txt",
+    "excerptSha256": "1998917af0791b6712e9778dca90574187fab24a025112201a5eaea76cda9cfe",
+    "evidence": "Current official ElectionDayNov3,2026 page links personalized sample ballot and current candidate resources. Personalized sample workflow requires voter lookup; no real voter identity submitted.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://browardvotes.gov/sites/default/files/sample-ballots.pdf",
+    "finalUrl": "https://browardvotes.gov/sites/default/files/sample-ballots.pdf",
+    "sourceCheckedAt": "2026-11-03T04:03:08.621379+00:00",
+    "sha256": "41a4e99aa0c53a1ca99cd5a15ada9bce569b5f8e8adf9d3dad3dd5e4ea5cd697",
+    "sourceFile": "sources/41a4e99aa0c53a1ca99cd5a15ada9bce569b5f8e8adf9d3dad3dd5e4ea5cd697.source",
+    "excerptFile": "sources/dd2a3cf51a2e04e3e415ca311411579b913de5b312dd7e0c50ea36442b518865.txt",
+    "excerptSha256": "dd2a3cf51a2e04e3e415ca311411579b913de5b312dd7e0c50ea36442b518865",
+    "evidence": "REJECTED_STALE:generic sample-ballots.pdf filename currently serves March10,2026 Lauderhill municipal measure ballot. Saved only to document rejection. Never used for November3contests,choices,election status or completeness.",
+    "role": "PENDING_COVERAGE_ONLY"
+  }
+]

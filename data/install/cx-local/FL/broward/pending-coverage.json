@@ -1,0 +1,1018 @@
+[
+  {
+    "kind": "ACTUAL_SAMPLE_BALLOT_CENSUS",
+    "status": "PARTIAL",
+    "details": "Actual November3municipal samples acquired for Hollywood3races7names and Hallandale2races5names. Other51local candidate races129names have full current official final candidate lists but actual samples not acquired. FiveDCA4retentions independently rechecked from current county list. Official personalized sample workflow requires voter lookup; no real voter submitted."
+  },
+  {
+    "kind": "LOCAL_MEASURES",
+    "status": "PENDING_FULL_TEXT_EXTRACTION",
+    "sourceContestBlocks": [
+      {
+        "title": "Broward County, Question 1",
+        "rows": [
+          {
+            "name": "FOR THE 0.25 CENT TAX",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "AGAINST THE 0.25 CENT TAX",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Broward County, Question 1                            FOR THE 0.25 CENT TAX         Nonpartisan",
+          "Broward County, Question 1                            AGAINST THE 0.25 CENT TAX     Nonpartisan"
+        ]
+      },
+      {
+        "title": "Broward County, Question 2",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Broward County, Question 2                            YES                           Nonpartisan",
+          "Broward County, Question 2    NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Broward County, Question 3",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Broward County, Question 3    YES                                           Nonpartisan",
+          "Broward County, Question 3    NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "School Board, Question 1",
+        "rows": [
+          {
+            "name": "YES - For the one-mill property tax levy",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO - Against the one-mill property tax levy",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "School Board, Question 1      YES - For the one-mill property tax levy      Nonpartisan",
+          "School Board, Question 1      NO - Against the one-mill property tax levy   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Coconut Creek, Question 1",
+        "rows": [
+          {
+            "name": "Yes",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Coconut Creek, Question 1     Yes                                           Nonpartisan",
+          "Coconut Creek, Question 1     No                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Coconut Creek, Question 2",
+        "rows": [
+          {
+            "name": "Yes",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Coconut Creek, Question 2     Yes                                           Nonpartisan",
+          "Coconut Creek, Question 2     No                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Coconut Creek, Question 3",
+        "rows": [
+          {
+            "name": "Yes",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Coconut Creek, Question 3     Yes                                           Nonpartisan",
+          "Coconut Creek, Question 3     No                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Coconut Creek, Question 4",
+        "rows": [
+          {
+            "name": "Yes",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Coconut Creek, Question 4     Yes                                           Nonpartisan",
+          "Coconut Creek, Question 4     No                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Coconut Creek, Question 5",
+        "rows": [
+          {
+            "name": "Yes",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Coconut Creek, Question 5     Yes                                           Nonpartisan",
+          "Coconut Creek, Question 5     No                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Cooper City, Question 1",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Cooper City, Question 1       YES                                           Nonpartisan",
+          "Cooper City, Question 1       NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Cooper City, Question 2",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Cooper City, Question 2       YES                                           Nonpartisan",
+          "Cooper City, Question 2       NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Cooper City, Question 3",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Cooper City, Question 3       YES                                           Nonpartisan",
+          "Cooper City, Question 3       NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question A",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question A   YES                                           Nonpartisan",
+          "Deerfield Beach, Question A   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question B",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question B   YES                                           Nonpartisan",
+          "Deerfield Beach, Question B   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question C",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question C   YES                                           Nonpartisan",
+          "Deerfield Beach, Question C   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question D",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question D   YES                                           Nonpartisan",
+          "Deerfield Beach, Question D   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question E",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question E   YES                                           Nonpartisan",
+          "Deerfield Beach, Question E   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question F",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question F   YES                                           Nonpartisan",
+          "Deerfield Beach, Question F   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question G",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question G   YES                                           Nonpartisan",
+          "Deerfield Beach, Question G   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question H",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question H   YES                                           Nonpartisan",
+          "Deerfield Beach, Question H   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Deerfield Beach, Question I",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Deerfield Beach, Question I   YES                                           Nonpartisan",
+          "Deerfield Beach, Question I   NO                                            Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 1",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 1   Yes, for approval                             Nonpartisan",
+          "Fort Lauderdale, Question 1   No, for rejection                             Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 2",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 2   Yes, for approval                             Nonpartisan",
+          "Fort Lauderdale, Question 2   No, for rejection                             Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 3",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 3         Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 3         No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 4",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 4         Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 4         No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 5",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 5         Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 5         No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 6",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 6         Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 6         No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 7",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 7         Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 7         No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 8",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 8         Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 8         No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 9",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 9         Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 9         No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Fort Lauderdale, Question 10",
+        "rows": [
+          {
+            "name": "Yes, for approval",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "No, for rejection",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Fort Lauderdale, Question 10        Yes, for approval   Nonpartisan",
+          "Fort Lauderdale, Question 10        No, for rejection   Nonpartisan"
+        ]
+      },
+      {
+        "title": "Hollywood, Question 1",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Hollywood, Question 1               YES                 Nonpartisan",
+          "Hollywood, Question 1               NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Hollywood, Question 2",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Hollywood, Question 2               YES                 Nonpartisan",
+          "Hollywood, Question 2               NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 1",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 1   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 1   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 2",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 2   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 2   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 3",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 3   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 3   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 4",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 4   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 4   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 5",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 5   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 5   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 6",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 6   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 6   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 7",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 7   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 7   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Lauderdale-by-the-Sea, Question 8",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Lauderdale-by-the-Sea, Question 8   YES                 Nonpartisan",
+          "Lauderdale-by-the-Sea, Question 8   NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "North Lauderdale, Question 1",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "North Lauderdale, Question 1        YES                 Nonpartisan",
+          "North Lauderdale, Question 1        NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "North Lauderdale, Question 2",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "North Lauderdale, Question 2        YES                 Nonpartisan",
+          "North Lauderdale, Question 2        NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "North Lauderdale, Question 3",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "North Lauderdale, Question 3        YES                 Nonpartisan",
+          "North Lauderdale, Question 3        NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "North Lauderdale, Question 4",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "North Lauderdale, Question 4        YES                 Nonpartisan",
+          "North Lauderdale, Question 4        NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "North Lauderdale, Question 5",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "North Lauderdale, Question 5        YES                 Nonpartisan",
+          "North Lauderdale, Question 5        NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Pembroke Pines, Question",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Pembroke Pines, Question            YES                 Nonpartisan",
+          "Pembroke Pines, Question            NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Southwest Ranches, Question",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Southwest Ranches, Question         YES                 Nonpartisan",
+          "Southwest Ranches, Question         NO                  Nonpartisan"
+        ]
+      },
+      {
+        "title": "Wilton Manors, Question",
+        "rows": [
+          {
+            "name": "YES",
+            "party": "Nonpartisan"
+          },
+          {
+            "name": "NO",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Wilton Manors, Question             YES                 Nonpartisan",
+          "Wilton Manors, Question             NO                  Nonpartisan"
+        ]
+      }
+    ],
+    "details": "Yes/No response rows alone do not supply complete question text; no measures installed here. Hollywood actualsample contains2fullquestions retained raw."
+  },
+  {
+    "kind": "DECLARED_WRITE_INS",
+    "status": "PENDING_OFFICIAL_SUPPLEMENT",
+    "details": "No named declared-write-in supplement acquired. Generic printed Write-in blanks are not candidates.",
+    "genericBlankBlocks": [
+      {
+        "title": "Representative in Congress, District 24",
+        "rows": [
+          {
+            "name": "Te Mayonna Brown",
+            "party": "Republican Party"
+          },
+          {
+            "name": "Oliver G. Gilbert III",
+            "party": "Democratic Party"
+          },
+          {
+            "name": "Write-in",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Representative in Congress, District 24                    Te Mayonna Brown                 Republican Party",
+          "Representative in Congress, District 24                    Oliver G. Gilbert III            Democratic Party",
+          "Representative in Congress, District 24                    Write-in                         Nonpartisan"
+        ]
+      },
+      {
+        "title": "Representative in Congress, District 25",
+        "rows": [
+          {
+            "name": "Scott Singer",
+            "party": "Republican Party"
+          },
+          {
+            "name": "Jared Moskowitz",
+            "party": "Democratic Party"
+          },
+          {
+            "name": "Peter Jassenoff",
+            "party": "Libertarian Party of Florida"
+          },
+          {
+            "name": "Write-in",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Representative in Congress, District 25                    Scott Singer                     Republican Party",
+          "Representative in Congress, District 25                    Jared Moskowitz                  Democratic Party",
+          "Representative in Congress, District 25                    Peter Jassenoff                  Libertarian Party of Florida",
+          "Representative in Congress, District 25                    Write-in                         Nonpartisan"
+        ]
+      },
+      {
+        "title": "Governor and Lieutenant Governor",
+        "rows": [
+          {
+            "name": "Byron Donalds",
+            "party": "Republican Party"
+          },
+          {
+            "name": "David Jolly",
+            "party": "Democratic Party"
+          },
+          {
+            "name": "Scott Eckhard Jewett",
+            "party": "Libertarian Party of Florida"
+          },
+          {
+            "name": "Charles Burkett",
+            "party": "No Party Affiliation"
+          },
+          {
+            "name": "Frank J. Russo",
+            "party": "No Party Affiliation"
+          },
+          {
+            "name": "Moliere \"Moe\" Dimanche",
+            "party": "No Party Affiliation"
+          },
+          {
+            "name": "Dean Ocean Abrams",
+            "party": "No Party Affiliation"
+          },
+          {
+            "name": "Jeffrey Peter \"Dr. Jeff\" Datto",
+            "party": "No Party Affiliation"
+          },
+          {
+            "name": "Write-in",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Governor and Lieutenant Governor                           Byron Donalds                    Republican Party",
+          "Governor and Lieutenant Governor                           David Jolly                      Democratic Party",
+          "Governor and Lieutenant Governor                           Scott Eckhard Jewett             Libertarian Party of Florida",
+          "Governor and Lieutenant Governor                           Charles Burkett                  No Party Affiliation",
+          "Governor and Lieutenant Governor                           Frank J. Russo                   No Party Affiliation",
+          "Governor and Lieutenant Governor                           Moliere \"Moe\" Dimanche           No Party Affiliation",
+          "Governor and Lieutenant Governor                           Dean Ocean Abrams                No Party Affiliation",
+          "Governor and Lieutenant Governor                           Jeffrey Peter \"Dr. Jeff\" Datto   No Party Affiliation",
+          "Governor and Lieutenant Governor                           Write-in                         Nonpartisan"
+        ]
+      },
+      {
+        "title": "Commissioner of Agriculture",
+        "rows": [
+          {
+            "name": "Wilton Simpson",
+            "party": "Republican Party"
+          },
+          {
+            "name": "Joey Mendoza Atkins",
+            "party": "Democratic Party"
+          },
+          {
+            "name": "Write-in",
+            "party": "Nonpartisan"
+          }
+        ],
+        "quoteLines": [
+          "Commissioner of Agriculture                                Wilton Simpson                   Republican Party",
+          "Commissioner of Agriculture                                Joey Mendoza Atkins              Democratic Party",
+          "Commissioner of Agriculture                                Write-in                         Nonpartisan"
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "MULTIMEMBER_VOTE_LIMIT",
+    "status": "PENDING_ACTUAL_SAMPLE",
+    "contests": [
+      "cx-local-fl-broward-2026-dania-beach-commissioner",
+      "cx-local-fl-broward-2026-oakland-park-commissioner",
+      "cx-local-fl-broward-2026-wilton-manors-commissioner"
+    ],
+    "details": "DaniaBeach,OaklandPark,WiltonManors commissioner fields contain multiple seats. All printed names preserved, voteFor remains null until direct printed limit is acquired."
+  },
+  {
+    "kind": "READER_DIVISION_MAPPING",
+    "status": "PENDING_RIVER",
+    "divisionIds": [
+      "ocd-division/country:us/state:fl/county:broward/school_board_district:6",
+      "ocd-division/country:us/state:fl/place:davie/council_district:1",
+      "ocd-division/country:us/state:fl/place:davie/council_district:3",
+      "ocd-division/country:us/state:fl/place:davie/council_district:4",
+      "ocd-division/country:us/state:fl/place:fort_lauderdale/council_district:1",
+      "ocd-division/country:us/state:fl/place:hollywood/council_district:1",
+      "ocd-division/country:us/state:fl/place:hollywood/council_district:3",
+      "ocd-division/country:us/state:fl/place:hollywood/council_district:5",
+      "ocd-division/country:us/state:fl/place:pompano_beach/council_district:1",
+      "ocd-division/country:us/state:fl/place:pompano_beach/council_district:2",
+      "ocd-division/country:us/state:fl/place:pompano_beach/council_district:3",
+      "ocd-division/country:us/state:fl/place:pompano_beach/council_district:4",
+      "ocd-division/country:us/state:fl/place:tamarac/council_district:2",
+      "ocd-division/country:us/state:fl/place:tamarac/council_district:4",
+      "ocd-division/country:us/state:fl/special_district:central_broward_water_control_district/zone:6",
+      "ocd-division/country:us/state:fl/special_district:coral_springs_improvement_district",
+      "ocd-division/country:us/state:fl/special_district:monterra_community_development_district",
+      "ocd-division/country:us/state:fl/special_district:orchid_grove_community_development_district",
+      "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:2",
+      "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:4",
+      "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:5",
+      "ocd-division/country:us/state:fl/special_district:sunshine_water_control_district",
+      "ocd-division/country:us/state:fl/special_district:turtle_run_community_development_district",
+      "ocd-division/country:us/state:fl/special_district:walnut_creek_community_development_district"
+    ],
+    "details": "Precise source-backed district identities supplied. No countywide, citywide, ZIP, or full-precinct fallback permitted. District/precinct registration report is reference only; partial precinct counts are not geographic membership."
+  }
+]

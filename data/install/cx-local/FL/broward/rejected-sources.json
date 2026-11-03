@@ -1,0 +1,10 @@
+[
+  {
+    "sourceUrl": "https://browardvotes.gov/sites/default/files/sample-ballots.pdf",
+    "retrievedAt": "2026-11-03T04:03:08.621379+00:00",
+    "sha256": "41a4e99aa0c53a1ca99cd5a15ada9bce569b5f8e8adf9d3dad3dd5e4ea5cd697",
+    "sourceFile": "sources/41a4e99aa0c53a1ca99cd5a15ada9bce569b5f8e8adf9d3dad3dd5e4ea5cd697.source",
+    "sourceElectionDate": "2026-03-10",
+    "reason": "Generic county filename currently serves March10municipal Lauderhill measure ballot; stale for November3general and never installable."
+  }
+]

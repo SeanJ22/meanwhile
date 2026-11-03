@@ -1,0 +1,2427 @@
+[
+  {
+    "title": "United States Senator",
+    "rows": [
+      {
+        "name": "Ashley Moody",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Angie Nixon",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Neil J. Gillespie",
+        "party": "No Party Affiliation"
+      }
+    ],
+    "quoteLines": [
+      "United States Senator                                      Ashley Moody                     Republican Party",
+      "United States Senator                                      Angie Nixon                      Democratic Party",
+      "United States Senator                                      Neil J. Gillespie                No Party Affiliation"
+    ]
+  },
+  {
+    "title": "Representative in Congress, District 20",
+    "rows": [
+      {
+        "name": "Brent Andersen",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Debbie Wasserman Schultz",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Kedner Maxime",
+        "party": "Independent Party of Florida"
+      }
+    ],
+    "quoteLines": [
+      "Representative in Congress, District 20                    Brent Andersen                   Republican Party",
+      "Representative in Congress, District 20                    Debbie Wasserman Schultz         Democratic Party",
+      "Representative in Congress, District 20                    Kedner Maxime                    Independent Party of Florida"
+    ]
+  },
+  {
+    "title": "Representative in Congress, District 22",
+    "rows": [
+      {
+        "name": "Casey Askar",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Pia Dandiya",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "Representative in Congress, District 22                    Casey Askar                      Republican Party",
+      "Representative in Congress, District 22                    Pia Dandiya                      Democratic Party"
+    ]
+  },
+  {
+    "title": "Representative in Congress, District 24",
+    "rows": [
+      {
+        "name": "Te Mayonna Brown",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Oliver G. Gilbert III",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Write-in",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Representative in Congress, District 24                    Te Mayonna Brown                 Republican Party",
+      "Representative in Congress, District 24                    Oliver G. Gilbert III            Democratic Party",
+      "Representative in Congress, District 24                    Write-in                         Nonpartisan"
+    ]
+  },
+  {
+    "title": "Representative in Congress, District 25",
+    "rows": [
+      {
+        "name": "Scott Singer",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Jared Moskowitz",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Peter Jassenoff",
+        "party": "Libertarian Party of Florida"
+      },
+      {
+        "name": "Write-in",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Representative in Congress, District 25                    Scott Singer                     Republican Party",
+      "Representative in Congress, District 25                    Jared Moskowitz                  Democratic Party",
+      "Representative in Congress, District 25                    Peter Jassenoff                  Libertarian Party of Florida",
+      "Representative in Congress, District 25                    Write-in                         Nonpartisan"
+    ]
+  },
+  {
+    "title": "Representative in Congress, District 26",
+    "rows": [
+      {
+        "name": "Mario Diaz-Balart",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Nicole Locklin",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Deborah Ann Meidinger Hosey",
+        "party": "No Party Affiliation"
+      }
+    ],
+    "quoteLines": [
+      "Representative in Congress, District 26                    Mario Diaz-Balart                Republican Party",
+      "Representative in Congress, District 26                    Nicole Locklin                   Democratic Party",
+      "Representative in Congress, District 26                    Deborah Ann Meidinger Hosey      No Party Affiliation"
+    ]
+  },
+  {
+    "title": "Governor and Lieutenant Governor",
+    "rows": [
+      {
+        "name": "Byron Donalds",
+        "party": "Republican Party"
+      },
+      {
+        "name": "David Jolly",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Scott Eckhard Jewett",
+        "party": "Libertarian Party of Florida"
+      },
+      {
+        "name": "Charles Burkett",
+        "party": "No Party Affiliation"
+      },
+      {
+        "name": "Frank J. Russo",
+        "party": "No Party Affiliation"
+      },
+      {
+        "name": "Moliere \"Moe\" Dimanche",
+        "party": "No Party Affiliation"
+      },
+      {
+        "name": "Dean Ocean Abrams",
+        "party": "No Party Affiliation"
+      },
+      {
+        "name": "Jeffrey Peter \"Dr. Jeff\" Datto",
+        "party": "No Party Affiliation"
+      },
+      {
+        "name": "Write-in",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Governor and Lieutenant Governor                           Byron Donalds                    Republican Party",
+      "Governor and Lieutenant Governor                           David Jolly                      Democratic Party",
+      "Governor and Lieutenant Governor                           Scott Eckhard Jewett             Libertarian Party of Florida",
+      "Governor and Lieutenant Governor                           Charles Burkett                  No Party Affiliation",
+      "Governor and Lieutenant Governor                           Frank J. Russo                   No Party Affiliation",
+      "Governor and Lieutenant Governor                           Moliere \"Moe\" Dimanche           No Party Affiliation",
+      "Governor and Lieutenant Governor                           Dean Ocean Abrams                No Party Affiliation",
+      "Governor and Lieutenant Governor                           Jeffrey Peter \"Dr. Jeff\" Datto   No Party Affiliation",
+      "Governor and Lieutenant Governor                           Write-in                         Nonpartisan"
+    ]
+  },
+  {
+    "title": "Attorney General",
+    "rows": [
+      {
+        "name": "James Uthmeier",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Jose Javier Rodriguez",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "Attorney General                                           James Uthmeier                   Republican Party",
+      "Attorney General                                           Jose Javier Rodriguez            Democratic Party"
+    ]
+  },
+  {
+    "title": "Chief Financial Officer",
+    "rows": [
+      {
+        "name": "Blaise Ingoglia",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Annette Taddeo",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "Chief Financial Officer                                    Blaise Ingoglia                  Republican Party",
+      "Chief Financial Officer                                    Annette Taddeo                   Democratic Party"
+    ]
+  },
+  {
+    "title": "Commissioner of Agriculture",
+    "rows": [
+      {
+        "name": "Wilton Simpson",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Joey Mendoza Atkins",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Write-in",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Commissioner of Agriculture                                Wilton Simpson                   Republican Party",
+      "Commissioner of Agriculture                                Joey Mendoza Atkins              Democratic Party",
+      "Commissioner of Agriculture                                Write-in                         Nonpartisan"
+    ]
+  },
+  {
+    "title": "State Senator, District 30",
+    "rows": [
+      {
+        "name": "Hector Rivera",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Lauren Book",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "State Senator, District 30                                 Hector Rivera                    Republican Party",
+      "State Senator, District 30                                 Lauren Book                      Democratic Party"
+    ]
+  },
+  {
+    "title": "State Senator, District 32",
+    "rows": [
+      {
+        "name": "Rosalind Osgood",
+        "party": "Democratic Party"
+      },
+      {
+        "name": "Crescente Furnaguera",
+        "party": "No Party Affiliation"
+      }
+    ],
+    "quoteLines": [
+      "State Senator, District 32                                 Rosalind Osgood                  Democratic Party",
+      "State Senator, District 32                                 Crescente Furnaguera             No Party Affiliation"
+    ]
+  },
+  {
+    "title": "State Representative, District 100",
+    "rows": [
+      {
+        "name": "Yoni Anijar",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Michael Terence Ferguson",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "State Representative, District 100                         Yoni Anijar                      Republican Party",
+      "State Representative, District 100                         Michael Terence Ferguson         Democratic Party"
+    ]
+  },
+  {
+    "title": "State Representative, District 101",
+    "rows": [
+      {
+        "name": "Hillary Cassel",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Todd Delmay",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "State Representative, District 101                         Hillary Cassel                   Republican Party",
+      "State Representative, District 101                         Todd Delmay                      Democratic Party"
+    ]
+  },
+  {
+    "title": "State Representative, District 102",
+    "rows": [
+      {
+        "name": "Mery Lopez-Palma",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Michael \"Mike\" Friend",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "State Representative, District 102                         Mery Lopez-Palma                 Republican Party",
+      "State Representative, District 102                         Michael \"Mike\" Friend            Democratic Party"
+    ]
+  },
+  {
+    "title": "State Representative, District 103",
+    "rows": [
+      {
+        "name": "Imtiaz Mohammad",
+        "party": "Republican Party"
+      },
+      {
+        "name": "Robin Bartleman",
+        "party": "Democratic Party"
+      }
+    ],
+    "quoteLines": [
+      "State Representative, District 103                         Imtiaz Mohammad                  Republican Party",
+      "State Representative, District 103                         Robin Bartleman                  Democratic Party"
+    ]
+  },
+  {
+    "title": "Justice of the Supreme Court, Carlos G. Mu\u00f1iz",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Justice of the Supreme Court, Carlos G. Mu\u00f1iz              YES                              Nonpartisan",
+      "Justice of the Supreme Court, Carlos G. Mu\u00f1iz              NO                               Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fourth District Court of Appeal, Alan O. Forst",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fourth District Court of Appeal, Alan O. Forst             YES                              Nonpartisan",
+      "Fourth District Court of Appeal, Alan O. Forst              NO                          Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fourth District Court of Appeal, Mark W. Klingensmith",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fourth District Court of Appeal, Mark W. Klingensmith       YES                         Nonpartisan",
+      "Fourth District Court of Appeal, Mark W. Klingensmith       NO                          Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fourth District Court of Appeal, Johnathan D. Lott",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fourth District Court of Appeal, Johnathan D. Lott          YES                         Nonpartisan",
+      "Fourth District Court of Appeal, Johnathan D. Lott          NO                          Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fourth District Court of Appeal, Shannon K. Shaw",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fourth District Court of Appeal, Shannon K. Shaw            YES                         Nonpartisan",
+      "Fourth District Court of Appeal, Shannon K. Shaw            NO                          Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fourth District Court of Appeal, Caroline Cahill Shepherd",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fourth District Court of Appeal, Caroline Cahill Shepherd   YES                         Nonpartisan",
+      "Fourth District Court of Appeal, Caroline Cahill Shepherd   NO                          Nonpartisan"
+    ]
+  },
+  {
+    "title": "Circuit Judge, 17th Judicial Circuit, Group 52",
+    "rows": [
+      {
+        "name": "David Andrew Fry",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Tamar Hamilton",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Circuit Judge, 17th Judicial Circuit, Group 52              David Andrew Fry            Nonpartisan",
+      "Circuit Judge, 17th Judicial Circuit, Group 52              Tamar Hamilton              Nonpartisan"
+    ]
+  },
+  {
+    "title": "School Board, District 6",
+    "rows": [
+      {
+        "name": "Adam Cervera",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Roberto Fernandez III",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "School Board, District 6                                    Adam Cervera                Nonpartisan",
+      "School Board, District 6                                    Roberto Fernandez III       Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coral Springs, Mayor",
+    "rows": [
+      {
+        "name": "Scott J. Brook",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Joshua Antonio Simmons",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coral Springs, Mayor                                        Scott J. Brook              Nonpartisan",
+      "Coral Springs, Mayor                                        Joshua Antonio Simmons      Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coral Springs, Commissioner, Seat 3",
+    "rows": [
+      {
+        "name": "William \"Bill\" Capplis",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Kohy Holmes",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Marly Metayer",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Erick Nyatenya",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Terry Ann Williams Edden",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coral Springs, Commissioner, Seat 3                         William \"Bill\" Capplis      Nonpartisan",
+      "Coral Springs, Commissioner, Seat 3                         Kohy Holmes                 Nonpartisan",
+      "Coral Springs, Commissioner, Seat 3                         Marly Metayer               Nonpartisan",
+      "Coral Springs, Commissioner, Seat 3                         Erick Nyatenya              Nonpartisan",
+      "Coral Springs, Commissioner, Seat 3                         Terry Ann Williams Edden    Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coral Springs, Commissioner, Seat 4",
+    "rows": [
+      {
+        "name": "Jeffrey \"Jeff\" Adelman",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Tristan Celestin",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Jennifer Levi",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coral Springs, Commissioner, Seat 4                         Jeffrey \"Jeff\" Adelman      Nonpartisan",
+      "Coral Springs, Commissioner, Seat 4                         Tristan Celestin            Nonpartisan",
+      "Coral Springs, Commissioner, Seat 4                         Jennifer Levi               Nonpartisan"
+    ]
+  },
+  {
+    "title": "Dania Beach, Commissioner",
+    "rows": [
+      {
+        "name": "Kristof Von Anderson",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Maoz Druskin",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Diana Fahmie",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Aaron \"A-1\" Hollis",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Kevin Johnson",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Colman W. Ryan",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Dania Beach, Commissioner                                   Kristof Von Anderson        Nonpartisan",
+      "Dania Beach, Commissioner                                   Maoz Druskin                Nonpartisan",
+      "Dania Beach, Commissioner                                   Diana Fahmie                Nonpartisan",
+      "Dania Beach, Commissioner                                   Aaron \"A-1\" Hollis          Nonpartisan",
+      "Dania Beach, Commissioner                                   Kevin Johnson               Nonpartisan",
+      "Dania Beach, Commissioner                                   Colman W. Ryan              Nonpartisan"
+    ]
+  },
+  {
+    "title": "Davie, Mayor, At-Large",
+    "rows": [
+      {
+        "name": "Judith \"Judy\" Paul",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Jacqueline \"Jackie\" Rocha",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Davie, Mayor, At-Large                                      Judith \"Judy\" Paul          Nonpartisan",
+      "Davie, Mayor, At-Large                                      Jacqueline \"Jackie\" Rocha   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Davie, Councilmember, District 1",
+    "rows": [
+      {
+        "name": "Lains Love Albert",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Heloise Giraldo",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Michelle Whitman",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Davie, Councilmember, District 1                            Lains Love Albert           Nonpartisan",
+      "Davie, Councilmember, District 1                            Heloise Giraldo             Nonpartisan",
+      "Davie, Councilmember, District 1                            Michelle Whitman            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Davie, Councilmember, District 3",
+    "rows": [
+      {
+        "name": "Toula Amanna",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Stephen Korka",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Jordan Nelson",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Susan Starkey",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Davie, Councilmember, District 3                            Toula Amanna                Nonpartisan",
+      "Davie, Councilmember, District 3                            Stephen Korka               Nonpartisan",
+      "Davie, Councilmember, District 3                            Jordan Nelson               Nonpartisan",
+      "Davie, Councilmember, District 3                            Susan Starkey               Nonpartisan"
+    ]
+  },
+  {
+    "title": "Davie, Councilmember, District 4",
+    "rows": [
+      {
+        "name": "Alexander \"Alex\" Barr",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Marlon Luis",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Roxana Milan",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Davie, Councilmember, District 4                            Alexander \"Alex\" Barr       Nonpartisan",
+      "Davie, Councilmember, District 4                            Marlon Luis                 Nonpartisan",
+      "Davie, Councilmember, District 4                            Roxana Milan                Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Commissioner, District 1",
+    "rows": [
+      {
+        "name": "Heather Moraitis",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "John E. Rodstrom",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Garry Smyth",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Commissioner, District 1                   Heather Moraitis            Nonpartisan",
+      "Fort Lauderdale, Commissioner, District 1                   John E. Rodstrom            Nonpartisan",
+      "Fort Lauderdale, Commissioner, District 1                   Garry Smyth                 Nonpartisan"
+    ]
+  },
+  {
+    "title": "Hallandale Beach, Commissioner, Seat 1",
+    "rows": [
+      {
+        "name": "Mike Butler",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Matthew Mickens",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Viktor Vaynshteyn",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Hallandale Beach, Commissioner, Seat 1                      Mike Butler                 Nonpartisan",
+      "Hallandale Beach, Commissioner, Seat 1                      Matthew Mickens             Nonpartisan",
+      "Hallandale Beach, Commissioner, Seat 1                      Viktor Vaynshteyn           Nonpartisan"
+    ]
+  },
+  {
+    "title": "Hallandale Beach, Commissioner, Seat 2",
+    "rows": [
+      {
+        "name": "Joy D. Adams",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Cheryl \"WhoDat\" Robinson",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Hallandale Beach, Commissioner, Seat 2                      Joy D. Adams                Nonpartisan",
+      "Hallandale Beach, Commissioner, Seat 2                      Cheryl \"WhoDat\" Robinson    Nonpartisan"
+    ]
+  },
+  {
+    "title": "Hollywood, Commissioner, District 1",
+    "rows": [
+      {
+        "name": "I. Feldman",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Brian A. Paruas",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Catherine \"Cat\" Uden",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Hollywood, Commissioner, District 1                         I. Feldman                  Nonpartisan",
+      "Hollywood, Commissioner, District 1                         Brian A. Paruas             Nonpartisan",
+      "Hollywood, Commissioner, District 1                         Catherine \"Cat\" Uden        Nonpartisan"
+    ]
+  },
+  {
+    "title": "Hollywood, Commissioner, District 3",
+    "rows": [
+      {
+        "name": "David Raskind",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Alex Recio",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Hollywood, Commissioner, District 3                         David Raskind               Nonpartisan",
+      "Hollywood, Commissioner, District 3           Alex Recio                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Hollywood, Commissioner, District 5",
+    "rows": [
+      {
+        "name": "Erin Marvasti",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Adam Roberti",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Hollywood, Commissioner, District 5           Erin Marvasti               Nonpartisan",
+      "Hollywood, Commissioner, District 5           Adam Roberti                Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Mayor",
+    "rows": [
+      {
+        "name": "Edmund Fred Malkoon",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Randolph \"Randy\" Strauss",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Mayor                  Edmund Fred Malkoon         Nonpartisan",
+      "Lauderdale-by-the-Sea, Mayor                  Randolph \"Randy\" Strauss    Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Commissioner, Seat 1",
+    "rows": [
+      {
+        "name": "Howard Goldberg",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Theo Poulopoulos",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Commissioner, Seat 1   Howard Goldberg             Nonpartisan",
+      "Lauderdale-by-the-Sea, Commissioner, Seat 1   Theo Poulopoulos            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Commissioner, Seat 2",
+    "rows": [
+      {
+        "name": "Justin Bartholomew",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Patrick Ferguson",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Commissioner, Seat 2   Justin Bartholomew          Nonpartisan",
+      "Lauderdale-by-the-Sea, Commissioner, Seat 2   Patrick Ferguson            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderhill, Mayor",
+    "rows": [
+      {
+        "name": "Denise D. Grant",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Pauline L. Ricketts",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderhill, Mayor                             Denise D. Grant             Nonpartisan",
+      "Lauderhill, Mayor                             Pauline L. Ricketts         Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderhill, Commissioner, Seat 4",
+    "rows": [
+      {
+        "name": "Richard Campbell",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Jalecia K. Mack",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Madline Noel",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Mary Smith",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderhill, Commissioner, Seat 4              Richard Campbell            Nonpartisan",
+      "Lauderhill, Commissioner, Seat 4              Jalecia K. Mack             Nonpartisan",
+      "Lauderhill, Commissioner, Seat 4              Madline Noel                Nonpartisan",
+      "Lauderhill, Commissioner, Seat 4              Mary Smith                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Margate, Commissioner, Seat 3",
+    "rows": [
+      {
+        "name": "Antonio V. Arserio",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Jonathan Kraljic",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Mindy W. Lee",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Sloan Robbins",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Margate, Commissioner, Seat 3                 Antonio V. Arserio          Nonpartisan",
+      "Margate, Commissioner, Seat 3                 Jonathan Kraljic            Nonpartisan",
+      "Margate, Commissioner, Seat 3                 Mindy W. Lee                Nonpartisan",
+      "Margate, Commissioner, Seat 3                 Sloan Robbins               Nonpartisan"
+    ]
+  },
+  {
+    "title": "Margate, Commissioner, Seat 5",
+    "rows": [
+      {
+        "name": "Theresa Booker",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Nina Culver",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Lesa \"LE\" Peerman",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Margate, Commissioner, Seat 5                 Theresa Booker              Nonpartisan",
+      "Margate, Commissioner, Seat 5                 Nina Culver                 Nonpartisan",
+      "Margate, Commissioner, Seat 5                 Lesa \"LE\" Peerman           Nonpartisan"
+    ]
+  },
+  {
+    "title": "North Lauderdale, Mayor, At-Large",
+    "rows": [
+      {
+        "name": "Samson Borgelin",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Tosha Chambers",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Willnae LaCroix",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "North Lauderdale, Mayor, At-Large             Samson Borgelin             Nonpartisan",
+      "North Lauderdale, Mayor, At-Large             Tosha Chambers              Nonpartisan",
+      "North Lauderdale, Mayor, At-Large             Willnae LaCroix             Nonpartisan"
+    ]
+  },
+  {
+    "title": "Oakland Park, Commissioner",
+    "rows": [
+      {
+        "name": "David Anderson",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Steven R. Arnst",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Chris Fischer",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Tim Lonergan",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Oakland Park, Commissioner                    David Anderson              Nonpartisan",
+      "Oakland Park, Commissioner                    Steven R. Arnst             Nonpartisan",
+      "Oakland Park, Commissioner                    Chris Fischer               Nonpartisan",
+      "Oakland Park, Commissioner                    Tim Lonergan                Nonpartisan"
+    ]
+  },
+  {
+    "title": "Plantation, Mayor",
+    "rows": [
+      {
+        "name": "Timothy J. Fadgen",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Nick Sortal",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Plantation, Mayor                             Timothy J. Fadgen           Nonpartisan",
+      "Plantation, Mayor                             Nick Sortal                 Nonpartisan"
+    ]
+  },
+  {
+    "title": "Plantation, Councilmember, Group 4",
+    "rows": [
+      {
+        "name": "Aston Bright",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "H. Wayne Clark Jr.",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Plantation, Councilmember, Group 4            Aston Bright                Nonpartisan",
+      "Plantation, Councilmember, Group 4            H. Wayne Clark Jr.          Nonpartisan"
+    ]
+  },
+  {
+    "title": "Pompano Beach, Commissioner, District 1",
+    "rows": [
+      {
+        "name": "Audrey Anne Fesik",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Keriann Worley",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Pompano Beach, Commissioner, District 1       Audrey Anne Fesik           Nonpartisan",
+      "Pompano Beach, Commissioner, District 1       Keriann Worley              Nonpartisan"
+    ]
+  },
+  {
+    "title": "Pompano Beach, Commissioner, District 2",
+    "rows": [
+      {
+        "name": "Rhonda Eaton",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Freddy York",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Brandi Zabadal",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Pompano Beach, Commissioner, District 2       Rhonda Eaton                Nonpartisan",
+      "Pompano Beach, Commissioner, District 2       Freddy York                 Nonpartisan",
+      "Pompano Beach, Commissioner, District 2       Brandi Zabadal              Nonpartisan"
+    ]
+  },
+  {
+    "title": "Pompano Beach, Commissioner, District 3",
+    "rows": [
+      {
+        "name": "Alison Fournier",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Tom McMahon",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Pompano Beach, Commissioner, District 3       Alison Fournier             Nonpartisan",
+      "Pompano Beach, Commissioner, District 3       Tom McMahon                 Nonpartisan"
+    ]
+  },
+  {
+    "title": "Pompano Beach, Commissioner, District 4",
+    "rows": [
+      {
+        "name": "Patricia Hawkins-Williams",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Beverly Perkins",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Mary Phillips",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Pompano Beach, Commissioner, District 4       Patricia Hawkins-Williams   Nonpartisan",
+      "Pompano Beach, Commissioner, District 4       Beverly Perkins             Nonpartisan",
+      "Pompano Beach, Commissioner, District 4       Mary Phillips               Nonpartisan"
+    ]
+  },
+  {
+    "title": "Sunrise, Commissioner, Seat C",
+    "rows": [
+      {
+        "name": "Evelyn B. Bryant",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Neil C. Kerch",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Emoni Nicole McGregor",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Sunrise, Commissioner, Seat C                 Evelyn B. Bryant            Nonpartisan",
+      "Sunrise, Commissioner, Seat C                 Neil C. Kerch               Nonpartisan",
+      "Sunrise, Commissioner, Seat C                 Emoni Nicole McGregor       Nonpartisan"
+    ]
+  },
+  {
+    "title": "Sunrise, Commissioner, Seat D",
+    "rows": [
+      {
+        "name": "Jacqueline A. Guzman",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Niccole M. Pazos",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Sunrise, Commissioner, Seat D                 Jacqueline A. Guzman        Nonpartisan",
+      "Sunrise, Commissioner, Seat D                 Niccole M. Pazos            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Tamarac, Commissioner, District 2",
+    "rows": [
+      {
+        "name": "Mike Gelin",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Morey Wright Jr.",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Tamarac, Commissioner, District 2             Mike Gelin                  Nonpartisan",
+      "Tamarac, Commissioner, District 2             Morey Wright Jr.            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Tamarac, Commissioner, District 4",
+    "rows": [
+      {
+        "name": "Kicia Daniel",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Carol Mendelson",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Tamarac, Commissioner, District 4             Kicia Daniel                Nonpartisan",
+      "Tamarac, Commissioner, District 4             Carol Mendelson             Nonpartisan"
+    ]
+  },
+  {
+    "title": "West Park, Commissioner, Seat 1",
+    "rows": [
+      {
+        "name": "Derrick Jones Jr.",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Katrina V. Touchstone",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "West Park, Commissioner, Seat 1               Derrick Jones Jr.           Nonpartisan",
+      "West Park, Commissioner, Seat 1                       Katrina V. Touchstone         Nonpartisan"
+    ]
+  },
+  {
+    "title": "West Park, Commissioner, Seat 2",
+    "rows": [
+      {
+        "name": "Jajuan Burton",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Brandon Smith",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "West Park, Commissioner, Seat 2                       Jajuan Burton                 Nonpartisan",
+      "West Park, Commissioner, Seat 2                       Brandon Smith                 Nonpartisan"
+    ]
+  },
+  {
+    "title": "Weston, Commissioner, Seat 3",
+    "rows": [
+      {
+        "name": "Patricia C. Bernardini",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "German Melo",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Weston, Commissioner, Seat 3                          Patricia C. Bernardini        Nonpartisan",
+      "Weston, Commissioner, Seat 3                          German Melo                   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Weston, Commissioner, Seat 4",
+    "rows": [
+      {
+        "name": "Jaime A. Herrero",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Alfredo Ortega",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Weston, Commissioner, Seat 4                          Jaime A. Herrero              Nonpartisan",
+      "Weston, Commissioner, Seat 4                          Alfredo Ortega                Nonpartisan"
+    ]
+  },
+  {
+    "title": "Wilton Manors, Mayor",
+    "rows": [
+      {
+        "name": "Julie A. Carson",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Jerry Fisichelli",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Paul Rolli",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Wilton Manors, Mayor                                  Julie A. Carson               Nonpartisan",
+      "Wilton Manors, Mayor                                  Jerry Fisichelli              Nonpartisan",
+      "Wilton Manors, Mayor                                  Paul Rolli                    Nonpartisan"
+    ]
+  },
+  {
+    "title": "Wilton Manors, Commissioner",
+    "rows": [
+      {
+        "name": "Angel Burgos",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Don D'Arminio",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Manish Kalra",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Scott Newton",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Wilton Manors, Commissioner                           Angel Burgos                  Nonpartisan",
+      "Wilton Manors, Commissioner                           Don D'Arminio                 Nonpartisan",
+      "Wilton Manors, Commissioner                           Manish Kalra                  Nonpartisan",
+      "Wilton Manors, Commissioner                           Scott Newton                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Central Broward Water Control District, Zone 6",
+    "rows": [
+      {
+        "name": "David Donzella",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Patrick J. Mason",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Central Broward Water Control District, Zone 6        David Donzella                Nonpartisan",
+      "Central Broward Water Control District, Zone 6        Patrick J. Mason              Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coral Springs Improvement District, Seat 4",
+    "rows": [
+      {
+        "name": "Travis McEwen",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Maryam Omidi",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coral Springs Improvement District, Seat 4            Travis McEwen                 Nonpartisan",
+      "Coral Springs Improvement District, Seat 4            Maryam Omidi                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coral Springs Improvement District, Seat 5",
+    "rows": [
+      {
+        "name": "Michael Kraus",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Curt Tiefenbrun",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coral Springs Improvement District, Seat 5            Michael Kraus                 Nonpartisan",
+      "Coral Springs Improvement District, Seat 5            Curt Tiefenbrun               Nonpartisan"
+    ]
+  },
+  {
+    "title": "Monterra Community Development District, Seat 2",
+    "rows": [
+      {
+        "name": "Syed Hashem",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Adam Zee",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Monterra Community Development District, Seat 2       Syed Hashem                   Nonpartisan",
+      "Monterra Community Development District, Seat 2       Adam Zee                      Nonpartisan"
+    ]
+  },
+  {
+    "title": "Orchid Grove Community Development District, Seat 5",
+    "rows": [
+      {
+        "name": "Jill Jernigan Quigley",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Edward K. Wolling",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Orchid Grove Community Development District, Seat 5   Jill Jernigan Quigley         Nonpartisan",
+      "Orchid Grove Community Development District, Seat 5   Edward K. Wolling             Nonpartisan"
+    ]
+  },
+  {
+    "title": "South Broward Drainage District, Zone 2",
+    "rows": [
+      {
+        "name": "Alanna Orlen Mersinger",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Steven Zucker",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "South Broward Drainage District, Zone 2               Alanna Orlen Mersinger        Nonpartisan",
+      "South Broward Drainage District, Zone 2               Steven Zucker                 Nonpartisan"
+    ]
+  },
+  {
+    "title": "South Broward Drainage District, Zone 4",
+    "rows": [
+      {
+        "name": "Luis Pedraza",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Mercedes B. Santana-Woodall",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "South Broward Drainage District, Zone 4               Luis Pedraza                  Nonpartisan",
+      "South Broward Drainage District, Zone 4               Mercedes B. Santana-Woodall   Nonpartisan"
+    ]
+  },
+  {
+    "title": "South Broward Drainage District, Zone 5",
+    "rows": [
+      {
+        "name": "Richard Andrews",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Sean Knowles",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "South Broward Drainage District, Zone 5               Richard Andrews               Nonpartisan",
+      "South Broward Drainage District, Zone 5               Sean Knowles                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Sunshine Water Control District, Seat 4",
+    "rows": [
+      {
+        "name": "Angelo \"Chuck\" LaRussell",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Jos\u00e9 \"Joe\" Morera",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Sunshine Water Control District, Seat 4               Angelo \"Chuck\" LaRussell      Nonpartisan",
+      "Sunshine Water Control District, Seat 4               Jos\u00e9 \"Joe\" Morera             Nonpartisan"
+    ]
+  },
+  {
+    "title": "Sunshine Water Control District, Seat 5",
+    "rows": [
+      {
+        "name": "Prem Mirpuri",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Paul Stepler",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Sunshine Water Control District, Seat 5               Prem Mirpuri                  Nonpartisan",
+      "Sunshine Water Control District, Seat 5               Paul Stepler                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Turtle Run Community Development District, Seat 1",
+    "rows": [
+      {
+        "name": "Chris Kapish",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "James \"Rob\" Shipe",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Turtle Run Community Development District, Seat 1     Chris Kapish                  Nonpartisan",
+      "Turtle Run Community Development District, Seat 1     James \"Rob\" Shipe             Nonpartisan"
+    ]
+  },
+  {
+    "title": "Turtle Run Community Development District, Seat 2",
+    "rows": [
+      {
+        "name": "Lloyd List",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Virginia \"Ginny\" Tropea",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Turtle Run Community Development District, Seat 2     Lloyd List                    Nonpartisan",
+      "Turtle Run Community Development District, Seat 2     Virginia \"Ginny\" Tropea       Nonpartisan"
+    ]
+  },
+  {
+    "title": "Turtle Run Community Development District, Seat 3",
+    "rows": [
+      {
+        "name": "Elzbieta \"Liz\" Jochim",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Kenneth Murray",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Turtle Run Community Development District, Seat 3     Elzbieta \"Liz\" Jochim         Nonpartisan",
+      "Turtle Run Community Development District, Seat 3     Kenneth Murray                Nonpartisan"
+    ]
+  },
+  {
+    "title": "Walnut Creek Community Development District, Seat 1",
+    "rows": [
+      {
+        "name": "Allan Beckmann Jr.",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Michael Cuevas",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Walnut Creek Community Development District, Seat 1   Allan Beckmann Jr.            Nonpartisan",
+      "Walnut Creek Community Development District, Seat 1   Michael Cuevas                Nonpartisan"
+    ]
+  },
+  {
+    "title": "Walnut Creek Community Development District, Seat 3",
+    "rows": [
+      {
+        "name": "Alison Hibbert Saffold",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "Juan Manuel Vazquez Canas",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Walnut Creek Community Development District, Seat 3   Alison Hibbert Saffold        Nonpartisan",
+      "Walnut Creek Community Development District, Seat 3   Juan Manuel Vazquez Canas     Nonpartisan"
+    ]
+  },
+  {
+    "title": "No. 1 Constitutional Amendment",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "No. 1 Constitutional Amendment                        YES                           Nonpartisan",
+      "No. 1 Constitutional Amendment                        NO                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "No. 2 Constitutional Amendment",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "No. 2 Constitutional Amendment                        YES                           Nonpartisan",
+      "No. 2 Constitutional Amendment                        NO                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "No. 3 Constitutional Amendment",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "No. 3 Constitutional Amendment                        YES                           Nonpartisan",
+      "No. 3 Constitutional Amendment                        NO                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Broward County, Question 1",
+    "rows": [
+      {
+        "name": "FOR THE 0.25 CENT TAX",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "AGAINST THE 0.25 CENT TAX",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Broward County, Question 1                            FOR THE 0.25 CENT TAX         Nonpartisan",
+      "Broward County, Question 1                            AGAINST THE 0.25 CENT TAX     Nonpartisan"
+    ]
+  },
+  {
+    "title": "Broward County, Question 2",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Broward County, Question 2                            YES                           Nonpartisan",
+      "Broward County, Question 2    NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Broward County, Question 3",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Broward County, Question 3    YES                                           Nonpartisan",
+      "Broward County, Question 3    NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "School Board, Question 1",
+    "rows": [
+      {
+        "name": "YES - For the one-mill property tax levy",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO - Against the one-mill property tax levy",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "School Board, Question 1      YES - For the one-mill property tax levy      Nonpartisan",
+      "School Board, Question 1      NO - Against the one-mill property tax levy   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coconut Creek, Question 1",
+    "rows": [
+      {
+        "name": "Yes",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coconut Creek, Question 1     Yes                                           Nonpartisan",
+      "Coconut Creek, Question 1     No                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coconut Creek, Question 2",
+    "rows": [
+      {
+        "name": "Yes",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coconut Creek, Question 2     Yes                                           Nonpartisan",
+      "Coconut Creek, Question 2     No                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coconut Creek, Question 3",
+    "rows": [
+      {
+        "name": "Yes",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coconut Creek, Question 3     Yes                                           Nonpartisan",
+      "Coconut Creek, Question 3     No                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coconut Creek, Question 4",
+    "rows": [
+      {
+        "name": "Yes",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coconut Creek, Question 4     Yes                                           Nonpartisan",
+      "Coconut Creek, Question 4     No                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Coconut Creek, Question 5",
+    "rows": [
+      {
+        "name": "Yes",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Coconut Creek, Question 5     Yes                                           Nonpartisan",
+      "Coconut Creek, Question 5     No                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Cooper City, Question 1",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Cooper City, Question 1       YES                                           Nonpartisan",
+      "Cooper City, Question 1       NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Cooper City, Question 2",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Cooper City, Question 2       YES                                           Nonpartisan",
+      "Cooper City, Question 2       NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Cooper City, Question 3",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Cooper City, Question 3       YES                                           Nonpartisan",
+      "Cooper City, Question 3       NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question A",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question A   YES                                           Nonpartisan",
+      "Deerfield Beach, Question A   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question B",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question B   YES                                           Nonpartisan",
+      "Deerfield Beach, Question B   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question C",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question C   YES                                           Nonpartisan",
+      "Deerfield Beach, Question C   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question D",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question D   YES                                           Nonpartisan",
+      "Deerfield Beach, Question D   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question E",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question E   YES                                           Nonpartisan",
+      "Deerfield Beach, Question E   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question F",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question F   YES                                           Nonpartisan",
+      "Deerfield Beach, Question F   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question G",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question G   YES                                           Nonpartisan",
+      "Deerfield Beach, Question G   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question H",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question H   YES                                           Nonpartisan",
+      "Deerfield Beach, Question H   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Deerfield Beach, Question I",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Deerfield Beach, Question I   YES                                           Nonpartisan",
+      "Deerfield Beach, Question I   NO                                            Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 1",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 1   Yes, for approval                             Nonpartisan",
+      "Fort Lauderdale, Question 1   No, for rejection                             Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 2",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 2   Yes, for approval                             Nonpartisan",
+      "Fort Lauderdale, Question 2   No, for rejection                             Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 3",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 3         Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 3         No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 4",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 4         Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 4         No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 5",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 5         Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 5         No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 6",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 6         Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 6         No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 7",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 7         Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 7         No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 8",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 8         Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 8         No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 9",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 9         Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 9         No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Fort Lauderdale, Question 10",
+    "rows": [
+      {
+        "name": "Yes, for approval",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "No, for rejection",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Fort Lauderdale, Question 10        Yes, for approval   Nonpartisan",
+      "Fort Lauderdale, Question 10        No, for rejection   Nonpartisan"
+    ]
+  },
+  {
+    "title": "Hollywood, Question 1",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Hollywood, Question 1               YES                 Nonpartisan",
+      "Hollywood, Question 1               NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Hollywood, Question 2",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Hollywood, Question 2               YES                 Nonpartisan",
+      "Hollywood, Question 2               NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 1",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 1   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 1   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 2",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 2   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 2   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 3",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 3   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 3   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 4",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 4   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 4   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 5",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 5   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 5   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 6",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 6   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 6   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 7",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 7   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 7   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Lauderdale-by-the-Sea, Question 8",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Lauderdale-by-the-Sea, Question 8   YES                 Nonpartisan",
+      "Lauderdale-by-the-Sea, Question 8   NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "North Lauderdale, Question 1",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "North Lauderdale, Question 1        YES                 Nonpartisan",
+      "North Lauderdale, Question 1        NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "North Lauderdale, Question 2",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "North Lauderdale, Question 2        YES                 Nonpartisan",
+      "North Lauderdale, Question 2        NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "North Lauderdale, Question 3",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "North Lauderdale, Question 3        YES                 Nonpartisan",
+      "North Lauderdale, Question 3        NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "North Lauderdale, Question 4",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "North Lauderdale, Question 4        YES                 Nonpartisan",
+      "North Lauderdale, Question 4        NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "North Lauderdale, Question 5",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "North Lauderdale, Question 5        YES                 Nonpartisan",
+      "North Lauderdale, Question 5        NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Pembroke Pines, Question",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Pembroke Pines, Question            YES                 Nonpartisan",
+      "Pembroke Pines, Question            NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Southwest Ranches, Question",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Southwest Ranches, Question         YES                 Nonpartisan",
+      "Southwest Ranches, Question         NO                  Nonpartisan"
+    ]
+  },
+  {
+    "title": "Wilton Manors, Question",
+    "rows": [
+      {
+        "name": "YES",
+        "party": "Nonpartisan"
+      },
+      {
+        "name": "NO",
+        "party": "Nonpartisan"
+      }
+    ],
+    "quoteLines": [
+      "Wilton Manors, Question             YES                 Nonpartisan",
+      "Wilton Manors, Question             NO                  Nonpartisan"
+    ]
+  }
+]

@@ -1,0 +1,1254 @@
+REGULAR MEETING
+    AGENDA
+
+   April 10, 2024
+      SUNSHINE
+WATER CONTROL DISTRICT
+
+
+
+
+AGENDA
+ LETTER
+April 3, 2024                                                                ATTENDEES:
+                                                                    Please identify yourself each
+                                                                    time you speak to facilitate
+                                                                    accurate transcription of
+Board of Supervisors                                                meeting minutes.
+Sunshine Water Control District
+
+Dear Board Members:
+The Board of Supervisors of the Sunshine Water Control District will hold a Regular Meeting on
+April 10, 2024 at 6:30 p.m., at Sartory Hall, 10150 NW 29th Street, Coral Springs, Florida 33065.
+The agenda is as follows:
+
+1.     Call to Order
+
+2.     Roll Call
+
+3.     Pledge of Allegiance
+
+4.     Public Comments [3-Minute Time Limit] (Comments should be made from the
+       microphone to ensure recording. Please state your name prior to speaking.)
+
+5.     Consideration of 401(A) Related Matters
+
+6.     Acceptance of Unaudited Financial Statements as of February 29, 2024
+
+7.     Approval of Minutes
+       A.       March 13, 2024 Landowners’ Meeting
+       B.       March 13, 2024 Regular Meeting
+
+8.     Supervisors’ Communications
+
+9.     Staff Reports
+       A.       District Counsel: Lewis, Longman & Walker, P.A.
+                I.     Discussion: Memorandum Regarding November Election of Supervisors
+                       •      Consideration of Resolution 2024-05, Calling a General Election for
+                              the Purpose of Electing a Board of Supervisors on November 5,
+                              2024, Including Seat 1, Seat 2, Seat 3, Seat 4, and Seat 5; Qualifying
+                              Candidates; Setting Terms; and Applicable Law
+                II.    Discussion: District Board of Supervisors Compensation Policy
+Board of Supervisors
+Sunshine Water Control District
+April 10, 2024, Regular Meeting Agenda
+Page 2
+
+
+
+       B.      District Engineer: Craig A. Smith & Associates
+               I.     Presentation: Monthly Engineer’s Report
+               II.    Permit Application(s)
+                      •        Lady Bird Academy, Permit 2022-14 Extension Request
+       C.      District Engineering Consultant: John McKune
+       D.      District Field Supervisor: Cory Selchan
+       E.      District Manager: Wrathell, Hunt & Associates, LLC
+               •      NEXT MEETING: May 8, 2024 at 6:30 PM
+                      o        QUORUM CHECK
+                          JOE MORERA       IN PERSON        PHONE        NO
+                          IVAN ORTIZ       IN PERSON        PHONE        NO
+                          CAROL SMITH      IN PERSON        PHONE        NO
+
+10.    Public Comments
+
+11.    Adjournment
+
+Should you have any questions, please contact me directly at (561) 512-9027.
+
+Sincerely,                                    FOR BOARD MEMBERS AND STAFF TO ATTEND BY TELEPHONE
+                                                      CALL-IN NUMBER: 1-888-354-0094
+                                                    PARTICIPANT PASSCODE: 131 733 0895
+Jamie Sanchez
+District Manager
+
+
+
+
+              2300 Glades Road, Suite 410W ▪ Boca Raton, Florida 33431 ▪ 561-571-0010
+       SUNSHINE
+ WATER CONTROL DISTRICT
+
+
+
+
+UNAUDITED
+ FINANCIAL
+STATEMENTS
+       SUNSHINE
+WATER CONTROL DISTRICT
+ FINANCIAL STATEMENTS
+       UNAUDITED
+    FEBRUARY 29, 2024
+                                         SUNSHINE
+                                  WATER CONTROL DISTRICT
+                                      BALANCE SHEET
+                                   GOVERNMENTAL FUNDS
+                                     FEBRUARY 29, 2024
+
+
+                                                                  Debt Service          Total
+                                                  General            Fund            Governmental
+                                                   Fund           Series 2021           Funds
+ASSETS
+Centennial Bank                               $ 5,342,927     $              -       $ 5,342,927
+Centennial Bank - escrow                           82,431                    -            82,431
+DS - Series 2021                                        -            1,146,363         1,146,363
+Investments
+  State Board of Administration
+    A Investment account                            5,551                    -              5,551
+    A Bank maintenance reserve account              2,908                    -              2,908
+    A Renewal & replacement reserve account         2,164                    -              2,164
+    A Equipment replacement reserve account           228                    -                228
+Centennial Bank - MMA                             261,795                    -            261,795
+FineMark Bank - MMA                                40,319                    -             40,319
+Bank United - MMA                                 250,000                    -            250,000
+Bank United - ICS                              10,283,488                    -         10,283,488
+Iberia Bank - MMA                                   5,558                    -              5,558
+Due from general fund                                   -               26,144             26,144
+Due from other soures                               2,670                    -              2,670
+  Total assets                                $16,280,039     $      1,172,507       $ 17,452,546
+
+LIABILITIES
+Liabilities:
+Retainage payable                             $     100,141   $                  -   $     100,141
+Due to debt service                                  26,144                      -          26,144
+Deposits payable/trash bonds                        239,500                      -         239,500
+Cost recovery deposits                               52,879                      -          52,879
+  Total liabilities                                 418,664                      -         418,664
+
+FUND BALANCES
+Assigned:
+ 3 months working capital                         1,760,312                      -        1,760,312
+ Disaster recovery                                3,500,000                      -        3,500,000
+ Truck replacement                                  180,000                      -          180,000
+Restricted for
+ Debt service                                           -            1,172,507            1,172,507
+Unassigned                                     10,421,063                    -           10,421,063
+ Total fund balances                           15,861,375            1,172,507           17,033,882
+
+Total liabilities and fund balances           $16,280,039     $      1,172,507       $ 17,452,546
+
+
+
+
+                                                                                                      1
+                                               SUNSHINE
+                                        WATER CONTROL DISTRICT
+                                 STATEMENT OF REVENUES, EXPENDITURES,
+                                     AND CHANGES IN FUND BALANCES
+                                             GENERAL FUND
+                                 FOR THE PERIOD ENDED FEBRUARY 29, 2024
+
+                                                        Current      Year to       Adopted      % of
+                                                        Month         Date         Budget      Budget
+REVENUES
+Assessments                                         $    114,931   $ 3,351,214   $ 3,727,751     90%
+Interest and miscellaneous                                41,303       212,786         9,000   2364%
+Permit review fees                                             -         1,050         2,450     43%
+Cost recovery                                                  -             -        17,500      0%
+  Total revenues                                         156,234     3,565,050     3,756,701     95%
+
+EXPENDITURES
+Administrative
+Supervisors                                                  250          550         1,938      28%
+Supervisor health care benefits                                -        2,440        25,000      10%
+Supervisors reimbursement                                      -            -         7,500       0%
+Management/accounting/recording                            5,642       28,210        67,706      42%
+DSF & CPF accounting                                       1,318        6,590        15,816      42%
+Dissemination fee                                             84          417         1,000      42%
+Arbitrage rebate calculation                                   -            -           750       0%
+Trustee                                                    3,000        3,000         5,000      60%
+Audit                                                          -            -        11,500       0%
+Legal                                                        203        9,807        95,000      10%
+Legal - legislative representation                             -            -        24,000       0%
+Retirement plan consulting                                     -          512        10,000       5%
+Human resource services                                      649        3,243         7,784      42%
+Communication                                                  -            -         7,500       0%
+Dues/subscriptions                                             -        4,675         4,500     104%
+Rent - operations facility                                 8,354       20,887        50,126      42%
+Insurance                                                      -       25,997        27,630      94%
+Legal advertising                                              -          324         2,500      13%
+Office supplies and expenses                                   -            -         1,500       0%
+Postage                                                        -          339         1,200      28%
+Postage-ROW clearing                                           -            -           500       0%
+Printing and binding                                         116          583         1,400      42%
+Website                                                      705          705         3,000      24%
+ADA website compliance                                         -            -           210       0%
+Contingencies                                                  -        1,030         5,000      21%
+  Total administrative expenses                           20,321      109,309       378,060      29%
+
+Field operations
+Salaries and wages                                        35,473      182,370       469,439      39%
+FICA taxes                                                 3,727       14,088        35,912      39%
+Special pay                                                    -        1,451         2,000      73%
+Bonus program                                                  -            -         2,500       0%
+401a retirement plan                                       3,994       18,699        46,944      40%
+Health insurance                                          16,303       83,726       373,750      22%
+Workers' compensation insurance                                -       11,908        16,500      72%
+Engineering                                                1,485        3,498       100,000       3%
+Engineering - capital outlay NW 123 ave                        -            -        85,000       0%
+Engineering - capital outlay University drive                  -            -       100,000       0%
+Engineering - telemetry                                        -            -        75,500       0%
+Engineering - wofo phase 3                                70,665       77,545       340,000      23%
+Consulting engineer services                                   -            -        25,000       0%
+Cost recovery                                                525        3,325        17,500      19%
+Water quality testing                                      1,253        2,506         5,224      48%
+Telephone                                                    255          255         1,800      14%
+                                                                                                        2
+                                              SUNSHINE
+                                       WATER CONTROL DISTRICT
+                                STATEMENT OF REVENUES, EXPENDITURES,
+                                    AND CHANGES IN FUND BALANCES
+                                            GENERAL FUND
+                                FOR THE PERIOD ENDED FEBRUARY 29, 2024
+
+                                                      Current        Year to        Adopted       % of
+                                                      Month           Date          Budget       Budget
+Electric                                                   698         29,738         85,000       35%
+Insurance                                                     -        67,237         89,438       75%
+Repairs and maintenance
+  Canal banks                                                 -          2,200        75,000        3%
+  Canal dredging                                              -              -        50,000        0%
+  Culvert inspection & cleaning                               -          4,250       100,000        4%
+  Dumpster service                                        4,139          7,056        13,000       54%
+  Truck, tractor and generator                            8,996         10,016        32,000       31%
+  Other                                                     236          1,809        10,000       18%
+Operating supplies
+  Chemicals                                                  -           9,216         90,000      10%
+  Fuel                                                   1,664           4,136         20,000      21%
+  Fuel-pump station generator                                -               -         50,000       0%
+  Triploid carp                                              -               -         19,755       0%
+  Uniforms                                                   -             576          3,217      18%
+  Other                                                    630             721          4,000      18%
+Permit fees, licenses, schools                               -             680          5,000      14%
+Capital outlay - NW 123 Ave                                  -               -        200,000       0%
+Capital outlay - University drive                            -               -        150,000       0%
+Capital outlay - telemetry                                   -               -        340,000       0%
+Capital outlay - wofc phase 3                                -               -      2,500,000       0%
+Field equipment                                              -           1,539         35,000       4%
+Pump station telemetry                                     440           1,917         40,000       5%
+Contingencies                                                -               -          5,000       0%
+  Total field operations                               150,483         540,462      5,613,479      10%
+Other fees and charges
+Tax collector                                            1,149          33,490         38,831      86%
+Property appraiser                                       1,150          33,490         38,831      86%
+Property tax bills - fire & EMS assessment                   -              40            100      40%
+  Total other fees & charges                             2,299          67,020         77,762      86%
+  Total expenditures                                   173,103         716,791      6,069,301      12%
+
+  Excess/(deficiency) of revenues
+   over/(under) expenditures                            (16,869)     2,848,259     (2,312,600)
+
+Fund balance - beginning                             15,878,244     13,013,116     11,721,524
+Fund balance - ending
+  Assigned:
+    3 months working capital                          1,760,312       1,760,312     1,760,312
+    Disaster recovery                                 3,500,000       3,500,000     3,500,000
+    Truck replacement                                   180,000         180,000       180,000
+  Unassigned                                         10,421,063      10,421,063     5,155,520
+  Total fund balance - ending                      $ 15,861,375    $ 15,861,375   $ 9,408,924
+
+
+
+
+                                                                                                          3
+                                             SUNSHINE
+                                      WATER CONTROL DISTRICT
+                               STATEMENT OF REVENUES, EXPENDITURES,
+                                   AND CHANGES IN FUND BALANCES
+                                   DEBT SERVICE FUND SERIES 2021
+                               FOR THE PERIOD ENDED FEBRUARY 29, 2024
+
+
+
+
+                                                 Current           Year To         Adopted       % of
+                                                 Month              Date           Budget       Budget
+REVENUES
+Assessment levy: on-roll                     $      26,158     $     762,724   $     848,359       90%
+Interest                                             3,241            11,803               -        N/A
+  Total revenues                                    29,399           774,527         848,359       91%
+
+EXPENDITURES
+Debt service
+Principal                                                  -               -         490,000        0%
+Interest                                                   -         174,079         348,158       50%
+  Total debt service                                       -         174,079         838,158       21%
+
+Other fees and charges
+Tax collector                                          262             7,622           8,837       86%
+Property appraiser                                     262             7,623           8,837       86%
+Total other fees and charges                           524            15,245          17,674       86%
+ Total expenditures                                    524           189,324         855,832       22%
+
+ Excess/(deficiency) of revenues
+  over/(under) expenditures                         28,875           585,203          (7,473)
+
+Fund balances - beginning                      1,143,632             587,304         570,220
+Fund balances - ending                       $ 1,172,507       $   1,172,507   $     562,747
+
+
+
+
+                                                                                                     4
+SUNSHINE
+Water Control District
+Special Assessment Revenue Refunding Bonds, Series 2021
+$12,010,000
+
+Debt Service Schedule
+     Date                Principal        Coupon             Interest        Total P+I
+ 11/01/2022                                       -         181,246.25       181,246.25
+ 05/01/2023              470,000.00         3.050%          181,246.25       651,246.25
+ 11/01/2023                       -               -         174,078.75       174,078.75
+ 05/01/2024              490,000.00         3.050%          174,078.75       664,078.75
+ 11/01/2024                       -               -         166,606.25       166,606.25
+ 05/01/2025              500,000.00         3.050%          166,606.25       666,606.25
+ 11/01/2025                       -               -         158,981.25       158,981.25
+ 05/01/2026              515,000.00         3.050%          158,981.25       673,981.25
+ 11/01/2026                       -               -         151,127.50       151,127.50
+ 05/01/2027              530,000.00         3.050%          151,127.50       681,127.50
+ 11/01/2027                       -               -         143,045.00       143,045.00
+ 05/01/2028              550,000.00         3.050%          143,045.00       693,045.00
+ 11/01/2028                       -               -         134,657.50       134,657.50
+ 05/01/2029              565,000.00         3.050%          134,657.50       699,657.50
+ 11/01/2029                       -               -         126,041.25       126,041.25
+ 05/01/2030              585,000.00         3.050%          126,041.25       711,041.25
+ 11/01/2030                       -               -         117,120.00       117,120.00
+ 05/01/2031              600,000.00         3.050%          117,120.00       717,120.00
+ 11/01/2031                       -               -         107,970.00       107,970.00
+ 05/01/2032              615,000.00         3.050%          107,970.00       722,970.00
+ 11/01/2032                       -               -          98,591.25        98,591.25
+ 05/01/2033              635,000.00         3.050%           98,591.25       733,591.25
+ 11/01/2033                       -               -          88,907.50        88,907.50
+ 05/01/2034              655,000.00         3.050%           88,907.50       743,907.50
+ 11/01/2034                       -               -          78,918.75        78,918.75
+ 05/01/2035              675,000.00         3.050%           78,918.75       753,918.75
+ 11/01/2035                       -               -          68,625.00        68,625.00
+ 05/01/2036              690,000.00         3.050%           68,625.00       758,625.00
+ 11/01/2036                       -               -          58,102.50        58,102.50
+ 05/01/2037              720,000.00         3.050%           58,102.50       778,102.50
+ 11/01/2037                       -               -          47,122.50        47,122.50
+ 05/01/2038              735,000.00         3.050%           47,122.50       782,122.50
+ 11/01/2038                       -               -          35,913.75        35,913.75
+ 05/01/2039              760,000.00         3.050%           35,913.75       795,913.75
+ 11/01/2039                       -               -          24,323.75        24,323.75
+ 05/01/2040              785,000.00         3.050%           24,323.75       809,323.75
+ 11/01/2040                       -               -          12,352.50        12,352.50
+ 05/01/2041               810,000.00        3.050%            12,352.50       822,352.50
+      Total           $11,885,000.00              -       $3,947,462.50   $15,832,462.50
+
+
+
+
+                                                                                 5
+       SUNSHINE
+ WATER CONTROL DISTRICT
+
+
+
+
+MINUTES A
+                                                  DRAFT
+
+
+ 1                                      MINUTES OF MEETING
+ 2                                SUNSHINE WATER CONTROL DISTRICT
+ 3
+ 4          A Meeting of the Landowners of the Sunshine Water Control District was held on March
+ 5   13, 2024, at 6:30 p.m., at Sartory Hall, 10150 NW 29 St., Coral Springs, Florida 33065.
+ 6
+ 7          Present at the meeting:
+ 8
+ 9          Jamie Sanchez                                 District Manager
+10          Orlando Rubio                                 District Engineer
+11          Ivan Ortiz                                    Landowner
+12          Joe Morera                                    Landowner
+13          Carol Smith (via telephone)                   Landowner
+14          Curtis Tiefenbrun                             Resident
+15          Other Members of the Public
+16
+17
+18   FIRST ORDER OF BUSINESS                              Call to Order
+19
+20          Ms. Sanchez called the meeting to order at 6:33 p.m.
+21
+22   SECOND ORDER OF BUSINESS                             Affidavit of Publication
+23
+24          The affidavit of publication was included for informational purposes.
+25
+26   THIRD ORDER OF BUSINESS                              Election of Chair and Secretary for the
+27                                                        Purpose of Conducting the Landowners’
+28                                                        Meeting
+29
+30          All in attendance agreed to Ms. Sanchez serving as Chair and Secretary to conduct the
+31   Landowners’ meeting.
+32
+33   FOURTH ORDER OF BUSINESS                             Determination of a Quorum Present
+34
+35          As Landowners of the Sunshine Water Control District (SWCD) were present, a quorum
+36   was established.
+37
+     SUNSHINE WATER CONTROL DISTRICT                     DRAFT                        March 13, 2024
+
+
+38   FIFTH ORDER OF BUSINESS                                Election of Supervisor
+39
+40   A.      Nominations
+41           •       Seat Currently Held by Joe Morera (three-year term)
+42           Landowner Ivan Ortiz nominated Mr. Joe Morera. No other nominations were made.
+43   B.      Casting of Ballots (in order of nominations)
+44           •       Determine Number of Voting Units Represented
+45           A total of 38 voting units were represented.
+46           •       Determine Number of Voting Units Assigned by Proxy
+47           All 38 voting units represented were assigned by proxy to Mr. Joe Morera. Ms. Sanchez
+48   noted that, while Mr. Ortiz and Mr. Morera are both Landowners and could cast individual
+49   ballots in person, they each executed a proxy assigning their votes to Mr. Morera. Mr. Morera
+50   is eligible to cast up to 38 votes.
+51           Mr. Morera cast all 38 votes for himself.
+52   C.      Ballot Tabulation and Results
+53           Ms. Sanchez reported the following ballot tabulation, results and term lengths:
+54           Joe Morera                      38 votes
+55           The term of this seat will expire upon the certification of the November 2024 General
+56   Election.
+57
+58   SIXTH ORDER OF BUSINESS                                District Engineer’s Annual Report      to
+59                                                          Landowners [Florida Statutes 298.14]
+60
+61           Mr. Rubio presented the District Engineer’s Annual Report to Landowners for the fiscal
+62   year of September 30, 2022 through October 1, 2023. It was noted that the Report was
+63   incorrectly dated as March 13, 2023; the Date should be March 13, 2024.
+64           Mr. Rubio reviewed the capital projects and costs, listed the planned capital projects to
+65   be considered, the right-of-way (ROW) permit approvals and Letter of No Objection (LONO)
+66   requests.
+67
+68   SEVENTH ORDER OF BUSINESS                              Landowners’ Questions/Comments
+
+
+
+                                                  2
+     SUNSHINE WATER CONTROL DISTRICT                   DRAFT                       March 13, 2024
+
+
+69
+70          Mr. Morera thanked Mr. Rubio for keeping the projects on track, as planned. He hopes
+71   for the continued successful completion of projects.
+72
+73   EIGHTH ORDER OF BUSINESS                           Adjournment
+74
+75          There being no further business to discuss, the meeting adjourned at 6:39 p.m.
+76
+77
+78
+79                          [SIGNATURES APPEAR ON THE FOLLOWING PAGE]
+
+
+
+
+                                                 3
+     SUNSHINE WATER CONTROL DISTRICT       DRAFT                   March 13, 2024
+
+
+80
+81
+82
+83
+84   ___________________________            ____________________________
+85   Secretary/Assistant Secretary          President/Vice President
+
+
+
+
+                                       4
+       SUNSHINE
+ WATER CONTROL DISTRICT
+
+
+
+
+MINUTES B
+                                                  DRAFT
+
+
+ 1                                     MINUTES OF MEETING
+ 2                               SUNSHINE WATER CONTROL DISTRICT
+ 3
+ 4          The Board of Supervisors of the Sunshine Water Control District held a Regular Meeting
+ 5   on March 13, 2024, immediately following the adjournment of the Landowners’ meeting,
+ 6   scheduled to commence at 6:30 p.m., at the Sartory Hall, 10150 NW 29th Street, Coral Springs,
+ 7   Florida 33065.
+ 8
+ 9          Present were:
+10
+11          Joe Morera                                      President
+12          Ivan Ortiz                                      Vice President
+13          Carol Smith (via telephone)                     Secretary
+14
+15          Also present:
+16
+17          Jamie Sanchez                                   District Manager
+18          Janice Rustin                                   District Counsel
+19          Orlando Rubio                                   District Engineer
+20          Cory Selchan                                    Field Superintendent
+21          A member of the public
+22
+23
+24   FIRST ORDER OF BUSINESS                                Call to Order
+25
+26          Mr. Morera called the meeting to order at 6:41 p.m.
+27
+28   SECOND ORDER OF BUSINESS                               Roll Call
+29
+30          Supervisors Morera and Ortiz were present in person. Supervisor Smith attended via
+31   telephone.
+32
+33   THIRD ORDER OF BUSINESS                                Pledge of Allegiance
+34
+35          All present recited the Pledge of Allegiance.
+36
+37   FOURTH ORDER OF BUSINESS                               Public Comments [3-Minute Time Limit]
+38                                                          (Comments should be made from the
+     SUNSHINE WATER CONTROL DISTRICT                    DRAFT                           March 13, 2024
+
+
+39                                                        microphone to ensure recording. Please
+40                                                        state your name prior to speaking)
+41
+42           There were no public comments.
+43
+44   FIFTH ORDER OF BUSINESS                              Administration of Oath of Office to Newly
+45                                                        Elected Supervisor (the following to be
+46                                                        provided under a separate cover)
+47
+48           Ms. Sanchez, a Notary of the State of Florida and duly authorized, administered the
+49   Oath of Office to Mr. Morera. Mr. Morera is already familiar with the following:
+50   A.      Guide to Sunshine Amendment and Code of Ethics for Public Officers and Employees
+51   B.      Membership, Obligations and Responsibilities
+52   C.      Sample Form 1: Statement of Financial Interests/Instructions
+53   D.      Form 8B – Memorandum of Voting Conflict
+54
+55   SIXTH ORDER OF BUSINESS                              Consideration of Resolution 2024-03,
+56                                                        Canvassing and Certifying the Results of
+57                                                        the Landowners’ Election of Supervisors
+58                                                        for the Sunshine Water Control District
+59
+60           Ms. Sanchez presented Resolution 2024-03 and recapped the Landowners Election
+61   results, as follows:
+62                          Joe Morera                    38 votes
+63
+64           On MOTION by Mr. Ortiz and seconded by Ms. Smith, with all in favor,
+65           Resolution 2024-03, Canvassing and Certifying the Results of the Landowners’
+66           Election of Supervisors for the Sunshine Water Control District, was adopted.
+67
+68
+69           Ms. Rustin stated that Mr. Morera’s term will end upon certification of the results of the
+70   November 2024 General Election.
+71
+
+
+
+
+                                                  2
+      SUNSHINE WATER CONTROL DISTRICT                  DRAFT                          March 13, 2024
+
+
+ 72   SEVENTH ORDER OF BUSINESS                         Consideration of Resolution 2024-04,
+ 73                                                     Appointing and Removing Officers of the
+ 74                                                     District and Providing for an Effective Date
+ 75
+ 76                  Ms. Sanchez presented Resolution 2024-04. The following slate was nominated:
+ 77                  Joe Morera                         President
+ 78                  Ivan Ortiz                         Vice President
+ 79                  Carol Smith                        Secretary
+ 80            No other nominations were made. This Resolution removes Cindy Cerbone removed as
+ 81   an Assistant Secretary. Prior appointments by the Board for Secretary, Treasurer, Assistant
+ 82   Treasurer and Assistant Secretary Jamie Sanchez, remain unaffected by this Resolution.
+ 83
+ 84            On MOTION by Ms. Smith and seconded by Mr. Ortiz, with all in favor,
+ 85            Resolution 2024-04, Appointing, as nominated, and Removing Officers of the
+ 86            District, and Providing for an Effective Date, was adopted.
+ 87
+ 88
+ 89   EIGHTH ORDER OF BUSINESS                          Acceptance of Unaudited Financial
+ 90                                                     Statements as of January 31, 2024
+ 91
+ 92            Ms. Sanchez presented the Unaudited Financial Statements as of January 31, 2024, and
+ 93   pointed out that, on Page 2, the “Supervisor health care benefits” line item is at 0%. She
+ 94   distributed updated statements with that correction. Asked about the “Tax collector” line item
+ 95   at 167%, on Page 3, Ms. Sanchez stated she will email the details of the expenditure to the
+ 96   Board.
+ 97
+ 98            On MOTION by Ms. Smith and seconded by Mr. Ortiz, with all in favor, the
+ 99            Unaudited Financial Statements as of January 31, 2024, were accepted.
+100
+101
+102   NINTH ORDER OF BUSINESS                           Approval of February 15, 2024 Regular
+103                                                     Meeting Minutes
+104
+105            Ms. Sanchez presented the February 15, 2024 Regular Meeting Minutes.
+106
+
+
+
+
+                                                 3
+      SUNSHINE WATER CONTROL DISTRICT                    DRAFT                           March 13, 2024
+
+
+107          On MOTION by Ms. Smith and seconded by Mr. Ortiz, with all in favor, the
+108          February 15, 2024 Regular Meeting Minutes, as presented, were approved.
+109
+110
+111   TENTH ORDER OF BUSINESS                              Supervisors’ Communications
+112
+113          Ms. Smith thanked the Board and Staff for their patience in allowing her to participate in
+114   tonight’s meeting remotely from the Margate Rehab Center. She stated she is recovering nicely
+115   from a fall and hopes to attend the next meeting in person.
+116          Mr. Ortiz wished everyone a blessed Easter, Passover and Ramadan.
+117          Mr. Morera echoed Mr. Ortiz’s comment. He stated that the Coral Springs Festival of the
+118   Arts is slated for the coming weekend at The Walk on University Drive. He urged everyone to
+119   attend the festival if they are able.
+120
+121   ELEVENTH ORDER OF BUSINESS                           Staff Reports
+122
+123   A.     District Counsel: Lewis, Longman & Walker, P.A.
+124          I.      Discussion: Draft Board Member Compensation Policy (to be provided under
+125                  separate cover)
+126          Ms. Rustin distributed and presented a draft of the Board of Supervisors Compensation
+127   Policy, including a list of six District-related work items that might be compensable. The final
+128   version will contain language that reads “will include work such as the following work but not
+129   limited to.” She asked if there were instances where Supervisors spent a significant amount of
+130   time reviewing agenda packages or documents to prepare for an upcoming meeting.
+131          Discussion ensued regarding typical preparation time for meetings, if Board Members
+132   should be compensated for meetings with residents when directed by the Board, the required
+133   annual ethics training, participation in depositions that are required for claims or lawsuits
+134   where the District is a party and attending mediation sessions, strategy meetings, negotiations
+135   and settlement discussions for claims or lawsuits where the District is a party.
+136          Ms. Rustin asked if the Board would like to put a limit on the number of days per month
+137   that Supervisors can be compensated for.
+
+
+
+
+                                                   4
+      SUNSHINE WATER CONTROL DISTRICT                    DRAFT                          March 13, 2024
+
+
+138          Ms. Smith thinks it should be up to the Board to decide what is allowed at the time. Mr.
+139   Morera discussed his experiences being compensated for attending Florida Association of
+140   Special Districts (FASD) conferences, taking certification courses, etc. If possible, he
+141   recommends his fellow Board Members attend such conferences.
+142           Ms. Rustin recapped that the Board’s consensus is that Supervisors should be
+143   compensated for annual ethics training and attending depositions, conferences and mediation
+144   sessions. She will coordinate with Ms. Sanchez to provide the Board with compensation
+145   paperwork.
+146          Ms. Rustin will revise the Policy, based on the Board’s comments, and present a
+147   finalized version for adoption at the next meeting.
+148          Ms. Rustin reported that she prepared a draft Memorandum regarding the Board of
+149   Supervisors Election in November and will present it at the next meeting.
+150          Discussion ensued regarding the District website, the candidate qualifying period, the
+151   Supervisor of Elections (SOE) and publicizing the upcoming change from three Board Members
+152   to five Board Members, the election being via the General Election, etc.
+153   B.     District Engineer: Craig A. Smith & Associates
+154          I.      Presentation: Monthly Engineer’s Report
+155          Mr. Rubio presented the Monthly Engineer’s Report and discussed the Westchester
+156   drainage improvements, Pump Station 3 replacement and the West Outfall Canal (WOFC) Phase
+157   3.
+158          Regarding the Westchester project, Mr. Selchan stated the drains from the street to the
+159   canal belong to the City. He agreed to work with the City on any issues that arise in the right-of-
+160   way (ROW). Noting that a few items were found in the ROW, such as trees growing on top of
+161   pipes and an illegal dock, Mr. Selchan stated he will coordinate with the City to have them
+162   removed.
+163   C.     District Engineering Consultant: John McKune
+164          There was no report.
+165   D.     District Field Supervisor: Cory Selchan
+166          Mr. Selchan reported the following:
+
+
+
+
+                                                   5
+      SUNSHINE WATER CONTROL DISTRICT                       DRAFT                      March 13, 2024
+
+
+167   ➢       March has had almost 3” of rain so far, which is positive.
+168   ➢       The daily operations are going well; the District has a full crew and there have been very
+169   few resident complaints. Crews continue fighting the invasives.
+170   ➢       The City recently held a semi-annual meeting to discuss how it can work together with
+171   the various Districts to solve issues generated by residents. It was a very productive meeting
+172   and all parties are on the same page.
+173   ➢       The District’s east outfall borders the City of Margate and, in a few of the areas,
+174   residents have started parking their boats on District property so something needs to be done.
+175   To resolve this issue, residents will be notified to remove the items stored in the District’s ROW
+176   and a guard rail will be installed to block access.
+177           Mr. Selchan presented Estimate #124258 for.
+178           Ms. Sanchez suggested setting a not-to-exceed amount for the guard rail.
+179
+180           On MOTION by Ms. Smith and seconded by Mr. Ortiz, with all in favor,
+181           Estimate #124258 for installation of a guard rail to block access on Royal Palm
+182           Boulevard, in a not-to-exceed amount of $7,000, was approved.
+183
+184
+185   ➢       A resident with a sprinkler issue received a $400 check from Rio-Bak made out to her
+186   sprinkler vendor for the repairs to the sprinkler.
+187   ➢       The crew participated in the Coral Springs waterway cleanup event that is run by the
+188   City.
+189   E.      District Manager: Wrathell, Hunt & Associates, LLC
+190           •      UPCOMING MEETINGS
+191                  ➢       April 10, 2024 at 6:00 PM (401(a) Committee Meeting)
+192                  ➢       April 10, 2024 at 6:30 PM (Regular Board Meeting)
+193                  o       QUORUM CHECK
+194           Ms. Rustin stated she will not be able to attend the next meeting; Mr. Seth Behn will
+195   attend in her place.
+196
+197   TWELFTH ORDER OF BUSINESS                              Public Comments
+
+
+
+                                                     6
+      SUNSHINE WATER CONTROL DISTRICT             DRAFT                     March 13, 2024
+
+
+198
+199         No members of the public spoke.
+200
+201   THIRTEENTH ORDER OF BUSINESS                 Adjournment
+202
+203
+204         On MOTION by Mr. Ortiz and seconded by Ms. Smith, with all in favor, the
+205         meeting adjourned at 8:10 p.m.
+206
+207
+208
+209
+210                       [SIGNATURES APPEAR ON THE FOLLOWING PAGE]
+
+
+
+
+                                              7
+      SUNSHINE WATER CONTROL DISTRICT       DRAFT                   March 13, 2024
+
+
+211
+212
+213
+214
+215   ___________________________            ____________________________
+216   Secretary/Assistant Secretary          President/Vice President
+
+
+
+
+                                        8
+      SUNSHINE
+WATER CONTROL DISTRICT
+
+
+
+
+ STAFF
+REPORTS
+   AI
+                                                                                                                             Attorneys at Law
+          (i) LLW                         LfWlS
+                                          LONGMAN
+                                          WAlkER
+                                                                                                                                  llw-law.com
+
+
+
+
+                                                                                                                    Reply To: West Palm Beach
+
+
+
+                                                                          MEMORANDUM
+
+
+                   TO:                Sunshine Water Control District
+
+                   FROM:              Janice Rustin; Robert Gertzman
+
+                   DATE:              April 5, 2024
+
+                   SUBJECT:           Information Regarding the November Election of District Supervisors
+
+
+                   This purpose for this memorandum is to advise the Sunshine Water Control District (“District”) on how to
+                   implement requirements for expanding its Board of Supervisors (“Board”) from three to five members. In short,
+                   the Board is required to call a general election. The Election Supervisor will qualify the candidates, run the
+                   election, and certify the results. However, it will not publicize the qualification period or election. The Governor
+                   is responsible for appointing a Board member if no one runs for the seat.
+
+                   1.         Background
+
+                   The Board currently consists of three members who were elected on a one-acre, one-vote basis by the
+                   landowners of the District. In 2021, the Florida Legislature adopted legislation which expanded the Board from
+                   three members to five members beginning November 5, 2024. This legislation was then incorporated into the
+                   District’s current Charter, which was reenacted in 2023 through the adoption of Chapter 2023-6, Laws of Florida.
+                   As a result, as of November 5, 2024, the Board shall consist of five members, each of whom shall be elected at
+                   the November general election.
+
+                   2.         District Responsibilities
+
+                   The District Charter requires the Board of Supervisors to call the election at which members of the Board will be
+                   elected. The election will be held in conjunction with the general election in November 2024. Although the
+                   Charter does not describe the method for calling an election, special districts typically do so by adopting a
+                   resolution at least 30 days before the qualifying period for candidates begins. The resolution is then submitted
+                   to the Supervisor of Elections. Here, the qualifying period for District Board members begins June 10, 2024.
+      01862158-1
+
+
+JACKSONVILLE                             ST. PETERSBURG                  TALLAHASSEE                  TAMPA                    WEST PALM BEACH
+245 Riverside Ave.                       100 Second Ave., South          106 East College Avenue      301 West Platt St.       360 South Rosemary Ave.
+Suite 510                                Suite 501-S                     Suite 1500                   Suite A364               Suite 1100
+Jacksonville, Florida 32202              St. Petersburg, Florida 33701   Tallahassee, Florida 32301   Tampa, Florida 33606     West Palm Beach, FL 33401
+T: 904.353.6410                          T: 727.245.0820                 T: 850.222.5702              T: 813.775.2331          T: 561.640.0820
+F: 904.353.7619                          F: 727.290.4057                 F: 850.224.9242                                       F: 561.640.8202
+
+
+                                                                    See Things Differently®
+April 5, 2024
+Page 2
+
+
+Therefore, it is recommended the Board adopt a resolution calling for the election of Board supervisors at its
+April 2024 meeting. The resolution will describe the number of seats, length of terms, important dates to qualify
+and run, and the entity responsible for conducting the election.
+
+The Election Supervisor will contact the District in late March or early April, via email, to provide helpful links
+and information about the election. It will also appoint personnel to prepare ballots, designate polling places,
+canvass returns, and declare and certify the election results. However, the Election Supervisor is not responsible
+for publicizing the election or notifying the public of the opportunities to run.
+
+3.       Seats and Terms
+
+The expanded Board shall consist of five designated seats named Seat 1, Seat 2, Seat 3, Seat 4, and Seat 5. New
+terms begin the second Tuesday after the election. Seat 1, Seat 2, and Seat 3 serve terms of four years. Seat 4
+and Seat 5 serve terms of two years, but only for the election held on November 5, 2024. Starting in 2026,
+elections occur every two years for the expiring seats with terms of four years each. Elections are nonpartisan
+and run like other general elections in Broward County.
+
+The terms of all current District Board members will end upon certification of the November 2024 general
+election results. Current members who wish to remain on the Board are required to qualify and run for election
+in November.
+
+4.       Candidate Requirements
+
+Each candidate must be at least 18 years old, a United States citizen, a permanent Florida resident, and live
+within the District. Candidates who meet those requirements must submit documents to the Election Supervisor
+during the qualifying period, which starts on June 10, 2024 and ends at noon on June 14, 2024. Candidates may
+submit some documents early starting on May 27, 2024. The documents include an oath, disclosure of certain
+financial interests or campaign contributions (where applicable), and a $25 filing fee1. The Election Supervisor
+reviews those documents and notifies candidates of any missing or incomplete submissions. Candidates may
+visit the Election Supervisor website to download forms and review information about deadlines or
+qualifications. Finally, candidates must conduct campaigns pursuant to Florida law.
+
+If only one candidate qualifies for the election of a seat, that person will automatically be elected to that seat.
+The Election Supervisor will notify the sole qualifying candidate at the end of the qualification period, and their
+name will not appear on the ballot. If no candidates qualify for a seat, the Governor is responsible for filling it by
+appointing someone who meets the eligibility requirements. The Board cannot appoint a member to a seat that
+was not filled in the general election. It can only a appoint a member after an elected and qualified member
+vacates the seat.
+
+
+
+
+1
+ While the Charter provides a different qualifying fee structure, the Election Supervisor confirmed candidates only owe a
+$25 filing fee here. Candidates may, however, petition the Election Supervisor to waive the fee.
+
+
+
+4874-0618-4114, v. 1
+                                         RESOLUTION NO. 2024-05
+
+               A RESOLUTION OF THE SUNSHINE WATER CONTROL DISTRICT CALLING A
+               GENERAL ELECTION FOR THE PURPOSE OF ELECTING A BOARD OF SUPERVISORS
+               ON NOVEMBER 5, 2024, INCLUDING SEAT 1, SEAT 2, SEAT 3, SEAT 4, AND SEAT 5;
+               QUALIFYING CANDIDATES; SETTING TERMS; AND APPLICABLE LAW
+
+        WHEREAS the Sunshine Water Control District (“District”) is an independent special district
+created through Chapter 63-609, Laws of Florida, as amended by Chapter 2021-255, Laws of Florida, and
+most recently by Chapter 2023-6, Laws of Florida (“Charter”); and
+
+         WHEREAS the Charter requires the District call for a general election on November 5, 2024
+(“Election”) so that qualified voters in the District may elect a Board of Supervisors (“Board”) to seats
+specifically designated as Seat 1, Seat 2, Seat 3, Seat 4, and Seat 5; and
+
+         WHEREAS the Charter requires that Seat 1, Seat 2, and Seat 3 shall each serve an initial term of
+four years while Seat 4 and Seat 5 shall each serve an initial term of two year. Thereafter, general elections
+shall occur every two years, starting in 2026, for expiring seats to serve terms of four years each; and
+
+        WHEREAS, the Charter requires that the newly elected Board take office on the second Tuesday
+following the Election; and
+
+        WHEREAS, the qualifying period for candidates runs from June 10, 2024, until noon on June 14,
+2024; and
+
+        WHEREAS the Charter requires that the Broward County Supervisor of Elections qualify each
+Election candidate, without limitation, by accepting and approving all required documents including filing
+fees and sworn oaths, conduct the Election, and certify the Election results all in accordance with Florida
+law; and
+
+         WHEREAS the Charter requires that Election candidates conduct their campaign pursuant to
+Florida law.
+
+            NOW, THEREFORE, BE IT RESOLVED by the Board of Supervisors of the Sunshine Water Control
+District:
+
+         Section 1. Calling the Election. The Sunshine Water Control District Board of Supervisors hereby
+calls a general election for November 5, 2024 (“Election”) so that qualified voters may elect a Board of
+Supervisors to seats specifically designated as Seat 1, Seat 2, Seat 3, Seat 4, and Seat 5, in accordance with
+Florida law.
+
+       Section 2. Applicable Law. The Broward County Supervisor of Elections shall qualify Election
+candidates, without limitation, by accepting and approving required documents including filing fees and
+sworn oaths, and shall conduct the Election and certify its results, all pursuant to Florida law. Election
+candidates shall also conduct their campaigns in accordance with Florida law.
+
+        Section 3. Qualifying Period. The qualifying period for Election candidates shall commence June
+10, 2024, and end at noon on June 14, 2024.
+
+
+
+4895-9608-3887, v. 1
+        Section 4. Declaration. After receiving the certified results from the Broward County Board of
+Supervisors, the current Board of Supervisors shall declare the Election results and record them in the
+minutes of the first meeting thereafter.
+
+         Section 5. Effective Date. This Resolution shall become effective upon passage.
+
+
+
+PASSED AND ADOPTED THIS 10TH DAY OF APRIL, 2024.
+
+
+                                                 __________________________________________
+                                                 JOSÉ E. MORERA
+                                                 Board President
+
+
+                                                 ATTEST:
+
+
+                                                 __________________________________________
+                                                 CAROL SMITH
+                                                 Board Secretary
+
+
+
+
+4895-9608-3887, v. 1
+      SUNSHINE
+WATER CONTROL DISTRICT
+
+
+
+
+ STAFF
+REPORTS
+   AII
+                       Sunshine Water Control District
+
+Policy Title:            District Board of Supervisors Compensation Policy
+Date Adopted:
+
+
+1. Purpose
+
+The purpose of the District Board of Supervisors Compensation Policy is to document the amount
+that District Supervisors will be compensated for time that they work on District matters and the
+activities that qualify for compensation. This policy complies with the requirements of F.S. §
+298.14.
+
+2. Statement of General Rule
+
+District Supervisors are entitled to receive compensation in the amount of $50 per day for
+attending Board meetings and for time actually engaged in work for the District as described
+below. In addition, District Supervisors are eligible for reimbursement of travel expenses
+incurred in the course of their duties, subject to the conditions described in F.S. § S112.061.
+
+3. Supervisor Compensation
+
+District Supervisors shall be compensated in the amount of $50 for attending regular and special
+meetings of the Board. In addition, District Supervisors may be compensated $50 for each day
+that they engage in work for the District, which includes but is not limited to:
+
+    •    Meetings with residents when directed by the Board;
+    •    Annual ethics training as required by F.S. § 112.3142;
+    •    Participation in depositions which are required for claims or lawsuits where the District is
+         a party;
+    •    Attending mediation sessions, strategy meetings, negotiations, and settlement
+         discussions for claims or lawsuits where the District is a party.
+
+District Supervisors shall not be compensated for any days they engage in work for the District
+unless the expenditure is first approved by the Board.
+
+4. Travel Expenses
+
+The District shall reimburse the travel expenses incurred by District Supervisors in accordance
+with F.S. § 112.061. In order to be reimbursed, travel must first be authorized and approved by
+
+
+
+4863-1641-7451, v. 6
+the Board. All requests for reimbursement of travel expenses must be accompanied by a signed
+statement describing the purpose of the travel. The Board of Supervisors shall not authorize or
+approve a request for travel expense reimbursement unless such travel is for official business of
+the District.
+
+A District Supervisor who uses his or her own vehicle for travel approved by the Board shall be
+reimbursed for mileage at the rate of 44.5 cents per mile and for all tolls and parking fees, in
+accordance with F.S. § 112.061, as may be amended.
+
+Depending on the travel destination and length of stay, District Supervisors may also be entitled
+to reimbursement of lodging expenses and a per diem amount for food. Before incurring these
+travel expenses, it is recommended that the Supervisor confer with the District Manager to
+determine whether a per diem and lodging reimbursement is available.
+
+In the event of a conflict between this Policy and F.S. § 112.061, the provisions outlined in the
+statute shall govern.
+
+5.   Conference attendance
+
+District Supervisors may be reimbursed for convention or conference registration fees and for
+daily attendance at the convention or conference if the Board determines that the Supervisor’s
+attendance will further the purposes of the District.
+
+6. Effective Date:
+This policy was adopted by the Board of Supervisors by motion at the meeting of
+_____________________, 2024.
+
+
+
+
+4863-1641-7451, v. 6
+      SUNSHINE
+WATER CONTROL DISTRICT
+
+
+
+
+ STAFF
+REPORTS
+   BI
+April 3, 2024
+
+Board of Supervisors
+Sunshine Water Control District (via e-mail)
+2300 Glades Road, Suite 410W
+Boca Raton, Florida 33073
+
+RE:     SUNSHINE WATER CONTROL DISTRICT – NOVEMBER MONTHLY ENGINEER’S REPORT (MER)
+        March 13, 2024 – April 3, 2024
+        CAS PROJECT NO. 15-1826
+
+Dear Board of Supervisors:
+
+Craig A. Smith & Associates, Inc. (CAS) is pleased to provide you with the MER summarizing activity performed by our team
+on behalf of SWCD during the referenced period including future work. Anything of significance or modifications occurring
+after this writing will be brought up at the April 10, 2024 BOS meeting.
+
+Pump Station 3 Replacement
+
+To date, vertical test hole explorations from our utility locating department have been completed and the plans will be
+updated to reflect these findings addressing conflicts with the proposed storm pipe. Coordination with the SFWMD is
+forthcoming.
+
+West Outfall Canal (WOFC) Phase 3
+
+To date, the survey field work has been completed. The survey plans are being finalized and the preparation of the
+engineering plans are under way. The canal typical cross section is shown in Figure 1. We note that the survey information
+revealed canal hump about 360 ft north of Atlantic Blvd and has a negative effect on canal hydraulics (see Figure 2). The
+anticipated volume to be excavated is 32,392 cy (see Figure 3). The arborist’s report is in draft form and is under review
+for follow up. Resident outreach exhibits are being drafted to address the encroachment issues (see enclosures). An
+Environmental Resource License and a construction dewatering permit will be submitted to Broward County and the South
+Florida Water Management District, respectively.
+
+
+
+
+                                                          1425 E. Newport Drive
+                              561.314.4445
+                                                         Deerfield Beach, FL 33442
+
+
+                                                                                              www.craigasmith.com
+Board of Supervisors – April 10, 2024 Board Meeting
+RE: SUNSHINE WATER CONTROL DISTRICT - MONTHLY ENGINEER’S REPORT (MER)
+Page |2
+
+Figure 1
+
+
+
+
+Figure 2
+Board of Supervisors – April 10, 2024 Board Meeting
+RE: SUNSHINE WATER CONTROL DISTRICT - MONTHLY ENGINEER’S REPORT (MER)
+Page |3
+
+Figure 3
+
+
+
+
+Right-of-way Permitting
+Due to construction delays, the Ladybird Academy ROW Permit No. 2022-14 is being requested for an extension via the
+permittee’s consultant. CAS recommends the extension be granted to the permittee.
+
+A recommendation may be presented at the meeting should the applicant (ATT crossing under Canal “RR”) submit the
+required information before the meeting to render the application complete.
+
+
+As always, we continue to look forward to working with the SWCD staff on current and future important projects.
+Should there be any questions, I can be reached at the letterhead numbers shown or by electronic mail at
+orubio@craigasmith.com.
+
+Sincerely,
+CRAIG A. SMITH & ASSOCIATES
+
+
+
+
+Orlando A. Rubio, PE
+VP - Stormwater Engineering
+
+Enc: WOFC Resident Draft Exhibits
+
+cc via e-mail:     SWCD - Cory Selchan, District Superintendent; WHA - Jamie Sanchez, Daphne Gillyard, Gianna Denofrio, Caryn Kupiec ; CAS -
+                   Stephen C. Smith, PE
+
+\\cas-file\projects\districts\sunshine_water_control\monthly engineers reports\2024mer\2024-04\swcd-monthlyrpt-2024-04-03.docx
+      SUNSHINE
+WATER CONTROL DISTRICT
+
+
+
+
+ STAFF
+REPORTS
+   BII
+CRAIG A . SMITH & ASSOCIATES
+  A SMART-INFRASTil:UCTURE COMPANY
+
+
+
+ April 5, 2024
+
+ Board of Supervisors
+ Sunshine Water Control District (SWCD)
+ 2300 Glades Road, Suite 410W
+ Boca Raton, Florida 33073
+
+ RE:            SWCD Right-of-Way Permit Application – Permit Extension Request (2)
+                Ladybird Academy - Canal L
+                CAS PROJECT NO. 15-1826-P31
+
+ Dear Board of Supervisors (BOS):
+
+ Recommended is the third extension of Ladybird Academy’s ROW Permit No. 2022-14 for an additional 180 days (originally
+ issued on 9.14.2022 and extended on October 11, 2023). The permit authorizes the development of an institutional facility
+ adjacent to Canal “L” and subsequent canal demucking work. All previously approved plans and permit conditions remain
+ in full force and effect.
+
+
+ Sincerely,
+
+ CRAIG A. SMITH & ASSOCIATES
+
+
+
+
+ Orlando A. Rubio, PE
+ VP - Stormwater Engineering
+
+ cc:            SWCD – Cory Selchan (via e-mail)
+                WHA – Jamie Sanchez, Gianna Dinofrio, (via e-mail)
+                Z Development Services – Julie Farr, Bob Ziegenfuss, PE, (via e-mail)
+                CAS – Stephen C. Smith, PE (via e-mail)
+
+ \\cas-file\Projects\Districts\Sunshine_Water_Control\15-1826-COST-RECOVERY-PROJECTS\15-1826-P31-LadybirdAcademy\06-
+ Permit\LadybirdAcademyCanalL-Engr_Ext-Recommendation20240405.docx
+
+
+
+
+                                                                            1425 E. Newport Center Dr
+                                          561.314.4445
+                                                                            Deerfield Beach, FL 33442
+
+
+                                                                                                        www.craigasmith.com
+      SUNSHINE
+WATER CONTROL DISTRICT
+
+
+
+
+ STAFF
+REPORTS
+   E
+                                SUNSHINE WATER CONTROL DISTRICT
+
+             BOARD OF SUPERVISORS FISCAL YEAR 2023/2024 MEETING SCHEDULE
+
+                                             LOCATION
+                         Sartory Hall, 10150 NW 29 St., Coral Springs, Florida 33065
+
+             DATE                         POTENTIAL DISCUSSION/FOCUS                    TIME
+
+      October 11, 2023                            Regular Meeting                      6:30 PM
+
+      November 8, 2023                            Regular Meeting                      6:30 PM
+
+      December 6, 2023                            Regular Meeting                      6:30 PM
+
+     December 13, 2023                            Regular Meeting                      6:30 PM
+Rescheduled to December 6, 2023
+
+       January 10, 2024                           Regular Meeting                      6:30 PM
+
+      February 14, 2024                           Regular Meeting                      6:30 PM
+Rescheduled to February 15, 2024
+
+      February 15, 2024                           Regular Meeting                      6:30 PM
+
+       March 13, 2024                Landowners’ Meeting & Regular Meeting             6:30 PM
+
+        April 10, 2024                      401(a) Committee Meeting                   6:00 PM
+
+        April 10, 2024                            Regular Meeting                      6:30 PM
+
+         May 8, 2024                              Regular Meeting                      6:30 PM
+
+        June 12, 2024                             Regular Meeting                      6:30 PM
+
+         July 10, 2024                            Regular Meeting                      6:30 PM
+
+       August 14, 2024                            Regular Meeting                      6:30 PM
+
+     September 11, 2024                           Regular Meeting                      6:30 PM
+

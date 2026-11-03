@@ -1,0 +1,11 @@
+{
+  "sources": 17,
+  "installReceiptSources": 15,
+  "exactProvenanceQuotes": 232,
+  "sourceAndExcerptHashes": "PASS",
+  "allProvenanceQuotesInExactSavedText": "PASS",
+  "pendingOnlyReceiptSeparation": "PASS",
+  "candidateCount": 146,
+  "contestCount": 61,
+  "productionWrites": 0
+}

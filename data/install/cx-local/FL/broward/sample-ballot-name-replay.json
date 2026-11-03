@@ -1,0 +1,90 @@
+[
+  {
+    "contestId": "cx-local-fl-broward-2026-hallandale-beach-commissioner-seat-1",
+    "contestTitle": "Hallandale Beach, Commissioner, Seat 1",
+    "sampleSourceUrl": "https://www.cohb.org/DocumentCenter/View/40408",
+    "sampleElectionDate": "2026-11-03",
+    "choices": [
+      {
+        "printedName": "Mike Butler",
+        "sampleNameMatch": true
+      },
+      {
+        "printedName": "Matthew Mickens",
+        "sampleNameMatch": true
+      },
+      {
+        "printedName": "Viktor Vaynshteyn",
+        "sampleNameMatch": true
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-broward-2026-hallandale-beach-commissioner-seat-2",
+    "contestTitle": "Hallandale Beach, Commissioner, Seat 2",
+    "sampleSourceUrl": "https://www.cohb.org/DocumentCenter/View/40408",
+    "sampleElectionDate": "2026-11-03",
+    "choices": [
+      {
+        "printedName": "Joy D. Adams",
+        "sampleNameMatch": true
+      },
+      {
+        "printedName": "Cheryl \"WhoDat\" Robinson",
+        "sampleNameMatch": true
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-broward-2026-hollywood-commissioner-district-1",
+    "contestTitle": "Hollywood, Commissioner, District 1",
+    "sampleSourceUrl": "https://www.hollywoodfl.org/Archive/ViewFile/Item/9662",
+    "sampleElectionDate": "2026-11-03",
+    "choices": [
+      {
+        "printedName": "I. Feldman",
+        "sampleNameMatch": true
+      },
+      {
+        "printedName": "Brian A. Paruas",
+        "sampleNameMatch": true
+      },
+      {
+        "printedName": "Catherine \"Cat\" Uden",
+        "sampleNameMatch": true
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-broward-2026-hollywood-commissioner-district-3",
+    "contestTitle": "Hollywood, Commissioner, District 3",
+    "sampleSourceUrl": "https://www.hollywoodfl.org/Archive/ViewFile/Item/9662",
+    "sampleElectionDate": "2026-11-03",
+    "choices": [
+      {
+        "printedName": "David Raskind",
+        "sampleNameMatch": true
+      },
+      {
+        "printedName": "Alex Recio",
+        "sampleNameMatch": true
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-fl-broward-2026-hollywood-commissioner-district-5",
+    "contestTitle": "Hollywood, Commissioner, District 5",
+    "sampleSourceUrl": "https://www.hollywoodfl.org/Archive/ViewFile/Item/9662",
+    "sampleElectionDate": "2026-11-03",
+    "choices": [
+      {
+        "printedName": "Erin Marvasti",
+        "sampleNameMatch": true
+      },
+      {
+        "printedName": "Adam Roberti",
+        "sampleNameMatch": true
+      }
+    ]
+  }
+]

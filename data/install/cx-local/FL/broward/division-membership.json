@@ -1,0 +1,427 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:broward",
+    "officialName": "Broward County / Seventeenth Judicial Circuit",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingStatus": "EXISTING_REGISTRY_ID",
+    "readerMappingOwner": "River",
+    "electorateRule": "The seventeenth judicial circuit consists of Broward County (Florida Statutes 26.021(17)).",
+    "provenance": {
+      "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+      "sourceOrg": "Florida Legislature",
+      "collectedAt": "2026-11-03T04:06:32.374479+00:00",
+      "verifiedAt": "2026-11-03T04:06:32.374479+00:00",
+      "quote": "(17) The seventeenth circuit is composed of Broward County."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:broward/school_board_district:6",
+    "officialName": "Broward County School Board District 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Only voters in School Board District 6 elect this member.",
+    "provenance": {
+      "sourceUrl": "https://www.broward.k12.fl.us/redistricting/Principles.shtml",
+      "sourceOrg": "Broward County Public Schools",
+      "collectedAt": "2026-11-03T04:14:24.796844+00:00",
+      "verifiedAt": "2026-11-03T04:14:24.796844+00:00",
+      "quote": "Seven district school board member residence areas. The electorate approved the school board to be comprised of nine members, seven of whom are to be elected from a single-member residence area by electors residing in the single-member residence area only, and two of whom are to be elected at-large."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:davie/council_district:1",
+    "officialName": "Davie Commissioner/Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Davie District 1.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Davie 2311/03/2026\nMayor\nCouncil Members\nAt Large\nDistricts 1, 2, 3 & 4\nDeerfield Beach1503/09/2027CommissionersDistricts 1 & 2"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:davie/council_district:3",
+    "officialName": "Davie Commissioner/Council District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Davie District 3.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Davie 2311/03/2026\nMayor\nCouncil Members\nAt Large\nDistricts 1, 2, 3 & 4\nDeerfield Beach1503/09/2027CommissionersDistricts 1 & 2"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:davie/council_district:4",
+    "officialName": "Davie Commissioner/Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Davie District 4.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Davie 2311/03/2026\nMayor\nCouncil Members\nAt Large\nDistricts 1, 2, 3 & 4\nDeerfield Beach1503/09/2027CommissionersDistricts 1 & 2"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale/council_district:1",
+    "officialName": "Fort Lauderdale Commissioner/Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Fort Lauderdale District 1.",
+    "provenance": {
+      "sourceUrl": "https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Election-Information",
+      "sourceOrg": "City of Fort Lauderdale",
+      "collectedAt": "2026-11-03T04:18:23.801408+00:00",
+      "verifiedAt": "2026-11-03T04:18:23.801408+00:00",
+      "quote": "The Mayor and four City Commissioners are the elected officials of the City of Fort Lauderdale. The Mayor is elected at-large and the City Commissioners are elected from each of the four districts. The four-year terms run concurrently, and all are up for election at the same time."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:hollywood/council_district:1",
+    "officialName": "Hollywood Commissioner/Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Hollywood District 1.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Hollywood2911/03/2026CommissionerDistricts 1, 3 & 5"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:hollywood/council_district:3",
+    "officialName": "Hollywood Commissioner/Council District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Hollywood District 3.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Hollywood2911/03/2026CommissionerDistricts 1, 3 & 5"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:hollywood/council_district:5",
+    "officialName": "Hollywood Commissioner/Council District 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Hollywood District 5.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Hollywood2911/03/2026CommissionerDistricts 1, 3 & 5"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:1",
+    "officialName": "Pompano Beach Commissioner/Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Pompano Beach District 1.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Pompano Beach2211/03/2026Commissioner Districts 1, 2, 3, 4 & 5"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:2",
+    "officialName": "Pompano Beach Commissioner/Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Pompano Beach District 2.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Pompano Beach2211/03/2026Commissioner Districts 1, 2, 3, 4 & 5"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:3",
+    "officialName": "Pompano Beach Commissioner/Council District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Pompano Beach District 3.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Pompano Beach2211/03/2026Commissioner Districts 1, 2, 3, 4 & 5"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:pompano_beach/council_district:4",
+    "officialName": "Pompano Beach Commissioner/Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Pompano Beach District 4.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Pompano Beach2211/03/2026Commissioner Districts 1, 2, 3, 4 & 5"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:tamarac/council_district:2",
+    "officialName": "Tamarac Commissioner/Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Tamarac District 2.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Tamarac1311/03/2026\nMayor\nCommissioner\nAt Large\nDistricts 2 & 4"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/place:tamarac/council_district:4",
+    "officialName": "Tamarac Commissioner/Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by registered voters in Tamarac District 4.",
+    "provenance": {
+      "sourceUrl": "https://browardvotes.gov/results-information/municipal-election",
+      "sourceOrg": "Broward County Supervisor of Elections",
+      "collectedAt": "2026-11-03T04:03:08.619314+00:00",
+      "verifiedAt": "2026-11-03T04:03:08.619314+00:00",
+      "quote": "Tamarac1311/03/2026\nMayor\nCommissioner\nAt Large\nDistricts 2 & 4"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:central_broward_water_control_district/zone:6",
+    "officialName": "Central Broward Water Control District \u2014 Zone 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by qualified district electors residing in Zone 6.",
+    "provenance": {
+      "sourceUrl": "https://centralbrowardwcd.org/wp-content/uploads/CHARTER-Final-2023-00566757xC4B6A.pdf",
+      "sourceOrg": "Central Broward Water Control District",
+      "collectedAt": "2026-11-03T04:09:03.349493+00:00",
+      "verifiedAt": "2026-11-03T04:09:03.349493+00:00",
+      "quote": "In all elections, the regular registration books of Broward County covering an area of the\n\n            district shall be used, and only those persons who are shown thereon as qualified electors\n\n            and residing within the district and zone which the election of commissioner is for shall\n\n            be entitled to vote in said election."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:coral_springs_improvement_district",
+    "officialName": "Coral Springs Improvement District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Numbered seat elected by qualified electors of the Coral Springs Improvement District. The seat is not a geographic subdistrict.",
+    "provenance": {
+      "sourceUrl": "https://www.csidfl.org/wp-content/uploads/2026/03/2026.03.16_csid_agenda_package.pdf",
+      "sourceOrg": "Coral Springs Improvement District",
+      "collectedAt": "2026-11-03T04:09:03.351930+00:00",
+      "verifiedAt": "2026-11-03T04:09:03.351930+00:00",
+      "quote": "WHEREAS the Charter required the District call for a general election in November 2024 (\u201cElection\u201d), for\nqualified voters in the District to elect a Board of Supervisors (\u201cBoard\u201d) to seats specifically designated as\nSeat 1, Seat 2, Seat 3, Seat 4, and Seat 5; and"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:monterra_community_development_district",
+    "officialName": "Monterra Community Development District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Numbered seat elected by qualified electors of the Monterra Community Development District. The seat is not a geographic subdistrict.",
+    "provenance": {
+      "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+      "sourceOrg": "Florida Legislature",
+      "collectedAt": "2026-11-03T04:13:42.652398+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.652398+00:00",
+      "quote": "2.a. Regardless of whether a district has proposed to levy ad valorem taxes, commencing 6 years after the initial appointment of members or, for a district exceeding 5,000 acres in area or for a compact, urban, mixed-use district, 10 years after the initial appointment of members, the position of each member whose term has expired shall be filled by a qualified elector of the district, elected by the qualified electors of the district. However, for those districts established after June 21, 1991, and for those existing districts established after December 31, 1983, which have less than 50 qualified electors on June 21, 1991, sub-subparagraphs b. and d. shall apply. If, in the 6th year after the initial appointment of members, or 10 years after such initial appointment for districts exceeding 5,000 acres in area or for a compact, urban, mixed-use district, there are not at least 250 qualified electors in the district, or for a district exceeding 5,000 acres or for a compact, urban, mixed-use district, there are not at least 500 qualified electors, members of the board shall continue to be elected by landowners."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:orchid_grove_community_development_district",
+    "officialName": "Orchid Grove Community Development District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Numbered seat elected by qualified electors of the Orchid Grove Community Development District. The seat is not a geographic subdistrict.",
+    "provenance": {
+      "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+      "sourceOrg": "Florida Legislature",
+      "collectedAt": "2026-11-03T04:13:42.652398+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.652398+00:00",
+      "quote": "2.a. Regardless of whether a district has proposed to levy ad valorem taxes, commencing 6 years after the initial appointment of members or, for a district exceeding 5,000 acres in area or for a compact, urban, mixed-use district, 10 years after the initial appointment of members, the position of each member whose term has expired shall be filled by a qualified elector of the district, elected by the qualified electors of the district. However, for those districts established after June 21, 1991, and for those existing districts established after December 31, 1983, which have less than 50 qualified electors on June 21, 1991, sub-subparagraphs b. and d. shall apply. If, in the 6th year after the initial appointment of members, or 10 years after such initial appointment for districts exceeding 5,000 acres in area or for a compact, urban, mixed-use district, there are not at least 250 qualified electors in the district, or for a district exceeding 5,000 acres or for a compact, urban, mixed-use district, there are not at least 500 qualified electors, members of the board shall continue to be elected by landowners."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:2",
+    "officialName": "South Broward Drainage District \u2014 Zone 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by qualified district electors residing in Zone 2.",
+    "provenance": {
+      "sourceUrl": "https://www.sbdd.org/pdfs/SBDDCHARTER.pdf",
+      "sourceOrg": "South Broward Drainage District",
+      "collectedAt": "2026-11-03T04:13:42.357619+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.357619+00:00",
+      "quote": "(4)    Except as stated herein, all commissioners shall be elected by the qualified\nelectors of the district on a nonpartisan basis. Except as stated herein, the seven\ncommissioners shall be elected from seven single-member zones which shall be identified\nas Zone 1, Zone 2, Zone 3, Zone 4, Zone 5, Zone 6, and Zone 7. The commissioners shall\nbe elected from the registered voters of each respective zone."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:4",
+    "officialName": "South Broward Drainage District \u2014 Zone 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by qualified district electors residing in Zone 4.",
+    "provenance": {
+      "sourceUrl": "https://www.sbdd.org/pdfs/SBDDCHARTER.pdf",
+      "sourceOrg": "South Broward Drainage District",
+      "collectedAt": "2026-11-03T04:13:42.357619+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.357619+00:00",
+      "quote": "(4)    Except as stated herein, all commissioners shall be elected by the qualified\nelectors of the district on a nonpartisan basis. Except as stated herein, the seven\ncommissioners shall be elected from seven single-member zones which shall be identified\nas Zone 1, Zone 2, Zone 3, Zone 4, Zone 5, Zone 6, and Zone 7. The commissioners shall\nbe elected from the registered voters of each respective zone."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:south_broward_drainage_district/zone:5",
+    "officialName": "South Broward Drainage District \u2014 Zone 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Elected only by qualified district electors residing in Zone 5.",
+    "provenance": {
+      "sourceUrl": "https://www.sbdd.org/pdfs/SBDDCHARTER.pdf",
+      "sourceOrg": "South Broward Drainage District",
+      "collectedAt": "2026-11-03T04:13:42.357619+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.357619+00:00",
+      "quote": "(4)    Except as stated herein, all commissioners shall be elected by the qualified\nelectors of the district on a nonpartisan basis. Except as stated herein, the seven\ncommissioners shall be elected from seven single-member zones which shall be identified\nas Zone 1, Zone 2, Zone 3, Zone 4, Zone 5, Zone 6, and Zone 7. The commissioners shall\nbe elected from the registered voters of each respective zone."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:sunshine_water_control_district",
+    "officialName": "Sunshine Water Control District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Numbered seat elected by qualified electors of the Sunshine Water Control District. The seat is not a geographic subdistrict.",
+    "provenance": {
+      "sourceUrl": "https://www.sunshinewcd.net/_assets/documents/fy-2024/2024-04-10-SWCD-agenda.pdf?v=1763484101",
+      "sourceOrg": "Sunshine Water Control District",
+      "collectedAt": "2026-11-03T04:13:42.360901+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.360901+00:00",
+      "quote": "WHEREAS the Charter requires the District call for a general election on November 5, 2024\n(\u201cElection\u201d) so that qualified voters in the District may elect a Board of Supervisors (\u201cBoard\u201d) to seats\nspecifically designated as Seat 1, Seat 2, Seat 3, Seat 4, and Seat 5; and"
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:turtle_run_community_development_district",
+    "officialName": "Turtle Run Community Development District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Numbered seat elected by qualified electors of the Turtle Run Community Development District. The seat is not a geographic subdistrict.",
+    "provenance": {
+      "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+      "sourceOrg": "Florida Legislature",
+      "collectedAt": "2026-11-03T04:13:42.652398+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.652398+00:00",
+      "quote": "2.a. Regardless of whether a district has proposed to levy ad valorem taxes, commencing 6 years after the initial appointment of members or, for a district exceeding 5,000 acres in area or for a compact, urban, mixed-use district, 10 years after the initial appointment of members, the position of each member whose term has expired shall be filled by a qualified elector of the district, elected by the qualified electors of the district. However, for those districts established after June 21, 1991, and for those existing districts established after December 31, 1983, which have less than 50 qualified electors on June 21, 1991, sub-subparagraphs b. and d. shall apply. If, in the 6th year after the initial appointment of members, or 10 years after such initial appointment for districts exceeding 5,000 acres in area or for a compact, urban, mixed-use district, there are not at least 250 qualified electors in the district, or for a district exceeding 5,000 acres or for a compact, urban, mixed-use district, there are not at least 500 qualified electors, members of the board shall continue to be elected by landowners."
+    },
+    "geometryIncluded": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:walnut_creek_community_development_district",
+    "officialName": "Walnut Creek Community Development District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "readerMappingOwner": "River",
+    "electorateRule": "Numbered seat elected by qualified electors of the Walnut Creek Community Development District. The seat is not a geographic subdistrict.",
+    "provenance": {
+      "sourceUrl": "https://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0190/Sections/0190.006.html",
+      "sourceOrg": "Florida Legislature",
+      "collectedAt": "2026-11-03T04:13:42.652398+00:00",
+      "verifiedAt": "2026-11-03T04:13:42.652398+00:00",
+      "quote": "2.a. Regardless of whether a district has proposed to levy ad valorem taxes, commencing 6 years after the initial appointment of members or, for a district exceeding 5,000 acres in area or for a compact, urban, mixed-use district, 10 years after the initial appointment of members, the position of each member whose term has expired shall be filled by a qualified elector of the district, elected by the qualified electors of the district. However, for those districts established after June 21, 1991, and for those existing districts established after December 31, 1983, which have less than 50 qualified electors on June 21, 1991, sub-subparagraphs b. and d. shall apply. If, in the 6th year after the initial appointment of members, or 10 years after such initial appointment for districts exceeding 5,000 acres in area or for a compact, urban, mixed-use district, there are not at least 250 qualified electors in the district, or for a district exceeding 5,000 acres or for a compact, urban, mixed-use district, there are not at least 500 qualified electors, members of the board shall continue to be elected by landowners."
+    },
+    "geometryIncluded": false
+  }
+]

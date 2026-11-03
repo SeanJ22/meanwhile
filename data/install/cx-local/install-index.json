@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:35:43.718646+00:00",
+  "preparedAt": "2026-11-03T04:35:50.295453+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -409,18 +409,32 @@
         "Numbered at-large city and Edgewood school places use their whole exact government electorate. Somerset single-member districts, commissioner precincts, justice precincts, MUD1, appraisal, aquifer and regional judicial territory retain precise separate division keys. Exact unmatched reader memberships remain listed in the installation manifest; no electoral district is widened to Bexar County.",
         "Blank write-in lines are not people. Separately named declared write-in certification remains acquisition work. This packet establishes all named candidate office blocks printed in the two linked current generic sample documents; individualized address-specific sample parity and exact district reader memberships remain open."
       ]
+    },
+    {
+      "state": "FL",
+      "county": "Broward",
+      "populationRank": 17,
+      "manifest": "FL/broward/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 61,
+      "measureContests": 0,
+      "candidacies": 146,
+      "newContests": 56,
+      "refreshedContests": 5,
+      "sourceInputSha256": "1335099889b97ccb478d995fb1119ad2cbc39b033ad28e0262de717d2fbdb141",
+      "coverage": "Complete current official final local named-candidate lists:56CANDIDACY races141names plus5RETENTION questions5judges=61fields146names. Actual November sample verification PARTIAL:Hollywood3races7names,Hallandale2races5names. Full county ballot/style census, remaining actualsamples, local measures, write-ins and3multimembervote limits pending."
     }
   ],
   "totals": {
-    "countiesPrepared": 16,
-    "packetsPrepared": 16,
-    "candidateAndRetentionContests": 1323,
+    "countiesPrepared": 17,
+    "packetsPrepared": 17,
+    "candidateAndRetentionContests": 1384,
     "measureContests": 71,
-    "candidacyEntries": 2920,
-    "newContestEntriesAgainstCheckedInBaseline": 1062,
-    "distinctPreparedContestIds": 1385,
-    "distinctPreparedCandidateIds": 2899,
-    "distinctNewContestsAgainstCheckedInBaseline": 1056
+    "candidacyEntries": 3066,
+    "newContestEntriesAgainstCheckedInBaseline": 1118,
+    "distinctPreparedContestIds": 1446,
+    "distinctPreparedCandidateIds": 3045,
+    "distinctNewContestsAgainstCheckedInBaseline": 1112
   },
   "remainingWork": [
     {

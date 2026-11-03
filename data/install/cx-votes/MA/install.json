@@ -114,7 +114,15 @@
   "validation": {
     "translationRecordIssue": "PASS",
     "manualProjectionCandidate": "PASS",
-    "withMeasureTranslations": "PASS: 8 exact current contest attachments"
+    "withMeasureTranslations": "PASS: 8 exact current contest attachments",
+    "freshReaderReplay": "PASS: all nine current statewide questions have substantive what/yes/no explanations after this packet"
   },
-  "productionWritesByThisBundle": false
+  "productionWritesByThisBundle": false,
+  "coverage": {
+    "heldStatewideQuestions": 9,
+    "preparedExplanationOrAttachmentRepairs": 8,
+    "alreadyAttachedQuestion": 9,
+    "allHeldQuestionsExplainedAfterInstall": true,
+    "localMeasureCompleteness": "Official local inventories remain under acquisition; this count concerns current held statewide Questions1–9."
+  }
 }

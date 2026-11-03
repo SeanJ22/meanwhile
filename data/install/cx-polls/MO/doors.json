@@ -1,0 +1,54 @@
+[
+  {
+    "id": "cx-polls-mo-st-louis-election-day-2026",
+    "publisher": "City of St. Louis Board of Election Commissioners",
+    "url": "https://www.stlouis-mo.gov/government/departments/board-election-commissioners/voter/polling-places/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "MO",
+      "ocdId": "ocd-division/country:us/state:mo/county:st_louis_city",
+      "name": "St. Louis city",
+      "countyFips": "29510"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.stlouis-mo.gov/government/departments/board-election-commissioners/voter/polling-places/",
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "format": "html",
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "date": "November 3, 2026",
+        "hours": "On election day polls open at 6 AM and close at 7 PM."
+      },
+      "records": {
+        "within": {
+          "pattern": "<h2 id=\"activePP\">[\\s\\S]*?</TABLE>"
+        },
+        "pattern": "<TR>\\s*<TD>(?!Machacek Library)[\\s\\S]*?</TR>",
+        "fields": {
+          "name": {
+            "pattern": "<TD>([\\s\\S]*?)</TD>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<a[^>]+>([^<]+)</a>",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "<br>\\s*([\\s\\S]*?)</td>",
+            "group": 1
+          }
+        }
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:48:52.558Z",
+      "detail": "Fresh official city-wide November 3 list. Machacek Library row is excluded because its own notice moves voting across the street to the separately listed Storyline Southwest Church."
+    }
+  }
+]

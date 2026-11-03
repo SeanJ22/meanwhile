@@ -1,0 +1,57 @@
+{
+  "kind": "CX_POLLS_VOTING_DATA_INSTALL",
+  "state": "MO",
+  "step": "CX-POLLS-MO",
+  "status": "READY_FOR_RIVER_SOURCE_INSTALL",
+  "productionWritesByThisBundle": false,
+  "appCodeChanges": false,
+  "contractId": "voting-sites:MO",
+  "readyDoors": "doors.json",
+  "sourceCaptures": "sources.json",
+  "validationFile": "checks.json",
+  "coverage": {
+    "scope": "St Louis city",
+    "countyFips": [
+      "29510"
+    ],
+    "counts": {
+      "electionDayVoteCenters": 56
+    },
+    "statewideComplete": false
+  },
+  "sourceOnlyPrepared": true,
+  "liveStatus": "Prepared data awaits River installation and live verification",
+  "limitations": [
+    "Coverage is limited to St Louis city; other Missouri counties remain open.",
+    "Official table includes superseded MachacekLibrary row directing voters across the street to separately listed StorylineSouthwestChurch; source mapping excludes that superseded row and excludes the early-only second table.",
+    "Live installation and reader verification remain River work."
+  ],
+  "existingInstallOperation": {
+    "register": {
+      "module": "lib/ballot/voting-source-publication.ts",
+      "function": "saveVotingSourceDoor",
+      "arguments": [
+        "context.repos.doors",
+        "each door from doors.json",
+        "actual install timestamp"
+      ]
+    },
+    "refresh": {
+      "module": "scripts/fetch-voting-sites.mts",
+      "function": "refreshVotingSources",
+      "arguments": {
+        "state": "MO",
+        "store": "existing PostgresRoutineDataStore",
+        "context": "existing workerPublicationContext",
+        "seeds": "ready doors from doors.json"
+      }
+    },
+    "productionWriteContext": "River performs installation through the existing authorized worker publication context."
+  },
+  "installOrder": [
+    "Use the saved source captures and their hashes for this data handoff. The savedDocument encoding is the existing VotingRawCapture gzip-base64 format.",
+    "Register doors.json with saveVotingSourceDoor; preserve unrelated source mappings and verified holdings.",
+    "Refresh the registered sources through refreshVotingSources in the existing authorized publication context.",
+    "Check real residential lookups in the named coverage on the live site. Live POST verification was rejected by automatic approval review under the data-only/no-production-writes instruction."
+  ]
+}

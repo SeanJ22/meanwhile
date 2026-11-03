@@ -1,0 +1,61 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "KS",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:KS",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ks-cx-2026-emporia-recreation-sales-tax",
+      "title": "Emporia — Recreation facility sales tax",
+      "ocdId": "ocd-division/country:us/state:ks/place:emporia",
+      "sourceUrl": "https://www.emporiaks.gov/1600/2026-City-of-Emporia-Ballot-Information"
+    },
+    {
+      "id": "ks-cx-2026-emporia-data-centers",
+      "title": "Emporia — High-impact data center ordinance",
+      "ocdId": "ocd-division/country:us/state:ks/place:emporia",
+      "sourceUrl": "https://www.emporiaks.gov/1600/2026-City-of-Emporia-Ballot-Information"
+    },
+    {
+      "id": "ks-cx-2026-emporia-battery-storage",
+      "title": "Emporia — Battery energy storage ordinance",
+      "ocdId": "ocd-division/country:us/state:ks/place:emporia",
+      "sourceUrl": "https://www.emporiaks.gov/1600/2026-City-of-Emporia-Ballot-Information"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion.",
+    "officialCityListedQuestions": 3,
+    "preparedCityQuestions": 3
+  },
+  "validation": {
+    "state": "KS",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "sourceReview": "All3 current City-listed questions, complete officialstatements for2/3, signed calling resolutions with full proposedordinances. Native operative pages visuallyread and derivedOCR explicitlylabeled. Data-center enactment courtcondition is separate from BESS retained-right-of-review; no latercourtdecision or caseoutcome asserted. Shared nativeHTML has1 publicbrowserkey redacted, originalnativeSHA and storedsanitizedSHA separate.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

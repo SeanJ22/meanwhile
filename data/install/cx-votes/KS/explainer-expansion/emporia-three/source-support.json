@@ -1,0 +1,138 @@
+[
+  {
+    "contestId": "ks-cx-2026-emporia-recreation-sales-tax",
+    "sourceUrl": "https://www.emporiaks.gov/1600/2026-City-of-Emporia-Ballot-Information",
+    "rawHash": "3b16bb36ba800a3e358d29c858cfae2ef74029c163e1e2e17b330ebdd904ebca",
+    "sourceFile": "sources/9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e.source",
+    "sourceTextFile": "sources/3a1655d592d07b5572955e1b258554da827f9a40f86b914827548fe58e874a5a.txt",
+    "excerpt": "Shall the City of Emporia, Kansas, be authorized to impose a one-quarter percent (0.25%) Citywide retailers' sales tax, the revenue from which will be used to pay the costs to acquire, construct, furnish and equip a recreation facility in the City and to make other recreational improvements and quality of life enhancements in the City, and all improvements related thereto (the \"Projects\"), including payment of debt service on financings issued for the Projects, with the collection of such sales tax to commence on April I, 2027, or as soon thereafter as permitted by law; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Emporia, Kansas, be authorized to impose a one-quarter percent (0.25%) Citywide retailers' sales tax, the revenue from which will be used to pay the costs to acquire, construct, furnish and equip a recreation facility in the City and to make other recreational improvements and quality of life enhancements in the City, and all improvements related thereto (the \"Projects\"), including payment of debt service on financings issued for the Projects, with the collection of such sales tax to commence on April I, 2027, or as soon thereafter as permitted by law; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended?"
+      ],
+      "yesMeans": [
+        "Shall the City of Emporia, Kansas, be authorized to impose a one-quarter percent (0.25%) Citywide retailers' sales tax, the revenue from which will be used to pay the costs to acquire, construct, furnish and equip a recreation facility in the City and to make other recreational improvements and quality of life enhancements in the City, and all improvements related thereto (the \"Projects\"), including payment of debt service on financings issued for the Projects, with the collection of such sales tax to commence on April I, 2027, or as soon thereafter as permitted by law; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended?"
+      ],
+      "noMeans": [
+        "Shall the City of Emporia, Kansas, be authorized to impose a one-quarter percent (0.25%) Citywide retailers' sales tax, the revenue from which will be used to pay the costs to acquire, construct, furnish and equip a recreation facility in the City and to make other recreational improvements and quality of life enhancements in the City, and all improvements related thereto (the \"Projects\"), including payment of debt service on financings issued for the Projects, with the collection of such sales tax to commence on April I, 2027, or as soon thereafter as permitted by law; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended?"
+      ]
+    },
+    "semanticConditions": [
+      "Official City current question/statement and adopted calling resolution checked with operative proposed ordinance. Neither public-safety/policy predictions in proposal preamble nor existing private projects are treated as established effects."
+    ],
+    "textExtraction": {
+      "method": "Native CityHTML text nodes; originalnativeHTML hash and sanitizedstoredhash distinguished"
+    },
+    "inventoryScope": "All three City-listed current Emporia questions; other LyonCounty/local inventories remain open. Not an all-Kansas or independent local-election completeness claim.",
+    "storedSourceHash": "9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e",
+    "sourceSanitization": {
+      "nativeSourceSha256": "3b16bb36ba800a3e358d29c858cfae2ef74029c163e1e2e17b330ebdd904ebca",
+      "storedSanitizedSha256": "9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e",
+      "redactions": 1,
+      "representation": "Native governmentHTML with unrelated public browser key redacted; storedcopy is not hash-identical to nativebytes."
+    },
+    "partSupport": {
+      "nativeResolutionUrl": "https://www.emporiaks.gov/DocumentCenter/View/9121/Resolution-3798-Special-Ballot-Question-1-for-25-Cent-Citywide-Sales-Tax-Rec-Center-PDF",
+      "derivedOcr": "sources/f2a9bc8d89589fed42bad476f5009d6f94fab80995852fb70c6e22cca3bcbec2.txt",
+      "visualPages": [
+        1,
+        2
+      ],
+      "officialNumber": "1",
+      "election": "City official page and signed resolution expressly say November3,2026; wholeCityelectorate.",
+      "supportingCaptures": "source-manifest.json"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-emporia-data-centers",
+    "sourceUrl": "https://www.emporiaks.gov/1600/2026-City-of-Emporia-Ballot-Information",
+    "rawHash": "3b16bb36ba800a3e358d29c858cfae2ef74029c163e1e2e17b330ebdd904ebca",
+    "sourceFile": "sources/9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e.source",
+    "sourceTextFile": "sources/3a1655d592d07b5572955e1b258554da827f9a40f86b914827548fe58e874a5a.txt",
+    "excerpt": "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of High Impact Data Centers**",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of High Impact Data Centers**"
+      ],
+      "yesMeans": [
+        "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of High Impact Data Centers**"
+      ],
+      "noMeans": [
+        "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of High Impact Data Centers**"
+      ]
+    },
+    "semanticConditions": [
+      "Official City current question/statement and adopted calling resolution checked with operative proposed ordinance. Neither public-safety/policy predictions in proposal preamble nor existing private projects are treated as established effects."
+    ],
+    "textExtraction": {
+      "method": "Native CityHTML text nodes; originalnativeHTML hash and sanitizedstoredhash distinguished"
+    },
+    "inventoryScope": "All three City-listed current Emporia questions; other LyonCounty/local inventories remain open. Not an all-Kansas or independent local-election completeness claim.",
+    "storedSourceHash": "9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e",
+    "sourceSanitization": {
+      "nativeSourceSha256": "3b16bb36ba800a3e358d29c858cfae2ef74029c163e1e2e17b330ebdd904ebca",
+      "storedSanitizedSha256": "9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e",
+      "redactions": 1,
+      "representation": "Native governmentHTML with unrelated public browser key redacted; storedcopy is not hash-identical to nativebytes."
+    },
+    "partSupport": {
+      "nativeResolutionUrl": "https://www.emporiaks.gov/DocumentCenter/View/9120/Resolution-3799-Ballot-Question-2-Prohibit-Installation-and-Operation-of-High-Impact-Data-Centers-PDF",
+      "derivedOcr": "sources/95e7c6d4c4bc378d3a6e3cb185edf43d0f3c91d16159d311530cc002b48a7f48.txt",
+      "visualPages": [
+        3,
+        7,
+        8
+      ],
+      "officialNumber": "2",
+      "election": "City official page and signed resolution expressly say November3,2026; wholeCityelectorate.",
+      "supportingCaptures": "source-manifest.json"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-emporia-battery-storage",
+    "sourceUrl": "https://www.emporiaks.gov/1600/2026-City-of-Emporia-Ballot-Information",
+    "rawHash": "3b16bb36ba800a3e358d29c858cfae2ef74029c163e1e2e17b330ebdd904ebca",
+    "sourceFile": "sources/9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e.source",
+    "sourceTextFile": "sources/3a1655d592d07b5572955e1b258554da827f9a40f86b914827548fe58e874a5a.txt",
+    "excerpt": "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of Type 2 and Type 3 Battery Energy Storage Systems**",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of Type 2 and Type 3 Battery Energy Storage Systems**"
+      ],
+      "yesMeans": [
+        "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of Type 2 and Type 3 Battery Energy Storage Systems**"
+      ],
+      "noMeans": [
+        "Shall the following ordinance be adopted? **An Ordinance of the City of Emporia, Kansas Prohibiting the Installation and Operation of Type 2 and Type 3 Battery Energy Storage Systems**"
+      ]
+    },
+    "semanticConditions": [
+      "Official City current question/statement and adopted calling resolution checked with operative proposed ordinance. Neither public-safety/policy predictions in proposal preamble nor existing private projects are treated as established effects."
+    ],
+    "textExtraction": {
+      "method": "Native CityHTML text nodes; originalnativeHTML hash and sanitizedstoredhash distinguished"
+    },
+    "inventoryScope": "All three City-listed current Emporia questions; other LyonCounty/local inventories remain open. Not an all-Kansas or independent local-election completeness claim.",
+    "storedSourceHash": "9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e",
+    "sourceSanitization": {
+      "nativeSourceSha256": "3b16bb36ba800a3e358d29c858cfae2ef74029c163e1e2e17b330ebdd904ebca",
+      "storedSanitizedSha256": "9261334456a29d86f1490a8f206e9aabba31e53325175bce650a5eebedbc389e",
+      "redactions": 1,
+      "representation": "Native governmentHTML with unrelated public browser key redacted; storedcopy is not hash-identical to nativebytes."
+    },
+    "partSupport": {
+      "nativeResolutionUrl": "https://www.emporiaks.gov/DocumentCenter/View/9119/Resolution-3800-Ballot-Question-3-Prohibit-Tier-2-and-Tier-3-Battery-Energy-Storage-Systems-PDF",
+      "derivedOcr": "sources/c2c489949686902445b13f4c9f59dc55e7c8cd1dc14353f0b9e1cc427bb4cb03.txt",
+      "visualPages": [
+        7,
+        8
+      ],
+      "officialNumber": "3",
+      "election": "City official page and signed resolution expressly say November3,2026; wholeCityelectorate.",
+      "supportingCaptures": "source-manifest.json"
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

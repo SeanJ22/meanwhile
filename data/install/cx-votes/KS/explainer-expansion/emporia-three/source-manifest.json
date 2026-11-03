@@ -1,0 +1,107 @@
+[
+  {
+    "requestedUrl": "https://www.emporiaks.gov/DocumentCenter/View/9121/Resolution-3798-Special-Ballot-Question-1-for-25-Cent-Citywide-Sales-Tax-Rec-Center-PDF",
+    "finalUrl": "https://www.emporiaks.gov/DocumentCenter/View/9121/Resolution-3798-Special-Ballot-Question-1-for-25-Cent-Citywide-Sales-Tax-Rec-Center-PDF",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:01:11.908902+00:00",
+    "rawHash": "d5000e754ef4c62e27939c52b4cc86f56f9c04e446ab9d654434009c20d8b68c",
+    "sourceFile": "sources/d5000e754ef4c62e27939c52b4cc86f56f9c04e446ab9d654434009c20d8b68c.pdf",
+    "sourceTextFile": "sources/f2a9bc8d89589fed42bad476f5009d6f94fab80995852fb70c6e22cca3bcbec2.txt",
+    "extractedTextSha256": "f2a9bc8d89589fed42bad476f5009d6f94fab80995852fb70c6e22cca3bcbec2",
+    "representation": "Original nativePDF; localTesseractOCR is derived, not native/selectablePDFtext",
+    "nativePages": 14,
+    "visuallyReadOperativePages": [
+      1,
+      2
+    ]
+  },
+  {
+    "sourceFile": "sources/60004ad24bf2e6afff6d8add361f6104e098bf5e72108f5ad2a4954a23e11509.png",
+    "storedSha256": "60004ad24bf2e6afff6d8add361f6104e098bf5e72108f5ad2a4954a23e11509",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 1,
+    "nativePdfSha256": "d5000e754ef4c62e27939c52b4cc86f56f9c04e446ab9d654434009c20d8b68c",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "sourceFile": "sources/02f4f782f74d96cdd5b6af260ae3536e2dedcb394687ed9e010de45e5de720e0.png",
+    "storedSha256": "02f4f782f74d96cdd5b6af260ae3536e2dedcb394687ed9e010de45e5de720e0",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 2,
+    "nativePdfSha256": "d5000e754ef4c62e27939c52b4cc86f56f9c04e446ab9d654434009c20d8b68c",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "requestedUrl": "https://www.emporiaks.gov/DocumentCenter/View/9120/Resolution-3799-Ballot-Question-2-Prohibit-Installation-and-Operation-of-High-Impact-Data-Centers-PDF",
+    "finalUrl": "https://www.emporiaks.gov/DocumentCenter/View/9120/Resolution-3799-Ballot-Question-2-Prohibit-Installation-and-Operation-of-High-Impact-Data-Centers-PDF",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:01:13.834791+00:00",
+    "rawHash": "0105e954553b6f48734550e38d7bbb6ebd32cc82c5187f2859f214bd640eb63b",
+    "sourceFile": "sources/0105e954553b6f48734550e38d7bbb6ebd32cc82c5187f2859f214bd640eb63b.pdf",
+    "sourceTextFile": "sources/95e7c6d4c4bc378d3a6e3cb185edf43d0f3c91d16159d311530cc002b48a7f48.txt",
+    "extractedTextSha256": "95e7c6d4c4bc378d3a6e3cb185edf43d0f3c91d16159d311530cc002b48a7f48",
+    "representation": "Original nativePDF; localTesseractOCR is derived, not native/selectablePDFtext",
+    "nativePages": 17,
+    "visuallyReadOperativePages": [
+      3,
+      7,
+      8
+    ]
+  },
+  {
+    "sourceFile": "sources/c756a946ea029af56924bf1d577d14ad3c62dfbf7701c9b6ce3f738475f87ae9.png",
+    "storedSha256": "c756a946ea029af56924bf1d577d14ad3c62dfbf7701c9b6ce3f738475f87ae9",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 3,
+    "nativePdfSha256": "0105e954553b6f48734550e38d7bbb6ebd32cc82c5187f2859f214bd640eb63b",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "sourceFile": "sources/424fd377d36eaef9c6e2b3fd15167fa5e0d05823f4cc94397fef2fcbd5e2571d.png",
+    "storedSha256": "424fd377d36eaef9c6e2b3fd15167fa5e0d05823f4cc94397fef2fcbd5e2571d",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 7,
+    "nativePdfSha256": "0105e954553b6f48734550e38d7bbb6ebd32cc82c5187f2859f214bd640eb63b",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "sourceFile": "sources/d96b6b5f5af46fb9493516a4ed0c7b52c1d1696885783a6099b2c6a015d65a03.png",
+    "storedSha256": "d96b6b5f5af46fb9493516a4ed0c7b52c1d1696885783a6099b2c6a015d65a03",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 8,
+    "nativePdfSha256": "0105e954553b6f48734550e38d7bbb6ebd32cc82c5187f2859f214bd640eb63b",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "requestedUrl": "https://www.emporiaks.gov/DocumentCenter/View/9119/Resolution-3800-Ballot-Question-3-Prohibit-Tier-2-and-Tier-3-Battery-Energy-Storage-Systems-PDF",
+    "finalUrl": "https://www.emporiaks.gov/DocumentCenter/View/9119/Resolution-3800-Ballot-Question-3-Prohibit-Tier-2-and-Tier-3-Battery-Energy-Storage-Systems-PDF",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:01:14.399794+00:00",
+    "rawHash": "c9a94abab3c0241390471037f20a1e5410f1b5b0d0ae6252072119ef830eb025",
+    "sourceFile": "sources/c9a94abab3c0241390471037f20a1e5410f1b5b0d0ae6252072119ef830eb025.pdf",
+    "sourceTextFile": "sources/c2c489949686902445b13f4c9f59dc55e7c8cd1dc14353f0b9e1cc427bb4cb03.txt",
+    "extractedTextSha256": "c2c489949686902445b13f4c9f59dc55e7c8cd1dc14353f0b9e1cc427bb4cb03",
+    "representation": "Original nativePDF; localTesseractOCR is derived, not native/selectablePDFtext",
+    "nativePages": 16,
+    "visuallyReadOperativePages": [
+      7,
+      8
+    ]
+  },
+  {
+    "sourceFile": "sources/535c5487178ce74f70571488495f2b54c4e6d17c7ea4b33a836a9bff386b069e.png",
+    "storedSha256": "535c5487178ce74f70571488495f2b54c4e6d17c7ea4b33a836a9bff386b069e",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 7,
+    "nativePdfSha256": "c9a94abab3c0241390471037f20a1e5410f1b5b0d0ae6252072119ef830eb025",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "sourceFile": "sources/22a4e58a0ef7b6d6ca4a68d78de0b2478a144fa067bc9f4498da4e840dd7de42.png",
+    "storedSha256": "22a4e58a0ef7b6d6ca4a68d78de0b2478a144fa067bc9f4498da4e840dd7de42",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 8,
+    "nativePdfSha256": "c9a94abab3c0241390471037f20a1e5410f1b5b0d0ae6252072119ef830eb025",
+    "nativeGovernmentImageClaim": false
+  }
+]

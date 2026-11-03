@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ks-cx-2026-emporia-recreation-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:emporia",
+      "place",
+      "2021275",
+      "Emporia city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Current City published ballot page and signed resolutions expressly call November3,2026 vote among whole City electors; exact existing Emporia Census-place division, notLyonCounty."
+  },
+  {
+    "contestId": "ks-cx-2026-emporia-data-centers",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:emporia",
+      "place",
+      "2021275",
+      "Emporia city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Current City published ballot page and signed resolutions expressly call November3,2026 vote among whole City electors; exact existing Emporia Census-place division, notLyonCounty."
+  },
+  {
+    "contestId": "ks-cx-2026-emporia-battery-storage",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:emporia",
+      "place",
+      "2021275",
+      "Emporia city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Current City published ballot page and signed resolutions expressly call November3,2026 vote among whole City electors; exact existing Emporia Census-place division, notLyonCounty."
+  }
+]

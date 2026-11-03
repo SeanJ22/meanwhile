@@ -1,0 +1,1237 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-2026-fort-lauderdale-charter-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 1 — Qualifications and taking office",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-20.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-20.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:40.639852+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to update the qualifications for the offices of mayor and city commissioner, and provide that elected officials assume office at the first regular City Commission meeting following certification of their election, and that a vice mayor be designated at the City Commission’s first meeting after all elected officials assume office following a regular municipal election and annually thereafter, instead of at the first meeting in April?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 2 — Candidate documentation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:40.640613+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to specify the procedure for candidates for the office of mayor or city commissioner to submit documentation to the City Clerk for review?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 3 — Challenges to candidates",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:40.640613+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to remove the City Commission’s authority to receive affidavits alleging that a candidate for the office of mayor or city commissioner has violated the Charter or is unqualified and make a finding as to whether such candidate violated the Charter or is unqualified, thereby leaving such considerations to the courts?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 4 — Special-meeting notice",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-22.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-22.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.284670+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76",
+            "quote": "Should the City of Fort Lauderdale Charter be amended so that special meetings of the City Commission may be called upon at least seventy-two hours’ notice, except that in the event of an emergency, where there is the potential for imminent harm or the ability to lessen or avert a catastrophe, a special meeting of the City Commission may be called upon such notice as is practicable under the circumstances?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 5 — Civil Service Board",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-23.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-23.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.435016+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to prescribe a method for resolving a tie in nominations to the Civil Service Board Nominating Committee, modify the composition of the Election Board that certifies the results of elections for the classified employees’ recommendation for appointment to the Civil Service Board, and remove the Civil Service Board’s duty to review, consider, and advise the City Manager concerning job class specifications?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 6 — Temporary managers, notices and election wording",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-24.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-24.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.802649+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to delete references to primary elections, remove the requirement of two newspaper publications for public hearings and other types of notice, and distinguish the title of interim city manager, who is appointed in the event of the city manager's resignation or termination, from that of acting city manager, who is appointed during temporary absences of the city manager?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-7",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 7 — City property sales and use agreements",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-25.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-25.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.943684+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to simplify the sale of City-owned personal property such as vehicles, furniture, and equipment, and City-owned land other than parks, to add limitations on lease, license, concession, or other types of use agreements with private parties for the use of City-owned land, and to add limitations on the sale or lease of City-owned land to other governments?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-8",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 8 — Park-land use agreements",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-26.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-26.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:42.183572+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to require a unanimous vote of the entire City Commission for any license agreement, concession agreement, facility use agreement, or other type of use agreement for more than one year for the use of City-owned park land?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-9",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 9 — Police chief reports to Commission",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-27.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-27.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:42.616604+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to establish the Charter position of Police Chief, who shall report directly to the City Commission rather than to the City Manager, and be employed and compensated under such terms and conditions as the City Commission deems appropriate?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-10",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale",
+          "divisionVintage": "2026",
+          "title": "Fort Lauderdale Charter Amendment 10 — Fire chief reports to Commission",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-28.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-28.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:42.945120+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to establish the Charter position of Fire Chief, who shall report directly to the City Commission rather than to the City Manager, and be employed and compensated under such terms and conditions as the City Commission deems appropriate?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "fl-2026-fort-lauderdale-charter-1:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-1",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to update the qualifications for the offices of mayor and city commissioner, and provide that elected officials assume office at the first regular City Commission meeting following certification of their election, and that a vice mayor be designated at the City Commission’s first meeting after all elected officials assume office following a regular municipal election and annually thereafter, instead of at the first meeting in April?",
+          "officialStatement": "AN ORDINANCE OF THE CITY OF FORT LAUDERDALE,\nFLORIDA, AMENDING THE CHARTER OF THE CITY OF\nFORT LAUDERDALE, FLORIDA, CONDITIONED ON THE\nAPPROVAL OF A BALLOT MEASURE, BY UPDATING THE\nQUALIFICATIONS FOR THE OFFICES OF MAYOR AND CITY\nCOMMISSIONER, PROVIDING FOR THE ASSUMPTION OF\nOFFICE AT THE FIRST REGULAR CITY COMMISSION\nMEETING FOLLOWING CERTIFICATION OF AN ELECTION,\nPROVIDING FOR THE DESIGNATION OF A VICE MAYOR AT\nTHE CITY COMMISSION’S FIRST MEETING AFTER ALL\nELECTED OFFICIALS ASSUME OFFICE FOLLOWING A\nREGULAR MUNICIPAL ELECTION AND ANNUALLY\nTHEREAFTER, AND PROVIDING FOR SEVERABILITY,\nREPEAL OF CONFLICTING ORDINANCE PROVISIONS,\nCORRECTION OF SCRIVENER’S ERRORS, AND AN\nEFFECTIVE DATE.\n\nWHEREAS, the Charter Revision Board has recommended to the City\nCommission that certain amendments be made to the Charter of the City of Fort Lauderdale,\nFlorida; and\n\nWHEREAS, the City Commission proposes certain amendments to the Charter\nof the City of Fort Lauderdale, Florida, to be submitted for voter consideration;\n\nNOW, THEREFORE, BE IT ORDAINED BY THE CITY COMMISSION OF THE\nCITY OF FORT LAUDERDALE, FLORIDA:\n\nSECTION 1. That Section 3.03 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 3.03. - Qualification of members;forfeiture-of office.\n\n(a) To be eligible to hold the office of mayor, a candidate shall:\n\n(1) have resided continuously in the City as a permanent resident for\nat_least_twelve_ months immediately preceding the date of\nqualification for such office;\n\n(2) beacitizen of the United States of America;\n\n(3) bean elector of the City at the time of qualification for such office:\n\n(4) hold no other public elective office as of the earlier of the-twe\ndates—{a.} the date he or she would take office, if elected, or ¢b.}\nthe date his or her successor is required to take office; and\n\n4} such public elected officer _mayustshall_ have submitted an\nirrevocable resignation at least ten days prior to the first day of\nqualifying for the sueh-office of mayor;\n\n(5) not be an officer, employee, or serving in any capacity in the\ngovernment of the City at the time of filing a candidate oath in\naccordance with section 7.14 of this charter, except that_a city\ncommissioner may qualify for election to the office of mayor, and\nthe mayor may qualify for reelection subject to section 3.02 of this\ncharter;\n\n(6) reside continuously as_a permanent resident of the City during\nthe term of office; and\n\n(7) be otherwise qualified for such office as provided in this charter.\n\n(b) To be eligible to hold the office of city commissioner a candidate shall:\n\n(1) have resided continuously as a permanent resident of the city\ncommission district for which such candidate seeks office for at\nleast_twelve_ months immediately preceding the date of\nqualification for such office, except that in any year in which there\nhas been a reestablishment of city commission districts (a\n“Reestablishment”), a candidate for the office of city commission\nwhose _permanent_ residence in the City is in a different city\ncommission district as a result of the Reestablishment may seek\noffice as a city commissioner in the city commission district of his\nor her permanent residence that results from the\nReestablishment;\n\n(2) beacitizen of the United States of America:\n\n(3) bean elector of the City at the time of qualification for such office;\n\n(4) hold no other public elective office as of the earlier of the-+we\ndatesta.} the date he or she would take office, if elected, or ¢b.}\nthe date his or her successor is required to take office; and\n\n& such public elected officer _maystshall_ have submitted an\nirrevocable resignation at least ten days prior to the first day of\nqualifying for the sueh-office_of city commissioner;\n\n(5) not be an officer, employee, or serving in any capacity in the\ngovernment of the City at the time of filing a candidate oath in\naccordance with section 7.14 of this charter, except that_a city\ncommissioner serving may qualify for reelection subject to\nsection 3.02 of this charter;\n\n(6) reside continuously as a permanent resident of the district to\nwhich such commissioner is elected during the term of office; and\n\n(7) be otherwise qualified for such office as provided in this charter.\n\n(c) Candidates for election as mayor or city commissioner shall comply\nwith all the rules and regulations set forth in the charter as to their\nconduct. Any candidate for mayor or city commissioner, or any mayor\nor city commissioner who shall cease to possess the qualifications\nrequired herein shall forthwith forfeit his or her office or candidacy.\n\n(d) For purposes of this section, continuous residence as a permanent\nresident for at least twelve months immediately preceding the date of\nqualification for office must be established by providing a copy of at\nleast five of the following to the city clerk:\n\n(1) Florida driver license or identification card _Aumbershowing a\nhome address within the city or district, as applicable;\n\n(2) Florida vehicle registration showing a home address within the\ncity or district, as applicable;\n\n(3) Florida voter registration card showing a home address within the\ncity or district, as applicable;\n\n(4) Certified copy of a recorded declaration of domicile and residency\nshowing a home address within the city or district, as applicable;\n\n(5) Address listed on the last Internal Revenue Service tax return,\nshowing a home address within the city or district, as applicable;\n\n(6) Bank statement and checking account mailing address showing\na home address within the city or district, as applicable;\n\n(7) Proof of payment of utilities ata home address within the city or\ndistrict, as applicable;\n\n(8) Property Appraiser’s record showing ownership of homestead\nproperty within the city or district, as applicable;\n\n(9) An item of mail with a postmark directed to a person’s home\naddress within the city or district, as applicable;\n\n(10) A residential lease showing a home address within the city or\ndistrict, as applicable.\n\nSECTION 2. That Section 3.05 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 3.05. Designation of-vice-may-or_vice mayor.\n\n(a) At its first meeting after all commissioners elected in a municipal\nelection assume office, and annually thereafter until the next\n\nmunicipal election, the-+regulartriennial -election—of 4988-the city\n\ncommission shall, by resolution, designate a district commissioner\n\nas-vice-mayer_vice mayor. -he-vice-mayerselected in1988-shall\n\nSECTION 3.\n\n(b)\n\nServe antl we iret eity-Sermniesien:mecting to-be-nele-aApalt980\nane ones Senhg-ane-at-tne-tret meeting In-Aptil for ever-yea\n\ncommissioneras-vice-mayor, Should a commissioner decline or be\notherwise disqualified from serving in the office of-vice-mayer_vice\n\nmayor, then and in that event, another district commissioner shall be\ndesignated by resolution to serve in such office.\n\nThe-vice-raayor vice mayor shall preside at any meeting of the city\ncommission from which the mayor is absent and shall perform those\n\nfunctions and duties set forth in section 4.04 hereof. Should the\nmayor resign from office or be otherwise unable to continue to serve\n\nas mayor, the-vice-rmayer vice mayor shall serve as mayor until the\nvacancy in the office of mayor shall be filled as provided herein.\n\nThat Section 4.04 of the Charter of the City of Fort Lauderdale, Florida, be, and\n\nis hereby amended to provide as follows:\n\ncommissioner in order to make a motion, or offer a resolution or\nordinance.\n\n(c) He or she may use the title of mayor in any case in which the\nexecution of legal instruments, writings, or other papers so require;\nbut this shall not be considered as conferring upon him or her any of\nthe administrative or judicial functions of a mayor under the general\nlaws of the state, except as herein provided.\n\n(d) | He or she shall be recognized as the official head of the city by the\ncourts for the purposes of serving civil processes; by the government\nin the exercise of military law; and by the public in general for all\nceremonial purposes.\n\n(e) He or she shall exercise all the power and duties of the mayor as\nmay be conferred upon him or her by the city commission in\npursuance of the provisions of this charter, and no others.\n\nSECTION 4. That Section 3.09 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 3.09. Organizational meeting.\n\nassumption of office by the after the certifi cation of alestion resiills ‘7 the\n\nBroward County Canvassing Board, all newly-elected commissioners\nofficials whose election has been certified shall take an oath of office and\n\nassume the duties of office. At+4:00-a.m-_Eastern Standard Time the newly\nelected-city commissioners-shall assume the duties-of office.\n\nSECTION 5. That Section 3.10 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby repealed as follows:\n\nSECTION 6. That this Ordinance shall not take effect unless a corresponding ballot measure\nis approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be\nheld on November 3, 2026. The ballot measure to be submitted shall be in substantially the\nfollowing form:\n\nCHARTER AMENDMENT NO. 1\n\nQUALIFICATIONS FOR ELIGIBILITY TO HOLD OFFICE,\nORGANIZATIONAL MEETING, AND DESIGNATION OF VICE MAYOR\n\nShould the City of Fort Lauderdale Charter be amended to update the\nqualifications for the offices of mayor and city commissioner, and provide that\nelected officials assume office at the first regular City Commission meeting\nfollowing certification of their election, and that a vice mayor be designated at the\nCity Commission’s first meeting after all elected officials assume office following a\nregular municipal election and annually thereafter, instead of at the first meeting in\nApril?\n\n<> YES, for approval\n<> NO, for rejection\n\nSECTION 7. That if any clause, section or other part of this Ordinance shall be held invalid or\nunconstitutional by any court of competent jurisdiction, the remainder of this Ordinance shall not\nbe affected thereby, but shall remain in full force and effect.\n\nSECTION 8. That all ordinances or parts of ordinances in conflict herewith, be and the same\nare hereby repealed.\n\nshall be over the age of twenty-one (21) years;\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 6, ten days after the date of certification of election results by the Broward County Canvassing Board.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-20.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:40.639852+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to update the qualifications for the offices of mayor and city commissioner, and provide that elected officials assume office at the first regular City Commission meeting following certification of their election, and that a vice mayor be designated at the City Commission’s first meeting after all elected officials assume office following a regular municipal election and annually thereafter, instead of at the first meeting in April?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-2:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-2",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to specify the procedure for candidates for the office of mayor or city commissioner to submit documentation to the City Clerk for review?",
+          "officialStatement": "SECTION 1. That Section 3.04 of the Charter of the City of Fort Lauderdale, Florida, be, and is hereby amended to provide as follows: Sec. 3.04. - Judge of elections and qualifications of members. All candidates for the office of mayor or city commissioner shall submit to the city clerk, for_a_ ministerial review, documentation necessary to demonstrate compliance with this charter and applicable law. The city commission shall be the judge of the qualifications of its members, referendums and_att_-municipal elections=and—referendums—and—of the quatifications-ofits- members, subject to review by the courts. At the time that the city commission meets to canvass the results of any election, any registered elector of City of Fort Lauderdale shall be entitled to file with the city commission an affidavit setting out the facts showing that a candidate CODING: Words, symbols, and letters stricken are deletions; words, symbols, and letters underlined are additions. Words, symbols, and letters deuwble-stricken are deletions after first reading; words, symbols, and letters double underlined are additions after first reading. C-26-21 === SOURCE PAGE 2 === ORDINANCE NO. C-26-21 PAGE 2 has violated the provisions of this charter as to the manner of his or her election, or is otherwise unqualified to hold office, and the city commission shall take proof at such meeting and declare the results.\n\nThat this Ordinance shall be in full force and effect, as conditioned in Sections 3 and 4, ten days after the date of certification of election results by the Broward County Canvassing Board. However, in the event neither of the ballot measures set forth in Sections 3 and 4 is approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be held on November 3, 2026, this Ordinance shall not take effect.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:40.640613+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to specify the procedure for candidates for the office of mayor or city commissioner to submit documentation to the City Clerk for review?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-3:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-3",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to remove the City Commission’s authority to receive affidavits alleging that a candidate for the office of mayor or city commissioner has violated the Charter or is unqualified and make a finding as to whether such candidate violated the Charter or is unqualified, thereby leaving such considerations to the courts?",
+          "officialStatement": "SECTION 2. That Section 3.04 of the Charter of the City of Fort Lauderdale, Florida, be, and is hereby amended to provide as follows: Sec. 3.04. - Judge of elections and qualifications of members. The city commission shall be the judge of all municipal elections and referendums and of the qualifications of its members, subject to review by\n\nThat this Ordinance shall be in full force and effect, as conditioned in Sections 3 and 4, ten days after the date of certification of election results by the Broward County Canvassing Board. However, in the event neither of the ballot measures set forth in Sections 3 and 4 is approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be held on November 3, 2026, this Ordinance shall not take effect.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:40.640613+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to remove the City Commission’s authority to receive affidavits alleging that a candidate for the office of mayor or city commissioner has violated the Charter or is unqualified and make a finding as to whether such candidate violated the Charter or is unqualified, thereby leaving such considerations to the courts?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-4:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-4",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended so that special meetings of the City Commission may be called upon at least seventy-two hours’ notice, except that in the event of an emergency, where there is the potential for imminent harm or the ability to lessen or avert a catastrophe, a special meeting of the City Commission may be called upon such notice as is practicable under the circumstances?",
+          "officialStatement": "AN ORDINANCE OF THE CITY OF FORT LAUDERDALE,\nFLORIDA, AMENDING THE CHARTER OF THE CITY OF\nFORT LAUDERDALE, FLORIDA, CONDITIONED ON THE\nAPPROVAL OF A BALLOT MEASURE, BY PROVIDING FOR\nSPECIAL MEETINGS OF THE CITY COMMISSION TO BE\nCALLED UPON AT LEAST SEVENTY-TWO HOURS’ NOTICE,\nEXCEPT THAT IN THE EVENT OF AN EMERGENCY,\nWHERE THERE IS THE POTENTIAL FOR IMMINENT HARM\nOR THE ABILITY TO LESSEN OR AVERT A CATASTROPHE,\nA SPECIAL MEETING OF THE CITY COMMISSION MAY BE\nCALLED UPON SUCH NOTICE AS IS PRACTICABLE UNDER\nTHE CIRCUMSTANCES, AND - PROVIDING FOR\nSEVERABILITY, REPEAL OF CONFLICTING ORDINANCE\nPROVISIONS, CORRECTION OF SCRIVENER’S ERRORS,\nAND AN EFFECTIVE DATE.\n\nWHEREAS, the Charter Revision Board has recommended to the City\nCommission that certain amendments be made to the Charter of the City of Fort Lauderdale,\nFlorida; and\n\nWHEREAS, the City Commission proposes certain amendments to the Charter\nof the City of Fort Lauderdale, Florida, to be submitted for voter consideration;\n\nNOW, THEREFORE, BE IT ORDAINED BY THE CITY COMMISSION OF THE\nCITY OF FORT LAUDERDALE, FLORIDA:\n\nSECTION 1. That Section 3.12 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 3.12. - Special meetings—How called.\n\nThe mayor or the city manager, may call special meetings of the city\n\ncommission upon at least six{6}hours—written-or e-mail notice-seventy-two\n\nhours’ notice prior to any special meeting, except that in the event of an\nemergency as determined by the mayor or the city manager, in consultation\nwith the city attorney, a special meeting of the city commission may be\n\ncalled upon such notice prior to a special meeting for an emergency as is\n\npracticable under the circumstances.te-each-memberthe-city_ manager\ncity auditor city clerk_and city attorney served personally transmitted by e-\nmait-oreftathis-orherusual place-of residence. The-call notice shall state\nthe general purpose of the meeting. For purposes of this section, an\nemergency is any occasion or instance in which there is the potential for\nimminent harm to the public’s health, safety, or property, or where the city\n\nhas the ability to lessen ¢ or avert the threat of catastrophe. =the rogularity oF\n\nSECTION 2. That this Ordinance shall not take effect unless a corresponding ballot measure\nis approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be\n\nheld on November 3, 2026. The ballot measure to be submitted shall be in substantially the\nfollowing form:\n\nCHARTER AMENDMENT NO. 4\nSPECIAL MEETINGS OF THE CITY COMMISSION\n\nShould the City of Fort Lauderdale Charter be amended so that special\nmeetings of the City Commission may be called upon at least seventy-two hours’\nnotice, except that in the event of an emergency, where there is the potential for\nimminent harm or the ability to lessen or avert a catastrophe, a special meeting of\n\nthe City Commission may be called upon such notice as is practicable under the\ncircumstances?\n\n<™ YES, for approval\n<> NO, for rejection\n\nSECTION 3. That if any clause, section or other part of this Ordinance shall be held invalid or\n\nunconstitutional by any court of competent jurisdiction, the remainder of this Ordinance shall not\nbe affected thereby, but shall remain in full force and effect.\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 2, ten days after the date of certification of election results by the Broward County Canvassing Board.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-22.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.284670+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76",
+            "quote": "Should the City of Fort Lauderdale Charter be amended so that special meetings of the City Commission may be called upon at least seventy-two hours’ notice, except that in the event of an emergency, where there is the potential for imminent harm or the ability to lessen or avert a catastrophe, a special meeting of the City Commission may be called upon such notice as is practicable under the circumstances?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-5:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-5",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to prescribe a method for resolving a tie in nominations to the Civil Service Board Nominating Committee, modify the composition of the Election Board that certifies the results of elections for the classified employees’ recommendation for appointment to the Civil Service Board, and remove the Civil Service Board’s duty to review, consider, and advise the City Manager concerning job class specifications?",
+          "officialStatement": "AN ORDINANCE OF THE CITY OF FORT LAUDERDALE,\nFLORIDA, AMENDING THE CHARTER OF THE CITY OF\nFORT LAUDERDALE, FLORIDA, CONDITIONED ON THE\nAPPROVAL OF A BALLOT MEASURE, BY PRESCRIBING A\nMETHOD FOR RESOLVING A TIE IN NOMINATIONS TO THE\nCIVIL SERVICE BOARD NOMINATING COMMITTEE,\nMODIFYING THE COMPOSITION OF THE ELECTION\nBOARD THAT CERTIFIES THE RESULTS OF ELECTIONS\nFOR THE CLASSIFIED EMPLOYEES’ RECOMMENDATION\nFOR APPOINTMENT TO THE CIVIL SERVICE BOARD,\nREMOVING THE CIVIL SERVICE BOARD’S DUTY TO\nREVIEW, CONSIDER, AND ADVISE THE CITY MANAGER\nCONCERNING JOB CLASS’ SPECIFICATIONS, AND\nPROVIDING FOR SEVERABILITY, REPEAL OF\nCONFLICTING ORDINANCE PROVISIONS, CORRECTION\nOF SCRIVENER’S ERRORS, AND AN EFFECTIVE DATE.\n\nWHEREAS, the Charter Revision Board has recommended to the City\nCommission that certain amendments be made to the Charter of the City of Fort Lauderdale,\nFlorida; and\n\nWHEREAS, the City Commission proposes certain amendments to the Charter\nof the City of Fort Lauderdale, Florida, to be submitted for voter consideration;\n\nNOW, THEREFORE, BE IT ORDAINED BY THE CITY COMMISSION OF THE\nCITY OF FORT LAUDERDALE, FLORIDA:\n\nSECTION 1. That Section 6.04 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 6.04. - Civil service board; created; composition.\n\n(a) Purpose of board. There shall be a civil service board, the members\nof which shall be residents and electors of the City of Fort\nLauderdale, who shall be in sympathy with the application of merit\nprinciples in connection with public employment. No member of the\nboard shall hold or be a candidate for any elective public office.\n\n(b)\n\nMembership; appointment, etc. The civil service board shall consist\nof three (3) members, one (1) of whom shall be recommended for\nappointment by the mayor, with approval of city commission; one (1)\nof whom shall be recommended for appointment by the city manager;\nand the third member shall be recommended for appointment by the\nregular employees of the City of Fort Lauderdale who are in the\nclassified service as of May 31 of the year of the appointment. Each\nmember shall be appointed by resolution for a full term of four (4)\nyears, which resolution shall specify upon whose recommendation\nthe member was appointed, and the expiration of his or her term of\noffice. The present members of the board shall serve until the\nexpiration of their terms of office or until their successors are\nappointed and qualified. If the office is vacated by death, resignation,\nremoval or other effective cause prior to expiration of the term, the\nvacancy shall be filled by appointment by the city commission upon\nrecommendation of the proper authority, for the balance of the\nunexpired term. All regular full terms shall be for a period of four (4)\nyears from the expiration of the preceding term. Recommendations\nfor appointment by the mayor and city manager shall be made to the\ncity commission in writing at least twenty (20) days prior to expiration\nof the term of the member whose successor it is the duty of such\nOfficials, respectively, to recommend for appointment.\n\nRecommendations for appointment by the employees shall be made in the\nfollowing manner: At least forty (40) days before expiration of the term of the\nmember to be filled upon recommendation of civil service employees, civil\nservice employees shall be notified that for a period of seven (7) days sealed\nnominations will be received for members of a nominating committee\nrepresenting the civil service employees. Any regular employee in the\nclassified service shall have the right to nominate any other regular employee\nin the classified service as a member of such nominating committee. At the\n\npo ola of seven A days from such notification, ee\n\nthe five (5) employees receiving the highest number of yvotes-nominations\nshall become the nominating committee to nominate up to three (3)\n\ncandidates for the office to be filled. In instances in which there is a tie in\nnominations for the nominating committee, the employee(s) with the highest\nlevel of overall City seniority shall serve on the nominating committee. For the\npurposes of this section, overall City seniority shall be defined as an\nemployee’s length of continuous service with the City. Upon vote of the\nregular employees in the classified service, the person receiving the highest\nnumber of votes, and otherwise qualified, shall be recommended to the city\ncommission for appointment. The city manager's designee and two (2) city\ncormmissioners—appointed_by_the—mayer—members of the nominating\ncommittee shall constitute the election board and shall certify the results to\nthe city commission in writing.\n\nNo person shall be eligible to be a member of the civil service board who is\nan officer or employee of the city or who is serving the city upon an advisory\nboard or in any other capacity (except as a member of the civil service board),\nnor shall the husband or wife of such a person or other relative (as defined\nby law) of such a person be eligible for membership.\n\nIf, because of lack of sufficient time, or other valid reason, except willful\nfailure to so do, proper nominations are not made before the expiration of a\nterm, the incumbent shall hold over until his or her successor is appointed\nand qualified, but the term of the new appointee shall run for the balance of\nthe full four-year term only. If, for any reason the mayor, city manager or\nemployees of the city should fail to make their respective recommendations\nfor appointment within sixty (60) days after expiration of a term, the city\ncommission shall appoint a qualified person to membership upon said board,\nwhose term shall run for the balance of the unexpired term only.\n\nAll members of the board shall file an oath to support and defend the\nConstitution of the United States and of the State of Florida, and to faithfully\nperform the duties of the office. The members of the board shall elect one (1)\nof their members to serve as a chairman for a two-year term.\n\n(c) Duties of the board. The board shall:\n\n(1) Hear appeals as outlined in section 6.04(d).\n\n(2) Review and consider additional personnel rules or\namendments to existing rules that may be recommended for\nadoption, and approve or disapprove, by motion, these rules.\n\n(43) Meet at such times and places as shall be required to conduct\nthe business of the board as outlined in paragraphs (1);_and\n(2)-and+3}, above. Time and place of the meeting shall be\nspecified by the call of the chairman of the board or by a\nmajority of the board. All meetings shall be open to the public.\nNotice of each meeting shall be given in writing to each board\n\nmember by the secretary of the board. Two (2) members shall\nconstitute a quorum for the transaction of business.\n\n(d) Appeals to the board. Regular employees subject to personnel rules\nand regulations who are suspended, dismissed or demoted, or who\nbelieve the personnel rules have been improperly applied or\nmisinterpreted to their detriment, may appeal to the board within\nthirty (30) calendar days from the date such action is taken, or from\nthe date an employee by use of reasonable diligence should have\nbecome aware of the action causing the appeal, and the board shall\nhear and take action upon such appeal. Upon such appeal, the\nappealing employee and the city management staff shall have the\nright to be heard publicly and to present evidence. At the hearing of\nsuch appeal, technical rules of evidence shall not apply. The board\nshall make the final decision disposing of the appeal. If such final\ndecision is in favor of the employee, the city manager shall reinstate\nthe employee without loss of pay and benefits.\n\n(e) Powers of the board. The board, each member of the board, and the\nsecretary to the board, who shall be designated by the city manager,\nshall have power to administer oaths, subpoena witnesses, and\ncompel the production of books and papers pertinent to any\ninvestigation or hearing authorized by this charter. Any person who\nshall fail to appear in response to a subpoena or to answer any\n\nquestion or produce any books or papers pertinent to any such\ninvestigation or hearing or who shall knowingly give false testimony\ntherein shall be guilty of an offense and punishable as provided in\nsection 1-6 of the Code.\n\nSECTION 2. That this Ordinance shall not take effect unless a corresponding ballot measure\nis approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be\nheld on November 3, 2026. The ballot measure to be submitted shall be in substantially the\nfollowing form:\n\nCHARTER AMENDMENT NO. 5\n\nCIVIL SERVICE BOARD\n\nShould the City of Fort Lauderdale Charter be amended to prescribe a\nmethod for resolving a tie in nominations to the Civil Service Board Nominating\nCommittee, modify the composition of the Election Board that certifies the results\nof elections for the classified employees’ recommendation for appointment to the\nCivil Service Board, and remove the Civil Service Board’s duty to review, consider,\nand advise the City Manager concerning job class specifications?\n\n<> YES, for approval\n<> NO, for rejection\n\nSECTION 3. That if any clause, section or other part of this Ordinance shall be held invalid or\nunconstitutional by any court of competent jurisdiction, the remainder of this Ordinance shall not\nbe affected thereby, but shall remain in full force and effect.\n\nSECTION 4. That all ordinances or parts of ordinances in conflict herewith, be and the same\nare hereby repealed.\n\nSECTION 5. That, at the direction of the City Attorney, the publisher of the Code of\nOrdinances of the City of Fort Lauderdale, Florida, is authorized to conform chapter, article,\nsection, subsection, and clause numbers and letters, and capitalization, set forth in this\nOrdinance, to the numbering, lettering, and capitalization structure established in the Code of\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 2, ten days after the date of certification of election results by the Broward County Canvassing Board. yin) dmnible Mayor DEAN J. TRANTALIS",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-23.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.435016+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to prescribe a method for resolving a tie in nominations to the Civil Service Board Nominating Committee, modify the composition of the Election Board that certifies the results of elections for the classified employees’ recommendation for appointment to the Civil Service Board, and remove the Civil Service Board’s duty to review, consider, and advise the City Manager concerning job class specifications?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-6:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-6",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to delete references to primary elections, remove the requirement of two newspaper publications for public hearings and other types of notice, and distinguish the title of interim city manager, who is appointed in the event of the city manager's resignation or termination, from that of acting city manager, who is appointed during temporary absences of the city manager?",
+          "officialStatement": "Florida; and\n\nAN ORDINANCE OF THE CITY OF FORT LAUDERDALE,\nFLORIDA, AMENDING THE CHARTER OF THE CITY OF\nFORT LAUDERDALE, FLORIDA, CONDITIONED ON THE\nAPPROVAL OF A BALLOT MEASURE, BY DELETING\nREFERENCES TO PRIMARY ELECTIONS, REMOVING THE\nREQUIREMENT OF TWO NEWSPAPER PUBLICATIONS\nFOR PUBLIC HEARINGS AND OTHER TYPES OF NOTICE,\nAND DISTINGUISHING AN INTERIM CITY MANAGER IN THE\nEVENT OF THE CITY MANAGER’S RESIGNATION OR\nTERMINATION FROM AN ACTING CITY MANAGER DURING\nTEMPORARY ABSENCES OF THE CITY MANAGER, AND\nPROVIDING FOR ~~ SEVERABILITY, REPEAL OF\nCONFLICTING ORDINANCE PROVISIONS, CORRECTION\nOF SCRIVENER’S ERRORS, AND AN EFFECTIVE DATE.\n\nWHEREAS, the Charter Revision Board has recommended to the City\nCommission that certain amendments be made to the Charter of the City of Fort Lauderdale,\n\nWHEREAS, the City Commission proposes certain amendments to the Charter\n\nof the City of Fort Lauderdale, Florida, to be submitted for voter consideration;\n\nNOW, THEREFORE, BE IT ORDAINED BY THE CITY COMMISSION OF THE\n\nCITY OF FORT LAUDERDALE, FLORIDA:\n\nSECTION 1.\n\nThat Section 4.06 of the Charter of the City of Fort Lauderdale, Florida, be, and\n\nis hereby amended to provide as follows:\n\nas-\"interim-acting city manager.\"\nDuring the absence of the city manager, the city manager may designate a\ndeputy city manager, assistant city manager, or department director to\n\ntemporarily exercise the powers and duties of the city manager. The person\nthus designated shall be known as \"acting city manager.\"\n\nSECTION 2. That Section 4.08 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 4.08. - Removal or discharge.\n\nThe city manager may be removed or discharged by resolution of the city\ncommission at any time. In such resolution the commission shall designate\nan aeting-interim_ city manager to serve in the place of the removed city\nmanager, and the removed city manager shall vacate the office upon\nadoption of the resolution. Within five (5) days after the adoption of\nresolution removing or discharging him or her, such removed city manager\nshall have the right to have served upon him or her written statement of\nspecific reasons for his or her discharge, if he or she so desires, by filing a\ndemand for same with the city clerk, and leaving sufficient copies with the\ncity clerk for service upon members of the city.commission. Such written\nstatement of specific reasons, signed by a majority of the city commission\nshall be delivered to such removed officer within five (5) days after service\nof such demand as aforesaid, and a definite time and date fixed in such\nwritten statement for a public hearing before the commission within not less\nthan five (5) days and not more than ten (10) days after the service of such\nwritten statement. At the time and place specified the city commission shall\nconvene as a body at a special meeting for the purpose of conducting a\npublic hearing upon such charges. The removed city manager shall have\nthe right to appear at such hearing to answer and rebut such charges or\nreasons, and he or she shall have the right to be represented by his or her\nown private counsel. At the conclusion of such hearing the commission shall\nadopt a resolution confirming such removal or reinstating such removed city\nmanager. If reinstated he or she shall receive full pay for the period\nintervening between his or her removal and reinstatement.\n\nAn acting-interim city manager may be removed at any time by resolution\nof the city commission, and such removed person shall not be entitled to a\npublic hearing upon such removal.\n\nSECTION 3. That Section 6.02 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 6.02. - Classified and nonclassified service.\n\nAll offices and positions of the city shall either be in the nonclassified service\nor in the classified service. The city manager and deputy city manager, city\nattorney and deputy city attorney, city clerk and city auditor shall be\nappointed by resolution of the city commission. Assistant city attorneys shall\nbe appointed by the city attorney. Commission assistants shall be appointed\nby the City Commission. Assistant city clerks shall be appointed by the city\nclerk and assistant city auditors shall be appointed by the city auditor. All\nother nonclassified personnel shall be appointed by the city manager, who\nshall be empowered to execute employment contracts with such\nemployees. The duration of such employment contracts shall not exceed\ntwo (2) years, and the pay provisions shall be in conformance with the salary\nrange established in the city's pay ordinance. All positions in the classified\nservice shall be filled in accordance with personnel rules and regulations;\nprovided, however, that all positions in the classified service which, once\nfilled, are subject to the provisions of any collective bargaining agreement\nshall be exempt from the applicability of such personnel rules and\nregulations. Positions in the nonclassified service shall be filled on the basis\nof relative ability, knowledge and skill. Such employees shall be entitled to\nfair and equitable compensation, with incentives and recognition for\nexcellent performance. The nonclassified service shall include the following\npositions and levels:\n\n(a) The city manager and/or aeting-interim city manager.\n(b) Deputy city manager and deputy city attorney.\n\n(c) Assistant city managers.\n\n(d) Administrative assistants to the city manager.\n(e) The city attorney and assistant city attorneys.\n(f) All management category | positions.\n\n(g) City clerk and assistant city clerks.\n\n(h) Commission assistants.\n\n(i) City auditor and assistant city auditors.\n\nNonclassified personnel may not be assigned the duties of a vacant\nclassified position except in accordance with personnel rules and\nregulations.\n\nThe classified service shall include all positions in the city's service, except\nthose specifically placed in the nonclassified service. All persons in the\nclassified service shall be subject to the civil service rules and regulations;\nprovided, however, that regular employees in the classified service who are\nsubject to a collective bargaining agreement shall not be subject to civil\nservice rules and regulations.\n\nSECTION 4. That Section 7.16 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 7.16. - Election; tie vote;primary-election-to-fill one_-vacancy.\n\nAt the-each regular or special municipal election, the candidates for each\noffice who shaltreceives the greatest number of votes for that office-atsuch\nregular—or—special_municipat-_election, shall be declared elected. A tie\nbetween two (2}-candidates for the office of mayor or city commissioner\ntial be Ceuilen by lot to ae connate By me city attomey. Hina municipal\n\nSECTION 5. That Section 10.03 of the Charter of the City of Fort Lauderdale, Florida, be,\nand is hereby repealed as follows:\n\nSECTION 6. That this Ordinance shall not take effect unless a corresponding ballot measure\nis approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be\nheld on November 3, 2026. The ballot measure to be submitted shall be in substantially the\nfollowing form:\n\nCHARTER AMENDMENT NO. 6\n\nDELETING PRIMARY ELECTION REFERENCES,\nREMOVING PUBLICATION REQUIREMENT, AND\nUPDATING INTERIM AND ACTING CITY MANAGER TITLES\n\nShould the City of Fort Lauderdale Charter be amended to delete\nreferences to primary elections, remove the requirement of two newspaper\npublications for public hearings and other types of notice, and distinguish the title\nof interim city manager, who is appointed in the event of the city manager's\nresignation or termination, from that of acting city manager, who is appointed\nduring temporary absences of the city manager?\n\n<> YES, for approval\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 6, ten days after the date of certification of election results by the Broward County Canvassing Board.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-24.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.802649+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to delete references to primary elections, remove the requirement of two newspaper publications for public hearings and other types of notice, and distinguish the title of interim city manager, who is appointed in the event of the city manager's resignation or termination, from that of acting city manager, who is appointed during temporary absences of the city manager?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-7:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-7",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to simplify the sale of City-owned personal property such as vehicles, furniture, and equipment, and City-owned land other than parks, to add limitations on lease, license, concession, or other types of use agreements with private parties for the use of City-owned land, and to add limitations on the sale or lease of City-owned land to other governments?",
+          "officialStatement": "AN ORDINANCE OF THE CITY OF FORT LAUDERDALE,\nFLORIDA, AMENDING THE CHARTER OF THE CITY OF\nFORT LAUDERDALE, FLORIDA, CONDITIONED ON THE\nAPPROVAL OF A BALLOT MEASURE, SIMPLIFYING THE\nSALE OF CITY-OWNED PERSONAL PROPERTY SUCH AS\nVEHICLES, FURNITURE, AND EQUIPMENT, AND CITY-\nOWNED LAND OTHER THAN’ PARKS, ADDING\nLIMITATIONS ON AGREEMENTS WITH PRIVATE PARTIES\nFOR THE USE OF CITY-OWNED LAND, AND ADDING\nLIMITATIONS ON THE SALE OR LEASE OF CITY-OWNED\nLAND TO OTHER GOVERNMENTS, AND PROVIDING FOR\nSEVERABILITY, REPEAL OF CONFLICTING ORDINANCE\nPROVISIONS, CORRECTION OF SCRIVENER’S ERRORS,\nAND AN EFFECTIVE DATE.\n\nWHEREAS, the Charter Revision Board has recommended to the City\nCommission that certain amendments be made to the Charter of the City of Fort Lauderdale,\nFlorida; and\n\nWHEREAS, the City Commission proposes certain amendments to the Charter\nof the City of Fort Lauderdale, Florida, to be submitted for voter consideration;\n\nNOW, THEREFORE, BE IT ORDAINED BY THE CITY COMMISSION OF THE\nCITY OF FORT LAUDERDALE, FLORIDA:\n\nSECTION 1. That Section 8.01 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 8.01. - Sale of personal property;precedure;-_public-netice.\n\nPersonal property belonging to the city shall not be sold; except as\n\nprovided ay eranance Wes ofits eeilng: sopsione have been\n\nSECTION 2. That Section 8.02 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 8.02. - Sale or lease of city public ands_and of public_property to\npublic bodies.\n\nThe City of Fort Lauderdale-is hereby authorized and empowered,\nupon adoption of a resolution by the affirmative vote of at least four\ncommissioners, to enterinte—centracts_with_and—te-sell, lease, alienate.\n\nexchange,-give_grant_or otherwise convey to the United States of America\nor any of its departments or agencies, to the State of Florida or any of its\ncounties, districts, subdivisions, municipalities, or agencies, or to any other\npublic body, any public-places-or any public-property, real or personal, now\nowned by said-the City-of Fert Lauderdale or hereafter acquired, or allow\nany such public body to make improvements on any property owned by the\nCity, to-be-used by such-_public body er agency for a public purpose, to wit,\nan activity that is essential to the health, safety, or general welfare of the\nCity, as determined by the city commission, notwithstanding an incidental\n\nbenefit to a private party.or make improvements _upen_public_property_used\n\n\n\nSECTION 3. That Section 8.04 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 8.04. - Sale of real property to private partiespersons,_firms—or\ncorporations.\n\nExcept as provided in Section 8.21, the City ef Ferttauderdale-is\nhereby authorized and empowered to sell any publictands—and\nipmprovements_thereen_real property owned by the,title to-whichis-vested\nin City ef Fert Lauderdale=-to any private party, or exchange, deed, or\nconvey any real property owned by the City in consummating a transaction\nwhereby the City acquires property needed in connection with a_ public\nimprovement or a public use, as provided by ordinance and consistent with\n\napplicable law, subject to the folowihd. pereen,-fiti OF Serperaier {ouIer\n\ndetermined by the-city commission_The approval of any sale,\n\nexchange, or conveyance of improved or unimproved real\nproperty shall be pursuant to a resolution containing a finding\nthat such sale, exchange, or conveyance would be in the\nCity’s best interest adopted by the affirmative vote of at least\nfour commissioners.\n\nSECTION 4. That Section 8.07 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby repealed as follows:\n\nSECTION 5. That Section 8.09 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 8.09. — Leases, licenses, concessions, and use agreements for\n\nmore than one year.\n\nThe City is hereby empowered to enter into lease agreements,\nlicense agreements, concession agreements, facility use agreements, or\nother types of use agreements with private parties, (each is an\n“Agreement’), for the use of any improved or unimproved real property,\nincluding air space over such real property, owned by the City, and not\nneeded for City purposes, or in consummating a transaction whereby the\nCity acquires property needed in connection with a public improvement or\na public use, for periods (each, including any renewals and extensions, is a\n\n“term”), as follows:\n\n(a) Any Agreement for a term exceeding one year but not more\nthan three years shall be pursuant to a resolution adopted by\nthe affirmative vote of at least four commissioners.\n\n(bo) Any Agreement for a term exceeding three years but not more\nthan ten years shall be pursuant to a resolution adopted by\nthe affirmative vote of at least four commissioners containing\na finding, based on a fair market value analysis of the property\nand_an evaluation of the qualifications of the private party\nprepared by a qualified independent consultant hired by the\nCity at_the private party's expense, that such use of the\nproperty would be in the City’s best interest.\n\n(c) Any Agreement for a term exceeding ten years shall be\npursuant to a resolution adopted by the affirmative vote of at\nleast four commissioners containing a finding, based on a fair\nmarket value analysis of the property and an evaluation of the\nqualifications of the private party prepared by a qualified\nindependent consultant hired by the City at the private party’s\nexpense, that such use of the property would be in the City’s\nbest interest. In addition, included in the city commission’s\nconsideration of the Agreement shall be the consideration of\na business viability report prepared by a qualified independent\nconsultant hired by the City at the private party’s expense.\n\nEach Agreement shall contain a provision that the Agreement may\nnot_be assigned except upon the affirmative vote of at least four\ncommissioners.\n\nSECTION 6. That this Ordinance shall not take effect unless a corresponding ballot measure\nis approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be\n\nheld on November 3, 2026. The ballot measure to be submitted shall be in substantially the\nfollowing form:\n\nCHARTER AMENDMENT NO. 7\n\nSALE OF CITY-OWNED PERSONAL PROPERTY\nAND SALE OR LEASE OF CITY-OWNED LAND\n\nShould the City of Fort Lauderdale Charter be amended to simplify the sale\nof City-owned personal property such as vehicles, furniture, and equipment, and\nCity-owned land other than parks, to add limitations on lease, license, concession,\nor other types of use agreements with private parties for the use of City-owned\nland, and to add limitations on the sale or lease of City-owned land to other\ngovernments?\n\n<> YES, for approval\n\n<> NO, for rejection\n\nSECTION 7. That if any clause, section or other part of this Ordinance shall be held invalid or\nunconstitutional by any court of competent jurisdiction, the remainder of this Ordinance shall not\nbe affected thereby, but shall remain in full force and effect.\n\nSECTION 8. That all ordinances or parts of ordinances in conflict herewith, be and the same\nare hereby repealed.\n\nSECTION 9. That, at the direction of the City Attorney, the publisher of the Code of\nOrdinances of the City of Fort Lauderdale, Florida, is authorized to conform chapter, article,\nsection, subsection, and clause numbers and letters, and capitalization, set forth in this\n\nNotwithstanding section 3.20 of this charter, any intent to enter into an Agreement for a term exceeding 50 years may be rejected by a majority of the electors voting at a referendum election as a result of initiative proceedings. In case of initiative proceedings, when the necessary requirements have been met, and proper petitions, bearing the signatures of fifteen (15) percent of all registered electors of the last election have been filed, the city commission shall pass a resolution calling for a referendum to be conducted in the same manner as provided in section 3.18 and section 3.19 of this charter.\n\nPersonal property belonging to the city shall not be sold, except where competitive bidding conditions have been maintained. Where the value of the personal property exceeds five thousand dollars ($5,000.00), same may not be sold except after public notice to bidders by publication. The sale shall be made to the highest and best bidder for cash, and no personal property shall be sold on terms.\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 6, ten days after the date of certification of election results by the Broward County Canvassing Board.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-25.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:41.943684+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to simplify the sale of City-owned personal property such as vehicles, furniture, and equipment, and City-owned land other than parks, to add limitations on lease, license, concession, or other types of use agreements with private parties for the use of City-owned land, and to add limitations on the sale or lease of City-owned land to other governments?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-8:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-8",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to require a unanimous vote of the entire City Commission for any license agreement, concession agreement, facility use agreement, or other type of use agreement for more than one year for the use of City-owned park land?",
+          "officialStatement": "AN ORDINANCE OF THE CITY OF FORT LAUDERDALE,\nFLORIDA, AMENDING THE CHARTER OF THE CITY OF\nFORT LAUDERDALE, FLORIDA, CONDITIONED ON THE\nAPPROVAL OF A BALLOT MEASURE, BY ADDING A\nREQUIREMENT OF A UNANIMOUS VOTE OF THE CITY\nCOMMISSION FOR ANY LICENSE AGREEMENT,\nCONCESSION AGREEMENT, FACILITY USE AGREEMENT,\nOR OTHER TYPE OF USE AGREEMENT FOR MORE THAN\nONE YEAR FOR THE USE OF CITY-OWNED PARK LAND,\nAND PROVIDING FOR SEVERABILITY, REPEAL OF\nCONFLICTING ORDINANCE PROVISIONS, CORRECTION\nOF SCRIVENER’S ERRORS, AND AN EFFECTIVE DATE.\n\nWHEREAS, the Charter Revision Board has recommended to the City\nCommission that certain amendments be made to the Charter of the City of Fort Lauderdale,\nFlorida; and\n\nWHEREAS, the City Commission proposes certain amendments to the Charter\nof the City of Fort Lauderdale, Florida, to be submitted for voter approval;\n\nNOW, THEREFORE, BE IT ORDAINED BY THE CITY COMMISSION OF THE\nCITY OF FORT LAUDERDALE, FLORIDA:\n\nSECTION 1. That Section 8.21 of the Charter of the City of Fort Lauderdale, Florida, be, and\nis hereby amended to provide as follows:\n\nSec. 8.21. Disposing of park property.\n\nNotwithstanding anything to the contrary in this Charter, the city shall\nnot, without a unanimous vote of the entire city commission:\n\n(a) sell, transfer, or lease, for more than one (1) year, any land\nzoned Parks, Recreation and Open Space in accordance with\nthe City's Unified Land Development Regulations; or\n\n(b) enter into any license agreement, concession agreement,\nfacility use agreement, or other type of use agreement, for\nmore than one (1) year, for any land zoned Parks, Recreation\nand Open Space in accordance with the City's Unified Land\nDevelopment Regulations.\n\nAdditionally, any land zoned Parks, Recreation and Open Space in\naccordance with the City's Unified Land Development Regulations shall\nrequire a unanimous vote of the entire city commission to remove such\n\ndesignation.\n\nSECTION 2. That this Ordinance shall not take effect unless a corresponding ballot measure\nis approved by a majority of the electors of the City of Fort Lauderdale voting at the election to be\nheld on November 3, 2026. The ballot measure to be submitted shall be in substantially the\nfollowing form:\n\nCHARTER AMENDMENT NO. 8\n\nCITY-OWNED PARK LAND\n\nShould the City of Fort Lauderdale Charter be amended to require a\nunanimous vote of the entire City Commission for any license agreement,\nconcession agreement, facility use agreement, or other type of use agreement for\nmore than one year for the use of City-owned park land?\n\n<> YES, for approval\n<> NO, for rejection\n\nSECTION 3. That if any clause, section or other part of this Ordinance shall be held invalid or\nunconstitutional by any court of competent jurisdiction, the remainder of this Ordinance shall not\nbe affected thereby, but shall remain in full force and effect.\n\nSECTION 4. That all ordinances or parts of ordinances in conflict herewith, be and the same\nare hereby repealed.\n\nSECTION 5. That, at the direction of the City Attorney, the publisher of the Code of\nOrdinances of the City of Fort Lauderdale, Florida, is authorized to conform chapter, article,\nsection, subsection, and clause numbers and letters, and capitalization, set forth in this\nOrdinance, to the numbering, lettering, and capitalization structure established in the Code of\nOrdinances of the City of Fort Lauderdale, Florida, and to correct non-substantive scrivener’s\nerrors in the codification of this Charter amendment.\n\nSECTION 6. That this Ordinance shall be in full force and effect, as conditioned in Section 2,\nten days after the date of certification of election results by the Broward County Canvassing Board.\n\nPASSED FIRST READING this 19\" day of May, 2026.\nPASSED SECOND READING this 2™ day of June, 2026.\n\nra “Mayor\nDEAN J. TRANTALIS\n\nAdditionally, any land zoned park on November 10, 2004, shall require a unanimous vote of the entire city commission to remove such designation.\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 2, ten days after the date of certification of election results by the Broward County Canvassing Board.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-26.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:42.183572+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to require a unanimous vote of the entire City Commission for any license agreement, concession agreement, facility use agreement, or other type of use agreement for more than one year for the use of City-owned park land?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-9:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-9",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to establish the Charter position of Police Chief, who shall report directly to the City Commission rather than to the City Manager, and be employed and compensated under such terms and conditions as the City Commission deems appropriate?",
+          "officialStatement": "(a) There is hereby established the position of Police Chief. The Police Chief shall be appointed by the City Commission and employed under such terms and conditions as the City Commission may deem appropriate. The Police Chief shall receive such compensation as the City Commission may by resolution fix and designate.\n\n(b) The individual serving as Police Chief on the effective date of this section shall automatically become the first appointed Police Chief.\n\n(c) The Police Chief shall reside in the City of Fort Lauderdale during his or her employment with the city, but he or she need not be a resident of the City of Fort Lauderdale or the State of Florida at the time of his or her appointment. Notwithstanding the foregoing sentence, the first appointed Police Chief need not reside in the City of Fort Lauderdale. Nor shall a Police Chief who is promoted to the position of Police Chief from within the Police Department need to reside in the City of Fort Lauderdale.\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 2,",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-27.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:42.616604+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to establish the Charter position of Police Chief, who shall report directly to the City Commission rather than to the City Manager, and be employed and compensated under such terms and conditions as the City Commission deems appropriate?"
+          }
+        },
+        {
+          "id": "fl-2026-fort-lauderdale-charter-10:measure",
+          "contestId": "fl-2026-fort-lauderdale-charter-10",
+          "questionText": "Should the City of Fort Lauderdale Charter be amended to establish the Charter position of Fire Chief, who shall report directly to the City Commission rather than to the City Manager, and be employed and compensated under such terms and conditions as the City Commission deems appropriate?",
+          "officialStatement": "(a) There is hereby established the position of Fire Chief. The Fire Chief shall be appointed by the City Commission and employed under such terms and conditions as the City Commission may deem appropriate. The Fire Chief shall receive such compensation as the City Commission may by resolution fix and designate.\n\n(b) The individual serving as Fire Chief on the effective date of this section shall automatically become the first appointed Fire Chief.\n\n(c) The Fire Chief shall reside in the City of Fort Lauderdale during his or her employment with the city, but he or she need not be a resident of the City of Fort Lauderdale or the State of Florida at the time of his or her appointment. Notwithstanding the foregoing sentence, the first appointed Fire Chief need not reside in the City of Fort Lauderdale. Nor shall a Fire Chief who is promoted to the position of Fire Chief from within the Fire Department need to reside in the City of Fort Lauderdale.\n\nThat this Ordinance shall be in full force and effect, as conditioned in Section 2, ten days after the date of certification of election results by the Broward County Canvassing Board.",
+          "provenance": {
+            "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-28.pdf",
+            "sourceOrg": "City of Fort Lauderdale",
+            "collectedAt": "2026-11-03T09:46:42.945120+00:00",
+            "verifiedAt": "2026-11-03T10:03:06.126031+00:00",
+            "rawHash": "ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb",
+            "quote": "Should the City of Fort Lauderdale Charter be amended to establish the Charter position of Fire Chief, who shall report directly to the City Commission rather than to the City Manager, and be employed and compensated under such terms and conditions as the City Commission deems appropriate?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-1",
+          "whatItDoes": "Raises continuous permanent-residence requirements before qualifying from six to 12 months: city residence for mayor and district residence for commissioner, with an exception when redistricting moves a candidate’s permanent city residence into another district. Candidates must be U.S. citizens, registered city voters and provide at least five listed proofs of residency. The express 21-year minimum age would be removed. Candidates holding another elected office must file an irrevocable resignation at least ten days before qualifying begins and leave that office by the required handover date. City officers, workers and others serving the city cannot qualify, except incumbents seeking reelection or commissioners running for mayor. Officials must maintain the required residence or forfeit office. Certified elected officials would take office at the first regular Commission meeting after certification. The Commission would select a vice mayor at its first meeting after all elected officials take office, then annually, instead of each April. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve the candidate-qualification and office-transition rules, including 12-month residency and five proofs, and the revised vice-mayor selection timing.",
+          "noMeans": "Reject these proposed changes to qualifications, taking office and vice-mayor selection.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-20.pdf",
+          "sourceHash": "37b51fb12587db3e3408e868abdcd9dc9a4685852990e5be6a8de00e02082b63",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-2",
+          "whatItDoes": "Requires candidates for mayor or city commissioner to submit documents showing compliance with the Charter and applicable law to the City Clerk for an administrative review. It also revises the Charter wording on the Commission’s role in judging elections and member qualifications, which remains subject to court review. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve the candidate-document submission and administrative-review procedure.",
+          "noMeans": "Reject this proposed candidate-document procedure.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+          "sourceHash": "1e2fe0192551cd60604eb795ee1c51899b483d96e4e113c8910bd6330e7e191c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-3",
+          "whatItDoes": "Removes the City Commission’s process for receiving a voter’s sworn allegation that a mayoral or Commission candidate violated the Charter or is unqualified, and for taking evidence and deciding that challenge. Such challenges would be considered by the courts. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve removing the Commission’s candidate-challenge process and leaving those questions to the courts.",
+          "noMeans": "Reject removal of the Commission’s candidate-challenge process.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+          "sourceHash": "90bc7bfa3a5bb53e40540cf80a782d6e84e6e2a1792945fe0b7c932b74df71ab",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-4",
+          "whatItDoes": "Increases the normal notice for a special City Commission meeting from six to 72 hours. For an emergency involving potential imminent harm to public health, safety or property, or a chance to lessen or avert a catastrophe, notice could be as much as practicable. The mayor or city manager would determine the emergency in consultation with the city attorney. The notice must state the meeting’s general purpose. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve the 72-hour notice rule and the defined emergency exception.",
+          "noMeans": "Reject these proposed changes to special-meeting notice.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-22.pdf",
+          "sourceHash": "901b2b11a86d3b3a9cd1bb46f5a846559b1754795ced69c81cdbce1a360f0e95",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-5",
+          "whatItDoes": "Resolves ties for the employee nominating committee in favor of employees with the longest continuous city service. The board certifying the employee-recommended Civil Service Board member would consist of the city manager’s designee and two members of the nominating committee, replacing the two city commissioners. It also removes the Civil Service Board’s duty to review job-class specifications and advise the city manager about them. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve the seniority tie-breaker, revised election-board membership and removal of the job-class review duty.",
+          "noMeans": "Reject these proposed Civil Service Board changes.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-23.pdf",
+          "sourceHash": "88c200e66a529fe3bd19453e0acd62567a9d9e63f4ee873db56ccc16b943f9a8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-6",
+          "whatItDoes": "Distinguishes an interim city manager, selected by Commission resolution after resignation or removal, from an acting manager selected by the city manager during a temporary absence. An acting manager must be a deputy or assistant city manager or department director. An interim manager could be removed by Commission resolution without a public hearing. It also deletes obsolete primary-election references and repeals the Charter requirement for two newspaper publications for public hearings and other notices. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve the manager-selection and terminology changes and removal of the specified primary-election and publication provisions.",
+          "noMeans": "Reject this group of proposed Charter changes.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-24.pdf",
+          "sourceHash": "11abf2efc6ced4177f4a3a6bd4d1d251648f02d8e869033edd5701561a549adc",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-7",
+          "whatItDoes": "Replaces the Charter’s competitive-bidding, public-notice and cash-sale rules for personal property with procedures set by ordinance. Sales of land to private parties, and exchanges or transfers to acquire property for a public improvement or use, would follow an ordinance and applicable law and need a four-commissioner resolution finding the transaction in the city’s best interest, subject to park-land rules. Transactions with other public bodies would need four votes and a purpose essential to city health, safety or welfare, even if a private party benefits incidentally. Covered private use agreements concern city land, including airspace, not needed for city purposes or used in a transaction acquiring property for a public improvement or use. Agreements longer than one year would require four votes. Terms over three and up to ten years would also need an independent fair-value and party-qualification review and a best-interest finding; terms over ten years would additionally need consideration of an independent business-viability report. The city hires the consultants at the private party’s expense. Renewals and extensions count toward the term. Assigning any covered agreement would require four votes. For a term over 50 years, the Charter initiative process could trigger a referendum to reject the agreement, with petitions signed by 15% of registered electors of the last election and the other initiative requirements met. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve the revised property-transaction procedures, four-vote approvals and additional reviews for longer private use agreements.",
+          "noMeans": "Reject these proposed changes to city property sales and use agreements.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-25.pdf",
+          "sourceHash": "0614cf3034330d87124c43f67779b9e2ee5687985f6f0c08b9e1db59b8cd4d19",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-8",
+          "whatItDoes": "Extends the requirement for a unanimous vote of the entire City Commission to licenses, concessions, facility-use agreements and other use agreements longer than one year for city land zoned Parks, Recreation and Open Space. Unanimous approval for sales, transfers and leases longer than one year would remain. The amendment also applies unanimous approval for removing the park zoning designation to all land with that designation, replacing the old limit to land zoned park on November 10,2004. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve requiring unanimous Commission approval for the additional park-land use agreements longer than one year.",
+          "noMeans": "Reject extending the unanimous-vote requirement to those park-land use agreements.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-26.pdf",
+          "sourceHash": "91a63a13bb65c8181da3ce31fcc84707fdb3ec354cf33aa1f949c8157db93b6e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-9",
+          "whatItDoes": "Makes police chief a Charter position appointed by and reporting directly to the City Commission, with employment terms and pay set by the Commission. The person serving as chief when the amendment takes effect would become the first appointee automatically. Chiefs must live in the city during employment, but may be appointed before becoming residents. The first appointee and chiefs promoted from within the Police Department are exempt from the city-residency requirement. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve direct Commission appointment, oversight and compensation of the police chief, with the stated transition and residency exceptions.",
+          "noMeans": "Reject the proposed Charter police-chief position reporting to the Commission.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-27.pdf",
+          "sourceHash": "528ea4129ac218683857494ff48d916907929ab048a30e2f84e06eb7b79c9556",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-fort-lauderdale-charter-10",
+          "whatItDoes": "Makes fire chief a Charter position appointed by and reporting directly to the City Commission, with employment terms and pay set by the Commission. The person serving as chief when the amendment takes effect would become the first appointee automatically. Chiefs must live in the city during employment, but may be appointed before becoming residents. The first appointee and chiefs promoted from within the Fire Department are exempt from the city-residency requirement. The amendment would take effect ten days after certification of the election results.",
+          "yesMeans": "Approve direct Commission appointment, oversight and compensation of the fire chief, with the stated transition and residency exceptions.",
+          "noMeans": "Reject the proposed Charter fire-chief position reporting to the Commission.",
+          "parts": [],
+          "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-28.pdf",
+          "sourceHash": "fe4c0971b60620e13d7c5c6d9479b8e68e139c687038df49bdb993720e865abb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:03:06.126031+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:03:06.126031+00:00",
+    "reviewedBy": "CX-VOTES direct current official-source and native legal-redline reading; no provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "finalUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:24.342Z",
+        "httpStatus": 200,
+        "rawHash": "461c5f7f145c4ab962a4e76b8de144a9b125bef5b751606c94187a35216604db",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "httpStatus": 200,
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "httpStatus": 200,
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.804Z",
+        "httpStatus": 200,
+        "rawHash": "7084e3d9008cc6d85dc3775970c414d4386d6677c86e4e8b987b2446a64733fe",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.657Z",
+        "httpStatus": 200,
+        "rawHash": "801c72e16e7689e15c639c9c42902fe7ee42bebf7cfcc3229a50b507fabcad0e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.522Z",
+        "httpStatus": 200,
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.411Z",
+        "httpStatus": 200,
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.089Z",
+        "httpStatus": 200,
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "httpStatus": 200,
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "httpStatus": 200,
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "httpStatus": 200,
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "httpStatus": 200,
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "httpStatus": 200,
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.586Z",
+        "httpStatus": 200,
+        "rawHash": "e2c15bd5ee4bd642102cfbf42fc00f1d8a485bd6dc5ac31c3af7f2ec92d9a90e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.410Z",
+        "httpStatus": 200,
+        "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Replayed all 55 complete local referendum questions from official master pages 19–73, exact printed local candidate names and vote limits. Only established county-wide, municipal mayor and at-large scopes projected; district or residential-area offices remain separate."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021 states that the eleventh judicial circuit is composed of Miami-Dade County."
+      },
+      {
+        "requestedUrl": "https://www.cityofdoral.com/Government-Center",
+        "finalUrl": "https://www.cityofdoral.com/Government-Center",
+        "publisher": "Doral municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.249835+00:00",
+        "httpStatus": 200,
+        "rawHash": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.hialeahfl.gov/169/Overview",
+        "finalUrl": "https://www.hialeahfl.gov/169/Overview",
+        "publisher": "Hialeah municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:57.558631+00:00",
+        "httpStatus": 200,
+        "rawHash": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "finalUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "publisher": "Sunny Isles Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.487943+00:00",
+        "httpStatus": 200,
+        "rawHash": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "finalUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "publisher": "Pinecrest municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.918266+00:00",
+        "httpStatus": 200,
+        "rawHash": "f617a5044e79bd05292353baf3bcc3b21664e1ec2dff43231eb9be57373303bb",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "finalUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "publisher": "Cutler Bay municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:08.208099+00:00",
+        "httpStatus": 200,
+        "rawHash": "42754b1b79830d6242643460bc1c2a5914875860e655d9b937c77735c8c2cdd3",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.southmiamifl.gov/113/Mayor-Commission",
+        "finalUrl": "https://www.somifl.gov/m/directory/department?did=4",
+        "publisher": "South Miami municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:38:24.121063+00:00",
+        "httpStatus": 200,
+        "rawHash": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "publisher": "North Miami Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+        "httpStatus": 200,
+        "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "All 20 circuit definitions parsed from Florida Statutes 26.021 and matched to all 67 unique existing county divisions. Each entire county belongs to exactly one circuit."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "httpStatus": 200,
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://www.coralgables.com/department/city-commission",
+        "finalUrl": "https://www.coralgables.com/department/city-commission",
+        "publisher": "Coral Gables municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:22.085521+00:00",
+        "httpStatus": 200,
+        "rawHash": "11e14ae71de08a1d7ceb3e57fc8af4b43b9e7489ab56704e0a731631f5df8069",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "publisher": "Miami-Dade County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:20.904818+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c71144edc323aa0a563ce0e6dd00be68b181a5fe004cb149204f241c67efe6",
+        "reviewedEvidence": "Official current map establishes COMMISSION DISTRICT 5; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "finalUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "publisher": "Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:24.308954+00:00",
+        "httpStatus": 200,
+        "rawHash": "0eb0b12fa5a301c0056c7d7fe71109f8ef0fe704ccb4cb7988c2706697fa2894",
+        "reviewedEvidence": "Official current map establishes School Board District 1; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "requestedUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "finalUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.016645+00:00",
+        "httpStatus": 200,
+        "rawHash": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+        "reviewedEvidence": "Current municipal election authority confirms November 3, 2026 runoff for Residential Area Seat 4, four-year term, both candidates, and that residential council seats are elected by their area."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+        "reviewedEvidence": "Official 2026 election notice supplies the complete metes-and-bounds description of Residential Area Seat 4. Current exact canonical council_district:4 ID checked without widening to the city."
+      },
+      {
+        "requestedUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "finalUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:34:08.006625+00:00",
+        "httpStatus": 200,
+        "rawHash": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+        "reviewedEvidence": "Current official city district-map index independently identifies the Seat 4 map URL; current 2026 election notice supplies the full scope description."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "httpStatus": 200,
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+        "httpStatus": 200,
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "reviewedEvidence": "All 330 full official November precinct ballot styles replayed. Each imported countywide candidate and the complete English school-tax question occurs in every style. Soil, district commissioner, school-board district and CDD races are not widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+        "httpStatus": 200,
+        "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+        "reviewedEvidence": "Certified general roster contains 31 unopposed core entries: 28 State House, two State Senate, and one U.S. House. These certified records are preserved, with explicit unopposed context; the roster is not a printed-ballot denominator."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.142032+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c2313f00a088cbd5944809556aea809cdf2c55a870c898ea57516aeeee8706e",
+        "reviewedEvidence": "Florida Statutes 101.151(7) explicitly excludes unopposed candidates, except justices or judges seeking retention, from the general election ballot. No certified record is deleted or hidden."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.047821+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1169c9218a554ba7dbdcfffa09131652efcec8d1ff0c8f2d762f241da819cd8",
+        "reviewedEvidence": "Current official board directory explicitly labels Districts 5 and 7 countywide, while identifying the separate District 1 and District 3 offices. Current canonical partial districts 1/3 are preserved precisely."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:01:43.394502+00:00",
+        "httpStatus": 200,
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "reviewedEvidence": "Official 2026 School Board qualifying/electorate table explicitly labels District 6 countywide and Districts 2/4 single-member; four-year term is stated. This is county-specific and is not inferred for other Florida school boards."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:02:17.706255+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+        "reviewedEvidence": "Current November 3 municipal election page lists the complete five qualified candidates for three council positions."
+      },
+      {
+        "requestedUrl": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+        "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+        "httpStatus": 200,
+        "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+        "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1083/11-03-26-Lee-County-BOCC-Single-Member-Districts-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+        "retrievedAt": "2026-11-03T03:44:05.111851+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1080/11-03-26-Lee-County-BOCC-CharterAmendment-TERM-LIMITS-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+        "retrievedAt": "2026-11-03T03:44:44.506753+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1086/11-03-26-TFMB-Charter-Amendment-Referendums-ENG?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+        "retrievedAt": "2026-11-03T03:44:05.112178+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1092/11-03-26-Lee-County-Mosquito-FMB-Mosquito-Control-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+        "retrievedAt": "2026-11-03T03:44:05.112573+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1093/11-03-26-Iona-McGregor-FMB-Fire-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+        "retrievedAt": "2026-11-03T03:44:05.314059+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+        "finalUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816/General-Election---November-3-2026---State-Representative-District-53-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hernando County official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:36.276054+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "publisher": "Duval County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:45.933140+00:00",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "finalUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "publisher": "Walton County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:32.531103+00:00",
+        "httpStatus": 200,
+        "rawHash": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "publisher": "Leon County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:39.125912+00:00",
+        "httpStatus": 200,
+        "rawHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "reviewedEvidence": "Complete native2026GeneralElectionGuide. Page7has five county charter amendments, two school-district tax questions and one nonbinding county advisory question. Eight bounded question fields extracted and checked; original bytes and source images retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+        "httpStatus": 200,
+        "rawHash": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+        "reviewedEvidence": "Leon County Ordinance26-08; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+        "httpStatus": 200,
+        "rawHash": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+        "reviewedEvidence": "Leon County Ordinance26-12; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "publisher": "Leon County Board of County Commissioners and School Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+        "httpStatus": 200,
+        "rawHash": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+        "reviewedEvidence": "Leon County Resolution26-32 and attached School Board resolution; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+        "httpStatus": 200,
+        "rawHash": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+        "reviewedEvidence": "Leon County Ordinance 26-06; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+        "httpStatus": 200,
+        "rawHash": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+        "reviewedEvidence": "Leon County Ordinance 26-05; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+        "httpStatus": 200,
+        "rawHash": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+        "reviewedEvidence": "Leon County Ordinance 26-07; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+        "httpStatus": 200,
+        "rawHash": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+        "reviewedEvidence": "Leon County Resolution 26-08; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "finalUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+        "publisher": "Manatee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.153167+00:00",
+        "httpStatus": 200,
+        "rawHash": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+        "reviewedEvidence": "Original current official November3,2026 sample compilation; positive named city/county question and complete limits read against native source. Original three-page official all-contests November 3, 2026 sample contains these five county/city questions plus a separate Parrish Fire District question that remains under exact-electorate review."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-20.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-20.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:40.639852+00:00",
+        "httpStatus": 200,
+        "rawHash": "c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:40.640613+00:00",
+        "httpStatus": 200,
+        "rawHash": "a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-22.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-22.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:41.284670+00:00",
+        "httpStatus": 200,
+        "rawHash": "0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-23.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-23.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:41.435016+00:00",
+        "httpStatus": 200,
+        "rawHash": "2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-24.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-24.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:41.802649+00:00",
+        "httpStatus": 200,
+        "rawHash": "a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-25.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-25.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:41.943684+00:00",
+        "httpStatus": 200,
+        "rawHash": "e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-26.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-26.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:42.183572+00:00",
+        "httpStatus": 200,
+        "rawHash": "e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-27.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-27.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:42.616604+00:00",
+        "httpStatus": 200,
+        "rawHash": "4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-28.pdf",
+        "finalUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-28.pdf",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:42.945120+00:00",
+        "httpStatus": 200,
+        "rawHash": "ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb",
+        "reviewedEvidence": "Signed adopted ordinance; full native bytes, complete derived OCR, relevant exact source excerpts and native page renders retained."
+      },
+      {
+        "requestedUrl": "https://spotlightftl.com/charterreview",
+        "finalUrl": "https://spotlightftl.com/charterreview",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:46:33.132331+00:00",
+        "httpStatus": 200,
+        "rawHash": "961fa1dda3a970b6ade26b4d1cae6dc81583a6015ce538de87acd13e74cf8396",
+        "reviewedEvidence": "Current official government publication or government-linked public information site, with direct native signed ordinance links."
+      },
+      {
+        "requestedUrl": "https://www.fortlauderdale.gov/",
+        "finalUrl": "https://www.fortlauderdale.gov/Home",
+        "publisher": "City of Fort Lauderdale",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:26:51.874506+00:00",
+        "httpStatus": 200,
+        "rawHash": "25c647a1a477dd3747d6b3934847b926d0f82bf4e244cee4cff906cba8fa19b9",
+        "reviewedEvidence": "Current official government publication or government-linked public information site, with direct native signed ordinance links."
+      }
+    ]
+  }
+}

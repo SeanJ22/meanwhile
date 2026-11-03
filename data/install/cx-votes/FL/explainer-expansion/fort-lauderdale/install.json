@@ -1,0 +1,89 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T10:03:06.126031+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-fort-lauderdale-charter-1",
+      "title": "Fort Lauderdale Charter Amendment 1 — Qualifications and taking office",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-2",
+      "title": "Fort Lauderdale Charter Amendment 2 — Candidate documentation",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-3",
+      "title": "Fort Lauderdale Charter Amendment 3 — Challenges to candidates",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-4",
+      "title": "Fort Lauderdale Charter Amendment 4 — Special-meeting notice",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-5",
+      "title": "Fort Lauderdale Charter Amendment 5 — Civil Service Board",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-6",
+      "title": "Fort Lauderdale Charter Amendment 6 — Temporary managers, notices and election wording",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-7",
+      "title": "Fort Lauderdale Charter Amendment 7 — City property sales and use agreements",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-8",
+      "title": "Fort Lauderdale Charter Amendment 8 — Park-land use agreements",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-9",
+      "title": "Fort Lauderdale Charter Amendment 9 — Police chief reports to Commission",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    },
+    {
+      "id": "fl-2026-fort-lauderdale-charter-10",
+      "title": "Fort Lauderdale Charter Amendment 10 — Fire chief reports to Commission",
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_lauderdale"
+    }
+  ],
+  "operation": "Merge source-verified local questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "All ten questions in the current City charter-review publication, covered by signed adopted OrdinancesC-26-20throughC-26-28. Other Broward municipal inventories continue.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T10:03:31.790Z",
+    "preparedRecords": 10,
+    "originalSourceHashes": "PASS; full native signed adopted originals retained, OCR separately labeled",
+    "exactSupportQuotes": "PASS; every field quote occurs in its relevant per-measure source excerpt",
+    "sourceSemanticAndNativeRenderReading": "PASS; every printed question/response choice matched native rendered adopted originals; operative clauses read through native legal redlines. Preserves residency/citizenship/registration/proof5, age21 removal, office-conflict and redistricting conditions; administrative review versus independent court challenges; emergency72hour rule; civil-service seniority/election board; interim/acting selection and publication changes; property tier thresholds, party-paid reviews, assignments and50year/15percent initiative referendum; broader park-zoning scope; police/fire first-appointee and internal-promotion residency exceptions; all ten-day post-certification effect. OCR omissions repaired with separately labeled verbatim native clause transcriptions.",
+    "publisherIdentification": "All ten primary measure-source URLs are direct fortlauderdale.gov native signed adopted ordinances. Current City charter-review microsite directly links each original and explicitly lists ten questions; current City.gov homepage directly links the same official microsite domain. No synthetic linking page or unperformed delegation check claimed.",
+    "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "53bc75f5fc14ad3e745d3243854892a66cc441cb9d36cd7caef16b076e2e4e6e",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

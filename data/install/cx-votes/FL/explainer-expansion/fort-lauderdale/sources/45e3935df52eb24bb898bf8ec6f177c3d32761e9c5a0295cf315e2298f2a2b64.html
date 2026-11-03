@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#FFFFFF"/>
+    <title>Home | City of Fort Lauderdale, FL</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content="Explore Fort Lauderdale’s official website for services, news updates, permits, and events, with vacation travel info for visitors to enjoy our beaches and coastal lifestyle." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.fortlauderdale.gov/Home" />
+    <meta property="og:title" content="City of Fort Lauderdale, FL" />
+    <meta property="og:description" content="Explore Fort Lauderdale’s official website for services, news updates, permits, and events, with vacation travel info for visitors to enjoy our beaches and coastal lifestyle." />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="City of Fort Lauderdale, FL" />
+    <meta property="twitter:description" content="Explore Fort Lauderdale’s official website for services, news updates, permits, and events, with vacation travel info for visitors to enjoy our beaches and coastal lifestyle." />
+    <link rel="canonical" href="https://www.fortlauderdale.gov/Home" />
+
+    
+    <link rel="icon" type="image/png" href="/files/ocfavicon/Public/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/files/ocfavicon/Public/favicon.svg" />
+<link rel="shortcut icon" href="/files/ocfavicon/Public/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/Public/apple-touch-icon.png" />
+<link rel="manifest" href="/files/ocfavicon/Public/site.webmanifest" />
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/jquery-3.7.1.min.js?seamlessts=639263251410003394" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "__SOURCE_CREDENTIAL_REDACTED__",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/modernizr.custom.710f3bf.js?seamlessts=639263251410003394" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/'
+        };
+    </script>
+    <script src='/ocapi/9fe2e6a8-0d5b-42c0-8a61-454284dc1d35/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/oc_head.js?applied=20260826052925"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20260826052925" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20260826052925" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".content-outer-container","EnableFade":false,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20260826052925" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/cab1cc12-784d-426a-98c2-aef63600c37b/v/155/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20260826052925" defer="true"></script>
+    <!--BING Verification-->
+<meta name="msvalidate.01" content="721BC5FD238506D49166EE28E46FA0D3" />
+
+<!--Google Search Console Verification-->
+<meta name="google-site-verification" content="kDMjk8cPEp1XRmhV7TNT6fjyMrLkkDob_n8eWm7yfpU" />
+
+<!--OG: IMAGE-->
+<meta property="og:image" content="https://fortlauderdale.gov/files/assets/public/v/2/ftl-dev-resources/images/ftl-og-image.png">
+<script defer="defer">
+
+window.addEventListener('load', (event) => {
+
+document.querySelector('meta[property="og:image"]').setAttribute("content", "https://fortlauderdale.gov/files/assets/public/v/2/ftl-dev-resources/images/ftl-og-image.png" );
+
+});
+
+</script> 
+
+<!--USERWAY CODE--> 
+<script>
+    (function(d){
+      var s = d.createElement("script");
+      /* uncomment the following line to override default position*/
+      /* s.setAttribute("data-position", 3);*/
+      /* uncomment the following line to override default size (values: small, large)*/
+      /* s.setAttribute("data-size", "small");*/
+      /* uncomment the following line to override default language (e.g., fr, de, es, he, nl, etc.)*/
+      /* s.setAttribute("data-language", "language");*/
+      /* uncomment the following line to override color set via widget (e.g., #053f67)*/
+      /* s.setAttribute("data-color", "#053e67");*/
+      /* uncomment the following line to override type set via widget (1=person, 2=chair, 3=eye, 4=text)*/
+      /* s.setAttribute("data-type", "1");*/
+      /* s.setAttribute("data-statement_text:", "Our Accessibility Statement");*/
+      /* s.setAttribute("data-statement_url", "http://www.example.com/accessibility")";*/
+      /* uncomment the following line to override support on mobile devices*/
+      /* s.setAttribute("data-mobile", true);*/
+      /* uncomment the following line to set custom trigger action for accessibility menu*/
+      /* s.setAttribute("data-trigger", "triggerId")*/
+      s.setAttribute("data-account", "XYfKYKg9G5");
+      s.setAttribute("src", "https://cdn.userway.org/widget.js");
+      (d.body || d.head).appendChild(s);
+    })(document)
+    </script>
+<noscript>
+Please ensure Javascript is enabled for purposes of <a href="https://userway.org">website accessibility</a>
+</noscript>
+
+<!--CITIBOT-->
+
+<script id="citibot-chatscript" type="text/javascript" src="https://webchat-ui.citibot.net/script.js?account_id=67ae78e18727ab099601e84e"></script>
+
+<!--OG: TOP TASKS BUTTONS-->
+
+<style>
+	
+	
+@media (min-width: 992px) {
+/* Home buttons */
+
+div#main-content section.row-index-1 div.row-container.full-width.clearfix div.row-content-container.fixed-width.clearfix div.profile-hero-container div.profile-video-listing div.ocp-video-banner.ocp-override.mobile-enabled {
+    min-height: 500px;
+}
+div#main-content section.row-index-2 div.row-container.full-width.clearfix div.row-content-container.fixed-width.clearfix {
+    margin-top: -146px;
+}
+/*Home page - Meetings tab section - height adjust*/
+	
+div#tabs-body.tab-group-body div#panel-2.tabs-panel.clearfix.tab-type-default.total-results-unknown.selected div.wysiwyg-content.body-content div div.profile-listing-container.profile-meetings-listing-container.profile-meetings-listing-option-1.clearfix div.profile-events-listing.without-images.clearfix div.grid div.col-xs-12.col-m-6.col-lg-4 a.profile-list {
+    min-height: 350px;
+}
+	
+
+/*	Home Page - Meeting Tiles*/
+	
+.profile-events-listing a {
+    min-height: 310px;
+}
+}
+/*----------------------END MQ-- min-width: 992px --------------------	*/
+	
+/* Home page - Pinned Story display workaround ------------------- 768PX TO 1024PX -- */
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+.profile-news-listing .grid .list-first-item a.profile-list {
+    display: block;
+}
+.profile-news-listing .grid .list-first-item a.profile-list picture::after {
+    display: none;
+}
+}
+/*------------------------------------------*/
+
+/*Removes border from iframes*/
+iframe {
+    border: none;
+}
+/*Back to Top Scroll button*/
+#back-to-top {
+    bottom: 166px !important;
+}
+/*USERWAY WIDGET*/
+body .uwy.userway_p5 .userway_buttons_wrapper {
+    bottom: 21px !important;
+}
+/*Calendar*/
+
+.calendar-body-content-day.today {
+    background-color: #F4F8FC;
+}
+.calendar-day-dialog .calendar-btn, .calendar-item-dialog .calendar-btn, .calendar-nav .calendar-btn {
+    background-color: #F4F8FC;
+}
+/* --- Responsive Tables ---*/	
+table.sc-responsive-table thead tr th, table.sc-responsive-table-heading thead tr th {
+    border-color: #fff !important;
+}
+table.sc-responsive-table thead tr th p strong, table.sc-responsive-table thead tr th p {
+    color: #fff !important;
+}
+/*pdf link file info*/
+a.featured-link.document.ext-pdf.opens-in-new-tab span.file-info, a.document.ext-pdf span.file-info {
+    display: none;
+}
+	
+/*	Home Page - Event Tiles*/
+
+.tabs-panel .large-thumbnail-image, .tabs-panel .more-than-3-items .item-0 .large-thumbnail-image {
+    display: block !important;
+}
+
+
+</style>
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodtio663w2xjvdoq-f-ec7a635b3-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"2022589","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":2,"ak.ipv":4,"ak.proto":"h2","ak.rid":"3352a3","ak.r":35417,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":38958,"ak.gh":"104.119.189.183","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793698013","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==W4ND5EZ3RTctuDzBr5eG0xhzZwkq5KK+LY6oJUO6OCVLfyWTnMFReZpL6Tu9kPUhMZKN2Q80XHwmdNnW2sXZtHOGBMjtKEzSPOuToO6i5b782bTMI6CqTnlC3GlscQ+Yb/4HhKKg3J0xt6MvINPft1AzklPfgPmrmu/PDLu3D91pwVkgT+gDaI9EQpsuT/XH3gJScPtgm1RRVlJL+yptfru9FxFspzIWHRBtxqBmvNvMYM4c2F3YLUHDtpcPoUEZ6yMo2ZO0qw8UfLHx7LME0nm0EWcE5fiN6igLCeEz/HM2F1zPMKHZ+HF8IrAtgbzLaWtfC7TgOcyVuiTT0yGw3DWeenLVV1/7b958P63hbj2eSjE2QANzs+AErR/3ckeSN2Jpdr602RRl07VOJeCXy6n9/ce5myTHxstqMyc28kw=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern  site-search-always-visble  content-type-oc-profile content-template-oc-default group-template-oc-empty-with-default-header page-name-home page-sequence-1 page-depth-1 page-section-1 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Home" id="mainForm">
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+    
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header>
+            
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://www.fortlauderdale.gov/Government/Departments/Fire-Rescue/Beach-Conditions" class="oc-icon-b oc-i--none link-type-internal"><span>Beach Conditions</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/Alert-FTL" class="oc-icon-b oc-i--none link-type-internal"><span>Emergency Alerts</span></a></li><li><a href="https://www.facebook.com/CityofFortLauderdale" class="oc-icon-b oc-i-facebook link-type-external link-hide-text" target="_blank"><span>Facebook</span></a></li><li><a href="https://www.instagram.com/cityoffortlauderdale/" class="oc-icon-b oc-i-instagram link-type-external link-hide-text" target="_blank"><span>Instagram</span></a></li><li><a href="https://nextdoor.com/agency-detail/fl/fort-lauderdale/city-of-fort-lauderdale/" class="oc-icon-b oc-i-nextdoor link-type-external link-hide-text" target="_blank"><span>Nextdoor</span></a></li><li><a href="https://x.com/FTLCityNews" class="oc-icon-b oc-i-x link-type-external link-hide-text" target="_blank"><span>X</span></a></li><li><a href="https://www.linkedin.com/company/city-of-fort-lauderdale" class="oc-icon-b oc-i-linkedin link-type-external link-hide-text" target="_blank"><span>LinkedIn</span></a></li><li><a href="https://www.youtube.com/@CityofFortLauderdale" class="oc-icon-b oc-i-youtube link-type-external link-hide-text"><span>YouTube</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.fortlauderdale.gov/Home?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.fortlauderdale.gov/Home?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ht-noscript"><a href="https://www.fortlauderdale.gov/Home?oc_lang=ht" class="lang-item lang-ht" data-translate-to="ht" lang="en">Haitian Creole<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.fortlauderdale.gov/Home?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.fortlauderdale.gov/Home?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ht" role="option" aria-selected="false" href="https://www.fortlauderdale.gov/Home?oc_lang=ht" class="lang-item lang-ht" data-translate-to="ht" lang="en">Haitian Creole<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container">
+    <div class="header-container header-layout-4  clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.fortlauderdale.gov/Home" lang="en-US" aria-label=" - Home - Logo">
+				</a>
+			</div>
+      
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>
+		    <div class="header-website-settings">
+                <button id="btn-mob-nav" type="button" aria-expanded="false" aria-controls="nav">
+                    <i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span>
+                </button>
+        	</div>
+          <div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container  navigation-container-option-8" data-menu-type="horizontal" aria-label="primary">
+        <div class="grid">
+            <div class="col-xs-12">              
+                <ul class="sf-menu mega-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.fortlauderdale.gov/Residents" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">Residents</span>
+</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-1" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-1" class="second-level-container ch-29">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Resident Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/City-News" class="navigation-top-task-icon" target="_self" ><span>News</span></a></li><li><a href="https://www.fortlauderdale.gov/Residents/Public-Notices" class="navigation-top-task-icon" target="_self" ><span>Public Notices</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Election-Information" class=""  target="_self">Election Information</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Emergency-Alerts" class=""  target="_self">Emergency Alerts</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/E-News-Sign-Up" class=""  target="_self">E-News Sign Up</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Event-Calendar" class=""  target="_self">Event Calendar</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/FixIt-FTL-Report-a-Concern" class=""  target="_self">FixIt FTL: Report a Concern</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Floods-and-Flood-Insurance" class=""  target="_self">Floods and Flood Insurance</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/FTL-Connect-Magazine" class=""  target="_self">FTL Connect Magazine</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/High-Tides-and-King-Tides" class=""  target="_self">High Tides and King Tides</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Historic-Preservation" class=""  target="_self">Historic Preservation</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Housing" class=""  target="_self">Housing</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Large-Projects-Partnerships" class=""  target="_blank">Large Projects & Partnerships</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Neighborhood-Associations" class=""  target="_self">Neighborhood Associations</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Neighbor-Support" class=""  target="_self">Neighbor Support</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Neighbor-Survey" class=""  target="_self">Neighbor Survey</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/News" class=""  target="_self">News</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Parking-Services-Permits" class=""  target="_self">Parking Services & Permits</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Property-Search" class=""  target="_blank">Property Search</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Public-Notices" class=""  target="">Public Notices</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Public-Records-Request" class=""  target="_blank">Public Records Request</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Recycling" class=""  target="_self">Recycling</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Sea-Turtles" class=""  target="_self">Sea Turtles</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Service-Directory" class=""  target="">Service Directory</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Sustainability" class=""  target="_self">Sustainability</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Utilities" class=""  target="_self">Utilities</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Utility-Billing" class=""  target="_self">Utility Billing</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Volunteer-Opportunities" class=""  target="_self">Volunteer Opportunities</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Water-Quality-Report" class="nav-has-children"  target="_self">Water Quality Report</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-27" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-27" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Water-Quality-Report/Request-a-copy-of-Water-Quality-Report"  target="_self">Request a copy of Water Quality Report</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Waterway-Quality" class=""  target="_self">Waterway Quality</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Residents/Waterways" class=""  target="_self">Waterways</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-2">
+<a href="https://www.fortlauderdale.gov/Business" class="nav-level-1 nav-has-children"  target="">Business</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-2" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-2" class="second-level-container ch-11">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Menu Top Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Development-Services/Permitting-Services" class="navigation-top-task-icon" target="_self" ><span>Permits</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Development-Services/LauderBuild" class="navigation-top-task-icon" target="_self" ><span>LauderBuild</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Bid-Solicitation-Results" class=""  target="_self">Bid Solicitation Results</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Building-Permits" class=""  target="_self">Building Permits</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Business" class=""  target="">Business</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Business-Tax-Applications-and-Forms" class=""  target="_self">Business Tax Applications and Forms</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Economic-Development" class=""  target="_self">Economic Development</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Fort-Lauderdale-Executive-Airport" class=""  target="_blank">Fort Lauderdale Executive Airport</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/LauderBuild" class=""  target="_blank">LauderBuild</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Lobbyist-Registration" class=""  target="_self">Lobbyist Registration</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Permits" class=""  target="_self">Permits</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Real-Estate" class=""  target="_self">Real Estate</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Business/Zoning" class=""  target="_self">Zoning</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-3">
+<a href="https://www.fortlauderdale.gov/Government" class="nav-level-1 nav-has-children"  target="">Government</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-3" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-3" class="second-level-container ch-7">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Menu Top Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Police" class="navigation-top-task-icon" target="_blank" ><span>Police</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Fire-Rescue" class="navigation-top-task-icon" target="_self" ><span>Fire Rescue</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/About-Fort-Lauderdale" class=""  target="">About Fort Lauderdale</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/Boards-Committees-and-Authorities" class=""  target="_self">Boards, Committees, and Authorities</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission" class="nav-has-children"  target="">City Commission</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Mayor-Dean-J-Trantalis"  target="">Mayor Dean J. Trantalis</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/District-1-Commissioner"  target="">District 1 Commissioner</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Commissioner-Steven-Glassman-District-2"  target="">Commissioner Steven Glassman</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Commissioner-Pamela-Beasley-Pittman-District-3"  target="">Commissioner Pamela Beasley-Pittman</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Vice-MayorCommissioner-Ben-Sorensen-District-4"  target="">Vice Mayor/Commissioner Ben Sorensen</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission/Office-of-the-Mayor-City-Commission"  target="">Office of the Mayor & City Commission</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission-Meetings" class="nav-has-children"  target="">City Commission Meetings</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission-Meetings/LauderBriefs"  target="">LauderBriefs</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/City-Commission-Meetings/Commission-Meeting-Agenda-Information"  target="">Commission Meeting Agenda Information</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments" class="nav-has-children"  target="">Departments</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Capital-Projects"  target="">Capital Projects</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Attorneys-Office"  target="">City Attorney's Office</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Auditors-Office"  target="">City Auditor's Office</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office"  target="">City Clerk's Office</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/City-Managers-Office"  target="">City Manager's Office</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Community-Redevelopment-Agency"  target="">Community Redevelopment Agency</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Community-Services"  target="">Community Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Development-Services"  target="">Development Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Finance"  target="">Finance</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Fire-Rescue"  target="">Fire Rescue</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Fort-Lauderdale-Executive-Airport-FXE"  target="_blank">Fort Lauderdale Executive Airport (FXE)</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Human-Resources"  target="">Human Resources</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Information-Technology-Services"  target="">Information Technology Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Office-of-Management-and-Budget"  target="">Office of Management and Budget</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Parks-Recreation"  target="">Parks & Recreation</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Police"  target="_blank">Police</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Procurement-Services"  target="">Procurement Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Public-Works"  target="">Public Works</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications"  target="">Strategic Communications</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Transportation-and-Mobility"  target="">Transportation and Mobility</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Departments/Utility-Services"  target="">Utility Services</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety" class="nav-has-children"  target="">Public Safety</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Alert-FTL"  target="_self">Alert FTL</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Emergency-Resources"  target="_self">Emergency Resources</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Fire-Rescue"  target="_self">Fire Rescue</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Public-Safety/Police"  target="_blank">Police</a></li></ul></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links" class="nav-has-children"  target="">Useful Links</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/City-Ordinances-Municode"  target="_blank">City Ordinances (Municode)</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Commission-Meeting-Agendas"  target="_blank">Commission Meeting Agendas</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Community-Enhancement-and-Compliance"  target="_self">Community Enhancement and Compliance</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Emergency-Management"  target="_self">Emergency Management</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Financial-Transparency-Portal"  target="_self">Financial Transparency Portal</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Geographic-Information-Systems-GIS"  target="_blank">Geographic Information Systems (GIS)</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Housing-Community-Development-and-Homelessness"  target="_self">Housing & Community Development and Homelessness</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Intergovernmental-Affairs"  target="_self">Intergovernmental Affairs</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Large-Projects-Partnerships"  target="_blank">Large Projects & Partnerships</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Marine-Facilities"  target="_blank">Marine Facilities</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Master-Plans"  target="_self">Master Plans</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Neighbor-Support"  target="_self">Neighbor Support</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Open-Data-Portal"  target="_self">Open Data Portal</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Parking-Services"  target="_self">Parking Services</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Public-Reporting-and-Transparency"  target="_self">Public Reporting and Transparency</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Sister-Cities"  target="_self">Sister Cities</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Strategic-Plan"  target="_self">Strategic Plan</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Sustainability"  target="_self">Sustainability</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Upcoming-Public-Meetings"  target="_self">Upcoming Public Meetings</a></li><li  class="third-level-item  "><a href="https://www.fortlauderdale.gov/Government/Useful-Links/Vision-Plan"  target="_self">Vision Plan</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-4   nav-item-seq-4">
+<a href="https://www.fortlauderdale.gov/Explore-FTL" class="nav-level-1 nav-has-children"  target="">Explore FTL</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-4" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-4" class="second-level-container ch-15">
+<li class="navigation-top-tasks-container"><section><h1 class="navigation-top-tasks-heading visuallyhidden">Menu Top Tasks</h1><ul class="navigation-top-tasks-list"><li><a href="https://www.fortlauderdale.gov/Government/Departments/Transportation-and-Mobility/Parking-Services" class="navigation-top-task-icon" target="_self" ><span>Parking</span></a></li><li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/Event-Calendar" class="navigation-top-task-icon" target="_self" ><span>Event Calendar</span></a></li></ul></section></li>
+          
+            <li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/About-Fort-Lauderdale" class=""  target="_self">About Fort Lauderdale</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Beach-Conditions" class=""  target="_self">Beach Conditions</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Boat-Show" class=""  target="_blank">Boat Show</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Convention-Visitors-Bureau" class=""  target="_blank">Convention & Visitors Bureau</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Discover-FTL-Beach" class=""  target="_blank">Discover FTL Beach</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar" class=""  target="">Event Calendar</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Fort-Lauderdale-Executive-Airport" class=""  target="_blank">Fort Lauderdale Executive Airport</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Go-Riverwalk" class=""  target="">Go Riverwalk</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/LauderGO-Mobility-Services" class=""  target="_self">LauderGO! Mobility Services</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Parking" class=""  target="_self">Parking</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Parking-Locations" class=""  target="_self">Parking Locations</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Parks-Recreation" class=""  target="_self">Parks & Recreation</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Port-Everglades" class=""  target="_blank">Port Everglades</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Sea-Turtles" class=""  target="">Sea Turtles</a></li><li class="second-level-item  "><a href="https://www.fortlauderdale.gov/Explore-FTL/Visit-Lauderdale" class=""  target="_blank">Visit Lauderdale</a></li></ul></li>
+          
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel">
+	<label for="ctl08_txtSearch" id="ctl08_lblSearch" class="sc-search-label">Search</label><input name="ctl08$txtSearch" type="text" id="ctl08_txtSearch" class="sc-search-text" placeholder="Search..." /><input type="submit" name="ctl08$btnSearch" value="Search" id="ctl08_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+    </div>
+</div>
+
+            
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container no-background clearfix">
+                        <div class="content-main-container">
+                                                    
+                            <!-- OC Layout Element Conent Template -->
+                            <!--normalTemplateStart--><div class="visuallyhidden"><h1 class='oc-page-title '>Home</h1></div><div id="main-content"><section class="row-index-1"><div class="row-container full-width clearfix"><div class="row-content-container fixed-width clearfix">
+
+
+
+        <div class="profile-hero-container">
+            <div class="profile-video-listing">
+                
+
+
+<p class="visuallyhidden">The following video is decorative.</p>
+<div class="ocp-video-banner ocp-override mobile-enabled">
+    <div id="ocp-video-container"></div>
+    
+    <div id="vb-controls" class="ocp-vb-controls">
+        <button type="button" id="pause-play" class="ocp-vb-pp ocp-vb-button" tabIndex="0" title="Play video player">Play video background</button>
+    </div>
+</div>
+ 
+<style>
+    .ocp-video-banner {
+        background:  url("/files/assets/public/v/1/_dev/hero.jpg") no-repeat 50%;
+        background-size: cover;
+        width: 100%;
+        padding-top: 56.25%;
+        position: relative;
+        overflow: hidden;
+    }
+     
+    .ocp-video-banner:after {
+        content: '';
+        background-image: linear-gradient(360deg, , transparent);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 0;
+    }
+     
+    #ocp-video-container, .ocp-video-banner iframe {
+        pointer-events: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+     
+    .ocp-video-banner iframe {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 200%;
+        opacity: 0;
+        transition: opacity .45s;
+    }
+     
+    .ocp-video-banner iframe.loaded {
+        opacity: 1;
+    }
+     
+    .ocp-vb-content-container {
+        position: absolute;
+        z-index: 1;
+        opacity: 1;
+        background-color: rgba(0,0,0,0.75);
+        color: #fff;
+        font-size: 3.5em;
+        line-height: 1;
+        font-weight: 700;
+        padding: 2%;
+        transition: opacity 2s;
+    }
+     
+    .ocp-vb-content-container.start {
+        opacity: 0;
+        transition: opacity 0.45s;
+    }
+     
+    .ocp-vb-content-container.center-center {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+     
+    .ocp-vb-content-container.left-center {
+        top: 50%;
+        left: 0;
+        transform: translate(0, -50%);
+    }
+     
+    .ocp-vb-content-container.left-top {
+        top: 0;
+        left: 0;
+    }
+     
+    .ocp-vb-content-container.left-bottom {
+        top: unset;
+        bottom: 0;
+        left: 0;
+    }
+     
+    .ocp-vb-content p {
+        color: #fff;
+        margin: 0;
+        font-size: 1em;
+    }
+     
+    .ocp-vb-controls {
+        z-index: 2000;
+        display: block;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+     
+    #vb-controls .ocp-vb-button {
+        display: block;
+        position: relative;
+        width: 44px;
+        height: 44px;
+        border: 2px solid transparent;
+        border-radius: 50%;
+        opacity: .75;
+        text-indent: -9999px;
+        animation: pulse 3s infinite;
+        padding: 0;
+        margin: 0;
+    }
+     
+    #vb-controls.ocp-vb-controls.loaded .ocp-vb-button {
+        transition: all 0.3s ease;
+    }
+     
+    #vb-controls .ocp-vb-button:focus {
+        background-color: #000;
+        border-color: #fff;
+        animation: none;
+        outline-offset: -5px;
+        color: #fff;
+    }
+     
+    #vb-controls .ocp-vb-button:hover {
+        background-color: #000;
+        border-color: #fff;
+        animation: none;
+        outline-offset: -5px;
+        color: #fff;
+    }
+     
+    #vb-controls .ocp-vb-button:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 9px;
+        left: 13px;
+        width: 0;
+        height: 0;
+        border: 0;
+        border-color: transparent transparent transparent #fff;
+        border-style: solid;
+        border-width: 11px 0 11px 20px;
+    }
+     
+    #vb-controls .ocp-vb-button.pause-button:after, #vb-controls .ocp-vb-button.mobile-button:after {
+        border-left: 5px solid #fff;
+        border-right: 5px solid #fff;
+        border-top: 0 solid transparent;
+        border-bottom: 0 solid transparent;
+        width: 16px;
+        height: 20px;
+        left: 12px;
+        top: 10px;
+    }
+     
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 hsla(24, 37%, 69%, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px hsla(24, 37%, 69%, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 hsla(24, 37%, 69%, 0);
+        }
+    }
+     
+    #vb-controls .ocp-vb-button {
+        background-color: rgba(0,0,0,0.56);
+    }
+     
+    @media only screen and (max-width: 991px) {
+        .ocp-vb-content-container {
+            font-size: 2em;
+        }
+    }
+ 
+    @media only screen and (max-width: 767px) {
+        .ocp-vb-content-container {
+            font-size: 1em;
+        }
+        .ocp-video-banner.no-autoplay .ocp-vb-controls.start {
+            height: 88px;
+            top: 50%;
+            right: 50%;
+            bottom: 0px;
+            transform: translate(50%, -50%);
+        }
+         
+        .ocp-video-banner.no-autoplay .ocp-vb-controls.start .ocp-vb-button {
+            width: 88px;
+            height: 88px;
+            transition: none;
+        }
+         
+        .ocp-video-banner.no-autoplay .ocp-vb-controls.start .ocp-vb-button:after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 20px;
+            left: 28px;
+            border-width: 22px 0 22px 40px;
+        }
+    }
+ 
+    @media only screen and (max-width: 499px) {
+        .ocp-vb-controls {
+            right: 10px;
+            bottom: 10px;
+        }
+    }
+ 
+</style>
+ 
+ 
+<script defer type="text/javascript">
+ 
+var videoLink = 'https://vimeo.com/604877708';
+var playText = 'Play video background';
+var pauseText = 'Pause video background';
+var playOnMobile = 'Yes';
+var mobileAutoplay = 'Yes';
+var mm = window.matchMedia('(max-width: 767px)');
+ 
+function YouTubeGetID(url){
+    url = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    return undefined !== url[2]?url[2].split(/[^0-9a-z_\-]/i)[0]:url[0];
+}
+ 
+function loadScript(url, callback) {
+     
+    var head = document.head;
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+ 
+    script.onreadystatechange = callback;
+    script.onload = callback;
+ 
+    head.appendChild(script);
+}
+ 
+// VIMEO BLOCK
+ 
+var createVimeoIframe = function() {
+    
+    var options = {url: videoLink, loop: true, autoplay: true, background: true, controls: false, muted: true, title: false,    playsinline: true
+    };
+     
+    var player = new Vimeo.Player('ocp-video-container', options);
+     
+    player.ready().then(function(e) {
+         
+        // remove iframe from tabindex ---
+        $('#ocp-video-container, #ocp-video-container iframe').prop('tabIndex', -1);
+         
+        if ((mm.matches) && (playOnMobile == 'Yes')) {         
+            player.pause()
+            setTimeout(function() { player.play() }, 750);
+        }
+    });
+     
+    player.on('play', function() {
+        $('#ocp-video-container iframe').addClass('loaded');
+        $('#vb-controls').removeClass('start');
+        $('#pause-play').addClass('pause-button');
+        if ( $('#vb-content').length > 0 ) {
+            $('#vb-content').removeClass('start');
+        }
+    });
+     
+    var controllers = $('.ocp-vb-pp');
+    controllers.attr('title', pauseText);
+    controllers.text(pauseText);
+     
+    // pause video toggle ---
+    controllers.on('click', function(e){
+        e.preventDefault();
+        controllers.toggleClass("pause-button");
+         
+        //var pp = $(this);
+         
+        player.getPaused().then(function(paused) {
+             
+            if (paused == false){
+             
+                player.pause();
+                controllers.attr('title', playText);
+                controllers.text(playText);
+             
+            } else {
+             
+                player.play();
+                controllers.attr('title', pauseText);
+                controllers.text(pauseText);
+            }
+             
+        }).catch(function(error) {
+            console.log(error);
+        });
+    });
+};
+ 
+// YOUTUBE BLOCK
+ 
+var createYouTubeIframe = function() {
+     
+    var videoId = YouTubeGetID(videoLink);
+     
+    var player;
+    var videoId = videoId;
+    var startSeconds = 0;
+     
+    onYouTubeIframeAPIReady = function () {
+      player = new YT.Player('ocp-video-container', {
+        videoId: videoId,
+        playerVars: {autoplay: 1, disablekb: 0, controls: 0, modestbranding: 1, loop: 1, fs: 0, rel: 0, enablejsapi: 1, start: startSeconds},
+        events: {
+          onReady: function (e) {
+            e.target.mute();
+            e.target.playVideo();
+          },
+          onStateChange: function (e) {
+             
+            if (e.data === YT.PlayerState.PLAYING) {
+              document.getElementById("ocp-video-container").classList.add("loaded");
+              document.getElementById("vb-controls").classList.remove("start");
+              document.getElementById("pause-play").classList.add("pause-button");
+              if  ( document.getElementById("vb-content") !== undefined ) {
+                document.getElementById("vb-content").classList.remove("start");
+              }
+            }
+             
+            if (e.data === YT.PlayerState.ENDED) {
+              // Loop from starting point
+              player.seekTo(startSeconds);
+            }
+          }
+        }
+      });
+       
+      // remove iframe from tabindex ---
+      $("#ocp-video-container").prop('tabIndex', -1);
+       
+      var controllers = $('.ocp-vb-pp');
+      controllers.attr('title', pauseText);
+      controllers.text(pauseText);
+       
+      // pause video toggle ---
+      controllers.on('click', function(e){
+         
+        e.preventDefault();
+        controllers.toggleClass("pause-button");
+         
+        if (player.getPlayerState() == 1){
+          player.pauseVideo();
+          controllers.attr('title', playText);
+          controllers.text(playText);
+           
+        } else {
+             
+          player.playVideo();
+          controllers.attr('title', pauseText);
+          controllers.text(pauseText);
+        }
+      });
+       
+    };
+};
+ 
+const observer = new IntersectionObserver(entries => {
+         
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            // Load correct player api ---
+            if (videoLink.includes('vimeo')) {
+                loadScript("https://player.vimeo.com/api/player.js", createVimeoIframe);
+            } else {
+                loadScript("https://www.youtube.com/iframe_api", createYouTubeIframe);
+            }
+            observer.unobserve(entry.target);
+        }
+    });
+},{threshold:[0.15]});
+ 
+$(document).ready(function() {
+    console.log(videoLink === '');
+    if ( mm.matches ) {
+        if ( playOnMobile === 'Yes' && videoLink !== '') {
+            if ( mobileAutoplay !== 'Yes') {
+                if ( !$('#ocp-video-container iframe').hasClass('loaded') ) {
+                    $('#pause-play').on("click", function () {
+                        observer.observe(document.querySelector('.ocp-video-banner'));
+                    });
+                    $('#vb-controls').addClass('start');
+                }
+            } else {
+                observer.observe(document.querySelector('.ocp-video-banner'));
+            }
+        } else {
+            $('.ocp-vb-controls').remove();
+            if ( $('#vb-content').length > 0 ) {
+                $('#vb-content').removeClass('start');
+            }
+        }
+    } else {
+        if ( videoLink === '' ) {
+            $('.ocp-vb-controls').remove();
+            if ( $('#vb-content').length > 0 ) {
+                $('#vb-content').removeClass('start');
+            }
+        } else {
+            observer.observe(document.querySelector('.ocp-video-banner'));
+        }
+    }
+});
+</script>
+
+
+
+
+
+
+
+            </div>
+        </div>
+    
+
+
+
+
+
+
+</div></div></section><section class="row-index-2"><div class="row-container full-width clearfix"><div class="row-content-container fixed-width clearfix">
+<div class="do-it-online do-it-online-format-10 top-task-homepage top-task-homepage-format-10 clearfix" data-total-results="6"><div class="grid"><div class="col-xs-12 col-m-4 col-lg-2">
+			<a href="https://www.fortlauderdale.gov/Government/Departments/Finance/Utility-Billing-and-Collections" class="profile-list item-0" target="_self" >
+				<i class="item-icon pay-utilities" aria-hidden="true"></i>
+				<h2>Pay Utilities</h2>
+			</a>
+		</div><div class="col-xs-12 col-m-4 col-lg-2">
+			<a href="https://www.fortlauderdale.gov/Government/Departments/Development-Services/Permitting-Services" class="profile-list item-1" target="_self" >
+				<i class="item-icon permitting-services" aria-hidden="true"></i>
+				<h2>Permitting Services</h2>
+			</a>
+		</div><div class="col-xs-12 col-m-4 col-lg-2">
+			<a href="https://www.fortlauderdale.gov/Government/Departments/Transportation-and-Mobility/Parking-Services" class="profile-list item-2" target="_self" >
+				<i class="item-icon p" aria-hidden="true"></i>
+				<h2>Parking</h2>
+			</a>
+		</div><div class="col-xs-12 col-m-4 col-lg-2">
+			<a href="https://www.fortlauderdale.gov/Government/Departments/Human-Resources/Talent-Management/Employment-with-the-City-of-Fort-Lauderdale" class="profile-list item-3" target="_self" >
+				<i class="item-icon employment" aria-hidden="true"></i>
+				<h2>Employment</h2>
+			</a>
+		</div><div class="col-xs-12 col-m-4 col-lg-2">
+			<a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar" class="profile-list item-4" target="_self" >
+				<i class="item-icon calendar" aria-hidden="true"></i>
+				<h2>Event Calendar</h2>
+			</a>
+		</div><div class="col-xs-12 col-m-4 col-lg-2">
+			<a href="https://fortlauderdale.legistar.com/Calendar.aspx" class="profile-list item-5" target="_blank" >
+				<i class="item-icon commission-agendas" aria-hidden="true"></i>
+				<h2>Commission Agendas</h2>
+			</a>
+		</div></div></div>
+
+</div></div></section><section class="row-index-3"><div class="row-container full-width clearfix"><div class="row-content-container fixed-width clearfix"><div class="row-container-title fixed-width" ><h1>Latest News</h1></div>
+<div class="profile-listing-container profile-news-listing-container profile-news-listing-option-4 clearfix"><div class="profile-tabbed-listing profile-news-listing clearfix" data-total-results="4">
+<div class="grid">
+
+<div class="col-xs-12 list-first-item ">
+	<a href="https://www.fortlauderdale.gov/Residents/City-News/Higher-Tides-Expected-This-Week-Nov-5-11" class="profile-list item-0 homepage-pin clearfix" >		
+		<picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/2/news/images/higher-tides.jpg?dimension=homepagelistingwide&w=710&h=327">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/2/news/images/higher-tides.jpg?dimension=homepagelistingwide&w=710&h=327">
+  <source srcset="/files/assets/public/v/2/news/images/higher-tides.jpg?dimension=homepagelistingwide&w=710&h=327">
+  <img class="large-thumbnail-image wide-thumbnail-image" src="/files/assets/public/v/2/news/images/higher-tides.jpg?dimension=homepagelistingwide&w=710&h=327"  alt=""/>
+  </picture>
+      
+		<div class="news-item-content">
+			<h2>Higher Tides Expected This Week (Nov. 5-11)</h2>
+			<p class="published-on small-text">Published on November 02, 2026</p>
+			<p>Higher tides are predicted over the next few days due to king tides.</p>
+		</div>
+	</a>
+</div><div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Residents/City-News/Traffic-Advisory-Downtown-Day-of-the-Dead-November-7" class="profile-list item-1 homepage-show" >		
+		
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=496&h=328">
+  <source srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=496&h=328" alt=""/>
+  </picture>
+		<h2>Traffic Advisory: Downtown Day of the Dead November 7</h2>
+		<p class="published-on small-text">Published on November 02, 2026</p>
+		<p>The Downtown Day of the Dead will take place on Saturday, November 7, at Esplanade Park in Fort Lauderdale.<br/><br/>The following traffic advisory will be in effect on Saturday, November 7, from 7 a.m. to 11 p.m.</p>
+	</a>
+</div><div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Residents/City-News/Traffic-Advisory-Backyard-FTL-Day-of-the-Dead-Celebration-November-7" class="profile-list item-2 homepage-show" >		
+		
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=496&h=328">
+  <source srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=496&h=328" alt=""/>
+  </picture>
+		<h2>Traffic Advisory: Backyard FTL Day of the Dead Celebration November 7</h2>
+		<p class="published-on small-text">Published on November 02, 2026</p>
+		<p>The Day of the Dead Celebration will take place on Saturday, November 7, at Backyard FTL in Fort Lauderdale.<br/><br/>The following traffic advisory will be in effect on Saturday, November 7, from 8 a.m. to 11:30 p.m.:<br/>- Nugent Ave (SW 3rd Avenue) will be closed between Broward Boulevard and SW 2nd Street<br/><br/>Expect traffic congestion and plan travel times accordingly.</p>
+	</a>
+</div><div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Residents/City-News/Traffic-Advisory-Friday-Dining-in-the-Streets" class="profile-list item-3 homepage-show" >		
+		
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=496&h=328">
+  <source srcset="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/4/news/images/traffic-alets/traffic-advisory.jpg?dimension=homepagelisting&w=496&h=328" alt=""/>
+  </picture>
+		<h2>Traffic Advisory: Friday Dining in the Streets</h2>
+		<p class="published-on small-text">Published on November 02, 2026</p>
+		<p>Friday Dining in the Streets will take place every Friday evening beginning November 6, 2026, and concluding January 29, 2027. The event will take place in the eastbound lanes of NE 33rd Street between NE 33rd Avenue and Ocean Boulevard. The following traffic advisory will be in effect every Friday from 5 p.m. to midnight.</p>
+	</a>
+</div>
+
+
+</div>
+</div>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/City-News" class="panel-button">View More News</a></div>
+        
+
+
+
+</div></div></section><section class="row-index-4"><div class="row-container full-width clearfix"><div class="row-content-container fixed-width clearfix">
+<div class="profile-cta-spotlight">
+<div class="grid">
+
+<div class="col-xs-12 col-m-12 col-lg-12">
+	<a class="cta-spotlight" href="https://spotlightftl.com/propertytaxes">
+		<div class="cta-text-item">
+			<h2 class="cta-spotlight-title">Understanding Property Taxes</h2>
+			<p class="cta-spotlight-description">Learn how property taxes and other locally raised revenue support essential City services, including public safety, roads, parks and neighborhood infrastructure.</p>
+		</div>
+		
+		 
+		<div class="cta-item-image">
+			<img src="/files/assets/public/v/1/news/images/property-taxes.jpg" alt="house and a calculator" />
+		</div>
+		
+	</a>
+</div>
+
+
+</div>
+</div>
+<style>
+	.profile-cta-spotlight {
+		text-align: center;
+	}
+</style>
+
+
+
+</div></div></section><section class="row-index-5"><div class="row-container full-width clearfix"><div class="row-content-container fixed-width clearfix"><div data-oc-tabs-name="tabs" class="tab-group profile-featured-links"><div id="tabs-body" class="tab-group-body"><div class="no-js-element clearfix tabs-header for-panel-1 tab-type-homepage-events-listing ">
+    <h1 class="item-text" >Events</h1>
+</div>
+<div id="panel-1" class="tabs-panel clearfix tab-type-homepage-events-listing ">
+    <div class="wysiwyg-content body-content" ><h1>Upcoming Events</h1>
+
+</div>
+    <div class="profile-listing-container  profile-events-listing-container profile-events-listing-option-1 clearfix"><div class="profile-tabbed-listing profile-events-listing clearfix" data-total-results="3">
+<div class="grid">
+        
+        <div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar/Water-Safety-Day" class="profile-list item-0 homepage-show  " >		
+		
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/parks-amp-recreation/images/10295-pr-water-safety-day_1080x1080_square.jpg?dimension=homepagelisting&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/parks-amp-recreation/images/10295-pr-water-safety-day_1080x1080_square.jpg?dimension=homepagelisting&w=496&h=328">
+  <source srcset="/files/assets/public/v/1/parks-amp-recreation/images/10295-pr-water-safety-day_1080x1080_square.jpg?dimension=homepagelisting&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/parks-amp-recreation/images/10295-pr-water-safety-day_1080x1080_square.jpg?dimension=homepagelisting&w=496&h=328" alt=""/>
+  </picture>
+		<span class="list-item-block-date" aria-hidden="true"><span class="part-date">03</span>
+<span class="part-month">Nov</span>
+<span class="part-year">2026</span></span>
+		<h2>Water Safety Day</h2>
+		<p class="event-date small-text">November 03, 2026</p>
+		<p>Join us for Water Safety Day where clubs and teen groups from across Broward County are invited for an exciting event focused on water safety, aquatic sports, lifeguarding, and career opportunities.</p>
+	</a>
+</div><div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar/King-Tides-Nov-5-11" class="profile-list item-1 homepage-show  " >		
+		
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/2/news/images/king-tides-flooding-380px-by-250px.jpg?dimension=homepagelisting&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/2/news/images/king-tides-flooding-380px-by-250px.jpg?dimension=homepagelisting&w=496&h=328">
+  <source srcset="/files/assets/public/v/2/news/images/king-tides-flooding-380px-by-250px.jpg?dimension=homepagelisting&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/2/news/images/king-tides-flooding-380px-by-250px.jpg?dimension=homepagelisting&w=496&h=328" alt=""/>
+  </picture>
+		<span class="list-item-block-date" aria-hidden="true"><span class="part-date">05</span>
+<span class="part-month">Nov</span>
+<span class="part-year">2026</span></span>
+		<h2>King Tides: Nov. 5-11</h2>
+		<p class="event-date small-text">November 05, 2026</p>
+		<p>While some roadway flooding is expected, please report impassable roads to our Customer Support Center at 954-828-8000.</p>
+	</a>
+</div><div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar/Light-Up-Lauderdale" class="profile-list item-2 homepage-show  " >		
+		
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/parks-amp-recreation/images/events/light-up-the-holidays/2026/10237-lul-2026_website-560x290.jpg?dimension=homepagelisting&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/parks-amp-recreation/images/events/light-up-the-holidays/2026/10237-lul-2026_website-560x290.jpg?dimension=homepagelisting&w=496&h=328">
+  <source srcset="/files/assets/public/v/1/parks-amp-recreation/images/events/light-up-the-holidays/2026/10237-lul-2026_website-560x290.jpg?dimension=homepagelisting&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/parks-amp-recreation/images/events/light-up-the-holidays/2026/10237-lul-2026_website-560x290.jpg?dimension=homepagelisting&w=496&h=328" alt=""/>
+  </picture>
+		<span class="list-item-block-date" aria-hidden="true"><span class="part-date">05</span>
+<span class="part-month">Nov</span>
+<span class="part-year">2026</span></span>
+		<h2>Light Up Lauderdale</h2>
+		<p class="event-date small-text">November 05, 2026</p>
+		<p>The holiday season officially kicks off as Riverwalk Fort Lauderdale hosts the popular “Get Lit” event that also marks the launch of Light Up Lauderdale – an annual 10-week celebration of sparkling holiday lights along the banks of the scenic New River. Join us for live holiday musical performances, kids’ crafts, a visit by Santa, and more!</p>
+	</a>
+</div></div>
+</div>
+<a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar" class="panel-button">View More Events</a></div>
+        
+        
+    
+</div><div class="no-js-element clearfix tabs-header for-panel-2 tab-type-default ">
+    <h1 class="item-text" >Meetings</h1>
+</div>
+<div id="panel-2" class="tabs-panel clearfix tab-type-default ">
+    <div class="wysiwyg-content body-content" ><h1>Upcoming Meetings</h1>
+<div>
+<div class="profile-listing-container profile-meetings-listing-container profile-meetings-listing-option-1 clearfix"><div class="profile-events-listing without-images clearfix" data-total-results="33">
+<div class="grid">
+
+<div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Upcoming-Public-Meetings/CANCELLED-City-Commission-Conference-Meeting-11-6-2026-CANCELLED" title=""CANCELLED-City Commission Conference Meeting 11-6-2026-CANCELLED"" class="profile-list item-0 homepage-show  " >	
+		<span class="list-item-block-date" aria-hidden="true">
+<span class="part-date">06</span>
+<span class="part-month">Nov</span>
+<span class="part-year">2026</span>
+</span>
+		<h2>"CANCELLED-City Commission Conference Meeting 11-6-2026-CANCELLED"</h2>
+		<p class="event-date small-text"><span class="minutes-date">November 06, 2026</span></p>
+		<p><span class="meeting-type">City Commission Conference Meeting</span></p>
+		<p>"CANCELLED-City Commission Conference Meeting 11-6-2026-CANCELLED"</p>
+	</a>
+</div><div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Upcoming-Public-Meetings/City-Commission-Regular-Meeting-11-6-2026" title="City Commission Regular Meeting 11-6-2026" class="profile-list item-1 homepage-show  " >	
+		<span class="list-item-block-date" aria-hidden="true">
+<span class="part-date">06</span>
+<span class="part-month">Nov</span>
+<span class="part-year">2026</span>
+</span>
+		<h2>City Commission Regular Meeting 11-6-2026</h2>
+		<p class="event-date small-text"><span class="minutes-date">November 06, 2026</span></p>
+		<p><span class="meeting-type">City Commission Regular Meeting</span></p>
+		<p>City Commission Regular Meeting 11-6-2026</p>
+	</a>
+</div><div class="col-xs-12 col-m-6 col-lg-4">
+	<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Upcoming-Public-Meetings/Vice-Mayor-Ben-Sorensens-Virtual-Agenda-Review-11-16-2026" title="Vice Mayor Ben Sorensen's Virtual Agenda Review" class="profile-list item-2 homepage-show  " >	
+		<span class="list-item-block-date" aria-hidden="true">
+<span class="part-date">16</span>
+<span class="part-month">Nov</span>
+<span class="part-year">2026</span>
+</span>
+		<h2>Vice Mayor Ben Sorensen's Virtual Agenda Review</h2>
+		<p class="event-date small-text"><span class="minutes-date">November 16, 2026</span></p>
+		<p><span class="meeting-type">Vice Mayor Ben Sorensen's Virtual Agenda Review</span></p>
+		<p>Neighborhood Agenda Review Meetings cover what the City Commission will vote on and provide space for the community to ask questions and provide feedback on agenda items.</p>
+	</a>
+</div>
+
+
+</div>
+</div>
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Clerks-Office/Upcoming-Public-Meetings" class="panel-button">View More Meetings</a></div>
+
+
+
+</div>
+
+</div>
+    
+    
+</div></div></div></div></div></section><section class="row-index-6"><div class="row-container full-width clearfix"><div class="row-content-container fixed-width clearfix"><div class="row-container-title fixed-width" ><h1>Helpful Resources</h1></div><div class="profile-featured-panels profile-featured-panel-format-2 display-as-carousel clearfix" role="region" aria-label="Featured Content" data-total-results="4"><div class="grid"><div class="col-xs-12 col-s-6 col-m-4"><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/E-News-Sign-Up" class="profile-featured-panel clearfix" target="_self" >
+		<div class="panel-image">
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/news/images/featured1.jpg?dimension=homepagefeaturecontent&w=380&h=216">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/news/images/featured1.jpg?dimension=homepagefeaturecontent&w=330&h=188">
+  <source srcset="/files/assets/public/v/1/news/images/featured1.jpg?dimension=homepagefeaturecontent&w=480&h=274">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/news/images/featured1.jpg?dimension=homepagefeaturecontent&w=480&h=274" alt=""/>
+  </picture></div> 
+		<h2>E-News Sign-Up</h2>
+		<p class="panel-text">Keep up-to-date with the latest news happening in Fort Lauderdale!</p>
+	</a></div><div class="col-xs-12 col-s-6 col-m-4"><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/FixIt-FTL" class="profile-featured-panel clearfix" target="_self" >
+		<div class="panel-image">
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/_dev/resources/featured2.jpg?dimension=homepagefeaturecontent&w=380&h=216">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/_dev/resources/featured2.jpg?dimension=homepagefeaturecontent&w=330&h=188">
+  <source srcset="/files/assets/public/v/1/_dev/resources/featured2.jpg?dimension=homepagefeaturecontent&w=480&h=274">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/_dev/resources/featured2.jpg?dimension=homepagefeaturecontent&w=480&h=274" alt=""/>
+  </picture></div> 
+		<h2>FixIt FTL: Report a Concern</h2>
+		<p class="panel-text">FixIt FTL is your streamlined solution for reporting non-emergency issues in our vibrant community.</p>
+	</a></div><div class="col-xs-12 col-s-6 col-m-4"><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/Alert-FTL" class="profile-featured-panel clearfix" target="_self" >
+		<div class="panel-image">
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/news/images/featured3.jpg?dimension=homepagefeaturecontent&w=380&h=216">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/news/images/featured3.jpg?dimension=homepagefeaturecontent&w=330&h=188">
+  <source srcset="/files/assets/public/v/1/news/images/featured3.jpg?dimension=homepagefeaturecontent&w=480&h=274">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/news/images/featured3.jpg?dimension=homepagefeaturecontent&w=480&h=274" alt=""/>
+  </picture></div> 
+		<h2>Emergency Alerts</h2>
+		<p class="panel-text">The City uses Alert FTL to send mass notifications and keep citizens informed in the event of ...</p>
+	</a></div><div class="col-xs-12 col-s-6 col-m-4"><a href="https://www.fortlauderdale.gov/Government/Departments/Office-of-Management-and-Budget/Strategy-and-Innovation/Open-Data-and-Transparency-Portal" class="profile-featured-panel clearfix" target="_self" >
+		<div class="panel-image">
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/2/_dev/resources/featured4.jpg?dimension=homepagefeaturecontent&w=380&h=216">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/2/_dev/resources/featured4.jpg?dimension=homepagefeaturecontent&w=330&h=188">
+  <source srcset="/files/assets/public/v/2/_dev/resources/featured4.jpg?dimension=homepagefeaturecontent&w=480&h=274">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/2/_dev/resources/featured4.jpg?dimension=homepagefeaturecontent&w=480&h=274" alt=""/>
+  </picture></div> 
+		<h2>Open Data Portal</h2>
+		<p class="panel-text">We invite you to research the open data available as part of our efforts to increase transparency...</p>
+	</a></div></div></div></div></div></section></div><!--normalTemplateEnd-->
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-4 col-lg-4 visuallyhidden" >
+	
+	<h2>Site Footer</h2>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-12 col-m-12 col-lg-12 footer-logo-section" >
+	
+	<div><img alt="Fort Lauderdale Footer Logo" src="/files/assets/public/v/1/_dev/footer-logo.png" class="footer-logo" /></div>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-4" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	<ul class="footer-links without-icons">
+<li><a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/FixIt-FTL" target="_self" title="FixIt FTL">Customer Service:</a></li>
+<li><a href="tel:954-828-8000">Call&nbsp;&nbsp;954-828-8000</a></li>
+</ul>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Get Involved</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Human-Resources/Talent-Management/Employment-with-the-City-of-Fort-Lauderdale" target="_self"  >Careers</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Explore-FTL/Event-Calendar" target="_self"  >Events</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/City-Managers-Office/Neighbor-Support/Neighbor-Volunteer-Office" target="_self"  >Volunteering</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/FixIt-FTL" target="_self"  >Provide Feedback</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Strategic-Communications/E-News-Sign-Up" target="_self"  >E-News Sign-Up</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Quick Links</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.fortlauderdale.gov/Residents" target="_self"  >Residents</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Business" target="_self"  >Business</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Explore-FTL" target="_self"  >Visitors</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Government/Departments/Finance/Utility-Billing-and-Collections" target="_self"  >Utility Billing</a>
+</li>
+          <li>
+<a href="https://www.fortlauderdale.gov/Explore-FTL/About-Fort-Lauderdale" target="_self"  >About FTL</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-3 col-lg-2" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Follow Us</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/CityofFortLauderdale" target="_blank"  >
+<i aria-hidden="true"></i>Facebook
+</a>
+</li>
+          <li class="footer-link-x">
+	<a href="https://twitter.com/FTLCityNews" target="_self"  >
+<i aria-hidden="true"></i>X
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/cityoffortlauderdale/" target="_self"  >
+<i aria-hidden="true"></i>Instagram
+</a>
+</li>
+          <li class="footer-link-linkedin">
+	<a href="https://www.linkedin.com/company/city-of-fort-lauderdale" target="_blank"  >
+<i aria-hidden="true"></i>Linkedin
+</a>
+</li>
+          <li class="footer-link-nextdoor">
+	<a href="https://nextdoor.com/agency-detail/fl/fort-lauderdale/city-of-fort-lauderdale/" target="_blank"  >
+<i aria-hidden="true"></i>Nextdoor
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/@CityofFortLauderdale" target="_blank"  >
+<i aria-hidden="true"></i>YouTube
+</a>
+</li>
+           </ul>
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.fortlauderdale.gov/Government/Website-Policies" target="_self"  >Website Policies</a>&nbsp;| <a href="https://www.fortlauderdale.gov/Government/Departments/Human-Resources/Risk-Management/Accessibility" target="_self"  >Accessibility Statement</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 &nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/e9a4d813-2c25-4b53-952f-104f40656af1/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    <!-- GovDelivery Subscription Overlay -->
+<script src="https://content.govdelivery.com/overlay/js/17582.js"></script>
+<!-- End GovDelivery Overlay -->
+    <!-- Global site tag (gtag.js) GOOGLE ANALYTICS -- - GA4 -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-5MQ00E8GD8"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() { dataLayer.push(arguments); }
+	gtag('js', new Date());
+
+	gtag('config', 'G-5MQ00E8GD8', {
+        
+            cookie_flags: 'secure;'
+        
+    });
+</script>
+<!-- End Global site tag (gtag.js) - GA4 -->
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K9JHSFN');</script>
+<!-- End Google Tag Manager -->
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

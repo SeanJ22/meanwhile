@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T10:03:31.790Z",
+  "preparedRecords": 10,
+  "originalSourceHashes": "PASS; full native signed adopted originals retained, OCR separately labeled",
+  "exactSupportQuotes": "PASS; every field quote occurs in its relevant per-measure source excerpt",
+  "sourceSemanticAndNativeRenderReading": "PASS; every printed question/response choice matched native rendered adopted originals; operative clauses read through native legal redlines. Preserves residency/citizenship/registration/proof5, age21 removal, office-conflict and redistricting conditions; administrative review versus independent court challenges; emergency72hour rule; civil-service seniority/election board; interim/acting selection and publication changes; property tier thresholds, party-paid reviews, assignments and50year/15percent initiative referendum; broader park-zoning scope; police/fire first-appointee and internal-promotion residency exceptions; all ten-day post-certification effect. OCR omissions repaired with separately labeled verbatim native clause transcriptions.",
+  "publisherIdentification": "All ten primary measure-source URLs are direct fortlauderdale.gov native signed adopted ordinances. Current City charter-review microsite directly links each original and explicitly lists ten questions; current City.gov homepage directly links the same official microsite domain. No synthetic linking page or unperformed delegation check claimed.",
+  "normalPublicationAdmission": "PASS; exact-byte receipts for every projected source URL",
+  "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations and ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

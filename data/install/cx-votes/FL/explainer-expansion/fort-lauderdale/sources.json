@@ -1,0 +1,708 @@
+{
+  "preparedAt": "2026-11-03T10:03:06.126031+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sha256": "c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510",
+      "bytes": 5701631,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-20.pdf",
+      "retrievedAt": "2026-11-03T09:46:40.639852+00:00"
+    },
+    {
+      "file": "sources/7e1980fd69529022f3fb411acf438caa17842e424f46c25e37167497a650c1e2.txt",
+      "sha256": "7e1980fd69529022f3fb411acf438caa17842e424f46c25e37167497a650c1e2",
+      "bytes": 15252,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/1e3a74c285ed0caf79f0e95725fef2df320ae485c5380f524614b734a5d0f1cf.txt",
+      "sha256": "1e3a74c285ed0caf79f0e95725fef2df320ae485c5380f524614b734a5d0f1cf",
+      "bytes": 11057,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/be2d614956f5805dbcbeac6d33457fdd18112563229b1701de7e3a3682e50998.png",
+      "sha256": "be2d614956f5805dbcbeac6d33457fdd18112563229b1701de7e3a3682e50998",
+      "bytes": 252822,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/2d111cfb9229507f57b8b7d604d8cc24c91c872840d41b32c4d1a52581c02201.png",
+      "sha256": "2d111cfb9229507f57b8b7d604d8cc24c91c872840d41b32c4d1a52581c02201",
+      "bytes": 271699,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/8b740bcaae79a5600580a6e332ff8be9a7901eb8ef16f9db2bca8c682eed1037.png",
+      "sha256": "8b740bcaae79a5600580a6e332ff8be9a7901eb8ef16f9db2bca8c682eed1037",
+      "bytes": 256404,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/8c2bfe1f63b3dc77adb71961f5dd1ac9b81cb322b2dc80943b9710a55639a9a0.png",
+      "sha256": "8c2bfe1f63b3dc77adb71961f5dd1ac9b81cb322b2dc80943b9710a55639a9a0",
+      "bytes": 243060,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/72ce4d1f48bd5586392a95c23a0fd251b155facc13d6d4ad3d5912f8ac3fd23f.png",
+      "sha256": "72ce4d1f48bd5586392a95c23a0fd251b155facc13d6d4ad3d5912f8ac3fd23f",
+      "bytes": 229883,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/980bdc97a2c33358702882596e09f045ec889bc00707b4d70b4cd6cfa1cd65ef.png",
+      "sha256": "980bdc97a2c33358702882596e09f045ec889bc00707b4d70b4cd6cfa1cd65ef",
+      "bytes": 253953,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/48ee594cc53e7d10f0402eb2ad54f82d0beec775b3a80e4efde04c460e974b3f.png",
+      "sha256": "48ee594cc53e7d10f0402eb2ad54f82d0beec775b3a80e4efde04c460e974b3f",
+      "bytes": 234270,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 7
+    },
+    {
+      "file": "sources/4ad3a9bb03ed9e7d27316b4a225297d164792dbab2b4b0ba24e2aa4accfc9194.png",
+      "sha256": "4ad3a9bb03ed9e7d27316b4a225297d164792dbab2b4b0ba24e2aa4accfc9194",
+      "bytes": 207930,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 8
+    },
+    {
+      "file": "sources/d1238cab2a9c50e1503dd89350c168ca2bb8f1e33ec61e64c498e94daae368c7.png",
+      "sha256": "d1238cab2a9c50e1503dd89350c168ca2bb8f1e33ec61e64c498e94daae368c7",
+      "bytes": 159273,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/c6523c362c1fba3274a79c4c34a21d746a5b44307c693691cc7b51ea01b65510.pdf",
+      "sourcePage": 9
+    },
+    {
+      "file": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "sha256": "a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41",
+      "bytes": 2331377,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-21.pdf",
+      "retrievedAt": "2026-11-03T09:46:40.640613+00:00"
+    },
+    {
+      "file": "sources/c79066e0dade93d947aa6beac3dfd6f69310f528dd0ba70f302f80da7ee2f862.txt",
+      "sha256": "c79066e0dade93d947aa6beac3dfd6f69310f528dd0ba70f302f80da7ee2f862",
+      "bytes": 6732,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/6143f92cb17dfacb6ce692a1482e274326ccbd23a0f8061c03a4674fd206704c.txt",
+      "sha256": "6143f92cb17dfacb6ce692a1482e274326ccbd23a0f8061c03a4674fd206704c",
+      "bytes": 2044,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/65c6413ca26fdccfa63a3bfcd4efed76fc149f42679155c9c2685c9e8e268bd6.png",
+      "sha256": "65c6413ca26fdccfa63a3bfcd4efed76fc149f42679155c9c2685c9e8e268bd6",
+      "bytes": 260520,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/350edb1d6da03f477844e1eacea91de0e19eb6ed01b8205209f2b6854765c8df.png",
+      "sha256": "350edb1d6da03f477844e1eacea91de0e19eb6ed01b8205209f2b6854765c8df",
+      "bytes": 232412,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/80b2de6f95ddd66e00b5ba0aff16df6ba08a3124561ae7b8e36b7943cad36176.png",
+      "sha256": "80b2de6f95ddd66e00b5ba0aff16df6ba08a3124561ae7b8e36b7943cad36176",
+      "bytes": 245908,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/e14008955c4de75255cdfbd5faa4bc5d8bd64ca559f3cf82a0ecfba4b79f9800.png",
+      "sha256": "e14008955c4de75255cdfbd5faa4bc5d8bd64ca559f3cf82a0ecfba4b79f9800",
+      "bytes": 93419,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/13e8fab174dd2ceb8088e14216aad49e1193d21d30d6ec6802376a10a1324c8f.txt",
+      "sha256": "13e8fab174dd2ceb8088e14216aad49e1193d21d30d6ec6802376a10a1324c8f",
+      "bytes": 1158,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/a8d66c4153ea6d1dfa54c2922e06ca51c191997522e13c42123f5dc586fb7b41.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76.pdf",
+      "sha256": "0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76",
+      "bytes": 1732471,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-22.pdf",
+      "retrievedAt": "2026-11-03T09:46:41.284670+00:00"
+    },
+    {
+      "file": "sources/d0a97409ff52247ed2c35ffe943b28b0de2e7b9c3b85e05e59f62681311d78ef.txt",
+      "sha256": "d0a97409ff52247ed2c35ffe943b28b0de2e7b9c3b85e05e59f62681311d78ef",
+      "bytes": 5330,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/67ba8fc437d082ffaa7def0cb21288828655c64182b4402066b2244af0f290ac.txt",
+      "sha256": "67ba8fc437d082ffaa7def0cb21288828655c64182b4402066b2244af0f290ac",
+      "bytes": 3928,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/c3da0a441f559093aefef3742883972c9af7e0abe2d3197fde55ce7871abc8f8.png",
+      "sha256": "c3da0a441f559093aefef3742883972c9af7e0abe2d3197fde55ce7871abc8f8",
+      "bytes": 245992,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/22faf192f03ac037c4ae69279b8f037b37ebd964ee1e57c6c0c7c21f60f80d5f.png",
+      "sha256": "22faf192f03ac037c4ae69279b8f037b37ebd964ee1e57c6c0c7c21f60f80d5f",
+      "bytes": 251600,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/ff568bffcfd5d3f74cf8475b748d6208c964785fd7b7ed4175b4e7425e81dde6.png",
+      "sha256": "ff568bffcfd5d3f74cf8475b748d6208c964785fd7b7ed4175b4e7425e81dde6",
+      "bytes": 166565,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/0cefbcf653c24f79a58dd4b3a33740f2fffd135dbb9791310416811a57810a76.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sha256": "2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d",
+      "bytes": 3857216,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-23.pdf",
+      "retrievedAt": "2026-11-03T09:46:41.435016+00:00"
+    },
+    {
+      "file": "sources/b0d2ccbda8f8eff839c393a3b3571ab1ad53edb4a82f3d2df131d1f8b845be56.txt",
+      "sha256": "b0d2ccbda8f8eff839c393a3b3571ab1ad53edb4a82f3d2df131d1f8b845be56",
+      "bytes": 12472,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/aee77582c0e16ed2f8898fb3a2d46e77618ec8977d86a8a4060195905f51808b.txt",
+      "sha256": "aee77582c0e16ed2f8898fb3a2d46e77618ec8977d86a8a4060195905f51808b",
+      "bytes": 10618,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/dc07629d40f3c59dba510637d056a7f456907d5bb50120b88e90813bad33e708.png",
+      "sha256": "dc07629d40f3c59dba510637d056a7f456907d5bb50120b88e90813bad33e708",
+      "bytes": 248420,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/244f72afe6878f31840ce814e8552b2d851144006e93e0470a20d2b841aa3e27.png",
+      "sha256": "244f72afe6878f31840ce814e8552b2d851144006e93e0470a20d2b841aa3e27",
+      "bytes": 293216,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/91c6be8ec1d1c45984ad8cc7fd2ffc782aa35f30005c5b2a41964fdec642f3b0.png",
+      "sha256": "91c6be8ec1d1c45984ad8cc7fd2ffc782aa35f30005c5b2a41964fdec642f3b0",
+      "bytes": 269299,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/cc061ea7e73f0d9959754a320e7d2242c6ed1d375b12f96dcdf256af6b6d6123.png",
+      "sha256": "cc061ea7e73f0d9959754a320e7d2242c6ed1d375b12f96dcdf256af6b6d6123",
+      "bytes": 267458,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/360462cee136560b97db3f70db154709eeff663ef25482b2c56abd1738e823f0.png",
+      "sha256": "360462cee136560b97db3f70db154709eeff663ef25482b2c56abd1738e823f0",
+      "bytes": 229002,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/fe9ac0d34ca425af1319e243840f06cdf728c49a7b05c18c23b81d15d0ec8b2b.png",
+      "sha256": "fe9ac0d34ca425af1319e243840f06cdf728c49a7b05c18c23b81d15d0ec8b2b",
+      "bytes": 124457,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/2a85cf8669ca01a69dfddfe0bdc1d040a0a4925416ad566b048a510973968c1d.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sha256": "a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99",
+      "bytes": 3878408,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-24.pdf",
+      "retrievedAt": "2026-11-03T09:46:41.802649+00:00"
+    },
+    {
+      "file": "sources/ba024616ab2013890017fa44b5aa782101f8bd228528dc37efadf29042f12a7c.txt",
+      "sha256": "ba024616ab2013890017fa44b5aa782101f8bd228528dc37efadf29042f12a7c",
+      "bytes": 11693,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/52e10b12c7719d90e2c2c5458ce70209a50ef118fc91500446f9f8576c9aea31.txt",
+      "sha256": "52e10b12c7719d90e2c2c5458ce70209a50ef118fc91500446f9f8576c9aea31",
+      "bytes": 8518,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/53db886919f6fa35a1709ae7cc8e7ab4ee8bfe1c86336a19c092f88023761ecc.png",
+      "sha256": "53db886919f6fa35a1709ae7cc8e7ab4ee8bfe1c86336a19c092f88023761ecc",
+      "bytes": 250373,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/4bc4bafea77c4c38fa3ea1eaeb5419f888a35951a85a93b0826ba98b9fb939e5.png",
+      "sha256": "4bc4bafea77c4c38fa3ea1eaeb5419f888a35951a85a93b0826ba98b9fb939e5",
+      "bytes": 282521,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/b83b191fcb39f20d474180f182d56ab6e7518a9683a06d40a60d07697466685c.png",
+      "sha256": "b83b191fcb39f20d474180f182d56ab6e7518a9683a06d40a60d07697466685c",
+      "bytes": 249336,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/591bf4ec250bdc290d2f2843e908d185c5e5bc6313ff690486c3595a3d2a2e30.png",
+      "sha256": "591bf4ec250bdc290d2f2843e908d185c5e5bc6313ff690486c3595a3d2a2e30",
+      "bytes": 207924,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/2e928bf0c891dc022c7821f49312c7884b34a292ab0cd1d668a206c150698ad0.png",
+      "sha256": "2e928bf0c891dc022c7821f49312c7884b34a292ab0cd1d668a206c150698ad0",
+      "bytes": 248366,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/5f2ea0460ddbf68b7c5b63f85f283081c2166cc3c907ab953fd168892f0aa414.png",
+      "sha256": "5f2ea0460ddbf68b7c5b63f85f283081c2166cc3c907ab953fd168892f0aa414",
+      "bytes": 194253,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/a1823206c893c4248c21aaba99cefa5121da941b3ca37f68a2f818adfe351c99.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sha256": "e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59",
+      "bytes": 8754355,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-25.pdf",
+      "retrievedAt": "2026-11-03T09:46:41.943684+00:00"
+    },
+    {
+      "file": "sources/f0f21972662c812d17517b540abbd4509735b6cd6e4054ec7099a7b3c718e92a.txt",
+      "sha256": "f0f21972662c812d17517b540abbd4509735b6cd6e4054ec7099a7b3c718e92a",
+      "bytes": 12711,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/4410ca9a2101dbe0b2cc74851f720e24084836188bb2c67d9617f27d2826e8ac.txt",
+      "sha256": "4410ca9a2101dbe0b2cc74851f720e24084836188bb2c67d9617f27d2826e8ac",
+      "bytes": 9223,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        10,
+        11,
+        12,
+        13
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/f2a5b8c52ac215b56878977a6346e48be1bcd09dd875ba943b6ed39ded40483f.png",
+      "sha256": "f2a5b8c52ac215b56878977a6346e48be1bcd09dd875ba943b6ed39ded40483f",
+      "bytes": 258688,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/664373c0135a1d85bf4d846ce002f3862e3deddfd4feab3fb968967ecd013f97.png",
+      "sha256": "664373c0135a1d85bf4d846ce002f3862e3deddfd4feab3fb968967ecd013f97",
+      "bytes": 257831,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/64332454c5d6fd13970b75dbb45b6730d82f6b82129f43c35d409635d35f42d8.png",
+      "sha256": "64332454c5d6fd13970b75dbb45b6730d82f6b82129f43c35d409635d35f42d8",
+      "bytes": 239336,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/50997e52352bdcdf12dccd4d6fd3dd3230596da39ad28b865eba17f55b460779.png",
+      "sha256": "50997e52352bdcdf12dccd4d6fd3dd3230596da39ad28b865eba17f55b460779",
+      "bytes": 241723,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/a19c3999a42f5e7b02edc146a7866971573a16dbe5d9ed27c58dd6f0d4ce55cc.png",
+      "sha256": "a19c3999a42f5e7b02edc146a7866971573a16dbe5d9ed27c58dd6f0d4ce55cc",
+      "bytes": 243380,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/e99d3e06f780ebd5f5c1cbf6eb5831b76069f6f3a0e780efc176b813b85c739e.png",
+      "sha256": "e99d3e06f780ebd5f5c1cbf6eb5831b76069f6f3a0e780efc176b813b85c739e",
+      "bytes": 225816,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 7
+    },
+    {
+      "file": "sources/61074f0e39bcf2dbe69d14f77519bbe5770b9f91f688282f722906faf6d4f324.png",
+      "sha256": "61074f0e39bcf2dbe69d14f77519bbe5770b9f91f688282f722906faf6d4f324",
+      "bytes": 259031,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 10
+    },
+    {
+      "file": "sources/96203a8d44ab50c792f78d5b2cad9c7fdeb5d64a9f77645c3bd24b66db9f0ce9.png",
+      "sha256": "96203a8d44ab50c792f78d5b2cad9c7fdeb5d64a9f77645c3bd24b66db9f0ce9",
+      "bytes": 269733,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 11
+    },
+    {
+      "file": "sources/66f3112002dd04d399165c944c3c8a860774860b391e1dff8151af69924a4bf7.png",
+      "sha256": "66f3112002dd04d399165c944c3c8a860774860b391e1dff8151af69924a4bf7",
+      "bytes": 221713,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 12
+    },
+    {
+      "file": "sources/fc1cedd8e512391f3a1907d082a76f9563777fb1d3f1177bbdbc8efec1a1dfb2.png",
+      "sha256": "fc1cedd8e512391f3a1907d082a76f9563777fb1d3f1177bbdbc8efec1a1dfb2",
+      "bytes": 136671,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e0c0ecc7939afe64600b27a207a02456e10d764ad94368c2e0bfa8be7946db59.pdf",
+      "sourcePage": 13
+    },
+    {
+      "file": "sources/e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731.pdf",
+      "sha256": "e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731",
+      "bytes": 1889274,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-26.pdf",
+      "retrievedAt": "2026-11-03T09:46:42.183572+00:00"
+    },
+    {
+      "file": "sources/7fd35cdee5c774f97879572ccca4fa034c5bc1bae1f899b3b18323dbd0447c5c.txt",
+      "sha256": "7fd35cdee5c774f97879572ccca4fa034c5bc1bae1f899b3b18323dbd0447c5c",
+      "bytes": 4555,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/c19e23195a971a144a5af5eb271c6a6038fbe4cc47a3eef024722ea66c29b161.txt",
+      "sha256": "c19e23195a971a144a5af5eb271c6a6038fbe4cc47a3eef024722ea66c29b161",
+      "bytes": 4416,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/d20aaa4a9455c012912dd13741c61cb361c29cebadfc69896fbbb551dc34aa0f.png",
+      "sha256": "d20aaa4a9455c012912dd13741c61cb361c29cebadfc69896fbbb551dc34aa0f",
+      "bytes": 242727,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/2b8c795134dcd6ae1b94ca6341d078d1c974e3ee59af8f9b174c721fe64d30e3.png",
+      "sha256": "2b8c795134dcd6ae1b94ca6341d078d1c974e3ee59af8f9b174c721fe64d30e3",
+      "bytes": 203927,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/2b948c04d81de08f28259aa397e6f01144d57a5afa012d925de16aec3ffd81dd.png",
+      "sha256": "2b948c04d81de08f28259aa397e6f01144d57a5afa012d925de16aec3ffd81dd",
+      "bytes": 203709,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/6a2719bb31557fa43888264c5c98f09ffee6a2ad130857d666546b02a37c2a58.png",
+      "sha256": "6a2719bb31557fa43888264c5c98f09ffee6a2ad130857d666546b02a37c2a58",
+      "bytes": 52296,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/e58437ab0954227922ce5912d4e296b15d150f95b787618c02666456c9634731.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1.pdf",
+      "sha256": "4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1",
+      "bytes": 1634707,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-27.pdf",
+      "retrievedAt": "2026-11-03T09:46:42.616604+00:00"
+    },
+    {
+      "file": "sources/9a49870139e52864a3504c29109c7eb766cae880bfd0a255cafe7553a2d05938.txt",
+      "sha256": "9a49870139e52864a3504c29109c7eb766cae880bfd0a255cafe7553a2d05938",
+      "bytes": 4681,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/f052c8cbe56108bc9441ee237c260714a6f3f382d07a9cc871ff38b6d4c61f36.txt",
+      "sha256": "f052c8cbe56108bc9441ee237c260714a6f3f382d07a9cc871ff38b6d4c61f36",
+      "bytes": 1358,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/a473e721f3ecbafef7b0fcd20798a86433685845b5df648efe634b4ebd5c8bb7.png",
+      "sha256": "a473e721f3ecbafef7b0fcd20798a86433685845b5df648efe634b4ebd5c8bb7",
+      "bytes": 259983,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/833fe69d40d476466e86e0a828d8741e97e92933fe3f61be663834313b02911b.png",
+      "sha256": "833fe69d40d476466e86e0a828d8741e97e92933fe3f61be663834313b02911b",
+      "bytes": 231184,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/a3f39c26185634135aff8f9940857d59c4dd34bf93a458597b8c302b4ad87750.png",
+      "sha256": "a3f39c26185634135aff8f9940857d59c4dd34bf93a458597b8c302b4ad87750",
+      "bytes": 103808,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/4e63a32eda537baa65e7ef804baa53da18a3e5e17044d0daac6a3fc8cf54e9a1.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb.pdf",
+      "sha256": "ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb",
+      "bytes": 1612136,
+      "kind": "NATIVE_SIGNED_ADOPTED_ORDINANCE",
+      "sourceUrl": "https://www.fortlauderdale.gov/files/assets/public/v/1/news/documents/charter-revision/ordinance-no-c-26-28.pdf",
+      "retrievedAt": "2026-11-03T09:46:42.945120+00:00"
+    },
+    {
+      "file": "sources/d3e7e22894deac3dd68e43ddde9c0a1ac04a4f78aa0c7e746f50a0a6ffbc079d.txt",
+      "sha256": "d3e7e22894deac3dd68e43ddde9c0a1ac04a4f78aa0c7e746f50a0a6ffbc079d",
+      "bytes": 4765,
+      "kind": "FULL_DERIVED_OCR_OF_NATIVE_PDF",
+      "derivedFrom": "sources/ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb.pdf",
+      "method": "Tesseract psm3, native pages rendered with PyMuPDF at200dpi; OCR may omit underlined/struck text, so operative conditions and printed questions were separately read from native renders."
+    },
+    {
+      "file": "sources/b3df3c1128ba9b3a123d648ce4023d4d7da6922c151ec9b98da1ef0f20b0b374.txt",
+      "sha256": "b3df3c1128ba9b3a123d648ce4023d4d7da6922c151ec9b98da1ef0f20b0b374",
+      "bytes": 1437,
+      "kind": "RELEVANT_OFFICIAL_QUESTION_AND_OPERATIVE_EXCERPTS",
+      "derivedFrom": "sources/ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb.pdf",
+      "sourcePages": [
+        1,
+        2,
+        3
+      ],
+      "representation": "Ballot question transcribed from native rendered signed original, whitespace normalized. Relevant legal excerpts derive from complete200dpiOCR and preserve deleted/added redline words; native renders determine changes. Deleted age21, personal-property sale rules, and November10,2004 park-zoning cutoff are manually transcribed from the stricken clauses omitted by OCR; they are historical redline text being removed, not proposed retained rules. For police/fire chief, the operative clause is a manual verbatim transcription including the page2 internal-promotion exception that OCR omitted. For question7, the50-year/15-percent initiative-referendum clause added at second reading is manually transcribed from native page11 because OCR omitted its dotted-underlined text."
+    },
+    {
+      "file": "sources/eee8220e2e7ab155ffc49c48358a0c5cac05656e76e0b5bde63d96951cdba157.png",
+      "sha256": "eee8220e2e7ab155ffc49c48358a0c5cac05656e76e0b5bde63d96951cdba157",
+      "bytes": 262254,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/42c6f1c3abcfd4afee4d2f2dae0f792b5283e7371bda3d147e1067e5e0cfba12.png",
+      "sha256": "42c6f1c3abcfd4afee4d2f2dae0f792b5283e7371bda3d147e1067e5e0cfba12",
+      "bytes": 222643,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/97a35b25ca4c226d5c8d822d64a968aec8d6a6366f9f11e54411d57b572bf0ec.png",
+      "sha256": "97a35b25ca4c226d5c8d822d64a968aec8d6a6366f9f11e54411d57b572bf0ec",
+      "bytes": 112301,
+      "kind": "RENDERED_NATIVE_SIGNED_ORDINANCE_PAGE",
+      "derivedFrom": "sources/ffb65f396626f57ac828286b2b88ca29a80be9f0b976f4575891ad5022f4d5fb.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/961fa1dda3a970b6ade26b4d1cae6dc81583a6015ce538de87acd13e74cf8396.html",
+      "sha256": "961fa1dda3a970b6ade26b4d1cae6dc81583a6015ce538de87acd13e74cf8396",
+      "bytes": 54202,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://spotlightftl.com/charterreview",
+      "retrievedAt": "2026-11-03T09:46:33.132331+00:00",
+      "nativeCaptureSha256": "961fa1dda3a970b6ade26b4d1cae6dc81583a6015ce538de87acd13e74cf8396",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    },
+    {
+      "file": "sources/45e3935df52eb24bb898bf8ec6f177c3d32761e9c5a0295cf315e2298f2a2b64.html",
+      "sha256": "45e3935df52eb24bb898bf8ec6f177c3d32761e9c5a0295cf315e2298f2a2b64",
+      "bytes": 181481,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.fortlauderdale.gov/",
+      "retrievedAt": "2026-11-03T09:26:51.874506+00:00",
+      "nativeCaptureSha256": "25c647a1a477dd3747d6b3934847b926d0f82bf4e244cee4cff906cba8fa19b9",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Complete sanitized current official publication, with native capture identity kept separate from stored sanitized identity."
+    }
+  ]
+}

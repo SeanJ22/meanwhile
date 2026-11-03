@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ia-cx-2026-dike-pool-financing",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:dike",
+      "place",
+      "1921405",
+      "Dike city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city or K12 school district named in source, not publisher county or similarly named city."
+  },
+  {
+    "contestId": "ia-cx-2026-reinbeck-fire-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:reinbeck",
+      "place",
+      "1966315",
+      "Reinbeck city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city or K12 school district named in source, not publisher county or similarly named city."
+  },
+  {
+    "contestId": "ia-cx-2026-agwsr-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:agwsr_community_school_district",
+      "unsd",
+      "1903060",
+      "AGWSR Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city or K12 school district named in source, not publisher county or similarly named city."
+  }
+]

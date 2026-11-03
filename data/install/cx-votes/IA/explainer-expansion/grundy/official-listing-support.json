@@ -1,0 +1,14 @@
+{
+  "sourceUrl": "https://www.grundycountyiowa.gov/",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T07:20:28.194935+00:00",
+  "sourceFile": "sources/8091e1cb4f0f55f7b6741c2eea33b09bc79d91f8d328a66d33da0f4735ab82af.official-index.html",
+  "originalSha256": "8091e1cb4f0f55f7b6741c2eea33b09bc79d91f8d328a66d33da0f4735ab82af",
+  "archivedSha256": "8091e1cb4f0f55f7b6741c2eea33b09bc79d91f8d328a66d33da0f4735ab82af",
+  "exactLinkedNotice": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+  "currentElectionDate": "November3,2026",
+  "localQuestionsListed": 3,
+  "preparedHere": 3,
+  "sharedSchool": "AGWSR whole K12 includes Butler/Franklin/Grundy/Hardin, same question not independently duplicated by county.",
+  "scopeLimitation": "Only this current dated official county notice inventory; no Iowa all-local completeness claim."
+}

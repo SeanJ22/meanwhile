@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ia-cx-2026-dike-pool-financing",
+      "title": "Dike — Measure IO: Municipal pool financing",
+      "ocdId": "ocd-division/country:us/state:ia/place:dike",
+      "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf"
+    },
+    {
+      "id": "ia-cx-2026-reinbeck-fire-bonds",
+      "title": "Reinbeck — Measure IP: Fire station bonds",
+      "ocdId": "ocd-division/country:us/state:ia/place:reinbeck",
+      "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf"
+    },
+    {
+      "id": "ia-cx-2026-agwsr-school-bonds",
+      "title": "AGWSR Community School District — Measure IR: School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:ia/school_district:agwsr_community_school_district",
+      "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "IA",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

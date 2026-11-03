@@ -1,0 +1,230 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-dike-pool-financing",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:dike",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Dike — Measure IO: Municipal pool financing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+            "sourceOrg": "Grundy County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.363286+00:00",
+            "verifiedAt": "2026-11-03T07:24:34.748111+00:00",
+            "quote": "Shall the City of Dike, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $1,500,000 for the purpose of paying\ncosts of the acquisition, construction, demolition, reconstruction, enlargement,\nimprovement, and equipping of swimming pool and pool facilities, including parking lot and\nrelated site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-reinbeck-fire-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:reinbeck",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Reinbeck — Measure IP: Fire station bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+            "sourceOrg": "Grundy County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.363286+00:00",
+            "verifiedAt": "2026-11-03T07:24:34.748111+00:00",
+            "quote": "Shall the City of Reinbeck, in Grundy County, State of Iowa, enter into a loan agreement\nand issue general obligation bonds in an amount not exceeding $4,000,000 for the purpose\nof paying the cost, to that extent, of constructing, furnishing and equipping a new municipal\nfire station?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-agwsr-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:agwsr_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "AGWSR Community School District — Measure IR: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+            "sourceOrg": "Grundy County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.363286+00:00",
+            "verifiedAt": "2026-11-03T07:24:34.748111+00:00",
+            "quote": "Shall the Board of Directors of the AGWSR Community School District in the Counties of\nButler, Franklin, Grundy, and Hardin, State of Iowa, be authorized to contract indebtedness\nand issue General Obligation Bonds in an amount not to exceed $10,820,000 to provide\nfunds to remodel, repair, improve, and equip the high school, including science and family\n& consumer science classrooms and heating, ventilation, and air conditioning (HVAC),\nmechanical, plumbing, electrical, roofing, and site improvements; to build, furnish, and\nequip a multipurpose activities/recess facility, including site improvements; and to remodel,\nrepair, improve, and equip the middle school locker rooms?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-dike-pool-financing:measure",
+          "contestId": "ia-cx-2026-dike-pool-financing",
+          "officialNumber": "IO",
+          "questionText": "Shall the City of Dike, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $1,500,000 for the purpose of paying\ncosts of the acquisition, construction, demolition, reconstruction, enlargement,\nimprovement, and equipping of swimming pool and pool facilities, including parking lot and\nrelated site improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+            "sourceOrg": "Grundy County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.363286+00:00",
+            "verifiedAt": "2026-11-03T07:24:34.748111+00:00",
+            "quote": "Shall the City of Dike, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $1,500,000 for the purpose of paying\ncosts of the acquisition, construction, demolition, reconstruction, enlargement,\nimprovement, and equipping of swimming pool and pool facilities, including parking lot and\nrelated site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-reinbeck-fire-bonds:measure",
+          "contestId": "ia-cx-2026-reinbeck-fire-bonds",
+          "officialNumber": "IP",
+          "questionText": "Shall the City of Reinbeck, in Grundy County, State of Iowa, enter into a loan agreement\nand issue general obligation bonds in an amount not exceeding $4,000,000 for the purpose\nof paying the cost, to that extent, of constructing, furnishing and equipping a new municipal\nfire station?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+            "sourceOrg": "Grundy County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.363286+00:00",
+            "verifiedAt": "2026-11-03T07:24:34.748111+00:00",
+            "quote": "Shall the City of Reinbeck, in Grundy County, State of Iowa, enter into a loan agreement\nand issue general obligation bonds in an amount not exceeding $4,000,000 for the purpose\nof paying the cost, to that extent, of constructing, furnishing and equipping a new municipal\nfire station?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-agwsr-school-bonds:measure",
+          "contestId": "ia-cx-2026-agwsr-school-bonds",
+          "officialNumber": "IR",
+          "questionText": "Shall the Board of Directors of the AGWSR Community School District in the Counties of\nButler, Franklin, Grundy, and Hardin, State of Iowa, be authorized to contract indebtedness\nand issue General Obligation Bonds in an amount not to exceed $10,820,000 to provide\nfunds to remodel, repair, improve, and equip the high school, including science and family\n& consumer science classrooms and heating, ventilation, and air conditioning (HVAC),\nmechanical, plumbing, electrical, roofing, and site improvements; to build, furnish, and\nequip a multipurpose activities/recess facility, including site improvements; and to remodel,\nrepair, improve, and equip the middle school locker rooms?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+            "sourceOrg": "Grundy County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:22:21.363286+00:00",
+            "verifiedAt": "2026-11-03T07:24:34.748111+00:00",
+            "quote": "Shall the Board of Directors of the AGWSR Community School District in the Counties of\nButler, Franklin, Grundy, and Hardin, State of Iowa, be authorized to contract indebtedness\nand issue General Obligation Bonds in an amount not to exceed $10,820,000 to provide\nfunds to remodel, repair, improve, and equip the high school, including science and family\n& consumer science classrooms and heating, ventilation, and air conditioning (HVAC),\nmechanical, plumbing, electrical, roofing, and site improvements; to build, furnish, and\nequip a multipurpose activities/recess facility, including site improvements; and to remodel,\nrepair, improve, and equip the middle school locker rooms?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-dike-pool-financing",
+          "whatItDoes": "Authorizes up to $1.5 million in general-obligation bonds or capital loan notes for acquiring, constructing, demolishing, rebuilding, expanding, improving and equipping a swimming pool and pool facilities, including parking and site improvements.",
+          "yesMeans": "Authorize the project financing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+          "sourceHash": "3c2e00a069aff668a73eff5bdf3e494a8b318cdbd8e87b8f04f9654bb859caf7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:24:34.748111+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-reinbeck-fire-bonds",
+          "whatItDoes": "Authorizes a loan agreement and up to $4 million in general-obligation bonds to construct, furnish and equip a new municipal fire station.",
+          "yesMeans": "Authorize the project financing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+          "sourceHash": "df5e6460a082cd0048db5213a14517d22d26eed8a00ae77b5e4874ae8d8f70b0",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:24:34.748111+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-agwsr-school-bonds",
+          "whatItDoes": "Authorizes up to $10.82 million in general-obligation bonds for high school renovations, including science and family and consumer science classrooms, heating and cooling, mechanical, plumbing, electrical, roofing and sites; a new multipurpose activities and recess facility; and middle school locker room renovations.",
+          "yesMeans": "Authorize the project financing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+          "sourceHash": "4703ff33603f66d34aff5814043a07387f46a0f94bc25f4e02a73e74d45e1221",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:24:34.748111+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:24:34.748111+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+        "finalUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+        "httpStatus": 200,
+        "rawHash": "b4a3d22facc9e3aed8522d8e2087fe49ec3d903ef0a7912cfd09e393c540fe4a",
+        "retrievedAt": "2026-11-03T07:22:21.363286+00:00",
+        "publisher": "Grundy County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official three-page general-election notice for November3,2026, linked from current county home page. All three complete local question fields on final page reviewed."
+      }
+    ]
+  }
+}

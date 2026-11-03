@@ -1,0 +1,93 @@
+[
+  {
+    "contestId": "ia-cx-2026-dike-pool-financing",
+    "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+    "rawHash": "b4a3d22facc9e3aed8522d8e2087fe49ec3d903ef0a7912cfd09e393c540fe4a",
+    "sourceFile": "sources/b4a3d22facc9e3aed8522d8e2087fe49ec3d903ef0a7912cfd09e393c540fe4a.source",
+    "sourceTextFile": "sources/3f69543986b1c5367648783696bf7d90c7d38e4ccb67e327e275813e3fb0f821.txt",
+    "excerpt": "Shall the City of Dike, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $1,500,000 for the purpose of paying\ncosts of the acquisition, construction, demolition, reconstruction, enlargement,\nimprovement, and equipping of swimming pool and pool facilities, including parking lot and\nrelated site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Dike, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $1,500,000 for the purpose of paying\ncosts of the acquisition, construction, demolition, reconstruction, enlargement,\nimprovement, and equipping of swimming pool and pool facilities, including parking lot and\nrelated site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the City of Dike, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $1,500,000 for the purpose of paying\ncosts of the acquisition, construction, demolition, reconstruction, enlargement,\nimprovement, and equipping of swimming pool and pool facilities, including parking lot and\nrelated site improvements?"
+      ],
+      "noMeans": [
+        "Shall the City of Dike, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $1,500,000 for the purpose of paying\ncosts of the acquisition, construction, demolition, reconstruction, enlargement,\nimprovement, and equipping of swimming pool and pool facilities, including parking lot and\nrelated site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred.",
+      "One aggregate1.5million ceiling for bonds OR capital loan notes; not separate caps."
+    ],
+    "inventoryScope": "Complete current official Grundy general-election notice lists three local questions (Dike IO, Reinbeck IP, AGWSR IR), all prepared here. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 3,
+      "scope": "Complete contiguous bounded final-page local question fields, no column interleaving."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-reinbeck-fire-bonds",
+    "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+    "rawHash": "b4a3d22facc9e3aed8522d8e2087fe49ec3d903ef0a7912cfd09e393c540fe4a",
+    "sourceFile": "sources/b4a3d22facc9e3aed8522d8e2087fe49ec3d903ef0a7912cfd09e393c540fe4a.source",
+    "sourceTextFile": "sources/3f69543986b1c5367648783696bf7d90c7d38e4ccb67e327e275813e3fb0f821.txt",
+    "excerpt": "Shall the City of Reinbeck, in Grundy County, State of Iowa, enter into a loan agreement\nand issue general obligation bonds in an amount not exceeding $4,000,000 for the purpose\nof paying the cost, to that extent, of constructing, furnishing and equipping a new municipal\nfire station?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Reinbeck, in Grundy County, State of Iowa, enter into a loan agreement\nand issue general obligation bonds in an amount not exceeding $4,000,000 for the purpose\nof paying the cost, to that extent, of constructing, furnishing and equipping a new municipal\nfire station?"
+      ],
+      "yesMeans": [
+        "Shall the City of Reinbeck, in Grundy County, State of Iowa, enter into a loan agreement\nand issue general obligation bonds in an amount not exceeding $4,000,000 for the purpose\nof paying the cost, to that extent, of constructing, furnishing and equipping a new municipal\nfire station?"
+      ],
+      "noMeans": [
+        "Shall the City of Reinbeck, in Grundy County, State of Iowa, enter into a loan agreement\nand issue general obligation bonds in an amount not exceeding $4,000,000 for the purpose\nof paying the cost, to that extent, of constructing, furnishing and equipping a new municipal\nfire station?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Complete current official Grundy general-election notice lists three local questions (Dike IO, Reinbeck IP, AGWSR IR), all prepared here. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 3,
+      "scope": "Complete contiguous bounded final-page local question fields, no column interleaving."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-agwsr-school-bonds",
+    "sourceUrl": "https://www.grundycountyiowa.gov/images/documents/announcements/NOTICE%20OF%20ELECTION--General%202026.pdf",
+    "rawHash": "b4a3d22facc9e3aed8522d8e2087fe49ec3d903ef0a7912cfd09e393c540fe4a",
+    "sourceFile": "sources/b4a3d22facc9e3aed8522d8e2087fe49ec3d903ef0a7912cfd09e393c540fe4a.source",
+    "sourceTextFile": "sources/3f69543986b1c5367648783696bf7d90c7d38e4ccb67e327e275813e3fb0f821.txt",
+    "excerpt": "Shall the Board of Directors of the AGWSR Community School District in the Counties of\nButler, Franklin, Grundy, and Hardin, State of Iowa, be authorized to contract indebtedness\nand issue General Obligation Bonds in an amount not to exceed $10,820,000 to provide\nfunds to remodel, repair, improve, and equip the high school, including science and family\n& consumer science classrooms and heating, ventilation, and air conditioning (HVAC),\nmechanical, plumbing, electrical, roofing, and site improvements; to build, furnish, and\nequip a multipurpose activities/recess facility, including site improvements; and to remodel,\nrepair, improve, and equip the middle school locker rooms?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the AGWSR Community School District in the Counties of\nButler, Franklin, Grundy, and Hardin, State of Iowa, be authorized to contract indebtedness\nand issue General Obligation Bonds in an amount not to exceed $10,820,000 to provide\nfunds to remodel, repair, improve, and equip the high school, including science and family\n& consumer science classrooms and heating, ventilation, and air conditioning (HVAC),\nmechanical, plumbing, electrical, roofing, and site improvements; to build, furnish, and\nequip a multipurpose activities/recess facility, including site improvements; and to remodel,\nrepair, improve, and equip the middle school locker rooms?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the AGWSR Community School District in the Counties of\nButler, Franklin, Grundy, and Hardin, State of Iowa, be authorized to contract indebtedness\nand issue General Obligation Bonds in an amount not to exceed $10,820,000 to provide\nfunds to remodel, repair, improve, and equip the high school, including science and family\n& consumer science classrooms and heating, ventilation, and air conditioning (HVAC),\nmechanical, plumbing, electrical, roofing, and site improvements; to build, furnish, and\nequip a multipurpose activities/recess facility, including site improvements; and to remodel,\nrepair, improve, and equip the middle school locker rooms?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the AGWSR Community School District in the Counties of\nButler, Franklin, Grundy, and Hardin, State of Iowa, be authorized to contract indebtedness\nand issue General Obligation Bonds in an amount not to exceed $10,820,000 to provide\nfunds to remodel, repair, improve, and equip the high school, including science and family\n& consumer science classrooms and heating, ventilation, and air conditioning (HVAC),\nmechanical, plumbing, electrical, roofing, and site improvements; to build, furnish, and\nequip a multipurpose activities/recess facility, including site improvements; and to remodel,\nrepair, improve, and equip the middle school locker rooms?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Complete current official Grundy general-election notice lists three local questions (Dike IO, Reinbeck IP, AGWSR IR), all prepared here. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "page1Based": 3,
+      "scope": "Complete contiguous bounded final-page local question fields, no column interleaving."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

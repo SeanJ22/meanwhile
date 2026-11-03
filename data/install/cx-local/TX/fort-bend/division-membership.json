@@ -1,0 +1,236 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/commissioner_precinct:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_FULL_COMMISSIONER_PRECINCT_EFFECTIVE_2026_01_01",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gisportal.fortbendcountytx.gov/arcgis/rest/services/InteractiveMap/Boundaries_Public/MapServer/7/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+      "sourceOrg": "Fort Bend County GIS",
+      "collectedAt": "2026-11-03T06:47:26.725004+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "{\"OBJECTID\":2,\"NAME\":\"2\",\"COMMISSION\":\"Grady Prestage\",\"WEBSITE\":\"https://fortbendcountytx.gov/government/departments/commissioners-court/commissioner-precinct-2\",\"SEQUENCE\":2,\"CREATED\":1762387200000,\"EFFECTIVE\":1767225600000,\"Shape.STArea()\":4980754300.4488525,\"Shape.STLength()\":638761.60141005192,\"GlobalID\":\"{EB48FE9B-9BD3-47ED-8EF8-E53C7A4F2ED2}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":\"portaladmin\",\"last_edited_date\":1767736784000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/commissioner_precinct:4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "OFFICIAL_FULL_COMMISSIONER_PRECINCT_EFFECTIVE_2026_01_01",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gisportal.fortbendcountytx.gov/arcgis/rest/services/InteractiveMap/Boundaries_Public/MapServer/7/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+      "sourceOrg": "Fort Bend County GIS",
+      "collectedAt": "2026-11-03T06:47:26.725004+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "{\"OBJECTID\":4,\"NAME\":\"4\",\"COMMISSION\":\"Dexter McCoy\",\"WEBSITE\":\"https://fortbendcountytx.gov/government/departments/commissioners-court/commissioner-precinct-4\",\"SEQUENCE\":4,\"CREATED\":1762387200000,\"EFFECTIVE\":1767225600000,\"Shape.STArea()\":1745093196.3131938,\"Shape.STLength()\":407521.80991762836,\"GlobalID\":\"{28A249AF-CD64-4DBF-8609-C5779F20CEE0}\",\"created_user\":null,\"created_date\":null,\"last_edited_user\":\"portaladmin\",\"last_edited_date\":1767736853000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:burney_road_mud",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "OFFICIAL_ACTIVE_BURNEY_ROAD_MUD_BOUNDARY_TCEQ_1762000",
+    "geometryNormalization": null,
+    "provenance": {
+      "sourceUrl": "https://gisportal.fortbendcountytx.gov/arcgis/rest/services/InteractiveMap/Water_Districts_Public/MapServer/1/query?where=UPPER(MUD_NAME)%20LIKE%20%27%25BURNEY%25%27&outFields=MUD_NAME,TCEQ_ID,STATUS,DATE_MODIFIED&outSR=4326&f=geojson",
+      "sourceOrg": "Fort Bend County GIS",
+      "collectedAt": "2026-11-03T06:49:12.082602+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "{\"MUD_NAME\":\"Burney Road MUD\",\"TCEQ_ID\":1762000,\"STATUS\":\"A\",\"DATE_MODIFIED\":1537160400000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "COUNTY JUDGE\nVote for None or One\nJUEZ DE CONDADO\nVote por Ninguno o Uno\nDANIEL WONG REP\nDEXTER L MCCOY DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_PRECINCT_ID_SOURCE_BACKED_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031057BS7.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:57.570061+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "JUSTICE OF THE PEACE\nPRECINCT 1, PLACE 1\nVote for None or One\nJUEZ DE PAZ PRECINTO\nNÚM. 1, LUGAR NÚM. 1\nVote por Ninguno o Uno\nKELLY CROW REP\nMARTIN B. SANCHEZ DEM"
+    },
+    "readerMappingLimit": "Exact legal JP precinct identity is proved by current actual sample. No commissioner polygon is substituted; independently verified2026 JP boundary acquisition remains pending."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_PRECINCT_ID_SOURCE_BACKED_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "JUSTICE OF THE PEACE\nPRECINCT 2, PLACE 1\nVote for None or One\nJUEZ DE PAZ PRECINTO\nNÚM. 2, LUGAR NÚM. 1\nVote por Ninguno o Uno\nNINH TRUONG REP\nRODERICK C. GARNER, SR DEM"
+    },
+    "readerMappingLimit": "Exact legal JP precinct identity is proved by current actual sample. No commissioner polygon is substituted; independently verified2026 JP boundary acquisition remains pending."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "EXACT_PRECINCT_ID_SOURCE_BACKED_POLYGON_PENDING",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033128BS40.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:09:02.169401+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "JUSTICE OF THE PEACE\nPRECINCT 3, PLACE 1\nVote for None or One\nJUEZ DE PAZ PRECINTO\nNÚM. 3, LUGAR NÚM. 1\nVote por Ninguno o Uno\nWILLIAM FERGUSON REP\nSONIA RASH DEM"
+    },
+    "readerMappingLimit": "Exact legal JP precinct identity is proved by current actual sample. No commissioner polygon is substituted; independently verified2026 JP boundary acquisition remains pending."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "JUSTICE, 1ST COURT OF\nAPPEALS DISTRICT, PLACE 3\nVote for None or One\nJUEZ, CORTE DE\nAPELACIONES DISTRITO\nNÚM. 1, LUGAR NÚM. 3\nVote por Ninguno o Uno\nTODD FRANKFORT REP\nVERONICA RIVAS-MOLLOY DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "CHIEF JUSTICE, 14TH COURT OF\nAPPEALS DISTRICT\nVote for None or One\nJUEZ PRESIDENTE, CORTE DE\nAPELACIONES DISTRITO NÚM. 14\nVote por Ninguno o Uno\nKEVIN JEWELL REP\nSARAH BETH LANDAU DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:240",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "DISTRICT JUDGE, 240TH\nJUDICIAL DISTRICT\nVote for None or One\nJUEZ DEL DISTRITO,\nDISTRITO NÚM. 240\nVote por Ninguno o Uno\nASHA REDDI REP\nSURENDRAN K. PATTEL DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:268",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "DISTRICT JUDGE, 268TH\nJUDICIAL DISTRICT\nVote for None or One\nJUEZ DEL DISTRITO,\nDISTRITO NÚM. 268\nVote por Ninguno o Uno\nSTEVE ROGERS REP\nBRENDETTA SCOTT DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:328",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "DISTRICT JUDGE, 328TH\nJUDICIAL DISTRICT\nVote for None or One\nJUEZ DEL DISTRITO,\nDISTRITO NÚM. 328\nVote por Ninguno o Uno\nRICHARD LYBARGER REP\nMONICA RAWLINS DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:458",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "DISTRICT JUDGE, 458TH\nJUDICIAL DISTRICT\nVote for None or One\nJUEZ DEL DISTRITO,\nDISTRITO NÚM. 458\nVote por Ninguno o Uno\nMAGGIE JARAMILLO REP\nTAMEIKA CARTER DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:501",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "DISTRICT JUDGE, 501ST\nJUDICIAL DISTRICT\nVote for None or One\nJUEZ DEL DISTRITO,\nDISTRITO NÚM. 501\nVote por Ninguno o Uno\nRICHARD T. BELL REP\nLATOSHA MCGILL CLAYTON DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:502",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "DISTRICT JUDGE, 502ND\nJUDICIAL DISTRICT\nVote for None or One\nJUEZ DEL DISTRITO,\nDISTRITO NÚM. 502\nVote por Ninguno o Uno\nMARK H. HANNA REP\nTAMECIA GLOVER DEM"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:fort_bend_independent_school_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034026BS45.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:30.565612+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "FORT BEND INDEPENDENT\nSCHOOL DISTRICT TRUSTEE\nGENERAL ELECTION\nDISTRITO ESCOLAR\nINDEPENDIENTE DE FORT BEND\nELECCIÓN DE REGENTE GENERAL\nTRUSTEE, POSITION 1\nVote for None or One\nREGENTE, POSICIÓN 1\nVote por Ninguno o Uno\nANGIE HANAN\nPEDRO VALENCIA"
+    },
+    "electorateRule": {
+      "sourceUrl": "https://www.fortbendisd.gov/our-district/leadership/board-of-trustees/board-elections",
+      "sourceOrg": "Fort Bend Independent School District",
+      "collectedAt": "2026-11-03T06:29:23.390536+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "The seven Board of Trustees members are voted on by all residents of the District, and represent all residents of the District."
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:fort_bend_central_appraisal_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "geometryCoverage": "HELD_REGISTRY_OR_EXACT_WHOLE_COUNTY_MEMBERSHIP",
+    "provenance": {
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:08:52.089534+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "FORT BEND CENTRAL APPRAISAL\nDISTRICT BOARD OF DIRECTORS\nAT-LARGE POSITION NO. 1\nVote for None or One\nJUNTA DIRECTORES DEL DISTRITO\nCENTRAL DE TASACIÓN DE FORT\nBEND EN GENERAL NRO. 1\nVote por Ninguno o Uno\nMARTIN JOHN\nSHAIZAD \"SAM\" CHATRIWALA"
+    }
+  }
+]

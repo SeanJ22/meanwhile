@@ -1,0 +1,81 @@
+{
+  "school": {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:fort_bend_independent_school_district",
+    "allThreePositionsWholeDistrict": true,
+    "electorateRule": {
+      "sourceUrl": "https://www.fortbendisd.gov/our-district/leadership/board-of-trustees/board-elections",
+      "sourceOrg": "Fort Bend Independent School District",
+      "collectedAt": "2026-11-03T06:29:23.390536+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "The seven Board of Trustees members are voted on by all residents of the District, and represent all residents of the District."
+    },
+    "termEvidence": {
+      "sourceUrl": "https://www.fortbendcountytx.gov/sites/default/files/document-central/document-central/elections-documents/election-notices/2026/Fort-Bend-Independent-School-District.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:46:36.939815+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "Position 1 \n3-year term currently held by Angie Hanan"
+    }
+  },
+  "cad": {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:fort_bend_central_appraisal_district",
+    "wholeCountyMembershipSupplied": true,
+    "boundaryRule": {
+      "sourceUrl": "https://r.jina.ai/https://statutes.capitol.texas.gov/Docs/TX/htm/TX.6.htm",
+      "sourceOrg": "Texas Legislature; official text through public reader",
+      "collectedAt": "2026-11-03T06:28:48.144038+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "(a) The appraisal district's boundaries are the same as the county's boundaries."
+    },
+    "captureLimit": "Public reader derivative of official statute; direct native routes returned the same application shell. Official current CAD election notice corroborates county voters; actual64class samples show all3CAD seats."
+  },
+  "mud": {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:burney_road_mud",
+    "voteFor": 3,
+    "candidates": 5,
+    "electorate": {
+      "sourceUrl": "https://www.fortbendcountytx.gov/sites/default/files/document-central/document-central/elections-documents/election-notices/2026/Burney-Road-MUD.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:46:36.358928+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "To the Registered Voters of Burney Road Municipal Utility District, Fort Bend County, Texas."
+    },
+    "electionPurpose": {
+      "sourceUrl": "https://www.fortbendcountytx.gov/sites/default/files/document-central/document-central/elections-documents/election-notices/2026/Burney-Road-MUD.pdf",
+      "sourceOrg": "Fort Bend County Elections / Voter Registration",
+      "collectedAt": "2026-11-03T06:46:36.358928+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "on November 3, 2026, for voting in a Directors Election to elect three (3) directors."
+    }
+  },
+  "regionalCourts": {
+    "sharedExistingHarrisIdsReused": true,
+    "courtDistricts": [
+      1,
+      14
+    ],
+    "counties": [
+      "Austin",
+      "Brazoria",
+      "Chambers",
+      "Colorado",
+      "Fort Bend",
+      "Galveston",
+      "Grimes",
+      "Harris",
+      "Waller",
+      "Washington"
+    ],
+    "currentHomePagesOnly": true
+  },
+  "heldJudicialDistricts": {
+    "exactSixHeldMembershipIdsReused": true,
+    "currentOfficialMap": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-11-03T06:42:46.914015+00:00",
+      "verifiedAt": "2026-11-03T06:56:12.293569+00:00",
+      "quote": "FORT BEND (10)\n---------------------\n240 268 328 387\n400 434 458 501\n502 505"
+    }
+  }
+}

@@ -1,0 +1,579 @@
+{
+  "publishedUrls": [
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031002BS1.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032002BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033006BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034001BS44.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031003BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032003BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033007BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034026BS45.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031004BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032017BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033008BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034032BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031004BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032018BS15.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033009BS25.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034032BS47.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031004BS5.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032021BS16.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033011BS26.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034039BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031005BS6.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032023BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033014BS27.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034043BS48.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031006BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032028BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033014BS28.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034066BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031007BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032030BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033015BS29.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034067BS49.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031008BS6.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032031BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033016BS25.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034068BS50.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031009BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032033BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033016BS30.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034069BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031010BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032034BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033018BS29.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034076BS51.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031011BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS17.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033020BS25.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034077BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031012BS6.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033020BS30.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034082BS52.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031013BS6.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032049BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033022BS31.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034082BS53.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031014BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032050BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033023BS32.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034082BS54.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031015BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032050BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033025BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034083BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031016BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032051BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033027BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034083BS55.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031019BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032052BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033029BS25.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034083BS56.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031038BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032055BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033035BS33.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034084BS53.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031038BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032056BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033035BS34.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034084BS54.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031039BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032058BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033037BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034085BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031039BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032059BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033040BS27.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034085BS55.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031057BS6.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032060BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033042BS26.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034085BS56.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031057BS7.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032060BS19.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033046BS25.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034086BS52.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031058BS6.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032061BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033047BS35.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034087BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031058BS7.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032062BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033048BS27.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034087BS47.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031059BS6.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032065BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033063BS27.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034095BS44.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031103BS8.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032070BS19.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033063BS28.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034095BS57.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031116BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032075BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033064BS26.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034096BS44.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031122BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032077BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033073BS27.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034099BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031122BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032078BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033074BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034099BS47.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031130BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032081BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033079BS35.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034100BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031130BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032088BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033080BS36.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034101BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031132BS8.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032088BS19.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033084BS35.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034101BS47.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031132BS9.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032089BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033085BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034106BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031133BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032089BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033087BS29.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034113BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031133BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032090BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033102BS37.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034113BS47.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031141BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032091BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033104BS38.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034117BS58.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031141BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032092BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033105BS38.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034117BS59.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031142BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032093BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033107BS25.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034124BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031143BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032094BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033110BS35.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034135BS45.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031144BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032095BS20.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033111BS29.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034141BS44.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031145BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032096BS21.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033119BS26.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034147BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031146BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032097BS22.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033120BS29.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034150BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031146BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032107BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033121BS39.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034150BS55.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031147BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032108BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033125BS29.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034151BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031148BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032109BS22.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033128BS40.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034152BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031149BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032112BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033129BS40.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034152BS55.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031150BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032112BS19.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033131BS34.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034155BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031151BS2.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032113BS22.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033139BS34.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034155BS47.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031156BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032114BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033140BS25.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034158BS45.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031156BS4.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032115BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033150BS34.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034163BS60.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031159BS3.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032118BS22.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033152BS41.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034164BS49.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031160BS10.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032119BS22.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033154BS24.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034167BS61.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031160BS11.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032123BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033158BS42.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034170BS62.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031160BS8.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032127BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033160BS43.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034172BS62.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031165BS8.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032134BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033161BS41.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034172BS63.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032135BS23.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033162BS43.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034172BS64.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032136BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033165BS42.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034173BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032136BS14.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033166BS34.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034174BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032137BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033167BS41.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034174BS47.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032137BS19.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034176BS46.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032151BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032152BS16.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032153BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032157BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032168BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032171BS12.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032175BS13.pdf",
+    "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032175BS19.pdf"
+  ],
+  "publishedCount": 250,
+  "bsClasses": 64,
+  "witnesses": [
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/8365c968ba07098bd93eb8a83b5f7b6638dfdb89a48f396295704b2b5011112e.raw.txt",
+      "hash": "8365c968ba07098bd93eb8a83b5f7b6638dfdb89a48f396295704b2b5011112e"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034026BS45.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/9f106022f518870ef0e783926164295669f070896238ea1a16bd44da1e3c309e.raw.txt",
+      "hash": "9f106022f518870ef0e783926164295669f070896238ea1a16bd44da1e3c309e"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034167BS61.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/45640b59a22b068ac5ed037af922df0c36d348c8ec87dce8c8152c9f80cf14ac.raw.txt",
+      "hash": "45640b59a22b068ac5ed037af922df0c36d348c8ec87dce8c8152c9f80cf14ac"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032095BS20.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/fbfc33a9449e10fb0a82c599ad9ecd83244da46a25a5c738ab957566fa79f3c9.raw.txt",
+      "hash": "fbfc33a9449e10fb0a82c599ad9ecd83244da46a25a5c738ab957566fa79f3c9"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031057BS7.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/fb7285d8675bfbe751374253c84b998dadbce59aef416520e14868e243f9d9e9.raw.txt",
+      "hash": "fb7285d8675bfbe751374253c84b998dadbce59aef416520e14868e243f9d9e9"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033128BS40.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/21b540183e2557e11be13ada2b40badb18bba9bb872417939a8ffd3c156f075d.raw.txt",
+      "hash": "21b540183e2557e11be13ada2b40badb18bba9bb872417939a8ffd3c156f075d"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031004BS3.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/f96c62626090a397cfbeef22fc46fedf33b75af1d09a8047139e360cfd7460b0.raw.txt",
+      "hash": "f96c62626090a397cfbeef22fc46fedf33b75af1d09a8047139e360cfd7460b0"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033009BS25.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/cce2c4a05d89486500093aecc3194bcb42bdefccf3078476ee37753f4f57453b.raw.txt",
+      "hash": "cce2c4a05d89486500093aecc3194bcb42bdefccf3078476ee37753f4f57453b"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031160BS10.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/9a05cc27405325edb52eb9e91817c9f5013c78f3ae64561c476d3a422bf54a22.raw.txt",
+      "hash": "9a05cc27405325edb52eb9e91817c9f5013c78f3ae64561c476d3a422bf54a22"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031160BS11.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/764c464e1153c12d7802ab9cba3572d8c4c9eefd2e8a280d1bfe8852d36b7d76.raw.txt",
+      "hash": "764c464e1153c12d7802ab9cba3572d8c4c9eefd2e8a280d1bfe8852d36b7d76"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033006BS24.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/9573c74701b75a016d97187958df72319cf105d0ca07711a20728c6a877f6b2a.raw.txt",
+      "hash": "9573c74701b75a016d97187958df72319cf105d0ca07711a20728c6a877f6b2a"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS17.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/c278e298664d8ef5fce55981d920ea5ab95d807c7d539d2d693ca5d57d76fd85.raw.txt",
+      "hash": "c278e298664d8ef5fce55981d920ea5ab95d807c7d539d2d693ca5d57d76fd85"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033022BS31.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/96338f082eca372d8dc05e0e126dcb50a6958a1c54ced045cc3710fb4f30b3e2.raw.txt",
+      "hash": "96338f082eca372d8dc05e0e126dcb50a6958a1c54ced045cc3710fb4f30b3e2"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032097BS22.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/4b8d132600cc29a11844b09c25b3eab4e6f8c9d1796dbc3dca1ef0c6f72c65b4.raw.txt",
+      "hash": "4b8d132600cc29a11844b09c25b3eab4e6f8c9d1796dbc3dca1ef0c6f72c65b4"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031002BS1.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/71ec919222cf5224eb27c1e66f82883539c29a7205bb432436b22460e91d031a.raw.txt",
+      "hash": "71ec919222cf5224eb27c1e66f82883539c29a7205bb432436b22460e91d031a"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033035BS34.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/5664b45210d75e0c345f5a1918af31a2e265f6a7676d2102728dcde0dbc573f7.raw.txt",
+      "hash": "5664b45210d75e0c345f5a1918af31a2e265f6a7676d2102728dcde0dbc573f7"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034172BS64.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/2cdeb6fc14257aad49ea3ed2e81030df1ed8ad3f632ffd76b94208ccebb4ea74.raw.txt",
+      "hash": "2cdeb6fc14257aad49ea3ed2e81030df1ed8ad3f632ffd76b94208ccebb4ea74"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034083BS55.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/e6e910c05a3d2d7d987e8618f736135a56f07895b57e56ff85ebe31e192c645f.raw.txt",
+      "hash": "e6e910c05a3d2d7d987e8618f736135a56f07895b57e56ff85ebe31e192c645f"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031004BS5.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/365ea17b030259a51c0bdbea17b9db36438874ba2c1412e38eada7a73ca19e17.raw.txt",
+      "hash": "365ea17b030259a51c0bdbea17b9db36438874ba2c1412e38eada7a73ca19e17"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034076BS51.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/2f5add25d341caeb97e8017bc6a5e27d85378461dc361b08c930ca3ef1b7bfbc.raw.txt",
+      "hash": "2f5add25d341caeb97e8017bc6a5e27d85378461dc361b08c930ca3ef1b7bfbc"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032096BS21.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/5db55b3426515d6052da5599c23f6c77e003841a8350854a82c5dccd32819e9a.raw.txt",
+      "hash": "5db55b3426515d6052da5599c23f6c77e003841a8350854a82c5dccd32819e9a"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033160BS43.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/ad7be3041d10395b2e0b765ec932f6b14c1bf56bedea2cd1586142d40dd093ea.raw.txt",
+      "hash": "ad7be3041d10395b2e0b765ec932f6b14c1bf56bedea2cd1586142d40dd093ea"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033035BS33.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/853dd756b88e5f638ec7e9e452fa94282c2aabbb3d400f3a8bf9343a446d84bd.raw.txt",
+      "hash": "853dd756b88e5f638ec7e9e452fa94282c2aabbb3d400f3a8bf9343a446d84bd"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034117BS59.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/7838a433c2ee86a4767081874fb0e8ddc95e15bca4fdcf7232cd73b508c75ae6.raw.txt",
+      "hash": "7838a433c2ee86a4767081874fb0e8ddc95e15bca4fdcf7232cd73b508c75ae6"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034082BS53.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/44acfda83c92686be0e5bbe36f3b7137adc808ceb83f3bd419131e03f50450af.raw.txt",
+      "hash": "44acfda83c92686be0e5bbe36f3b7137adc808ceb83f3bd419131e03f50450af"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033152BS41.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/039b8e30d7ec3acf5f1fa3812baa52d2d3405893d768ac94ae8ae635be49d503.raw.txt",
+      "hash": "039b8e30d7ec3acf5f1fa3812baa52d2d3405893d768ac94ae8ae635be49d503"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034043BS48.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/7e60f529e465dc8f23664289b352476c2dd04e00d9556dc22418cd215a28fde3.raw.txt",
+      "hash": "7e60f529e465dc8f23664289b352476c2dd04e00d9556dc22418cd215a28fde3"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032060BS19.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/eba22662e2f8c0864e0d5ae26e075f6c7982b4ac640555f335733f73c64c0965.raw.txt",
+      "hash": "eba22662e2f8c0864e0d5ae26e075f6c7982b4ac640555f335733f73c64c0965"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032017BS14.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/35f30425775eb3c1b5b7d527a7732fac6df3737dc276fee9d200d0c0beb06227.raw.txt",
+      "hash": "35f30425775eb3c1b5b7d527a7732fac6df3737dc276fee9d200d0c0beb06227"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032018BS15.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/b1f35f62931458d9bd313110c741e615fc694ef073f4a77c2cbd51fe1f682eed.raw.txt",
+      "hash": "b1f35f62931458d9bd313110c741e615fc694ef073f4a77c2cbd51fe1f682eed"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032002BS12.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/a6841de8bb006c2fbaa5178220425435698a62db95049b6e40ad2a9397f5c2c5.raw.txt",
+      "hash": "a6841de8bb006c2fbaa5178220425435698a62db95049b6e40ad2a9397f5c2c5"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034172BS63.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/d1ad5ed4c8512d44b8e0ea202a2c9d977d21a1c7948e2f6e19c0c6051993946e.raw.txt",
+      "hash": "d1ad5ed4c8512d44b8e0ea202a2c9d977d21a1c7948e2f6e19c0c6051993946e"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033063BS28.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/161181e81de941f2287b35a19b6c63b2a6ea35653156943792654347a66f1203.raw.txt",
+      "hash": "161181e81de941f2287b35a19b6c63b2a6ea35653156943792654347a66f1203"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034082BS54.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/ba395a524fc405f5157bbad85804f8adfd78eb262879465bd23bad05ab8280ae.raw.txt",
+      "hash": "ba395a524fc405f5157bbad85804f8adfd78eb262879465bd23bad05ab8280ae"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031003BS2.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/71ab0805f639ab7d0add4a5e9a63f46036f4b64538424bbd4587e7bfd665f9f9.raw.txt",
+      "hash": "71ab0805f639ab7d0add4a5e9a63f46036f4b64538424bbd4587e7bfd665f9f9"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034032BS47.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/8e059e822dc3026e4ea5ba7b358d6a562a5d06fd6559d5762a56d5986de3ec35.raw.txt",
+      "hash": "8e059e822dc3026e4ea5ba7b358d6a562a5d06fd6559d5762a56d5986de3ec35"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032021BS16.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/0e0e9903abae5df0264ea28899c32a06febd6fbf115b08e45cf7d153e4a672ea.raw.txt",
+      "hash": "0e0e9903abae5df0264ea28899c32a06febd6fbf115b08e45cf7d153e4a672ea"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032028BS13.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/26dff688bcd81a14d498ba954d9e40b8075ab9418aed83ccf367af3effea7bd7.raw.txt",
+      "hash": "26dff688bcd81a14d498ba954d9e40b8075ab9418aed83ccf367af3effea7bd7"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033102BS37.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/336991762dc377df106f349a80cc4c0f9056a3bc609d870df904118156c785d2.raw.txt",
+      "hash": "336991762dc377df106f349a80cc4c0f9056a3bc609d870df904118156c785d2"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031005BS6.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/6672c2c2612413f2849d663c02d2d93ab0e93e02e97bc29dd90b33d5e6bd7892.raw.txt",
+      "hash": "6672c2c2612413f2849d663c02d2d93ab0e93e02e97bc29dd90b33d5e6bd7892"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034067BS49.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/f76dfe3760fb5661074b5e96fa2f30b4c463a4da0c1798a175253a19c70d34c6.raw.txt",
+      "hash": "f76dfe3760fb5661074b5e96fa2f30b4c463a4da0c1798a175253a19c70d34c6"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034117BS58.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/e5e0815b7f7a07c9d5e0b22f4d838e99e5d3ec732eb2342ad8a410eb798090a4.raw.txt",
+      "hash": "e5e0815b7f7a07c9d5e0b22f4d838e99e5d3ec732eb2342ad8a410eb798090a4"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034095BS57.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/1ee5f7bf7422d5f55134c2ae99e0b16d5434f52ad64f5ec3cd5bba00fee6d866.raw.txt",
+      "hash": "1ee5f7bf7422d5f55134c2ae99e0b16d5434f52ad64f5ec3cd5bba00fee6d866"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033011BS26.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/f54cd882b04b167f2c302aabe521c730abc05b87ba244edb079aa39de8023900.raw.txt",
+      "hash": "f54cd882b04b167f2c302aabe521c730abc05b87ba244edb079aa39de8023900"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031132BS9.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/c1933081e28aea76aa8ca89e7fbe54128bf58c44ee287fe84b910a081d260aa5.raw.txt",
+      "hash": "c1933081e28aea76aa8ca89e7fbe54128bf58c44ee287fe84b910a081d260aa5"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033023BS32.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/4208401006a213dc918a75f364ba54f6174c0e94af2fca2927d862e1dc0bfeea.raw.txt",
+      "hash": "4208401006a213dc918a75f364ba54f6174c0e94af2fca2927d862e1dc0bfeea"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034001BS44.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/c9910afd7ae8e601fb1ad687cb66fc6ab48549ec08483392576ecc46c5c1eb1f.raw.txt",
+      "hash": "c9910afd7ae8e601fb1ad687cb66fc6ab48549ec08483392576ecc46c5c1eb1f"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034170BS62.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/04d7e3ccb579c4bdc79d6cd3b7de7125a6a101cdc2a302620c66602f55aab83f.raw.txt",
+      "hash": "04d7e3ccb579c4bdc79d6cd3b7de7125a6a101cdc2a302620c66602f55aab83f"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031103BS8.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/b4accf074c17df45de662ab920215ffb9b505e8d40ffca56efb9ef8690dec167.raw.txt",
+      "hash": "b4accf074c17df45de662ab920215ffb9b505e8d40ffca56efb9ef8690dec167"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033104BS38.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/e75455578607d72693a51585d41b35b292485555591244aecf21fd750862f55d.raw.txt",
+      "hash": "e75455578607d72693a51585d41b35b292485555591244aecf21fd750862f55d"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033014BS27.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/0ae693939dcee644b306a7ce02937a7928683fe29dc7df1ec7f2cff78cc41eb2.raw.txt",
+      "hash": "0ae693939dcee644b306a7ce02937a7928683fe29dc7df1ec7f2cff78cc41eb2"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031004BS4.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/6c8d93143dfa84808d7e331864d2f0857cbeed42441b591de891b34d8c58f32f.raw.txt",
+      "hash": "6c8d93143dfa84808d7e331864d2f0857cbeed42441b591de891b34d8c58f32f"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034083BS56.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/495eb3eeee26ff82dec49c2f0bc5b5b5a3183f5f0da2042451d3253c1c8f3a87.raw.txt",
+      "hash": "495eb3eeee26ff82dec49c2f0bc5b5b5a3183f5f0da2042451d3253c1c8f3a87"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033080BS36.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/b7e7d4a2aaa01b4ed97cff421c33031bee2437be94cb444daa2f0bf8abce0555.raw.txt",
+      "hash": "b7e7d4a2aaa01b4ed97cff421c33031bee2437be94cb444daa2f0bf8abce0555"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034032BS46.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/d87af6634067e5798da002f66fd92c45bc9a9cb2fef127e08f719e905706b024.raw.txt",
+      "hash": "d87af6634067e5798da002f66fd92c45bc9a9cb2fef127e08f719e905706b024"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033158BS42.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/675138507a68d12ebfdcefe5f7a715c24479151538616db9f19858378fb2ffed.raw.txt",
+      "hash": "675138507a68d12ebfdcefe5f7a715c24479151538616db9f19858378fb2ffed"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033047BS35.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/de33925cbfa44575db9998c02faf8df802e8fbc950e82024a31dda10aead30b4.raw.txt",
+      "hash": "de33925cbfa44575db9998c02faf8df802e8fbc950e82024a31dda10aead30b4"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034163BS60.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/8b90790109e3b59f6bccbca13aade5b015d9ac86d2974077dff38be3d4832c63.raw.txt",
+      "hash": "8b90790109e3b59f6bccbca13aade5b015d9ac86d2974077dff38be3d4832c63"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033016BS30.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/6e787d2809c5cacb5fea737fcc0a29425fd613b4965a2798939e51830f946dfe.raw.txt",
+      "hash": "6e787d2809c5cacb5fea737fcc0a29425fd613b4965a2798939e51830f946dfe"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033121BS39.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/a69bb6617b48d2251272330748868c3345021f6c9db17510b058bfd146475b89.raw.txt",
+      "hash": "a69bb6617b48d2251272330748868c3345021f6c9db17510b058bfd146475b89"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033015BS29.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/81dd0e76db90d9896b690c9ad93907e1464ed6eb79d56d045a3144d1ec6f38c9.raw.txt",
+      "hash": "81dd0e76db90d9896b690c9ad93907e1464ed6eb79d56d045a3144d1ec6f38c9"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034082BS52.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/5b25041faab88a74a3bf8c73e93add6e3c45bc98f402476202684015023d6a15.raw.txt",
+      "hash": "5b25041faab88a74a3bf8c73e93add6e3c45bc98f402476202684015023d6a15"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034068BS50.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/13b86ce13cdfb80ed4585144fc4a0b02cf17b8cbfa61467043d0b2f86f5e4b0f.raw.txt",
+      "hash": "13b86ce13cdfb80ed4585144fc4a0b02cf17b8cbfa61467043d0b2f86f5e4b0f"
+    },
+    {
+      "url": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032135BS23.pdf",
+      "text": "/workspace/cx-local-work/fort-bend/6248a89a36cf57dcf6e4c5119991123cbafd5641de2a97bae4ea530ef9dc8daa.raw.txt",
+      "hash": "6248a89a36cf57dcf6e4c5119991123cbafd5641de2a97bae4ea530ef9dc8daa"
+    }
+  ],
+  "limit": "One complete native representative for every published BSclass, not every250precinct URL."
+}

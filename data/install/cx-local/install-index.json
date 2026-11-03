@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:49:47.736314+00:00",
+  "preparedAt": "2026-11-03T07:04:16.644097+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 56,
-    "stateName": "Texas",
-    "county": "Fort Bend County",
-    "fips": "48157",
-    "population": 975191,
+    "rank": 62,
+    "stateName": "California",
+    "county": "Kern County",
+    "fips": "06029",
+    "population": 927068,
     "populationYear": 2025,
-    "state": "TX"
+    "state": "CA"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -1416,6 +1416,44 @@
       }
     },
     {
+      "state": "TX",
+      "county": "Fort Bend",
+      "populationRank": 56,
+      "manifest": "TX/fort-bend/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 35,
+      "measureContests": 0,
+      "candidacies": 75,
+      "newContests": 20,
+      "refreshedContests": 15,
+      "sourceInputSha256": "4e1f0f61db43d7fd577a830f6d8f0e4bc333101da90fd6ee931c8ca20bacb9dc",
+      "coverage": {
+        "preparedContests": 35,
+        "preparedCandidacies": 75,
+        "newlyMintedContests": 15,
+        "newlyMintedCandidacies": 35,
+        "refreshedCheckedInHeldContests": 15,
+        "refreshedCheckedInHeldCandidacies": 30,
+        "reusedReadyLaneContests": 5,
+        "reusedReadyLaneCandidacies": 10,
+        "actualCurrentSampleClassWitnesses": 64,
+        "actualSamplePages": 128,
+        "publishedPdfUrls": 250,
+        "completePublishedBsClassWitnessSet": true,
+        "full250PdfCensus": false,
+        "independentElectionCensusComplete": false,
+        "sourceCaptures": 82,
+        "exactGeometryFeatures": 3,
+        "wholeCountyMemberships": 27,
+        "newWholeCountyMemberships": 21,
+        "refreshedExactHeldWholeCountyMemberships": 6,
+        "missingReaderIds": 14,
+        "pendingJpPolygons": 3,
+        "measuresPrepared": 0,
+        "absencesCreated": 0
+      }
+    },
+    {
       "state": "MD",
       "county": "Prince George's County",
       "populationRank": 57,
@@ -1612,17 +1650,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 61,
-    "packetsPrepared": 62,
-    "candidateAndRetentionContests": 3250,
+    "countiesPrepared": 62,
+    "packetsPrepared": 63,
+    "candidateAndRetentionContests": 3285,
     "measureContests": 112,
-    "candidacyEntries": 7237,
-    "newContestEntriesAgainstCheckedInBaseline": 2718,
-    "distinctPreparedContestIds": 3321,
-    "distinctPreparedCandidateIds": 7150,
-    "distinctNewContestsAgainstCheckedInBaseline": 2698,
+    "candidacyEntries": 7312,
+    "newContestEntriesAgainstCheckedInBaseline": 2738,
+    "distinctPreparedContestIds": 3351,
+    "distinctPreparedCandidateIds": 7215,
+    "distinctNewContestsAgainstCheckedInBaseline": 2713,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 62
+    "distinctCountyHandoffs": 63
   },
   "remainingWork": [
     {

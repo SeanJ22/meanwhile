@@ -1,0 +1,337 @@
+{
+  "heldBaselineSha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+  "identityInputs": [
+    "data/ballot/2026-general/tx.json",
+    "data/install/cx-local/TX/collin/ballot-input/tx.json",
+    "data/install/cx-local/TX/bexar/ballot-input/tx.json",
+    "data/install/cx-local/TX/denton/ballot-input/tx.json",
+    "data/install/cx-local/TX/dallas/ballot-input/tx.json",
+    "data/install/cx-local/TX/travis/ballot-input/tx.json",
+    "data/install/cx-local/TX/tarrant/ballot-input/tx.json",
+    "data/install/cx-local/TX/harris/ballot-input/tx.json",
+    "data/install/cx-local/TX/hidalgo/ballot-input/tx.json"
+  ],
+  "latestCxVotesReadOnlyReference": "/workspace/cx-local-work/reference/cx-votes-TX-92b249b5e",
+  "records": [
+    {
+      "contestId": "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals",
+      "identityStatus": "EXACT_EXISTING_READY_LANE_ID",
+      "identitySource": "data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "preparedCandidateIds": [
+        "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals:kevin-jewell",
+        "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals:sarah-beth-landau"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3",
+      "identityStatus": "EXACT_EXISTING_READY_LANE_ID",
+      "identitySource": "data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "preparedCandidateIds": [
+        "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3:todd-frankfort",
+        "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3:veronica-rivas-molloy"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term",
+      "identityStatus": "EXACT_EXISTING_READY_LANE_ID",
+      "identitySource": "data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "preparedCandidateIds": [
+        "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term:david-gunn",
+        "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term:julie-countiss"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5",
+      "identityStatus": "EXACT_EXISTING_READY_LANE_ID",
+      "identitySource": "data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "preparedCandidateIds": [
+        "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5:jessica-caird",
+        "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5:amy-guerra"
+      ]
+    },
+    {
+      "contestId": "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7",
+      "identityStatus": "EXACT_EXISTING_READY_LANE_ID",
+      "identitySource": "data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "preparedCandidateIds": [
+        "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7:ken-wise",
+        "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7:william-demond"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-240",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-district-judge-240:asha_reddi",
+        "tx-ba01-2026-district-judge-240:surendran_k_pattel"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-268",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-district-judge-268:steve_rogers",
+        "tx-ba01-2026-district-judge-268:brendetta_scott"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-328",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-district-judge-328:richard_lybarger",
+        "tx-ba01-2026-district-judge-328:monica_rawlins"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-458",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-district-judge-458:maggie_jaramillo",
+        "tx-ba01-2026-district-judge-458:tameika_carter"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-501",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-district-judge-501:richard_t_bell",
+        "tx-ba01-2026-district-judge-501:latosha_mcgill_clayton"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-502",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-district-judge-502:mark_h_hanna",
+        "tx-ba01-2026-district-judge-502:tamecia_glover"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-district-attorney-268th-judicial-district",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-district-attorney-268th-judicial-district:shawn-mcdonald",
+        "cx-local-tx-fort-bend-2026-district-attorney-268th-judicial-district:brian-m-middleton"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-county_judge",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-county_judge:daniel_wong",
+        "tx-ba01-2026-county-48157-county_judge:dexter_l_mccoy"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_1",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_1:chris_morales",
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_1:nireasha_murray"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_2",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_2:jorden_maljovec",
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_2:tyra_mccollum"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_3",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_3:jessica_jaramillo",
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_3:juli_a_mathew"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_4",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_4:michael_cody_moore",
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_4:toni_wallace"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_6",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_6:dean_hrbacek",
+        "tx-ba01-2026-county-48157-judge_county_court_at_law_no_6:stephen_longoria"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-district_clerk",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-district_clerk:audrey_lee",
+        "tx-ba01-2026-county-48157-district_clerk:beverley_mcgrew_walker"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-county_clerk",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-county_clerk:tamara_mcfarlane",
+        "tx-ba01-2026-county-48157-county_clerk:sonya_jones"
+      ]
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48157-county_treasurer",
+      "identityStatus": "EXACT_CHECKED_IN_HELD_ID",
+      "identitySource": "data/ballot/2026-general/tx.json",
+      "preparedCandidateIds": [
+        "tx-ba01-2026-county-48157-county_treasurer:bill_rickert",
+        "tx-ba01-2026-county-48157-county_treasurer:jeffrey_l_boney"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-county-commissioner-precinct-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-county-commissioner-precinct-2:tony-aranda",
+        "cx-local-tx-fort-bend-2026-county-commissioner-precinct-2:grady-prestage"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-2-place-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-2-place-1:ninh-truong",
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-2-place-1:roderick-c-garner-sr"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-1:martin-john",
+        "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-1:shaizad-sam-chatriwala"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-2:muzaffar-vohra",
+        "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-2:dayna-druke"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-3",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-3:ameer-malik"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-county-commissioner-precinct-4",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-county-commissioner-precinct-4:ken-mathews",
+        "cx-local-tx-fort-bend-2026-county-commissioner-precinct-4:april-l-jones"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-trustee-position-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-trustee-position-1:angie-hanan",
+        "cx-local-tx-fort-bend-2026-trustee-position-1:pedro-valencia"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-trustee-position-4",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-trustee-position-4:dan-mathews",
+        "cx-local-tx-fort-bend-2026-trustee-position-4:eric-pursley",
+        "cx-local-tx-fort-bend-2026-trustee-position-4:shirley-rose-gilliam",
+        "cx-local-tx-fort-bend-2026-trustee-position-4:rob-dominguez",
+        "cx-local-tx-fort-bend-2026-trustee-position-4:robert-dombrowski",
+        "cx-local-tx-fort-bend-2026-trustee-position-4:shirisha-mudhireddy"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-trustee-position-5",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-trustee-position-5:addie-heyliger"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-1:kelly-crow",
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-1:martin-b-sanchez"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-2:tricia-krenek",
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-2:hortencia-sanchez"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-1",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-1:william-ferguson",
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-1:sonia-rash"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-2",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-2:ken-cannata",
+        "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-2:rachelle-carter"
+      ]
+    },
+    {
+      "contestId": "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors",
+      "identityStatus": "NEW_CX_LOCAL_ID",
+      "identitySource": null,
+      "preparedCandidateIds": [
+        "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors:cynthia-van-deursen",
+        "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors:doug-otto",
+        "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors:najeed-ismail",
+        "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors:muzaffar-vohra",
+        "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors:mark-johnson"
+      ]
+    }
+  ]
+}

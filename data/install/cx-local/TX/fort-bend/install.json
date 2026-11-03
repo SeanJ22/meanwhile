@@ -1,0 +1,368 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Fort Bend",
+  "countyFips": "48157",
+  "populationRank": 56,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge only the35 reviewed local candidate fields and27 exact source-backed district memberships against latest TX. Preserve15 checked-in contest IDs and30 candidates plus5 existing Harris shared appellate IDs/10 candidates. Mint only15missing local contests/35candidacies. Preserve unrelated statewide/legislative/federal fields, every measure and reader attachment. No production publication performed.",
+  "subjects": [
+    {
+      "id": "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals",
+      "title": "Chief Justice, 14th Court of Appeals",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3",
+      "title": "Justice, 1st Court of Appeals District, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term",
+      "title": "Justice, 1st Court of Appeals District, Place 4 - Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5",
+      "title": "Justice, 1st Court of Appeals District, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7",
+      "title": "Justice, 14th Court of Appeals District, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-240",
+      "title": "DISTRICT JUDGE, 240TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:240",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-268",
+      "title": "DISTRICT JUDGE, 268TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:268",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-328",
+      "title": "DISTRICT JUDGE, 328TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:328",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-458",
+      "title": "DISTRICT JUDGE, 458TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:458",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-501",
+      "title": "DISTRICT JUDGE, 501ST JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:501",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-502",
+      "title": "DISTRICT JUDGE, 502ND JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:502",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-district-attorney-268th-judicial-district",
+      "title": "DISTRICT ATTORNEY, 268TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:268",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-county_judge",
+      "title": "COUNTY JUDGE",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_1",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_2",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_3",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_4",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-judge_county_court_at_law_no_6",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-district_clerk",
+      "title": "DISTRICT CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-county_clerk",
+      "title": "COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48157-county_treasurer",
+      "title": "COUNTY TREASURER",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-county-commissioner-precinct-2",
+      "title": "COUNTY COMMISSIONER PRECINCT 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/commissioner_precinct:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-2-place-1",
+      "title": "JUSTICE OF THE PEACE PRECINCT 2, PLACE 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-1",
+      "title": "FORT BEND CENTRAL APPRAISAL DISTRICT BOARD OF DIRECTORS AT-LARGE POSITION NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:fort_bend_central_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-2",
+      "title": "FORT BEND CENTRAL APPRAISAL DISTRICT BOARD OF DIRECTORS AT-LARGE POSITION NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:fort_bend_central_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-3",
+      "title": "FORT BEND CENTRAL APPRAISAL DISTRICT BOARD OF DIRECTORS AT-LARGE POSITION NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:fort_bend_central_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11032044BS18.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-county-commissioner-precinct-4",
+      "title": "COUNTY COMMISSIONER PRECINCT 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/commissioner_precinct:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034026BS45.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-trustee-position-1",
+      "title": "Fort Bend Independent School District Trustee, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fort_bend_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034026BS45.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-trustee-position-4",
+      "title": "Fort Bend Independent School District Trustee, Position 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fort_bend_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 6,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034026BS45.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-trustee-position-5",
+      "title": "Fort Bend Independent School District Trustee, Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fort_bend_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034026BS45.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-1",
+      "title": "JUSTICE OF THE PEACE PRECINCT 1, PLACE 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031057BS7.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-2",
+      "title": "JUSTICE OF THE PEACE PRECINCT 1, PLACE 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11031057BS7.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-1",
+      "title": "JUSTICE OF THE PEACE PRECINCT 3, PLACE 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033128BS40.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-2",
+      "title": "JUSTICE OF THE PEACE PRECINCT 3, PLACE 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11033128BS40.pdf"
+    },
+    {
+      "id": "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors",
+      "title": "BURNEY ROAD MUNICIPAL UTILITY DISTRICT DIRECTORS",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:burney_road_mud",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://sampleballots.fortbendcountytx.gov/Congressional-Election/11034172BS64.pdf"
+    }
+  ],
+  "coverage": {
+    "preparedContests": 35,
+    "preparedCandidacies": 75,
+    "newlyMintedContests": 15,
+    "newlyMintedCandidacies": 35,
+    "refreshedCheckedInHeldContests": 15,
+    "refreshedCheckedInHeldCandidacies": 30,
+    "reusedReadyLaneContests": 5,
+    "reusedReadyLaneCandidacies": 10,
+    "actualCurrentSampleClassWitnesses": 64,
+    "actualSamplePages": 128,
+    "publishedPdfUrls": 250,
+    "completePublishedBsClassWitnessSet": true,
+    "full250PdfCensus": false,
+    "independentElectionCensusComplete": false,
+    "sourceCaptures": 82,
+    "exactGeometryFeatures": 3,
+    "wholeCountyMemberships": 27,
+    "newWholeCountyMemberships": 21,
+    "refreshedExactHeldWholeCountyMemberships": 6,
+    "missingReaderIds": 14,
+    "pendingJpPolygons": 3,
+    "measuresPrepared": 0,
+    "absencesCreated": 0
+  },
+  "summary": "35 local CANDIDACY fields/75 printed names across all64published BSclass witnesses. Includes5shared regional appellate races,6held district judges,county offices,2commissioner precincts,5JPplaces,3CADpositions,3FBISDtrustees and Burney Road MUD5names/vote3. School seats are whole-district elections, CAD coextensive county, MUD precise held district. Full250PDF and independent election census remain explicit followups.",
+  "missingReaderDistricts": [
+    "ocd-division/country:us/state:tx/county:fort_bend/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:fort_bend/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:fort_bend/justice_precinct:3",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:1",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:14",
+    "ocd-division/country:us/state:tx/judicial_district:240",
+    "ocd-division/country:us/state:tx/judicial_district:268",
+    "ocd-division/country:us/state:tx/judicial_district:328",
+    "ocd-division/country:us/state:tx/judicial_district:458",
+    "ocd-division/country:us/state:tx/judicial_district:501",
+    "ocd-division/country:us/state:tx/judicial_district:502",
+    "ocd-division/country:us/state:tx/special_district:fort_bend_central_appraisal_district"
+  ],
+  "newContestIds": [
+    "cx-local-tx-fort-bend-2026-district-attorney-268th-judicial-district",
+    "cx-local-tx-fort-bend-2026-county-commissioner-precinct-2",
+    "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-2-place-1",
+    "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-1",
+    "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-2",
+    "cx-local-tx-fort-bend-2026-fort-bend-central-appraisal-district-board-of-directors-at-large-position-no-3",
+    "cx-local-tx-fort-bend-2026-county-commissioner-precinct-4",
+    "cx-local-tx-fort-bend-2026-trustee-position-1",
+    "cx-local-tx-fort-bend-2026-trustee-position-4",
+    "cx-local-tx-fort-bend-2026-trustee-position-5",
+    "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-1",
+    "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-1-place-2",
+    "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-1",
+    "cx-local-tx-fort-bend-2026-justice-of-the-peace-precinct-3-place-2",
+    "cx-local-tx-fort-bend-2026-burney-road-municipal-utility-district-directors"
+  ],
+  "reusedReadyLaneContestIds": [
+    "tx-cx-local-2026-harris-chief-justice-14th-court-of-appeals",
+    "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-3",
+    "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-4-unexpired-term",
+    "tx-cx-local-2026-harris-justice-1st-court-of-appeals-district-place-5",
+    "tx-cx-local-2026-harris-justice-14th-court-of-appeals-district-place-7"
+  ],
+  "nextOwner": "River: latest-state merge with shared Harris appellate identities, source-backed exact district/member integration, pending JP polygons and remaining independent/style acquisition; controlled installation and reader checks.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 82 captured sources and 137 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

@@ -83,7 +83,7 @@ interface Read {
 
 /**
  * A selection read from slices, as the rows a place's page carries: for each place (and each named board that no place of the selection
- * holds) its boards, their facts, rosters and sittings from the cards of the places and boards, the registry from the state's shelf, and the
+ * holds) its boards, their facts, rosters, sittings and registry rows from the cards of the places and boards, and the
  * history and agenda cards when asked for. Nothing is assembled from the fact store and nothing waits on a worker: a card not yet built is a card with nothing on it.
  */
 export async function readSlicedRows(input: PlaceInput, query: Query): Promise<SlicedRows> {
@@ -98,13 +98,14 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   if (!out) throw new Error("PLACE_SLICES_UNREADABLE");
 
   const boards = new Map<string, Board>(), people = new Map<string, Person>(), regs = new Map<number, SliceBody["reg"]>(), cards = new Map<string, Cards>(), runtimes: PlaceRuntime[] = [];
+  let stateRegistered = false;
   const keep = (slice: { s: string }, card: keyof Cards) => { const held = cards.get(slice.s) ?? {}; (held as Record<string, unknown>)[card] = slice; cards.set(slice.s, held); };
   for (const [n, card, body] of out.places ?? []) {
     if (card === "meetings" || card === "history" || card === "agenda") { keep(unpackSlice<{ s: string }>(body), card); continue; }
     const slice = unpackSlice<SliceBody>(body);
     // A card written by an earlier slice job is not read as this one; it is rebuilt by the lane.
     if (slice.v !== 2) continue;
-    if (card === "bodies") { regs.set(n, slice.reg); if (slice.reg?.rt) runtimes.push(slice.reg.rt); }
+    if (card === "bodies") { regs.set(n, slice.reg); if (slice.reg?.rt) runtimes.push(slice.reg.rt); if (n >= LENT * 2 && slice.reg) stateRegistered = true; }
     for (const entity of slice.entities) {
       if (entity.k === "body") { if (!boards.has(entity.id)) boards.set(entity.id, { id: entity.id, name: entity.n, parent: entity.p ?? null, aliases: entity.a ?? [], filed: [...new Set(entity.d ?? [])], host: entity.h === 1, facts: heldFacts(slice, entity.f) }); }
       else if (entity.k === "person") people.set(entity.id, { facts: new Map([...people.get(entity.id)?.facts ?? [], ...heldFacts(slice, entity.f)]), shown: entity.x ?? people.get(entity.id)?.shown ?? "" });
@@ -113,7 +114,7 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   for (const [card, body] of out.boards ?? []) { const slice = unpackSlice<{ s: string }>(body); keep(slice, card as keyof Cards); }
 
   // The state's registry is what the cards hold of it: one page names the state when its places or boards do.
-  const runtime = mergeRuntime(runtimes, placeIds.some(id => stateIds.includes(id)));
+  const runtime = mergeRuntime(runtimes, stateOnly || placeIds.some(id => stateIds.includes(id)));
   const listedAt = new Map<number, Set<string>>();
   for (const [n, id] of out.filed ?? []) listedAt.set(n, (listedAt.get(n) ?? new Set()).add(id));
   const listed = [...new Set([...listedAt.values()].flatMap(set => [...set]))], held = out.entities ?? {};
@@ -191,7 +192,7 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
       if (!target || seen.has(id)) continue;
       seen.add(id); target.agendaDocuments.push(document);
     }
-    return { page_id: pageId, page_kind: kind, built_at: 0, division_ids: [...divisions], registration_held: reg !== undefined,
+    return { page_id: pageId, page_kind: kind, built_at: 0, division_ids: [...divisions], registration_held: reg !== undefined || kind === "body" && stateRegistered,
       registry, governments: reg?.governments ?? [], divisions: reg?.divisions ?? [], government_order: Object.fromEntries((reg?.governments ?? []).map((government, at) => [government.id, reg?.order?.[at] ?? 0])),
       entities, fields, rosters, comments, sittings, meeting_rows: partitions, archived_meetings: archivedMeetings, archived_documents: archivedDocuments, archived_document_links: [], agenda_texts: [], parts: {}, publication_attempts: [] };
   };

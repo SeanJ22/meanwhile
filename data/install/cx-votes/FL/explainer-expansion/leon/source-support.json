@@ -1,0 +1,285 @@
+[
+  {
+    "contestId": "fl-2026-leon-county-ordinance-priority",
+    "ocdId": "ocd-division/country:us/state:fl/county:leon",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/59621e6439569c856325d1c87a14a4860e5494856357db6b692b90a21288e8e7.txt",
+    "textFilePerMeasure": "sources/c8ba67f018cc57c11f3bef4c06e6f5f6bc33a0189d0b23afee1828286dc880e8.txt",
+    "imageFile": "sources/491461493e2d558aad48ef12a3acb397e36ba0a4bddae41ca7e32901aac98e9b.png",
+    "sourcePage": 7,
+    "bbox": [
+      243,
+      129,
+      407,
+      253
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?"
+      ],
+      "yesMeans": [
+        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?"
+      ],
+      "noMeans": [
+        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?"
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes for Approval",
+      "No for Rejection"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  },
+  {
+    "contestId": "fl-2026-leon-street-address-standards",
+    "ocdId": "ocd-division/country:us/state:fl/county:leon",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/2c5ca1bc48a393db295eee250f2178c3eb2900211125503a82bf419e03fd0211.txt",
+    "textFilePerMeasure": "sources/08c339815bf8b29721964d96dcfd5cf4e5ca1af4026f1e8a936e5a994d4b1777.txt",
+    "imageFile": "sources/7d0ac335dd599b4ee8633ebc15a1178ecbeb12c76807ac2d1ec31fcfb187ca32.png",
+    "sourcePage": 7,
+    "bbox": [
+      243,
+      259,
+      407,
+      384
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?"
+      ],
+      "yesMeans": [
+        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?"
+      ],
+      "noMeans": [
+        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?"
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes for Approval",
+      "No for Rejection"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  },
+  {
+    "contestId": "fl-2026-leon-human-dignity-preamble",
+    "ocdId": "ocd-division/country:us/state:fl/county:leon",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/4f13cc0a9d73aee873ef3314b37f7ba02e5f81ee37727166abddb25be6be54fa.txt",
+    "textFilePerMeasure": "sources/3abc4337c335eb96bd7f9e63684913687f49eb10095ba1a3e3e9fe5b2dd2b651.txt",
+    "imageFile": "sources/94ba055a27ec168f3fa43bfdf178bf168325e1f436210b508babd9f3b80ca296.png",
+    "sourcePage": 7,
+    "bbox": [
+      243,
+      389,
+      407,
+      497
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?"
+      ],
+      "yesMeans": [
+        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?"
+      ],
+      "noMeans": [
+        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?"
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes for Approval",
+      "No for Rejection"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  },
+  {
+    "contestId": "fl-2026-leon-charter-review-process",
+    "ocdId": "ocd-division/country:us/state:fl/county:leon",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/7ec4f57ac30b6079717d80740b6a39bf99364ffaecba92091d3c2f5143e1dfdb.txt",
+    "textFilePerMeasure": "sources/b1be4b794927bdb097b80d8a74bf308dba2ebfa98a31b644aa15e6050b73878b.txt",
+    "imageFile": "sources/54badbf4a338e1e14a4ba6b38c045aa6ab4f7a8c7074f96979b03ca76adfd1c5.png",
+    "sourcePage": 7,
+    "bbox": [
+      243,
+      501,
+      407,
+      644
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?"
+      ],
+      "yesMeans": [
+        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?"
+      ],
+      "noMeans": [
+        "Shall the Leon County Charter be amended to remove outdated statutory references related to the establishment of a Charter, specify public hearing and notice requirements to consider amending the Charter, and require the Citizen Charter Review Committee to submit its recommendations 150 days before the general election to provide additional time for the Board and residents of Leon County to consider proposed charter amendments?"
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes for Approval",
+      "No for Rejection"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  },
+  {
+    "contestId": "fl-2026-leon-community-impact-assessment",
+    "ocdId": "ocd-division/country:us/state:fl/county:leon",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/9751577c4d72b881b6d9fe6e0d523402d38de0aa08f3e1d6a65032c28fddb712.txt",
+    "textFilePerMeasure": "sources/16ac4d121a3fed4cb5954bfb487b496fac3fb646c09defd60bdbd84b3e1891a0.txt",
+    "imageFile": "sources/8da8985928c8c873a4f4b4e1ac64ce5b260102a5af7407b015a1f048dbf5f69f.png",
+    "sourcePage": 7,
+    "bbox": [
+      410,
+      109,
+      575,
+      226
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?"
+      ],
+      "yesMeans": [
+        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?"
+      ],
+      "noMeans": [
+        "Shall the Home Rule Charter of Leon County, Florida, be amended to provide for a periodic Community Impact Assessment process, public reporting, and Board of County Commissioners’ review and consideration regarding adverse community conditions related to the County’s historic laws, policies, and practices?"
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes for Approval",
+      "No for Rejection"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  },
+  {
+    "contestId": "fl-2026-leon-school-sales-surtax",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:leon_county_school_district",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/c13570d15e42db66c3ed30cc5ebde63db0ef47a43dfab6cb3865624f40bcc8a6.txt",
+    "textFilePerMeasure": "sources/b9a5bbfc8bb5ce8c096660f1017800d281c8875eef770a020127cb27c30faed5.txt",
+    "imageFile": "sources/c816ff367fb8cc5d19756652e53c64356780de31e914636ab4c7436dd45b507d.png",
+    "sourcePage": 7,
+    "bbox": [
+      410,
+      249,
+      575,
+      400
+    ],
+    "fields": {
+      "whatItDoes": [
+        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?"
+      ],
+      "yesMeans": [
+        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?"
+      ],
+      "noMeans": [
+        "To provide resources to improve safety and security and maintain high-quality education by expanding, constructing, and improving school facilities, technology and transportation, with collected revenues shared with eligible charter schools based on their proportionate share of total school district enrollment, shall the school district of Leon County continue to levy a one-half cent sales surtax for fifteen years to fund such activities for such schools, with review by a School Board appointed citizen advisory committee?"
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes = For the 1/2% (0.5 cents) tax",
+      "No = Against the 1/2% (0.5 cents) tax"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  },
+  {
+    "contestId": "fl-2026-leon-school-operating-millage",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:leon_county_school_district",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/654f3962108760eb08204170dbd78726a832bbf6fb998be93a5da98a2fdd472a.txt",
+    "textFilePerMeasure": "sources/1108392a5a353abae25e09836c0b38fcd64f53c8633e6052bc67718f6b5b02ce.txt",
+    "imageFile": "sources/a78a77859c700392d8e47e94d012b02d77f178e97165f4740cad14660d3147bf.png",
+    "sourcePage": 7,
+    "bbox": [
+      410,
+      405,
+      575,
+      547
+    ],
+    "fields": {
+      "whatItDoes": [
+        "To increase compensation for teachers and staff, enhance school security operations, and fund essential school programs including arts education and athletics, shall the Leon County School Board authorize an annual ad valorem operating millage of one mill annually from July 1, 2027 through June 30, 2031, with revenues collected to be shared with eligible charter schools pursuant to Florida law, and with expenditures reviewed by a citizen's advisory committee?"
+      ],
+      "yesMeans": [
+        "To increase compensation for teachers and staff, enhance school security operations, and fund essential school programs including arts education and athletics, shall the Leon County School Board authorize an annual ad valorem operating millage of one mill annually from July 1, 2027 through June 30, 2031, with revenues collected to be shared with eligible charter schools pursuant to Florida law, and with expenditures reviewed by a citizen's advisory committee?"
+      ],
+      "noMeans": [
+        "To increase compensation for teachers and staff, enhance school security operations, and fund essential school programs including arts education and athletics, shall the Leon County School Board authorize an annual ad valorem operating millage of one mill annually from July 1, 2027 through June 30, 2031, with revenues collected to be shared with eligible charter schools pursuant to Florida law, and with expenditures reviewed by a citizen's advisory committee?"
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes = For the 1 mill levy",
+      "No = Against the 1 mill levy"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  },
+  {
+    "contestId": "fl-2026-leon-consolidation-advisory",
+    "ocdId": "ocd-division/country:us/state:fl/county:leon",
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+    "boundedTextFile": "sources/3221a0065f5f20cf2eb7ffc84a90503b3ee989534262dcea8aeeecd22e204bc2.txt",
+    "textFilePerMeasure": "sources/56bba1c0b8f15d2366a57928736d7a5c2a7d6945bc587ae411401702b1cc62aa.txt",
+    "imageFile": "sources/009f8592063145c3f6ae8d9e6edb997854407c648365c86d1b2fde77ac945f5f.png",
+    "sourcePage": 7,
+    "bbox": [
+      410,
+      571,
+      575,
+      713
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Leon County pursue development of a plan to consolidate the governments of Leon County and the City of Tallahassee into a single consolidated government, under the Leon County government structure and leadership, through the constitutional process requiring a special act of the Florida Legislature and voter approval?",
+        "This nonbinding referendum only gauges voter sentiment and does not create a consolidated government."
+      ],
+      "yesMeans": [
+        "Shall Leon County pursue development of a plan to consolidate the governments of Leon County and the City of Tallahassee into a single consolidated government, under the Leon County government structure and leadership, through the constitutional process requiring a special act of the Florida Legislature and voter approval?",
+        "This nonbinding referendum only gauges voter sentiment and does not create a consolidated government."
+      ],
+      "noMeans": [
+        "Shall Leon County pursue development of a plan to consolidate the governments of Leon County and the City of Tallahassee into a single consolidated government, under the Leon County government structure and leadership, through the constitutional process requiring a special act of the Florida Legislature and voter approval?",
+        "This nonbinding referendum only gauges voter sentiment and does not create a consolidated government."
+      ]
+    },
+    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "choices": [
+      "Yes = For the advisory proposal",
+      "No = Against the advisory proposal"
+    ],
+    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+  }
+]

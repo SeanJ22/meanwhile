@@ -1,0 +1,79 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T05:32:22.101704+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-leon-county-ordinance-priority",
+      "title": "Leon County charter — County ordinance priority",
+      "ocdId": "ocd-division/country:us/state:fl/county:leon"
+    },
+    {
+      "id": "fl-2026-leon-street-address-standards",
+      "title": "Leon County charter — Uniform street and address standards",
+      "ocdId": "ocd-division/country:us/state:fl/county:leon"
+    },
+    {
+      "id": "fl-2026-leon-human-dignity-preamble",
+      "title": "Leon County charter — Human dignity preamble",
+      "ocdId": "ocd-division/country:us/state:fl/county:leon"
+    },
+    {
+      "id": "fl-2026-leon-charter-review-process",
+      "title": "Leon County charter — Charter review and amendment process",
+      "ocdId": "ocd-division/country:us/state:fl/county:leon"
+    },
+    {
+      "id": "fl-2026-leon-community-impact-assessment",
+      "title": "Leon County charter — Community impact assessments",
+      "ocdId": "ocd-division/country:us/state:fl/county:leon"
+    },
+    {
+      "id": "fl-2026-leon-school-sales-surtax",
+      "title": "Leon County School District — Fifteen-year sales surtax continuation",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:leon_county_school_district"
+    },
+    {
+      "id": "fl-2026-leon-school-operating-millage",
+      "title": "Leon County School District — One-mill operating property tax",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:leon_county_school_district"
+    },
+    {
+      "id": "fl-2026-leon-consolidation-advisory",
+      "title": "Leon County advisory question — County–city consolidation plan",
+      "ocdId": "ocd-division/country:us/state:fl/county:leon"
+    }
+  ],
+  "operation": "Merge8new local questions and neutral explanations through the existing ballot data path; prior candidate and measure facts remain.",
+  "coverageLimit": "Official67county source inventory continues; this is not a statewide local-measure completeness claim.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T05:33:50.230Z",
+    "preparedRecords": 8,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all eight rendered question regions viewed and checked",
+    "officialAuthority": "PASS",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/leon",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "1ec589417ce184fcd87a6acf21589a3b785a899ab71eaebdc9ad957970c6ca7e",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

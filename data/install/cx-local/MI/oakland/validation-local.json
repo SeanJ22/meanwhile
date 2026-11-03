@@ -1,0 +1,22 @@
+{
+  "result": "PASS",
+  "checks": 1258,
+  "localOfficeFieldClassification": {
+    "Township": 19,
+    "Judicial": 18,
+    "Community college": 4,
+    "City": 7,
+    "Village": 18,
+    "School board": 49,
+    "District library": 6
+  },
+  "exactCandidateSets": 117,
+  "heldFields": 4,
+  "separateWriteInFilings": 16,
+  "separateWithdrawnDisqualifiedFilings": 9,
+  "sampleFieldChecks": 27,
+  "originalSamplePdfs": 18,
+  "originalSamplePages": 152,
+  "sourceNameVariations": 6,
+  "productionWrites": false
+}

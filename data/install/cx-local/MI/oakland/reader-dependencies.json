@@ -1,0 +1,173 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:mi/circuit_court:6",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [
+      {
+        "id": "mi-ba01-county_oakland-to-circuit_court_6",
+        "memberOcdId": "ocd-division/country:us/state:mi/county:oakland"
+      }
+    ],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:mott_community_college",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:oakland_community_college",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [
+      {
+        "id": "mi-cx-local-2026-wayne-schoolcraft-member-clarenceville_school_district",
+        "memberOcdId": "ocd-division/country:us/state:mi/school_district:clarenceville_school_district"
+      },
+      {
+        "id": "mi-cx-local-2026-wayne-schoolcraft-member-garden_city_school_district",
+        "memberOcdId": "ocd-division/country:us/state:mi/school_district:garden_city_school_district"
+      },
+      {
+        "id": "mi-cx-local-2026-wayne-schoolcraft-member-livonia_public_schools",
+        "memberOcdId": "ocd-division/country:us/state:mi/school_district:livonia_public_schools"
+      },
+      {
+        "id": "mi-cx-local-2026-wayne-schoolcraft-member-northville_public_schools",
+        "memberOcdId": "ocd-division/country:us/state:mi/school_district:northville_public_schools"
+      },
+      {
+        "id": "mi-cx-local-2026-wayne-schoolcraft-member-plymouth_canton_community_schools",
+        "memberOcdId": "ocd-division/country:us/state:mi/school_district:plymouth_canton_community_schools"
+      }
+    ],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:2",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [
+      {
+        "id": "mi-ba01-county_genesee-to-court_of_appeals_2",
+        "memberOcdId": "ocd-division/country:us/state:mi/county:genesee"
+      },
+      {
+        "id": "mi-ba01-county_macomb-to-court_of_appeals_2",
+        "memberOcdId": "ocd-division/country:us/state:mi/county:macomb"
+      },
+      {
+        "id": "mi-ba01-county_oakland-to-court_of_appeals_2",
+        "memberOcdId": "ocd-division/country:us/state:mi/county:oakland"
+      }
+    ],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:35",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:43",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:45",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:46",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:47",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:48",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:50",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:51",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:1",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:2",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:3",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:4",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/district_court:67/division:4",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/library_district:ferndale_area_district_library",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/library_district:hazel_park_district_library",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/library_district:northville_district_library",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mi/library_district:salem_south_lyon_district_library",
+    "registryPresent": false,
+    "heldWholeMemberMemberships": [],
+    "readerDependency": "Resolve the precise existing district or apply its already supported whole-member memberships. Never widen this electorate to Oakland County or a municipality as a fallback."
+  }
+]

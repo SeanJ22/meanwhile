@@ -1,0 +1,477 @@
+[
+  {
+    "id": "mi-cx-local-2026-oakland-oxford-township-trustee-12-1-2028-1-positions:filing:declared-write-in:james-nicholas-lopiccolo",
+    "contestId": "mi-cx-local-2026-oakland-oxford-township-trustee-12-1-2028-1-positions",
+    "givenName": "",
+    "familyName": "James Nicholas Lopiccolo",
+    "partyLabel": "Npa",
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Npa\nJames Nicholas Lopiccolo (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 12
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-oxford-township-trustee-12-1-2028-1-positions:filing:declared-write-in:michelle-corinne-mcclellan",
+    "contestId": "mi-cx-local-2026-oakland-oxford-township-trustee-12-1-2028-1-positions",
+    "givenName": "",
+    "familyName": "Michelle Corinne McClellan",
+    "partyLabel": "Npa",
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Npa\nMichelle Corinne McClellan (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 12
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-oxford-township-trustee-12-1-2028-1-positions:filing:declared-write-in:david-jude-zavolta",
+    "contestId": "mi-cx-local-2026-oakland-oxford-township-trustee-12-1-2028-1-positions",
+    "givenName": "",
+    "familyName": "David Jude Zavolta",
+    "partyLabel": "Npa",
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Npa\nDavid Jude Zavolta (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 12
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-oxford-township-park-commissioner-12-1-2028-1-positions:filing:declared-write-in:madelyn-swan",
+    "contestId": "mi-cx-local-2026-oakland-oxford-township-park-commissioner-12-1-2028-1-positions",
+    "givenName": "",
+    "familyName": "Madelyn Swan",
+    "partyLabel": "Npa",
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Npa\nMadelyn Swan (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 12
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-oxford-township-park-commissioner-12-1-2028-1-positions:filing:declared-write-in:danielle-carolina-wernis",
+    "contestId": "mi-cx-local-2026-oakland-oxford-township-park-commissioner-12-1-2028-1-positions",
+    "givenName": "",
+    "familyName": "Danielle Carolina Wernis",
+    "partyLabel": "Npa",
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Npa\nDanielle Carolina Wernis (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 12
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-royal-oak-township-trustee-12-1-2028-1-positions:filing:declared-write-in:michael-a-staton",
+    "contestId": "mi-cx-local-2026-oakland-royal-oak-township-trustee-12-1-2028-1-positions",
+    "givenName": "",
+    "familyName": "Michael A. Staton",
+    "partyLabel": "Npa",
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Npa\nMichael A. Staton (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 12
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-oakland-community-college-board-of-trustees-member-6-year-term-2-positions:filing:withdrawn-or-disqualified:jeffrey-simek",
+    "contestId": "mi-cx-local-2026-oakland-oakland-community-college-board-of-trustees-member-6-year-term-2-positions",
+    "givenName": "",
+    "familyName": "Jeffrey Simek",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "7/24/2026",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Jeffrey Simek\n7/24/2026"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 18
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-clarkston-council-member-2-year-term-3-positions:filing:declared-write-in:richard-david-bisio",
+    "contestId": "mi-cx-local-2026-oakland-clarkston-council-member-2-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Richard David Bisio",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Richard David Bisio (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 19
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-orchard-lake-council-member-3-year-term-2-positions:filing:declared-write-in:anthony-stephen-castiglione",
+    "contestId": "mi-cx-local-2026-oakland-orchard-lake-council-member-3-year-term-2-positions",
+    "givenName": "",
+    "familyName": "Anthony Stephen Castiglione",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Anthony Stephen Castiglione (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 19
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-orchard-lake-council-member-3-year-term-2-positions:filing:declared-write-in:deborah-evans",
+    "contestId": "mi-cx-local-2026-oakland-orchard-lake-council-member-3-year-term-2-positions",
+    "givenName": "",
+    "familyName": "Deborah Evans",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Deborah Evans (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 19
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-beverly-hills-village-council-member-4-year-term-4-positions:filing:declared-write-in:michael-alan-white",
+    "contestId": "mi-cx-local-2026-oakland-beverly-hills-village-council-member-4-year-term-4-positions",
+    "givenName": "",
+    "familyName": "Michael Alan White",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Michael Alan White (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 21
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-holly-village-council-member-4-year-term-3-positions:filing:withdrawn-or-disqualified:ragina-kakos",
+    "contestId": "mi-cx-local-2026-oakland-holly-village-council-member-4-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Ragina Kakos",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "7/20/2026",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Ragina Kakos\n7/20/2026"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 23
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-oxford-village-council-member-4-year-term-3-positions:filing:declared-write-in:allison-e-kemp",
+    "contestId": "mi-cx-local-2026-oakland-oxford-village-council-member-4-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Allison E. Kemp",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Allison E. Kemp (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 24
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-grand-blanc-community-schools-board-member-6-year-term-2-positions:filing:withdrawn-or-disqualified:tika-logan-tyson",
+    "contestId": "mi-cx-local-2026-oakland-grand-blanc-community-schools-board-member-6-year-term-2-positions",
+    "givenName": "",
+    "familyName": "Tika Logan Tyson",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "Withdrew",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Tika Logan Tyson\nWithdrew"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 28
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-grand-blanc-community-schools-board-member-6-year-term-2-positions:filing:withdrawn-or-disqualified:ryan-yelen",
+    "contestId": "mi-cx-local-2026-oakland-grand-blanc-community-schools-board-member-6-year-term-2-positions",
+    "givenName": "",
+    "familyName": "Ryan Yelen",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "Disqualified",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Ryan Yelen\nDisqualified"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 28
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-lake-orion-community-schools-board-member-4-year-term-3-positions:filing:withdrawn-or-disqualified:anthony-stiel-jr",
+    "contestId": "mi-cx-local-2026-oakland-lake-orion-community-schools-board-member-4-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Anthony Stiel, Jr.",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "7/23/2026",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Anthony Stiel, Jr.\n7/23/2026"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 29
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-4-year-term-3-positions:filing:declared-write-in:brandon-lewis-montgomery",
+    "contestId": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-4-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Brandon Lewis Montgomery",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Brandon Lewis Montgomery (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 30
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-4-year-term-3-positions:filing:declared-write-in:gloria-jane-moore",
+    "contestId": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-4-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Gloria Jane Moore",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Gloria Jane Moore (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 30
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-4-year-term-3-positions:filing:declared-write-in:dylan-raymond-taylor",
+    "contestId": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-4-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Dylan Raymond Taylor",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Dylan Raymond Taylor (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 30
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-school-district-of-the-city-of-oak-park-board-member-12-31-2030-1-positions:filing:withdrawn-or-disqualified:heather-perryman-tanks",
+    "contestId": "mi-cx-local-2026-oakland-school-district-of-the-city-of-oak-park-board-member-12-31-2030-1-positions",
+    "givenName": "",
+    "familyName": "Heather Perryman-Tanks",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "7/14/2026",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Heather Perryman-Tanks\n7/14/2026"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 31
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions:filing:withdrawn-or-disqualified:nicholas-blaszczyk",
+    "contestId": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions",
+    "givenName": "",
+    "familyName": "Nicholas Blaszczyk",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "7/7/2026",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Nicholas Blaszczyk\n7/7/2026"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 32
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions:filing:withdrawn-or-disqualified:courtney-caldwell",
+    "contestId": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions",
+    "givenName": "",
+    "familyName": "Courtney Caldwell",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "6/11/2026",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Courtney Caldwell\n6/11/2026"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 32
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-south-lyon-community-schools-board-member-6-year-term-3-positions:filing:declared-write-in:tricia-lee-johnson",
+    "contestId": "mi-cx-local-2026-oakland-south-lyon-community-schools-board-member-6-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Tricia Lee Johnson",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Tricia Lee Johnson (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 33
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-south-lyon-community-schools-board-member-6-year-term-3-positions:filing:declared-write-in:ryan-iver-timothy-klann",
+    "contestId": "mi-cx-local-2026-oakland-south-lyon-community-schools-board-member-6-year-term-3-positions",
+    "givenName": "",
+    "familyName": "Ryan-Iver Timothy Klann",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "DECLARED_WRITE_IN",
+    "sourceStatus": "Write-in",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Ryan-Iver Timothy Klann (Write-in)"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 33
+  },
+  {
+    "id": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2028-2-positions:filing:withdrawn-or-disqualified:adam-mazur-baker",
+    "contestId": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2028-2-positions",
+    "givenName": "",
+    "familyName": "Adam Mazur-Baker",
+    "partyLabel": null,
+    "incumbent": null,
+    "filingStatus": "WITHDRAWN_OR_DISQUALIFIED",
+    "sourceStatus": "Withdrew",
+    "provenance": {
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourceOrg": "Oakland County Clerk/Register of Deeds, Elections Division",
+      "collectedAt": "2026-11-03T04:54:51.471578+00:00",
+      "verifiedAt": "2026-11-03T04:54:51.471578+00:00",
+      "quote": "Adam Mazur-Baker\nWithdrew"
+    },
+    "readerStatus": "FILING_ONLY_NOT_PRINTED_BALLOT_CHOICE",
+    "physicalPage": 34
+  }
+]

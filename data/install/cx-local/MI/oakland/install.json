@@ -1,0 +1,1656 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MI",
+  "county": "Oakland",
+  "countyFips": "26125",
+  "populationRank": 34,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only partial county sample packet and complete current official-list local candidate fields. River must merge against latest Michigan data, including Wayne identities, and resolve exact reader district applicability. No production writes or publication.",
+  "counts": {
+    "officialLocalFields": 121,
+    "installedNamedFields": 117,
+    "printedCandidateChoices": 324,
+    "heldFields": 4,
+    "declaredWriteInFilings": 16,
+    "withdrawnOrDisqualifiedFilings": 9,
+    "sampleCorroboratedFields": 27,
+    "rosterOnlyNamedFields": 90,
+    "baselineContestIdsReused": 18,
+    "wayneContestIdsReused": 6,
+    "newContestIdentities": 94,
+    "samplePdfFiles": 18,
+    "samplePhysicalPages": 152,
+    "selectedSamplePrecinctStyles": 76,
+    "heldMeasuresPreserved": 2,
+    "unmatchedRegistryDivisions": 22
+  },
+  "subjects": [
+    {
+      "id": "mi-cx-local-2026-oakland-addison-township-trustee-12-1-2028-1-positions",
+      "title": "Addison Township \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:addison_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-groveland-township-trustee-12-1-2028-1-positions",
+      "title": "Groveland Township \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:groveland_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-holly-township-park-commissioner-12-1-2028-4-positions",
+      "title": "Holly Township \u2014 Park Commissioner \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:holly_township",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-oakland-township-clerk-12-1-2028-1-positions",
+      "title": "Oakland Township \u2014 Clerk \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:oakland_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        11
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-royal-oak-township-trustee-12-1-2028-1-positions",
+      "title": "Royal Oak Township \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:royal_oak_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        12
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-southfield-township-trustee-12-1-2028-1-positions",
+      "title": "Southfield Township \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:southfield_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        12
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-springfield-township-trustee-12-1-2028-1-positions",
+      "title": "Springfield Township \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:springfield_charter_township",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-springfield-township-park-commissioner-12-1-2028-1-positions",
+      "title": "Springfield Township \u2014 Park Commissioner \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:springfield_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-west-bloomfield-township-supervisor-12-1-2028-1-positions",
+      "title": "West Bloomfield Township \u2014 Supervisor \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:west_bloomfield_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-west-bloomfield-township-trustee-12-1-2028-1-positions",
+      "title": "West Bloomfield Township \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:west_bloomfield_charter_township",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        13
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-2nd_district_judge_of_court_of_appeals_incumbent_6_year_terms_2_positions",
+      "title": "2nd District Judge of Court of Appeals Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:2",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-6th_circuit_judge_of_circuit_court_incumbent_6_year_terms_6_positions",
+      "title": "6th Circuit Judge of Circuit Court Incumbent 6 Year Terms (6) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:6",
+      "candidates": 6,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-6th_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+      "title": "6th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:6",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        14
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-oakland_judge_of_probate_court_incumbent_partial_term_ending_01_01_2029_1_position_files_with_county",
+      "title": "OAKLAND Judge of Probate Court Incumbent Partial Term Ending 01/01/2029 (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-oakland_judge_of_probate_court_non_incumbent_6_year_term_1_position_files_with_county",
+      "title": "OAKLAND Judge of Probate Court Non-Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-35th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "35th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:35",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": true
+    },
+    {
+      "id": "mi-ba01-43rd_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "43rd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:43",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-45th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "45th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:45",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        15
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-46th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "46th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:46",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-47th_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+      "title": "47th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:47",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-48th_district_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "48th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:48",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-50th_district_judge_of_district_court_incumbent_6_year_terms_2_positions",
+      "title": "50th District Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:50",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-51st_district_judge_of_district_court_non_incumbent_6_year_term_1_position",
+      "title": "51st District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:51",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        16
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-52nd_district_1st_division_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "52nd District - 1st Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:1",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-52nd_district_2nd_division_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "52nd District - 2nd Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:2",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-52nd_district_3rd_division_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "52nd District - 3rd Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:3",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-52nd_district_4th_division_judge_of_district_court_incumbent_6_year_term_1_position",
+      "title": "52nd District - 4th Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:4",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-ba01-67th_district_4th_division_judge_of_district_court_non_incumbent_6_year_term_1_position",
+      "title": "67th District - 4th Division Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:67/division:4",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        17
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": true,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-mott-community-college-board-of-trustees-member-6-year-term-2-positions",
+      "title": "Mott Community College \u2014 Board of Trustees Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:mott_community_college",
+      "candidates": 8,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-oakland-community-college-board-of-trustees-member-6-year-term-2-positions",
+      "title": "Oakland Community College \u2014 Board of Trustees Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:oakland_community_college",
+      "candidates": 7,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-6-year-term-3-positions",
+      "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - 6 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": true
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-trustee-schoolcraft-community-college-partial-term-ending-12-31-2028-1-position",
+      "title": "TRUSTEE - SCHOOLCRAFT COMMUNITY COLLEGE - PARTIAL TERM ENDING 12/31/2028 (1) POSITION",
+      "ocdId": "ocd-division/country:us/state:mi/community_college_district:schoolcraft_community_college",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        18
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": true
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-clarkston-mayor-2-year-term-1-positions",
+      "title": "Clarkston \u2014 Mayor \u2014 2 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:village_of_clarkston",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-clarkston-council-member-2-year-term-3-positions",
+      "title": "Clarkston \u2014 Council Member \u2014 2 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:village_of_clarkston",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-keego-harbor-council-member-3-year-term-2-positions",
+      "title": "Keego Harbor \u2014 Council Member \u2014 3 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:keego_harbor",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-keego-harbor-council-member-12-1-2027-1-positions",
+      "title": "Keego Harbor \u2014 Council Member \u2014 Term Ending 12/1/2027",
+      "ocdId": "ocd-division/country:us/state:mi/place:keego_harbor",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-orchard-lake-council-member-3-year-term-2-positions",
+      "title": "Orchard Lake \u2014 Council Member \u2014 3 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:orchard_lake_village",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-orchard-lake-council-member-12-1-2027-1-positions",
+      "title": "Orchard Lake \u2014 Council Member \u2014 Term Ending 12/1/2027",
+      "ocdId": "ocd-division/country:us/state:mi/place:orchard_lake_village",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-sylvan-lake-council-member-4-year-term-3-positions",
+      "title": "Sylvan Lake \u2014 Council Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:sylvan_lake",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        19
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-addison-township-library-board-member-12-1-2028-1-positions",
+      "title": "Addison Township \u2014 Library Board Member \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:addison_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        20
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-brandon-township-library-board-member-12-1-2028-2-positions",
+      "title": "Brandon Township \u2014 Library Board Member \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:brandon_charter_township",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        20
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-highland-township-library-board-member-12-1-2028-2-positions",
+      "title": "Highland Township \u2014 Library Board Member \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:highland_charter_township",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        20
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-holly-township-library-board-member-12-1-2028-3-positions",
+      "title": "Holly Township \u2014 Library Board Member \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:holly_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        20
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-royal-oak-township-library-board-member-12-1-2028-1-positions",
+      "title": "Royal Oak Township \u2014 Library Board Member \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:royal_oak_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-west-bloomfield-township-library-board-member-12-1-2028-1-positions",
+      "title": "West Bloomfield Township \u2014 Library Board Member \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:west_bloomfield_charter_township",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-beverly-hills-village-council-member-4-year-term-4-positions",
+      "title": "Beverly Hills Village \u2014 Council Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:beverly_hills",
+      "candidates": 7,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-bingham-farms-village-president-4-year-term-1-positions",
+      "title": "Bingham Farms Village \u2014 President \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:bingham_farms",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-bingham-farms-village-trustee-4-year-term-3-positions",
+      "title": "Bingham Farms Village \u2014 Trustee \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:bingham_farms",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        21
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-franklin-village-trustee-4-year-term-3-positions",
+      "title": "Franklin Village \u2014 Trustee \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:franklin",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        22
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-franklin-village-trustee-12-1-2028-1-positions",
+      "title": "Franklin Village \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/place:franklin",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        22
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-franklin-village-library-board-member-6-year-term-2-positions",
+      "title": "Franklin Village \u2014 Library Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:franklin",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        22
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-holly-village-president-2-year-term-1-positions",
+      "title": "Holly Village \u2014 President \u2014 2 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:holly",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        23
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-holly-village-council-member-4-year-term-3-positions",
+      "title": "Holly Village \u2014 Council Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:holly",
+      "candidates": 5,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        23
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-lake-orion-village-council-member-term-not-stated-4-positions",
+      "title": "Lake Orion Village \u2014 Council Member",
+      "ocdId": "ocd-division/country:us/state:mi/place:lake_orion",
+      "candidates": 10,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        23
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-leonard-village-trustee-4-year-term-2-positions",
+      "title": "Leonard Village \u2014 Trustee \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:leonard",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        23
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-milford-village-president-2-year-term-1-positions",
+      "title": "Milford Village \u2014 President \u2014 2 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:milford",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-milford-village-council-member-4-year-term-3-positions",
+      "title": "Milford Village \u2014 Council Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:milford",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-ortonville-village-president-2-year-term-1-positions",
+      "title": "Ortonville Village \u2014 President \u2014 2 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:ortonville",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-ortonville-village-trustee-4-year-term-3-positions",
+      "title": "Ortonville Village \u2014 Trustee \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:ortonville",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-ortonville-village-trustee-12-1-2028-2-positions",
+      "title": "Ortonville Village \u2014 Trustee \u2014 Term Ending 12/1/2028",
+      "ocdId": "ocd-division/country:us/state:mi/place:ortonville",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-oxford-village-council-member-4-year-term-3-positions",
+      "title": "Oxford Village \u2014 Council Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/place:oxford",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        24
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-wolverine-lake-village-council-member-term-not-stated-4-positions",
+      "title": "Wolverine Lake Village \u2014 Council Member",
+      "ocdId": "ocd-division/country:us/state:mi/place:wolverine_lake",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-6-year-term-1-positions",
+      "title": "Almont Community Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-4-year-term-2-positions",
+      "title": "Almont Community Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-almont-community-schools-board-member-12-31-2028-2-positions",
+      "title": "Almont Community Schools \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-avondale-school-district-board-member-4-year-term-4-positions",
+      "title": "Avondale School District \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:avondale_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-berkley-school-district-board-member-6-year-term-2-positions",
+      "title": "Berkley School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:berkley_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        25
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-birmingham-public-schools-board-member-6-year-term-2-positions",
+      "title": "Birmingham Public Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:birmingham_city_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        26
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-birmingham-public-schools-board-member-12-31-2030-1-positions",
+      "title": "Birmingham Public Schools \u2014 Board Member \u2014 Term Ending 12/31/2030",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:birmingham_city_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        26
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-bloomfield-hills-schools-board-member-4-year-term-4-positions",
+      "title": "Bloomfield Hills Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:bloomfield_hills_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        26
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-brandon-school-district-board-member-6-year-term-3-positions",
+      "title": "Brandon School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:brandon_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        26
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-clarenceville-school-district-4-year-term-3-positions",
+      "title": "BOARD MEMBER - CLARENCEVILLE SCHOOL DISTRICT - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:clarenceville_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        26
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": true
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-clarkston-community-schools-board-member-6-year-term-3-positions",
+      "title": "Clarkston Community Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:clarkston_community_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        27
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-clawson-public-schools-board-member-4-year-term-4-positions",
+      "title": "Clawson Public Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:clawson_city_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        27
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-clawson-public-schools-board-member-12-31-2028-1-positions",
+      "title": "Clawson Public Schools \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:clawson_city_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        27
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-farmington-public-school-district-board-member-6-year-term-2-positions",
+      "title": "Farmington Public School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:farmington_public_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        27
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-fenton-area-public-schools-board-member-6-year-term-2-positions",
+      "title": "Fenton Area Public Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:fenton_area_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        27
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-fenton-area-public-schools-board-member-12-31-2028-1-positions",
+      "title": "Fenton Area Public Schools \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:fenton_area_public_schools",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        27
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-ferndale-public-schools-board-member-4-year-term-4-positions",
+      "title": "Ferndale Public Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:ferndale_public_schools",
+      "candidates": 5,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-ferndale-public-schools-board-member-12-31-2028-1-positions",
+      "title": "Ferndale Public Schools \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:ferndale_public_schools",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-goodrich-area-schools-board-member-6-year-term-3-positions",
+      "title": "Goodrich Area Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:goodrich_area_schools",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-grand-blanc-community-schools-board-member-6-year-term-2-positions",
+      "title": "Grand Blanc Community Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:grand_blanc_community_schools",
+      "candidates": 6,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-grand-blanc-community-schools-board-member-12-31-2028-1-positions",
+      "title": "Grand Blanc Community Schools \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:grand_blanc_community_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        28
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-school-district-of-the-city-of-hazel-park-board-member-4-year-term-3-positions",
+      "title": "School District of the City of Hazel Park \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:hazel_park_city_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-holly-area-school-district-board-member-4-year-term-3-positions",
+      "title": "Holly Area School District \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:holly_area_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-huron-valley-schools-board-member-6-year-term-2-positions",
+      "title": "Huron Valley Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:huron_valley_schools",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-lake-orion-community-schools-board-member-4-year-term-3-positions",
+      "title": "Lake Orion Community Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lake_orion_community_schools",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-the-lamphere-schools-board-member-6-year-term-2-positions",
+      "title": "The Lamphere Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lamphere_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        29
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-4-year-term-3-positions",
+      "title": "Madison District Public Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:madison_public_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-madison-district-public-schools-board-member-12-31-2028-1-positions",
+      "title": "Madison District Public Schools \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:madison_public_schools",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-board-member-northville-public-schools-4-year-term-3-positions",
+      "title": "BOARD MEMBER - NORTHVILLE PUBLIC SCHOOLS - 4 YEAR TERM (3) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:northville_public_schools",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": true
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-novi-community-school-district-board-member-6-year-term-3-positions",
+      "title": "Novi Community School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:novi_community_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        30
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-school-district-of-the-city-of-oak-park-board-member-6-year-term-2-positions",
+      "title": "School District of the City of Oak Park \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:oak_park_city_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-school-district-of-the-city-of-oak-park-board-member-12-31-2030-1-positions",
+      "title": "School District of the City of Oak Park \u2014 Board Member \u2014 Term Ending 12/31/2030",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:oak_park_city_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-oxford-community-schools-board-member-4-year-term-4-positions",
+      "title": "Oxford Community Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:oxford_area_community_schools",
+      "candidates": 8,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-school-district-of-the-city-of-pontiac-board-member-6-year-term-2-positions",
+      "title": "School District of the City of Pontiac \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:pontiac_city_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-school-district-of-the-city-of-pontiac-board-member-12-31-2028-1-positions",
+      "title": "School District of the City of Pontiac \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:pontiac_city_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        31
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-6-year-term-2-positions",
+      "title": "Rochester Community School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:rochester_community_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-rochester-community-school-district-board-member-12-31-2028-1-positions",
+      "title": "Rochester Community School District \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:rochester_community_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-romeo-community-schools-board-member-6-year-term-2-positions",
+      "title": "Romeo Community Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:romeo_community_schools",
+      "candidates": 6,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-royal-oak-schools-board-member-4-year-term-3-positions",
+      "title": "Royal Oak Schools \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:royal_oak_city_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        32
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-south-lyon-community-schools-board-member-6-year-term-3-positions",
+      "title": "South Lyon Community Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:south_lyon_community_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-southfield-public-schools-board-member-6-year-term-2-positions",
+      "title": "Southfield Public Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:southfield_public_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-troy-school-district-board-member-6-year-term-2-positions",
+      "title": "Troy School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:troy_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-walled-lake-consolidated-school-district-board-member-6-year-term-2-positions",
+      "title": "Walled Lake Consolidated School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:walled_lake_consolidated_schools",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-walled-lake-consolidated-school-district-board-member-12-31-2028-2-positions",
+      "title": "Walled Lake Consolidated School District \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:walled_lake_consolidated_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        33
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-6-year-term-2-positions",
+      "title": "Warren Consolidated Schools \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:warren_consolidated_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2030-1-positions",
+      "title": "Warren Consolidated Schools \u2014 Board Member \u2014 Term Ending 12/31/2030",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:warren_consolidated_schools",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-warren-consolidated-schools-board-member-12-31-2028-2-positions",
+      "title": "Warren Consolidated Schools \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:warren_consolidated_schools",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-waterford-school-district-board-member-6-year-term-2-positions",
+      "title": "Waterford School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:waterford_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": true,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-west-bloomfield-school-district-board-member-6-year-term-2-positions",
+      "title": "West Bloomfield School District \u2014 Board Member \u2014 6 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:west_bloomfield_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        34
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-ferndale-area-district-library-board-member-4-year-term-3-positions",
+      "title": "Ferndale Area District Library \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:ferndale_area_district_library",
+      "candidates": 3,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        35
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-ferndale-area-district-library-board-member-12-31-2028-1-positions",
+      "title": "Ferndale Area District Library \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:ferndale_area_district_library",
+      "candidates": 1,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        35
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-hazel-park-district-library-board-member-4-year-term-3-positions",
+      "title": "Hazel Park District Library \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:hazel_park_district_library",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        35
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-hazel-park-district-library-board-member-12-31-2028-2-positions",
+      "title": "Hazel Park District Library \u2014 Board Member \u2014 Term Ending 12/31/2028",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:hazel_park_district_library",
+      "candidates": 2,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        35
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    },
+    {
+      "id": "mi-cx-local-2026-wayne-northille-district-library-board-member-4-year-term-4-positions",
+      "title": "NORTHILLE DISTRICT LIBRARY BOARD MEMBER - 4 YEAR TERM (4) POSITIONS",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:northville_district_library",
+      "candidates": 7,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        36
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": true
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-salem-south-lyon-district-library-board-member-4-year-term-4-positions",
+      "title": "Salem South Lyon District Library \u2014 Board Member \u2014 4 Year Term",
+      "ocdId": "ocd-division/country:us/state:mi/library_district:salem_south_lyon_district_library",
+      "candidates": 4,
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/official-candidate-list488be47f-6596-4103-9847-fbdcaacfd308.pdf?sfvrsn=7e119b85_1",
+      "sourcePages": [
+        36
+      ],
+      "sampleCorroborated": false,
+      "reusedBaseline": false,
+      "reusedWayne": false
+    }
+  ],
+  "heldContests": [
+    {
+      "id": "mi-cx-local-2026-oakland-oxford-township-trustee-12-1-2028-1-positions",
+      "reason": "The current official candidate list has no active printed nominee in this exact office field. It lists named Write-in filings, retained separately as filings; these are not printed ballot candidates. A complete current sample for this field has not been acquired. This is a held election field, not a claim that no election occurs, and no generic write-in person is fabricated."
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-oxford-township-park-commissioner-12-1-2028-1-positions",
+      "reason": "The current official candidate list has no active printed nominee in this exact office field. It lists named Write-in filings, retained separately as filings; these are not printed ballot candidates. A complete current sample for this field has not been acquired. This is a held election field, not a claim that no election occurs, and no generic write-in person is fabricated."
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-royal-oak-township-park-commissioner-12-1-2028-1-positions",
+      "reason": "The current official candidate list has no active printed nominee in this exact office field. A complete current sample for this field has not been acquired. This is a held election field, not a claim that no election occurs, and no generic write-in person is fabricated."
+    },
+    {
+      "id": "mi-cx-local-2026-oakland-franklin-village-library-board-member-12-1-2028-1-positions",
+      "reason": "The current official candidate list has no active printed nominee in this exact office field. A complete current sample for this field has not been acquired. This is a held election field, not a claim that no election occurs, and no generic write-in person is fabricated."
+    }
+  ],
+  "sourceScope": {
+    "primary": "Official Oakland County candidate list updated October 30, 2026; re-fetched from the current official election page November 3.",
+    "candidateList": "Every local office field on pages 11\u201336, excluding state Supreme Court and statewide fields.",
+    "sampleCoverage": "Farmington Hills: all 24 posted precinct styles, 48 pages. Southfield: all 36 posted styles, 72 pages. Bloomfield Township: all 13 posted PDF styles, 26 pages. Waterford: 3 of 22 posted styles, six pages. These four municipalities do not exhaust Oakland County.",
+    "sampleVsRoster": "27 complete named fields corroborated by exact official sample page/column; 90 other named fields have current official-list evidence only.",
+    "currentFailures": [
+      {
+        "label": "northville-samples",
+        "url": "https://northvillemi.hosted.civiclive.com/cms/One.aspx?pageId=13653445&portalId=11895963",
+        "httpStatus": 403
+      },
+      {
+        "label": "bloomfield-p1",
+        "url": "https://www.bloomfieldhills.gov/DocumentCenter/View/1395/Precinct-1-Sample-Ballot-11326-Election-PDF",
+        "httpStatus": 403
+      },
+      {
+        "label": "bloomfield-hills-election",
+        "url": "https://www.bloomfieldhills.gov/223/Voting",
+        "httpStatus": 403
+      },
+      {
+        "label": "bloomfield-p2b",
+        "url": "https://www.bloomfieldhills.gov/DocumentCenter/View/1397/Precinct-2B-Bloomfield-Hills-Schools-Sample-Ballot-11326-PDF",
+        "httpStatus": 403
+      },
+      {
+        "label": "bloomfield-p2a",
+        "url": "https://www.bloomfieldhills.gov/DocumentCenter/View/1396/Precinct-2A-BIRM-Schools-Sample-Ballot-11326-PDF",
+        "httpStatus": 403
+      },
+      {
+        "label": "mvic-public",
+        "url": "https://mvic.sos.state.mi.us/PublicBallot/Index",
+        "httpStatus": 403
+      }
+    ],
+    "readerFailures": "Michigan Voter Information Center sample endpoint was blocked; its successful reader capture was only a loading/selection shell and is not candidate evidence. Bloomfield Hills city PDFs were blocked; Bloomfield Township is a separate successfully captured jurisdiction."
+  },
+  "identityPolicy": "Reuse 18 held Michigan judicial contest IDs and six Wayne lane contest IDs (one overlaps baseline); all existing candidacy IDs matched within exact office. Shared Schoolcraft and Clarenceville canonical source-supported Wayne names are preserved, with exact Oakland printed variations recorded separately.",
+  "readerDependencies": "reader-dependencies.json lists precise unmatched district IDs and already held whole-member memberships. No new unverified boundary memberships or county fallback are introduced.",
+  "preservation": {
+    "preparedFederalStateLegislative": "Unchanged; excluded from incoming contests.",
+    "preparedMeasures": "All held Michigan measures and explainers unchanged; no measure input.",
+    "baselineMeasureSha256": "367b46c931ea28a4cba73dc8f4d03a1c18b08b892941eee1bc64ada876241c75"
+  },
+  "validation": {
+    "local": "PASS: 1,258 focused source, scope, filing-status, candidate-set and privacy checks",
+    "sourceHashes": "PASS: 39 source captures; 470 saved provenance quotes",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sharedCheckedAt": "2026-11-03T05:19:25.846Z",
+    "sharedCheckedInBasisCounts": {
+      "newContests": 99,
+      "refreshedContests": 18,
+      "candidacies": 324
+    },
+    "laneIdentityCountExplanation": "The shared checked-in baseline sees 99 incoming IDs as new; five of these already exist in the Wayne CX-LOCAL lane. There are 94 brand-new named contest identities after Wayne reuse.",
+    "readerApplicability": "PENDING exact division or existing whole-member joins; see reader-dependencies.json.",
+    "productionWrites": "NONE",
+    "publication": false,
+    "sourceHashesAndQuotes": "PASS: 39 captured sources and 470 exact saved-source quotes"
+  },
+  "artifacts": [
+    "ballot-input/mi.json",
+    "source-support.json",
+    "sample-field-review.json",
+    "filing-status-review.json",
+    "source-name-variations.json",
+    "identity-review.json",
+    "reader-dependencies.json",
+    "validation.json",
+    "validation-local.json",
+    "review.md"
+  ],
+  "localOfficeFieldClassification": {
+    "Township": 19,
+    "Judicial": 18,
+    "Community college": 4,
+    "City": 7,
+    "Village": 18,
+    "School board": 49,
+    "District library": 6
+  }
+}

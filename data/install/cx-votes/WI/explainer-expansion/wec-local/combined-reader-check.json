@@ -1,0 +1,14 @@
+{
+  "state": "WI",
+  "officialWecListMeasures": 108,
+  "schoolFinanceQuestions": 79,
+  "heldStatewide": 3,
+  "newLocalExplainers": 105,
+  "responseChoiceAcquisitionGaps": 2,
+  "combinedPublicationAdmission": "PASS",
+  "actualReaderAndExactJurisdictions": "PASS",
+  "savedSourceInputCandidateFacts": "UNCHANGED; existing merge may add identity aliases",
+  "productionWrites": 0,
+  "method": "Chronological replay of committed data packets through existing BallotContestMerge(checkAuthority), manualProjectionCandidate, authorityForManualReceipt, withMeasureTranslations, measureRecordsForBallot and ballotForDivisions. All108 actual question/explainer attachments checked. Native source inventories bounded; no non-WEC local absence claim.",
+  "checkedAt": "2026-11-03T07:47:41.713300+00:00"
+}

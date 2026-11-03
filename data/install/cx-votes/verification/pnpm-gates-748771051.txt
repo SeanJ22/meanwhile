@@ -1,0 +1,37 @@
+
+> we-the-people@0.1.0 gates /workspace/work/explainers-gates
+> node scripts/gates.mjs
+
+local gates — the set CI requires
+
+  visible-tree … PASS — files a sweep of the committed tree can see: 13693 of 13693.
+  civic-data-release-firewall … PASS — 0 findings across 826 routine and 361 explicit-owner source contract(s).
+  preflight … PASS (34.02s) — 2 cheap check(s) clean
+
+  lint … PASS (93s)
+  tsc … PASS (54s)
+  dead-code … PASS (4s)
+  assert:browser … PASS (1s)
+  test … PASS (2180s)
+      summary: tests 10483, pass 10481, fail 0, suites 38, skipped 2, todo 0, cancelled 0
+  db:gate … PASS (1s)
+  build … PASS (39s)
+  test:bundle … PASS (3s)
+      summary: tests 16, pass 16, fail 0, suites 0, skipped 0, todo 0, cancelled 0
+  build:standalone … PASS (16s)
+
+  gate            CI job                        result
+  lint            gates (test · lint · tsc)     PASS (93s)
+  tsc             gates (test · lint · tsc)     PASS (54s)
+  dead-code       gates (test · lint · tsc)     PASS (4s)
+  assert:browser  gates (test · lint · tsc)     PASS (1s)
+  test            gates (test · lint · tsc)     PASS (2180s)
+  db:gate         gates (test · lint · tsc)     PASS (1s)
+  build           build (default)               PASS (39s)
+  test:bundle     build (default)               PASS (3s)
+  build:standalone build (standalone)            PASS (16s)
+
+9 of 9 gates green
+  suite denominator: 10483 tests registered (10481 pass, 0 fail, 2 skipped) — this run, this environment
+(node:222697) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

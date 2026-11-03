@@ -1,0 +1,1486 @@
+{
+  "state": "WI",
+  "status": "WEC_LIST_EXPLAINER_COVERAGE_RECONCILED",
+  "observedAt": "2026-11-03T07:38:49.477085+00:00",
+  "officialSource": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+  "sourceTextFile": "../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+  "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+  "sourceFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "Complete deterministic public-reader official XLSX extraction text; not native workbook bytes. Native403 and reader200 capture-only metadata in sibling source capture.",
+  "officialSourceRows": 108,
+  "matchedUniqueContestIds": 108,
+  "schoolFinanceQuestions": 79,
+  "statewideQuestions": 3,
+  "additionalLocalQuestions": 26,
+  "responseChoiceAcquisitionGaps": 2,
+  "statewideOrNonWecLocalAbsenceClaim": false,
+  "matchingReview": "Every row has one distinct existing/staged contest and exact named electorate. Official primary question variants inspected individually: labels, punctuation, five/5 and school-year abbreviation, native source spellings, and previously verified WEC extraction/source typos. No differing material financial term or substantive purpose found. Source table numeric ballotPosition is reused by jurisdiction and is never a global contest ID.",
+  "rows": [
+    {
+      "sourceRow": 0,
+      "ballotPosition": "950001",
+      "referendumName": "Adams-Friendship Area School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "ADAMS COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:adams_friendship_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4310",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 1,
+      "ballotPosition": "950000",
+      "referendumName": "Barron Area School District Operating Expenses Referendum",
+      "reportedJurisdiction": "BARRON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:barron_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4302",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 2,
+      "ballotPosition": "950001",
+      "referendumName": "Washburn School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "BAYFIELD COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:washburn_school_district",
+      "contestId": "wi-dpi-2026-referendum-4362",
+      "packet": "../dpi-follow-up-south/batch-05-three-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 3,
+      "ballotPosition": "950005",
+      "referendumName": "Green Bay Area Public School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "BROWN COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:green_bay_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4305",
+      "packet": "../dpi-follow-up-north/batch-03-six-district-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 4,
+      "ballotPosition": "950007",
+      "referendumName": "Pulaski School District General Obligation Bonds for School Facility Improvements Referendum",
+      "reportedJurisdiction": "BROWN COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:pulaski_community_school_district",
+      "contestId": "wi-dpi-2026-referendum-4420",
+      "packet": "../dpi-follow-up-south/batch-02-pulaski/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 5,
+      "ballotPosition": "950010",
+      "referendumName": "West De Pere School District Exceed Revenue Limits Referendum",
+      "reportedJurisdiction": "BROWN COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:west_de_pere_school_district",
+      "contestId": "wi-dpi-2026-referendum-4284",
+      "packet": "../dpi-follow-up-south/batch-01-three/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 6,
+      "ballotPosition": "930010",
+      "referendumName": "Burnett Decreasing County Board Members Referendum",
+      "reportedJurisdiction": "BURNETT COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:burnett",
+      "contestId": "wi-wec-2026-burnett-decreasing-county-board-members-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 7,
+      "ballotPosition": "950010",
+      "referendumName": "Siren School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "BURNETT COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:siren_school_district",
+      "contestId": "wi-dpi-2026-referendum-4380",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "121.91,",
+          "staged": "121.91"
+        },
+        {
+          "kind": "replace",
+          "wec": "Statutes,",
+          "staged": "Statues,"
+        },
+        {
+          "kind": "replace",
+          "wec": "$750,000",
+          "staged": "$750,000.00"
+        },
+        {
+          "kind": "replace",
+          "wec": "Schools?",
+          "staged": "School District."
+        }
+      ]
+    },
+    {
+      "sourceRow": 8,
+      "ballotPosition": "950001",
+      "referendumName": "Brillion Public School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "CALUMET COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:brillion_school_district",
+      "contestId": "wi-dpi-2026-referendum-4397",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "5",
+          "staged": "five"
+        }
+      ]
+    },
+    {
+      "sourceRow": 9,
+      "ballotPosition": "950001",
+      "referendumName": "Bloomer School District General Obligation Bonds Referendum",
+      "reportedJurisdiction": "CHIPPEWA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:bloomer_school_district",
+      "contestId": "wi-dpi-2026-referendum-4297",
+      "packet": "../dpi-follow-up-north/batch-08-final-two-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 10,
+      "ballotPosition": "940000",
+      "referendumName": "City of Eagle River Term Limits Referendum",
+      "reportedJurisdiction": "CITY OF EAGLE RIVER - VILAS COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:eagle_river",
+      "contestId": "wi-wec-2026-city-of-eagle-river-term-limits-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 11,
+      "ballotPosition": "940010",
+      "referendumName": "City of Eau Claire Citizens' Advisory Healthcare Action Committee Referendum",
+      "reportedJurisdiction": "CITY OF EAU CLAIRE - MULTIPLE COUNTIES",
+      "ocdId": "ocd-division/country:us/state:wi/place:eau_claire",
+      "contestId": "wi-wec-2026-city-of-eau-claire-citizens-advisory-healthcare-action-committee-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 12,
+      "ballotPosition": "940000",
+      "referendumName": "City of Fountain City Treasurer Referendum",
+      "reportedJurisdiction": "CITY OF FOUNTAIN CITY - BUFFALO COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:fountain_city",
+      "contestId": "wi-wec-2026-city-of-fountain-city-treasurer-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 13,
+      "ballotPosition": "940000",
+      "referendumName": "City of Hudson Fire Department Staffing Referendum",
+      "reportedJurisdiction": "CITY OF HUDSON - ST. CROIX COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:hudson",
+      "contestId": "wi-wec-2026-city-of-hudson-fire-department-staffing-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 14,
+      "ballotPosition": "940010",
+      "referendumName": "City of Janesville Direct Legislation Petition on GM/JATCO Site Development Referendum",
+      "reportedJurisdiction": "CITY OF JANESVILLE - ROCK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:janesville",
+      "contestId": "wi-wec-2026-city-of-janesville-direct-legislation-petition-on-gm-jatco-site-development-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 15,
+      "ballotPosition": "940000",
+      "referendumName": "City of La Crosse Citizens' Advisory Healthcare Action Committee",
+      "reportedJurisdiction": "CITY OF LA CROSSE - LA CROSSE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:la_crosse",
+      "contestId": "wi-wec-2026-city-of-la-crosse-citizens-advisory-healthcare-action-committee",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 16,
+      "ballotPosition": "940000",
+      "referendumName": "City of Muskego Levy Increase Referendum",
+      "reportedJurisdiction": "CITY OF MUSKEGO - WAUKESHA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:muskego",
+      "contestId": "wi-wec-2026-city-of-muskego-levy-increase-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 17,
+      "ballotPosition": "940000",
+      "referendumName": "City of New Berlin Public Safety Referendum",
+      "reportedJurisdiction": "CITY OF NEW BERLIN - WAUKESHA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:new_berlin",
+      "contestId": "wi-wec-2026-city-of-new-berlin-public-safety-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 18,
+      "ballotPosition": "940000",
+      "referendumName": "City of Plymouth Levy Increase Referendum",
+      "reportedJurisdiction": "CITY OF PLYMOUTH - SHEBOYGAN COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:plymouth",
+      "contestId": "wi-wec-2026-city-of-plymouth-levy-increase-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 19,
+      "ballotPosition": "950004",
+      "referendumName": "Granton Area School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "CLARK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:granton_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4376",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 20,
+      "ballotPosition": "950005",
+      "referendumName": "Greenwood School District Advisory/Non-Binding Consolidation Referendum",
+      "reportedJurisdiction": "CLARK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:greenwood_school_district",
+      "contestId": "wi-wec-2026-greenwood-school-district-advisory-non-binding-consolidation-referendum",
+      "packet": "../wec-local/batch-03-advisory-school-consolidation/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT",
+      "responseChoiceAcquisitionGap": "WEC actualquestionfield endsPleasechooseone: with no choices; useful sourced whatItDoes and nullYesNo retained."
+    },
+    {
+      "sourceRow": 21,
+      "ballotPosition": "950006",
+      "referendumName": "Loyal School District Advisory/Non-Binding Consolidation Referendum",
+      "reportedJurisdiction": "CLARK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:loyal_school_district",
+      "contestId": "wi-wec-2026-loyal-school-district-advisory-non-binding-consolidation-referendum",
+      "packet": "../wec-local/batch-03-advisory-school-consolidation/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT",
+      "responseChoiceAcquisitionGap": "WEC actualquestionfield endsPleasechooseone: with no choices; useful sourced whatItDoes and nullYesNo retained."
+    },
+    {
+      "sourceRow": 22,
+      "ballotPosition": "950008",
+      "referendumName": "Thorp School District General Obligation Bonds Referendum",
+      "reportedJurisdiction": "CLARK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:thorp_school_district",
+      "contestId": "wi-dpi-2026-referendum-4403",
+      "packet": "../dpi-follow-up-south/batch-06-six-county-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 23,
+      "ballotPosition": "950002",
+      "referendumName": "Lodi School District Exceed Revenue Limit Referendum - Question",
+      "reportedJurisdiction": "I COLUMBIA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:lodi_school_district",
+      "contestId": "wi-dpi-2026-referendum-4291",
+      "packet": "../dpi-follow-up-north/batch-01-lodi/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question I:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 24,
+      "ballotPosition": "950003",
+      "referendumName": "Lodi School District General Obligation Bonds Referendum - Question",
+      "reportedJurisdiction": "II COLUMBIA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:lodi_school_district",
+      "contestId": "wi-dpi-2026-referendum-4292",
+      "packet": "../dpi-follow-up-north/batch-01-lodi/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question II:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "athletic practice",
+          "staged": "athleticpractice"
+        }
+      ]
+    },
+    {
+      "sourceRow": 25,
+      "ballotPosition": "950004",
+      "referendumName": "Pardeeville Area School District General Obligation Bonds Referendum",
+      "reportedJurisdiction": "COLUMBIA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:pardeeville_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4309",
+      "packet": "../dpi-follow-up-south/batch-01-three/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 26,
+      "ballotPosition": "950001",
+      "referendumName": "Seneca Area School District Exceed Revenue Limit",
+      "reportedJurisdiction": "CRAWFORD COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:seneca_school_district",
+      "contestId": "wi-dpi-2026-referendum-4382",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 27,
+      "ballotPosition": "950000",
+      "referendumName": "Waunakee School District to Exceed the Revenue Limit Referendum- Question #1",
+      "reportedJurisdiction": "DANE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:waunakee_community_school_district",
+      "contestId": "wi-dpi-2026-referendum-4349",
+      "packet": "../dpi-follow-up-south/batch-06-six-county-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 28,
+      "ballotPosition": "950001",
+      "referendumName": "Waunakee School District General Obligation Bonds not to Exceed $97,500,000 Referendum - Question #2",
+      "reportedJurisdiction": "DANE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:waunakee_community_school_district",
+      "contestId": "wi-dpi-2026-referendum-4350",
+      "packet": "../dpi-follow-up-south/batch-06-six-county-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 29,
+      "ballotPosition": "950002",
+      "referendumName": "Middleton-Cross Plains School District to Exceed the Revenue Limit Referendum",
+      "reportedJurisdiction": "DANE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:middleton_cross_plains_school_district",
+      "contestId": "wi-dpi-2026-referendum-4319",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 30,
+      "ballotPosition": "950000",
+      "referendumName": "School District of Mayville Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "DODGE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:mayville_school_district",
+      "contestId": "wi-dpi-2026-referendum-4384",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 31,
+      "ballotPosition": "950100",
+      "referendumName": "Southern Door County School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "DOOR COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:southern_door_county_school_district",
+      "contestId": "wi-dpi-2026-referendum-4409",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 32,
+      "ballotPosition": "950200",
+      "referendumName": "Sturgeon Bay School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "DOOR COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:sturgeon_bay_school_district",
+      "contestId": "wi-dpi-2026-referendum-4415",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 33,
+      "ballotPosition": "954200",
+      "referendumName": "Ripon Area School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "FOND DU LAC COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:ripon_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4361",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 34,
+      "ballotPosition": "950003",
+      "referendumName": "Markesan School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "GREEN LAKE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:markesan_school_district",
+      "contestId": "wi-dpi-2026-referendum-4387",
+      "packet": "../dpi-follow-up-north/batch-02-neshkoro/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 35,
+      "ballotPosition": "950004",
+      "referendumName": "Princeton School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "GREEN LAKE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:princeton_school_district",
+      "contestId": "wi-dpi-2026-referendum-4378",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question Number I:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 36,
+      "ballotPosition": "950005",
+      "referendumName": "Princeton School District Improvement Project Referendum",
+      "reportedJurisdiction": "GREEN LAKE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:princeton_school_district",
+      "contestId": "wi-dpi-2026-referendum-4377",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question Number II:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "Counties, Wisconsin",
+          "staged": "Counties,Wisconsin"
+        }
+      ]
+    },
+    {
+      "sourceRow": 37,
+      "ballotPosition": "950000",
+      "referendumName": "Dodgeville School District Operational Expenses Referendum",
+      "reportedJurisdiction": "IOWA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:dodgeville_school_district",
+      "contestId": "wi-dpi-2026-referendum-4356",
+      "packet": "../dpi-follow-up-north/batch-08-final-two-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 38,
+      "ballotPosition": "950002",
+      "referendumName": "Black River Falls School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "JACKSON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:black_river_falls_school_district",
+      "contestId": "wi-dpi-2026-referendum-4304",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 39,
+      "ballotPosition": "950000",
+      "referendumName": "Fort Atkinson School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "JEFFERSON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:fort_atkinson_school_district",
+      "contestId": "wi-dpi-2026-referendum-4396",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 40,
+      "ballotPosition": "950008",
+      "referendumName": "Lake Mills Area School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "JEFFERSON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:lake_mills_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4393",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "non- recurring",
+          "staged": "non-recurring"
+        }
+      ]
+    },
+    {
+      "sourceRow": 41,
+      "ballotPosition": "950010",
+      "referendumName": "Palmyra-Eagle School Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "JEFFERSON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:palmyra_eagle_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4426",
+      "packet": "../dpi-follow-up-south/batch-03-five/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 42,
+      "ballotPosition": "950005",
+      "referendumName": "Wonewoc-Union Center School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "JUNEAU COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:wonewoc_union_center_school_district",
+      "contestId": "wi-dpi-2026-referendum-4381",
+      "packet": "../dpi-follow-up-south/batch-07-wonewoc-question/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "Statues,",
+          "staged": "Statutes,"
+        }
+      ]
+    },
+    {
+      "sourceRow": 43,
+      "ballotPosition": "950000",
+      "referendumName": "Twin Lakes #4 School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "KENOSHA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:twin_lakes_no_4_school_district",
+      "contestId": "wi-dpi-2026-referendum-4422",
+      "packet": "../dpi-follow-up-south/batch-05-three-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 44,
+      "ballotPosition": "950001",
+      "referendumName": "Trevor-Wilmot Consolidated School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "KENOSHA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:trevor_wilmot_consolidated_school_district",
+      "contestId": "wi-dpi-2026-referendum-4306",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 45,
+      "ballotPosition": "950000",
+      "referendumName": "Luxemburg-Casco SD Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "KEWAUNEE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:luxemburg_casco_school_district",
+      "contestId": "wi-dpi-2026-referendum-4398",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "math",
+          "staged": "math,"
+        },
+        {
+          "kind": "replace",
+          "wec": "programming?",
+          "staged": "programming."
+        }
+      ]
+    },
+    {
+      "sourceRow": 46,
+      "ballotPosition": "930001",
+      "referendumName": "Lafayette County Capital Expenditures Referendum - QUESTION 1",
+      "reportedJurisdiction": "LAFAYETTE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:lafayette",
+      "contestId": "wi-wec-2026-lafayette-county-capital-expenditures-referendum-question-1",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 47,
+      "ballotPosition": "930002",
+      "referendumName": "Lafayette County Levy Increase Referendum - QUESTION 2",
+      "reportedJurisdiction": "LAFAYETTE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:lafayette",
+      "contestId": "wi-wec-2026-lafayette-county-levy-increase-referendum-question-2",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 48,
+      "ballotPosition": "950001",
+      "referendumName": "Athens School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "MARATHON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:athens_school_district",
+      "contestId": "wi-cx-2026-general-athens-school-revenue-limit",
+      "packet": "../ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "withe",
+          "staged": "with"
+        }
+      ]
+    },
+    {
+      "sourceRow": 49,
+      "ballotPosition": "950002",
+      "referendumName": "Edgar School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "MARATHON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:edgar_school_district",
+      "contestId": "wi-cx-2026-general-edgar-school-revenue-limit",
+      "packet": "../ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 50,
+      "ballotPosition": "950001",
+      "referendumName": "Marinette Schools-$68,000,000 Bonds",
+      "reportedJurisdiction": "MARINETTE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:marinette_school_district",
+      "contestId": "wi-dpi-2026-referendum-4360",
+      "packet": "../dpi-follow-up-north/batch-07-four-county-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 51,
+      "ballotPosition": "950002",
+      "referendumName": "Wausaukee School - Exceed Revenue Limit",
+      "reportedJurisdiction": "MARINETTE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:wausaukee_school_district",
+      "contestId": "wi-dpi-2026-referendum-4332",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "QUESTION:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 52,
+      "ballotPosition": "950000",
+      "referendumName": "Montello School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "MARQUETTE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:montello_school_district",
+      "contestId": "wi-dpi-2026-referendum-4325",
+      "packet": "../dpi-follow-up-north/batch-02-neshkoro/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 53,
+      "ballotPosition": "950001",
+      "referendumName": "Westfield School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "MARQUETTE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:westfield_school_district",
+      "contestId": "wi-dpi-2026-referendum-4295",
+      "packet": "../dpi-follow-up-south/batch-01-three/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 54,
+      "ballotPosition": "950001",
+      "referendumName": "Brown Deer School District Operational Referendum",
+      "reportedJurisdiction": "MILWAUKEE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:brown_deer_school_district",
+      "contestId": "wi-dpi-2026-referendum-4345",
+      "packet": "../dpi-follow-up-north/batch-03-six-district-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question Number I:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 55,
+      "ballotPosition": "950002",
+      "referendumName": "Brown Deer School District Capital Referendum",
+      "reportedJurisdiction": "MILWAUKEE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:brown_deer_school_district",
+      "contestId": "wi-dpi-2026-referendum-4344",
+      "packet": "../dpi-follow-up-north/batch-03-six-district-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question Number II:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 56,
+      "ballotPosition": "950003",
+      "referendumName": "Greenfield School District Operational Referendum",
+      "reportedJurisdiction": "MILWAUKEE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:greenfield_school_district",
+      "contestId": "wi-dpi-2026-referendum-4321",
+      "packet": "../dpi-follow-up-north/batch-03-six-district-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question I:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "2030-2031",
+          "staged": "2030-31"
+        }
+      ]
+    },
+    {
+      "sourceRow": 57,
+      "ballotPosition": "950004",
+      "referendumName": "Greenfield School District Capital Referendum",
+      "reportedJurisdiction": "MILWAUKEE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:greenfield_school_district",
+      "contestId": "wi-dpi-2026-referendum-4320",
+      "packet": "../dpi-follow-up-north/batch-03-six-district-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question II:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "Wisconsin,",
+          "staged": "Wisconsin"
+        },
+        {
+          "kind": "replace",
+          "wec": "Statutes,",
+          "staged": "Statues,"
+        },
+        {
+          "kind": "delete",
+          "wec": "the",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 58,
+      "ballotPosition": "950005",
+      "referendumName": "Fox Point-Bayside School District Operational Referendum",
+      "reportedJurisdiction": "MILWAUKEE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:fox_point_joint_no_2_school_district",
+      "contestId": "wi-dpi-2026-referendum-4404",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 59,
+      "ballotPosition": "950006",
+      "referendumName": "Whitefish Bay School District Capital Referendum",
+      "reportedJurisdiction": "MILWAUKEE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:whitefish_bay_school_district",
+      "contestId": "wi-dpi-2026-referendum-4373",
+      "packet": "../dpi-follow-up-south/batch-05-three-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 60,
+      "ballotPosition": "950000",
+      "referendumName": "Cashton School District Operating Referendum",
+      "reportedJurisdiction": "MONROE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:cashton_school_district",
+      "contestId": "wi-dpi-2026-referendum-4352",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 61,
+      "ballotPosition": "950001",
+      "referendumName": "Gillett School District Exceed Revenue Limits Referendum",
+      "reportedJurisdiction": "OCONTO COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:gillett_school_district",
+      "contestId": "wi-dpi-2026-referendum-4405",
+      "packet": "../dpi-follow-up-north/batch-06-gillett/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 62,
+      "ballotPosition": "950002",
+      "referendumName": "Oconto Unified School District Exceed Revenue Limits Referendum",
+      "reportedJurisdiction": "OCONTO COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:oconto_school_district",
+      "contestId": "wi-dpi-2026-referendum-4401",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 63,
+      "ballotPosition": "950000",
+      "referendumName": "MJ1 School -Exceed Revenue Limit",
+      "reportedJurisdiction": "ONEIDA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:minocqua_joint_no_1_school_district",
+      "contestId": "wi-dpi-2026-referendum-4402",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 64,
+      "ballotPosition": "950002",
+      "referendumName": "Little Chute Area School District Operational Expenses Referendum -",
+      "reportedJurisdiction": "QUESTION NUMBER I OUTAGAMIE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:little_chute_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4323",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 65,
+      "ballotPosition": "950003",
+      "referendumName": "Little Chute Area School District Capital Improvements Referendum -",
+      "reportedJurisdiction": "QUESTION NUMBER II OUTAGAMIE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:little_chute_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4322",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 66,
+      "ballotPosition": "950005",
+      "referendumName": "Seymour Community School District Operational and Maintenance Expenses Referendum",
+      "reportedJurisdiction": "OUTAGAMIE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:seymour_community_school_district",
+      "contestId": "wi-dpi-2026-referendum-4394",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 67,
+      "ballotPosition": "950001",
+      "referendumName": "Unity School Question 1- Bonding",
+      "reportedJurisdiction": "POLK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:unity_school_district",
+      "contestId": "wi-dpi-2026-referendum-4342",
+      "packet": "../dpi-follow-up-south/batch-06-six-county-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 68,
+      "ballotPosition": "950002",
+      "referendumName": "Unity School Question 2- Exceed Revenue Limit",
+      "reportedJurisdiction": "POLK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:unity_school_district",
+      "contestId": "wi-dpi-2026-referendum-4343",
+      "packet": "../dpi-follow-up-south/batch-06-six-county-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 69,
+      "ballotPosition": "950001",
+      "referendumName": "Tomorrow River School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "PORTAGE COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:tomorrow_river_school_district",
+      "contestId": "wi-dpi-2026-referendum-4385",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 70,
+      "ballotPosition": "951568",
+      "referendumName": "Evansville School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "ROCK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:evansville_community_school_district",
+      "contestId": "wi-dpi-2026-referendum-4329",
+      "packet": "../dpi-follow-up-north/batch-03-six-district-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 71,
+      "ballotPosition": "952695",
+      "referendumName": "Janesville School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "ROCK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:janesville_school_district",
+      "contestId": "wi-dpi-2026-referendum-4328",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 72,
+      "ballotPosition": "930000",
+      "referendumName": "Rusk County Jail Referendum",
+      "reportedJurisdiction": "RUSK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:rusk",
+      "contestId": "wi-wec-2026-rusk-county-jail-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 73,
+      "ballotPosition": "950000",
+      "referendumName": "School District of Ladysmith Referendum",
+      "reportedJurisdiction": "RUSK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:ladysmith_school_district",
+      "contestId": "wi-dpi-2026-referendum-4294",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 74,
+      "ballotPosition": "950005",
+      "referendumName": "Wisconsin Dells School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "SAUK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:wisconsin_dells_school_district",
+      "contestId": "wi-dpi-2026-referendum-4324",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "school",
+          "staged": "School"
+        }
+      ]
+    },
+    {
+      "sourceRow": 75,
+      "ballotPosition": "950015",
+      "referendumName": "Reedsburg School District General Obligation Bonds Referendum",
+      "reportedJurisdiction": "SAUK COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:reedsburg_school_district",
+      "contestId": "wi-dpi-2026-referendum-4370",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        },
+        {
+          "kind": "replace",
+          "wec": "issue",
+          "staged": "issue,"
+        }
+      ]
+    },
+    {
+      "sourceRow": 76,
+      "ballotPosition": "950005",
+      "referendumName": "Winter School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "SAWYER COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:winter_school_district",
+      "contestId": "wi-dpi-2026-referendum-4368",
+      "packet": "../dpi-follow-up-south/batch-06-six-county-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "QUESTION:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 77,
+      "ballotPosition": "950000",
+      "referendumName": "Sheboygan Falls School District Facility Improvements Referendum",
+      "reportedJurisdiction": "SHEBOYGAN COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:sheboygan_falls_school_district",
+      "contestId": "wi-dpi-2026-referendum-4298",
+      "packet": "../dpi-follow-up-south/batch-08-sheboygan-question/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 78,
+      "ballotPosition": "950000",
+      "referendumName": "Glenwood City School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "ST. CROIX COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:glenwood_city_school_district",
+      "contestId": "wi-dpi-2026-referendum-4357",
+      "packet": "../dpi-follow-up-north/batch-07-four-county-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 79,
+      "ballotPosition": "950001",
+      "referendumName": "Somerset School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "ST. CROIX COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:somerset_school_district",
+      "contestId": "wi-dpi-2026-referendum-4417",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 80,
+      "ballotPosition": "910001",
+      "referendumName": "State of Wisconsin Partial Veto Referendum - QUESTION 1",
+      "reportedJurisdiction": "STATE OF WISCONSIN",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "contestId": "wi-green-county-2026-general-question-1",
+      "packet": "PREVIOUSLY_HELD_WI",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "QUESTION 1: “Partial",
+          "staged": "Partial"
+        },
+        {
+          "kind": "replace",
+          "wec": "fee?”",
+          "staged": "fee?"
+        }
+      ]
+    },
+    {
+      "sourceRow": 81,
+      "ballotPosition": "910002",
+      "referendumName": "State of Wisconsin Freedom to Gather in Places of Worship During an Emergency Referendum - QUESTION 2",
+      "reportedJurisdiction": "STATE OF WISCONSIN",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "contestId": "wi-green-county-2026-general-question-2",
+      "packet": "PREVIOUSLY_HELD_WI",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "QUESTION 2: \"Freedom",
+          "staged": "Freedom"
+        },
+        {
+          "kind": "replace",
+          "wec": "emergency?\"",
+          "staged": "emergency?"
+        }
+      ]
+    },
+    {
+      "sourceRow": 82,
+      "ballotPosition": "910003",
+      "referendumName": "State of Wisconsin Governmental Entity Discrimination Prohibited Referendum - QUESTION 3",
+      "reportedJurisdiction": "STATE OF WISCONSIN",
+      "ocdId": "ocd-division/country:us/state:wi",
+      "contestId": "wi-green-county-2026-general-question-3",
+      "packet": "PREVIOUSLY_HELD_WI",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "QUESTION 3: \"Governmental",
+          "staged": "Governmental"
+        },
+        {
+          "kind": "replace",
+          "wec": "administration?\"",
+          "staged": "administration?"
+        }
+      ]
+    },
+    {
+      "sourceRow": 83,
+      "ballotPosition": "940000",
+      "referendumName": "Town of Arland Zoning Referendum",
+      "reportedJurisdiction": "TOWN OF ARLAND - BARRON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:barron/place:arland_town",
+      "contestId": "wi-wec-2026-town-of-arland-zoning-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 84,
+      "ballotPosition": "940010",
+      "referendumName": "Caucus to Paper Nomination",
+      "reportedJurisdiction": "TOWN OF AUBURNDALE - WOOD COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:wood/place:auburndale_town",
+      "contestId": "wi-wec-2026-caucus-to-paper-nomination",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 85,
+      "ballotPosition": "940000",
+      "referendumName": "Town of Corning Clerk Appointment Referendum",
+      "reportedJurisdiction": "TOWN OF CORNING - LINCOLN COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:lincoln/place:corning_town",
+      "contestId": "wi-wec-2026-town-of-corning-clerk-appointment-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 86,
+      "ballotPosition": "940015",
+      "referendumName": "Exceed Revenue Limits",
+      "reportedJurisdiction": "TOWN OF GRAND RAPIDS - WOOD COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:wood/place:grand_rapids_town",
+      "contestId": "wi-wec-2026-exceed-revenue-limits",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 87,
+      "ballotPosition": "940000",
+      "referendumName": "Town of Harrison - Lincoln County Advisory Zoning Referendum",
+      "reportedJurisdiction": "TOWN OF HARRISON - LINCOLN COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:lincoln/place:harrison_town",
+      "contestId": "wi-wec-2026-town-of-harrison-lincoln-county-advisory-zoning-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 88,
+      "ballotPosition": "940000",
+      "referendumName": "Town of Hayward Exceed Levy Limit Referendum",
+      "reportedJurisdiction": "TOWN OF HAYWARD - SAWYER COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:sawyer/place:hayward_town",
+      "contestId": "wi-wec-2026-town-of-hayward-exceed-levy-limit-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 89,
+      "ballotPosition": "940222",
+      "referendumName": "Town of Hudson Tax Levy for Emergency Services Referendum",
+      "reportedJurisdiction": "TOWN OF HUDSON - ST. CROIX COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:st_croix/place:hudson_town",
+      "contestId": "wi-wec-2026-town-of-hudson-tax-levy-for-emergency-services-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 90,
+      "ballotPosition": "940010",
+      "referendumName": "Town of Meenon Clerk Appointment Referendum - Question 1",
+      "reportedJurisdiction": "TOWN OF MEENON - BURNETT COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:burnett/place:meenon_town",
+      "contestId": "wi-wec-2026-town-of-meenon-clerk-appointment-referendum-question-1",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 91,
+      "ballotPosition": "940020",
+      "referendumName": "Town of Meenon Treasurer Appointment Referendum - Question 2",
+      "reportedJurisdiction": "TOWN OF MEENON - BURNETT COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:burnett/place:meenon_town",
+      "contestId": "wi-wec-2026-town-of-meenon-treasurer-appointment-referendum-question-2",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 92,
+      "ballotPosition": "940000",
+      "referendumName": "Town of Waldwick Exceed Levy Limit Referendum",
+      "reportedJurisdiction": "TOWN OF WALDWICK - IOWA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/county:iowa/place:waldwick_town",
+      "contestId": "wi-wec-2026-town-of-waldwick-exceed-levy-limit-referendum",
+      "packet": "../wec-local/batch-02-financing/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 93,
+      "ballotPosition": "950000",
+      "referendumName": "Whitehall School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "TREMPEALEAU COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:whitehall_school_district",
+      "contestId": "wi-dpi-2026-referendum-4289",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 94,
+      "ballotPosition": "950001",
+      "referendumName": "De Soto Area School District Educational Programs Referendum",
+      "reportedJurisdiction": "VERNON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:de_soto_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4359",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 95,
+      "ballotPosition": "950002",
+      "referendumName": "Hillsboro School District Facilities and Programs Referendum",
+      "reportedJurisdiction": "VERNON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:hillsboro_school_district",
+      "contestId": "wi-dpi-2026-referendum-4293",
+      "packet": "../dpi-follow-up-north/batch-07-four-county-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 96,
+      "ballotPosition": "950004",
+      "referendumName": "Viroqua Area School District Operating Referendum",
+      "reportedJurisdiction": "VERNON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:viroqua_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4407",
+      "packet": "../dpi-follow-up-south/batch-03-five/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 97,
+      "ballotPosition": "950005",
+      "referendumName": "Westby Area School District Education and Operating Referendum",
+      "reportedJurisdiction": "VERNON COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:westby_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4372",
+      "packet": "../dpi-follow-up-south/batch-03-five/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "I 21.91,",
+          "staged": "121.91,"
+        },
+        {
+          "kind": "replace",
+          "wec": "by$ I ,600,000",
+          "staged": "by $1,600,000"
+        }
+      ]
+    },
+    {
+      "sourceRow": 98,
+      "ballotPosition": "940000",
+      "referendumName": "Village of Necedah Term Limit Referendum",
+      "reportedJurisdiction": "VILLAGE OF NECEDAH - JUNEAU COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/place:necedah",
+      "contestId": "wi-wec-2026-village-of-necedah-term-limit-referendum",
+      "packet": "../wec-local/batch-01-governance/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 99,
+      "ballotPosition": "950000",
+      "referendumName": "Delavan-Darien Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "WALWORTH COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:delavan_darien_school_district",
+      "contestId": "wi-dpi-2026-referendum-4358",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 100,
+      "ballotPosition": "950100",
+      "referendumName": "Williams Bay School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "WALWORTH COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:williams_bay_school_district",
+      "contestId": "wi-dpi-2026-referendum-4355",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 101,
+      "ballotPosition": "950200",
+      "referendumName": "Geneva J4 School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "WALWORTH COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:geneva_joint_no_4_school_district",
+      "contestId": "wi-dpi-2026-referendum-4371",
+      "packet": "../dpi-follow-up-north/batch-07-four-county-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "replace",
+          "wec": "2029-20230",
+          "staged": "2029-2030"
+        }
+      ]
+    },
+    {
+      "sourceRow": 102,
+      "ballotPosition": "950300",
+      "referendumName": "Whitewater Unified School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "WALWORTH COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:whitewater_school_district",
+      "contestId": "wi-dpi-2026-referendum-4410",
+      "packet": "../dpi-follow-up-south/batch-04-nine-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 103,
+      "ballotPosition": "950002",
+      "referendumName": "Elmbrook School District Facility Improvement Expenses Referendum",
+      "reportedJurisdiction": "WAUKESHA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:elmbrook_school_district",
+      "contestId": "wi-dpi-2026-referendum-4303",
+      "packet": "../dpi-follow-up-north/batch-04-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 104,
+      "ballotPosition": "950003",
+      "referendumName": "Oconomowoc Area School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "WAUKESHA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:oconomowoc_area_school_district",
+      "contestId": "wi-dpi-2026-referendum-4338",
+      "packet": "../dpi-follow-up-south/batch-03-five/ballot-input/wi.json",
+      "questionAgreement": "OFFICIAL_PRIMARY_VARIANT_MATERIAL_TERMS_AGREE",
+      "sourceVariants": [
+        {
+          "kind": "delete",
+          "wec": "Question:",
+          "staged": ""
+        }
+      ]
+    },
+    {
+      "sourceRow": 105,
+      "ballotPosition": "950005",
+      "referendumName": "Swallow School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "WAUKESHA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:swallow_school_district",
+      "contestId": "wi-dpi-2026-referendum-4423",
+      "packet": "../dpi-follow-up-south/batch-03-five/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 106,
+      "ballotPosition": "950500",
+      "referendumName": "Weyauwega-Fremont School District Facility Improvements Referendum",
+      "reportedJurisdiction": "WAUPACA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:weyauwega_fremont_school_district",
+      "contestId": "wi-dpi-2026-referendum-4424",
+      "packet": "../dpi-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    },
+    {
+      "sourceRow": 107,
+      "ballotPosition": "950501",
+      "referendumName": "Iola-Scandinavia School District Exceed Revenue Limit Referendum",
+      "reportedJurisdiction": "WAUPACA COUNTY",
+      "ocdId": "ocd-division/country:us/state:wi/school_district:iola_scandinavia_school_district",
+      "contestId": "wi-dpi-2026-referendum-4327",
+      "packet": "../dpi-follow-up-north/batch-05-eight-school-questions/ballot-input/wi.json",
+      "questionAgreement": "EXACT_IGNORING_CASE_PUNCTUATION_AND_LAYOUT"
+    }
+  ]
+}

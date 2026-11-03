@@ -86,7 +86,7 @@
     "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained.",
     "pnpmGatesBaseline": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
     "expandedPnpmGates": {
-      "status": "WARM_BUILD_CHECKOUT_RERUN_IN_PROGRESS",
+      "status": "PASS",
       "snapshot": "748771051",
       "earlierExpandedRun": {
         "snapshot": "823a21f5e",
@@ -94,8 +94,8 @@
         "testResults": "10483 registered;10368passed;110failed;5skipped",
         "causeEvidence": "Missing postinstall-generated place references caused ENOENT fixture failures; build rejected external node_modules symlink. Original failure summary and focused failure trace retained in scratch."
       },
-      "correction": "Independent copied dependencies and normal pnpm postinstall; both normal and standalone builds completed. Running all gates once more with complete build traces. No app code changed.",
-      "completed": "preflight, lint, tsc, dead-code, browser contract",
+      "correction": "The isolated checkout now has independent copied dependencies, normal postinstall-generated references and complete build traces. All required gates passed; no app code changed.",
+      "completed": "All9 required gates; both builds and bundle checks passed.",
       "productionWrites": 0,
       "appCodeChanges": 0,
       "secondExpandedRun": {
@@ -103,7 +103,15 @@
         "result": "8/9 gates; both builds and bundle checks passed",
         "testResults": "10483 registered;10478 passed;1 failed;4 skipped",
         "failure": "One deployment trace test found zero NFT manifests in an incomplete build directory left by the first checkout setup failure. After successful builds, all12 tests in that deployment-path suite passed."
-      }
+      },
+      "testResults": {
+        "registered": 10483,
+        "passed": 10481,
+        "failed": 0,
+        "skipped": 2
+      },
+      "evidence": "verification/pnpm-gates-748771051.txt",
+      "laterData": "Later state packets receive existing publication admission, reader/jurisdiction and source/hash/credential checks. They contain data only."
     }
   },
   "earlierPreparedPackets": [
@@ -2038,7 +2046,7 @@
       "VA": "67/67 current official master-list measures",
       "IN": "41/41 active questions on current official DLGF referendum list; other local categories remain open",
       "MD": "51/51 current official statewide/local master-list measures have substantive explanations after prepared correction",
-      "WI": "79/79 questions on current official Nov3 school finance referendum report prepared. Broader WEC108 list acquired:3statewide+79school-finance+26other local questions;26additional explanations in progress.",
+      "WI": "108/108 questions in official WEC October6 current referendum list have substantive explanations, including79/79 in the school-finance report. Two advisory response-choice lists remain unacquired; Yes/No meanings are null rather than invented. Other non-WEC local inventories not independently certified.",
       "DE": "530/530 published general-election sample descriptions checked;0measurequestions found;4heading conflicts resolved with original linked ballot images; separate local elections outside directory not established",
       "CT": "50/53 questions in current official state sample-ballot inventory prepared or already explained; three charter questions need further primary-text reconciliation"
     },

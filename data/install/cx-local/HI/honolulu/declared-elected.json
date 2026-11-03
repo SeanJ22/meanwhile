@@ -1,0 +1,36 @@
+{
+  "electionId": "hi-2026-11-03",
+  "county": "Honolulu",
+  "status": "SEPARATE_FROM_ACTIVE_NOVEMBER_CONTESTS",
+  "records": [
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST II",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:2",
+      "name": "WEYER, Matt",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "Elected After Primary",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST II | NONPARTISAN SPECIAL | WEYER, Matt | Elected After Primary"
+      }
+    },
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST VIII",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:8",
+      "name": "OKIMOTO, Val Aquino",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "Elected After Primary",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST VIII | NONPARTISAN SPECIAL | OKIMOTO, Val Aquino | Elected After Primary"
+      }
+    }
+  ],
+  "basis": "Exact current official report ElectedAfterPrimary statuses; councilII/VIII absent from all154NovemberEnglishsamples. No ordinary Novembercontest/candidacy created."
+}

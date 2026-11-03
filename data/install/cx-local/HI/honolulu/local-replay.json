@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "sources": 159,
+  "exactQuotes": 19,
+  "nativeOfficialSamples": 154,
+  "nativePages": 616,
+  "localBlockComparisons": 36,
+  "stylesWithoutLocalCandidateField": 118,
+  "localContests": 2,
+  "printedCandidates": 4,
+  "newContests": 0,
+  "newCandidates": 0,
+  "reusedContestCoreFieldsPreserved": 2,
+  "reusedCandidateCoreFieldsPreserved": 4,
+  "separateDeclaredElectedRecords": 2,
+  "separateOtherNonGeneralFilings": 6,
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:6"
+  ],
+  "sharedOfflineCheck": "PENDING_PARENT",
+  "productionWrites": "NONE"
+}

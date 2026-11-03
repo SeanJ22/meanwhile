@@ -1,0 +1,91 @@
+{
+  "electionId": "hi-2026-11-03",
+  "county": "Honolulu",
+  "status": "SOURCE_STATUS_RETAINED;NO_WITHDRAWAL_OR_CANCELLATION_INFERENCE",
+  "records": [
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST II",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:2",
+      "name": "BURLEW, Dave",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "Issued",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST II | NONPARTISAN SPECIAL | BURLEW, Dave | Issued"
+      }
+    },
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST II",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:2",
+      "name": "SLEDGE, Oral M.",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "Issued",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST II | NONPARTISAN SPECIAL | SLEDGE, Oral M. | Issued"
+      }
+    },
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST IV",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+      "name": "LIANG, Jason K.",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "In Primary",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST IV | NONPARTISAN SPECIAL | LIANG, Jason K. | In Primary"
+      }
+    },
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST IV",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+      "name": "WATERS, Tommy",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "In Primary",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST IV | NONPARTISAN SPECIAL | WATERS, Tommy | In Primary"
+      }
+    },
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST VI",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:6",
+      "name": "CAMBE, Tana M.K.",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "Issued",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST VI | NONPARTISAN SPECIAL | CAMBE, Tana M.K. | Issued"
+      }
+    },
+    {
+      "office": "HONOLULU COUNCILMEMBER, DIST VI",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:6",
+      "name": "WILKINSON, Ian M.",
+      "partyLabel": "NONPARTISAN SPECIAL",
+      "status": "Issued",
+      "provenance": {
+        "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "sourceOrg": "State of Hawaii Office of Elections",
+        "collectedAt": "2026-11-03T06:03:36.207375+00:00",
+        "verifiedAt": "2026-11-03T06:03:36.207375+00:00",
+        "quote": "HONOLULU COUNCILMEMBER, DIST VI | NONPARTISAN SPECIAL | WILKINSON, Ian M. | Issued"
+      }
+    }
+  ]
+}

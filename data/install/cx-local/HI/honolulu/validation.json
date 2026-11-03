@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T06:11:09.045Z",
+  "state": "HI",
+  "sources": 159,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 6,
+  "newContests": 0,
+  "refreshedContests": 2,
+  "candidacies": 4,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 90,
+  "unrelatedCandidateCoreFieldsPreserved": 134,
+  "unrelatedCandidateAliasEnrichments": 136,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:6"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:6"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

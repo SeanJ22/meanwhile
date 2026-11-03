@@ -1,0 +1,18 @@
+{
+  "authority": "Parent/root supplied fresh fetch and git ls-tree result; worker ran no git commands",
+  "comparisonRef": "origin/stream/cx-votes",
+  "comparisonCommit": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+  "hiInstallPacketPaths": [],
+  "heldReference": "data/ballot/2026-general/hi.json",
+  "heldReferenceSha256": "e8ac5dd52d3bbdcfa59368b605a0e2dcabadd95c39deef7c9702e5b6c87614f9",
+  "reusedActiveContestIds": [
+    "ba01-hi-honolulu-councilmember-dist-iv",
+    "ba01-hi-honolulu-councilmember-dist-vi"
+  ],
+  "reusedActiveCandidacyIds": [
+    "ba01-hi-honolulu-councilmember-dist-iv:6bd16a30c4b88295",
+    "ba01-hi-honolulu-councilmember-dist-iv:fcbd8f3d4a96afbe",
+    "ba01-hi-honolulu-councilmember-dist-vi:76108adb0cf648b5",
+    "ba01-hi-honolulu-councilmember-dist-vi:f037ca52bebc4c3b"
+  ]
+}

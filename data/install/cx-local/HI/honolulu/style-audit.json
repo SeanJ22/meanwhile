@@ -1,0 +1,3016 @@
+{
+  "totalStyles": 154,
+  "localFields": 2,
+  "localBlockComparisons": 36,
+  "styles": [
+    {
+      "label": "sample-3505",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3505_1.pdf",
+      "status": 200,
+      "rawHash": "38608263fb559956775a5cf3a463f6a035bf2138a678d8de6e74ef475bf17d32",
+      "retrievedAt": "2026-11-03T05:58:52.700553+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172050
+    },
+    {
+      "label": "sample-3506",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3506_1.pdf",
+      "status": 200,
+      "rawHash": "d5c4f31ccc999b833201d9963841bb7ffebb1c6e51474c3fc15115315e41fa93",
+      "retrievedAt": "2026-11-03T05:58:52.693758+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172046
+    },
+    {
+      "label": "sample-3603",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3603_1.pdf",
+      "status": 200,
+      "rawHash": "a96496755ffcfb0aed75e9cb03864b440dd7884cf6896ccc8b107c8e189a3d04",
+      "retrievedAt": "2026-11-03T05:58:52.741826+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172050
+    },
+    {
+      "label": "sample-3701",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3701_1.pdf",
+      "status": 200,
+      "rawHash": "2cb9ff056c4028754d27302621a8ae73c649080a1211ab5e9817101b365d6114",
+      "retrievedAt": "2026-11-03T05:58:52.901704+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172050
+    },
+    {
+      "label": "sample-3702",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3702_1.pdf",
+      "status": 200,
+      "rawHash": "7e0aec3dcf06843fe4d81e311b7bda83b30f75b0442b1aa36d0db84ba211dcd6",
+      "retrievedAt": "2026-11-03T05:58:53.008435+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172049
+    },
+    {
+      "label": "sample-3704",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3704_1.pdf",
+      "status": 200,
+      "rawHash": "5d8a80a96adf034b11e0c243baee90e44de7cbc015068c9b766fc3da88169552",
+      "retrievedAt": "2026-11-03T05:58:53.186887+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172048
+    },
+    {
+      "label": "sample-3801",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3801_1.pdf",
+      "status": 200,
+      "rawHash": "9ca1c05a5b885b292284903e341e385aa57c5482ce769b856923758d9d83aa5e",
+      "retrievedAt": "2026-11-03T05:58:53.316338+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172052
+    },
+    {
+      "label": "sample-3901",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3901_1.pdf",
+      "status": 200,
+      "rawHash": "cec1fd55698534622b7b601b1d517204b4fc4c1611beaf6afc6296570179bf49",
+      "retrievedAt": "2026-11-03T05:58:53.177678+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "State Representative, Dist 39",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172228
+    },
+    {
+      "label": "sample-3902",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3902_1.pdf",
+      "status": 200,
+      "rawHash": "ea4e89e599d34cf1c8118227ec9836260ed04a4e717ae4fb70d1d605aa53f4cc",
+      "retrievedAt": "2026-11-03T05:58:53.263754+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "State Representative, Dist 39",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172191
+    },
+    {
+      "label": "sample-3903",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3903_1.pdf",
+      "status": 200,
+      "rawHash": "1da59b6ffebd99e11b35cc53b81e733a48fde131d9c29fbfd82084cf8a06e634",
+      "retrievedAt": "2026-11-03T05:58:53.571982+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "State Representative, Dist 39",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172228
+    },
+    {
+      "label": "sample-4607",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4607_1.pdf",
+      "status": 200,
+      "rawHash": "74420a420dd8d3f778605599a519867945f211db7261610de29383e3a710f78e",
+      "retrievedAt": "2026-11-03T05:58:53.580605+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Senator, Dist 18 (Vacancy)",
+        "State Representative, Dist 46",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172196
+    },
+    {
+      "label": "sample-1801",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1801_1.pdf",
+      "status": 200,
+      "rawHash": "c3b4b5fca35d6f522b9fd040b16eafd9914cb485d735cce86d3e948f0b97b07d",
+      "retrievedAt": "2026-11-03T05:58:53.531099+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 18",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172243
+    },
+    {
+      "label": "sample-1802",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1802_1.pdf",
+      "status": 200,
+      "rawHash": "17440ab5fa924c0334d352e3c259aad68df023313fdd27eb0e5802038929d1ec",
+      "retrievedAt": "2026-11-03T05:58:53.792204+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 18",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172244
+    },
+    {
+      "label": "sample-1803",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1803_1.pdf",
+      "status": 200,
+      "rawHash": "ee99f0e74730f59dccbd54cb5f2cb227b01fa1b52698ae2bad9a4193305d18f5",
+      "retrievedAt": "2026-11-03T05:58:54.213356+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 18",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172259
+    },
+    {
+      "label": "sample-1804",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1804_1.pdf",
+      "status": 200,
+      "rawHash": "5066743eb45b4d8e27ef687b962e1c7e30a8ba1bbe456a8386f797c6bb0dbbb2",
+      "retrievedAt": "2026-11-03T05:58:53.963489+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 18",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172257
+    },
+    {
+      "label": "sample-1805",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1805_1.pdf",
+      "status": 200,
+      "rawHash": "7ce1f0e3ee62f6327fb7337f8a2470ad9823ce87c4f6fad83fa11c1e1b11cf6f",
+      "retrievedAt": "2026-11-03T05:58:53.796729+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 8,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "State Representative, Dist 18",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172504
+    },
+    {
+      "label": "sample-1901",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1901_1.pdf",
+      "status": 200,
+      "rawHash": "b0817b9557c13eb01dc0c2857964405928acf036359a745b08f7632ebe43a063",
+      "retrievedAt": "2026-11-03T05:58:54.217007+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172242
+    },
+    {
+      "label": "sample-1902",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1902_1.pdf",
+      "status": 200,
+      "rawHash": "380cece2e7803179fe73e600de226c4ab2051f98953d1cd5433f902d1f5cd571",
+      "retrievedAt": "2026-11-03T05:58:54.072246+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172241
+    },
+    {
+      "label": "sample-1903",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1903_1.pdf",
+      "status": 200,
+      "rawHash": "b6b2bf4adb9798b442759ce3b3356a3a5535a377099ca593dcd39fc15e75112e",
+      "retrievedAt": "2026-11-03T05:58:54.262420+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172261
+    },
+    {
+      "label": "sample-1904",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1904_1.pdf",
+      "status": 200,
+      "rawHash": "367a1f3520e0e40e5021bb7013bac712c4c6874d679ec386863ff1089a7022e1",
+      "retrievedAt": "2026-11-03T05:58:54.344728+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172099
+    },
+    {
+      "label": "sample-2001",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2001_1.pdf",
+      "status": 200,
+      "rawHash": "703a0c6c6c4072947c7e8c3fe9b3610c1e575e57e68d7eb7cf26d41fc04896a7",
+      "retrievedAt": "2026-11-03T05:58:54.554635+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 8,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "State Representative, Dist 20",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172489
+    },
+    {
+      "label": "sample-2002",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2002_1.pdf",
+      "status": 200,
+      "rawHash": "a63caf28b555a82156be892e5d93239b7dadb243d834bd23ea21d9889bba2561",
+      "retrievedAt": "2026-11-03T05:58:54.460019+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 8,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "State Representative, Dist 20",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172489
+    },
+    {
+      "label": "sample-2003",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2003_1.pdf",
+      "status": 200,
+      "rawHash": "6f8d7425c8f4835d4040d7d10d2fcd368274bb24de88833408c7ae1a9e26f6d0",
+      "retrievedAt": "2026-11-03T05:58:54.518686+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 8,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "State Representative, Dist 20",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172488
+    },
+    {
+      "label": "sample-2004",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2004_1.pdf",
+      "status": 200,
+      "rawHash": "52f93535eddef350a572622c3f4e8a95982249a9ba1d515c1e30302889a06c7b",
+      "retrievedAt": "2026-11-03T05:58:54.561417+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 8,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 9",
+        "State Representative, Dist 20",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172488
+    },
+    {
+      "label": "sample-2005",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2005_1.pdf",
+      "status": 200,
+      "rawHash": "b71316ccd9fd7e434c07bc1c7809ba20b8c47080d8419a1f2eb4ca3c50fc66ac",
+      "retrievedAt": "2026-11-03T05:58:54.721364+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 20",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172279
+    },
+    {
+      "label": "sample-2101",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2101_1.pdf",
+      "status": 200,
+      "rawHash": "5e48ecc59d996812708f7f468e4d4b730b7fb8f233441728309b68775aa180c0",
+      "retrievedAt": "2026-11-03T05:58:54.828458+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172087
+    },
+    {
+      "label": "sample-2102",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2102_1.pdf",
+      "status": 200,
+      "rawHash": "66a3ee60ad765a56975c0c502fd7e35bad84d49d381f39e3f963f6d30a37c6a9",
+      "retrievedAt": "2026-11-03T05:58:55.198555+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171578
+    },
+    {
+      "label": "sample-2103",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2103_1.pdf",
+      "status": 200,
+      "rawHash": "eb9e78d6f0af48f9665e8697cca331b9811eb4ceabc6e4979dcf36d9217449a5",
+      "retrievedAt": "2026-11-03T05:58:54.804842+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171595
+    },
+    {
+      "label": "sample-2104",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2104_1.pdf",
+      "status": 200,
+      "rawHash": "303e916f3af0bc7ff11ef787f89e323c2f680c86fdb69ab2b7676d619d138ce7",
+      "retrievedAt": "2026-11-03T05:58:55.182692+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171591
+    },
+    {
+      "label": "sample-2201",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2201_1.pdf",
+      "status": 200,
+      "rawHash": "361eaf3ea2501571c45d1f7fe9e2d2a131f7e0d223d0be725220c7ada3889dcd",
+      "retrievedAt": "2026-11-03T05:58:55.263465+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172083
+    },
+    {
+      "label": "sample-2202",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2202_1.pdf",
+      "status": 200,
+      "rawHash": "0b3896fdec0297b9cbcc136d6a02f33a5e32a0cf2e3424333df1ab495118ca5b",
+      "retrievedAt": "2026-11-03T05:58:55.318714+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171563
+    },
+    {
+      "label": "sample-2203",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2203_1.pdf",
+      "status": 200,
+      "rawHash": "2e346eb13922e4e243841bc87f78360d940e322a5c5514cda9d747af7c944c03",
+      "retrievedAt": "2026-11-03T05:58:55.493930+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171562
+    },
+    {
+      "label": "sample-2204",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2204_1.pdf",
+      "status": 200,
+      "rawHash": "4d0412a22fc83942bb9158fad2e213159c609f90a153e01917f2fa4b3a2407ca",
+      "retrievedAt": "2026-11-03T05:58:55.440502+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171563
+    },
+    {
+      "label": "sample-2205",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2205_1.pdf",
+      "status": 200,
+      "rawHash": "6a281d661a2619d490160f0a923d5bcfcf6b7bfbae9426925a18cbe4d2d48ad3",
+      "retrievedAt": "2026-11-03T05:58:55.729240+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171564
+    },
+    {
+      "label": "sample-2301",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2301_1.pdf",
+      "status": 200,
+      "rawHash": "a72a4cf3f59e24ae7745d4d1ac6768013813a6a980fb5832e484040bf7bac466",
+      "retrievedAt": "2026-11-03T05:58:55.709404+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 23",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172246
+    },
+    {
+      "label": "sample-2302",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2302_1.pdf",
+      "status": 200,
+      "rawHash": "691785ce4dcbf670ad7facb8e90475fdd0eb04d5cd666db71cd2a87a4e880d1c",
+      "retrievedAt": "2026-11-03T05:58:55.844890+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 23",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171972
+    },
+    {
+      "label": "sample-2303",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2303_1.pdf",
+      "status": 200,
+      "rawHash": "0dc430ed13787b3b5cc38d65eb6483ef936d77b0480665c916ed05d96e51473e",
+      "retrievedAt": "2026-11-03T05:58:55.796115+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 23",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171968
+    },
+    {
+      "label": "sample-2304",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2304_1.pdf",
+      "status": 200,
+      "rawHash": "946894f71c4302e4c2e6bf51e96e7c8738fd6d6d0f3a8062de4f936b30983180",
+      "retrievedAt": "2026-11-03T05:58:55.933219+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 23",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171967
+    },
+    {
+      "label": "sample-2305",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2305_1.pdf",
+      "status": 200,
+      "rawHash": "644c39de66202433d40e47b53336d731fd6b1235e3342b367eadb1cb247fb20c",
+      "retrievedAt": "2026-11-03T05:58:56.109798+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 23",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171968
+    },
+    {
+      "label": "sample-2401",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+      "status": 200,
+      "rawHash": "5dd4fbec4a2ecbe06b55afbce6098ddcc7f1000cbca300de8ec9df405a381e0e",
+      "retrievedAt": "2026-11-03T05:58:56.162001+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172083
+    },
+    {
+      "label": "sample-2402",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2402_1.pdf",
+      "status": 200,
+      "rawHash": "91c25b3d7a29bc6f3f949226973ab26d23c3112ed9dde2ebd85e992649405552",
+      "retrievedAt": "2026-11-03T05:58:56.133913+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist IV"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist IV"
+      ],
+      "rawBytes": 172084
+    },
+    {
+      "label": "sample-2403",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2403_1.pdf",
+      "status": 200,
+      "rawHash": "d679fe64033b6407337fec24f52a106a3eca787ceeefe73a0a8a1a8988e99358",
+      "retrievedAt": "2026-11-03T05:58:56.410844+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171593
+    },
+    {
+      "label": "sample-2404",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2404_1.pdf",
+      "status": 200,
+      "rawHash": "73cccb4a0564a817b8097c1274746f18f996a980d72e0f747f657afc7bc8dfde",
+      "retrievedAt": "2026-11-03T05:58:56.338088+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171575
+    },
+    {
+      "label": "sample-2501",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2501_1.pdf",
+      "status": 200,
+      "rawHash": "3ab5e9edd07b81fee1f42cc43003a6ca35a05730d19f45c98ff5e49e63ed47db",
+      "retrievedAt": "2026-11-03T05:58:56.578932+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171577
+    },
+    {
+      "label": "sample-2502",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2502_1.pdf",
+      "status": 200,
+      "rawHash": "d8e2b3e98d894e80fd8309db55129d706646a5812b8300e7e9fb971abc968793",
+      "retrievedAt": "2026-11-03T05:58:56.668978+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171589
+    },
+    {
+      "label": "sample-2503",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2503_1.pdf",
+      "status": 200,
+      "rawHash": "d283a99aadd074ff99df15f46d24e6f2579967f8ec81cfb078a2c8fec0ba413c",
+      "retrievedAt": "2026-11-03T05:58:56.834644+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 13",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172312
+    },
+    {
+      "label": "sample-2504",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2504_1.pdf",
+      "status": 200,
+      "rawHash": "85e580c21e13008bdc168ac2a746591d8dfa934176062ca46455c607142bcbf9",
+      "retrievedAt": "2026-11-03T05:58:56.647410+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172102
+    },
+    {
+      "label": "sample-2601",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2601_1.pdf",
+      "status": 200,
+      "rawHash": "8a9e734e5913ee93638ca201c64edf5d5e6446b3ada9e2ccd927dea8824d9568",
+      "retrievedAt": "2026-11-03T05:58:56.822071+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 26",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172004
+    },
+    {
+      "label": "sample-2602",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2602_1.pdf",
+      "status": 200,
+      "rawHash": "0f207ba1276a784697ac9a765f560b42e3e44a1ace85dd11d3c980bbc363c387",
+      "retrievedAt": "2026-11-03T05:58:56.875867+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 26",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172001
+    },
+    {
+      "label": "sample-2603",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2603_1.pdf",
+      "status": 200,
+      "rawHash": "0d9eeaa6f6c8a3c712df6a0f11b854926d4310461bdb556c1faaece2da5eb7e7",
+      "retrievedAt": "2026-11-03T05:58:57.025435+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 26",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172260
+    },
+    {
+      "label": "sample-2604",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2604_1.pdf",
+      "status": 200,
+      "rawHash": "0071326593f17d1de7fcffe5b9db6a683b712dcd94626914866904fd476fbc1d",
+      "retrievedAt": "2026-11-03T05:58:57.291545+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 8,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 13",
+        "State Representative, Dist 26",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172548
+    },
+    {
+      "label": "sample-2701",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2701_1.pdf",
+      "status": 200,
+      "rawHash": "d58f335b93b503b8420b5e89f169a78a29256f8d1d169994e42e0d138558524a",
+      "retrievedAt": "2026-11-03T05:58:57.288056+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172098
+    },
+    {
+      "label": "sample-2702",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2702_1.pdf",
+      "status": 200,
+      "rawHash": "e9ab9275904d564444eaf82891edb0e2408d1bf3bd40b3865aaee85896de6904",
+      "retrievedAt": "2026-11-03T05:58:57.112516+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 13",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172307
+    },
+    {
+      "label": "sample-2703",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2703_1.pdf",
+      "status": 200,
+      "rawHash": "17c3051ecd2964e7c62a73eafce18d58506c39eba57bbb32bed1e96b232b5543",
+      "retrievedAt": "2026-11-03T05:58:57.429808+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 13",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172307
+    },
+    {
+      "label": "sample-2704",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2704_1.pdf",
+      "status": 200,
+      "rawHash": "c7e384b0c768db0db40e0ad9b85bb8425a8c6435fc347e1a8909679cfaa84d6a",
+      "retrievedAt": "2026-11-03T05:58:57.352952+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172101
+    },
+    {
+      "label": "sample-2801",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2801_1.pdf",
+      "status": 200,
+      "rawHash": "90f205bcd46f8600402ddfc4031d6b90f535fa191b8b8fc58287ed466565d881",
+      "retrievedAt": "2026-11-03T05:58:57.563492+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 13",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172294
+    },
+    {
+      "label": "sample-2802",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2802_1.pdf",
+      "status": 200,
+      "rawHash": "153b3d0053be1d1370de847ab70e90d2982081b2b6a5e714f11af3cac77461e3",
+      "retrievedAt": "2026-11-03T05:58:57.759408+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 13",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172311
+    },
+    {
+      "label": "sample-2803",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2803_1.pdf",
+      "status": 200,
+      "rawHash": "1159b1bbd59be7d9210dbd9eb4a45a92bee4329cd722d7d2972e18ba250181e1",
+      "retrievedAt": "2026-11-03T05:58:57.841693+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172100
+    },
+    {
+      "label": "sample-2804",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2804_1.pdf",
+      "status": 200,
+      "rawHash": "49af376b3b757da63ef6bf5a5adc5e21eba76f3d4e15645fdf0e259705b3f9b1",
+      "retrievedAt": "2026-11-03T05:58:57.920399+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171591
+    },
+    {
+      "label": "sample-2901",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2901_1.pdf",
+      "status": 200,
+      "rawHash": "27a38a60d498318a13ed8f54e47d529ac140fd9fb845cfad1b757b359eb061dc",
+      "retrievedAt": "2026-11-03T05:58:58.159603+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 29",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172263
+    },
+    {
+      "label": "sample-2902",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2902_1.pdf",
+      "status": 200,
+      "rawHash": "d3b796c7f6d72e6ecf4b3904c73a30e1408803e1646a77914de7fd9f89193f9c",
+      "retrievedAt": "2026-11-03T05:58:58.001472+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 29",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172273
+    },
+    {
+      "label": "sample-2903",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2903_1.pdf",
+      "status": 200,
+      "rawHash": "14c2c557471108e5c0f77432a5c31affd947904eb1232e11f5f3872fc1406465",
+      "retrievedAt": "2026-11-03T05:58:58.219681+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 29",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172279
+    },
+    {
+      "label": "sample-2904",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2904_1.pdf",
+      "status": 200,
+      "rawHash": "7fb1ef4b9201a7bc4f52b5df48c4f0492312ae53f971b61cd57ebdb142d825eb",
+      "retrievedAt": "2026-11-03T05:58:58.366689+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 29",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172275
+    },
+    {
+      "label": "sample-3001",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3001_1.pdf",
+      "status": 200,
+      "rawHash": "adbdc4c06fdb9433b2442bd1ed35ecc4b7c9dc422de254ab00a82baddc00008f",
+      "retrievedAt": "2026-11-03T05:58:58.355005+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 30",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171981
+    },
+    {
+      "label": "sample-3002",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3002_1.pdf",
+      "status": 200,
+      "rawHash": "77bf622726ca90e96889f2e2f79fa51d3a58a5c7e88f4bab813435df2e13a2d5",
+      "retrievedAt": "2026-11-03T05:58:58.526784+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 30",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171982
+    },
+    {
+      "label": "sample-3003",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3003_1.pdf",
+      "status": 200,
+      "rawHash": "799cc1372b9b442a47113227fe6deda8b5e68b72a55f0f20ea31c6a526e871b7",
+      "retrievedAt": "2026-11-03T05:58:58.567840+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 30",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172261
+    },
+    {
+      "label": "sample-3004",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3004_1.pdf",
+      "status": 200,
+      "rawHash": "426a8d2b5a58268dfea89cdec050fe28f177e9941f4c11d4654f80709e17ac2e",
+      "retrievedAt": "2026-11-03T05:58:58.855991+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 30",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171985
+    },
+    {
+      "label": "sample-3101",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3101_1.pdf",
+      "status": 200,
+      "rawHash": "e26d3396fdad60ee4e29bbb7d8e18a91640ed048cce02853e521dd819870343c",
+      "retrievedAt": "2026-11-03T05:58:58.743203+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 31",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171987
+    },
+    {
+      "label": "sample-3102",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3102_1.pdf",
+      "status": 200,
+      "rawHash": "d44467fd2bd8e9d79ef4d2db119a2e4576ac00109cd5539da9ddb10312b8e5c4",
+      "retrievedAt": "2026-11-03T05:58:58.943422+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 31",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171984
+    },
+    {
+      "label": "sample-3103",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3103_1.pdf",
+      "status": 200,
+      "rawHash": "45f86c76241cbb6b5ae20b1bd927a101dbe168318bd028d36bb19b0f2c527dd2",
+      "retrievedAt": "2026-11-03T05:58:58.824341+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 31",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171986
+    },
+    {
+      "label": "sample-3104",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3104_1.pdf",
+      "status": 200,
+      "rawHash": "9d03b9b835c04fa38a03aaa43c3aa185edb48053cb357e05ff968374ecc87126",
+      "retrievedAt": "2026-11-03T05:58:59.286434+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 31",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171984
+    },
+    {
+      "label": "sample-3201",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3201_1.pdf",
+      "status": 200,
+      "rawHash": "d02cf854b1d72d0892b563bf8cf183390a6f181c2c1cad26e8caecbede9aac63",
+      "retrievedAt": "2026-11-03T05:58:59.500728+00:00",
+      "pages": 4,
+      "localFields": [
+        "Councilmember, Dist VI"
+      ],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 32",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "Councilmember, Dist VI"
+      ],
+      "rawBytes": 172276
+    },
+    {
+      "label": "sample-3202",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3202_1.pdf",
+      "status": 200,
+      "rawHash": "425da6e75d6d718d19ee464fa2834fe2f3da0874f387fecb040d25fce4e8b559",
+      "retrievedAt": "2026-11-03T05:58:59.311705+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 32",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171990
+    },
+    {
+      "label": "sample-3203",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3203_1.pdf",
+      "status": 200,
+      "rawHash": "bfed464ced345a3d2508fca4b2c25025f0c1155e04673a0a312338eee624a19a",
+      "retrievedAt": "2026-11-03T05:58:59.395034+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 32",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171992
+    },
+    {
+      "label": "sample-3204",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3204_1.pdf",
+      "status": 200,
+      "rawHash": "9a520a6378575775286067b4ae04f2ba0f8f40dcfcc3110160a56e923abbd891",
+      "retrievedAt": "2026-11-03T05:58:59.707462+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 32",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171992
+    },
+    {
+      "label": "sample-3205",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3205_1.pdf",
+      "status": 200,
+      "rawHash": "6c6410733b3b6a8c511939ccc4066a893d9aee2af4d7d2a0c6a2baa458a9c514",
+      "retrievedAt": "2026-11-03T05:58:59.700845+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 32",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171988
+    },
+    {
+      "label": "sample-3301",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3301_1.pdf",
+      "status": 200,
+      "rawHash": "0c6a19924dccde93972a6017523d0b6dc349b7799a6b50c8e7f94c0ca10e0dbf",
+      "retrievedAt": "2026-11-03T05:58:59.790626+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171562
+    },
+    {
+      "label": "sample-3302",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3302_1.pdf",
+      "status": 200,
+      "rawHash": "eeeb2a6e17aaa9208f636b9b90db8adcdc9195e4284ab5be32f8f792c9cf6de7",
+      "retrievedAt": "2026-11-03T05:58:59.976803+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171562
+    },
+    {
+      "label": "sample-3303",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3303_1.pdf",
+      "status": 200,
+      "rawHash": "5e5b977ef421aa985c124f01d452468c882bdc9695e99985c5db9566a9880428",
+      "retrievedAt": "2026-11-03T05:59:00.466444+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171561
+    },
+    {
+      "label": "sample-3304",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3304_1.pdf",
+      "status": 200,
+      "rawHash": "dfecfc97207b19e4c29f87dd16db74e8388843980414cee70a7852a42a0c9dba",
+      "retrievedAt": "2026-11-03T05:58:59.969342+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171563
+    },
+    {
+      "label": "sample-3401",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3401_1.pdf",
+      "status": 200,
+      "rawHash": "f2efa07cf754a73d2f788e8172243c5b060e08a6a85ce71825a9e58c2b9fc1d1",
+      "retrievedAt": "2026-11-03T05:59:00.145606+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 34",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171969
+    },
+    {
+      "label": "sample-3402",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3402_1.pdf",
+      "status": 200,
+      "rawHash": "c047dafa38d948394c2e4fba6d514759ac6f8bbaf34038c6a3add670c6d407f6",
+      "retrievedAt": "2026-11-03T05:59:00.327219+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 34",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171967
+    },
+    {
+      "label": "sample-3403",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3403_1.pdf",
+      "status": 200,
+      "rawHash": "629bf7b98900e99f33110b2ae44b034867bb607ea7aaad81a89fad2f3af4496d",
+      "retrievedAt": "2026-11-03T05:59:00.394638+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 34",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171967
+    },
+    {
+      "label": "sample-3404",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3404_1.pdf",
+      "status": 200,
+      "rawHash": "bfa1eb22e43064bb4996a8144dec932ee760da6737d65c02535892dbac5ae780",
+      "retrievedAt": "2026-11-03T05:59:00.536947+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "State Representative, Dist 34",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172244
+    },
+    {
+      "label": "sample-3501",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3501_1.pdf",
+      "status": 200,
+      "rawHash": "4b7c0c3bc412cc2df011c385b7140b3ec46bf34052b37331087e936d52dff4d0",
+      "retrievedAt": "2026-11-03T05:59:01.067673+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171578
+    },
+    {
+      "label": "sample-3502",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3502_1.pdf",
+      "status": 200,
+      "rawHash": "7317b93affb5b35f3a36b068a428f10135c8f5c959f1ad77b8b922e4657e3c4c",
+      "retrievedAt": "2026-11-03T05:59:00.860185+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171578
+    },
+    {
+      "label": "sample-3503",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3503_1.pdf",
+      "status": 200,
+      "rawHash": "23697165a3484b7a7003b4c16bc7d8e0fffe4e8928d90b0245132ec923164471",
+      "retrievedAt": "2026-11-03T05:59:00.886651+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172001
+    },
+    {
+      "label": "sample-3504",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3504_1.pdf",
+      "status": 200,
+      "rawHash": "267a358b0d994bca2c65545d61074b8d45fb80ecf0919c976481e0f0a732260e",
+      "retrievedAt": "2026-11-03T05:59:00.987062+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172003
+    },
+    {
+      "label": "sample-3601",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3601_1.pdf",
+      "status": 200,
+      "rawHash": "e55b9e8f654f0684cec0f25cd703992836e22e03ff68c3dfa8bf05e8ea6d890b",
+      "retrievedAt": "2026-11-03T05:59:01.100404+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172003
+    },
+    {
+      "label": "sample-3602",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3602_1.pdf",
+      "status": 200,
+      "rawHash": "ec148606bb557bce82c20ff8d567462b4c6a659cfe1bf63a733196184757d8b1",
+      "retrievedAt": "2026-11-03T05:59:01.142072+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172007
+    },
+    {
+      "label": "sample-3604",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3604_1.pdf",
+      "status": 200,
+      "rawHash": "33ac4450656482cf4448f3aa726a3dead099728c9f5b97a0271634ce2165d9fe",
+      "retrievedAt": "2026-11-03T05:59:01.456309+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171578
+    },
+    {
+      "label": "sample-3703",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3703_1.pdf",
+      "status": 200,
+      "rawHash": "b3aac44d37a14b64126e0cc1526292895b96c9d3b405ab5a42b6253d0c1d3e10",
+      "retrievedAt": "2026-11-03T05:59:01.300947+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171580
+    },
+    {
+      "label": "sample-3802",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3802_1.pdf",
+      "status": 200,
+      "rawHash": "205b218f893109a480d98ff6794c3fd8fc24fc44bdf198ab273b703fc083aabf",
+      "retrievedAt": "2026-11-03T05:59:01.318554+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171577
+    },
+    {
+      "label": "sample-3803",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3803_1.pdf",
+      "status": 200,
+      "rawHash": "48bf5f7369f057b438a3e8ad7115742fe8a2656bc0a4e90d661046c9d8b13599",
+      "retrievedAt": "2026-11-03T05:59:01.501516+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171578
+    },
+    {
+      "label": "sample-3804",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3804_1.pdf",
+      "status": 200,
+      "rawHash": "9cfd5c393fba12a647c20c1451cadda02d20384b821b27d6ead26b8ecba6f83d",
+      "retrievedAt": "2026-11-03T05:59:01.527434+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171562
+    },
+    {
+      "label": "sample-3904",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3904_1.pdf",
+      "status": 200,
+      "rawHash": "3d445125ebb1c9eb9d6c7bb7447b5f9041284e7574bdb390149b95b054afd312",
+      "retrievedAt": "2026-11-03T05:59:01.730959+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "State Representative, Dist 39",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172230
+    },
+    {
+      "label": "sample-3905",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3905_1.pdf",
+      "status": 200,
+      "rawHash": "60c364a44452ca143e24e5b92d8a5ab51c1ed9e3098191f67dbc7435cb9e89c7",
+      "retrievedAt": "2026-11-03T05:59:01.899190+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "State Representative, Dist 39",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172167
+    },
+    {
+      "label": "sample-3906",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_3906_1.pdf",
+      "status": 200,
+      "rawHash": "479a56147ad0061949fb68fe48be1b60c1dc8d3a4b29ee6643b4fb8d828cb099",
+      "retrievedAt": "2026-11-03T05:59:01.854438+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "State Representative, Dist 39",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172230
+    },
+    {
+      "label": "sample-4001",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4001_1.pdf",
+      "status": 200,
+      "rawHash": "b56972ee5e7651aff566c0b00d9291595889b5b0f907c4676632c68227e1380b",
+      "retrievedAt": "2026-11-03T05:59:02.100995+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "State Representative, Dist 40",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172169
+    },
+    {
+      "label": "sample-4002",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4002_1.pdf",
+      "status": 200,
+      "rawHash": "029f848eef3b879762d6c1f7bd585af82964a0d89810136dec1c9916adf2852e",
+      "retrievedAt": "2026-11-03T05:59:02.085073+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "State Representative, Dist 40",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172170
+    },
+    {
+      "label": "sample-4003",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4003_1.pdf",
+      "status": 200,
+      "rawHash": "16baf1b89bba9121e10c479db19f11f9143954c2b40bf8ae0e674b7c5f9ceedd",
+      "retrievedAt": "2026-11-03T05:59:02.131490+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "State Representative, Dist 40",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172167
+    },
+    {
+      "label": "sample-4004",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4004_1.pdf",
+      "status": 200,
+      "rawHash": "d499a3503b40a4de54266fc134c26c3d94483e6026a46a8cf49e4bde79247d53",
+      "retrievedAt": "2026-11-03T05:59:02.328205+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "State Representative, Dist 40",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172172
+    },
+    {
+      "label": "sample-4101",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4101_1.pdf",
+      "status": 200,
+      "rawHash": "6e91fc39572ef422dede1b74ca30046b3ddff660d3803701943df723ee719875",
+      "retrievedAt": "2026-11-03T05:59:02.486332+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171972
+    },
+    {
+      "label": "sample-4102",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4102_1.pdf",
+      "status": 200,
+      "rawHash": "ddd5f16f7442b9d929737754ddef490038bbe6286264aa750a152465692df450",
+      "retrievedAt": "2026-11-03T05:59:02.577956+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171968
+    },
+    {
+      "label": "sample-4103",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4103_1.pdf",
+      "status": 200,
+      "rawHash": "9d60097d3d127a9d96b04dbb66c0a7a48af2b228ecdc43e89f084a550c028091",
+      "retrievedAt": "2026-11-03T05:59:02.573761+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171590
+    },
+    {
+      "label": "sample-4201",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4201_1.pdf",
+      "status": 200,
+      "rawHash": "a36b8db7a9c58a16b739f6bb5c6a812f2a027ddcc9ee461443d7bfc9a23845a9",
+      "retrievedAt": "2026-11-03T05:59:02.673575+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 20",
+        "State Representative, Dist 42",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172171
+    },
+    {
+      "label": "sample-4202",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4202_1.pdf",
+      "status": 200,
+      "rawHash": "72255da8b5a10afc88a14ea9419df05d987ffdcd9f663c0372ee78f3e48c6e1f",
+      "retrievedAt": "2026-11-03T05:59:02.745015+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 42",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171987
+    },
+    {
+      "label": "sample-4203",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4203_1.pdf",
+      "status": 200,
+      "rawHash": "8c5d28b6b7e7e3d4b71729f468cfb8e60ce5f3ce7473fc593cea307307477040",
+      "retrievedAt": "2026-11-03T05:59:02.876465+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 42",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172005
+    },
+    {
+      "label": "sample-4204",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4204_1.pdf",
+      "status": 200,
+      "rawHash": "ffc1e4fd17799ebc1e688b9ded529735762cb254856ef7c84d0ad1826d758f5b",
+      "retrievedAt": "2026-11-03T05:59:02.907896+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 7,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Senator, Dist 19 (Vacancy)",
+        "State Representative, Dist 42",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 172228
+    },
+    {
+      "label": "sample-4301",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4301_1.pdf",
+      "status": 200,
+      "rawHash": "fc0d8554a78b84dd0e154e67bef8e3bce29c792a5e82e0672539b08a7f7ffc97",
+      "retrievedAt": "2026-11-03T05:59:03.072577+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "State Representative, Dist 43"
+      ],
+      "rawBytes": 172082
+    },
+    {
+      "label": "sample-4603",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4603_1.pdf",
+      "status": 200,
+      "rawHash": "c8592807c12e7772ab42adaa988a5d9d556217c2f87f4ae9cae0fda0d6ccf783",
+      "retrievedAt": "2026-11-03T05:59:03.119082+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 46",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171984
+    },
+    {
+      "label": "sample-4604",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4604_1.pdf",
+      "status": 200,
+      "rawHash": "cf8f32387c16099029d97d9b3b44a23c9fa9ddba70db4a1de5b6a7373196568a",
+      "retrievedAt": "2026-11-03T05:59:03.148963+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 46",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171986
+    },
+    {
+      "label": "sample-4605",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4605_1.pdf",
+      "status": 200,
+      "rawHash": "183528ead4758b782caeb78171c7c9fb8868fcee66d076343d8d142807b36af3",
+      "retrievedAt": "2026-11-03T05:59:03.337915+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist I",
+        "Governor",
+        "State Representative, Dist 46",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171982
+    },
+    {
+      "label": "sample-4104",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4104_1.pdf",
+      "status": 200,
+      "rawHash": "d1ab7175a158ba1447e36da635d05ee023680dfbdd832bbee1209e4e50fce38e",
+      "retrievedAt": "2026-11-03T05:59:03.447774+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171463
+    },
+    {
+      "label": "sample-4105",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4105_1.pdf",
+      "status": 200,
+      "rawHash": "b68085617d511983059212911e31604c9ce3e23f693b6755a97f20622a4c2368",
+      "retrievedAt": "2026-11-03T05:59:03.533086+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171477
+    },
+    {
+      "label": "sample-4302",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4302_1.pdf",
+      "status": 200,
+      "rawHash": "5c78f5a64198217e52209e2ccbcd5bd8fb3d1f29dda2ac224bfddaccf6a65783",
+      "retrievedAt": "2026-11-03T05:59:03.797580+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "State Representative, Dist 43"
+      ],
+      "rawBytes": 171984
+    },
+    {
+      "label": "sample-4303",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4303_1.pdf",
+      "status": 200,
+      "rawHash": "fcf236c4b0e0ed235d2789495bde4f40c2929f00fa45d83c7018ad886a9a5a3a",
+      "retrievedAt": "2026-11-03T05:59:03.587187+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "State Representative, Dist 43"
+      ],
+      "rawBytes": 171983
+    },
+    {
+      "label": "sample-4304",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4304_1.pdf",
+      "status": 200,
+      "rawHash": "c35a7ed08ef2e30dc700794f6d567b9384381257f275867192bf442b16b9139a",
+      "retrievedAt": "2026-11-03T05:59:03.656485+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee",
+        "State Representative, Dist 43"
+      ],
+      "rawBytes": 171986
+    },
+    {
+      "label": "sample-4401",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4401_1.pdf",
+      "status": 200,
+      "rawHash": "77639bb27ae15b9f95aa0e8f395ada4f18f63ed66bcd411c15f3e701f1035a54",
+      "retrievedAt": "2026-11-03T05:59:04.009293+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 44",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171907
+    },
+    {
+      "label": "sample-4402",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4402_1.pdf",
+      "status": 200,
+      "rawHash": "56c4c3e5398724b437cc8c9d4de63723a59665cbd6a535db0394feea9e589003",
+      "retrievedAt": "2026-11-03T05:59:04.180547+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 44",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171906
+    },
+    {
+      "label": "sample-4403",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4403_1.pdf",
+      "status": 200,
+      "rawHash": "18a7a9bc8df6b87ee8bf9dff218eda7740b657a936d87cd1c4a9936954352767",
+      "retrievedAt": "2026-11-03T05:59:03.974838+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 44",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171907
+    },
+    {
+      "label": "sample-4404",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4404_1.pdf",
+      "status": 200,
+      "rawHash": "5df601589902d310da35bda0db4ae4383ed8790e6c6e917b7ccb4fdd26069557",
+      "retrievedAt": "2026-11-03T05:59:04.356281+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 44",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171911
+    },
+    {
+      "label": "sample-4501",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4501_1.pdf",
+      "status": 200,
+      "rawHash": "2dcaa1f19ed184fc5968fe899d8bcccf4c08f3bca3e14f108f4d9c17c07ffe3d",
+      "retrievedAt": "2026-11-03T05:59:04.397020+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 45",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171892
+    },
+    {
+      "label": "sample-4502",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4502_1.pdf",
+      "status": 200,
+      "rawHash": "8e236f5cf650c47a5424eb68db5b612e04e11afa6de33ce5bbaeb519220db5d2",
+      "retrievedAt": "2026-11-03T05:59:04.405598+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 45",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171906
+    },
+    {
+      "label": "sample-4503",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4503_1.pdf",
+      "status": 200,
+      "rawHash": "b3ccaf56c5f022b8d0a21d26219c654fb8d64f9b1081bd76127bc663345238ec",
+      "retrievedAt": "2026-11-03T05:59:04.629905+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 45",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171925
+    },
+    {
+      "label": "sample-4504",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4504_1.pdf",
+      "status": 200,
+      "rawHash": "cb96e958b3c534283d0c9afbcc24ff0a37f336cc82eff7cca7ddb01a32548bcf",
+      "retrievedAt": "2026-11-03T05:59:04.879905+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 45",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171925
+    },
+    {
+      "label": "sample-4601",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4601_1.pdf",
+      "status": 200,
+      "rawHash": "26d1e9cee9c30d2e6c1198ce5a2175c11d4cdf93750edc9039d69f152fb79ae1",
+      "retrievedAt": "2026-11-03T05:59:04.627009+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 46",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171925
+    },
+    {
+      "label": "sample-4602",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4602_1.pdf",
+      "status": 200,
+      "rawHash": "a3b164a845ac53965652be888a933ec776b837e5ce60c8db9142d3116291bb54",
+      "retrievedAt": "2026-11-03T05:59:04.971297+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 46",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171911
+    },
+    {
+      "label": "sample-4606",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4606_1.pdf",
+      "status": 200,
+      "rawHash": "ec18c23862dc831eff2aa611ae76f016399e4d5087a82330a44058952f501e87",
+      "retrievedAt": "2026-11-03T05:59:04.847071+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 46",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171921
+    },
+    {
+      "label": "sample-4701",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4701_1.pdf",
+      "status": 200,
+      "rawHash": "18bdeae91eb549e304dd24420337438cd3f0a4a6a3c15494d023b9d88eda15ec",
+      "retrievedAt": "2026-11-03T05:59:04.985577+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 47",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171909
+    },
+    {
+      "label": "sample-4702",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4702_1.pdf",
+      "status": 200,
+      "rawHash": "82489f10f2b14f322e6316efdccdf7de27545b880084dc62c6d0a8a808daa494",
+      "retrievedAt": "2026-11-03T05:59:05.142988+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 47",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171909
+    },
+    {
+      "label": "sample-4703",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4703_1.pdf",
+      "status": 200,
+      "rawHash": "c791322019ca0f7a4c8efc0a6625f41587f03d737534defb10ddfc09cda92fcb",
+      "retrievedAt": "2026-11-03T05:59:05.401068+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 47",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171907
+    },
+    {
+      "label": "sample-4704",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4704_1.pdf",
+      "status": 200,
+      "rawHash": "9b19432c8b342f05c8368605f91aa76da653fdcd63e95681a421f5d8911ff591",
+      "retrievedAt": "2026-11-03T05:59:05.478400+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 47",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171907
+    },
+    {
+      "label": "sample-4801",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4801_1.pdf",
+      "status": 200,
+      "rawHash": "ef2d600739fee447b7c18936ce2aa19e78f328fd0110a1a24a86799a32f496f3",
+      "retrievedAt": "2026-11-03T05:59:05.368889+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171461
+    },
+    {
+      "label": "sample-4802",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4802_1.pdf",
+      "status": 200,
+      "rawHash": "97cf3d7d50b0f993e92d26822f1e1f2cad8b7a625223d198a51364bb7e34bcf5",
+      "retrievedAt": "2026-11-03T05:59:05.622498+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171477
+    },
+    {
+      "label": "sample-4803",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4803_1.pdf",
+      "status": 200,
+      "rawHash": "542e49235ee430b2a0d7859e3b51b5036ac2945798cf82aa3f1421c768aaff2d",
+      "retrievedAt": "2026-11-03T05:59:05.963924+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171474
+    },
+    {
+      "label": "sample-4804",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4804_1.pdf",
+      "status": 200,
+      "rawHash": "60c5a587536b5f12f7f039bbb8810ce79a23d2767c86e440d2286d7bc87d345d",
+      "retrievedAt": "2026-11-03T05:59:05.644766+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171475
+    },
+    {
+      "label": "sample-4805",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4805_1.pdf",
+      "status": 200,
+      "rawHash": "bb2c0a5fa839beb7508594e71209b9dc648bc1ad38f24639cfdfa17b888dd6d1",
+      "retrievedAt": "2026-11-03T05:59:05.706045+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171476
+    },
+    {
+      "label": "sample-4901",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4901_1.pdf",
+      "status": 200,
+      "rawHash": "a959558813adf8768bb36805c6dd5fcb1d2cba3204de7f4aeb9dafe30363a71e",
+      "retrievedAt": "2026-11-03T05:59:06.077380+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 49",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171892
+    },
+    {
+      "label": "sample-4902",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4902_1.pdf",
+      "status": 200,
+      "rawHash": "18a160e90c0d8a2f1df9b608cbe48dee32dcc0ad208d298c59905a5d8fd886f2",
+      "retrievedAt": "2026-11-03T05:59:06.109612+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 49",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171907
+    },
+    {
+      "label": "sample-4903",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4903_1.pdf",
+      "status": 200,
+      "rawHash": "be007b85d1219ff2d8868d0244950d62a3dec29b471bb2592f498c0a077250e2",
+      "retrievedAt": "2026-11-03T05:59:06.176736+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 49",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171907
+    },
+    {
+      "label": "sample-4904",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4904_1.pdf",
+      "status": 200,
+      "rawHash": "d5e5b9185dd1f85c65e3aa5fa4a2b966f3f8facbafca172939b2ca793ca86c07",
+      "retrievedAt": "2026-11-03T05:59:06.204779+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 49",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171906
+    },
+    {
+      "label": "sample-4905",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4905_1.pdf",
+      "status": 200,
+      "rawHash": "21f0fd40ef15106dd78955e577a29a82a1a04ee621fc7e2ffa0122914002b8a5",
+      "retrievedAt": "2026-11-03T05:59:06.515698+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 49",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171906
+    },
+    {
+      "label": "sample-4906",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_4906_1.pdf",
+      "status": 200,
+      "rawHash": "a857353603941ae2e97db6d8f6be7846f2c2e10f0e42cfcb3488a7757be11773",
+      "retrievedAt": "2026-11-03T05:59:06.495630+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 49",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171907
+    },
+    {
+      "label": "sample-5001",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5001_1.pdf",
+      "status": 200,
+      "rawHash": "56576c05377fbe4c5757adf3890b551d8f4dd43252161e22e3b326e700785072",
+      "retrievedAt": "2026-11-03T05:59:06.455816+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 50",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171891
+    },
+    {
+      "label": "sample-5002",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5002_1.pdf",
+      "status": 200,
+      "rawHash": "6480df20e3b22a95977eddb9d30a804b06e33defb9df9b2fa8cf0067ae5be57a",
+      "retrievedAt": "2026-11-03T05:59:06.664303+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 50",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171894
+    },
+    {
+      "label": "sample-5003",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5003_1.pdf",
+      "status": 200,
+      "rawHash": "9637395798f449a8bd3fbe1313370aaef85c78216c0b7651e82882fcb13b4538",
+      "retrievedAt": "2026-11-03T05:59:06.660755+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 50",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171892
+    },
+    {
+      "label": "sample-5004",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5004_1.pdf",
+      "status": 200,
+      "rawHash": "d63839480ca01fe5720d663d2d2d8b72069f1fcf0ee7cbd3f45849ced2d0823d",
+      "retrievedAt": "2026-11-03T05:59:06.715884+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 50",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171893
+    },
+    {
+      "label": "sample-5005",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5005_1.pdf",
+      "status": 200,
+      "rawHash": "67b02adf0a7ca5c645d53b476d7cca96ffb1cd79e1953befd4123bfd24ffe219",
+      "retrievedAt": "2026-11-03T05:59:06.928689+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 6,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "State Representative, Dist 50",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171894
+    },
+    {
+      "label": "sample-5101",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5101_1.pdf",
+      "status": 200,
+      "rawHash": "35e731c5275fb43181744d52b7faa080f7dc0329cd9e6586bd74d40a5aee5d32",
+      "retrievedAt": "2026-11-03T05:59:07.098149+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171460
+    },
+    {
+      "label": "sample-5102",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5102_1.pdf",
+      "status": 200,
+      "rawHash": "25d6d6312033985d19846924fd64b5a79f13cec2e0f68ea10984c5ff5d107db7",
+      "retrievedAt": "2026-11-03T05:59:07.076737+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171475
+    },
+    {
+      "label": "sample-5103",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5103_1.pdf",
+      "status": 200,
+      "rawHash": "93fee54ea3e5f61e1cee195a724d5730813d06c71771be0f899820374c06b9b6",
+      "retrievedAt": "2026-11-03T05:59:07.116596+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171475
+    },
+    {
+      "label": "sample-5104",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5104_1.pdf",
+      "status": 200,
+      "rawHash": "c889a9d67a58ed111e9884f68065497dce059e07c65d04c35005073ac7dfbb75",
+      "retrievedAt": "2026-11-03T05:59:07.579203+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171477
+    },
+    {
+      "label": "sample-5105",
+      "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_5105_1.pdf",
+      "status": 200,
+      "rawHash": "14a4760876de34d2d211794d28b2e6bf1f1754a748a450dab952b04f69471d9b",
+      "retrievedAt": "2026-11-03T05:59:07.418081+00:00",
+      "pages": 4,
+      "localFields": [],
+      "candidateHeadingCount": 5,
+      "allCandidateHeadings": [
+        "U.S. Representative, Dist II",
+        "Governor",
+        "Maui Resident Trustee",
+        "Oahu Resident Trustee",
+        "At-Large Trustee"
+      ],
+      "rawBytes": 171466
+    }
+  ]
+}

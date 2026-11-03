@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:11:01.050381+00:00",
+  "preparedAt": "2026-11-03T06:11:11.024278+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1310,6 +1310,27 @@
           "River latest-state merge, installation and live ballot verification remain pending."
         ]
       }
+    },
+    {
+      "state": "HI",
+      "county": "Honolulu",
+      "populationRank": 54,
+      "manifest": "HI/honolulu/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 2,
+      "measureContests": 0,
+      "candidacies": 4,
+      "newContests": 0,
+      "refreshedContests": 2,
+      "sourceInputSha256": "fcfb06a6826916906dfe533dd9a09ed47713528427a264b8d01aab6dc6d9e531",
+      "coverage": [
+        "All154English2026General sample PDFs linked by the official Honolulu-filtered state index were acquired and all616native pages reviewed for candidate headings. Exactly two local candidate fields occur: councilDistrictIV in19styles and DistrictVI in17styles; four printed names and full fields agree everywhere. Remaining118styles have no local candidate field. County coverage here means the complete current published English sample set; other translations were not separately compared.",
+        "Both active local contest IDs and allfour candidate IDs/core fields already exist in the held HI input. This packet refreshes their evidence only and mints zero active offices/people. Current official report independently marks allfour InGeneral. Existing statewide/federal/legislative/OHA records, other counties and allmeasures/explanations remain unchanged. OHA island-residency labels are not narrowed to county-only electorates.",
+        "The current official county inventory schedules councilII/IV/VI/VIII in2026. Official report explicitly marks WEYER,Matt inDistrictII and OKIMOTO,ValAquino inDistrictVIII ElectedAfterPrimary; those records remain in separate declared-elected.json and are not Novemberactive contests. Six other filings retain exact Issued/InPrimary statuses without an invented withdrawal/cancellation label.",
+        "Hawaii official election rules state there is no provision for write-in voting. No blank slot is a person, and no named write-in is created. All sample acquisition used public index/PDF routes; CSVexport was a read-only public report action. No registered-voter identity was used.",
+        "Exact councilDistrict4/6 electorate keys are preserved and require reader geography matching; neither HonoluluCDP nor entireCityandCounty replaces a council district. Candidate facts are ready; reader delivery remains for parent/River to verify.",
+        "Parent fresh-fetch comparison reports origin/stream/cx-votes commit c1c0d49bd0606800a6a6c38bb82fb26ebd046561 has no data/install/cx-votes/HI packet. Held data/ballot/2026-general/hi.json remains identity reference; this worker performed no git operation."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -1335,17 +1356,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 50,
-    "packetsPrepared": 51,
-    "candidateAndRetentionContests": 2765,
+    "countiesPrepared": 51,
+    "packetsPrepared": 52,
+    "candidateAndRetentionContests": 2767,
     "measureContests": 113,
-    "candidacyEntries": 6148,
+    "candidacyEntries": 6152,
     "newContestEntriesAgainstCheckedInBaseline": 2269,
-    "distinctPreparedContestIds": 2857,
-    "distinctPreparedCandidateIds": 6087,
+    "distinctPreparedContestIds": 2859,
+    "distinctPreparedCandidateIds": 6091,
     "distinctNewContestsAgainstCheckedInBaseline": 2258,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 51
+    "distinctCountyHandoffs": 52
   },
   "remainingWork": [
     {

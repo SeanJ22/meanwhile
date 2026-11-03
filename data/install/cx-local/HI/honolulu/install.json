@@ -1,0 +1,115 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "HI",
+  "county": "Honolulu",
+  "countyFips": "15003",
+  "populationRank": 54,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:HI",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial state merge through existing candidate APIs. Refresh two held exact councilfields/fourheld people only; preserve allstate/OHA/legislative/othercounty/measure rows. Separate primary-elected/filing statuses remain data evidence. No production writes.",
+  "subjects": [
+    {
+      "id": "ba01-hi-honolulu-councilmember-dist-iv",
+      "title": "HONOLULU COUNCILMEMBER, DIST IV",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1801_1.pdf",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD;EXISTING_IDENTITIES_ONLY"
+    },
+    {
+      "id": "ba01-hi-honolulu-councilmember-dist-vi",
+      "title": "HONOLULU COUNCILMEMBER, DIST VI",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:6",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2503_1.pdf",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD;EXISTING_IDENTITIES_ONLY"
+    }
+  ],
+  "coverageStatus": "ALL154_PUBLISHED_COUNTY_ENGLISH_SAMPLE_STYLES;2_ACTIVE_LOCAL_FIELDS_ALREADY_HELD;2_PRIMARY_ELECTED_STATUSES_SEPARATE",
+  "counts": {
+    "contests": 2,
+    "candidacies": 4,
+    "newContests": 0,
+    "newCandidates": 0,
+    "reusedContests": 2,
+    "reusedCandidates": 4,
+    "publishedCountyEnglishStyles": 154,
+    "actualGovernmentSampleFiles": 154,
+    "nativeSamplePages": 616,
+    "localBlockComparisons": 36,
+    "stylesWithLocalField": 36,
+    "stylesWithoutLocalField": 118,
+    "uniqueLocalCandidateFields": 2,
+    "officialListOnlyFields": 0,
+    "pendingGovernmentSampleFields": 0,
+    "separateDeclaredElectedRecords": 2,
+    "separateOtherNonGeneralFilings": 6,
+    "measures": 0
+  },
+  "newContestIds": [],
+  "newCandidacyIds": [],
+  "reusedContestIds": [
+    "ba01-hi-honolulu-councilmember-dist-iv",
+    "ba01-hi-honolulu-councilmember-dist-vi"
+  ],
+  "reusedCandidacyIds": [
+    "ba01-hi-honolulu-councilmember-dist-iv:6bd16a30c4b88295",
+    "ba01-hi-honolulu-councilmember-dist-iv:fcbd8f3d4a96afbe",
+    "ba01-hi-honolulu-councilmember-dist-vi:76108adb0cf648b5",
+    "ba01-hi-honolulu-councilmember-dist-vi:f037ca52bebc4c3b"
+  ],
+  "identityInputsCompared": [
+    "data/ballot/2026-general/hi.json"
+  ],
+  "cxVotesComparison": "cx-votes-comparison.json",
+  "coverage": [
+    "All154English2026General sample PDFs linked by the official Honolulu-filtered state index were acquired and all616native pages reviewed for candidate headings. Exactly two local candidate fields occur: councilDistrictIV in19styles and DistrictVI in17styles; four printed names and full fields agree everywhere. Remaining118styles have no local candidate field. County coverage here means the complete current published English sample set; other translations were not separately compared.",
+    "Both active local contest IDs and allfour candidate IDs/core fields already exist in the held HI input. This packet refreshes their evidence only and mints zero active offices/people. Current official report independently marks allfour InGeneral. Existing statewide/federal/legislative/OHA records, other counties and allmeasures/explanations remain unchanged. OHA island-residency labels are not narrowed to county-only electorates.",
+    "The current official county inventory schedules councilII/IV/VI/VIII in2026. Official report explicitly marks WEYER,Matt inDistrictII and OKIMOTO,ValAquino inDistrictVIII ElectedAfterPrimary; those records remain in separate declared-elected.json and are not Novemberactive contests. Six other filings retain exact Issued/InPrimary statuses without an invented withdrawal/cancellation label.",
+    "Hawaii official election rules state there is no provision for write-in voting. No blank slot is a person, and no named write-in is created. All sample acquisition used public index/PDF routes; CSVexport was a read-only public report action. No registered-voter identity was used.",
+    "Exact councilDistrict4/6 electorate keys are preserved and require reader geography matching; neither HonoluluCDP nor entireCityandCounty replaces a council district. Candidate facts are ready; reader delivery remains for parent/River to verify.",
+    "Parent fresh-fetch comparison reports origin/stream/cx-votes commit c1c0d49bd0606800a6a6c38bb82fb26ebd046561 has no data/install/cx-votes/HI packet. Held data/ballot/2026-general/hi.json remains identity reference; this worker performed no git operation."
+  ],
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+    "ocd-division/country:us/state:hi/county:honolulu/council_district:6"
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+      "status": "UNMATCHED_EXACT_COUNCIL_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official council district geometry/reader membership; do not substitute entire county or HonoluluCDP."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:6",
+      "status": "UNMATCHED_EXACT_COUNCIL_DISTRICT",
+      "owner": "River/registry",
+      "next": "Resolve official council district geometry/reader membership; do not substitute entire county or HonoluluCDP."
+    }
+  ],
+  "sampleSourceGaps": [],
+  "declaredElected": "declared-elected.json",
+  "nonGeneralFilings": "non-general-filings.json",
+  "declaredWriteIns": "declared-write-ins.json",
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS_159_CAPTURES_19_EXACT_QUOTES_ALL154_NATIVE_SAMPLES_616PAGES_36_IDENTICAL_LOCAL_BLOCKS_2_HELD_OFFICES_4_HELD_PEOPLE_CORE_UNCHANGED",
+    "completeSampleUniverse": "ALL154_NATIVE_PUBLISHED_ENGLISH_STYLES_616PAGES;36_LOCAL_BLOCKS_AGREE;NO_OTHER_LOCAL_CANDIDATE_HEADINGS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 159 captured sources and 6 exact saved-source quotes"
+  },
+  "remainingWork": [
+    {
+      "owner": "Parent/River",
+      "next": "Run shared focused offline checks; install evidence refresh if useful, match exact council district reader geography and verify delivery. Keep primary-elected/otherfiling statuses distinct from active Novembercontests."
+    }
+  ],
+  "nextOwner": "Parent focused validation; River data installation/reader geography. No publication performed."
+}

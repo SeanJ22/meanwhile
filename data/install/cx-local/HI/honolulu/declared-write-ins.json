@@ -1,0 +1,13 @@
+{
+  "electionId": "hi-2026-11-03",
+  "county": "Honolulu",
+  "status": "WRITE_IN_VOTING_NOT_PROVIDED_UNDER_OFFICIAL_STATE_RULE",
+  "candidates": [],
+  "provenance": {
+    "sourceUrl": "https://elections.hawaii.gov/elections-in-hawaii/",
+    "sourceOrg": "State of Hawaii Office of Elections",
+    "collectedAt": "2026-11-03T06:01:35.200847+00:00",
+    "verifiedAt": "2026-11-03T06:01:35.200847+00:00",
+    "quote": "Hawaii does not have provisions for write-in voting and does not conduct a presidential primary."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "kind": "EXACT_REUSED_SOURCE_OBSERVATION_METADATA_RECONCILIATION",
+  "checkedAt": "2026-11-03T09:40:43.160078+00:00",
+  "sourceUrl": "https://r.jina.ai/https://statutes.capitol.texas.gov/Docs/TX/htm/TX.6.htm",
+  "rawHash": "1a98561b7d6957a60e199e13cd7c6bbcb69287e1ac21c736f62e7e0ad4415ba4",
+  "retrievedAt": "2026-11-03T06:28:48.144038+00:00",
+  "sourceClass": "OFFICIAL_PUBLISHER",
+  "earlierReceipt": "TX/fort-bend/ballot-input/tx.json",
+  "earlierPublisher": "Texas Legislature official text, retrieved through public reader",
+  "supersededPublisherLabel": "Texas Legislature; official text through public reader",
+  "disposition": "Reuse the exact earlier publisher literal for this identical URL/finalURL/hash/time capture, preserving immutable source observation authority. Official publisher/class and all original bytes, quotes, dates, ballot facts and identities unchanged.",
+  "inputBeforeSha256": "672ca7713bc5a1c7644be21c50f0e0ca5b3bb6f9c1f073b8f04ecc75d69e074f",
+  "inputAfterSha256": "519025b239cd23eef5f9bd9ca6ea524ab4f756ad7e2ec9851566215c7c465288",
+  "ballotFactsChanged": false,
+  "productionWrites": false
+}

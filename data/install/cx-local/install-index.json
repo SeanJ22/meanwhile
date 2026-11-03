@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:34:44.495506+00:00",
+  "preparedAt": "2026-11-03T09:41:03.733604+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 83,
-    "stateName": "Kentucky",
-    "county": "Jefferson County",
-    "fips": "21111",
-    "population": 795222,
+    "rank": 91,
+    "stateName": "New York",
+    "county": "Monroe County",
+    "fips": "36055",
+    "population": 750506,
     "populationYear": 2025,
-    "state": "KY"
+    "state": "NY"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -62,7 +62,9 @@
           "20 state/regional judicial retentions already held; retain existing data, actual sample confirmation separate.",
           "Register/connect every unmatched division below and verify reader applicability; no whole-city/whole-county district memberships inferred."
         ]
-      }
+      },
+      "censusCounty": "Los Angeles County",
+      "countyFips": "06037"
     },
     {
       "state": "IL",
@@ -91,7 +93,9 @@
           "Exact school subdistrict,commissioner andjudicial-subcircuit geography for reader applicability.",
           "Named declared write-ins beyond generic Write-in N/A placeholders."
         ]
-      }
+      },
+      "censusCounty": "Cook County",
+      "countyFips": "17031"
     },
     {
       "state": "IL",
@@ -110,7 +114,9 @@
         "Chicago is a separate election authority. Its current October27 candidate inventory is preserved as a lead; Chicago school president and20 school subdistrict specimen ballots are not yet acquired. No conclusion about the absence of any Chicago, municipal, school or special-district race is made.",
         "District contests retain their precise district division keys. Commissioner, Board of Review, judicial subcircuit and MWRD keys are not yet in the held Illinois registry and need exact geographic joins for address-specific reader delivery. Countywide facts can serve Chicago and suburban Cook where the office electorate is countywide.",
         "Declared write-in candidates are separate coverage work. Blank write-in slots printed on these ballots are not candidates; no named declared write-in certification was acquired."
-      ]
+      ],
+      "censusCounty": "Cook County",
+      "countyFips": "17031"
     },
     {
       "state": "TX",
@@ -130,7 +136,9 @@
         "The official declared-write-in list is preserved separately: 14 names across six office fields, including County Judge (2) and County Commissioner Precinct 4 (1). Blank Write-in spaces are excluded from printed candidate totals. Reader representation of declared write-ins remains open.",
         "Composite coverage describes only elections administered and printed by Harris County. It does not prove every independent jurisdiction touching Harris County contracted with the county or held an election. No whole-county completeness is asserted.",
         "Every source-printed electorate is retained separately. The 41 district-judge electorates already have source-backed whole-Harris-County memberships in held TX data, preserved by the partial merge. The checked-in registry and held memberships do not resolve the 23 precise IDs listed in unresolved-reader-divisions.json; the live registry has not been checked here. Reader division or boundary links remain open until resolved. No precinct, council district, water-authority director district, township, or special district is widened to the county or a CDP."
-      ]
+      ],
+      "censusCounty": "Harris County",
+      "countyFips": "48201"
     },
     {
       "state": "AZ",
@@ -144,7 +152,9 @@
       "newContests": 24,
       "refreshedContests": 59,
       "sourceInputSha256": "c3fb29421e790bbe281fd220460a4eda743a921d5d4eaabfdefbc6c45a53a0a9",
-      "coverage": "PARTIAL. Actual current official Scottsdale sample ballot and full current school/county candidate lists acquired. All omitted district/write-in/cancelled cases remain in companion files. Full county sample-style census has not been acquired."
+      "coverage": "PARTIAL. Actual current official Scottsdale sample ballot and full current school/county candidate lists acquired. All omitted district/write-in/cancelled cases remain in companion files. Full county sample-style census has not been acquired.",
+      "censusCounty": "Maricopa County",
+      "countyFips": "04013"
     },
     {
       "state": "CA",
@@ -191,7 +201,9 @@
           ],
           "finding": "These current official discovery pages link the composite and the August 28 candidate listing; neither displayed a separate declared-write-in link in this capture. Additional current declared-write-in acquisition remains with CX-LOCAL."
         }
-      }
+      },
+      "censusCounty": "San Diego County",
+      "countyFips": "06073"
     },
     {
       "state": "CA",
@@ -217,7 +229,9 @@
         "printedNamedCandidateCount": 368,
         "declaredWriteInCount": 1,
         "scope": "All 138 local named-candidate contests qualified by the county for November 3 2026: 47 school/community-college, 2 county supervisor, 77 municipal and 12 special district contests. Statewide/legislative/judicial races were already held and preserved. Local measures are outside this candidate packet."
-      }
+      },
+      "censusCounty": "Orange County",
+      "countyFips": "06059"
     },
     {
       "state": "FL",
@@ -231,7 +245,9 @@
       "newContests": 3,
       "refreshedContests": 43,
       "sourceInputSha256": "e8384431286a3c47bc2989fedde21da6f2bd4b1eb63b0dcfbeb2bbdae8071493",
-      "coverage": "PARTIAL. Actual8-page general SAMPLE and complete73-page master acquired/current. All45 local candidate contests/116 printed choices parsed. Four ElPortal council races/11 choices remain pending. Existing55 local measure questions untouched."
+      "coverage": "PARTIAL. Actual8-page general SAMPLE and complete73-page master acquired/current. All45 local candidate contests/116 printed choices parsed. Four ElPortal council races/11 choices remain pending. Existing55 local measure questions untouched.",
+      "censusCounty": "Miami-Dade County",
+      "countyFips": "12086"
     },
     {
       "state": "TX",
@@ -250,7 +266,9 @@
         "Page4 has53uncontested offices in one Vote for All/Vote for None bloc. Each office and its named candidate are retained separately, with the source voting instruction; no independent vote selection rule is invented for a new bloc office.",
         "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified.",
         "Composite coverage concerns only the elections printed by Dallas County; it does not prove every independent jurisdiction touching the county contracted with the county or held an election. Precinct contests and the Fifth Court of Appeals retain their precise electorates. No commissioner, justice or constable precinct is widened to all Dallas County."
-      ]
+      ],
+      "censusCounty": "Dallas County",
+      "countyFips": "48113"
     },
     {
       "state": "NY",
@@ -268,7 +286,9 @@
         "Kings County official specimen judicial candidate coverage contains8 local races: Supreme Court District2, county Civil Court and municipal court districts2/3/4/6/7/8. Six municipal court races were missing from held New York data. The2 countywide judicial contest identities are reused. Five held citywide charter proposals were also checked against the specimens and remain unchanged outside this candidate installation.",
         "No Kings mayoral, borough-president, county prosecutor, city-council, school or special-district candidate contest appears in the current BOE Kings general-election inventory checked. The full public source manifest lists922 English sample styles; selected specimens cover every local judicial candidate field enumerated by that current inventory, but every style has not been independently compared for late additions.",
         "Blank write-in slots are not people. Separate declared write-in certification remains coverage work. Exact municipal court district and Supreme Court territory joins need held registry/reader geography; no municipal court district is widened to Kings County."
-      ]
+      ],
+      "censusCounty": "Kings County",
+      "countyFips": "36047"
     },
     {
       "state": "CA",
@@ -296,7 +316,9 @@
         "remaining": "Other official ballot styles and their distinct city, school trustee-area and special district office blocks remain open with CX-LOCAL. The final144-page county candidate roster is acquired in scratch as a coverage lead, not substituted for sample-ballot evidence.",
         "certifiedWriteInsRetainedSeparately": 1,
         "heldEmptyPrintedOffices": 1
-      }
+      },
+      "censusCounty": "Riverside County",
+      "countyFips": "06065"
     },
     {
       "state": "NV",
@@ -326,7 +348,9 @@
           "LasVegas official elections page points to county login;Mesquite official election page has no sample link;Henderson/NorthLasVegas native pages returned403 and public-reader attempts429.",
           "Register precise EighthJudicialDistrict8 andcommissionDistrictG for reader applicability; entireClarkCounty court membership has direct official evidence."
         ]
-      }
+      },
+      "censusCounty": "Clark County",
+      "countyFips": "32003"
     },
     {
       "state": "NY",
@@ -344,7 +368,9 @@
         "Complete named-candidate blocks in actual official specimen PDFs cover Supreme Court District11, Queens county Civil Court and municipal Civil Court districts2,3,4. Countywide offices and district4 identities were held and are reused; district2 and3 are new missing local offices.",
         "The current-linked BOE Queens general contest inventory enumerates these five local judicial fields. No Queens mayoral, borough-president, prosecutor, council, school or special-district candidate field appears in that inventory. Selected official samples cover all enumerated local fields; other sample styles have not all been compared for late additions.",
         "Generic blank Write-in and NO CANDIDATE FILED cells are not people. No separate declared-write-in certification was acquired. Five held citywide charter proposals and their explanations remain unchanged outside this candidate packet."
-      ]
+      ],
+      "censusCounty": "Queens County",
+      "countyFips": "36081"
     },
     {
       "state": "WA",
@@ -358,7 +384,9 @@
       "newContests": 27,
       "refreshedContests": 15,
       "sourceInputSha256": "98b73ece75c61948f12fb6147d57e07efc879eb32df946d7c9dd0ae1716955e5",
-      "coverage": "COMPLETE for all42local named-candidate races52choices on current official all-county sample/list. PARTIAL for full ballot:local measures not prepared here. Complete current list has no school or special-district candidate section."
+      "coverage": "COMPLETE for all42local named-candidate races52choices on current official all-county sample/list. PARTIAL for full ballot:local measures not prepared here. Complete current list has no school or special-district candidate section.",
+      "censusCounty": "King County",
+      "countyFips": "53033"
     },
     {
       "state": "TX",
@@ -403,7 +431,9 @@
           "Exact commissioner/justice precinct andappraisal-district reader applicability; existing district-court county memberships stay intact.",
           "Any later declared-write-in certification and additional county styles/source updates. No generic Write-in blank imported."
         ]
-      }
+      },
+      "censusCounty": "Tarrant County",
+      "countyFips": "48439"
     },
     {
       "state": "CA",
@@ -428,7 +458,9 @@
         "remaining": "Reader representation for separate qualified write-in records and missing exact division memberships remain with River/CX-LOCAL geography work.",
         "sharedExistingContests": 3,
         "newContests": 132
-      }
+      },
+      "censusCounty": "San Bernardino County",
+      "countyFips": "06071"
     },
     {
       "state": "TX",
@@ -447,7 +479,9 @@
         "The36 already-held county/district-judge contest identities and all45 corresponding candidacy identities are preserved;31 local races and61 choices were missing. Federal, statewide and legislative data and existing measure texts/explainers remain outside this focused installation. Local bond/tax/charter propositions remain open candidate-independent coverage work and their complete original samples are retained.",
         "Numbered at-large city and Edgewood school places use their whole exact government electorate. Somerset single-member districts, commissioner precincts, justice precincts, MUD1, appraisal, aquifer and regional judicial territory retain precise separate division keys. Exact unmatched reader memberships remain listed in the installation manifest; no electoral district is widened to Bexar County.",
         "Blank write-in lines are not people. Separately named declared write-in certification remains acquisition work. This packet establishes all named candidate office blocks printed in the two linked current generic sample documents; individualized address-specific sample parity and exact district reader memberships remain open."
-      ]
+      ],
+      "censusCounty": "Bexar County",
+      "countyFips": "48029"
     },
     {
       "state": "FL",
@@ -461,7 +495,9 @@
       "newContests": 56,
       "refreshedContests": 5,
       "sourceInputSha256": "1335099889b97ccb478d995fb1119ad2cbc39b033ad28e0262de717d2fbdb141",
-      "coverage": "Complete current official final local named-candidate lists:56CANDIDACY races141names plus5RETENTION questions5judges=61fields146names. Actual November sample verification PARTIAL:Hollywood3races7names,Hallandale2races5names. Full county ballot/style census, remaining actualsamples, local measures, write-ins and3multimembervote limits pending."
+      "coverage": "Complete current official final local named-candidate lists:56CANDIDACY races141names plus5RETENTION questions5judges=61fields146names. Actual November sample verification PARTIAL:Hollywood3races7names,Hallandale2races5names. Full county ballot/style census, remaining actualsamples, local measures, write-ins and3multimembervote limits pending.",
+      "censusCounty": "Broward County",
+      "countyFips": "12011"
     },
     {
       "state": "CA",
@@ -487,7 +523,9 @@
         "completenessBasis": "Current original public official OmniBallot election1968 Composite and all327 non-composite ballot styles, crosschecked against all73 county roster On Ballot Yes office rows. Paid candidate statements are not used as complete ballots.",
         "declaredWriteIns": "Hina Patel (Orchard) and Jacob Montoya (Morgan Hill mayor) qualified in final October20 county list; stored separately, not added to printed sample list.",
         "judicialCoverage": "Two Supreme Court and five Sixth Appellate retention offices appear as type retention in source and already exist in held CA input; omitted here. No new local judicial candidate race printed."
-      }
+      },
+      "censusCounty": "Santa Clara County",
+      "countyFips": "06085"
     },
     {
       "state": "MI",
@@ -507,7 +545,9 @@
         "The official candidate list has no populated withdrawal-date cells. Seven No Candidate Filed placeholder rows across six office blocks are preserved in parsed evidence; three entirely unnamed fields are kept pending rather than converted into fake candidates. Blank printed write-in ovals are never candidates. A current local declared-write-in roster has not been acquired; no assertion of no declared write-ins is made.",
         "City and school elections use their exact city/school electorates. Highland Park council districts, Wayne commissioner district5, WCCCD trustee districts and district libraries retain narrower nominal IDs. Unknown boundaries are explicit. Schoolcraft college membership uses only the five whole school districts named in the official sample; the partly included Novi district is excluded.",
         "The county current page links a September10 candidate PDF whose bytes exactly match the held October source. Current municipal samples independently corroborate22 full local fields. This packet is data preparation only; River must merge with latest held Michigan and resolve reader applicability before any display."
-      ]
+      ],
+      "censusCounty": "Wayne County",
+      "countyFips": "26163"
     },
     {
       "state": "MA",
@@ -521,7 +561,9 @@
       "newContests": 6,
       "refreshedContests": 0,
       "sourceInputSha256": "dbf34531dd7d20482977950017c76fe2af32cd7e3975b3d144e14326ce32b459",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Middlesex County",
+      "countyFips": "25017"
     },
     {
       "state": "NY",
@@ -539,7 +581,9 @@
         "Selected actual official New York County sample ballots verify nine local candidate fields: Surrogate, Supreme Court District1, county Civil Court, Council District3 and municipal Civil Court districts1/3/4/7/9. Five held contest identities and their18 held candidacy identities are reused; four municipal district offices and eight printed choices are new.",
         "The current-linked BOE New York county inventory enumerates these nine local fields. No other mayoral, borough president, prosecutor, school or special district candidate field appears in that inventory. Selected samples cover every enumerated local field; every remaining PDF style has not been compared for late changes.",
         "Blank Write-in cells are not people. Separate declared write-in certification remains acquisition work. Five held citywide charter proposals and all their explanations remain unchanged outside this candidate packet. Exact judicial and Council district reader membership joins remain the registry owner\u2019s work."
-      ]
+      ],
+      "censusCounty": "New York County",
+      "countyFips": "36061"
     },
     {
       "state": "CA",
@@ -553,7 +597,9 @@
       "newContests": 84,
       "refreshedContests": 11,
       "sourceInputSha256": "52121dc3222a52a280208a7421806c57c48fee4738b273a4f230e3d916390587",
-      "coverage": "Complete printedlocalnamed-candidatefields:84CANDIDACY228names plus11heldFirstDCARETENTIONjudges=95fields239people. One declaredwriteinReichiLee keptseparate. 30NotOnBallotgroups40filers and5withdrawn/incompleteOnBallotfilersnotprintedexcluded. Fullballotcoveragepartial:measuresunparsedandnamedwriteinreaderdisplaypending."
+      "coverage": "Complete printedlocalnamed-candidatefields:84CANDIDACY228names plus11heldFirstDCARETENTIONjudges=95fields239people. One declaredwriteinReichiLee keptseparate. 30NotOnBallotgroups40filers and5withdrawn/incompleteOnBallotfilersnotprintedexcluded. Fullballotcoveragepartial:measuresunparsedandnamedwriteinreaderdisplaypending.",
+      "censusCounty": "Alameda County",
+      "countyFips": "06001"
     },
     {
       "state": "CA",
@@ -572,7 +618,9 @@
         "The current official roster contains61 OnBallotYes local fields and62 No/Off local fields. The earlier strict parser undercounted headings containing nonbreaking spaces, compact dashes or double spaces; this corrected inventory splits every office at its complete Contest header. No qualified name is carried across an office boundary.",
         "Candidate qualification evidence is the current official candidate list for59 fields and actual official samples for2 fields. The53-field sample gap reported before robust header parsing is corrected to59 sample fields; no roster is called a sample. No inference of cancellation, appointment, election absence or outcome is made from No/Off flags. No ordinary candidate is created from DID NOT FILE, DID NOT QUALIFY, Pending or WITHDRAWN rows.",
         "Sacramento guide lookup requires date of birth; no voter identity or DOB submitted. Official county certification says there are no certified write-in candidates, preserved separately. Exact trustee areas, supervisor/council districts, utility ward and special-district divisions are retained; no electorate is widened to a whole city, school district or county. Unrelated statewide, legislative and measure records/explanations remain unchanged."
-      ]
+      ],
+      "censusCounty": "Sacramento County",
+      "countyFips": "06067"
     },
     {
       "state": "FL",
@@ -593,7 +641,9 @@
         "No local Write-in option is printed in the all-contests sample; blank write-in options for federal/state races are excluded from this local packet. The embedded local candidate report contains no explicit write-in row. No named declared write-in identity is fabricated and no blanket statewide write-in absence is asserted.",
         "County Commission and School Board districts, Port, Soil and Water Conservation, Indian Trail, Avenir and County Library taxing district retain their exact electorates. Port charter boundaries expressly cover only part of the county. Nominal district IDs and observed precinct facts are data-ready; source-backed boundary/division joins remain a River dependency. Existing Palm Beach County\u2192Fourth Appellate District membership is preserved.",
         "Original current all-contests PDF, county-embedded status HTML, official33-page voting-district PDF and official Port boundary HTML are included with hashes. The57.9MB precinct PDF remains saved in task evidence at /workspace/cx-local-work/palm-beach/raw/amendments.pdf with its original URL/hash; the filename was inherited and is not a constitutional-amendment booklet. Compact field/style observations, source acquisition metadata and reproducible audit script accompany this packet. Preparation makes no production writes."
-      ]
+      ],
+      "censusCounty": "Palm Beach County",
+      "countyFips": "12099"
     },
     {
       "state": "FL",
@@ -628,7 +678,9 @@
         "unopposedCertifiedNonpartisanFieldsKeptSeparate": 136,
         "namedStateFederalDeclaredWriteInFilingsKeptSeparate": 6,
         "heldExactDistrictIdsWithoutRegistryGeometry": 3
-      }
+      },
+      "censusCounty": "Hillsborough County",
+      "countyFips": "12057"
     },
     {
       "state": "NY",
@@ -666,7 +718,9 @@
           "/workspace/meanwhile/data/install/cx-local/NY/queens/ballot-input/ny.json"
         ],
         "heldNyInputSha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb"
-      }
+      },
+      "censusCounty": "Suffolk County",
+      "countyFips": "36103"
     },
     {
       "state": "FL",
@@ -680,7 +734,9 @@
       "newContests": 10,
       "refreshedContests": 3,
       "sourceInputSha256": "7d0dd4203f849cd0494cac99e7265813815882ebb44ac8725383b1b5b79c4579",
-      "coverage": "COMPLETEprintedlocalcandidatefields13races28namesagainstofficialallcontestssampleand330precinctstyles. Existinglocalschoolmeasureconfirmedacross330styleswithancillaryreview,keptunchangedandoutsideincominginput. NoNov3municipalcandidatefieldsprinted. Fullballotcoveragepartial:federal/statefieldsoutsidethislocalpacketand1declaredwriteinreaderdisplaypending."
+      "coverage": "COMPLETEprintedlocalcandidatefields13races28namesagainstofficialallcontestssampleand330precinctstyles. Existinglocalschoolmeasureconfirmedacross330styleswithancillaryreview,keptunchangedandoutsideincominginput. NoNov3municipalcandidatefieldsprinted. Fullballotcoveragepartial:federal/statefieldsoutsidethislocalpacketand1declaredwriteinreaderdisplaypending.",
+      "censusCounty": "Orange County",
+      "countyFips": "12095"
     },
     {
       "state": "NY",
@@ -694,7 +750,9 @@
       "newContests": 1,
       "refreshedContests": 3,
       "sourceInputSha256": "06cf563c1af7576c61ab526ba0ff481cdb8f88b11f485d9e19b93c2db620f093",
-      "coverage": "ALL4LOCAL_JUDICIAL_FIELDS_IN_CURRENT_BOE_BRONX_INVENTORY_VERIFIED_ON_SELECTED_CURRENT_SPECIMENS;FULL_STYLE_PARITY_OPEN"
+      "coverage": "ALL4LOCAL_JUDICIAL_FIELDS_IN_CURRENT_BOE_BRONX_INVENTORY_VERIFIED_ON_SELECTED_CURRENT_SPECIMENS;FULL_STYLE_PARITY_OPEN",
+      "censusCounty": "Bronx County",
+      "countyFips": "36005"
     },
     {
       "state": "NY",
@@ -715,7 +773,9 @@
         "Countywide Family Court is kept separate from shared state Supreme Court. Town office electorates use exact registered towns rather than villages/CDPs. No county legislative district is widened to Nassau County. School/special-district offices absent from the candidate list are not represented as verified absent or cancelled.",
         "The list explicitly says subject to change and has no qualification/withdrawal/status columns. No late withdrawal, replacement or cancellation identity is inferred. Blank Write-in spaces do not identify people, and no separate current local declared-write-in certification has been established. Existing measures, legislative races and explainers are preserved by the partial merge.",
         "Acquisition evidence includes current BOE/legacy/domain redirects, the public BOE DocumentCenter folder enumeration of319 documents, county search and city/town routes. It records the sample gap without asserting no sample exists. Replay scripts remain in scratch; this packet contains data and source evidence only. No production publication or git operation was performed."
-      ]
+      ],
+      "censusCounty": "Nassau County",
+      "countyFips": "36059"
     },
     {
       "state": "TX",
@@ -757,7 +817,9 @@
         "retainedExactPrecinctPolygons": 7,
         "newThirdCourtWholeCountyMemberships": 24,
         "retainedExactElectoratePolygons": 12
-      }
+      },
+      "censusCounty": "Travis County",
+      "countyFips": "48453"
     },
     {
       "state": "OH",
@@ -776,7 +838,9 @@
         "No municipal, school, township or special-district candidate office appears in the current linked general-election candidate list. Other sample styles have not been independently compared for late changes; no reader absence is inferred from this inventory.",
         "The official county source and Ohio Revised Code confirm the Tenth Appellate District consists solely of Franklin County, so existing held county keys represent the exact full electorate. All held candidate core fields, office IDs and vote limits remain unchanged.",
         "No listed local ordinary candidate has a Write-In Yes flag in the current official list. Statewide/legislative declared-write-in rows are outside this local packet. Blank write-in cells are not people. Existing statewide, legislative and measure records/explanations remain unchanged."
-      ]
+      ],
+      "censusCounty": "Franklin County",
+      "countyFips": "39049"
     },
     {
       "state": "TX",
@@ -806,7 +870,9 @@
         ],
         "unmatchedReaderDivisionsAlreadyLinkedByHeldWholeCountyCourtMembership": 7,
         "unmatchedReaderDivisionsWithoutHeldMembership": 16
-      }
+      },
+      "censusCounty": "Collin County",
+      "countyFips": "48085"
     },
     {
       "state": "MI",
@@ -820,7 +886,9 @@
       "newContests": 99,
       "refreshedContests": 18,
       "sourceInputSha256": "74de7b8a4b349773c69bd4efd49b674b8ca32afbcbcb0cf9c60974fdcad406c0",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Oakland County",
+      "countyFips": "26125"
     },
     {
       "state": "MN",
@@ -852,7 +920,9 @@
         "sourceCaptures": 117,
         "geometryFeatures": 69,
         "preciseDistrictsAbsentReaderRegistry": 24
-      }
+      },
+      "censusCounty": "Hennepin County",
+      "countyFips": "27053"
     },
     {
       "state": "NC",
@@ -873,7 +943,9 @@
         "All printed named candidates are retained, including unopposed judicial/commission/council fields and minor-party names where applicable. Blank Write-in lines are excluded as identities. No separate local declared-write-in certification or cancellation list was established; no blanket absence is asserted. Other election dates in the state candidateCSV are not imported into November fields.",
         "Federal, statewide Supreme/Appellate and legislative contests, held measures and explainers remain preserved by omission. County/Raleigh/Knightdale bond questions visible on the full source set are ancillary source coverage; no new measure is installed in this candidate-first packet.",
         "All171 original sample PDFs and the original current state candidateCSV are included with hashes. Filed address/contact columns are excluded from reader excerpts/quotes. The county352-page combined booklet original is210MB and remains in task scratch; honestly labelled derived first10 cover/key pages are included, with original URL/hash/byte count. Helpers remain in scratch and no production publication or git operation was performed."
-      ]
+      ],
+      "censusCounty": "Wake County",
+      "countyFips": "37183"
     },
     {
       "state": "NC",
@@ -893,7 +965,9 @@
         "All 31 printed names and their exact office/vote limits independently match the current official state general-election CSV. Every incoming field has actual sample evidence; there are no roster-only supplement fields. The 16 held office IDs and all 22 held person IDs/core fields are reused. Existing statewide, legislative and measure records/explanations are preserved.",
         "Precise electorates are retained. County commissioner districts 1\u20136 and Superior Court districts 26C/26F/26H need reader geography matching. Their candidate facts are data ready; reader delivery is not established by this packet. No city or entire county is substituted for a subdistrict.",
         "The 23 local partisan office fields print no write-in slot. Official 2026 NCSBE rules tie partisan write-in slots to qualification. Soil and Water prints two unnamed write-in slots and automatically permits eligible write-ins without a petition. No unnamed slot is a person; no certified named write-in is added as an ordinary candidacy."
-      ]
+      ],
+      "censusCounty": "Mecklenburg County",
+      "countyFips": "37119"
     },
     {
       "state": "OH",
@@ -932,7 +1006,9 @@
         ],
         "retainedExactCouncilPolygons": 6,
         "wholeCountyAppellateMemberships": 1
-      }
+      },
+      "censusCounty": "Cuyahoga County",
+      "countyFips": "39035"
     },
     {
       "state": "PA",
@@ -959,7 +1035,9 @@
           "All generic Write-in blanks are excluded as people. A current named declared-write-in supplement is not certified.",
           "River installation and exact Whitehall borough reader applicability check remain pending."
         ]
-      }
+      },
+      "censusCounty": "Allegheny County",
+      "countyFips": "42003"
     },
     {
       "state": "UT",
@@ -998,7 +1076,9 @@
         "activeUnmatchedReaderDivisionCount": 22,
         "unmatchedReaderDivisionCountIncludingHeldWriteInOnly": 23,
         "newCourtWholeMemberLinks": 4
-      }
+      },
+      "censusCounty": "Salt Lake County",
+      "countyFips": "49035"
     },
     {
       "state": "CA",
@@ -1019,7 +1099,9 @@
         "The zero report explicitly lists Kofi Opong-Mensah as WRITE-IN for Hercules council. His qualified write-in record stays separate from ordinary choices pending a verified reader distinction; no withdrawal or removal is invented. Blank Write-in/Yes/No slots are not candidates. The August27 proof contains additional offices absent from current dynamic sample/zero report; those are not inferred withdrawn/cancelled, and remain pending final sample/status verification.",
         "Electorates use exact city, school trustee-area, community-college ward, county education area and special-district division/ward IDs. No district is widened to the county and no split precinct is installed as a whole-member link. Exact held FirstDCA county-membership ID is refreshed from official current court geography and retention-voting rules. Unresolved reader joins remain explicit.",
         "All held and already-prepared CA packet identities were scanned. All13 held judicial contest/candidate IDs and shared Livermore Area3 prepared identities are preserved. Legislative contests, measures, explainers and unrelated records are left to the partial merge. Data only, no production publication, git operation or voter-identity query."
-      ]
+      ],
+      "censusCounty": "Contra Costa County",
+      "countyFips": "06013"
     },
     {
       "state": "VA",
@@ -1039,7 +1121,9 @@
         "The electorate is incorporated Town of Herndon. Fairfax County is distinct from independent Fairfax City and Falls Church City; their contests remain untouched. Clifton in Fairfax County is distinct from Clifton Forge. Existing statewide/federal/legislative contests and all measures/explanations remain untouched.",
         "The county official schedule places county regular offices and town elections in Vienna and Clifton in odd years, with Herndon in even years. No countywide, judicial, school board or special district candidate field is printed in the current nine November2026 county sample formats. These are precise current-source review findings, not invented contests or a permanent absence claim.",
         "The actual Herndon sample includes one blank mayor write-in slot and six blank council slots. Those slots name no person and create no ordinary candidacy. No separate named write-in certification inventory was acquired."
-      ]
+      ],
+      "censusCounty": "Fairfax County",
+      "countyFips": "51059"
     },
     {
       "state": "GA",
@@ -1076,7 +1160,9 @@
         ],
         "heldInputSha256": "2eb85dcc4ec5c16d976fe68d7cf9445885dd441b9bd36d469db361db1344a483",
         "retainedExactCommissionPolygons": 4
-      }
+      },
+      "censusCounty": "Fulton County",
+      "countyFips": "13121"
     },
     {
       "state": "AZ",
@@ -1121,7 +1207,9 @@
           "ballotInputChanged": false,
           "fullManualStyleReviewComplete": false
         }
-      ]
+      ],
+      "censusCounty": "Pima County",
+      "countyFips": "04019"
     },
     {
       "state": "MD",
@@ -1160,7 +1248,9 @@
         ],
         "heldInputSha256": "b3dbf262a26bbdc3a004c7e0b3a596f18c6f00a347ec9b80afd02263950f94cd",
         "readerVisibility": "PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN"
-      }
+      },
+      "censusCounty": "Montgomery County",
+      "countyFips": "24031"
     },
     {
       "state": "TX",
@@ -1182,7 +1272,9 @@
         "District/precinct electorates are exact. Regionalcourt2, six held judicial districts, commissioner precincts2/4, justice precincts1\u20136, constable precinct1 and CityofDenton council district1 require reader geography matching; no entire county/city is substituted for a subdistrict. Data-ready candidate facts do not establish reader visibility.",
         "Declaredwriteins are separate from printed ordinary candidates. The current statewide/district certification contains no entry for either Second Appeals seat or the six Denton judicial districts; county/municipal/special named write-in inventories remain pending. No generic blank Write-in is treated as a person.",
         "The official SecondCourt county list supports12whole-county districtMemberships, one each for Archer,Clay,Cooke,Denton,Hood,Jack,Montague,Parker,Tarrant,Wichita,Wise,Young. The same two regional offices can therefore serve every included county; no per-county duplicate contest is minted. Actual reader delivery remains for parent/River to verify."
-      ]
+      ],
+      "censusCounty": "Denton County",
+      "countyFips": "48121"
     },
     {
       "state": "FL",
@@ -1198,7 +1290,9 @@
       "sourceInputSha256": "2829058bda20dd6aca4dd95f33c41bebd9c3103190cb28c172195438a89a24c1",
       "coverage": {
         "measureDisposition": "Duval millage already prepared by CX-VOTES; confirmation outside changed input preserves its held explanation. No duplicate proposed question."
-      }
+      },
+      "censusCounty": "Duval County",
+      "countyFips": "12031"
     },
     {
       "state": "CA",
@@ -1219,7 +1313,9 @@
         "Canonical school identities are disambiguated with current government records: PacificUnionElementaryFresno NCES0629400; WashingtonUnifiedFresno NCES0601415. Each numbered trustee/council/supervisor/director/division/zone electorate retains its exact source scope, with missing reader geometry explicit. MercedCountyBoardEducationDistrict5 and StateCenterCollege trusteearea1 remain exact cross-county offices, not countywide Fresno races.",
         "Registrar October31notice confirms FresnoUnified trusteeareas1/3/4 are FresnoUnified despite Fowler mislabels on some ballot-marking-device prints. Current inventory and exact FresnoUnified electorates are used. Existing statewide, legislative and measure records/explanations remain unchanged.",
         "Official county VoterGuide redirects to an OmniBallot workflow configured for first name,last name,dateofbirth; no voter identity was submitted. Public election metadata found no current/upcoming entry and past entries only through2025. Public government mirror searches did not yield a current2026sample. These are source-access findings, not proof the government publishes no samples."
-      ]
+      ],
+      "censusCounty": "Fresno County",
+      "countyFips": "06019"
     },
     {
       "state": "GA",
@@ -1241,7 +1337,9 @@
         "writeIn": "No named local certified write-in list acquired; generic blank slots excluded and no zero-write-in claim.",
         "sourceTransport": "Native official PDFs unavailable for county and Suwanee; complete successful reader text captures are separately fingerprinted and explicitly distinguished from native503/403. Native city official-list, legal act and county GIS200 captured.",
         "questions": "One new Gwinnett school-district homestead question remains. Exact Suwanee municipal question is prepared by CX-VOTES and retained only in held-question-confirmation.json outside incoming changed IDs to preserve latest explanation."
-      }
+      },
+      "censusCounty": "Gwinnett County",
+      "countyFips": "13135"
     },
     {
       "state": "NY",
@@ -1272,7 +1370,9 @@
           "Existing measures are preserved, with no new measure or absence assertion from this candidate-office packet."
         ],
         "boundarySupplement": "Exact adopted native official polygons supplied for 17 currently prepared district IDs. Registry joins and live reader verification remain River work; no electorate widened."
-      }
+      },
+      "censusCounty": "Westchester County",
+      "countyFips": "36119"
     },
     {
       "state": "CT",
@@ -1311,7 +1411,9 @@
         "populationRank": 51,
         "population2025": 994115,
         "printedNamedBallotLinesInCanonicalOffices": 62
-      }
+      },
+      "censusCounty": "Capitol Planning Region",
+      "countyFips": "09110"
     },
     {
       "state": "IN",
@@ -1347,7 +1449,9 @@
         "geometryFeatures": 23,
         "missingReaderDistricts": 5,
         "courtDistrictWholeCountyMemberships": 19
-      }
+      },
+      "censusCounty": "Marion County",
+      "countyFips": "18097"
     },
     {
       "state": "MO",
@@ -1380,7 +1484,9 @@
           "No new measures in this candidate packet; existing state/local questions/explanations remain untouched.",
           "River latest-state merge, installation and live ballot verification remain pending."
         ]
-      }
+      },
+      "censusCounty": "St. Louis County",
+      "countyFips": "29189"
     },
     {
       "state": "HI",
@@ -1401,7 +1507,9 @@
         "Hawaii official election rules state there is no provision for write-in voting. No blank slot is a person, and no named write-in is created. All sample acquisition used public index/PDF routes; CSVexport was a read-only public report action. No registered-voter identity was used.",
         "Exact councilDistrict4/6 electorate keys are preserved and require reader geography matching; neither HonoluluCDP nor entireCityandCounty replaces a council district. Candidate facts are ready; reader delivery remains for parent/River to verify.",
         "Parent fresh-fetch comparison reports origin/stream/cx-votes commit c1c0d49bd0606800a6a6c38bb82fb26ebd046561 has no data/install/cx-votes/HI packet. Held data/ballot/2026-general/hi.json remains identity reference; this worker performed no git operation."
-      ]
+      ],
+      "censusCounty": "Honolulu County",
+      "countyFips": "15003"
     },
     {
       "state": "NJ",
@@ -1424,7 +1532,9 @@
         "questions": "All seven CX-VOTES prepared Bergen questions/explainers, including the exact Park Ridge open-space continuation, stay outside changed input IDs. Official Park Ridge text is retained as source confirmation in held-question-confirmation.json.",
         "writeInsAndStatuses": "Generic Personal Choice/NO NOMINATION MADE/NO PETITION FILED spaces excluded from people. Final named-write-in certification and cancelled-office inventory not established, so no zero-write-in or countywide absence claim.",
         "extraction": "Exact nativePDF raw hashes plus separate geometric reading-order/native-text hashes. Every surname-font span assigned once and every local named set independently agrees with the official-linked expressly unofficial roster. Representative visual checks only; no blanket74-page visual claim."
-      }
+      },
+      "censusCounty": "Bergen County",
+      "countyFips": "34003"
     },
     {
       "state": "TX",
@@ -1462,7 +1572,9 @@
         "pendingJpPolygons": 3,
         "measuresPrepared": 0,
         "absencesCreated": 0
-      }
+      },
+      "censusCounty": "Fort Bend County",
+      "countyFips": "48157"
     },
     {
       "state": "MD",
@@ -1491,7 +1603,9 @@
           "Liveinstallation and exactreader applicability belongtoRiver."
         ],
         "boundarySupplement": "Exact adopted native official polygons supplied for 13 currently prepared district IDs. Registry joins and live reader verification remain River work; no electorate widened."
-      }
+      },
+      "censusCounty": "Prince George's County",
+      "countyFips": "24033"
     },
     {
       "state": "FL",
@@ -1505,7 +1619,9 @@
       "newContests": 15,
       "refreshedContests": 0,
       "sourceInputSha256": "de91815125c0c823d0973a6b67463a7f1a676fe069c2f765965f7ef6f0737d91",
-      "coverage": "COUNTY_COMPLETE_ACTUAL_SAMPLE_CANDIDATE_FIELDS_ALL_444_PUBLIC_STYLES"
+      "coverage": "COUNTY_COMPLETE_ACTUAL_SAMPLE_CANDIDATE_FIELDS_ALL_444_PUBLIC_STYLES",
+      "censusCounty": "Pinellas County",
+      "countyFips": "12103"
     },
     {
       "state": "NY",
@@ -1527,7 +1643,9 @@
         "Federal/statewide/legislative races and all 13 observed Buffalo/Amherst/Cheektowaga question fields are outside this candidate additions packet. Existing measures and explanations remain unchanged. No school, special-district, mayoral, other city, party-position or off-cycle contest is invented. The complete current samples and county office inventory identify no additional November local candidate field.",
         "Blank Write-in slots are retained in source/audit counts and never converted to people. No separately named declared write-in, cancelled field or declared-elected status was found in the complete current sample/inventory set; separate status files make no broader certification claim. Ordinary unopposed named candidates remain active fields where the sample supplies an actual voting choice.",
         "Candidate facts are data-ready. Exact county legislative geography remains a River/reader dependency. A regional judicial key absent from the registry already has eight held whole-county memberships. Missing reader keys are explicitly listed and no reader visibility is claimed."
-      ]
+      ],
+      "censusCounty": "Erie County",
+      "countyFips": "36029"
     },
     {
       "state": "WA",
@@ -1548,7 +1666,9 @@
         "Candidate-only packet. The complete sample also contains7 Pierce charter amendments and7 other local measures (plus3 held statewide initiatives); raw source text and a separate inventory are preserved, without adding optional measures or changing held legislative/measures data.",
         "No current separate qualified-write-in supplement was acquired. State filing source has Active rows but no separate write-in qualification certification, so absence is not asserted. Generic blank optional write-in spaces identify no people. No cancelled/declared-elected office or withdrawn identity is inferred from one-name fields or missing supplementary records.",
         "All current sources are original native PDF/HTML bytes with exact hashes/extraction; no voter identity or personal-address lookup was used. Shared King geometry and identities remain data prepared for River; reader application joins and source-based qualified-write-in updates remain explicit. No git or production operation."
-      ]
+      ],
+      "censusCounty": "Pierce County",
+      "countyFips": "53053"
     },
     {
       "state": "IL",
@@ -1577,7 +1697,9 @@
           "Namedlocalwrite-insbeyondthepublishedSeptember9listremainunestablished;nogenericblankslotsaspersons.",
           "Questionsareoutside thiscandidateinstall;CX-VOTESlegislativeandmeasureworkisuntouched."
         ]
-      }
+      },
+      "censusCounty": "DuPage County",
+      "countyFips": "17043"
     },
     {
       "state": "CA",
@@ -1598,7 +1720,9 @@
         "Seven nonordinary filers remain separate: Arthur J. Calloway II and Fernando Alonzo Aguilar explicitly Withdrawn; five other names have no qualified date and are excluded from the proof qualified counts.70 school and64 special fields explicitly NOT ON BALLOT,148 qualified names, remain separate source-status records. No appointment/declared-election/cancellation or withdrawal status is invented. No current separate named qualified-write-in roster is established; native sample ChoiceType distinctions are retained and generic Write-in/Yes/No choices are not people.",
         "Every office uses its exact city/district/ward/trustee area or special-district division electorate; none is broadened to Kern County. Greenfield B/D/E retain lettered areas. Official NCES IDs0616050/0620730 resolve similarly named Kern Greenfield/Lakeside school bases. Exact held FifthDCA whole-Kern membership is refreshed from current official court geography and district-only voting rule; school/special district reader joins remain explicit.",
         "Candidate-only partial installation preserves all legislative contests, measures and unrelated CA facts. Original native public sample DTOs/cookies and replay helpers stay in scratch. No registered-voter name/DOB/identity lookup, user address, candidate marking, validation, casting, production or git operation. Public facility sample navigation only."
-      ]
+      ],
+      "censusCounty": "Kern County",
+      "countyFips": "06029"
     },
     {
       "state": "WI",
@@ -1634,7 +1758,9 @@
         "readerDistrictsMissing": 0,
         "measuresPrepared": 0,
         "absencesCreated": 0
-      }
+      },
+      "censusCounty": "Milwaukee County",
+      "countyFips": "55079"
     },
     {
       "state": "TX",
@@ -1648,7 +1774,9 @@
       "newContests": 59,
       "refreshedContests": 16,
       "sourceInputSha256": "0361cf349e6d27faf19f768681ba8573e71b4dc27a910adf7b4e203ba4c4ce72",
-      "coverage": "ALL_64_CURRENT_OFFICIAL_SAMPLES_COMPLETE_LOCAL_NAMED_BLOCKS"
+      "coverage": "ALL_64_CURRENT_OFFICIAL_SAMPLES_COMPLETE_LOCAL_NAMED_BLOCKS",
+      "censusCounty": "Hidalgo County",
+      "countyFips": "48215"
     },
     {
       "state": "TN",
@@ -1670,7 +1798,9 @@
         "All generic Write-in slots remain source/audit metadata and never become people. No separate current named declared-write-in or cancellation/elected-status certification was acquired; separate status files state that precise limitation. Null party labels preserve municipal fields that print no party; the exact RepublicanPartyNominee/DemocraticPartyNominee/IndependentCandidate school labels come from actual samples.",
         "The June5office inventory omits the later Millington AldermanPosition7 vacancy field; the complete current September sample explicitly includes it and controls this addition. Official source URLs/times/native-byte hashes, complete raw PDFs/text, safe exact quotations and all access failures are retained. Candidate data is ready for parent focused merge/projection checks and River reader verification; no production or git operation was performed.",
         "Parent fresh fetch pins CX-VOTES commit 92b249b5ed11d6a9d39a227ca5cbc0b569860005. Both TN inputs, including explainer-expansion, were copied by parent, native file hashes verified and fully compared alongside held TN and all available TN lane inputs. Both CX-VOTES inputs contain measure records only and no overlapping Shelby candidate office/person identity. All 27 offices/53 people are new; all held and CX-VOTES measure records/explanations remain unchanged."
-      ]
+      ],
+      "censusCounty": "Shelby County",
+      "countyFips": "47157"
     },
     {
       "state": "NJ",
@@ -1692,7 +1822,9 @@
         "measures": "Two exact numbered WestEssex districtwide bond questions, full common explanatory statement and conditionalQ2 dependency; one exact unnumbered FairfieldOpenSpace question and full statement. None present in compared held/remote/prepared/Bergen inputs. All existing questions/explanations unchanged.",
         "status": "Empty NoPetitionFiled field held. Generic PersonalChoice/NoNominationMade blanks excluded. Final named-write-in certification and cancelled-office census not acquired; no zero or countywide absence claim.",
         "sourceReview": "NativePDF raw hashes, full native text and geometric reading-order extraction independently fingerprinted. All49 unique local office blocks visually checked; zero unassigned candidate-font spans. Original question linewraps retained with an explicitly labelled readable dehyphenation transcription."
-      }
+      },
+      "censusCounty": "Essex County",
+      "countyFips": "34013"
     },
     {
       "state": "MA",
@@ -1720,7 +1852,9 @@
           "Reader must install/verify the two precise prosecutorial districts with62source-backedmemberships.",
           "Existingstatelegislativeandmeasuredataremainpreserved;noquestioninstallfromthiscandidatepacket."
         ]
-      }
+      },
+      "censusCounty": "Worcester County",
+      "countyFips": "25027"
     },
     {
       "state": "MI",
@@ -1734,7 +1868,9 @@
       "newContests": 56,
       "refreshedContests": 10,
       "sourceInputSha256": "ff7838e89c90ff1e543aee7031e321e80edbcb857be12bed976fbd4aa8e530d1",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Macomb County",
+      "countyFips": "26099"
     },
     {
       "state": "NJ",
@@ -1768,7 +1904,9 @@
           "NoPetitionFiled/NoNominationMade/WriteInspacesareexcludedfrompeople;twoentireBOEno-namedfieldsheld.",
           "Questionsremainancillary;noCX-VOTESmeasureorexplainerrowschanged."
         ]
-      }
+      },
+      "censusCounty": "Middlesex County",
+      "countyFips": "34023"
     },
     {
       "state": "TX",
@@ -1782,7 +1920,9 @@
       "newContests": 35,
       "refreshedContests": 19,
       "sourceInputSha256": "5ce86022b2f38b49af449809a47d01ab314bb51cebfb2538bcef496145050bd6",
-      "coverage": "COMPLETE_LOCAL_NAMED_BLOCKS_IN_ALL_11_CURRENT_COUNTY_POSTED_COMPOSITE_ENTITY_SAMPLES"
+      "coverage": "COMPLETE_LOCAL_NAMED_BLOCKS_IN_ALL_11_CURRENT_COUNTY_POSTED_COMPOSITE_ENTITY_SAMPLES",
+      "censusCounty": "El Paso County",
+      "countyFips": "48141"
     },
     {
       "state": "FL",
@@ -1824,7 +1964,9 @@
         "newMeasureFields": 0,
         "absencesCreated": 0,
         "sourceCaptures": 23
-      }
+      },
+      "censusCounty": "Lee County",
+      "countyFips": "12071"
     },
     {
       "state": "FL",
@@ -1845,7 +1987,9 @@
         "statuses": "Official county-linked public register49offices65rows accounts for every current qualified/runoff printed candidate plus one qualifiedWRI.40Elected4Defeated3Withdrawn rows remain ancillary; no invented unopposed/cancelled explanation or November candidate.",
         "measure": "Exact current school millage block retained only as source confirmation in held-question-confirmation.json. Newer CX-VOTES prepared the identical question/election/electorate, so incoming measure IDs stay empty to preserve latest held identity and explanation. If earlier local ID is already held, River preserves that existing identity when reconciling source/explainer evidence.",
         "sourceLimits": "LakeAshtonII website503 and reader422 retained truthfully; native state audit200 verifies exact district and2024expansion. Wrong Holly template describes SilverleafManatee and is rejected. Correct July2026Holly map retained. No current CDD machine polygons claimed."
-      }
+      },
+      "censusCounty": "Polk County",
+      "countyFips": "12105"
     },
     {
       "state": "WA",
@@ -1867,7 +2011,9 @@
         "County GIS PUD polygon excludes CamanoIsland; it is preserved only as partial county-portion diagnostic marked DO_NOT_INSTALL_AS_FULL_DISTRICT_BOUNDARY, never installed as full PUD geometry. Exact full-PUD geometry/reader applicability to Camano remains pending, while verified candidate facts and whole-Snohomish member link are data-ready.",
         "Candidate-only packet. Complete sample/pamphlet source retains17 local measure fields (5county charter,6city,3school,2fire,1hospital) and statewide/federal/legislative source text; optional measure additions do not delay verified local candidates. Held measures/legislative identities remain untouched.",
         "No separate current qualified-write-in certification was acquired. Filing source Active rows are not a separate qualification supplement; absence of named write-ins is not asserted. Blank Write-in lines identify no people. No cancellation, withdrawal or declared-elected status is inferred. All source bytes are native public election/official GIS documents, with image-only court order excerpt explicitly identified as visual transcription. No git or production operation."
-      ]
+      ],
+      "censusCounty": "Snohomish County",
+      "countyFips": "53061"
     },
     {
       "state": "MD",
@@ -1889,7 +2035,9 @@
         "All statewide/federal/legislative races, statewide at-large Appellate Court retention, BaltimoreCityrecords and existing statewide/county questions/explanations remain unchanged. In particular, all14heldBaltimoreCountyquestion IDs and the latest CX-VOTESquestion/explanation records are preserved; this packet installs no measure or explanation.",
         "Fresh parent-pinned CX-VOTESMDcommit563382d4ef9e3040934b795c2581d3e796131d31has two input files, both fully read with exact copied hashes verified. They contain questions and no new candidate identities. Held MD plus Montgomery and PrinceGeorgeslaneinputs were compared before new local IDs. No production or git operation was performed.",
         "All16exact subdistrict keys are currently unmatched in the reader registry:9council and7school. Source-backed candidate facts are ready for parent checks; River owns exact geometry/reader delivery. The full safe official precinct crosswalk and final council map metadata support that work. No whole-member geography expansion or reader visibility claim is made."
-      ]
+      ],
+      "censusCounty": "Baltimore County",
+      "countyFips": "24005"
     },
     {
       "state": "OH",
@@ -1903,7 +2051,9 @@
       "newContests": 0,
       "refreshedContests": 17,
       "sourceInputSha256": "c365ead7094aa551da6d23feeb9d448a8dc103ff632e1e13484d42219255bae4",
-      "coverage": "County-complete local named office inventory, all seventeen fields proved by complete current sample blocks. Three current precinct witnesses compared; not an all-style audit. Current certified roster and46day notice contain no additional municipal/school/special candidate offices."
+      "coverage": "County-complete local named office inventory, all seventeen fields proved by complete current sample blocks. Three current precinct witnesses compared; not an all-style audit. Current certified roster and46day notice contain no additional municipal/school/special candidate offices.",
+      "censusCounty": "Hamilton County",
+      "countyFips": "39061"
     },
     {
       "state": "CA",
@@ -1917,7 +2067,9 @@
       "newContests": 62,
       "refreshedContests": 0,
       "sourceInputSha256": "d22a639d37c86d0718648128691e22f660a2ab035522cc042fc358c0ff5ee50f",
-      "coverage": "COUNTY_COMPLETE_ORDINARY_LOCAL_NAMED_SAMPLE_FIELDS"
+      "coverage": "COUNTY_COMPLETE_ORDINARY_LOCAL_NAMED_SAMPLE_FIELDS",
+      "censusCounty": "Ventura County",
+      "countyFips": "06111"
     },
     {
       "state": "MA",
@@ -1931,7 +2083,9 @@
       "newContests": 2,
       "refreshedContests": 0,
       "sourceInputSha256": "fb60b7120a7c6f9d9ee13df6c482041d42ad75f64f0799ba00ae8eb5c00134c1",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Essex County",
+      "countyFips": "25009"
     },
     {
       "state": "CA",
@@ -1953,7 +2107,9 @@
         "Native official October21 CertifiedListofQualifiedWrite-InCandidates expressly says no one filed required paperwork and there are no qualified write-in candidates for November3 general election. Records list is empty by affirmative official certification, not inference from blank write-in lines or a0filers web counter. Single-candidate offices remain ordinary; no cancelled/declared-elected/withdrawal status invented.",
         "Current qualification names JoaquinTorres,ManoharRaju,LisaWynn differ from ballot-name proof JOAQU\u00cdNTORRES,MANORAJU,LISAPWYNNII. Exact heldIDs/canonicalqualification names retained; source-backed name variants and office/nomination identity evidence preserved separately. Lisa official linked redacted nomination page1 proves Lisa/P/WynnII for CCSFBoardofTrustees Nov3; pamphlet has LISAPALAGIWYNNII. Earlier BOS proof differs on MichaelNguyen,EllsworthJennison and PearciBastiany punctuation; all variants retained, actual sample spelling confirmation remains open.",
         "Candidate-only packet;10 held local measures and regionalRTM raw pamphlet source retained without optional measure additions. Ranked-choice offices identified by official pamphlet; one office is not extra rank candidates. Data/evidence only, helpers scratch, no git or production operation."
-      ]
+      ],
+      "censusCounty": "San Francisco County",
+      "countyFips": "06075"
     },
     {
       "state": "CA",
@@ -1989,7 +2145,9 @@
           "Any unpublished/replacement ballot styles and qualified-write-in updates after acquiredOct6list.",
           "Local questions remain ancillary; no79held measures or latest CX-VOTES question/explanation rows changed."
         ]
-      }
+      },
+      "censusCounty": "San Joaquin County",
+      "countyFips": "06077"
     },
     {
       "state": "OK",
@@ -2022,7 +2180,9 @@
           "Supplemental named write-in, cancellation and declared-elected inventory beyond acquired evidence.",
           "Local questions remain ancillary; no question or CX-VOTES explanation changed."
         ]
-      }
+      },
+      "censusCounty": "Oklahoma County",
+      "countyFips": "40109"
     },
     {
       "state": "OR",
@@ -2065,7 +2225,9 @@
         "sourceCaptures": 297,
         "newMeasures": 0,
         "absencesCreated": 0
-      }
+      },
+      "censusCounty": "Multnomah County",
+      "countyFips": "41051"
     },
     {
       "state": "KY",
@@ -2102,7 +2264,9 @@
           "Final post-August24 declared-write-in inventory and any later cancellation/withdrawal statements.",
           "Local questions remain ancillary; state question and CX-VOTES explanations preserved."
         ]
-      }
+      },
+      "censusCounty": "Jefferson County",
+      "countyFips": "21111"
     },
     {
       "state": "GA",
@@ -2116,7 +2280,9 @@
       "newContests": 8,
       "refreshedContests": 0,
       "sourceInputSha256": "ab666ff3d28424d5864cd8fd1bec64a20f9c7e36ca983d5053ec598ee7f6c3c5",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Cobb County",
+      "countyFips": "13067"
     },
     {
       "state": "MA",
@@ -2137,7 +2303,9 @@
         "Current public state samples forBoston/Chelsea/Revere Ward1Precinct1 corroborate county names/parties/date. Native Incapsula challenge means reader responses are preserved as reader bytes, not official originalHTML. State tool explicitly warns additional local offices may appear and omits NortheastMetro, so it cannot establish complete local field coverage. No voter name/address/dateofbirth submitted; only public municipality/ward/precinct identifiers.",
         "Revere current election page links native10page bilingual PDF stampedDRAFT. Its4local names corroborate Winthrop; draft status is preserved and never represented as finalized specimen. Separate old2025OnMyBallot download rejected for2026. Chelsea municipal native/reader challenge and Boston municipal populated specimen remain acquisition gaps; no entire county/municipal local completeness claim.",
         "Candidate-only packet. OriginalWinthrop3specimen pages and Revere10page draft retain statewide/local questions as evidence; held question/legislative/explanatory fields untouched. Separate named qualified-writein certification not acquired; no absence asserted, no cancellation/withdrawal/declared-elected status inferred from one-name blocks. No git or production operation."
-      ]
+      ],
+      "censusCounty": "Suffolk County",
+      "countyFips": "25025"
     },
     {
       "state": "TX",
@@ -2151,7 +2319,9 @@
       "newContests": 41,
       "refreshedContests": 11,
       "sourceInputSha256": "4f44b68b4beed8e40b613561fa97191b4036a0e00870660acadc9a86552f61ce",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Montgomery County",
+      "countyFips": "48339"
     },
     {
       "state": "GA",
@@ -2165,7 +2335,9 @@
       "newContests": 10,
       "refreshedContests": 0,
       "sourceInputSha256": "06807e3cd3b1e581f0bf2a371ab9f218a2a9f6db42b0e1198cbb08092fa5a582",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "DeKalb County",
+      "countyFips": "13089"
     },
     {
       "state": "UT",
@@ -2206,7 +2378,9 @@
           "Cross-county Draper sample discrepancy kept source-only; no correction to Salt Lake packet or full-city electorate inferred.",
           "No production, app, git, voter identity lookup or sign-in operations. River owns installation and reader checks."
         ]
-      }
+      },
+      "censusCounty": "Utah County",
+      "countyFips": "49049"
     },
     {
       "state": "CO",
@@ -2229,7 +2403,9 @@
         "MonumentAtLarge composite labelsFourYearTerm forbothseats; current official municipal page/guide explicitly highest-vote candidate4years and runner-up2years. Full actual sample block retained, variableterm rule source quoted, contesttermYearsnull rather than assigning a false common term. Candidate names/voteFor2 agree. Printed CountySurveyor saysThere are no candidates for this office; preserve separately as printed-empty-office facts, no fictitiousperson or qualification/cancellation inference.",
         "All33currentCX-VOTESCOreferenceinputs at79402c8d3 verified against exactSHA:200uniqueMEASUREcontests,0candidatecontests. IncomingcandidateIDs have nooverlap; existingMonument/GreenMountainFalls place identities reused and allheldquestions/explainers/legislative data left outside incoming. River must merge latest held/reference data.",
         "Separate current local qualified-write-in supplement not acquired after public county/state candidate routes. GenericWrite-in markers identify no people, absence notasserted. Singlecandidate/underfilled ordinary fields remain choices; no cancellation/withdrawal/declared-elected status invented. Data-only packet, exactgeography/readerjoins and delivery remainRiver work; no git/app/production writes."
-      ]
+      ],
+      "censusCounty": "El Paso County",
+      "countyFips": "08041"
     },
     {
       "state": "TX",
@@ -2242,7 +2418,7 @@
       "candidacies": 104,
       "newContests": 40,
       "refreshedContests": 12,
-      "sourceInputSha256": "672ca7713bc5a1c7644be21c50f0e0ca5b3bb6f9c1f073b8f04ecc75d69e074f",
+      "sourceInputSha256": "519025b239cd23eef5f9bd9ca6ea524ab4f756ad7e2ec9851566215c7c465288",
       "coverage": {
         "preparedContests": 52,
         "preparedPreprintedNames": 104,
@@ -2274,7 +2450,9 @@
         "sourceCaptures": 59,
         "newMeasures": 0,
         "absencesCreated": 0
-      }
+      },
+      "censusCounty": "Williamson County",
+      "countyFips": "48491"
     },
     {
       "state": "TN",
@@ -2288,7 +2466,9 @@
       "newContests": 3,
       "refreshedContests": 0,
       "sourceInputSha256": "3d42a1cf1dcf3ca28e4ef14d68284e849cb936182b7126dc76b5efd6908d9920",
-      "coverage": "See per-county manifest for exact source and reader scope."
+      "coverage": "See per-county manifest for exact source and reader scope.",
+      "censusCounty": "Davidson County",
+      "countyFips": "47037"
     }
   ],
   "sourceReviewCounties": [
@@ -2310,7 +2490,9 @@
         "newOrRefreshedMeasures": 0,
         "absencesCreated": 0
       },
-      "sourceScope": "No additional local candidate field appears in the complete current official48published split-style samples or the associated official office/candidate inventory. This is a source-scoped review result; no countywide reader absence or no-election record is created."
+      "sourceScope": "No additional local candidate field appears in the complete current official48published split-style samples or the associated official office/candidate inventory. This is a source-scoped review result; no countywide reader absence or no-election record is created.",
+      "censusCounty": "Philadelphia County",
+      "countyFips": "42101"
     },
     {
       "state": "PA",
@@ -2339,7 +2521,9 @@
         "newOrRefreshedMeasures": 0,
         "absencesCreated": 0
       },
-      "sourceScope": "The complete current official431sample/62municipality source set prints no additional NAMED local candidate field. A local Conshohocken Borough Government Study Commission office DOES exist and appears in seven samples, each with exactly seven blank Write-In slots and no printed candidate name. This is source-review evidence only; no reader absence, no-election assertion or empty publication input is created."
+      "sourceScope": "The complete current official431sample/62municipality source set prints no additional NAMED local candidate field. A local Conshohocken Borough Government Study Commission office DOES exist and appears in seven samples, each with exactly seven blank Write-In slots and no printed candidate name. This is source-review evidence only; no reader absence, no-election assertion or empty publication input is created.",
+      "censusCounty": "Montgomery County",
+      "countyFips": "42091"
     }
   ],
   "totals": {

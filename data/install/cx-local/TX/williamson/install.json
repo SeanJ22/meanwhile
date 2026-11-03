@@ -485,5 +485,6 @@
     "manualProjectionCandidate": "PASS",
     "sourceHashesAndQuotes": "PASS: 59 captured sources and 157 exact saved-source quotes",
     "productionWrites": "NONE"
-  }
+  },
+  "sourceObservationReconciliation": "source-observation-reconciliation.json"
 }

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-03T09:28:40.931Z",
+  "checkedAt": "2026-11-03T09:41:00.987Z",
   "basis": "Offline cumulative merge against checked-in River input, one state at a time; actual latest-state installation and live readers remain River responsibility.",
   "productionWrites": false,
   "states": [
@@ -559,13 +559,17 @@
       "state": "TN",
       "packets": [
         {
+          "manifest": "TN/davidson/install.json",
+          "inputSha256": "3d42a1cf1dcf3ca28e4ef14d68284e849cb936182b7126dc76b5efd6908d9920"
+        },
+        {
           "manifest": "TN/shelby/install.json",
           "inputSha256": "2c625bb9d0f5e0cb4fd12de329f39bad5ad20419d291478b3d8d3ed131fc2794"
         }
       ],
       "crossCountyReusedContestIds": 0,
-      "mergedContests": 156,
-      "mergedCandidacies": 319,
+      "mergedContests": 159,
+      "mergedCandidacies": 330,
       "genericBallotProblems": "PASS",
       "authorityAwareCumulativeMerge": "PASS",
       "manualProjectionCandidate": "PASS",
@@ -617,11 +621,15 @@
         {
           "manifest": "TX/travis/install.json",
           "inputSha256": "3c4aa4665587c521c985ead211df30de6f3349e12ad6582622beb394c45d6f33"
+        },
+        {
+          "manifest": "TX/williamson/install.json",
+          "inputSha256": "519025b239cd23eef5f9bd9ca6ea524ab4f756ad7e2ec9851566215c7c465288"
         }
       ],
-      "crossCountyReusedContestIds": 18,
-      "mergedContests": 2270,
-      "mergedCandidacies": 3053,
+      "crossCountyReusedContestIds": 38,
+      "mergedContests": 2290,
+      "mergedCandidacies": 3099,
       "genericBallotProblems": "PASS",
       "authorityAwareCumulativeMerge": "PASS",
       "manualProjectionCandidate": "PASS",

@@ -1,0 +1,25 @@
+{
+  "nativeSamples": "All781publicPDFlinksandtheemptychilddirectoryacquiredwithoutvoterlookup.776ordinaryand5federal-only.",
+  "regionalSuperintendentStyleCounts": {
+    "19 DuPage": 734,
+    "31 Kane": 42
+  },
+  "regionalOfficeStatuteOrigin": "https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+  "regionalOfficeRuleOrigin": "https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+  "legalSourceAccess": "Native origin attempts failed503TLS certificateverification atsessionproxy; exactofficialtextcapturedviareaderwithactualURL/time/hash. No false native200assertion.",
+  "forestCommissionStyleCounts": {
+    "1": 121,
+    "2": 150,
+    "5": 119
+  },
+  "forestDistrictsAreNotCountyBoardDistricts": true,
+  "countyBoardTerms": "Two separate seats for each district1–6: full4yearandfull2yearterms;nevercollapse.",
+  "nonPersonPrintedPartyPlaceholder": {
+    "office": "Circuit18Subcircuit5Fullertonvacancy",
+    "printedText": "NO CANDIDATE/CANDIDATO Republican",
+    "representation": "OnlyTERRACOSTAHOWARDisaperson; blankRepublicanlineisnotacandidateoracancellationevent."
+  },
+  "sameNameDifferentOffices": "MARGARET PEGGY OCONNELL is separately printed for ThirdDistrictAppellateMcDadevacancy andCircuit18retention; bothdistinctofficeblocksretained.",
+  "declaredWriteInListScope": "September9countylistcontainsonlystateoffices. No localfilingpersoninvented; noassertionaboutunpublishedlaterfilings.",
+  "existingLegislativeData": "All held IL state/federal/legislative rows remain unchanged; no measures imported."
+}

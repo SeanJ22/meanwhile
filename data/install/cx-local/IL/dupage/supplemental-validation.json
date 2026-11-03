@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-03T06:32:53.991302+00:00",
+  "allSourcePrimaryAndSupplementalQuotes": "PASS",
+  "sourceQuotes": 122,
+  "all781StyleChoiceAndPartyParity": "PASS",
+  "ordinaryStyles": 776,
+  "federalOnlyStyles": 5,
+  "all49PartisanPrintedChoicesMatchCurrentOfficialCandidateList": "PASS",
+  "all4RetentionsMatchStateCertificate": "PASS",
+  "separateCountyBoard2And4YearTerms": "PASS",
+  "regionalOfficeStyleCounts": {
+    "ROE19DuPage": 734,
+    "ROE31Kane": 42
+  },
+  "noCandidatePartyPlaceholderExcluded": true,
+  "forestAndCountyBoardElectoratesDistinct": true,
+  "wholeCountyAppellate3Memberships": 7,
+  "productionWrites": false
+}

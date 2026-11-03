@@ -1,0 +1,1837 @@
+{
+  "ballots": {
+    "IL:il-2026-11-03": {
+      "election": {
+        "id": "il-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IL"
+      },
+      "contests": [
+        {
+          "id": "il-cx-local-2026-dupage-county-board-chairperson",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "DuPage County — County Board Chairperson",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR CHAIRPERSON OF THE COUNTY BOARD\nPARA PRESIDENTE DE LA JUNTA DEL CONDADO\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nDEB CONROY Democratic\nDemocratic\nGARY GRASSO Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-sheriff",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "DuPage County — Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR SHERIFF\nPARA COMISARIO\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nPETER JOSEPH COOLIDGE Democratic\nDemocratic\nSEAN T. NOONAN Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-clerk",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "DuPage County — County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR COUNTY CLERK\nPARA SECRETARIO DEL CONDADO\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nPAULA DEACON GARCIA Democratic\nDemocratic\nPATRICIA KLADIS-SCHIAPPA Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-treasurer",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "DuPage County — County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR COUNTY TREASURER\nPARA TESORERO DEL CONDADO\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nYEENA YOO Democratic\nDemocratic\nGWEN HENRY Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-1-4-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:1",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 1 — Full 4 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 1\nFULL 4 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 1\nPERIODO COMPLETO DE 4 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nMICHAEL L. CHILDRESS Democratic\nDemocratic\nERIC POPLONSKI Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-1-2-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:1",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 1 — Full 2 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 1\nFULL 2 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 1\nPERIODO COMPLETO DE 2 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nMELISSA VILLANUEVA Democratic\nDemocratic\nPAULA PEZZA Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-president",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:forest_preserve_district_of_dupage_county",
+          "divisionVintage": "2026",
+          "title": "Forest Preserve District of DuPage County — President",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR PRESIDENT OF THE FOREST PRESERVE\nPARA PRESIDENTE DE LA RESERVA FORESTAL\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nDANIEL HEBREARD Democratic\nDemocratic\nCARL SCHULTZ Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-1",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:forest_preserve_district_of_dupage_county/board_district:1",
+          "divisionVintage": "2026",
+          "title": "Forest Preserve District of DuPage County — Commissioner, District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR COMMISSIONER OF THE FOREST PRESERVE\nDISTRICT 1\nPARA COMISIONADO DE LA RESERVA FORESTAL\nDEL DISTRITO  1\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nSUSAN M. SMENTEK Democratic\nDemocratic\nCAROLYN UBRIACO Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe19",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:19",
+          "divisionVintage": "2026",
+          "title": "DuPage Regional Superintendent of Schools",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The electorate follows the educational service region, with unit school district transfers required by state law.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR REGIONAL SUPERINTENDENT OF SCHOOLS\nDuPAGE COUNTY\nPARA SUPERINTENDENTE REGIONAL DE ESCUELAS\nCONDADO DE DuPAGE\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nREBECCA GAMBOA Democratic\nDemocratic\nAMBER M. QUIRK Republican\nRepublican"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+              "sourceOrg": "Illinois General Assembly — captured official statute",
+              "collectedAt": "2026-11-03T06:25:14.441679+00:00",
+              "verifiedAt": "2026-11-03T06:25:14.441679+00:00",
+              "quote": "Whenever a unit school district is located\nin\nmore than one educational service region, a qualified\n elector residing in\nthat unit school district but outside of the educational service region\nadministered by the regional superintendent of schools having supervision and\ncontrol over that unit school district shall be eligible to vote in any election held to\nelect the regional superintendent of schools of the educational service\nregion that is administered by the regional superintendent of schools who has\nsupervision and control over that unit school\ndistrict, but the elector shall not also be\neligible to vote in the\nelection held to elect the regional superintendent of schools of the\neducational service region in which the elector resides."
+            },
+            {
+              "sourceUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+              "sourceOrg": "Illinois General Assembly — captured official administrative rule",
+              "collectedAt": "2026-11-03T06:25:41.853670+00:00",
+              "verifiedAt": "2026-11-03T06:25:41.853670+00:00",
+              "quote": "11) Region 19: DuPage County"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-appellate-3-mcdade",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Judge of the Appellate Court — Third Judicial District — McDade Vacancy",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR JUDGE OF THE APPELLATE COURT\nTHIRD JUDICIAL DISTRICT\n(To fill the vacancy of the Honorable Mary W. McDade)\nPARA JUEZ DE LA CORTE DE APELACIONES\nTERCER DISTRITO JUDICIAL\n(Para llenar la vacancia del Honorable Mary W. McDade)\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nMARGARET \"PEGGY\" O'CONNELL Democratic\nDemocratic\nJASON A. HELLAND Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-ann-celine-walsh",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — ANN CELINE WALSH — Eighteenth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Vote Yes or No on whether this judge should be retained in office.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "SHALL EACH OF THE PERSONS LISTED BE \nRETAINED IN OFFICE AS JUDGE OF THE CIRCUIT \nCOURT, EIGHTEENTH JUDICIAL CIRCUIT\n¿CADA UNA DE LAS PERSONAS INDICADAS DEBE SER \nRETENIDA EN EL CARGO DE JUEZ DEL TRIBUNAL DE \nCIRCUITO DECIMO OCTAVO CIRCUITO JUDICIAL?\nRetention - Judicial Court\nAnn Celine Walsh\nRetention - Judicial Court\nAnn Celine Walsh\nANN CELINE WALSH\nYES SÍ\nNO NO\nRetention - Judicial Court\nMonique O'Toole\nRetention - Judicial Court\nMonique O'Toole\nMONIQUE O'TOOLE\nYES SÍ\nNO NO\nRetention - Judicial Court\nRichard D. Felice\nRetention - Judicial Court\nRichard D. Felice\nRICHARD D. FELICE\nYES SÍ\nNO NO\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nMARGARET \"PEGGY\" O'CONNELL\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-monique-o-toole",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — MONIQUE O'TOOLE — Eighteenth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Vote Yes or No on whether this judge should be retained in office.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "SHALL EACH OF THE PERSONS LISTED BE \nRETAINED IN OFFICE AS JUDGE OF THE CIRCUIT \nCOURT, EIGHTEENTH JUDICIAL CIRCUIT\n¿CADA UNA DE LAS PERSONAS INDICADAS DEBE SER \nRETENIDA EN EL CARGO DE JUEZ DEL TRIBUNAL DE \nCIRCUITO DECIMO OCTAVO CIRCUITO JUDICIAL?\nRetention - Judicial Court\nAnn Celine Walsh\nRetention - Judicial Court\nAnn Celine Walsh\nANN CELINE WALSH\nYES SÍ\nNO NO\nRetention - Judicial Court\nMonique O'Toole\nRetention - Judicial Court\nMonique O'Toole\nMONIQUE O'TOOLE\nYES SÍ\nNO NO\nRetention - Judicial Court\nRichard D. Felice\nRetention - Judicial Court\nRichard D. Felice\nRICHARD D. FELICE\nYES SÍ\nNO NO\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nMARGARET \"PEGGY\" O'CONNELL\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-richard-d-felice",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — RICHARD D. FELICE — Eighteenth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Vote Yes or No on whether this judge should be retained in office.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "SHALL EACH OF THE PERSONS LISTED BE \nRETAINED IN OFFICE AS JUDGE OF THE CIRCUIT \nCOURT, EIGHTEENTH JUDICIAL CIRCUIT\n¿CADA UNA DE LAS PERSONAS INDICADAS DEBE SER \nRETENIDA EN EL CARGO DE JUEZ DEL TRIBUNAL DE \nCIRCUITO DECIMO OCTAVO CIRCUITO JUDICIAL?\nRetention - Judicial Court\nAnn Celine Walsh\nRetention - Judicial Court\nAnn Celine Walsh\nANN CELINE WALSH\nYES SÍ\nNO NO\nRetention - Judicial Court\nMonique O'Toole\nRetention - Judicial Court\nMonique O'Toole\nMONIQUE O'TOOLE\nYES SÍ\nNO NO\nRetention - Judicial Court\nRichard D. Felice\nRetention - Judicial Court\nRichard D. Felice\nRICHARD D. FELICE\nYES SÍ\nNO NO\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nMARGARET \"PEGGY\" O'CONNELL\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-margaret-peggy-o-connell",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — MARGARET \"PEGGY\" O'CONNELL — Eighteenth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Vote Yes or No on whether this judge should be retained in office.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "SHALL EACH OF THE PERSONS LISTED BE \nRETAINED IN OFFICE AS JUDGE OF THE CIRCUIT \nCOURT, EIGHTEENTH JUDICIAL CIRCUIT\n¿CADA UNA DE LAS PERSONAS INDICADAS DEBE SER \nRETENIDA EN EL CARGO DE JUEZ DEL TRIBUNAL DE \nCIRCUITO DECIMO OCTAVO CIRCUITO JUDICIAL?\nRetention - Judicial Court\nAnn Celine Walsh\nRetention - Judicial Court\nAnn Celine Walsh\nANN CELINE WALSH\nYES SÍ\nNO NO\nRetention - Judicial Court\nMonique O'Toole\nRetention - Judicial Court\nMonique O'Toole\nMONIQUE O'TOOLE\nYES SÍ\nNO NO\nRetention - Judicial Court\nRichard D. Felice\nRetention - Judicial Court\nRichard D. Felice\nRICHARD D. FELICE\nYES SÍ\nNO NO\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nMARGARET \"PEGGY\" O'CONNELL\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-sub4-wilson",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/judicial_subcircuit:4",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court — Eighteenth Judicial Circuit — Subcircuit 4 — Wilson Vacancy",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "FOR JUDGE OF THE CIRCUIT COURT\nEIGHTEENTH JUDICIAL CIRCUIT - 4TH SUBCIRCUIT\n(To fill the vacancy of the Honorable Karen M. Wilson)\nPARA JUEZ DEL CIRCUITO TRIBUNAL\nDECIMO OCTAVO CIRCUITO JUDICIAL - SUBCIRCUITO 4\n(Para llenar la vacancia del Honorable Karen M. Wilson)\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nCHRISTINA KYE Democratic\nDemocratic\nMICHAEL W. FLEMING Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-2-4-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:2",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 2 — Full 4 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 2\nFULL 4 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 2\nPERIODO COMPLETO DE 4 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nCHRISTOPHER ESPINOZA Democratic\nDemocratic\nROBERT \"RUSTY\" STEVENS Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-2-2-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:2",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 2 — Full 2 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 2\nFULL 2 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 2\nPERIODO COMPLETO DE 2 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nMARY RADA WALTERS Democratic\nDemocratic\nTHERESA McCLEAR Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-2",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:forest_preserve_district_of_dupage_county/board_district:2",
+          "divisionVintage": "2026",
+          "title": "Forest Preserve District of DuPage County — Commissioner, District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "FOR COMMISSIONER OF THE FOREST PRESERVE\nDISTRICT 2\nPARA COMISIONADO DE LA RESERVA FORESTAL\nDEL DISTRITO  2\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nTINA TYSON-DUNNE Democratic\nDemocratic\nWILLIAM \"BILL\" WEHRLE Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-6-4-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:6",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 6 — Full 4 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 6\nFULL 4 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 6\nPERIODO COMPLETO DE 4 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nJESSE GUTIERREZ Democratic\nDemocratic\nJAMES F. \"JIM\" ZAY Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-6-2-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:6",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 6 — Full 2 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 6\nFULL 2 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 6\nPERIODO COMPLETO DE 2 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nMELISSA MARTINEZ Democratic\nDemocratic\nKATHLEEN ZANDER Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-4-4-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:4",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 4 — Full 4 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:32.757976+00:00",
+            "verifiedAt": "2026-11-03T06:20:32.757976+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 4\nFULL 4 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 4\nPERIODO COMPLETO DE 4 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nPAULA McGOWEN Democratic\nDemocratic\nGRANT ECKHOFF Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-4-2-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:4",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 4 — Full 2 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:32.757976+00:00",
+            "verifiedAt": "2026-11-03T06:20:32.757976+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 4\nFULL 2 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 4\nPERIODO COMPLETO DE 2 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nMARY FITZGERALD OZOG Democratic\nDemocratic\nISOBEL MICHAUD Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-3-4-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:3",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 3 — Full 4 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:35.066947+00:00",
+            "verifiedAt": "2026-11-03T06:20:35.066947+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 3\nFULL 4 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 3\nPERIODO COMPLETO DE 4 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nMARCUS KING Democratic\nDemocratic\nKARI GALASSI Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-3-2-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:3",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 3 — Full 2 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:35.066947+00:00",
+            "verifiedAt": "2026-11-03T06:20:35.066947+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 3\nFULL 2 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 3\nPERIODO COMPLETO DE 2 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nERICKA POLANCO-WEBB Democratic\nDemocratic\nBRIAN J. KRAJEWSKI Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-5-4-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:5",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 5 — Full 4 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 5\nFULL 4 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 5\nPERIODO COMPLETO DE 4 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nIAN HOLZHAUER Democratic\nDemocratic\nCHRIS JACKS Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-5-2-year",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/board_district:5",
+          "divisionVintage": "2026",
+          "title": "DuPage County Board — District 5 — Full 2 Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "FOR MEMBER OF THE COUNTY BOARD DISTRICT 5\nFULL 2 YEAR TERM\nPARA MIEMBROS DE LA JUNTA DEL CONDADO DEL DISTRITO 5\nPERIODO COMPLETO DE 2 AÑOS\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nDAWN DeSART Democratic\nDemocratic\nDANIEL ALEJANDRO LOMELI Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-5",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:forest_preserve_district_of_dupage_county/board_district:5",
+          "divisionVintage": "2026",
+          "title": "Forest Preserve District of DuPage County — Commissioner, District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "FOR COMMISSIONER OF THE FOREST PRESERVE\nDISTRICT 5\nPARA COMISIONADO DE LA RESERVA FORESTAL\nDEL DISTRITO  5\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nBARBARA A. O'MEARA Democratic\nDemocratic\nMICHAEL FARMER Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-sub5-fullerton",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:dupage/judicial_subcircuit:5",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court — Eighteenth Judicial Circuit — Subcircuit 5 — Fullerton Vacancy",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "FOR JUDGE OF THE CIRCUIT COURT\nEIGHTEENTH JUDICIAL CIRCUIT - 5TH SUBCIRCUIT\n(To fill the vacancy of the Honorable Paul M. Fullerton)\nPARA JUEZ DEL CIRCUITO TRIBUNAL\nDECIMO OCTAVO CIRCUITO JUDICIAL - SUBCIRCUITO 5\n(Para llenar la vacancia del Honorable Paul M. Fullerton)\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nTERRA COSTA HOWARD Democratic\nDemocratic\nNO CANDIDATE/CANDIDATO Republican\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe31",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:31",
+          "divisionVintage": "2026",
+          "title": "Kane Regional Superintendent of Schools",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The electorate follows the educational service region, with unit school district transfers required by state law.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "FOR REGIONAL SUPERINTENDENT OF SCHOOLS\nKANE COUNTY\nPARA SUPERINTENDENTE REGIONAL DE ESCUELAS\nCONDADO DE KANE\n(Vote for ONE)/(Vote por UNO)\n(Vote for ONE)/(Vote por UNO)\nJERRY COOK Democratic\nDemocratic\nJOHN K. JONAK Republican\nRepublican"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+              "sourceOrg": "Illinois General Assembly — captured official statute",
+              "collectedAt": "2026-11-03T06:25:14.441679+00:00",
+              "verifiedAt": "2026-11-03T06:25:14.441679+00:00",
+              "quote": "Whenever a unit school district is located\nin\nmore than one educational service region, a qualified\n elector residing in\nthat unit school district but outside of the educational service region\nadministered by the regional superintendent of schools having supervision and\ncontrol over that unit school district shall be eligible to vote in any election held to\nelect the regional superintendent of schools of the educational service\nregion that is administered by the regional superintendent of schools who has\nsupervision and control over that unit school\ndistrict, but the elector shall not also be\neligible to vote in the\nelection held to elect the regional superintendent of schools of the\neducational service region in which the elector resides."
+            },
+            {
+              "sourceUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+              "sourceOrg": "Illinois General Assembly — captured official administrative rule",
+              "collectedAt": "2026-11-03T06:25:41.853670+00:00",
+              "verifiedAt": "2026-11-03T06:25:41.853670+00:00",
+              "quote": "18) Region 31: Kane County"
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "il-cx-local-2026-dupage-county-board-chairperson:deb-conroy",
+          "contestId": "il-cx-local-2026-dupage-county-board-chairperson",
+          "givenName": "",
+          "familyName": "DEB CONROY",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "DEB CONROY Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-chairperson:gary-grasso",
+          "contestId": "il-cx-local-2026-dupage-county-board-chairperson",
+          "givenName": "",
+          "familyName": "GARY GRASSO",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "GARY GRASSO Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-sheriff:peter-joseph-coolidge",
+          "contestId": "il-cx-local-2026-dupage-sheriff",
+          "givenName": "",
+          "familyName": "PETER JOSEPH COOLIDGE",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "PETER JOSEPH COOLIDGE Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-sheriff:sean-t-noonan",
+          "contestId": "il-cx-local-2026-dupage-sheriff",
+          "givenName": "",
+          "familyName": "SEAN T. NOONAN",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "SEAN T. NOONAN Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-clerk:paula-deacon-garcia",
+          "contestId": "il-cx-local-2026-dupage-county-clerk",
+          "givenName": "",
+          "familyName": "PAULA DEACON GARCIA",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "PAULA DEACON GARCIA Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-clerk:patricia-kladis-schiappa",
+          "contestId": "il-cx-local-2026-dupage-county-clerk",
+          "givenName": "",
+          "familyName": "PATRICIA KLADIS-SCHIAPPA",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "PATRICIA KLADIS-SCHIAPPA Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-treasurer:yeena-yoo",
+          "contestId": "il-cx-local-2026-dupage-county-treasurer",
+          "givenName": "",
+          "familyName": "YEENA YOO",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "YEENA YOO Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-treasurer:gwen-henry",
+          "contestId": "il-cx-local-2026-dupage-county-treasurer",
+          "givenName": "",
+          "familyName": "GWEN HENRY",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "GWEN HENRY Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-1-4-year:michael-l-childress",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-1-4-year",
+          "givenName": "",
+          "familyName": "MICHAEL L. CHILDRESS",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "MICHAEL L. CHILDRESS Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-1-4-year:eric-poplonski",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-1-4-year",
+          "givenName": "",
+          "familyName": "ERIC POPLONSKI",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "ERIC POPLONSKI Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-1-2-year:melissa-villanueva",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-1-2-year",
+          "givenName": "",
+          "familyName": "MELISSA VILLANUEVA",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "MELISSA VILLANUEVA Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-1-2-year:paula-pezza",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-1-2-year",
+          "givenName": "",
+          "familyName": "PAULA PEZZA",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "PAULA PEZZA Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-president:daniel-hebreard",
+          "contestId": "il-cx-local-2026-dupage-forest-president",
+          "givenName": "",
+          "familyName": "DANIEL HEBREARD",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "DANIEL HEBREARD Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-president:carl-schultz",
+          "contestId": "il-cx-local-2026-dupage-forest-president",
+          "givenName": "",
+          "familyName": "CARL SCHULTZ",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "CARL SCHULTZ Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-1:susan-m-smentek",
+          "contestId": "il-cx-local-2026-dupage-forest-commissioner-1",
+          "givenName": "",
+          "familyName": "SUSAN M. SMENTEK",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "SUSAN M. SMENTEK Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-1:carolyn-ubriaco",
+          "contestId": "il-cx-local-2026-dupage-forest-commissioner-1",
+          "givenName": "",
+          "familyName": "CAROLYN UBRIACO",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "CAROLYN UBRIACO Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe19:rebecca-gamboa",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe19",
+          "givenName": "",
+          "familyName": "REBECCA GAMBOA",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "REBECCA GAMBOA Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe19:amber-m-quirk",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe19",
+          "givenName": "",
+          "familyName": "AMBER M. QUIRK",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "AMBER M. QUIRK Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-appellate-3-mcdade:margaret-peggy-o-connell",
+          "contestId": "il-cx-local-2026-appellate-3-mcdade",
+          "givenName": "",
+          "familyName": "MARGARET \"PEGGY\" O'CONNELL",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "MARGARET \"PEGGY\" O'CONNELL Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-appellate-3-mcdade:jason-a-helland",
+          "contestId": "il-cx-local-2026-appellate-3-mcdade",
+          "givenName": "",
+          "familyName": "JASON A. HELLAND",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "JASON A. HELLAND Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-ann-celine-walsh:ann-celine-walsh",
+          "contestId": "il-cx-local-2026-dupage-circuit18-retention-ann-celine-walsh",
+          "givenName": "",
+          "familyName": "ANN CELINE WALSH",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "Retention - Judicial Court\nAnn Celine Walsh\nRetention - Judicial Court\nAnn Celine Walsh\nANN CELINE WALSH\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-monique-o-toole:monique-o-toole",
+          "contestId": "il-cx-local-2026-dupage-circuit18-retention-monique-o-toole",
+          "givenName": "",
+          "familyName": "MONIQUE O'TOOLE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "Retention - Judicial Court\nMonique O'Toole\nRetention - Judicial Court\nMonique O'Toole\nMONIQUE O'TOOLE\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-richard-d-felice:richard-d-felice",
+          "contestId": "il-cx-local-2026-dupage-circuit18-retention-richard-d-felice",
+          "givenName": "",
+          "familyName": "RICHARD D. FELICE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "Retention - Judicial Court\nRichard D. Felice\nRetention - Judicial Court\nRichard D. Felice\nRICHARD D. FELICE\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-retention-margaret-peggy-o-connell:margaret-peggy-o-connell",
+          "contestId": "il-cx-local-2026-dupage-circuit18-retention-margaret-peggy-o-connell",
+          "givenName": "",
+          "familyName": "MARGARET \"PEGGY\" O'CONNELL",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "Retention - Judicial Court\nMargaret \"Peggy\" O'Connell\nRetention - Judicial Court\nMargaret \"Peggy\" O'Connell\nMARGARET \"PEGGY\" O'CONNELL\nYES SÍ\nNO NO"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-sub4-wilson:christina-kye",
+          "contestId": "il-cx-local-2026-dupage-circuit18-sub4-wilson",
+          "givenName": "",
+          "familyName": "CHRISTINA KYE",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "CHRISTINA KYE Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-sub4-wilson:michael-w-fleming",
+          "contestId": "il-cx-local-2026-dupage-circuit18-sub4-wilson",
+          "givenName": "",
+          "familyName": "MICHAEL W. FLEMING",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:29.653194+00:00",
+            "verifiedAt": "2026-11-03T06:20:29.653194+00:00",
+            "quote": "MICHAEL W. FLEMING Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-2-4-year:christopher-espinoza",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-2-4-year",
+          "givenName": "",
+          "familyName": "CHRISTOPHER ESPINOZA",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "CHRISTOPHER ESPINOZA Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-2-4-year:robert-rusty-stevens",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-2-4-year",
+          "givenName": "",
+          "familyName": "ROBERT \"RUSTY\" STEVENS",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "ROBERT \"RUSTY\" STEVENS Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-2-2-year:mary-rada-walters",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-2-2-year",
+          "givenName": "",
+          "familyName": "MARY RADA WALTERS",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "MARY RADA WALTERS Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-2-2-year:theresa-mcclear",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-2-2-year",
+          "givenName": "",
+          "familyName": "THERESA McCLEAR",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "THERESA McCLEAR Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-2:tina-tyson-dunne",
+          "contestId": "il-cx-local-2026-dupage-forest-commissioner-2",
+          "givenName": "",
+          "familyName": "TINA TYSON-DUNNE",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "TINA TYSON-DUNNE Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-2:william-bill-wehrle",
+          "contestId": "il-cx-local-2026-dupage-forest-commissioner-2",
+          "givenName": "",
+          "familyName": "WILLIAM \"BILL\" WEHRLE",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "WILLIAM \"BILL\" WEHRLE Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-6-4-year:jesse-gutierrez",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-6-4-year",
+          "givenName": "",
+          "familyName": "JESSE GUTIERREZ",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "JESSE GUTIERREZ Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-6-4-year:james-f-jim-zay",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-6-4-year",
+          "givenName": "",
+          "familyName": "JAMES F. \"JIM\" ZAY",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "JAMES F. \"JIM\" ZAY Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-6-2-year:melissa-martinez",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-6-2-year",
+          "givenName": "",
+          "familyName": "MELISSA MARTINEZ",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "MELISSA MARTINEZ Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-6-2-year:kathleen-zander",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-6-2-year",
+          "givenName": "",
+          "familyName": "KATHLEEN ZANDER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "KATHLEEN ZANDER Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-4-4-year:paula-mcgowen",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-4-4-year",
+          "givenName": "",
+          "familyName": "PAULA McGOWEN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:32.757976+00:00",
+            "verifiedAt": "2026-11-03T06:20:32.757976+00:00",
+            "quote": "PAULA McGOWEN Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-4-4-year:grant-eckhoff",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-4-4-year",
+          "givenName": "",
+          "familyName": "GRANT ECKHOFF",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:32.757976+00:00",
+            "verifiedAt": "2026-11-03T06:20:32.757976+00:00",
+            "quote": "GRANT ECKHOFF Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-4-2-year:mary-fitzgerald-ozog",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-4-2-year",
+          "givenName": "",
+          "familyName": "MARY FITZGERALD OZOG",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:32.757976+00:00",
+            "verifiedAt": "2026-11-03T06:20:32.757976+00:00",
+            "quote": "MARY FITZGERALD OZOG Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-4-2-year:isobel-michaud",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-4-2-year",
+          "givenName": "",
+          "familyName": "ISOBEL MICHAUD",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:32.757976+00:00",
+            "verifiedAt": "2026-11-03T06:20:32.757976+00:00",
+            "quote": "ISOBEL MICHAUD Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-3-4-year:marcus-king",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-3-4-year",
+          "givenName": "",
+          "familyName": "MARCUS KING",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:35.066947+00:00",
+            "verifiedAt": "2026-11-03T06:20:35.066947+00:00",
+            "quote": "MARCUS KING Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-3-4-year:kari-galassi",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-3-4-year",
+          "givenName": "",
+          "familyName": "KARI GALASSI",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:35.066947+00:00",
+            "verifiedAt": "2026-11-03T06:20:35.066947+00:00",
+            "quote": "KARI GALASSI Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-3-2-year:ericka-polanco-webb",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-3-2-year",
+          "givenName": "",
+          "familyName": "ERICKA POLANCO-WEBB",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:35.066947+00:00",
+            "verifiedAt": "2026-11-03T06:20:35.066947+00:00",
+            "quote": "ERICKA POLANCO-WEBB Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-3-2-year:brian-j-krajewski",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-3-2-year",
+          "givenName": "",
+          "familyName": "BRIAN J. KRAJEWSKI",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:35.066947+00:00",
+            "verifiedAt": "2026-11-03T06:20:35.066947+00:00",
+            "quote": "BRIAN J. KRAJEWSKI Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-5-4-year:ian-holzhauer",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-5-4-year",
+          "givenName": "",
+          "familyName": "IAN HOLZHAUER",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "IAN HOLZHAUER Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-5-4-year:chris-jacks",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-5-4-year",
+          "givenName": "",
+          "familyName": "CHRIS JACKS",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "CHRIS JACKS Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-5-2-year:dawn-desart",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-5-2-year",
+          "givenName": "",
+          "familyName": "DAWN DeSART",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "DAWN DeSART Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-county-board-district-5-2-year:daniel-alejandro-lomeli",
+          "contestId": "il-cx-local-2026-dupage-county-board-district-5-2-year",
+          "givenName": "",
+          "familyName": "DANIEL ALEJANDRO LOMELI",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "DANIEL ALEJANDRO LOMELI Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-5:barbara-a-o-meara",
+          "contestId": "il-cx-local-2026-dupage-forest-commissioner-5",
+          "givenName": "",
+          "familyName": "BARBARA A. O'MEARA",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "BARBARA A. O'MEARA Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-forest-commissioner-5:michael-farmer",
+          "contestId": "il-cx-local-2026-dupage-forest-commissioner-5",
+          "givenName": "",
+          "familyName": "MICHAEL FARMER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.188941+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.188941+00:00",
+            "quote": "MICHAEL FARMER Republican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-dupage-circuit18-sub5-fullerton:terra-costa-howard",
+          "contestId": "il-cx-local-2026-dupage-circuit18-sub5-fullerton",
+          "givenName": "",
+          "familyName": "TERRA COSTA HOWARD",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:41.157030+00:00",
+            "verifiedAt": "2026-11-03T06:20:41.157030+00:00",
+            "quote": "TERRA COSTA HOWARD Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe31:jerry-cook",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe31",
+          "givenName": "",
+          "familyName": "JERRY COOK",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "JERRY COOK Democratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe31:john-k-jonak",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe31",
+          "givenName": "",
+          "familyName": "JOHN K. JONAK",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+            "sourceOrg": "DuPage County Clerk Election Division",
+            "collectedAt": "2026-11-03T06:20:51.455989+00:00",
+            "verifiedAt": "2026-11-03T06:20:51.455989+00:00",
+            "quote": "JOHN K. JONAK Republican"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "il-cx-local-third-judicial-district-whole-will",
+          "memberOcdId": "ocd-division/country:us/state:il/county:will",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        },
+        {
+          "id": "il-cx-local-third-judicial-district-whole-bureau",
+          "memberOcdId": "ocd-division/country:us/state:il/county:bureau",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        },
+        {
+          "id": "il-cx-local-third-judicial-district-whole-grundy",
+          "memberOcdId": "ocd-division/country:us/state:il/county:grundy",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        },
+        {
+          "id": "il-cx-local-third-judicial-district-whole-lasalle",
+          "memberOcdId": "ocd-division/country:us/state:il/county:lasalle",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        },
+        {
+          "id": "il-cx-local-third-judicial-district-whole-dupage",
+          "memberOcdId": "ocd-division/country:us/state:il/county:dupage",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        },
+        {
+          "id": "il-cx-local-third-judicial-district-whole-iroquois",
+          "memberOcdId": "ocd-division/country:us/state:il/county:iroquois",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        },
+        {
+          "id": "il-cx-local-third-judicial-district-whole-kankakee",
+          "memberOcdId": "ocd-division/country:us/state:il/county:kankakee",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:28:09.933659+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Addison%20040-0198-NP.pdf",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:20:29.653194+00:00",
+        "rawHash": "4d8b556e82da293fafd386c7b8b3e43086b1c48f451c53ba90c1143684c13f24",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual current November3,2026 SAMPLE BALLOT. Portable representative from the complete781PDFpublicarchive acquisition. All776ordinary styles have identical complete candidate/party sets for every occurrence of each imported office;5federal-onlysamples correctly have no local fields. Exact office blocks include distinct2year/4yearterms, forestpreserveboarddistricts and court subcircuits."
+      },
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20003-0538-NP.pdf",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:20:41.157030+00:00",
+        "rawHash": "a10651f7173f7fca03a3fe7462b2cc10070e9657f7936ae026b1c62e8205f3d5",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual current November3,2026 SAMPLE BALLOT. Portable representative from the complete781PDFpublicarchive acquisition. All776ordinary styles have identical complete candidate/party sets for every occurrence of each imported office;5federal-onlysamples correctly have no local fields. Exact office blocks include distinct2year/4yearterms, forestpreserveboarddistricts and court subcircuits."
+      },
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Lisle%20001-0536-NP.pdf",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:20:41.188941+00:00",
+        "rawHash": "ffb34a62d18d960ffac9232b20dbaca76f3b5d4cc53e4d28590966177ff0e49f",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual current November3,2026 SAMPLE BALLOT. Portable representative from the complete781PDFpublicarchive acquisition. All776ordinary styles have identical complete candidate/party sets for every occurrence of each imported office;5federal-onlysamples correctly have no local fields. Exact office blocks include distinct2year/4yearterms, forestpreserveboarddistricts and court subcircuits."
+      },
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Wayne%20001-0001-NP.pdf",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:20:51.455989+00:00",
+        "rawHash": "1cb11f4f47f4b0cf5949549491ec2c16d7f8ace9e5aad2067f067bf79a9fd473",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual current November3,2026 SAMPLE BALLOT. Portable representative from the complete781PDFpublicarchive acquisition. All776ordinary styles have identical complete candidate/party sets for every occurrence of each imported office;5federal-onlysamples correctly have no local fields. Exact office blocks include distinct2year/4yearterms, forestpreserveboarddistricts and court subcircuits."
+      },
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Bloomingdale%20037-0110-NP.pdf",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:20:32.757976+00:00",
+        "rawHash": "43c456fe6529f087299707e7cc8257b2f5800fc53eb3118474e2756b49b250b0",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual current November3,2026 SAMPLE BALLOT. Portable representative from the complete781PDFpublicarchive acquisition. All776ordinary styles have identical complete candidate/party sets for every occurrence of each imported office;5federal-onlysamples correctly have no local fields. Exact office blocks include distinct2year/4yearterms, forestpreserveboarddistricts and court subcircuits."
+      },
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/Downers%20Grove%20006-0650-NP.pdf",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:20:35.066947+00:00",
+        "rawHash": "e3b5d42a8714c0d47e690c9b56e840c10ea164911699c3e98c80f9a14b9099c1",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Actual current November3,2026 SAMPLE BALLOT. Portable representative from the complete781PDFpublicarchive acquisition. All776ordinary styles have identical complete candidate/party sets for every occurrence of each imported office;5federal-onlysamples correctly have no local fields. Exact office blocks include distinct2year/4yearterms, forestpreserveboarddistricts and court subcircuits."
+      },
+      {
+        "requestedUrl": "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/",
+        "finalUrl": "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:19:11.391283+00:00",
+        "rawHash": "688f1a27461fa7bf03eea083fc56799fccc2dc56e80ca60439fd6777d81f04f6",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county source/linking page. The publicGeneralarchive publishes781PDFlinks; its oneGeneralchilddirectory is empty. No voteridentity,login or personal lookup used."
+      },
+      {
+        "requestedUrl": "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/voting_information/view_sample_ballot.php",
+        "finalUrl": "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/voting_information/view_sample_ballot.php",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:20:31.148123+00:00",
+        "rawHash": "1431d135f89eafede3f03ba56b4f41d5aee718a17cf1dd57d4c7738eb72e9c82",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county source/linking page. The publicGeneralarchive publishes781PDFlinks; its oneGeneralchilddirectory is empty. No voteridentity,login or personal lookup used."
+      },
+      {
+        "requestedUrl": "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/candidate_information/candidate_listings.php",
+        "finalUrl": "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/candidate_information/candidate_listings.php",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:21:09.896711+00:00",
+        "rawHash": "890f5a82c9443cb1fa399a152c9f8ca9c9b37e3c3f87518f1e0a99cda9f65d74",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county source/linking page. The publicGeneralarchive publishes781PDFlinks; its oneGeneralchilddirectory is empty. No voteridentity,login or personal lookup used."
+      },
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:19:24.933727+00:00",
+        "rawHash": "d5c7a34915f608df585230c63ee493194226003ce2fb3b00fc9014d2c06a824a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county source/linking page. The publicGeneralarchive publishes781PDFlinks; its oneGeneralchilddirectory is empty. No voteridentity,login or personal lookup used."
+      },
+      {
+        "requestedUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/General/",
+        "finalUrl": "https://electionresults.dupagecounty.gov/election/Ballots/2026/General/General/",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:28:09.933659+00:00",
+        "rawHash": "62ac456190cad66d46ee25e2db32b98c44fa232e22b9587c2ab77feca46e4742",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official county source/linking page. The publicGeneralarchive publishes781PDFlinks; its oneGeneralchilddirectory is empty. No voteridentity,login or personal lookup used."
+      },
+      {
+        "requestedUrl": "https://www.dupagecounty.gov/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+        "finalUrl": "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Candidate%20Listing.pdf?t=202609300917530",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:22:23.025878+00:00",
+        "rawHash": "0ab2aff2cfd0cabefaf271818c01385eab8008dc39abda0c99289d5a3a085f81",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "County publication explicitly titled2026General OfficialCandidateListing, updatedSeptember28,2026. Every49printedlocalcandidacy andparty independently matches its complete office block. It is supplemental to actual samples, not itself a sample."
+      },
+      {
+        "requestedUrl": "https://www.dupagecounty.gov/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Judicial%20Retention.pdf?t=202609091454520",
+        "finalUrl": "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Judicial%20Retention.pdf?t=202609091454520",
+        "publisher": "Illinois State Board of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:22:22.803328+00:00",
+        "rawHash": "f0cf286b1ad56fe1d9fc144bea43d605bc5c3aec9458e2d015d277d78acbae5a",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "StateBoardofElections GeneralElectionCertificate addressed toDuPageCounty explicitly certifiesallfourCircuit18retentioncandidates toDuPageelectors. Actualall776ordinarysamples showfourindependentYes/Novotes, notanopposedcandidatefield."
+      },
+      {
+        "requestedUrl": "https://www.dupagecounty.gov/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Write-In%20Candidate%20Listing.pdf?t=202609091642040",
+        "finalUrl": "https://cms5.revize.com/revize/dupage/Election/Documents/Candidate%20Information/WebsiteListingsByElection/2026GE/2026GE%20Write-In%20Candidate%20Listing.pdf?t=202609091642040",
+        "publisher": "DuPage County Clerk Election Division",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:22:22.806008+00:00",
+        "rawHash": "4fd707e62bb6f2e61a25e841e7ecf48221cb6ece5b1d4b53a3a202f1a47e84b3",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current linked county Write-InCandidateListing datedSeptember9,2026 contains onlystateGovernor/LieutenantGovernor,ComptrollerandTreasurernames. No localfilingorblankcandidateisfabricated; laterunpublisheddeclarations remain outside this source’s dated scope."
+      },
+      {
+        "requestedUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+        "finalUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+        "publisher": "State of Illinois Office of the Illinois Courts",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:21:11.270310+00:00",
+        "rawHash": "1f52f68080a421f4e1d65a6eea731bcaec7bab06e4f2e7266f67ba83672e11f7",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OfficialIllinoisCourts districtpage explicitly listsall7wholecounties ofThirdAppellateDistrict:Will,Bureau,Grundy,LaSalle,DuPage,Iroquois,Kankakee. Its18thCircuit entry isDuPage. Supports7precisewholecountyAppellate3memberships; never broaden DuPagesubcircuit races."
+      },
+      {
+        "requestedUrl": "https://www.dupageforest.org/about-us/our-board",
+        "finalUrl": "https://www.dupageforest.org/about-us/our-board",
+        "publisher": "Forest Preserve District of DuPage County",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:21:10.096356+00:00",
+        "rawHash": "7e4eaf20313a030e9cc7517aef01db5cb2d5ab703f615cc75db92fdb9373fdcd",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current officialForestPreserveDistrictofDuPageCounty Board page links its ownpublishedcommissiondistrictmap. Forestcommissiondistricts are not assumed identical tocountyboarddistricts."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/5010d6afb20d4f9688450d62bd1e2d87/data?f=json",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/5010d6afb20d4f9688450d62bd1e2d87/data?f=json",
+        "publisher": "Forest Preserve District of DuPage County",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:22:23.531674+00:00",
+        "rawHash": "230d2aebc6e3eb48e95c9b83d84248d518b78534410ce3451377ed96dc978ee9",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native officialmap configuration/districtgeometry in thechain directlylinked from theForestPreserveDistrict Boardpage. SixDistrict-codedpolygons define its owncommissiondistricts. Geometry is evidence for River installation, no productionorregistrywrite performed."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/e87fc2d7bd3d4555afd4ce79fde2953b/data?f=json",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/e87fc2d7bd3d4555afd4ce79fde2953b/data?f=json",
+        "publisher": "Forest Preserve District of DuPage County",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:23:27.183011+00:00",
+        "rawHash": "4a9a491047310dba595b51d79ed3aabf6f503ddda82c3085655f2fcb08221394",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native officialmap configuration/districtgeometry in thechain directlylinked from theForestPreserveDistrict Boardpage. SixDistrict-codedpolygons define its owncommissiondistricts. Geometry is evidence for River installation, no productionorregistrywrite performed."
+      },
+      {
+        "requestedUrl": "https://services5.arcgis.com/fui97fnwp2uOvw2J/arcgis/rest/services/FPD_Board/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services5.arcgis.com/fui97fnwp2uOvw2J/arcgis/rest/services/FPD_Board/FeatureServer/0?f=pjson",
+        "publisher": "Forest Preserve District of DuPage County",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:25:15.041669+00:00",
+        "rawHash": "6d14b1648814792b4edf3fe16c1ae7e499bb1a30f4416347dec1c38c36df9021",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native officialmap configuration/districtgeometry in thechain directlylinked from theForestPreserveDistrict Boardpage. SixDistrict-codedpolygons define its owncommissiondistricts. Geometry is evidence for River installation, no productionorregistrywrite performed."
+      },
+      {
+        "requestedUrl": "https://services5.arcgis.com/fui97fnwp2uOvw2J/arcgis/rest/services/FPD_Board/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services5.arcgis.com/fui97fnwp2uOvw2J/arcgis/rest/services/FPD_Board/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "Forest Preserve District of DuPage County",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:25:16.037371+00:00",
+        "rawHash": "2e0640916f9e7e741389382b795c151eedfa558671377a9426be09f0f2497d83",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Native officialmap configuration/districtgeometry in thechain directlylinked from theForestPreserveDistrict Boardpage. SixDistrict-codedpolygons define its owncommissiondistricts. Geometry is evidence for River installation, no productionorregistrywrite performed."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+        "finalUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+        "publisher": "Illinois General Assembly — captured official source text",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:25:14.441679+00:00",
+        "rawHash": "86883302aead3647c639eac1f2ca268e4c3bda5220417dea22a15b766736ed0b",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "105ILCS5/3-1.1:unit-schooldistrict residents vote for the superintendent supervisingtheirunitdistrict evenacross educationalservice-regionlines, andnotfortheirresidentialregion. NativeILGAretrievalfailedTLSviarequiredproxy; thisreaderretrieval preserves exactofficialtext andorigin URL, accuratelylabeledcapturedtext, notanative200claim."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+        "finalUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+        "publisher": "Illinois General Assembly — captured official source text",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:25:41.853670+00:00",
+        "rawHash": "7c90926a32508179656b6aab0964d9572c5592cbcda727a21d26c6ea5317cc58",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "23IllinoisAdministrativeCode525.20 identifies Region19DuPage andRegion31Kane. Thecurrentcapturedpublicofficialrule also bearsPublishedTimeAugust8,2026; governingtransferrules areseparatelyquoted. NativeoriginTLSfailurepreservedinscratch; readercapture isexplicit."
+      }
+    ]
+  }
+}

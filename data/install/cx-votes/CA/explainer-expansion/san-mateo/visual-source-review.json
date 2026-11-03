@@ -1,0 +1,300 @@
+{
+  "reviewedAt": "2026-11-03T05:32:49.554433+00:00",
+  "questions": [
+    {
+      "code": "L",
+      "contestId": "ca-san-mateo-2026-measure-l",
+      "primaryPdfSha256": "db9b218ebad34190631d655a933a558be422f90d367b4ad07c51ef85c59efae6",
+      "physicalPage": 3,
+      "questionSha256": "7cbbccc58e7af0d6ddbe78ccc3939b8dd0d7ea4f026a48f85c6369bf5fae3a69",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "AA",
+      "contestId": "ca-san-mateo-2026-measure-aa",
+      "primaryPdfSha256": "db9b218ebad34190631d655a933a558be422f90d367b4ad07c51ef85c59efae6",
+      "physicalPage": 4,
+      "questionSha256": "8fe68a0cda9f9aac36a665bce15a42ebdd6c2e45c873671add4954a781a016ad",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "J",
+      "contestId": "ca-san-mateo-2026-measure-j",
+      "primaryPdfSha256": "db9b218ebad34190631d655a933a558be422f90d367b4ad07c51ef85c59efae6",
+      "physicalPage": 5,
+      "questionSha256": "34284ac36f3b25f72b590ac2941ddffd62f192bee9ad9ca4fa0303ae20956375",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "U",
+      "contestId": "ca-san-mateo-2026-measure-u",
+      "primaryPdfSha256": "db9b218ebad34190631d655a933a558be422f90d367b4ad07c51ef85c59efae6",
+      "physicalPage": 6,
+      "questionSha256": "81c7c9e270ac11839bc638e73af38725c498b6f70a28431a76463943cde5e4ec",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "RTM",
+      "contestId": "ca-sf-2026-regional-transit-measure",
+      "primaryPdfSha256": "343dbfda30034769a5ca0f3db2b31281fb17cbe5ea2737c0e470e0e7b7b4347d",
+      "physicalPage": 8,
+      "questionSha256": "81efe16e1b95150f21a24e32086af61848d6234e47c851e8781a99f154520b46",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "R",
+      "contestId": "ca-san-mateo-2026-measure-r",
+      "primaryPdfSha256": "e16fa8a147865340d54aee5421dd9e545c5321ca9d9df4389034096b92701d1f",
+      "physicalPage": 11,
+      "questionSha256": "0796db5859ef6fb86a3b0fb89fe25940bf7751b9568cd35bf51c43809df69c08",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "Z",
+      "contestId": "ca-san-mateo-2026-measure-z",
+      "primaryPdfSha256": "a3be79e88d15dc14e57ec218320c9997b5ac9f61a83997e04c5e2de73e53ce3b",
+      "physicalPage": 7,
+      "questionSha256": "52930b9983aa9bf0a1f1e375281ccfc9442a73502ac3ba7fe6c0afeafb16317e",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "M",
+      "contestId": "ca-san-mateo-2026-measure-m",
+      "primaryPdfSha256": "b6b2d9c3bce3928ac3860571799df277e19a831d9d06d7ad4022f865ce4e5d52",
+      "physicalPage": 5,
+      "questionSha256": "4b5c0c85df528c961c771b5a792d1ee74b63a68a11813b00fc0ce9c7481d2b0b",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "T",
+      "contestId": "ca-san-mateo-2026-measure-t",
+      "primaryPdfSha256": "bc7dbdf927311df3ec5d264fdfec8c799a1337e1ded8815a615d3fdbb25620a0",
+      "physicalPage": 5,
+      "questionSha256": "84864b573b5f08564447a40871bb6561fc7c6b449125e8437841153fb75a239b",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "K",
+      "contestId": "ca-san-mateo-2026-measure-k",
+      "primaryPdfSha256": "00dfb84d7bb7512dfe4f3ec651142a3e3438b0c688f6a4cdeb0413657989fb78",
+      "physicalPage": 5,
+      "questionSha256": "bd0d2fd3e5e9325a84b083d173db10734898c63e1d1bc24784e3bda1fbd379ba",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "V",
+      "contestId": "ca-san-mateo-2026-measure-v",
+      "primaryPdfSha256": "2a44e4aec2b7613fd7c69583e39a7ef2211fba465c221eb9b2dceafd1a0993b7",
+      "physicalPage": 7,
+      "questionSha256": "5d4416fba4e15efe80da5341f38d340c99a36417e2157ae72d3c49299805396c",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "W",
+      "contestId": "ca-san-mateo-2026-measure-w",
+      "primaryPdfSha256": "df14dc287302eaa24029ee4664988e8161fac276a58d8afa757c24508ab39ba5",
+      "physicalPage": 6,
+      "questionSha256": "c6daa8a67285d4035fb7b49426ea19a13a8b86a2847a48868f3981639f422e2b",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "Y",
+      "contestId": "ca-san-mateo-2026-measure-y",
+      "primaryPdfSha256": "aaf00fbc8562ce0f8fac11c587d3b8c03a5875d270cc28ff0a59d66fffe99854",
+      "physicalPage": 2,
+      "questionSha256": "39cf068417a6f741130c789b9d8448d14e62d6e3ded48963a36edb9ecf1a2fbe",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "X",
+      "contestId": "ca-san-mateo-2026-measure-x",
+      "primaryPdfSha256": "dd2389d19c9923ae4af1be749cf7b50a3bc685714ca31b8849f7b8aa133ce3ef",
+      "physicalPage": 2,
+      "questionSha256": "4b7aaac31b93ca87592174000d21ba016006894249d7e0f06f8604aec2a013d9",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "D",
+      "contestId": "ca-san-mateo-2026-measure-d",
+      "primaryPdfSha256": "71f422c7783479f57b833453179ba103c32053aa934d560492a906f4026e7169",
+      "physicalPage": 2,
+      "questionSha256": "708dd014e2efdcfae6b41fb07f147d5c6d03387d7564b5432a4eb9da0e716441",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "O",
+      "contestId": "ca-san-mateo-2026-measure-o",
+      "primaryPdfSha256": "2a4cbc33915d3b03626cac9c068c6bca0441fdd251e8fc1a31965ef1b4e25d2e",
+      "physicalPage": 2,
+      "questionSha256": "cc621335bc014ff4f9dec9dd66699452108f5cdf307bc8752372d9d686eb36fd",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "CC",
+      "contestId": "ca-san-mateo-2026-measure-cc",
+      "primaryPdfSha256": "daef22a2faeadd173026c342f400b8257b7de61600b359bcc9eb97c75ac9af1a",
+      "physicalPage": 2,
+      "questionSha256": "8a09364d38c76c3ed06bfa7447c7753d6b6bbe4d4c4f757c10c075f1f0375175",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "I",
+      "contestId": "ca-san-mateo-2026-measure-i",
+      "primaryPdfSha256": "f9b8e79352f36d499bfa86ee55d00a4b9ec73bf33a90bf82cd04122685ca5338",
+      "physicalPage": 3,
+      "questionSha256": "f5ae2ace44c4e6f72fcb8c6c9e40c2b5a10cee355f8286435f2c42b74bcf44bb",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "Q",
+      "contestId": "ca-san-mateo-2026-measure-q",
+      "primaryPdfSha256": "3b2ae9f9f12745043027c5b386aa34bf9fe972b5b17e522b424e5c7d7d515083",
+      "physicalPage": 3,
+      "questionSha256": "7c696cbdde1a783dadb51de0306e43480625cb11092b8439f65400ac6f43f5bb",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "P",
+      "contestId": "ca-san-mateo-2026-measure-p",
+      "primaryPdfSha256": "b4c7febfe4a4e77b32ffc71090a69e8f1bd9291fbaee6f718a28faab9fcb4282",
+      "physicalPage": 2,
+      "questionSha256": "7d5bf8ce8d92d8ee84f8210c772771622d2aa3c7428515235885ee4ca45c0f22",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "BB",
+      "contestId": "ca-san-mateo-2026-measure-bb",
+      "primaryPdfSha256": "b1649da5de4e951043e388cbbf18c7b83130e6edff6914f999dc12c832a2f087",
+      "physicalPage": 2,
+      "questionSha256": "2d42a46c54324010b899f02786dcc422261c4a2c30555909b0d26bd96ffaf892",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "N",
+      "contestId": "ca-san-mateo-2026-measure-n",
+      "primaryPdfSha256": "dee8e20e8db3f7a5a273d6923a5da9e494383ba98a26a0ffdd3b6917a4199ede",
+      "physicalPage": 4,
+      "questionSha256": "237cd980733f8fdceda09a4c22b5c2fa4d14803751de520d1f966a5e15031843",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "E",
+      "contestId": "ca-san-mateo-2026-measure-e",
+      "primaryPdfSha256": "00f25b487f050792dadb03d7762213d36d190105efd4e695875b62f333259291",
+      "physicalPage": 2,
+      "questionSha256": "948e6a6b6fe643bf9ce952e8cfbf8486acb020252ab42f5888e4ba7e15b3701b",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "S",
+      "contestId": "ca-san-mateo-2026-measure-s",
+      "primaryPdfSha256": "eb4e70296f4e7abb53937614c33bf88c643138039a521495c8f8064e588278a2",
+      "physicalPage": 2,
+      "questionSha256": "677e5b0967a55df25c5279fcaea5d3ad44bbde75485987fb126b672ab23ab1b6",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "DD",
+      "contestId": "ca-san-mateo-2026-measure-dd",
+      "primaryPdfSha256": "c04e2f5e8f672195d9bd3e7b90415bd0c39c76282f4c091c9573e08e2e4400c6",
+      "physicalPage": 2,
+      "questionSha256": "a7e70cc2e78e52e0958ee33b72f7d8f051e2f48bc6668e1c2324b8ab98120e67",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "EE",
+      "contestId": "ca-san-mateo-2026-measure-ee",
+      "primaryPdfSha256": "7ca6b593aa3f383b3e875059b2967b3a0fb8f6d9fa049b6f6c48f63c0e7a04da",
+      "physicalPage": 2,
+      "questionSha256": "1dc1b34a7be47d421829902e29bca7840eedc9fc283c0ff0a233a640d0c15da4",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "G",
+      "contestId": "ca-san-mateo-2026-measure-g",
+      "primaryPdfSha256": "b4f9ac9d5c302bd9a6f386fbb128c979c20c02a9b0e28bb4142790f38b62052a",
+      "physicalPage": 3,
+      "questionSha256": "79d3babe1498d7e65d8e10d63ae1583c9199ec8aeee3f2009dd180e059ba7827",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "H",
+      "contestId": "ca-san-mateo-2026-measure-h",
+      "primaryPdfSha256": "ea78342cd4ac0d4a01221735631c39a861ad4c9da65df49e10d21a55b4c1858f",
+      "physicalPage": 2,
+      "questionSha256": "7badaadd206e2ac719d5182d0d35711efac5b4334c9ab7c45cef33ddb8afaea5",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    },
+    {
+      "code": "F",
+      "contestId": "ca-san-mateo-2026-measure-f",
+      "primaryPdfSha256": "edbd9d96bf61015a10f6ec87fbc68d4958cd24b57f7a43a18cbb6675d5f6657d",
+      "physicalPage": 2,
+      "questionSha256": "1b3b037a1370daff8fd330ea33c369311b67819132a675e2a9cd204e2f23156c",
+      "status": "FULL_QUESTION_VISUALLY_VERIFIED",
+      "originalQuestionImageRenderedAt2200px": true
+    }
+  ],
+  "additionalOriginalPdfConditionPagesVisuallyRead": [
+    {
+      "key": "smc-08",
+      "page": 2,
+      "conditions": "Senior May1 eligibility and actual exemption classes"
+    },
+    {
+      "key": "smc-04",
+      "page": 12,
+      "conditions": "Burlingame16rate,195482493debt,2057–58finalyear"
+    },
+    {
+      "key": "smc-22",
+      "page": 15,
+      "conditions": "College10.50average,18highest,1350000000debt,2048–49finalyear"
+    },
+    {
+      "key": "smc-21",
+      "page": 11,
+      "conditions": "School29rate,900mdebt,2054–55finalyear"
+    },
+    {
+      "key": "smc-07",
+      "page": 28,
+      "conditions": "Redwood4xHUDor12000,+6000qualification,annualCPIadjustment"
+    },
+    {
+      "key": "smc-07",
+      "page": 42,
+      "conditions": "Redwoodinitial120/84feesandCouncilcostfundingrule"
+    }
+  ],
+  "method": "Manual semantic review against complete official primary and analysis texts, plus explicit original-PDF visual checks above. No blanket claim that all425PDFpages were visually inspected.",
+  "modelCalls": 0
+}

@@ -1,0 +1,427 @@
+[
+  {
+    "contestId": "ca-san-mateo-2026-measure-l",
+    "officialMeasure": "L",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo",
+    "kind": "EXACT_EXISTING_COUNTY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/county:san_mateo",
+      "county",
+      "06081",
+      "San Mateo County"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure L – San Mateo County Charter Amendment Measure – Extreme Weather Events",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/San%20Mateo%20County%20Amendments.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-aa",
+    "officialMeasure": "AA",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo",
+    "kind": "EXACT_EXISTING_COUNTY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/county:san_mateo",
+      "county",
+      "06081",
+      "San Mateo County"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure AA – San Mateo County Charter Amendment Measure – Affirmation of Rights",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/San%20Mateo%20County%20Amendments.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-j",
+    "officialMeasure": "J",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo",
+    "kind": "EXACT_EXISTING_COUNTY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/county:san_mateo",
+      "county",
+      "06081",
+      "San Mateo County"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure J – San Mateo County Charter Amendment Measure – Extension to Call a Special Election or Appoint",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/San%20Mateo%20County%20Amendments.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-u",
+    "officialMeasure": "U",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_mateo",
+    "kind": "EXACT_EXISTING_COUNTY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/county:san_mateo",
+      "county",
+      "06081",
+      "San Mateo County"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure U – San Mateo County Charter Amendment Measure – Reapportionment of Supervisorial Districts",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/San%20Mateo%20County%20Amendments.pdf"
+  },
+  {
+    "contestId": "ca-sf-2026-regional-transit-measure",
+    "officialMeasure": "RTM",
+    "ocdId": "ocd-division/country:us/state:ca/electoral_district:2026_public_transit_revenue_measure_district",
+    "kind": "OFFICIAL_WHOLE_COUNTY_UNION",
+    "registeredDivision": null,
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Regional Transit Measure – Public Transit Revenue Measure District: Transactions and Use Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-r",
+    "officialMeasure": "R",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:burlingame_elementary_school_district",
+    "kind": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/school_district:burlingame_elementary_school_district",
+      "elsd",
+      "0606480",
+      "Burlingame Elementary School District"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure R – Burlingame School District: Bond Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M105-Contest%20Code-Reso-Burlingame%20ESD%20Bon_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-z",
+    "officialMeasure": "Z",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district",
+    "kind": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/school_district:cabrillo_unified_school_district",
+      "unsd",
+      "0606780",
+      "Cabrillo Unified School District"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure Z – Cabrillo Unified School District: Parcel Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M109-Contest%20Code-Reso-Cabrillo%20USD%20Parcel%20Tax.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-m",
+    "officialMeasure": "M",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:jefferson_union_high_school_district",
+    "kind": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/school_district:jefferson_union_high_school_district",
+      "scsd",
+      "0618930",
+      "Jefferson Union High School District"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure M – Jefferson Union High School District: Parcel Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M106-Contest%20Code-Reso-JUHSD%20Parcel%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-t",
+    "officialMeasure": "T",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pacifica_school_district",
+    "kind": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/school_district:pacifica_school_district",
+      "elsd",
+      "0620460",
+      "Pacifica School District"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure T – Pacifica School District: Parcel Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-06/52-ENG-M103-Contest%20Code-Reso-Pacifica%20SD%20Parcel%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-k",
+    "officialMeasure": "K",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_carlos_elementary_school_district",
+    "kind": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/school_district:san_carlos_elementary_school_district",
+      "elsd",
+      "0634290",
+      "San Carlos Elementary School District"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure K – San Carlos School District: Parcel Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-05/52-ENG-M101-Contest%20Code-Reso-San%20Carlos%20SD%20Parcel%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-v",
+    "officialMeasure": "V",
+    "ocdId": "ocd-division/country:us/state:ca/electoral_district:2026_san_mateo_county_community_college_district",
+    "kind": "OFFICIAL_WHOLE_COUNTY_UNION",
+    "registeredDivision": null,
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure V – San Mateo County Community College District: Bond Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M307-Contest%20Code-Reso-SMCCD%20Bond_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-w",
+    "officialMeasure": "W",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:san_mateo_foster_city_elementary_school_district",
+    "kind": "EXACT_EXISTING_SCHOOL_DISTRICT",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/school_district:san_mateo_foster_city_elementary_school_district",
+      "elsd",
+      "0634920",
+      "San Mateo-Foster City Elementary School District"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure W – San Mateo-Foster City School District: Bond Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M306-Contest%20Code-Reso-SMFCSD%20Bond_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-y",
+    "officialMeasure": "Y",
+    "ocdId": "ocd-division/country:us/state:ca/place:belmont",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:belmont",
+      "place",
+      "0605108",
+      "Belmont city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure Y – City of Belmont: Special Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M308-Contest%20Code-Reso-Belmont%20Special%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-x",
+    "officialMeasure": "X",
+    "ocdId": "ocd-division/country:us/state:ca/place:brisbane",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:brisbane",
+      "place",
+      "0608310",
+      "Brisbane city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure X – City of Brisbane: Business License Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M302-Contest%20Code-Reso-City%20of%20Brisbane%20Business%20License%20Tax_Redacted_1.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-d",
+    "officialMeasure": "D",
+    "ocdId": "ocd-division/country:us/state:ca/place:burlingame",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:burlingame",
+      "place",
+      "0609066",
+      "Burlingame city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure D – City of Burlingame: Transient Occupancy Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M107-Contest%20Code-Reso-Burlingame%20Occupancy%20Tax_Redacted_0.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-o",
+    "officialMeasure": "O",
+    "ocdId": "ocd-division/country:us/state:ca/place:east_palo_alto",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:east_palo_alto",
+      "place",
+      "0620956",
+      "East Palo Alto city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure O – City of East Palo Alto: Bond Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M207-Contest%20Code-Reso-City%20of%20East%20Palo%20Alto%20Bond_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-cc",
+    "officialMeasure": "CC",
+    "ocdId": "ocd-division/country:us/state:ca/place:east_palo_alto",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:east_palo_alto",
+      "place",
+      "0620956",
+      "East Palo Alto city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure CC – City of East Palo Alto: Term Limits Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M207-Contest%20-Code-Reso-EPA%20Term%20Limits_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-i",
+    "officialMeasure": "I",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:half_moon_bay",
+      "place",
+      "0631708",
+      "Half Moon Bay city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure I – City of Half Moon Bay: Coastal Land Use Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M309-Contest%20Code-Reso-Half%20Moon%20Bay%20Coastal%20Land_Redacted_0.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-q",
+    "officialMeasure": "Q",
+    "ocdId": "ocd-division/country:us/state:ca/place:half_moon_bay",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:half_moon_bay",
+      "place",
+      "0631708",
+      "Half Moon Bay city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure Q – City of Half Moon Bay: Housing Initiative Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M401-Contest%20Code-Reso-Half%20Moon%20Bay%20Housing%20Initiative_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-p",
+    "officialMeasure": "P",
+    "ocdId": "ocd-division/country:us/state:ca/place:menlo_park",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:menlo_park",
+      "place",
+      "0646870",
+      "Menlo Park city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure P – City of Menlo Park: Citizen Initiative to Amend Municipal Code",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-05/52-ENG-M102-Contest%20Code-Reso-Menlo%20Park%20Muni%20Amendment_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-bb",
+    "officialMeasure": "BB",
+    "ocdId": "ocd-division/country:us/state:ca/place:pacifica",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:pacifica",
+      "place",
+      "0654806",
+      "Pacifica city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure BB – City of Pacifica: Transactions and Use Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M402-Contest%20Code-Reso-Pacifica%20Transactions%20and%20Use%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-n",
+    "officialMeasure": "N",
+    "ocdId": "ocd-division/country:us/state:ca/place:portola_valley",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:portola_valley",
+      "place",
+      "0658380",
+      "Portola Valley town"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure N – Town of Portola Valley: Town Charter and Property Transfer Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M205-Contest%20Code-Reso-Portola%20Valley%20Transfer%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-e",
+    "officialMeasure": "E",
+    "ocdId": "ocd-division/country:us/state:ca/place:redwood_city",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:redwood_city",
+      "place",
+      "0660102",
+      "Redwood City city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure E – City of Redwood City: Rent Control and Eviction Limits Initiative",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M108-Contest%20Code-Reso-RWC%20Housing_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-s",
+    "officialMeasure": "S",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:san_bruno",
+      "place",
+      "0665028",
+      "San Bruno city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure S – City of San Bruno: Housing Permits and Developments Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M303-Contest%20Code-Reso-San%20Bruno%20Hosuing%20Permit%20and%20Development_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-dd",
+    "officialMeasure": "DD",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:san_bruno",
+      "place",
+      "0665028",
+      "San Bruno city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure DD – City of San Bruno: Fireworks Ban Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M304-Contest%20Code-Reso-San%20Bruno%20Fireworks%20Ban_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-ee",
+    "officialMeasure": "EE",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_bruno",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:san_bruno",
+      "place",
+      "0665028",
+      "San Bruno city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure EE – City of San Bruno: Business License Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M305-Contest%20Code-Reso-San%20Bruno%20Business%20License%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-g",
+    "officialMeasure": "G",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_carlos",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:san_carlos",
+      "place",
+      "0665070",
+      "San Carlos city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure G – City of San Carlos: Transactions and Use Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M104-Contest%20Code-Reso-City%20of%20San%20Carlos%20Use%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-h",
+    "officialMeasure": "H",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:san_mateo",
+      "place",
+      "0668252",
+      "San Mateo city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure H – City of San Mateo: Transactions and Use Tax Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M301-Contest%20Code-Reso-San%20Mateo%20Transactions%20and%20Use%20Tax_Redacted.pdf"
+  },
+  {
+    "contestId": "ca-san-mateo-2026-measure-f",
+    "officialMeasure": "F",
+    "ocdId": "ocd-division/country:us/state:ca/place:san_mateo",
+    "kind": "EXACT_EXISTING_CITY",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ca/place:san_mateo",
+      "place",
+      "0668252",
+      "San Mateo city"
+    ],
+    "registrySha256": "6e66cb4f055f77bef250079f25130258aa236d10530376ea960d4f87ce3083bc",
+    "officialTitle": "Measure F – City of San Mateo: Charter Amendment Measure",
+    "officialSourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M209-Contest%20Code-Reso-San%20Mateo%20Charter%20Amendment_Redacted.pdf"
+  }
+]

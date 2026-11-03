@@ -1,0 +1,202 @@
+{
+  "state": "CA",
+  "county": "San Mateo",
+  "electionDate": "2026-11-03",
+  "officialCountyIndex": {
+    "url": "https://smcacre.gov/elections/november-3-2026-statewide-general-election",
+    "finalUrl": "https://smcacre.gov/elections/november-3-2026-statewide-general-election",
+    "file": "sources/66756d35f2811a2526bfa5cdce4e0d2a44fa247bf42718681a01a94a5e258d29.html",
+    "sha256": "66756d35f2811a2526bfa5cdce4e0d2a44fa247bf42718681a01a94a5e258d29",
+    "byteLength": 336081,
+    "storedEncoding": "identity",
+    "storedSha256": "66756d35f2811a2526bfa5cdce4e0d2a44fa247bf42718681a01a94a5e258d29",
+    "storedByteLength": 336081,
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-03T04:40:32.494841+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES"
+  },
+  "officialCountyMeasureDenominator": 29,
+  "newLocalMeasures": 28,
+  "previouslyHeldRegionalMeasureCorrected": 1,
+  "sourcePdfCount": 55,
+  "sourcePdfPhysicalPages": 425,
+  "rows": [
+    {
+      "code": "L",
+      "title": "Measure L – San Mateo County Charter Amendment Measure – Extreme Weather Events",
+      "contestId": "ca-san-mateo-2026-measure-l",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "AA",
+      "title": "Measure AA – San Mateo County Charter Amendment Measure – Affirmation of Rights",
+      "contestId": "ca-san-mateo-2026-measure-aa",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "J",
+      "title": "Measure J – San Mateo County Charter Amendment Measure – Extension to Call a Special Election or Appoint",
+      "contestId": "ca-san-mateo-2026-measure-j",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "U",
+      "title": "Measure U – San Mateo County Charter Amendment Measure – Reapportionment of Supervisorial Districts",
+      "contestId": "ca-san-mateo-2026-measure-u",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "RTM",
+      "title": "Regional Transit Measure – Public Transit Revenue Measure District: Transactions and Use Tax Measure",
+      "contestId": "ca-sf-2026-regional-transit-measure",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "R",
+      "title": "Measure R – Burlingame School District: Bond Measure",
+      "contestId": "ca-san-mateo-2026-measure-r",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "Z",
+      "title": "Measure Z – Cabrillo Unified School District: Parcel Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-z",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "M",
+      "title": "Measure M – Jefferson Union High School District: Parcel Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-m",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "T",
+      "title": "Measure T – Pacifica School District: Parcel Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-t",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "K",
+      "title": "Measure K – San Carlos School District: Parcel Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-k",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "V",
+      "title": "Measure V – San Mateo County Community College District: Bond Measure",
+      "contestId": "ca-san-mateo-2026-measure-v",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "W",
+      "title": "Measure W – San Mateo-Foster City School District: Bond Measure",
+      "contestId": "ca-san-mateo-2026-measure-w",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "Y",
+      "title": "Measure Y – City of Belmont: Special Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-y",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "X",
+      "title": "Measure X – City of Brisbane: Business License Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-x",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "D",
+      "title": "Measure D – City of Burlingame: Transient Occupancy Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-d",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "O",
+      "title": "Measure O – City of East Palo Alto: Bond Measure",
+      "contestId": "ca-san-mateo-2026-measure-o",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "CC",
+      "title": "Measure CC – City of East Palo Alto: Term Limits Measure",
+      "contestId": "ca-san-mateo-2026-measure-cc",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "I",
+      "title": "Measure I – City of Half Moon Bay: Coastal Land Use Measure",
+      "contestId": "ca-san-mateo-2026-measure-i",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "Q",
+      "title": "Measure Q – City of Half Moon Bay: Housing Initiative Measure",
+      "contestId": "ca-san-mateo-2026-measure-q",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "P",
+      "title": "Measure P – City of Menlo Park: Citizen Initiative to Amend Municipal Code",
+      "contestId": "ca-san-mateo-2026-measure-p",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "BB",
+      "title": "Measure BB – City of Pacifica: Transactions and Use Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-bb",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "N",
+      "title": "Measure N – Town of Portola Valley: Town Charter and Property Transfer Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-n",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "E",
+      "title": "Measure E – City of Redwood City: Rent Control and Eviction Limits Initiative",
+      "contestId": "ca-san-mateo-2026-measure-e",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "S",
+      "title": "Measure S – City of San Bruno: Housing Permits and Developments Measure",
+      "contestId": "ca-san-mateo-2026-measure-s",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "DD",
+      "title": "Measure DD – City of San Bruno: Fireworks Ban Measure",
+      "contestId": "ca-san-mateo-2026-measure-dd",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "EE",
+      "title": "Measure EE – City of San Bruno: Business License Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-ee",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "G",
+      "title": "Measure G – City of San Carlos: Transactions and Use Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-g",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "H",
+      "title": "Measure H – City of San Mateo: Transactions and Use Tax Measure",
+      "contestId": "ca-san-mateo-2026-measure-h",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    },
+    {
+      "code": "F",
+      "title": "Measure F – City of San Mateo: Charter Amendment Measure",
+      "contestId": "ca-san-mateo-2026-measure-f",
+      "status": "CURRENT_OFFICIAL_SOURCE_EXPLAINER_PREPARED"
+    }
+  ],
+  "stateLocalComplete": false,
+  "scope": "Every local/regional measure listed in the current San Mateo County election index; statewide California measures and other counties are held or handled by other packets."
+}

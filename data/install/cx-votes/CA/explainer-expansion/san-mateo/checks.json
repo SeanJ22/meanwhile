@@ -1,0 +1,53 @@
+{
+  "state": "CA",
+  "county": "San Mateo",
+  "officialCountyMeasureDenominator": 29,
+  "newExplainedMeasures": 28,
+  "heldRegionalMeasureRefreshedAndScopeCorrected": 1,
+  "exactWholeCountyMemberships": 6,
+  "nativeGovernmentPdfs": 55,
+  "nativePdfPhysicalPages": 425,
+  "questionVisualChecks": 29,
+  "allStoredAndDecompressedSourceIdentities": "PASS",
+  "officialCollegeHostLink": "PASS",
+  "registryBindings": 27,
+  "currentExplainerSourceIdentity": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "genericBallotProblems": "PASS",
+  "actualExactLocalReaderChecks": 27,
+  "actualRegionalCountyReaderChecks": [
+    {
+      "county": "alameda",
+      "visible": true
+    },
+    {
+      "county": "contra_costa",
+      "visible": true
+    },
+    {
+      "county": "san_mateo",
+      "visible": true
+    },
+    {
+      "county": "santa_clara",
+      "visible": true
+    },
+    {
+      "county": "san_francisco",
+      "visible": true
+    }
+  ],
+  "actualRegionalNonmemberNegativeChecks": 4,
+  "actualCollegePositiveChecks": 1,
+  "actualCollegeNonmemberNegativeChecks": 3,
+  "singleRegionalContestIdentity": 1,
+  "unrelatedPriorFactsPreservedAgainstExistingRoutineNormalization": 942,
+  "allPriorCandidateFactualRowsUnchanged": 461,
+  "existingRoutineCandidateAliasEnrichment": "Baseline unchanged-prior BallotContestMerge.finish performs identical alias enrichment; no new candidate source facts supplied.",
+  "freshRecordsSurviveActualTranslationAttachment": 29,
+  "stateLocalComplete": false,
+  "productionWrites": 0,
+  "modelCalls": 0,
+  "appCodeChanges": 0
+}

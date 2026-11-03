@@ -1,0 +1,3352 @@
+[
+  {
+    "url": "https://smcacre.gov/system/files/2026-05/52-ENG-M101-Contest%20Code-Reso-San%20Carlos%20SD%20Parcel%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-05/52-ENG-M101-Contest%20Code-Reso-San%20Carlos%20SD%20Parcel%20Tax_Redacted.pdf",
+    "file": "sources/00dfb84d7bb7512dfe4f3ec651142a3e3438b0c688f6a4cdeb0413657989fb78.pdf.gz",
+    "sha256": "00dfb84d7bb7512dfe4f3ec651142a3e3438b0c688f6a4cdeb0413657989fb78",
+    "byteLength": 953907,
+    "storedEncoding": "gzip",
+    "storedSha256": "6e17f15d3b013743011f88c5eb6e133e8cfb289232ed0c24b1510dc8aa815686",
+    "storedByteLength": 818438,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:58:59.766109+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/b7c7b6af1a544151713fbc9cd4dd0e189477a12dc476bfd0a83c32726e3ff6b6.txt",
+    "textSha256": "b7c7b6af1a544151713fbc9cd4dd0e189477a12dc476bfd0a83c32726e3ff6b6",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 9,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 3474
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 3332
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 3359
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 3476
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 3596
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 3154
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 511
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 2089
+      },
+      {
+        "page": 9,
+        "method": "native PDF text",
+        "chars": 1752
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-05/52-ENG-M102-Contest%20Code-Reso-Menlo%20Park%20Muni%20Amendment_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-05/52-ENG-M102-Contest%20Code-Reso-Menlo%20Park%20Muni%20Amendment_Redacted.pdf",
+    "file": "sources/b4c7febfe4a4e77b32ffc71090a69e8f1bd9291fbaee6f718a28faab9fcb4282.pdf.gz",
+    "sha256": "b4c7febfe4a4e77b32ffc71090a69e8f1bd9291fbaee6f718a28faab9fcb4282",
+    "byteLength": 882351,
+    "storedEncoding": "gzip",
+    "storedSha256": "e85160bf087785bd27ef74bac10969bb1ab3a46157f1ec52a510ad325a6ceb19",
+    "storedByteLength": 709318,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:58:59.767012+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/9f50eafd30e1a994027be9336894b14be27ca26347211723f927c678620600cc.txt",
+    "textSha256": "9f50eafd30e1a994027be9336894b14be27ca26347211723f927c678620600cc",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 10,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2769
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 4314
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 4498
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 936
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 3488
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 3689
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 3512
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 3766
+      },
+      {
+        "page": 9,
+        "method": "native PDF text",
+        "chars": 3637
+      },
+      {
+        "page": 10,
+        "method": "native PDF text",
+        "chars": 2868
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-06/52-ENG-M103-Contest%20Code-Reso-Pacifica%20SD%20Parcel%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-06/52-ENG-M103-Contest%20Code-Reso-Pacifica%20SD%20Parcel%20Tax_Redacted.pdf",
+    "file": "sources/bc7dbdf927311df3ec5d264fdfec8c799a1337e1ded8815a615d3fdbb25620a0.pdf.gz",
+    "sha256": "bc7dbdf927311df3ec5d264fdfec8c799a1337e1ded8815a615d3fdbb25620a0",
+    "byteLength": 638745,
+    "storedEncoding": "gzip",
+    "storedSha256": "143850aa1a925d4ddf47b8816b30e6de7d286927a99d7bf7027fac5ddabc6e18",
+    "storedByteLength": 583644,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:58:59.767638+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/5bc0ebd011e6c9067c232eba39d1801c9cdadea7c416c144449dbf14e27f8a6e.txt",
+    "textSha256": "5bc0ebd011e6c9067c232eba39d1801c9cdadea7c416c144449dbf14e27f8a6e",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 11,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2311
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 3066
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2510
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 441
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 721
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 1739
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2703
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 3210
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 3450
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 60
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 1385
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M104-Contest%20Code-Reso-City%20of%20San%20Carlos%20Use%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M104-Contest%20Code-Reso-City%20of%20San%20Carlos%20Use%20Tax_Redacted.pdf",
+    "file": "sources/b4f9ac9d5c302bd9a6f386fbb128c979c20c02a9b0e28bb4142790f38b62052a.pdf.gz",
+    "sha256": "b4f9ac9d5c302bd9a6f386fbb128c979c20c02a9b0e28bb4142790f38b62052a",
+    "byteLength": 4018931,
+    "storedEncoding": "gzip",
+    "storedSha256": "6798ed934f8754cbb3c5a5af45cc667a6dd8af731cc94bab1da7860274a95612",
+    "storedByteLength": 3852272,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:58:59.768253+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/afb604b48af889882b8baf32601e88f87aea1a35682266a6872506def6b0134d.txt",
+    "textSha256": "afb604b48af889882b8baf32601e88f87aea1a35682266a6872506def6b0134d",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 13,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2718
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 3533
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 3926
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 3918
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 2890
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 2619
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 952
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 3300
+      },
+      {
+        "page": 9,
+        "method": "native PDF text",
+        "chars": 3641
+      },
+      {
+        "page": 10,
+        "method": "native PDF text",
+        "chars": 3754
+      },
+      {
+        "page": 11,
+        "method": "native PDF text",
+        "chars": 3988
+      },
+      {
+        "page": 12,
+        "method": "native PDF text",
+        "chars": 3647
+      },
+      {
+        "page": 13,
+        "method": "native PDF text",
+        "chars": 249
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M105-Contest%20Code-Reso-Burlingame%20ESD%20Bon_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M105-Contest%20Code-Reso-Burlingame%20ESD%20Bon_Redacted.pdf",
+    "file": "sources/e16fa8a147865340d54aee5421dd9e545c5321ca9d9df4389034096b92701d1f.pdf.gz",
+    "sha256": "e16fa8a147865340d54aee5421dd9e545c5321ca9d9df4389034096b92701d1f",
+    "byteLength": 887991,
+    "storedEncoding": "gzip",
+    "storedSha256": "2495459726ed1159156119325dc7e852a52439692b469a58d0671f99715aab0a",
+    "storedByteLength": 843313,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:58:59.768644+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/9be021f2469501a16cd4710b272d6646f491d5b2805e13ac3d4edbc63e0d6625.txt",
+    "textSha256": "9be021f2469501a16cd4710b272d6646f491d5b2805e13ac3d4edbc63e0d6625",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 12,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2792
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 3594
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 3871
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 4152
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 1045
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 432
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 3524
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 2279
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 3488
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2487
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 669
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 3460
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M106-Contest%20Code-Reso-JUHSD%20Parcel%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M106-Contest%20Code-Reso-JUHSD%20Parcel%20Tax_Redacted.pdf",
+    "file": "sources/b6b2d9c3bce3928ac3860571799df277e19a831d9d06d7ad4022f865ce4e5d52.pdf.gz",
+    "sha256": "b6b2d9c3bce3928ac3860571799df277e19a831d9d06d7ad4022f865ce4e5d52",
+    "byteLength": 844005,
+    "storedEncoding": "gzip",
+    "storedSha256": "da2cfa7e1b21c840a8f8b86ffc96008b4953155dc5b10ea567c132771a3dad23",
+    "storedByteLength": 681374,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.197831+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/f20f61c20f8625a5738458c181b6c36b74994bae1ab07e3266f6bbca624f2f2b.txt",
+    "textSha256": "f20f61c20f8625a5738458c181b6c36b74994bae1ab07e3266f6bbca624f2f2b",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 9,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 3609
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 3324
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 3553
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 3445
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 2973
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 3375
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 2310
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 1243
+      },
+      {
+        "page": 9,
+        "method": "native PDF text",
+        "chars": 968
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M107-Contest%20Code-Reso-Burlingame%20Occupancy%20Tax_Redacted_0.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M107-Contest%20Code-Reso-Burlingame%20Occupancy%20Tax_Redacted_0.pdf",
+    "file": "sources/71f422c7783479f57b833453179ba103c32053aa934d560492a906f4026e7169.pdf.gz",
+    "sha256": "71f422c7783479f57b833453179ba103c32053aa934d560492a906f4026e7169",
+    "byteLength": 7169641,
+    "storedEncoding": "gzip",
+    "storedSha256": "0dd507839cf11351c4c3fb2b5f6c18a452512c4cd7cd34b7b0258cf8108af4f3",
+    "storedByteLength": 6823539,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.227807+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/bd30dde11ebc863a078a5a873250ce86b61fba914ddf55fd8aad967d13e3cede.txt",
+    "textSha256": "bd30dde11ebc863a078a5a873250ce86b61fba914ddf55fd8aad967d13e3cede",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 8,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2341
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2588
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 3411
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 2881
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 55
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 2588
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 2768
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 740
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M108-Contest%20Code-Reso-RWC%20Housing_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M108-Contest%20Code-Reso-RWC%20Housing_Redacted.pdf",
+    "file": "sources/00f25b487f050792dadb03d7762213d36d190105efd4e695875b62f333259291.pdf.gz",
+    "sha256": "00f25b487f050792dadb03d7762213d36d190105efd4e695875b62f333259291",
+    "byteLength": 2851747,
+    "storedEncoding": "gzip",
+    "storedSha256": "fba041d84320722593ebc6a43e5712e8689dbcd2158943dc454b7882cd52bd8a",
+    "storedByteLength": 2688758,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.285407+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/15df8dd9c70f180d6e65b4037f2ee3418f8c242ab8d122c74849d9907f7b85be.txt",
+    "textSha256": "15df8dd9c70f180d6e65b4037f2ee3418f8c242ab8d122c74849d9907f7b85be",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 51,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2879
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 3323
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 2974
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 579
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 1307
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 2405
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2827
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 2486
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 2394
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 3081
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2298
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 2311
+      },
+      {
+        "page": 13,
+        "method": "tesseract OCR",
+        "chars": 2830
+      },
+      {
+        "page": 14,
+        "method": "tesseract OCR",
+        "chars": 2597
+      },
+      {
+        "page": 15,
+        "method": "tesseract OCR",
+        "chars": 2972
+      },
+      {
+        "page": 16,
+        "method": "tesseract OCR",
+        "chars": 2984
+      },
+      {
+        "page": 17,
+        "method": "tesseract OCR",
+        "chars": 2671
+      },
+      {
+        "page": 18,
+        "method": "tesseract OCR",
+        "chars": 2547
+      },
+      {
+        "page": 19,
+        "method": "tesseract OCR",
+        "chars": 2411
+      },
+      {
+        "page": 20,
+        "method": "tesseract OCR",
+        "chars": 2446
+      },
+      {
+        "page": 21,
+        "method": "tesseract OCR",
+        "chars": 2617
+      },
+      {
+        "page": 22,
+        "method": "tesseract OCR",
+        "chars": 2598
+      },
+      {
+        "page": 23,
+        "method": "tesseract OCR",
+        "chars": 2499
+      },
+      {
+        "page": 24,
+        "method": "tesseract OCR",
+        "chars": 2121
+      },
+      {
+        "page": 25,
+        "method": "tesseract OCR",
+        "chars": 2409
+      },
+      {
+        "page": 26,
+        "method": "tesseract OCR",
+        "chars": 2674
+      },
+      {
+        "page": 27,
+        "method": "tesseract OCR",
+        "chars": 2287
+      },
+      {
+        "page": 28,
+        "method": "tesseract OCR",
+        "chars": 2754
+      },
+      {
+        "page": 29,
+        "method": "tesseract OCR",
+        "chars": 2776
+      },
+      {
+        "page": 30,
+        "method": "tesseract OCR",
+        "chars": 2729
+      },
+      {
+        "page": 31,
+        "method": "tesseract OCR",
+        "chars": 2887
+      },
+      {
+        "page": 32,
+        "method": "tesseract OCR",
+        "chars": 2319
+      },
+      {
+        "page": 33,
+        "method": "tesseract OCR",
+        "chars": 2522
+      },
+      {
+        "page": 34,
+        "method": "tesseract OCR",
+        "chars": 2455
+      },
+      {
+        "page": 35,
+        "method": "tesseract OCR",
+        "chars": 2747
+      },
+      {
+        "page": 36,
+        "method": "tesseract OCR",
+        "chars": 2397
+      },
+      {
+        "page": 37,
+        "method": "tesseract OCR",
+        "chars": 2318
+      },
+      {
+        "page": 38,
+        "method": "tesseract OCR",
+        "chars": 2450
+      },
+      {
+        "page": 39,
+        "method": "tesseract OCR",
+        "chars": 2138
+      },
+      {
+        "page": 40,
+        "method": "tesseract OCR",
+        "chars": 2639
+      },
+      {
+        "page": 41,
+        "method": "tesseract OCR",
+        "chars": 2090
+      },
+      {
+        "page": 42,
+        "method": "tesseract OCR",
+        "chars": 2888
+      },
+      {
+        "page": 43,
+        "method": "tesseract OCR",
+        "chars": 2740
+      },
+      {
+        "page": 44,
+        "method": "tesseract OCR",
+        "chars": 2425
+      },
+      {
+        "page": 45,
+        "method": "tesseract OCR",
+        "chars": 2299
+      },
+      {
+        "page": 46,
+        "method": "tesseract OCR",
+        "chars": 2935
+      },
+      {
+        "page": 47,
+        "method": "tesseract OCR",
+        "chars": 2587
+      },
+      {
+        "page": 48,
+        "method": "tesseract OCR",
+        "chars": 3031
+      },
+      {
+        "page": 49,
+        "method": "tesseract OCR",
+        "chars": 2880
+      },
+      {
+        "page": 50,
+        "method": "tesseract OCR",
+        "chars": 326
+      },
+      {
+        "page": 51,
+        "method": "tesseract OCR",
+        "chars": 0
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M109-Contest%20Code-Reso-Cabrillo%20USD%20Parcel%20Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M109-Contest%20Code-Reso-Cabrillo%20USD%20Parcel%20Tax.pdf",
+    "file": "sources/a3be79e88d15dc14e57ec218320c9997b5ac9f61a83997e04c5e2de73e53ce3b.pdf.gz",
+    "sha256": "a3be79e88d15dc14e57ec218320c9997b5ac9f61a83997e04c5e2de73e53ce3b",
+    "byteLength": 2022238,
+    "storedEncoding": "gzip",
+    "storedSha256": "0a07b98812224ab03f6da64a81b2a28a5b93bc56ebc14cd7a2a09ff407826f39",
+    "storedByteLength": 1951212,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.362685+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/c1d2896efbc8f50705ad0602e51a053d2864ed7c6ba63dbd6edfa7c3625e5fbb.txt",
+    "textSha256": "c1d2896efbc8f50705ad0602e51a053d2864ed7c6ba63dbd6edfa7c3625e5fbb",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 12,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2688
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 3138
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 3498
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 3061
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 1038
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 509
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 852
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 2193
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 2721
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 3183
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2085
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 1743
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M205-Contest%20Code-Reso-Portola%20Valley%20Transfer%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M205-Contest%20Code-Reso-Portola%20Valley%20Transfer%20Tax_Redacted.pdf",
+    "file": "sources/dee8e20e8db3f7a5a273d6923a5da9e494383ba98a26a0ffdd3b6917a4199ede.pdf.gz",
+    "sha256": "dee8e20e8db3f7a5a273d6923a5da9e494383ba98a26a0ffdd3b6917a4199ede",
+    "byteLength": 1034076,
+    "storedEncoding": "gzip",
+    "storedSha256": "1ccfbaa451807cceba9b753f127d9ef46e74f52ab5c896945e0eb12b2e6fe913",
+    "storedByteLength": 973506,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.555385+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/8daaf7badb4164524b74023aeb860dea31034e9b2a1a56f9aec61fc84fa735a7.txt",
+    "textSha256": "8daaf7badb4164524b74023aeb860dea31034e9b2a1a56f9aec61fc84fa735a7",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 13,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2321
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2681
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2448
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 3023
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 3204
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 841
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2047
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 1789
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 2332
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2138
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2655
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 1803
+      },
+      {
+        "page": 13,
+        "method": "tesseract OCR",
+        "chars": 1811
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+    "file": "sources/343dbfda30034769a5ca0f3db2b31281fb17cbe5ea2737c0e470e0e7b7b4347d.pdf.gz",
+    "sha256": "343dbfda30034769a5ca0f3db2b31281fb17cbe5ea2737c0e470e0e7b7b4347d",
+    "byteLength": 2282041,
+    "storedEncoding": "gzip",
+    "storedSha256": "3749e11f8ac1bbb301fa893b35ef8e1afacc06248bb7129153e1984353e12b6d",
+    "storedByteLength": 1850199,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.728270+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/5f455690e5ba72ae5aa55f3254093909c182b76eecb89bae2bb249d63cec7dea.txt",
+    "textSha256": "5f455690e5ba72ae5aa55f3254093909c182b76eecb89bae2bb249d63cec7dea",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 26,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 1730
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 2706
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 2531
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 1814
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 2218
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 2449
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 2290
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 2530
+      },
+      {
+        "page": 9,
+        "method": "native PDF text",
+        "chars": 2695
+      },
+      {
+        "page": 10,
+        "method": "native PDF text",
+        "chars": 1261
+      },
+      {
+        "page": 11,
+        "method": "native PDF text",
+        "chars": 5102
+      },
+      {
+        "page": 12,
+        "method": "native PDF text",
+        "chars": 2678
+      },
+      {
+        "page": 13,
+        "method": "native PDF text",
+        "chars": 2822
+      },
+      {
+        "page": 14,
+        "method": "native PDF text",
+        "chars": 2785
+      },
+      {
+        "page": 15,
+        "method": "native PDF text",
+        "chars": 2318
+      },
+      {
+        "page": 16,
+        "method": "native PDF text",
+        "chars": 2473
+      },
+      {
+        "page": 17,
+        "method": "native PDF text",
+        "chars": 3050
+      },
+      {
+        "page": 18,
+        "method": "native PDF text",
+        "chars": 3082
+      },
+      {
+        "page": 19,
+        "method": "native PDF text",
+        "chars": 3005
+      },
+      {
+        "page": 20,
+        "method": "native PDF text",
+        "chars": 2902
+      },
+      {
+        "page": 21,
+        "method": "native PDF text",
+        "chars": 2203
+      },
+      {
+        "page": 22,
+        "method": "native PDF text",
+        "chars": 1924
+      },
+      {
+        "page": 23,
+        "method": "native PDF text",
+        "chars": 2197
+      },
+      {
+        "page": 24,
+        "method": "native PDF text",
+        "chars": 2640
+      },
+      {
+        "page": 25,
+        "method": "native PDF text",
+        "chars": 2294
+      },
+      {
+        "page": 26,
+        "method": "native PDF text",
+        "chars": 549
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M207-Contest%20-Code-Reso-EPA%20Term%20Limits_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M207-Contest%20-Code-Reso-EPA%20Term%20Limits_Redacted.pdf",
+    "file": "sources/daef22a2faeadd173026c342f400b8257b7de61600b359bcc9eb97c75ac9af1a.pdf.gz",
+    "sha256": "daef22a2faeadd173026c342f400b8257b7de61600b359bcc9eb97c75ac9af1a",
+    "byteLength": 1765100,
+    "storedEncoding": "gzip",
+    "storedSha256": "d36c2c4d366dff4389a24ef90ead178a1e345d5df3060a87ba70921892a55be0",
+    "storedByteLength": 1708497,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.737077+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/708d11543ea177d2c1d44063cc7447943ef1e1b89987edc9d0ed11b5a73e83d0.txt",
+    "textSha256": "708d11543ea177d2c1d44063cc7447943ef1e1b89987edc9d0ed11b5a73e83d0",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 5,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2601
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 2993
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 1509
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 1719
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 252
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M207-Contest%20Code-Reso-City%20of%20East%20Palo%20Alto%20Bond_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M207-Contest%20Code-Reso-City%20of%20East%20Palo%20Alto%20Bond_Redacted.pdf",
+    "file": "sources/2a4cbc33915d3b03626cac9c068c6bca0441fdd251e8fc1a31965ef1b4e25d2e.pdf.gz",
+    "sha256": "2a4cbc33915d3b03626cac9c068c6bca0441fdd251e8fc1a31965ef1b4e25d2e",
+    "byteLength": 1470709,
+    "storedEncoding": "gzip",
+    "storedSha256": "6e71c92d1fd5336254e4a5ba8ce3a7a1e03552b0be89a01a938ec96a79382dbf",
+    "storedByteLength": 1345636,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.762158+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/74b6bd6b008da23feb02a74c0d095643c71a8d99392c8e2919865ac8cca2d7a8.txt",
+    "textSha256": "74b6bd6b008da23feb02a74c0d095643c71a8d99392c8e2919865ac8cca2d7a8",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 15,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 3408
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 3260
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 4470
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 2790
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 1100
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 2882
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2897
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 3198
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 3808
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2764
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2979
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 477
+      },
+      {
+        "page": 13,
+        "method": "tesseract OCR",
+        "chars": 3023
+      },
+      {
+        "page": 14,
+        "method": "tesseract OCR",
+        "chars": 4204
+      },
+      {
+        "page": 15,
+        "method": "tesseract OCR",
+        "chars": 2721
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M209-Contest%20Code-Reso-San%20Mateo%20Charter%20Amendment_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M209-Contest%20Code-Reso-San%20Mateo%20Charter%20Amendment_Redacted.pdf",
+    "file": "sources/edbd9d96bf61015a10f6ec87fbc68d4958cd24b57f7a43a18cbb6675d5f6657d.pdf.gz",
+    "sha256": "edbd9d96bf61015a10f6ec87fbc68d4958cd24b57f7a43a18cbb6675d5f6657d",
+    "byteLength": 1042791,
+    "storedEncoding": "gzip",
+    "storedSha256": "08428a554bf671547e86161dafb3b3b77fa9d6961978d0d78230360b26b43207",
+    "storedByteLength": 1000343,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.879276+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/3657e6223f3bc2d36a284846aba29a1513fad03da13533416d9532a306efa344.txt",
+    "textSha256": "3657e6223f3bc2d36a284846aba29a1513fad03da13533416d9532a306efa344",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 12,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2851
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 3325
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2079
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 3058
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 3337
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 3366
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 3040
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 3191
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 2002
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2425
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2152
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 0
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M301-Contest%20Code-Reso-San%20Mateo%20Transactions%20and%20Use%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M301-Contest%20Code-Reso-San%20Mateo%20Transactions%20and%20Use%20Tax_Redacted.pdf",
+    "file": "sources/ea78342cd4ac0d4a01221735631c39a861ad4c9da65df49e10d21a55b4c1858f.pdf.gz",
+    "sha256": "ea78342cd4ac0d4a01221735631c39a861ad4c9da65df49e10d21a55b4c1858f",
+    "byteLength": 894824,
+    "storedEncoding": "gzip",
+    "storedSha256": "4ae0fb060d7ab938e09a3f29b614dd5e870725bffb6c6572eeea1fb51618cff7",
+    "storedByteLength": 854708,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:00.948350+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/8b7010d03285d808881879536c92fa7d6bb65624d7a394142e22912203afd564.txt",
+    "textSha256": "8b7010d03285d808881879536c92fa7d6bb65624d7a394142e22912203afd564",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 10,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3407
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 3625
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 3524
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 833
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 3070
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 3943
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 3487
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 3823
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 3903
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 252
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M302-Contest%20Code-Reso-City%20of%20Brisbane%20Business%20License%20Tax_Redacted_1.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M302-Contest%20Code-Reso-City%20of%20Brisbane%20Business%20License%20Tax_Redacted_1.pdf",
+    "file": "sources/dd2389d19c9923ae4af1be749cf7b50a3bc685714ca31b8849f7b8aa133ce3ef.pdf.gz",
+    "sha256": "dd2389d19c9923ae4af1be749cf7b50a3bc685714ca31b8849f7b8aa133ce3ef",
+    "byteLength": 1746328,
+    "storedEncoding": "gzip",
+    "storedSha256": "87b9994ebdf29d542e03deddf23a037f8041bbb453f610b9d0c10947c86d62d8",
+    "storedByteLength": 1662904,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.216349+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/641cb8efe895022e621cca2b844592cec39099a759353e06ff8d6c2a1bc818ab.txt",
+    "textSha256": "641cb8efe895022e621cca2b844592cec39099a759353e06ff8d6c2a1bc818ab",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 26,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2268
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 2703
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 2821
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 3510
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 1228
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 2564
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 2303
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 1937
+      },
+      {
+        "page": 9,
+        "method": "native PDF text",
+        "chars": 2805
+      },
+      {
+        "page": 10,
+        "method": "native PDF text",
+        "chars": 3191
+      },
+      {
+        "page": 11,
+        "method": "native PDF text",
+        "chars": 2960
+      },
+      {
+        "page": 12,
+        "method": "native PDF text",
+        "chars": 3348
+      },
+      {
+        "page": 13,
+        "method": "native PDF text",
+        "chars": 3488
+      },
+      {
+        "page": 14,
+        "method": "native PDF text",
+        "chars": 3741
+      },
+      {
+        "page": 15,
+        "method": "native PDF text",
+        "chars": 3622
+      },
+      {
+        "page": 16,
+        "method": "native PDF text",
+        "chars": 3761
+      },
+      {
+        "page": 17,
+        "method": "native PDF text",
+        "chars": 3432
+      },
+      {
+        "page": 18,
+        "method": "native PDF text",
+        "chars": 3559
+      },
+      {
+        "page": 19,
+        "method": "native PDF text",
+        "chars": 3879
+      },
+      {
+        "page": 20,
+        "method": "native PDF text",
+        "chars": 3656
+      },
+      {
+        "page": 21,
+        "method": "native PDF text",
+        "chars": 3411
+      },
+      {
+        "page": 22,
+        "method": "native PDF text",
+        "chars": 3837
+      },
+      {
+        "page": 23,
+        "method": "native PDF text",
+        "chars": 3519
+      },
+      {
+        "page": 24,
+        "method": "native PDF text",
+        "chars": 2959
+      },
+      {
+        "page": 25,
+        "method": "native PDF text",
+        "chars": 3650
+      },
+      {
+        "page": 26,
+        "method": "native PDF text",
+        "chars": 909
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M303-Contest%20Code-Reso-San%20Bruno%20Hosuing%20Permit%20and%20Development_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M303-Contest%20Code-Reso-San%20Bruno%20Hosuing%20Permit%20and%20Development_Redacted.pdf",
+    "file": "sources/eb4e70296f4e7abb53937614c33bf88c643138039a521495c8f8064e588278a2.pdf.gz",
+    "sha256": "eb4e70296f4e7abb53937614c33bf88c643138039a521495c8f8064e588278a2",
+    "byteLength": 542991,
+    "storedEncoding": "gzip",
+    "storedSha256": "3d460c035d4418e3c999fe167e6f27395b1fc5fbaa63acfe666cd6430fc083bf",
+    "storedByteLength": 530200,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.216775+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/5264343d6daf5a88dd605a4463de65bae252283ea1c3669fd7d49d1e7b5bdfa6.txt",
+    "textSha256": "5264343d6daf5a88dd605a4463de65bae252283ea1c3669fd7d49d1e7b5bdfa6",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 4,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3356
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2944
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2563
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 1659
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/52-ENG-M304-Contest%20Code-Reso-San%20Bruno%20Fireworks%20Ban_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M304-Contest%20Code-Reso-San%20Bruno%20Fireworks%20Ban_Redacted.pdf",
+    "file": "sources/c04e2f5e8f672195d9bd3e7b90415bd0c39c76282f4c091c9573e08e2e4400c6.pdf.gz",
+    "sha256": "c04e2f5e8f672195d9bd3e7b90415bd0c39c76282f4c091c9573e08e2e4400c6",
+    "byteLength": 404417,
+    "storedEncoding": "gzip",
+    "storedSha256": "36bfc5092488d25547015f9b8daf7b854cc4c89170bcfc3ba787924bf3ef24e9",
+    "storedByteLength": 392663,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.228630+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/63f0c825fa01d58872cd1b1372e301163966da750b574229807549beda53c130.txt",
+    "textSha256": "63f0c825fa01d58872cd1b1372e301163966da750b574229807549beda53c130",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 4,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2639
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2642
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 1183
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 1999
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-07/San%20Mateo%20County%20Amendments.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-07/San%20Mateo%20County%20Amendments.pdf",
+    "file": "sources/db9b218ebad34190631d655a933a558be422f90d367b4ad07c51ef85c59efae6.pdf.gz",
+    "sha256": "db9b218ebad34190631d655a933a558be422f90d367b4ad07c51ef85c59efae6",
+    "byteLength": 1315004,
+    "storedEncoding": "gzip",
+    "storedSha256": "9c2f283ea733d0489de89abab0b656459bc5ed28e5fd8e249405bf7a3d2bd791",
+    "storedByteLength": 1033319,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.294724+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/0cccb1d6e9da9a69623d75370fc51456de861da4a7674ec219640a69968623f6.txt",
+    "textSha256": "0cccb1d6e9da9a69623d75370fc51456de861da4a7674ec219640a69968623f6",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 21,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 1777
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 1963
+      },
+      {
+        "page": 3,
+        "method": "native PDF text",
+        "chars": 1297
+      },
+      {
+        "page": 4,
+        "method": "native PDF text",
+        "chars": 1299
+      },
+      {
+        "page": 5,
+        "method": "native PDF text",
+        "chars": 1466
+      },
+      {
+        "page": 6,
+        "method": "native PDF text",
+        "chars": 1584
+      },
+      {
+        "page": 7,
+        "method": "native PDF text",
+        "chars": 1500
+      },
+      {
+        "page": 8,
+        "method": "native PDF text",
+        "chars": 1617
+      },
+      {
+        "page": 9,
+        "method": "native PDF text",
+        "chars": 1743
+      },
+      {
+        "page": 10,
+        "method": "native PDF text",
+        "chars": 1282
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 596
+      },
+      {
+        "page": 12,
+        "method": "native PDF text",
+        "chars": 2077
+      },
+      {
+        "page": 13,
+        "method": "native PDF text",
+        "chars": 1675
+      },
+      {
+        "page": 14,
+        "method": "native PDF text",
+        "chars": 1831
+      },
+      {
+        "page": 15,
+        "method": "native PDF text",
+        "chars": 1808
+      },
+      {
+        "page": 16,
+        "method": "native PDF text",
+        "chars": 1464
+      },
+      {
+        "page": 17,
+        "method": "native PDF text",
+        "chars": 1379
+      },
+      {
+        "page": 18,
+        "method": "native PDF text",
+        "chars": 1626
+      },
+      {
+        "page": 19,
+        "method": "native PDF text",
+        "chars": 1455
+      },
+      {
+        "page": 20,
+        "method": "native PDF text",
+        "chars": 1275
+      },
+      {
+        "page": 21,
+        "method": "tesseract OCR",
+        "chars": 591
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M206-ImpartialAnalysis-Public-Transit-District-Sales-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M206-ImpartialAnalysis-Public-Transit-District-Sales-Tax.pdf",
+    "file": "sources/88da1639b2d0cee37228184d0190eb6f277afa6456a53c2078d914bc25b0d031.pdf.gz",
+    "sha256": "88da1639b2d0cee37228184d0190eb6f277afa6456a53c2078d914bc25b0d031",
+    "byteLength": 118974,
+    "storedEncoding": "gzip",
+    "storedSha256": "b5490fd26f0a99658c5583c92bf433fec54ec869771a026c14472114f0d184dd",
+    "storedByteLength": 109306,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.323408+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/70df66ecd57142f271039cdbbfc4446567251c8f59379ee2c14ff15753340533.txt",
+    "textSha256": "70df66ecd57142f271039cdbbfc4446567251c8f59379ee2c14ff15753340533",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3330
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 322
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M305-Contest%20Code-Reso-San%20Bruno%20Business%20License%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M305-Contest%20Code-Reso-San%20Bruno%20Business%20License%20Tax_Redacted.pdf",
+    "file": "sources/7ca6b593aa3f383b3e875059b2967b3a0fb8f6d9fa049b6f6c48f63c0e7a04da.pdf.gz",
+    "sha256": "7ca6b593aa3f383b3e875059b2967b3a0fb8f6d9fa049b6f6c48f63c0e7a04da",
+    "byteLength": 3279281,
+    "storedEncoding": "gzip",
+    "storedSha256": "96aef62a7eafa10b0d4ecd3f586a095fff03e8a894423bb44e2a5b2a2bbd29a9",
+    "storedByteLength": 3189801,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.507461+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/fa830ef88958d4b07292d6746ea6e99716286dcbe20aa69fb8d2718e45a76a34.txt",
+    "textSha256": "fa830ef88958d4b07292d6746ea6e99716286dcbe20aa69fb8d2718e45a76a34",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 36,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2610
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2974
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 1851
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 2153
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 3003
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 438
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2923
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 3134
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 1943
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 1527
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2915
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 2549
+      },
+      {
+        "page": 13,
+        "method": "tesseract OCR",
+        "chars": 3032
+      },
+      {
+        "page": 14,
+        "method": "tesseract OCR",
+        "chars": 2819
+      },
+      {
+        "page": 15,
+        "method": "tesseract OCR",
+        "chars": 3365
+      },
+      {
+        "page": 16,
+        "method": "tesseract OCR",
+        "chars": 2263
+      },
+      {
+        "page": 17,
+        "method": "tesseract OCR",
+        "chars": 3109
+      },
+      {
+        "page": 18,
+        "method": "tesseract OCR",
+        "chars": 3033
+      },
+      {
+        "page": 19,
+        "method": "tesseract OCR",
+        "chars": 3185
+      },
+      {
+        "page": 20,
+        "method": "tesseract OCR",
+        "chars": 2964
+      },
+      {
+        "page": 21,
+        "method": "tesseract OCR",
+        "chars": 2627
+      },
+      {
+        "page": 22,
+        "method": "tesseract OCR",
+        "chars": 2251
+      },
+      {
+        "page": 23,
+        "method": "tesseract OCR",
+        "chars": 2640
+      },
+      {
+        "page": 24,
+        "method": "tesseract OCR",
+        "chars": 2480
+      },
+      {
+        "page": 25,
+        "method": "tesseract OCR",
+        "chars": 3380
+      },
+      {
+        "page": 26,
+        "method": "tesseract OCR",
+        "chars": 2735
+      },
+      {
+        "page": 27,
+        "method": "tesseract OCR",
+        "chars": 2875
+      },
+      {
+        "page": 28,
+        "method": "tesseract OCR",
+        "chars": 1768
+      },
+      {
+        "page": 29,
+        "method": "tesseract OCR",
+        "chars": 1645
+      },
+      {
+        "page": 30,
+        "method": "tesseract OCR",
+        "chars": 1191
+      },
+      {
+        "page": 31,
+        "method": "tesseract OCR",
+        "chars": 2325
+      },
+      {
+        "page": 32,
+        "method": "tesseract OCR",
+        "chars": 2230
+      },
+      {
+        "page": 33,
+        "method": "tesseract OCR",
+        "chars": 2436
+      },
+      {
+        "page": 34,
+        "method": "tesseract OCR",
+        "chars": 2836
+      },
+      {
+        "page": 35,
+        "method": "tesseract OCR",
+        "chars": 3414
+      },
+      {
+        "page": 36,
+        "method": "tesseract OCR",
+        "chars": 1317
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M306-Contest%20Code-Reso-SMFCSD%20Bond_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M306-Contest%20Code-Reso-SMFCSD%20Bond_Redacted.pdf",
+    "file": "sources/df14dc287302eaa24029ee4664988e8161fac276a58d8afa757c24508ab39ba5.pdf.gz",
+    "sha256": "df14dc287302eaa24029ee4664988e8161fac276a58d8afa757c24508ab39ba5",
+    "byteLength": 966297,
+    "storedEncoding": "gzip",
+    "storedSha256": "0203af48a59ee85f3cba7901376d3e09c6b9222e7731f2d245ff45b78c8815a0",
+    "storedByteLength": 921041,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.553758+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/502d1c4b3c301b14c4d1239ef3fd3643357da379bdcb57b4385fc9d9eaa2fa88.txt",
+    "textSha256": "502d1c4b3c301b14c4d1239ef3fd3643357da379bdcb57b4385fc9d9eaa2fa88",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 11,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3069
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 3301
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 3274
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 2153
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 444
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 690
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2487
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 2031
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 4556
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 3070
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2988
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M307-Contest%20Code-Reso-SMCCD%20Bond_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M307-Contest%20Code-Reso-SMCCD%20Bond_Redacted.pdf",
+    "file": "sources/2a44e4aec2b7613fd7c69583e39a7ef2211fba465c221eb9b2dceafd1a0993b7.pdf.gz",
+    "sha256": "2a44e4aec2b7613fd7c69583e39a7ef2211fba465c221eb9b2dceafd1a0993b7",
+    "byteLength": 1299765,
+    "storedEncoding": "gzip",
+    "storedSha256": "f9fb35e3410a81266890598971b44dc63948b2492cfcb5f2c6f9349fa2b49e55",
+    "storedByteLength": 1246512,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.691887+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/60813c75990308a6d891b5ce23bfc27ab3d61d8fff9d3dd98abeff63dbfc3b2e.txt",
+    "textSha256": "60813c75990308a6d891b5ce23bfc27ab3d61d8fff9d3dd98abeff63dbfc3b2e",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 16,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2876
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 3138
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2646
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 3580
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 2137
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 444
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2698
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 3218
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 3502
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2117
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2560
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 4164
+      },
+      {
+        "page": 13,
+        "method": "tesseract OCR",
+        "chars": 2694
+      },
+      {
+        "page": 14,
+        "method": "tesseract OCR",
+        "chars": 687
+      },
+      {
+        "page": 15,
+        "method": "tesseract OCR",
+        "chars": 3327
+      },
+      {
+        "page": 16,
+        "method": "tesseract OCR",
+        "chars": 510
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M308-Contest%20Code-Reso-Belmont%20Special%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M308-Contest%20Code-Reso-Belmont%20Special%20Tax_Redacted.pdf",
+    "file": "sources/aaf00fbc8562ce0f8fac11c587d3b8c03a5875d270cc28ff0a59d66fffe99854.pdf.gz",
+    "sha256": "aaf00fbc8562ce0f8fac11c587d3b8c03a5875d270cc28ff0a59d66fffe99854",
+    "byteLength": 935569,
+    "storedEncoding": "gzip",
+    "storedSha256": "bf05b3fbef39900aacede7f2216b83fa784f50320abe37b99bbae1d0372748cc",
+    "storedByteLength": 894806,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.726718+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/cc09fd46c9ef7a5622dceb519fa0c1cb78f5f61ef81d4d5b515cb0378969d4a5.txt",
+    "textSha256": "cc09fd46c9ef7a5622dceb519fa0c1cb78f5f61ef81d4d5b515cb0378969d4a5",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 12,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2531
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2267
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 3166
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 1085
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 177
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 2623
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2630
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 2827
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 1803
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2367
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2776
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 3086
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M309-Contest%20Code-Reso-Half%20Moon%20Bay%20Coastal%20Land_Redacted_0.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M309-Contest%20Code-Reso-Half%20Moon%20Bay%20Coastal%20Land_Redacted_0.pdf",
+    "file": "sources/f9b8e79352f36d499bfa86ee55d00a4b9ec73bf33a90bf82cd04122685ca5338.pdf.gz",
+    "sha256": "f9b8e79352f36d499bfa86ee55d00a4b9ec73bf33a90bf82cd04122685ca5338",
+    "byteLength": 1599439,
+    "storedEncoding": "gzip",
+    "storedSha256": "c4024f7c403997165f5b8d5b5b1d87689eaf57ad8f93837f34b65e77ed7faa65",
+    "storedByteLength": 1530971,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.803505+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/768f7f007b230a3ce538df7ae06db730666fbd434fc51a9986a8b2d5aa648a06.txt",
+    "textSha256": "768f7f007b230a3ce538df7ae06db730666fbd434fc51a9986a8b2d5aa648a06",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 14,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2605
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2502
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2866
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 2396
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 1853
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 2509
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 2479
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 2490
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 2395
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2250
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 3297
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 643
+      },
+      {
+        "page": 13,
+        "method": "tesseract OCR",
+        "chars": 750
+      },
+      {
+        "page": 14,
+        "method": "tesseract OCR",
+        "chars": 486
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M401-Contest%20Code-Reso-Half%20Moon%20Bay%20Housing%20Initiative_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M401-Contest%20Code-Reso-Half%20Moon%20Bay%20Housing%20Initiative_Redacted.pdf",
+    "file": "sources/3b2ae9f9f12745043027c5b386aa34bf9fe972b5b17e522b424e5c7d7d515083.pdf.gz",
+    "sha256": "3b2ae9f9f12745043027c5b386aa34bf9fe972b5b17e522b424e5c7d7d515083",
+    "byteLength": 452121,
+    "storedEncoding": "gzip",
+    "storedSha256": "3301949f2aca3648b40c3b8b0c625f0ab4ff0ab602b1adfc98c26c646fa38a54",
+    "storedByteLength": 430281,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.875091+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/eda57c6f71f092465bccd9298122e94826802320cc1893437874cb1b37dcf3f4.txt",
+    "textSha256": "eda57c6f71f092465bccd9298122e94826802320cc1893437874cb1b37dcf3f4",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 6,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2696
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2643
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2368
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 2645
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 2723
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 226
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-M402-Contest%20Code-Reso-Pacifica%20Transactions%20and%20Use%20Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-M402-Contest%20Code-Reso-Pacifica%20Transactions%20and%20Use%20Tax_Redacted.pdf",
+    "file": "sources/b1649da5de4e951043e388cbbf18c7b83130e6edff6914f999dc12c832a2f087.pdf.gz",
+    "sha256": "b1649da5de4e951043e388cbbf18c7b83130e6edff6914f999dc12c832a2f087",
+    "byteLength": 1296692,
+    "storedEncoding": "gzip",
+    "storedSha256": "8244bd53dd246f4b6faaefb2bd64e671ef2cb2ce8d4fe29acbb31543367e3434",
+    "storedByteLength": 1250130,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:01.944067+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/013455231e8ee0098268b6a706075b52c334f744013f1e80f79e81d081c7168b.txt",
+    "textSha256": "013455231e8ee0098268b6a706075b52c334f744013f1e80f79e81d081c7168b",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 17,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3033
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2584
+      },
+      {
+        "page": 3,
+        "method": "tesseract OCR",
+        "chars": 2672
+      },
+      {
+        "page": 4,
+        "method": "tesseract OCR",
+        "chars": 2312
+      },
+      {
+        "page": 5,
+        "method": "tesseract OCR",
+        "chars": 2135
+      },
+      {
+        "page": 6,
+        "method": "tesseract OCR",
+        "chars": 2464
+      },
+      {
+        "page": 7,
+        "method": "tesseract OCR",
+        "chars": 384
+      },
+      {
+        "page": 8,
+        "method": "tesseract OCR",
+        "chars": 73
+      },
+      {
+        "page": 9,
+        "method": "tesseract OCR",
+        "chars": 2537
+      },
+      {
+        "page": 10,
+        "method": "tesseract OCR",
+        "chars": 2651
+      },
+      {
+        "page": 11,
+        "method": "tesseract OCR",
+        "chars": 2611
+      },
+      {
+        "page": 12,
+        "method": "tesseract OCR",
+        "chars": 2435
+      },
+      {
+        "page": 13,
+        "method": "tesseract OCR",
+        "chars": 2626
+      },
+      {
+        "page": 14,
+        "method": "tesseract OCR",
+        "chars": 2725
+      },
+      {
+        "page": 15,
+        "method": "tesseract OCR",
+        "chars": 2687
+      },
+      {
+        "page": 16,
+        "method": "tesseract OCR",
+        "chars": 2992
+      },
+      {
+        "page": 17,
+        "method": "tesseract OCR",
+        "chars": 1333
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MAA-ImpartialAnalysis-SMC-Charter-Affirmation-of-Rights.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MAA-ImpartialAnalysis-SMC-Charter-Affirmation-of-Rights.pdf",
+    "file": "sources/6b12116c6249c79e08208d3e6afc63266fd09a0084055d2cb21077707956a6eb.pdf.gz",
+    "sha256": "6b12116c6249c79e08208d3e6afc63266fd09a0084055d2cb21077707956a6eb",
+    "byteLength": 51591,
+    "storedEncoding": "gzip",
+    "storedSha256": "4a2afd36fbe1761a3703bab661b06561a5fb85b722b44183654d5b603abb9f5d",
+    "storedByteLength": 46106,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.023252+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/50f4e584575336a21a2d9e751b482b90fa9e28f3aea762a581f25de42831503b.txt",
+    "textSha256": "50f4e584575336a21a2d9e751b482b90fa9e28f3aea762a581f25de42831503b",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 1441
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MBB-ImpartialAnalysis-Pacifica-Transactions-and-Use-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MBB-ImpartialAnalysis-Pacifica-Transactions-and-Use-Tax.pdf",
+    "file": "sources/fe1796525870f17551fb57e48bc11b90f1089c5065f8b5dc752c5013dc5a4b41.pdf.gz",
+    "sha256": "fe1796525870f17551fb57e48bc11b90f1089c5065f8b5dc752c5013dc5a4b41",
+    "byteLength": 89562,
+    "storedEncoding": "gzip",
+    "storedSha256": "7b178dd698381b572b09217f91417a3efa5c81ce375c30597d9c289825ca42cc",
+    "storedByteLength": 81659,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.058291+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/7aaed75af5b236631a0016a0d869a566364e3c376d6deb218936cc41c478439a.txt",
+    "textSha256": "7aaed75af5b236631a0016a0d869a566364e3c376d6deb218936cc41c478439a",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2511
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MCC-ImpartialAnalysis-EPA-Term-Limits_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MCC-ImpartialAnalysis-EPA-Term-Limits_Redacted.pdf",
+    "file": "sources/29a974ada7eccad8bfe937d1fe02c4d378891e8e7582a724325a41b0984624e4.pdf.gz",
+    "sha256": "29a974ada7eccad8bfe937d1fe02c4d378891e8e7582a724325a41b0984624e4",
+    "byteLength": 106466,
+    "storedEncoding": "gzip",
+    "storedSha256": "080b9792b3286d27829dd8cd910beb26214ed8ab4a0ee2817dfe8bb66014eff0",
+    "storedByteLength": 95474,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.083508+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/e7156cb8eb3b10b3e6c4c8cac23cbd72ef133c9ba9bb3083b91390e5565bf0ac.txt",
+    "textSha256": "e7156cb8eb3b10b3e6c4c8cac23cbd72ef133c9ba9bb3083b91390e5565bf0ac",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 1187
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MD-ImpartialAnalysis-Burlingame-Occupancy-Tax_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MD-ImpartialAnalysis-Burlingame-Occupancy-Tax_Redacted.pdf",
+    "file": "sources/2bc5eab19fb4a9182452c0bdfa99fb46043e998d51f623a7c8b323323e0cf3bf.pdf.gz",
+    "sha256": "2bc5eab19fb4a9182452c0bdfa99fb46043e998d51f623a7c8b323323e0cf3bf",
+    "byteLength": 3856801,
+    "storedEncoding": "gzip",
+    "storedSha256": "586fe9d788dfec320450dfd03dd57457164cfdc48277de94461b0350d13b2a59",
+    "storedByteLength": 3823340,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.142473+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/71e9baccd4958e71d6617a05fc8e3882b377ed172a43a9375d74fc2a8a43b7ce.txt",
+    "textSha256": "71e9baccd4958e71d6617a05fc8e3882b377ed172a43a9375d74fc2a8a43b7ce",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2038
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MDD-ImpartialAnalysis-San-Bruno-Fireworks-Ban.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MDD-ImpartialAnalysis-San-Bruno-Fireworks-Ban.pdf",
+    "file": "sources/dfca5fd54b555bd1e6a14fc70cd91f9b70d848d4f9edfd8d3d99c40b52c92b5c.pdf.gz",
+    "sha256": "dfca5fd54b555bd1e6a14fc70cd91f9b70d848d4f9edfd8d3d99c40b52c92b5c",
+    "byteLength": 82560,
+    "storedEncoding": "gzip",
+    "storedSha256": "3941691b9ea18417f0aba7dff4922037bbdd76894d169c7ad340f5217b00c91d",
+    "storedByteLength": 74044,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.272281+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/46c39f16054551a796242124c215bf1287deba43d25e4d22b963d926f3665d6b.txt",
+    "textSha256": "46c39f16054551a796242124c215bf1287deba43d25e4d22b963d926f3665d6b",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2194
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-ME-ImpartialAnalysis-RWC-Housing_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-ME-ImpartialAnalysis-RWC-Housing_Redacted.pdf",
+    "file": "sources/463224fce1815c4d3fd084336b7ccd1e380cc9c150f22bfc0bb1bf988139f75c.pdf.gz",
+    "sha256": "463224fce1815c4d3fd084336b7ccd1e380cc9c150f22bfc0bb1bf988139f75c",
+    "byteLength": 385550,
+    "storedEncoding": "gzip",
+    "storedSha256": "a9d87f6c7a304038cba3f3a33a548b65de4eab9cc19c334aa96966ba70ef64d1",
+    "storedByteLength": 368309,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.274644+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/b47415677fc495adcf870c6f75e52fe75d37993222c52c166cc9ea4f1cf411b2.txt",
+    "textSha256": "b47415677fc495adcf870c6f75e52fe75d37993222c52c166cc9ea4f1cf411b2",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3383
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 604
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MEE-ImpartialAnalysis-San-Bruno-Business-License-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MEE-ImpartialAnalysis-San-Bruno-Business-License-Tax.pdf",
+    "file": "sources/c115fbb250c53840d6f5df6a2d6f8a05c4ffc3fe6c54850331388ce80119d12b.pdf.gz",
+    "sha256": "c115fbb250c53840d6f5df6a2d6f8a05c4ffc3fe6c54850331388ce80119d12b",
+    "byteLength": 83288,
+    "storedEncoding": "gzip",
+    "storedSha256": "c1cfbae9bc7a8d1f4bb774f19216086dd10e65b9559430246cc72a94bfdc1418",
+    "storedByteLength": 74634,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.320055+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/21379ef879621ee084f84023f7a60d37874d0011853a99769802fb419693c467.txt",
+    "textSha256": "21379ef879621ee084f84023f7a60d37874d0011853a99769802fb419693c467",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2745
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 544
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MF-ImpartialAnalysis-San-Mateo-Charter-Amendment-Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MF-ImpartialAnalysis-San-Mateo-Charter-Amendment-Redacted.pdf",
+    "file": "sources/fe0b8e568c7aba1e99e862a86f7d4b01ee83e26f97085fd19287556996e231db.pdf.gz",
+    "sha256": "fe0b8e568c7aba1e99e862a86f7d4b01ee83e26f97085fd19287556996e231db",
+    "byteLength": 2451172,
+    "storedEncoding": "gzip",
+    "storedSha256": "fced5950af64b16b282821bec854b3bb07088fe6101ca26e09aeb424ec541916",
+    "storedByteLength": 2152632,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.447784+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/3d5422cafefdabbd10b58fcb3817d5d5e481481d3a18e120e89ed42123e8c5cd.txt",
+    "textSha256": "3d5422cafefdabbd10b58fcb3817d5d5e481481d3a18e120e89ed42123e8c5cd",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2629
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 884
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MG-ImpartialAnalysis-City-of-San-Carlos-Use-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MG-ImpartialAnalysis-City-of-San-Carlos-Use-Tax.pdf",
+    "file": "sources/d2dae6d3a4218bbb102c30e3a3c15e8cb5c2fb150d4d74ba956023636642a40f.pdf.gz",
+    "sha256": "d2dae6d3a4218bbb102c30e3a3c15e8cb5c2fb150d4d74ba956023636642a40f",
+    "byteLength": 743223,
+    "storedEncoding": "gzip",
+    "storedSha256": "e8d7e00145ddf714dd18f9856edacc6159b7715d48ca0438e2cf14a260085945",
+    "storedByteLength": 642867,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.554598+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/977626b2ea81456036f6680d598cb4c35f5f3dfa44657b0c3df12710953f05ae.txt",
+    "textSha256": "977626b2ea81456036f6680d598cb4c35f5f3dfa44657b0c3df12710953f05ae",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2300
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 2092
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MH-ImpartialAnalysis-San-Mateo-Transactions-and-Use-Tax-Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MH-ImpartialAnalysis-San-Mateo-Transactions-and-Use-Tax-Redacted.pdf",
+    "file": "sources/8c34b935da0a8cbd28672c78a4b3bc5ef15bbffa315b427b0568e3ab5f282c7f.pdf.gz",
+    "sha256": "8c34b935da0a8cbd28672c78a4b3bc5ef15bbffa315b427b0568e3ab5f282c7f",
+    "byteLength": 3985580,
+    "storedEncoding": "gzip",
+    "storedSha256": "95369509adbeb355d18ee55efdd167bb0140738d2b4a8a678681f167bd8482cc",
+    "storedByteLength": 3864521,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.560771+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/17a0a33264c4564672cbd361531d77ac6824ab141cb0d483c6b1f4028a9ba8eb.txt",
+    "textSha256": "17a0a33264c4564672cbd361531d77ac6824ab141cb0d483c6b1f4028a9ba8eb",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 1944
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MI-ImpartialAnalysis-Half-Moon-Bay-Coastal-Land_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MI-ImpartialAnalysis-Half-Moon-Bay-Coastal-Land_Redacted.pdf",
+    "file": "sources/4f0adf00b5b516f7c2cd1869f8cbcbb152961a64b2af1e656c085584314a5bf8.pdf.gz",
+    "sha256": "4f0adf00b5b516f7c2cd1869f8cbcbb152961a64b2af1e656c085584314a5bf8",
+    "byteLength": 17165,
+    "storedEncoding": "gzip",
+    "storedSha256": "796c4f32513938c38bc03af9a4f95d6a1a611c4c121f20704db6ce675320c396",
+    "storedByteLength": 9800,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.660085+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/13124396829403dc05c5e723288c612092279d660e40e3cb3748a02798051b63.txt",
+    "textSha256": "13124396829403dc05c5e723288c612092279d660e40e3cb3748a02798051b63",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2932
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MJ-ImpartialAnalysis-SMC-Charter-Extension-to-Call%20Special%20Election.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MJ-ImpartialAnalysis-SMC-Charter-Extension-to-Call%20Special%20Election.pdf",
+    "file": "sources/db9d881a44157b18338295c51952269c622596f9e195894166db6fb3057de16d.pdf.gz",
+    "sha256": "db9d881a44157b18338295c51952269c622596f9e195894166db6fb3057de16d",
+    "byteLength": 80899,
+    "storedEncoding": "gzip",
+    "storedSha256": "9b9f99560ab12e61e034ba05cd9df586f38d80b8476883314128a6c84d0ac15f",
+    "storedByteLength": 73805,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.688970+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/0cb825229e24d4dc7279ec2a1e196a2998769da16b38dd0188c8c3b334dbbf55.txt",
+    "textSha256": "0cb825229e24d4dc7279ec2a1e196a2998769da16b38dd0188c8c3b334dbbf55",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2425
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MK-ImpartialAnalysis-San-Carlos-SD-Parcel-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MK-ImpartialAnalysis-San-Carlos-SD-Parcel-Tax.pdf",
+    "file": "sources/e98ffee2d4fc2ba93d0f4295e36f00a1ffd2a7c7bf7340cf3b832724d7d036ed.pdf.gz",
+    "sha256": "e98ffee2d4fc2ba93d0f4295e36f00a1ffd2a7c7bf7340cf3b832724d7d036ed",
+    "byteLength": 109462,
+    "storedEncoding": "gzip",
+    "storedSha256": "96ab42630912437f9ee4d4698bddd9891b3a758e849a9675ffac96ea0e585f0f",
+    "storedByteLength": 97465,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:02.833526+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/88819b50f4cd951c919d67e83b5bf1eaf53737a757b695732966189ebf140ce1.txt",
+    "textSha256": "88819b50f4cd951c919d67e83b5bf1eaf53737a757b695732966189ebf140ce1",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2980
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 199
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-ML-ImpartialAnalysis-SMC-Charter-Extreme-Weather.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-ML-ImpartialAnalysis-SMC-Charter-Extreme-Weather.pdf",
+    "file": "sources/00f5fa81560a4ae0e5acc4bb2163cca312f95d6357a1e260f93467bbe556fa49.pdf.gz",
+    "sha256": "00f5fa81560a4ae0e5acc4bb2163cca312f95d6357a1e260f93467bbe556fa49",
+    "byteLength": 51181,
+    "storedEncoding": "gzip",
+    "storedSha256": "a85667b9407368812fcf753c718bc8c5bdba6c5f529e0e6577b1c87f20a4e7e5",
+    "storedByteLength": 45680,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.028375+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/c6b04202b32a3b6cfbceebfa6b0a0668e421cc5cb56785efb7b3181f3ad36b9f.txt",
+    "textSha256": "c6b04202b32a3b6cfbceebfa6b0a0668e421cc5cb56785efb7b3181f3ad36b9f",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 1468
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MM-ImpartialAnalysis-JUHSD-Parcel-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MM-ImpartialAnalysis-JUHSD-Parcel-Tax.pdf",
+    "file": "sources/acc83b79b2e0f4a6193103ffdeeaea46e04f3137baf7c82200ab586221f29eef.pdf.gz",
+    "sha256": "acc83b79b2e0f4a6193103ffdeeaea46e04f3137baf7c82200ab586221f29eef",
+    "byteLength": 241701,
+    "storedEncoding": "gzip",
+    "storedSha256": "0dcfcdf4122a1bb3d5758987e15fa0cb1f1c35b664a82be8c84797bfe795ff0b",
+    "storedByteLength": 225658,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.126409+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/e0f0c1fd0f15417fd954c8ae002028b8f692fdac003540cba595ecc50719e9e0.txt",
+    "textSha256": "e0f0c1fd0f15417fd954c8ae002028b8f692fdac003540cba595ecc50719e9e0",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2706
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MN-ImpartialAnalysis-PortolaValley-Transfer-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MN-ImpartialAnalysis-PortolaValley-Transfer-Tax.pdf",
+    "file": "sources/a4bf0ccc1abecfa186d481984a9cefbd8c40210b29ee91436efd25356a90afcc.pdf.gz",
+    "sha256": "a4bf0ccc1abecfa186d481984a9cefbd8c40210b29ee91436efd25356a90afcc",
+    "byteLength": 149700,
+    "storedEncoding": "gzip",
+    "storedSha256": "06d3987144f727a4a085bc17f1b27a0a306e493ceeccf53fcac09ec3d8b400f2",
+    "storedByteLength": 139950,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.180750+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/d814124675040f148704ca76eaf8177bbaddda2a88fc7debad32b937b39f27d5.txt",
+    "textSha256": "d814124675040f148704ca76eaf8177bbaddda2a88fc7debad32b937b39f27d5",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3186
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MO-ImpartialAnalysis-City-of-East-Palo-Alto-Bond.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MO-ImpartialAnalysis-City-of-East-Palo-Alto-Bond.pdf",
+    "file": "sources/c8c684f600c2694ac3e576f89c7fd984ce0f9853891fcc85547357a36e866326.pdf.gz",
+    "sha256": "c8c684f600c2694ac3e576f89c7fd984ce0f9853891fcc85547357a36e866326",
+    "byteLength": 146494,
+    "storedEncoding": "gzip",
+    "storedSha256": "918f9ac7db70ab92e35e826e29f73c25b10d43e251ed1fa8eca766906f85c26b",
+    "storedByteLength": 133909,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.218601+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/3c9472af1d34844f1eebd6ec96082b0404068fb097101184fa37586793ed5a5a.txt",
+    "textSha256": "3c9472af1d34844f1eebd6ec96082b0404068fb097101184fa37586793ed5a5a",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2813
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 308
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MP-ImpartialAnalysis-MenloPark-Muni-Amendment.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MP-ImpartialAnalysis-MenloPark-Muni-Amendment.pdf",
+    "file": "sources/f1218f97286257c9e446fc967f4fce99649252019b1d466908d9b140c2eacea5.pdf.gz",
+    "sha256": "f1218f97286257c9e446fc967f4fce99649252019b1d466908d9b140c2eacea5",
+    "byteLength": 137167,
+    "storedEncoding": "gzip",
+    "storedSha256": "951e03dd3c16a72ce3831dcea73803cfa3df8332bf9c0a858871ddd48ca33cea",
+    "storedByteLength": 128442,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.231548+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/a10109ceb98132088a51086dc9bdf67d3ebb1eae26e2cde4edcf286ec920fe92.txt",
+    "textSha256": "a10109ceb98132088a51086dc9bdf67d3ebb1eae26e2cde4edcf286ec920fe92",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2857
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 128
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MQ-ImpartialAnalysis-Half-Moon-Bay-Housing_Redacted.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MQ-ImpartialAnalysis-Half-Moon-Bay-Housing_Redacted.pdf",
+    "file": "sources/af800e1c0e5ac9d7f89c5a3af486ab5e831e5b92c3dc95fd6054b7a9b4a47d06.pdf.gz",
+    "sha256": "af800e1c0e5ac9d7f89c5a3af486ab5e831e5b92c3dc95fd6054b7a9b4a47d06",
+    "byteLength": 18054,
+    "storedEncoding": "gzip",
+    "storedSha256": "e578d9bbbec503a7b7a9c7954ec774dc3f8946f9427e0c812964598481a4669b",
+    "storedByteLength": 10493,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.313733+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/be7f58d275238fd08ca1cae9812f9a185afe02d6122ae3b68eaae680277a5e12.txt",
+    "textSha256": "be7f58d275238fd08ca1cae9812f9a185afe02d6122ae3b68eaae680277a5e12",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 3032
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 285
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MR-ImpartialAnalysis-Burlingame-ESD-Bond.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MR-ImpartialAnalysis-Burlingame-ESD-Bond.pdf",
+    "file": "sources/ddeb0a284c6526f6f01a13062350068311d157dba816049dda972745c003eab4.pdf.gz",
+    "sha256": "ddeb0a284c6526f6f01a13062350068311d157dba816049dda972745c003eab4",
+    "byteLength": 117197,
+    "storedEncoding": "gzip",
+    "storedSha256": "a33539cec274d03c0808fa933474f541f90240d1d0571eed94dbc621326c30d2",
+    "storedByteLength": 104668,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.412848+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/197d65bf060301e73ae5c95797a844665391225ecf20bc66c853330360307bd4.txt",
+    "textSha256": "197d65bf060301e73ae5c95797a844665391225ecf20bc66c853330360307bd4",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3074
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 418
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MS-ImpartialAnalysis-San-Bruno-Hosuing-Permit-and-Development.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MS-ImpartialAnalysis-San-Bruno-Hosuing-Permit-and-Development.pdf",
+    "file": "sources/c2abf4150dae76ae670975d8030c06aa5bf4f5f5375cd6ce1e430fff3b207c86.pdf.gz",
+    "sha256": "c2abf4150dae76ae670975d8030c06aa5bf4f5f5375cd6ce1e430fff3b207c86",
+    "byteLength": 78731,
+    "storedEncoding": "gzip",
+    "storedSha256": "752d072016888f282d9e4ce96513f33e158e3dfb9db0cab48f375b629b579787",
+    "storedByteLength": 70160,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.428056+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/fe198b85016d1779954851a14b8bff7cf30016e573066b1f86145dd10259f69a.txt",
+    "textSha256": "fe198b85016d1779954851a14b8bff7cf30016e573066b1f86145dd10259f69a",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2673
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MT-ImpartialAnalysis-Pacifica-SD-Parcel-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MT-ImpartialAnalysis-Pacifica-SD-Parcel-Tax.pdf",
+    "file": "sources/ab45c11ea1f039d9dd2b1a0af0b7059a7bbf1b769f0223eac297f3a103e477be.pdf.gz",
+    "sha256": "ab45c11ea1f039d9dd2b1a0af0b7059a7bbf1b769f0223eac297f3a103e477be",
+    "byteLength": 95071,
+    "storedEncoding": "gzip",
+    "storedSha256": "d0b9f43bf361dc7a47a1438c9b9b1d76ecacd88d1278378aa797c01f2bc1b1bb",
+    "storedByteLength": 87591,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.455797+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/838aeae94c2db8e78b1f5dde24899b3b4d695b8d9708032e44dbe1f718555eb8.txt",
+    "textSha256": "838aeae94c2db8e78b1f5dde24899b3b4d695b8d9708032e44dbe1f718555eb8",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2905
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MU-ImpartialAnalysis-SMC-Charter-Reapportionment.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MU-ImpartialAnalysis-SMC-Charter-Reapportionment.pdf",
+    "file": "sources/dbd9fddde80d2c03052b1a1164291a6a1e16b0f9569b1b40286cac0f253a616b.pdf.gz",
+    "sha256": "dbd9fddde80d2c03052b1a1164291a6a1e16b0f9569b1b40286cac0f253a616b",
+    "byteLength": 783804,
+    "storedEncoding": "gzip",
+    "storedSha256": "8bd233e6d1c78bf90da2465bbbc294f23713a0ea332d0ca0bd11ff624df89ab2",
+    "storedByteLength": 691111,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.482279+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/85cf0bddabba159c23f94c227f7f7d796f966362ef259847b08684f96a3b4226.txt",
+    "textSha256": "85cf0bddabba159c23f94c227f7f7d796f966362ef259847b08684f96a3b4226",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2654
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MV-ImpartialAnalysis-SMCCD-Bond.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MV-ImpartialAnalysis-SMCCD-Bond.pdf",
+    "file": "sources/77e2de30fa2e015262762725b1d3f88d05407df23574a779c8b0f7e73314e91f.pdf.gz",
+    "sha256": "77e2de30fa2e015262762725b1d3f88d05407df23574a779c8b0f7e73314e91f",
+    "byteLength": 116969,
+    "storedEncoding": "gzip",
+    "storedSha256": "d4f41c95d35189cd3e8aa66b7c17b0cf349cbbbfc3860a2ef52b396e4bfca0c6",
+    "storedByteLength": 107901,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.597052+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/814bc8f0a45287857e9d03263580033af05a07565c1ec0562ccc3f8ea3d50a8e.txt",
+    "textSha256": "814bc8f0a45287857e9d03263580033af05a07565c1ec0562ccc3f8ea3d50a8e",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2553
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 1065
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MW-ImpartialAnalysis-SMFCSD-Bond.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MW-ImpartialAnalysis-SMFCSD-Bond.pdf",
+    "file": "sources/a44c93b09b166f87a90174004c7beda48251fadcd10120360f9c74ecb8734176.pdf.gz",
+    "sha256": "a44c93b09b166f87a90174004c7beda48251fadcd10120360f9c74ecb8734176",
+    "byteLength": 108796,
+    "storedEncoding": "gzip",
+    "storedSha256": "bc93c53dacd50162c1ec49552e3534363abb089975c5aba555579b724c264b05",
+    "storedByteLength": 99934,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.634532+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/97d1e8d60ebb707f96745d4338d0e09e1349298328ceda5b4178ca50b1fe7637.txt",
+    "textSha256": "97d1e8d60ebb707f96745d4338d0e09e1349298328ceda5b4178ca50b1fe7637",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3104
+      },
+      {
+        "page": 2,
+        "method": "tesseract OCR",
+        "chars": 182
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MX-ImpartialAnalysis-City-of-Brisbane-Business-License-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MX-ImpartialAnalysis-City-of-Brisbane-Business-License-Tax.pdf",
+    "file": "sources/d005ee006c504ea188734b5793540052f6c182afe66cde90ef68f88aca349bb3.pdf.gz",
+    "sha256": "d005ee006c504ea188734b5793540052f6c182afe66cde90ef68f88aca349bb3",
+    "byteLength": 66703,
+    "storedEncoding": "gzip",
+    "storedSha256": "bf621fe120dc3ca43257e7841aeaf49cc0df45a812c8fc44b932cba3644fd487",
+    "storedByteLength": 61926,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.667759+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/1709ae1933464da5913a025505dc081f6272271d3dc33a2c7eed538589d7c6f0.txt",
+    "textSha256": "1709ae1933464da5913a025505dc081f6272271d3dc33a2c7eed538589d7c6f0",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 2,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "native PDF text",
+        "chars": 2626
+      },
+      {
+        "page": 2,
+        "method": "native PDF text",
+        "chars": 403
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MY-ImpartialAnalysis-Belmont-Special-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MY-ImpartialAnalysis-Belmont-Special-Tax.pdf",
+    "file": "sources/710020a1cc79ce0ab6c1d0557a1cfa19fd19468dbcf06af1f737925a74d2c700.pdf.gz",
+    "sha256": "710020a1cc79ce0ab6c1d0557a1cfa19fd19468dbcf06af1f737925a74d2c700",
+    "byteLength": 307771,
+    "storedEncoding": "gzip",
+    "storedSha256": "836dfeffbaaf409766ea908cb46a6020603e887118e3e6b1d7f6f48ed924e13f",
+    "storedByteLength": 267143,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.735484+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/fa709005a2315164fb336750a61206ab824cf064eef07033a2be83c1ffa1d529.txt",
+    "textSha256": "fa709005a2315164fb336750a61206ab824cf064eef07033a2be83c1ffa1d529",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 3531
+      }
+    ]
+  },
+  {
+    "url": "https://smcacre.gov/system/files/2026-08/52-ENG-MZ-ImpartialAnalysis-Cabrillo-USD-Parcel-Tax.pdf",
+    "finalUrl": "https://smcacre.gov/system/files/2026-08/52-ENG-MZ-ImpartialAnalysis-Cabrillo-USD-Parcel-Tax.pdf",
+    "file": "sources/82eb13562f4933253fd8fccc62694107fcbc217ab09bd07c0f7c64e2ba3ab967.pdf.gz",
+    "sha256": "82eb13562f4933253fd8fccc62694107fcbc217ab09bd07c0f7c64e2ba3ab967",
+    "byteLength": 245952,
+    "storedEncoding": "gzip",
+    "storedSha256": "0f72a4e70ed8fa088edfcfd57b18742be1f5571135d51d9efbeef49e9620d686",
+    "storedByteLength": 230372,
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "retrievedAt": "2026-11-03T04:59:03.815910+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_PDF_BYTES",
+    "textFile": "sources/3a8329f757b18d8bea69e2af3629340421fd9c2b4922e89799f2a38945e88c7e.txt",
+    "textSha256": "3a8329f757b18d8bea69e2af3629340421fd9c2b4922e89799f2a38945e88c7e",
+    "textFormat": "PDF_TEXT_AND_LOCAL_OCR_ANNOTATION",
+    "textHashScope": "Exact UTF8 saved page text, extracted natively or locally OCRed; not original PDF bytes. Original PDF hash remains sha256.",
+    "pageCount": 1,
+    "textPages": [
+      {
+        "page": 1,
+        "method": "tesseract OCR",
+        "chars": 2740
+      }
+    ]
+  },
+  {
+    "url": "https://www.burlingameschools.org/apps/pages/index.jsp?pREC_ID=2402779&type=d&uREC_ID=3569727",
+    "finalUrl": "https://www.burlingameschools.org/apps/pages/index.jsp?uREC_ID=3569727&type=d&pREC_ID=2402779",
+    "file": "sources/b3df818262a3a0fd166f625ffa9ccb32da52bffa3bd24fd032fe61fd2172906d.html",
+    "sha256": "b3df818262a3a0fd166f625ffa9ccb32da52bffa3bd24fd032fe61fd2172906d",
+    "byteLength": 42624,
+    "storedEncoding": "identity",
+    "storedSha256": "b3df818262a3a0fd166f625ffa9ccb32da52bffa3bd24fd032fe61fd2172906d",
+    "storedByteLength": 42624,
+    "httpStatus": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "retrievedAt": "2026-11-03T05:06:19.433632+00:00",
+    "rawFormat": "ORIGINAL_PUBLISHER_HTML_BYTES"
+  },
+  {
+    "url": "https://www.scsdk8.org/apps/news/article/1339112?categoryId=11047",
+    "finalUrl": "https://www.scsdk8.org/apps/news/article/1339112?categoryId=11047",
+    "file": "sources/3ec8cd6f9200c4e62295b88ef2357ad745d319c5e30a29700dcabbe3cb3315a6.html",
+    "sha256": "3ec8cd6f9200c4e62295b88ef2357ad745d319c5e30a29700dcabbe3cb3315a6",
+    "byteLength": 60350,
+    "storedEncoding": "identity",
+    "storedSha256": "3ec8cd6f9200c4e62295b88ef2357ad745d319c5e30a29700dcabbe3cb3315a6",
+    "storedByteLength": 60350,
+    "httpStatus": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "retrievedAt": "2026-11-03T05:06:19.434070+00:00",
+    "rawFormat": "ORIGINAL_PUBLISHER_HTML_BYTES"
+  },
+  {
+    "url": "https://smcacre.gov/elections/school-offices",
+    "finalUrl": "https://smcacre.gov/elections/school-offices",
+    "file": "sources/4e14e9c12b8f9a678814a91245f31a8c37a441f3a7d5b4e681f475e7d821c335.html",
+    "sha256": "4e14e9c12b8f9a678814a91245f31a8c37a441f3a7d5b4e681f475e7d821c335",
+    "byteLength": 140036,
+    "storedEncoding": "identity",
+    "storedSha256": "4e14e9c12b8f9a678814a91245f31a8c37a441f3a7d5b4e681f475e7d821c335",
+    "storedByteLength": 140036,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "retrievedAt": "2026-11-03T05:06:19.433254+00:00",
+    "rawFormat": "ORIGINAL_PUBLISHER_HTML_BYTES"
+  },
+  {
+    "url": "https://www.smccd.edu/boardoftrustees/",
+    "finalUrl": "https://www.smccd.edu/boardoftrustees/",
+    "file": "sources/8a8c570f2ac8c27f06a2da98671aeadc2bd6ad768dc145058bcdf565af2d53c8.html",
+    "sha256": "8a8c570f2ac8c27f06a2da98671aeadc2bd6ad768dc145058bcdf565af2d53c8",
+    "byteLength": 18173,
+    "storedEncoding": "identity",
+    "storedSha256": "8a8c570f2ac8c27f06a2da98671aeadc2bd6ad768dc145058bcdf565af2d53c8",
+    "storedByteLength": 18173,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "retrievedAt": "2026-11-03T05:06:19.432864+00:00",
+    "rawFormat": "ORIGINAL_PUBLISHER_HTML_BYTES"
+  },
+  {
+    "url": "https://smcacre.gov/elections/november-3-2026-statewide-general-election",
+    "finalUrl": "https://smcacre.gov/elections/november-3-2026-statewide-general-election",
+    "file": "sources/66756d35f2811a2526bfa5cdce4e0d2a44fa247bf42718681a01a94a5e258d29.html",
+    "sha256": "66756d35f2811a2526bfa5cdce4e0d2a44fa247bf42718681a01a94a5e258d29",
+    "byteLength": 336081,
+    "storedEncoding": "identity",
+    "storedSha256": "66756d35f2811a2526bfa5cdce4e0d2a44fa247bf42718681a01a94a5e258d29",
+    "storedByteLength": 336081,
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "retrievedAt": "2026-11-03T04:40:32.494841+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES"
+  }
+]

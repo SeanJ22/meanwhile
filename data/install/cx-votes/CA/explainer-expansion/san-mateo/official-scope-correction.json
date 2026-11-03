@@ -1,0 +1,79 @@
+{
+  "contestId": "ca-sf-2026-regional-transit-measure",
+  "priorScopeOcdId": "ocd-division/country:us/state:ca/county:san_francisco",
+  "correctScopeOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_public_transit_revenue_measure_district",
+  "reason": "This single official regional measure is voted throughout the five whole counties. Keep its held contest identity and replace the narrower prior SFcounty scope.",
+  "officialScopeQuote": "WHEREAS, Title 7.85 ofthe Government Code, commencing with Government Code\nSection 67700 (Senate Bill 63/Connect Bay Area Act, Wiener/Arreguin, October l3, 2025)\ncreated the Public Transit Revenue Measure District (“PTRMD” or “District”) with jurisdiction\nextending throughout the territorial boundaries of the Counties ofAlameda, Contra Costa, San\nMateo, and Santa Clara, and the City and County of San Francisco, and provides that the District\nshall be governed by the same board that governs the Metropolitan Transportation Commission\n(“MTC”); and",
+  "sourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+  "sourceFile": "sources/343dbfda30034769a5ca0f3db2b31281fb17cbe5ea2737c0e470e0e7b7b4347d.pdf.gz",
+  "newMemberships": [
+    {
+      "id": "ca-2026-membership:county:alameda->electoral_district:2026_public_transit_revenue_measure_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:alameda",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_public_transit_revenue_measure_district",
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+        "sourceOrg": "San Mateo County Elections / Public Transit Revenue Measure District",
+        "collectedAt": "2026-11-03T04:59:00.728270+00:00",
+        "verifiedAt": "2026-11-03T05:32:49.554433+00:00",
+        "quote": "WHEREAS, Title 7.85 ofthe Government Code, commencing with Government Code\nSection 67700 (Senate Bill 63/Connect Bay Area Act, Wiener/Arreguin, October l3, 2025)\ncreated the Public Transit Revenue Measure District (“PTRMD” or “District”) with jurisdiction\nextending throughout the territorial boundaries of the Counties ofAlameda, Contra Costa, San\nMateo, and Santa Clara, and the City and County of San Francisco, and provides that the District\nshall be governed by the same board that governs the Metropolitan Transportation Commission\n(“MTC”); and"
+      }
+    },
+    {
+      "id": "ca-2026-membership:county:contra_costa->electoral_district:2026_public_transit_revenue_measure_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:contra_costa",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_public_transit_revenue_measure_district",
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+        "sourceOrg": "San Mateo County Elections / Public Transit Revenue Measure District",
+        "collectedAt": "2026-11-03T04:59:00.728270+00:00",
+        "verifiedAt": "2026-11-03T05:32:49.554433+00:00",
+        "quote": "WHEREAS, Title 7.85 ofthe Government Code, commencing with Government Code\nSection 67700 (Senate Bill 63/Connect Bay Area Act, Wiener/Arreguin, October l3, 2025)\ncreated the Public Transit Revenue Measure District (“PTRMD” or “District”) with jurisdiction\nextending throughout the territorial boundaries of the Counties ofAlameda, Contra Costa, San\nMateo, and Santa Clara, and the City and County of San Francisco, and provides that the District\nshall be governed by the same board that governs the Metropolitan Transportation Commission\n(“MTC”); and"
+      }
+    },
+    {
+      "id": "ca-2026-membership:county:san_mateo->electoral_district:2026_public_transit_revenue_measure_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:san_mateo",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_public_transit_revenue_measure_district",
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+        "sourceOrg": "San Mateo County Elections / Public Transit Revenue Measure District",
+        "collectedAt": "2026-11-03T04:59:00.728270+00:00",
+        "verifiedAt": "2026-11-03T05:32:49.554433+00:00",
+        "quote": "WHEREAS, Title 7.85 ofthe Government Code, commencing with Government Code\nSection 67700 (Senate Bill 63/Connect Bay Area Act, Wiener/Arreguin, October l3, 2025)\ncreated the Public Transit Revenue Measure District (“PTRMD” or “District”) with jurisdiction\nextending throughout the territorial boundaries of the Counties ofAlameda, Contra Costa, San\nMateo, and Santa Clara, and the City and County of San Francisco, and provides that the District\nshall be governed by the same board that governs the Metropolitan Transportation Commission\n(“MTC”); and"
+      }
+    },
+    {
+      "id": "ca-2026-membership:county:santa_clara->electoral_district:2026_public_transit_revenue_measure_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:santa_clara",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_public_transit_revenue_measure_district",
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+        "sourceOrg": "San Mateo County Elections / Public Transit Revenue Measure District",
+        "collectedAt": "2026-11-03T04:59:00.728270+00:00",
+        "verifiedAt": "2026-11-03T05:32:49.554433+00:00",
+        "quote": "WHEREAS, Title 7.85 ofthe Government Code, commencing with Government Code\nSection 67700 (Senate Bill 63/Connect Bay Area Act, Wiener/Arreguin, October l3, 2025)\ncreated the Public Transit Revenue Measure District (“PTRMD” or “District”) with jurisdiction\nextending throughout the territorial boundaries of the Counties ofAlameda, Contra Costa, San\nMateo, and Santa Clara, and the City and County of San Francisco, and provides that the District\nshall be governed by the same board that governs the Metropolitan Transportation Commission\n(“MTC”); and"
+      }
+    },
+    {
+      "id": "ca-2026-membership:county:san_francisco->electoral_district:2026_public_transit_revenue_measure_district",
+      "memberOcdId": "ocd-division/country:us/state:ca/county:san_francisco",
+      "districtOcdId": "ocd-division/country:us/state:ca/electoral_district:2026_public_transit_revenue_measure_district",
+      "provenance": {
+        "sourceUrl": "https://smcacre.gov/system/files/2026-07/52-ENG-M206-Contest%20Code-Reso-Public%20Transit%20District%20Sales%20Tax_Redacted.pdf",
+        "sourceOrg": "San Mateo County Elections / Public Transit Revenue Measure District",
+        "collectedAt": "2026-11-03T04:59:00.728270+00:00",
+        "verifiedAt": "2026-11-03T05:32:49.554433+00:00",
+        "quote": "WHEREAS, Title 7.85 ofthe Government Code, commencing with Government Code\nSection 67700 (Senate Bill 63/Connect Bay Area Act, Wiener/Arreguin, October l3, 2025)\ncreated the Public Transit Revenue Measure District (“PTRMD” or “District”) with jurisdiction\nextending throughout the territorial boundaries of the Counties ofAlameda, Contra Costa, San\nMateo, and Santa Clara, and the City and County of San Francisco, and provides that the District\nshall be governed by the same board that governs the Metropolitan Transportation Commission\n(“MTC”); and"
+      }
+    }
+  ],
+  "collegeScope": {
+    "ocdId": "ocd-division/country:us/state:ca/electoral_district:2026_san_mateo_county_community_college_district",
+    "officialScopeQuote": "The San Mateo County Community College District is co-terminus with the boundaries of San Mateo County.",
+    "sourceUrl": "https://www.smccd.edu/boardoftrustees/",
+    "sourceFile": "sources/8a8c570f2ac8c27f06a2da98671aeadc2bd6ad768dc145058bcdf565af2d53c8.html",
+    "wholeMember": "ocd-division/country:us/state:ca/county:san_mateo"
+  },
+  "noGeometryInvented": true
+}

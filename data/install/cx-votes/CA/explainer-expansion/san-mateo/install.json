@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "CA",
+  "county": "San Mateo",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "sourceCaptures": "sources.json",
+  "sourceSupport": "source-support.json",
+  "officialInventory": "official-inventory.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "officialScopeCorrection": "official-scope-correction.json",
+  "visualSourceReview": "visual-source-review.json",
+  "coverage": {
+    "officialCountyMeasureDenominator": 29,
+    "newExplainedMeasures": 28,
+    "existingRegionalMeasureRefreshedAndScopeCorrected": 1,
+    "exactWholeCountyMemberships": 6,
+    "stateLocalComplete": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "CA",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "notes": [
+    "Keep every unrelated current ballot fact; this packet adds28localquestions and corrects/refreshes the single existing regionalRTMmeasure.",
+    "Six exact source-backed memberships use the existing reader: SanMateoCounty→co-terminuscommunitycollegeelectorate, and each of five whole counties→regionaltransitelectorate. Source-defined alias IDs are explicitly not Census geographies. No registry upsert/new geometry/app code is needed.",
+    "Original used PDF bytes stored once by SHA256 under losslessgzip, with distinct stored/decoded identities. Text annotations use native extraction and localOCR; nativePDFidentity remains separate.",
+    "Core parent owns CA READY, River installs and verifies live. No production outcome is claimed."
+  ],
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

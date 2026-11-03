@@ -5,7 +5,7 @@ const secret='saved-private-map-key';
 test('Map assets keep templates and content while removing credentials from browser-visible files',async()=>{
  let fetched='';
  const response=await readMapAsset(['maps','basic-v2','style.json'],new URLSearchParams('key=attacker&language=en'),{
-  readKey:async()=>secret,fetch:(async(url,init)=>{
+  origin:'https://reader.example',readKey:async()=>secret,fetch:(async(url,init)=>{
    fetched=String(url);assert.equal(init?.redirect,'error');
    assert.equal(new Headers(init?.headers).get('cookie'),null);
    return Response.json({version:8,sprite:`https://api.maptiler.com/maps/basic-v2/sprite?key=${secret}`,glyphs:`https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${secret}`,sources:{streets:{url:`https://api.maptiler.com/tiles/v3/tiles.json?key=${secret}`}},layers:[{id:'background',type:'background'}],unexpected:`echo ${secret}`});
@@ -14,7 +14,7 @@ test('Map assets keep templates and content while removing credentials from brow
  assert.equal(new URL(fetched).searchParams.get('language'),'en');
  const body=await response.text();assert.ok(!body.includes(secret));assert.ok(!body.includes('attacker'));
  const style=JSON.parse(body);assert.equal(style.version,8);assert.equal(style.layers[0].id,'background');
- assert.equal(style.sprite,'/api/maptiler/maps/basic-v2/sprite');
+ assert.equal(style.sprite,'https://reader.example/api/maptiler/maps/basic-v2/sprite');
  assert.equal(style.glyphs,'/api/maptiler/fonts/{fontstack}/{range}.pbf');
  assert.equal(style.sources.streets.url,'/api/maptiler/tiles/v3/tiles.json');
 });

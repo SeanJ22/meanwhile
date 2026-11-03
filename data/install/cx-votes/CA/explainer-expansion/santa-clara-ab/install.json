@@ -1,0 +1,43 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-santa-clara-a",
+      "sourceUrl": "https://www.morganhill.ca.gov/DocumentCenter/View/57400/Appointed-City-Treasurer-Ordinance"
+    },
+    {
+      "id": "ca-2026-santa-clara-b",
+      "sourceUrl": "https://www.cityofgilroy.org/DocumentCenter/View/20494/2026-30_Resolution_Transient_Occupancy_Tax_Ballot_Measure"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Santa Clara",
+    "officialCountyDenominator": 20,
+    "officialLocalLabels": "A–S (19) plus shared RTM",
+    "preparedAttached": 2,
+    "preparedLabels": [
+      "A",
+      "B"
+    ],
+    "scope": "Only measures and exact jurisdictions in this packet. Other county and western-state inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "See source-reader-check.json and reader-scope-check.json.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

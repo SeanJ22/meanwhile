@@ -1,0 +1,85 @@
+[
+  {
+    "whatItDoes": "Makes Oakland’s Mayor the chief executive responsible for most city departments, while the City Administrator keeps finance and human-resources duties. It replaces the Mayor’s Council tie-breaking vote with legislative and budget vetoes that the Council can override. It also adds confirmation for certain department heads, allows an independent Council budget-analysis office, requires full-time Council service and changes elected-official salary rules. The City Auditor estimates first-year costs of $2 million to $2.6 million, depending on salaries and implementation.",
+    "yesMeans": "Adopt the charter package, including the transfer of executive authority, veto and override rules, appointment checks, Council powers and salary changes. A majority vote is required.",
+    "noMeans": "Keep the existing charter provisions rather than transfer this management authority or add these veto and other charter changes.",
+    "contestId": "ca-2026-alameda-ee",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-ee#executive",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Mayor and City Administrator",
+        "what": "The Mayor manages most departments and appoints, disciplines and removes their directors and staff, subject to civil-service rules and other charter exceptions. The Administrator retains finance, treasury, risk and debt management, human resources and labor relations, and any other departments assigned by the Mayor. The Mayor continues to appoint the Administrator with Council confirmation. Existing reporting structures and administrative rules continue until lawfully changed."
+      },
+      {
+        "id": "ca-2026-alameda-ee#appointments",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Department-head confirmation",
+        "what": "Permanent appointments of the finance and human-resources directors and heads of departments primarily responsible for designing, building or maintaining city infrastructure need Council confirmation. The Council has 30 calendar days after the appointing authority requests scheduling to confirm or reject; inaction confirms the nominee. Interim appointments do not need confirmation for up to 120 days, but extending them requires Council approval."
+      },
+      {
+        "id": "ca-2026-alameda-ee#legislative-veto",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Legislative veto and override",
+        "what": "The Mayor has seven days after adoption to approve or veto covered Council ordinances and resolutions, with written objections; no action means approval. Six Council votes override, or a higher threshold if the underlying action legally requires one. Without a successful override within 30 calendar days of the veto, the action fails. Exceptions include Council-only governance and appointments, legally required ministerial acts, quasi-judicial decisions, emergency ordinances and the property-tax levy; the annual budget has separate rules. The Mayor no longer breaks Council ties."
+      },
+      {
+        "id": "ca-2026-alameda-ee#budget-veto",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Budget line-item veto",
+        "what": "Within seven days after Council adoption, the Mayor may restore a changed budget item to the Mayor’s original proposal or a value between that proposal and the Council’s version. Changes to item descriptions or limits may be vetoed or restored to the original wording. After the Mayor’s period, the Council has seven days to use six votes to restore its item or choose an amount between its version and the Mayor’s; descriptions or limits can only be restored to the Council’s original version. Otherwise the Mayor’s changes stand. No mayoral action within seven days approves the budget."
+      },
+      {
+        "id": "ca-2026-alameda-ee#analysis",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Independent analysis for Council",
+        "what": "The Council may create an Office of Independent Budget and Legislative Analyst by ordinance to provide objective, nonpartisan fiscal, policy and feasibility analysis. The Council appoints and may remove its qualified director by resolution. The director needs a relevant college degree or professional certification and relevant experience and appoints authorized staff subject to civil-service rules. The Mayor and Administrator must cooperate with the office and supply requested budget and financial information."
+      },
+      {
+        "id": "ca-2026-alameda-ee#inquiries",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Council information and investigation",
+        "what": "Councilmembers and designated staff may ask city officials for data, relay constituent complaints, propose projects and follow up on services. Officials must respond reasonably and promptly unless disclosure is legally prohibited. Councilmembers still cannot direct, order or coerce administrative staff. The former misdemeanor penalty for administrative interference is removed. The Council may hold legislative hearings, subpoena records and testimony, and—with at least five votes—pursue a failure to comply under state-law procedures."
+      },
+      {
+        "id": "ca-2026-alameda-ee#service",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Full-time Council service",
+        "what": "Councilmembers must devote full time to their duties and may not take outside employment or actively run a business that interferes or conflicts. Passive business or investment income remains allowed if it does not conflict. Other city jobs and outside compensation for official service are restricted, with specified exceptions for authorized government-board service. When the Council President temporarily fills a mayoral vacancy, the Council may appoint a qualified substitute for that Council seat until the President returns or the term ends, whichever comes first."
+      },
+      {
+        "id": "ca-2026-alameda-ee#salaries",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Salary setting",
+        "what": "Starting in 2027, the Public Ethics Commission sets Mayor and Council salaries every two years using comparable full-time California city or county roles, relevant high-paid professional staff and department-head salaries. Mayor comparisons use city managers and chief executives; Council comparisons use full-time councilmembers and county supervisors. Salaries cannot be cut except as part of an equal general reduction for city officers and employees. The commission also sets City Attorney and City Auditor salaries under their respective charter provisions. No particular salary increase is guaranteed."
+      },
+      {
+        "id": "ca-2026-alameda-ee#costs",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Official cost estimates",
+        "what": "The City Auditor estimates first-year Council salary and benefit increases of $36,000–$108,000 per member, totaling $288,000–$867,000, with no significant Mayor compensation increase estimated. A budget-analysis office modeled with five staff would cost about $1.7 million–$1.8 million in staffing and overhead. The estimated combined first-year cost is $2 million–$2.6 million, with later costs affected by inflation. These are estimates; the Council is authorized, rather than required by this measure, to establish the office."
+      },
+      {
+        "id": "ca-2026-alameda-ee#publication",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Publication and other changes",
+        "what": "Ordinance titles, summaries and notice of available copies are published within fifteen days after final passage, in the official newspaper or another method authorized by ordinance. The current rule publishes between introduction and final adoption. Effective-date rules account for mayoral approval, veto deadlines and Council overrides; most ordinances take effect seven days after final passage, with specified immediate-effect exceptions. The package also makes related administrative and term-start updates."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:54:43.397872+00:00",
+    "citation": "measure-source"
+  }
+]

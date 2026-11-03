@@ -1,0 +1,203 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-santa-clara-a",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:morgan_hill",
+          "title": "Morgan Hill — Measure A",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:01:58.333507+00:00",
+            "quote": "Shall the office of the City Treasurer be appointive?"
+          },
+          "measureTextUrl": "https://www.morganhill.ca.gov/DocumentCenter/View/57400/Appointed-City-Treasurer-Ordinance",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-santa-clara-b",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:gilroy",
+          "title": "Gilroy — Measure B",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:01:58.333507+00:00",
+            "quote": "To maintain critical City services such as street/pothole repair, park and recreation programs, emergency preparedness for storms, flooding and wildfires, and police and fire response shall the City of Gilroy measure raising the Transient Occupancy Tax (hotel tax) rate from 9% to a maximum of 13%, set by Council resolution, providing $700,000 annually paid only by hotel/lodging guests, with annual independent audits, that cannot be taken by Sacramento, until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://www.cityofgilroy.org/DocumentCenter/View/20494/2026-30_Resolution_Transient_Occupancy_Tax_Ballot_Measure",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-santa-clara-a-text",
+          "contestId": "ca-2026-santa-clara-a",
+          "officialNumber": "Measure A",
+          "questionText": "Shall the office of the City Treasurer be appointive?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:01:58.333507+00:00",
+            "quote": "Shall the office of the City Treasurer be appointive?"
+          }
+        },
+        {
+          "id": "ca-2026-santa-clara-b-text",
+          "contestId": "ca-2026-santa-clara-b",
+          "officialNumber": "Measure B",
+          "questionText": "To maintain critical City services such as street/pothole repair, park and recreation programs, emergency preparedness for storms, flooding and wildfires, and police and fire response shall the City of Gilroy measure raising the Transient Occupancy Tax (hotel tax) rate from 9% to a maximum of 13%, set by Council resolution, providing $700,000 annually paid only by hotel/lodging guests, with annual independent audits, that cannot be taken by Sacramento, until ended by voters, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:01:58.333507+00:00",
+            "quote": "To maintain critical City services such as street/pothole repair, park and recreation programs, emergency preparedness for storms, flooding and wildfires, and police and fire response shall the City of Gilroy measure raising the Transient Occupancy Tax (hotel tax) rate from 9% to a maximum of 13%, set by Council resolution, providing $700,000 annually paid only by hotel/lodging guests, with annual independent audits, that cannot be taken by Sacramento, until ended by voters, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Changes Morgan Hill’s City Treasurer from an elected office to an appointed one. The City Manager would appoint the Treasurer based on experience and ability, and could remove that appointee. The current elected term ends in 2028; the official analysis says an earlier vacancy could also start the appointed arrangement. The city estimates savings of about $40,000 annually in personnel costs and $15,000 in election costs every four years.",
+          "yesMeans": "Make the Treasurer an appointed position under these rules. A majority vote is required.",
+          "noMeans": "Keep electing the Treasurer every four years under the current rules.",
+          "contestId": "ca-2026-santa-clara-a",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-a#duties",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Treasury duties and appointment",
+              "what": "The Treasurer oversees collection and safekeeping of city money. The Finance Director and department already perform most day-to-day banking, investment, accounting, debt and reporting work, with internal controls and independent audits. The operative ordinance gives appointment and removal authority to the City Manager; it does not require a particular person to hold the job."
+            },
+            {
+              "id": "ca-2026-santa-clara-a#timing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Transition",
+              "what": "The ordinance directs appointment when the existing Treasurer’s term expires, scheduled in 2028, and takes effect 31 days after election certification. The county-published City Attorney analysis also describes appointment if a vacancy occurs earlier. Current candidates for the elected job need to be adult city residents and registered voters, without a required finance degree or professional qualification."
+            }
+          ],
+          "sourceUrl": "https://www.morganhill.ca.gov/DocumentCenter/View/57400/Appointed-City-Treasurer-Ordinance",
+          "sourceHash": "8e93793cedfbe798b5724f499a9d626ffa895caf6536184e28686289d2c708ae",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:01:58.333507+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Raises Gilroy’s hotel and short-term lodging tax from 9% to 11%, beginning January 1, 2027 or when the ordinance becomes effective if later. It lets the Council later move the rate up or down by resolution, to a maximum of 13%, without another vote. The tax applies to stays of 30 consecutive days or less and goes into the general fund for any lawful city purpose. The ballot estimates $700,000 annually; independent audits and public annual revenue reports are required.",
+          "yesMeans": "Approve the 11% starting rate and Council authority to adjust it up to 13%. A simple majority is required; there is no scheduled expiration.",
+          "noMeans": "Keep the current 9% lodging-tax rate rather than adopt this increase and rate-setting authority.",
+          "contestId": "ca-2026-santa-clara-b",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-b#rates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Starting rate and later changes",
+              "what": "The starting rate is 11% of lodging rent, not an automatic jump to the 13% ceiling. Later Council resolutions may set any rate at or below 13%, and take effect no sooner than 60 days after adoption. If no resolution setting a different rate is in effect, the default is 11%."
+            },
+            {
+              "id": "ca-2026-santa-clara-b#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Spending and accountability",
+              "what": "Revenue may support any lawful municipal purpose; streets, recreation, emergency preparation, police and fire are examples rather than reserved spending shares. The money receives the same independent audit requirements as other general-fund revenue, and an annual lodging-tax revenue report must be available for public review."
+            },
+            {
+              "id": "ca-2026-santa-clara-b#payment",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Who pays and when",
+              "what": "Guests owe the tax on hotel, motel and other qualifying short-term lodging, including short-term rentals, for stays of 30 consecutive days or less. Operators collect it with room payments, including proportional installments; unpaid tax is due when the stay ends and may be collected directly by the Finance Director. Other existing lodging-tax provisions remain. The ordinance takes effect ten days after the Council declares results, with higher-rate collection starting January 1, 2027 or later if necessary."
+            }
+          ],
+          "sourceUrl": "https://www.cityofgilroy.org/DocumentCenter/View/20494/2026-30_Resolution_Transient_Occupancy_Tax_Ballot_Measure",
+          "sourceHash": "df45604173dc0a3f9a436f44988af1094cdc30b62e5926a169d214d3cb335762",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:01:58.333507+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:01:58.333507+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "httpStatus": 200,
+        "rawHash": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+        "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-a-city-of-morgan-hill-city-treasurer-ia_08-18-2026_redacted.pdf?VersionId=mTJIuz4UVVSs4UnPLrbcfAeLpwQOq_FK",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-a-city-of-morgan-hill-city-treasurer-ia_08-18-2026_redacted.pdf?VersionId=mTJIuz4UVVSs4UnPLrbcfAeLpwQOq_FK",
+        "httpStatus": 200,
+        "rawHash": "d19290114cffd45e93329ffc9a697ceefc13c21a1676e11c0cd02ee419a6abb0",
+        "retrievedAt": "2026-11-03T07:57:11.726838+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.morganhill.ca.gov/DocumentCenter/View/57400/Appointed-City-Treasurer-Ordinance",
+        "finalUrl": "https://www.morganhill.ca.gov/DocumentCenter/View/57400/Appointed-City-Treasurer-Ordinance",
+        "httpStatus": 200,
+        "rawHash": "8e93793cedfbe798b5724f499a9d626ffa895caf6536184e28686289d2c708ae",
+        "retrievedAt": "2026-11-03T07:59:32.636267+00:00",
+        "publisher": "City of Morgan Hill",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-b-city-of-gilroy_ia_8.7.26_redacted.pdf?VersionId=7XiKfX17ZSRj5ai0wLH64KNsqzxW_Zvm",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-b-city-of-gilroy_ia_8.7.26_redacted.pdf?VersionId=7XiKfX17ZSRj5ai0wLH64KNsqzxW_Zvm",
+        "httpStatus": 200,
+        "rawHash": "d5e2ecbb1914dc23e71282bec8a67ecd05a8c134363c6e3e61ac1d618f6e55cb",
+        "retrievedAt": "2026-11-03T07:57:11.755558+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.cityofgilroy.org/DocumentCenter/View/20494/2026-30_Resolution_Transient_Occupancy_Tax_Ballot_Measure",
+        "finalUrl": "https://www.cityofgilroy.org/DocumentCenter/View/20494/2026-30_Resolution_Transient_Occupancy_Tax_Ballot_Measure",
+        "httpStatus": 200,
+        "rawHash": "df45604173dc0a3f9a436f44988af1094cdc30b62e5926a169d214d3cb335762",
+        "retrievedAt": "2026-11-03T07:59:32.733780+00:00",
+        "publisher": "City of Gilroy",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      }
+    ]
+  }
+}

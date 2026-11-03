@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-11-03T08:02:38.379Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "Morgan Hill A and Gilroy B only.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:morgan_hill",
+      "contests": [
+        "ca-2026-santa-clara-a"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:gilroy",
+      "contests": [
+        "ca-2026-santa-clara-b"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:santa_clara",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:san_jose",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_clara",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sunnyvale",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

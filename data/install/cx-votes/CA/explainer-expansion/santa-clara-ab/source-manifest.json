@@ -1,0 +1,87 @@
+[
+  {
+    "url": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "httpStatus": 200,
+    "sha256": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+    "bytes": 129975,
+    "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+    "savedFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.html",
+    "sourceTextFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.txt",
+    "extractedTextSha256": "f0df47f1888722f49b758af5dad74883540bea00f87ae9ee534f8fa2dc0389f4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Current official measure inventory"
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-a-city-of-morgan-hill-city-treasurer-ia_08-18-2026_redacted.pdf?VersionId=mTJIuz4UVVSs4UnPLrbcfAeLpwQOq_FK",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-a-city-of-morgan-hill-city-treasurer-ia_08-18-2026_redacted.pdf?VersionId=mTJIuz4UVVSs4UnPLrbcfAeLpwQOq_FK",
+    "httpStatus": 200,
+    "sha256": "d19290114cffd45e93329ffc9a697ceefc13c21a1676e11c0cd02ee419a6abb0",
+    "bytes": 401951,
+    "retrievedAt": "2026-11-03T07:57:11.726838+00:00",
+    "savedFile": "sources/d19290114cffd45e93329ffc9a697ceefc13c21a1676e11c0cd02ee419a6abb0.pdf",
+    "sourceTextFile": "sources/d19290114cffd45e93329ffc9a697ceefc13c21a1676e11c0cd02ee419a6abb0.txt",
+    "extractedTextSha256": "6b138ba79be5836649200ffaa76ef2502a6dbc54876de97577dd7c8eab5d7e17",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full operative measure text"
+  },
+  {
+    "url": "https://www.morganhill.ca.gov/DocumentCenter/View/57400/Appointed-City-Treasurer-Ordinance",
+    "finalUrl": "https://www.morganhill.ca.gov/DocumentCenter/View/57400/Appointed-City-Treasurer-Ordinance",
+    "httpStatus": 200,
+    "sha256": "8e93793cedfbe798b5724f499a9d626ffa895caf6536184e28686289d2c708ae",
+    "bytes": 88921,
+    "retrievedAt": "2026-11-03T07:59:32.636267+00:00",
+    "savedFile": "sources/8e93793cedfbe798b5724f499a9d626ffa895caf6536184e28686289d2c708ae.pdf",
+    "sourceTextFile": "sources/8e93793cedfbe798b5724f499a9d626ffa895caf6536184e28686289d2c708ae.txt",
+    "extractedTextSha256": "84160202363d035e1b205bf4ffe087deeddc90885494a694e320a857bc22bb56",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_TEXT_BOUNDED_TO_MEASURE",
+    "publisher": "City of Morgan Hill",
+    "role": "Official impartial analysis or full operative measure text",
+    "boundedPdfPages": [
+      1
+    ]
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-b-city-of-gilroy_ia_8.7.26_redacted.pdf?VersionId=7XiKfX17ZSRj5ai0wLH64KNsqzxW_Zvm",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-b-city-of-gilroy_ia_8.7.26_redacted.pdf?VersionId=7XiKfX17ZSRj5ai0wLH64KNsqzxW_Zvm",
+    "httpStatus": 200,
+    "sha256": "d5e2ecbb1914dc23e71282bec8a67ecd05a8c134363c6e3e61ac1d618f6e55cb",
+    "bytes": 388828,
+    "retrievedAt": "2026-11-03T07:57:11.755558+00:00",
+    "savedFile": "sources/d5e2ecbb1914dc23e71282bec8a67ecd05a8c134363c6e3e61ac1d618f6e55cb.pdf",
+    "sourceTextFile": "sources/d5e2ecbb1914dc23e71282bec8a67ecd05a8c134363c6e3e61ac1d618f6e55cb.txt",
+    "extractedTextSha256": "fa9f024737f2a6365ad093f900ee96d8afada0309594a752825daba71eaeca12",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Official impartial analysis or full operative measure text"
+  },
+  {
+    "url": "https://www.cityofgilroy.org/DocumentCenter/View/20494/2026-30_Resolution_Transient_Occupancy_Tax_Ballot_Measure",
+    "finalUrl": "https://www.cityofgilroy.org/DocumentCenter/View/20494/2026-30_Resolution_Transient_Occupancy_Tax_Ballot_Measure",
+    "httpStatus": 200,
+    "sha256": "df45604173dc0a3f9a436f44988af1094cdc30b62e5926a169d214d3cb335762",
+    "bytes": 351911,
+    "retrievedAt": "2026-11-03T07:59:32.733780+00:00",
+    "savedFile": "sources/df45604173dc0a3f9a436f44988af1094cdc30b62e5926a169d214d3cb335762.pdf",
+    "sourceTextFile": "sources/df45604173dc0a3f9a436f44988af1094cdc30b62e5926a169d214d3cb335762.txt",
+    "extractedTextSha256": "aa0f762e10699df930d74a6461eec5da23cee2c05361b8343f1429549050b55c",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_TEXT_BOUNDED_TO_MEASURE",
+    "publisher": "City of Gilroy",
+    "role": "Official impartial analysis or full operative measure text",
+    "boundedPdfPages": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  }
+]

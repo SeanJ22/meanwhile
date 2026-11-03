@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1562/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1562/download",
+      "rawPath": "sources/78199d61896b51dea8bca1a40a44522d9aff5450b48b5ac3f29436db8f458033.source",
+      "rawHash": "78199d61896b51dea8bca1a40a44522d9aff5450b48b5ac3f29436db8f458033",
+      "textPath": "sources/c8a739bc608ae5610762749b42d45b45725b1d38e0d5e84a1147f8ae5536f2ad.txt",
+      "textSha256": "c8a739bc608ae5610762749b42d45b45725b1d38e0d5e84a1147f8ae5536f2ad",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:pike-disabled-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

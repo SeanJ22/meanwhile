@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-407/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-407/download",
+      "rawPath": "sources/54be7fa3cc59449daf159acac4d273a2261b6f5514879f267d6ac15e8bcbda81.source",
+      "rawHash": "54be7fa3cc59449daf159acac4d273a2261b6f5514879f267d6ac15e8bcbda81",
+      "textPath": "sources/48c05e428f9b99d2cc17ff151e32bb088931826deb27c42e84bc1e56524e33fd.txt",
+      "textSha256": "48c05e428f9b99d2cc17ff151e32bb088931826deb27c42e84bc1e56524e33fd",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:cherokee-school-value-growth"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

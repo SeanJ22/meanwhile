@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:bryan-school-value-growth",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:bryan_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Bryan County schools — homestead value-growth exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:02.635139+00:00",
+            "verifiedAt": "2026-11-03T07:51:06.398326+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Bryan County school district ad valorem taxes for educational purposes in an amount equal to the amount by which the current year assessed value of a homestead exceeds the base year assessed value, including any final determination of value on appeal pursuant to Code Section 48-5-311 of the O.C.G.A., as amended, of such homestead?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:bryan-school-value-growth#question",
+          "contestId": "ga-local-2026:bryan-school-value-growth",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Bryan County school district ad valorem taxes for educational purposes in an amount equal to the amount by which the current year assessed value of a homestead exceeds the base year assessed value, including any final determination of value on appeal pursuant to Code Section 48-5-311 of the O.C.G.A., as amended, of such homestead?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:02.635139+00:00",
+            "verifiedAt": "2026-11-03T07:51:06.398326+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Bryan County school district ad valorem taxes for educational purposes in an amount equal to the amount by which the current year assessed value of a homestead exceeds the base year assessed value, including any final determination of value on appeal pursuant to Code Section 48-5-311 of the O.C.G.A., as amended, of such homestead?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:bryan-school-value-growth",
+          "whatItDoes": "Exempts the amount by which a qualifying homestead’s current assessed value exceeds its base-year assessed value from Bryan County school-district property taxes, excluding school bond taxes, beginning January 1, 2027 if voters approve. For the most recent owner, the usual base year is the tax year before the exemption is first granted; the homestead may include no more than five contiguous acres. Residents receiving the 2025 local adjusted-base-year school exemption by December 31, 2026 would qualify automatically using 2026 as the base year; recipients of the statewide adjusted-base-year exemption by that date would qualify automatically using that exemption’s existing base year. Improvements and added land after January 1 of the base year would not receive this exemption; removing land would adjust the base-year value and require recalculation, including final value determinations on appeal. A surviving spouse could continue receiving the exemption while occupying the home as a residence and homestead. It adds to other school-tax homestead exemptions and does not apply to state, county, city or independent-school-district property taxes. Other residents or their agents must apply to the county tax commissioner; the exemption then renews while the home remains the resident’s homestead, and recipients must report loss of eligibility.",
+          "yesMeans": "Approve the proposed school-tax exemption for qualifying assessed-value growth above the applicable base year.",
+          "noMeans": "Reject this proposed school-tax homestead value-growth exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+          "sourceHash": "53611ece5106d2c13e6fa9628132ab1b9bf0df885696a78881b575eb27ee2bdc",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:51:06.398326+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:51:06.398326+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+        "httpStatus": 200,
+        "rawHash": "53611ece5106d2c13e6fa9628132ab1b9bf0df885696a78881b575eb27ee2bdc",
+        "retrievedAt": "2026-11-03T07:27:02.635139+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

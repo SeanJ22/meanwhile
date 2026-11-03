@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1582/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1582/download",
+      "rawPath": "sources/03ac42b41d83fb031b7f15400253385ed7bfd15aaf4b097ba339b8e4904d00d7.source",
+      "rawHash": "03ac42b41d83fb031b7f15400253385ed7bfd15aaf4b097ba339b8e4904d00d7",
+      "textPath": "sources/5cd24a9ee91ef4d22e39f4cbeda6f0649b3d7f31e97964f0052f161a81d51810.txt",
+      "textSha256": "5cd24a9ee91ef4d22e39f4cbeda6f0649b3d7f31e97964f0052f161a81d51810",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:fayette-school-collection-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

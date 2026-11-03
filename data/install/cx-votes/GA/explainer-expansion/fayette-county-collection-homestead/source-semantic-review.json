@@ -1,0 +1,17 @@
+{
+  "state": "GA",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "b1f077d0cd26235c600c9be59a523f6ea3af6a8f0dbe94da653f22dd7914bea5",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Exact current held General Election key and complete election object retained.",
+    "Full official question preserved from native PDF; choice labels and legislative line numbers excluded only.",
+    "Every explanation sentence checked against complete native source; all numbers, ages, conditions, scopes and effect dates supported.",
+    "Dollar exemption amounts describe assessed value, not dollar tax savings; city/county/school tax scopes distinguished.",
+    "Exact existing registered government and primary division reused; no invented or widened geography.",
+    "Existing BallotContestMerge with checkAuthority, manualProjectionCandidate, actual reader and supporting source hashes all pass.",
+    "Partial one-measure packet preserves unrelated held ballot data."
+  ]
+}

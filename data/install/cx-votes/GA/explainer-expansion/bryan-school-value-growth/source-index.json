@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+      "rawPath": "sources/53611ece5106d2c13e6fa9628132ab1b9bf0df885696a78881b575eb27ee2bdc.source",
+      "rawHash": "53611ece5106d2c13e6fa9628132ab1b9bf0df885696a78881b575eb27ee2bdc",
+      "textPath": "sources/30a1c58aac03bf008809205824f641ce43944bf455c5e9f9fbe4bec3d1638a85.txt",
+      "textSha256": "30a1c58aac03bf008809205824f641ce43944bf455c5e9f9fbe4bec3d1638a85",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:bryan-school-value-growth"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

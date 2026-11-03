@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1581/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1581/download",
+      "rawPath": "sources/392bbc6b6c2933fb91a989ccad82efaf19a698c99d3c2ff056253a7cbbcb73cc.source",
+      "rawHash": "392bbc6b6c2933fb91a989ccad82efaf19a698c99d3c2ff056253a7cbbcb73cc",
+      "textPath": "sources/3c4e1bc6b3bc9b6754fa8b2691f2361f729687283d1e52f0d1500c57801d4db7.txt",
+      "textSha256": "3c4e1bc6b3bc9b6754fa8b2691f2361f729687283d1e52f0d1500c57801d4db7",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:fayetteville-collection-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

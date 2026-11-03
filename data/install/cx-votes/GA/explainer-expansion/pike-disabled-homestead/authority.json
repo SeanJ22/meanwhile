@@ -1,0 +1,8 @@
+{
+  "packetSubject": "ga-local-2026:pike-disabled-homestead",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/d2e44a05ec905aa667b130e6ae4b24d1840608ee015b3ca3e03df377ee908fa7.json",
+  "noElectionOutcomesUsed": true
+}

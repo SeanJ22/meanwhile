@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1563/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1563/download",
+      "rawPath": "sources/6c39588765f457979f7d28d2da0d8c1c0212d5065add823794cc1d1a29441aa8.source",
+      "rawHash": "6c39588765f457979f7d28d2da0d8c1c0212d5065add823794cc1d1a29441aa8",
+      "textPath": "sources/b2fac103f8727beff4376e6d13b177459960992611b9fb5773db45b4c0d586de.txt",
+      "textSha256": "b2fac103f8727beff4376e6d13b177459960992611b9fb5773db45b4c0d586de",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:pike-senior-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

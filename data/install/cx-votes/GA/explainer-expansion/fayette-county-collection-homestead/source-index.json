@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1583/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1583/download",
+      "rawPath": "sources/85ab47c09061efdae31f1152faee1596a8bbcc3f1a17da3f04a57b4fb651ddb0.source",
+      "rawHash": "85ab47c09061efdae31f1152faee1596a8bbcc3f1a17da3f04a57b4fb651ddb0",
+      "textPath": "sources/f257f4e10ba96b75ba89ca09564daf8083a30d0438012b90d27229e126cb8fd3.txt",
+      "textSha256": "f257f4e10ba96b75ba89ca09564daf8083a30d0438012b90d27229e126cb8fd3",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:fayette-county-collection-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

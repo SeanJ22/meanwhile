@@ -1,0 +1,141 @@
+Frequently Asked Questions | Hayward Area Recreation and Park District, CA
+Skip to Main Content
+About Us
+Programs
+Facilities
+Employment
+How Do I
+Measure F1
+So much to do,
+so close to home!
+Registration
+/QuickLinks.aspx
+Search
+Home
+About Us
+Administration & Board of Directors
+District Election
+District Election - Past Actions
+Frequently Asked Questions
+Frequently Asked Questions
+What is districting?
+Why do by-district elections matter to me?
+What criteria will our Board of Directors use when drawing district lines?
+How will the H.A.R.D. notify the public about the transition to a by-district elections system?
+How can I get involved?
+How do I stay updated on the process?
+How are district drawn?
+What is the criteria being used in the process to select maps?
+Can I draw district myself and submit them for consideration?
+What information do we need from the public?
+When will the map go into effect?
+What is districting?
+The Hayward Area Recreation and Park District currently uses an at-large election system for the Board of Directors. This means that all voters from the District's jurisdiction elect all five members of the Board of Directors, no matter where they live. A by-district election system, in contrast, means that the Board of Directors is delineated into separate electoral districts, and one member of the Board of Directors will be elected from each district.
+District Elections determines who can run and who can vote in each election-district. Candidates and voters must live within their respective election districts. This does not impact services provided to the public by HARD.
+Why do by-district elections matter to me?
+District elections determine which neighborhoods and communities are grouped into a district to elect a Board of Directors.
+The H.A.R.D. The Board of Directors will seek input in selecting the following district map for our Board. You can share with the Board of Directors how district boundaries should be drawn to best represent your community.
+You can contact staff supporting the districting efforts at Elections@haywardrec.org to learn more about how the process works.
+What criteria will our Board of Directors use when drawing district lines?
+To the extent practicable, district lines will be adopted using the following criteria:
+Geographically contiguous districts (each board of directors district should share a common border with the next),
+The geographic integrity of local neighborhoods or communities shall be respected in a manner that minimizes its division,
+The geographic integrity of a city or census-designated place shall be respected in a manner that minimizes its division,
+Geographies will be easily identifiable boundaries that follow natural or artificial barriers (rivers, streets, highways, rail lines, etc.)
+Geographic lines shall be drawn to encourage geographic compactness.
+Populations of each district shall be similar ~61,000
+In addition, boundaries shall not be drawn to favor or discriminate against a political party.
+How will the H.A.R.D. notify the public about the transition to a by-district elections system?
+The Board of Directors will contact local media to publicize the redistricting process. Also, we will make a good-faith effort to notify various community groups about the redistricting process. Our public hearings or workshops will be provided in applicable languages if residents submit a request in advance. The Board of Directors will notify the public about redistricting public hearings and workshops, post maps online before adoption, and create a dedicated web page for all relevant information about the districting process.
+How can I get involved?
+Community members can provide public input through in-person and remote oral public comments during a public hearing or by submitting written public comments.
+Attend Public Meetings or Community Workshops:
+H.A.R.D. is committed to soliciting community input on communities of interest, draft maps, and election sequencing. Community members are invited to attend one of the five community workshops or public hearings; times and locations can be found here.
+Draw maps:
+Community members may draft and submit maps for the Board of Directors' review using DristictR.
+Submit testimony in-person or online:
+Community members can attend one of the five community workshops or public hearings to provide in-person or remote testimony. Additionally, written testimony can be provided by writing to Elections@haywardrec.org.
+Mail or in-person drop-off: Hayward Area Recreation and Park District, c/o District Clerk, 1099 "E" Street, Hayward, California 94541.
+How do I stay updated on the process?
+The District Election's website will post everything related to the districting process. Please continue to check it for updates and progress in selecting a district map.
+How are district drawn?
+Districting is subject to a constitutional criterion that mandates that districts must be (roughly) equal in population. The districts must also comply with federal law, specifically the Federal Voting Rights Act, which aims to ensure that protected groups can elect a candidate of their choice if certain criteria are met.
+California’s FAIRMAPS Act was amended in 2023 to ensure that the same criteria mandated in local redistricting would also be used when jurisdictions transition to by-district elections. The FAIRMAPS Act explains that the purpose of these changes is to “Establish ranked criteria that prioritize keeping whole neighborhoods and communities of interest together, facilitate political organization and constituent representation, and prohibit gerrymandering, including incumbent-protection gerrymandering.”
+For more information, please see California Elections Code Section 21100 here.
+These are the criteria that must be followed, in order of importance:
+Each district shall contain nearly the same number of people.
+Boundaries shall be drawn in accordance with the United States Constitution and the Federal Voting Rights Act.
+Board of Director districts shall consist of contiguous territory, meaning it is possible to travel between any two points in the district without leaving it.
+Board of Directors districts shall respect communities of interest and local neighborhoods as much as practicable. Communities of Interest generally refer to a contiguous population that shares common social and economic interests that should be included within a single district for fair and effective representation.
+Board of Directors districts shall follow natural or artificial boundaries, such as streets, and be easily understandable to residents.
+Board of Director districts shall be drawn compactly if it does not conflict with the above criteria, which means that nearby populations shall not be bypassed for more distant groups of persons.
+The process will not favor or disfavor incumbents, candidates, or parties. In other words, the maps will disregard where incumbents and candidates live and also disregard the interests of political parties.
+In summary, this means the following:
+We will use the DistrictR mapping program to construct districts after receiving public input.
+Census data will determine how many people live in each part of the city and ensure that each district contains roughly the same number of people.
+We will build a dataset that allows us to preliminarily evaluate whether the district complies with the Federal Voting Rights Act.
+Census geography will be used to ensure that the districts are contiguous.
+When drawing districts, we will collect and utilize Community of Interest data and information about neighborhoods from the residents of Hayward.
+The district lines will follow census geography, which uses visible features such as streets to ensure that the districts are easily understandable.
+We will assess the districts for compactness and make possible adjustments if these do not negatively impact the higher-ranked criteria.
+We will not use any address information for current council members or potential candidates or use political party affiliation or information in the drawing of districts.
+What is the criteria being used in the process to select maps?
+What is the criteria being used in the process to select a map?
+We are following the ranked list of criteria set by the FAIR MAPS Act.
+Relatively equal population
+Contiguity
+Maintain communities of interest
+Use easily identifiable and understandable lines
+Keep districts compact.
+Can I draw district myself and submit them for consideration?
+Yes! You can submit maps using the online mapping tool DistrictR. Please visit the website to view the mapping software and user guides.
+What information do we need from the public?
+One of the criteria for drawing maps is called “Communities of Interest” or “COI.”
+A “community of interest” is a population that shares common social or economic interests that should be included within a single election district for practical and fair representation. Characteristics of communities of interest may include, but are not limited to, shared public policy concerns such as education, public safety, public health, environment, housing, transportation, and access to social services. Characteristics of communities of interest may also include, but are not limited to, cultural districts, shared socioeconomic characteristics, similar voter registration rates and participation rates, and shared histories. Communities of interest do not include relationships with political parties, incumbents, or candidates.
+Because no census datasets are available to identify communities of interest for H.A.R.D., we need community support to identify and ensure they are maintained in new election districts.
+When will the map go into effect?
+The map will first go into effect in 2026, and the final seats will go into effect in 2028.
+After the 2030 US Census, the district will redistrict in 2031.
+Create District Map
+Public Comment
+Draft Maps
+Frequently Asked Questions
+Recreation Guide
+Board Agenda
+Golf
+Capital Projects
+Volunteer
+Stay Informed
+Contact Us
+District Administration Office
+1099 E Street
+Hayward, CA 94541
+(510) 881-6700
+Quick Links
+Board Meeting and Agendas
+Report A Concern
+District-Wide Citizens Advisory Committee
+Construction Projects
+District Regulations
+Facility Reservations
+Parks & Facilities Quick-View Map
+/QuickLinks.aspx
+Helpful Links
+Home
+Contact Us
+Copyright Notices
+Site Map
+Accessibility
+Apps Download
+Privacy
+Powered by CivicPlus®
+/QuickLinks.aspx
+Loading
+Loading
+Do Not Show Again
+Close
+Arrow Left
+Arrow Right
+[]
+Slideshow Left Arrow
+Slideshow Right Arrow

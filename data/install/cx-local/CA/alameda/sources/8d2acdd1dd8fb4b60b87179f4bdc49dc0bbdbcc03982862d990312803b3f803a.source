@@ -1,0 +1,70 @@
+{
+  "id": "fb0ed98720a54032a4bde9d4fe1b00f8",
+  "owner": "AlamedaCounty.CA.US",
+  "ownerId": "8d6669b1b6b359d86f72cef6fffef211",
+  "created": 1725663356000,
+  "modified": 1791418738000,
+  "guid": null,
+  "name": "Health_Care_Districts",
+  "title": "Health Care Districts",
+  "type": "Feature Service",
+  "typeKeywords": [
+    "ArcGIS Server",
+    "Data",
+    "Feature Access",
+    "Feature Service",
+    "Metadata",
+    "Service",
+    "Singlelayer",
+    "Hosted Service"
+  ],
+  "description": "<div style='text-align:Left;font-size:12pt'><div><div><p style='margin:7 0 7 0;'><span>Alameda County Water <\/span><span>District with <\/span><span>district <\/span><span>boundar<\/span><span>y.  Boundaries represent voting districts (i.e., district designation for each address) and therefore may align with parcel boundaries in cases where parcels (and sometimes residences) are divided by the true city/district boundary. <\/span><\/p><\/div><\/div><\/div>",
+  "tags": [
+    "Alameda County",
+    "Open Data",
+    "ROV"
+  ],
+  "snippet": "Health care districts with district and zone boundaries.  Boundaries have been updated to show 2022 districting changes. Boundaries represent voting districts (i.e., district designation for each address) and therefore may align with parcel boundaries in cases where parcels (and sometimes residences) are divided by the true city/district boundary. ",
+  "thumbnail": "thumbnail/thumbnail.png",
+  "documentation": null,
+  "extent": [
+    [
+      -122.33304508609815,
+      37.45418791238701
+    ],
+    [
+      -121.7401983042387,
+      37.817142023643314
+    ]
+  ],
+  "categories": [],
+  "spatialReference": "102100",
+  "accessInformation": "Alameda County Registrar of Voters",
+  "classification": null,
+  "licenseInfo": "<div style='text-align:Left;font-size:12pt'><div><div><p><span>The data provided herein are derived from various sources and are dynamic and in an ongoing state of maintenance, correction and update, and are subject to verification by the user and/or the County of Alameda. The boundary lines depicted herein do not constitute a legal survey. While every effort is made to keep such information accurate and up-to-date, the County of Alameda makes no warranty, representation or guarantee as to the content, accuracy, timeliness or completeness of any of the information implied herein. The County of Alameda explicitly disclaims any representation and warranties, including, without limitation, the implied warranties of merchantability and fitness for a particular purpose. The County of Alameda shall not be held liable for improper or incorrect use of the data described and/or contained herein. The County of Alameda assumes no responsibility for any decisions made, or any actions taken by the user based upon information obtained from the data described and/ or contained herein.<\/span><\/p><\/div><\/div><\/div>",
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 393216,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": null,
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": true,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 4146,
+  "scoreCompleteness": 96,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": 1793678400000
+}

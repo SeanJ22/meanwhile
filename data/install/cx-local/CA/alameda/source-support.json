@@ -1,0 +1,453 @@
+[
+  {
+    "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260",
+    "sourceCheckedAt": "2026-11-03T04:30:53.794320+00:00",
+    "sha256": "589a66f601f50a07ab5cccd041337982d4c55f77b20c81a9096f93467900f513",
+    "sourceFile": "sources/589a66f601f50a07ab5cccd041337982d4c55f77b20c81a9096f93467900f513.source",
+    "excerptFile": "sources/77adfef03f22ac1b9fc9f12c8258d25aeb27d774d2a3a9ccc3d2e45207444628.txt",
+    "excerptSha256": "77adfef03f22ac1b9fc9f12c8258d25aeb27d774d2a3a9ccc3d2e45207444628",
+    "evidence": "Current official GeneralElection11/03/2026(Official) on-ballot candidate query,electionid260.103races267names,including84localfields229people;one of those local people,REICHI LEE,is explicitly Write-inCandidate. All228regular local printednames independently match592actualsamplepages. GenericblankWrite-inlinesexcluded. EveryOnBallotfield retained;candidatecontactinformationneverquoted."
+  },
+  {
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf",
+    "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf",
+    "sourceCheckedAt": "2026-11-03T04:23:11.860079+00:00",
+    "sha256": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceFile": "sources/5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3.source",
+    "excerptFile": "sources/d9eb666b65bf40240c12fa29e2bbdec995e2d9d254d448c337b2ade4db5f7cc8.txt",
+    "excerptSha256": "d9eb666b65bf40240c12fa29e2bbdec995e2d9d254d448c337b2ade4db5f7cc8",
+    "evidence": "Actual official November3,2026 compositeVoterInformationGuide965pages. Sampleballotsection p40\u2013631=592pages,148ballottypes\u00d74. All228regularlocalnames matchcurrentofficialOnBallotlist.11heldFirstDCAretentionjudgesallmatchactualsample. NativePDFbytes preserved. EmbeddedIdentity-H fonts omitToUnicode/cmap;sample text recovered deterministically viafontTools standardGlyphOrder/Adobe glyphUnicode,withseparateWinAnsiwatermarkpreserved. Renderedpage40and119visualchecks confirm. See extractionmethod/script. Onlyunmappedglyphis private-usebullet,no candidatenames affected."
+  },
+  {
+    "sourceUrl": "https://acvote.alamedacountyca.gov/election-information/elections?id=260",
+    "finalUrl": "https://acvote.alamedacountyca.gov/election-information/elections?id=260",
+    "sourceCheckedAt": "2026-11-03T04:22:53.724267+00:00",
+    "sha256": "9e087b5c22bfed6e043b37a234ed7652f75af0a98765bcbb511b577afede7799",
+    "sourceFile": "sources/9e087b5c22bfed6e043b37a234ed7652f75af0a98765bcbb511b577afede7799.source",
+    "excerptFile": "sources/97fdd57dbd5d1e061190d416c57e8b8a4d774dd0f8743c623cd199ac284b528c.txt",
+    "excerptSha256": "97fdd57dbd5d1e061190d416c57e8b8a4d774dd0f8743c623cd199ac284b528c",
+    "evidence": "Current official November3,2026 GeneralElectionpage directly links compositeVIG andofficialcandidateapplication;wholecountyOnBallotoffice inventory andeligibility retained."
+  },
+  {
+    "sourceUrl": "https://alamedacountyca.gov/rov_app/edata?page=maps",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/edata?page=maps",
+    "sourceCheckedAt": "2026-11-03T04:28:52.417175+00:00",
+    "sha256": "df58c51fff6f69c01bcc8e88f81a10e30be55f267cadfee81059cb9bc4cb610d",
+    "sourceFile": "sources/df58c51fff6f69c01bcc8e88f81a10e30be55f267cadfee81059cb9bc4cb610d.source",
+    "excerptFile": "sources/03f27adca3531f4f90c494bd6721e99ae576b3c849483e64b72ca6ca6afe802e.txt",
+    "excerptSha256": "03f27adca3531f4f90c494bd6721e99ae576b3c849483e64b72ca6ca6afe802e",
+    "evidence": "OfficialROV mapcatalog directly links current county votingdistrict GIS layers for citycouncils,schooltrusteeareas,communitycollegetrusteeareas andspecialdistricts. Directsource linking capture included;no unverified GIS service treated as election authority."
+  },
+  {
+    "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist/",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/candidatelist/",
+    "sourceCheckedAt": "2026-11-03T04:24:18.849266+00:00",
+    "sha256": "1f3c4d5c28966a2bf2301981011e4dfbc66c2cbf749f541e52f3a7fc0eb915f2",
+    "sourceFile": "sources/1f3c4d5c28966a2bf2301981011e4dfbc66c2cbf749f541e52f3a7fc0eb915f2.source",
+    "excerptFile": "sources/9d136f9b7a180e2cedf50dfd6e2ab830642adf0e9c80ca1a0578fa9ce7a54ebb.txt",
+    "excerptSha256": "9d136f9b7a180e2cedf50dfd6e2ab830642adf0e9c80ca1a0578fa9ce7a54ebb",
+    "evidence": "Pendingcoverage/exclusions only:read-onlypublicfilter POSTelectionId260withallstatuses produces133groups312filers.30NotOnBallotgroups40filers notinstalled;2withdrawn and3incomplete people absentfromactualsample/currentGETlist excluded. One qualifieddeclaredwritein savedseparately. Exactrequestbodyandmethod preserved in acquisition.json.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://www.sanleandro.org/197/Elections",
+    "finalUrl": "https://www.sanleandro.org/197/Elections",
+    "sourceCheckedAt": "2026-11-03T04:28:52.415485+00:00",
+    "sha256": "db0cdd7ad1c91fa13fb09edade3460584975dcc3bc360184721e7b6f0032e373",
+    "sourceFile": "sources/db0cdd7ad1c91fa13fb09edade3460584975dcc3bc360184721e7b6f0032e373.source",
+    "excerptFile": "sources/75d9f02e4d514115bf79733911f5885e0c3d87c5c9a80e7daf6d0ae03940c5f1.txt",
+    "excerptSha256": "75d9f02e4d514115bf79733911f5885e0c3d87c5c9a80e7daf6d0ae03940c5f1",
+    "evidence": "Current officialNov2026transitionnotice:Mayorcontinuescitywide;onlyvotescastbyresidentswithineachcouncildistrict counttowinner. AllCouncil1,2,3,5fieldsstillprintedoncitywideballots;cityusescertifiedprecincttotalsforbydistrictwinners. Actualsamplecoappearance explicitlydoesnotwiden electorate."
+  },
+  {
+    "sourceUrl": "https://www.sanleandro.org/202/Candidate-Information",
+    "finalUrl": "https://www.sanleandro.org/202/Candidate-Information",
+    "sourceCheckedAt": "2026-11-03T04:28:52.416434+00:00",
+    "sha256": "14bdbbda10305bbb12f46cd481dc58d92f901a85f8ac24abd7c712b363b0ed59",
+    "sourceFile": "sources/14bdbbda10305bbb12f46cd481dc58d92f901a85f8ac24abd7c712b363b0ed59.source",
+    "excerptFile": "sources/b0938ed16014fe04bf073e456775cb82e92b17eacd43084fc369e252bce947c3.txt",
+    "excerptSha256": "b0938ed16014fe04bf073e456775cb82e92b17eacd43084fc369e252bce947c3",
+    "evidence": "Official candidateinformation explicitly saysJune2026MeasureFchangedCouncil1,2,3,5fromatlarge tobydistrict. Novemberballotsstillreflectprevioussystem;citycalculatesprecinctvoteswithineachapplicabledistrict. Governingcurrentrule overridesstaleatlargehandbooks."
+  },
+  {
+    "sourceUrl": "https://berkeleyca.gov/sites/default/files/Notice%20of%20Candidates%20Nov%203%202026%20-%20WEB%20Version.pdf",
+    "finalUrl": "https://berkeleyca.gov/sites/default/files/Notice%20of%20Candidates%20Nov%203%202026%20-%20WEB%20Version.pdf",
+    "sourceCheckedAt": "2026-11-03T04:29:47.565056+00:00",
+    "sha256": "8929f0606c4dbf745963fdad10dbc904adb47df53ba4463ccb1e924d241d3ef5",
+    "sourceFile": "sources/8929f0606c4dbf745963fdad10dbc904adb47df53ba4463ccb1e924d241d3ef5.source",
+    "excerptFile": "sources/092ddb0c2b2c8009c8cc414c0f3789fcc93ca337bd53656116e1de8f34ef8d85.txt",
+    "excerptSha256": "092ddb0c2b2c8009c8cc414c0f3789fcc93ca337bd53656116e1de8f34ef8d85",
+    "evidence": "Official August19,2026 NoticeofNominees forNovember3,2026 confirmscurrentregularschool3names andallBerkeleycandidatefields. LaterReichiLeedeclaredwritein suppliedbycurrentcountyapp remainsseparate."
+  },
+  {
+    "sourceUrl": "https://berkeleyca.gov/your-government/elections/voting-information",
+    "finalUrl": "https://berkeleyca.gov/your-government/elections/voting-information",
+    "sourceCheckedAt": "2026-11-03T04:28:52.418727+00:00",
+    "sha256": "c618961f00092e5bd974d303b6afb85a82f7a24232bcc77a2e6910d712e417dc",
+    "sourceFile": "sources/c618961f00092e5bd974d303b6afb85a82f7a24232bcc77a2e6910d712e417dc.source",
+    "excerptFile": "sources/e90528491f3e58a0fceaa902f2af3754e2716af920eddbbf0f06e2454589499e.txt",
+    "excerptSha256": "e90528491f3e58a0fceaa902f2af3754e2716af920eddbbf0f06e2454589499e",
+    "evidence": "Official city votinginformation explainsseparateelectionrules forCouncil/Mayor/Auditor,RentBoard,SchoolBoard. UsedforRCVandatlarge/distinctschooldistrict interpretation."
+  },
+  {
+    "sourceUrl": "https://acvote.alamedacountyca.gov/youthvoting",
+    "finalUrl": "https://acvote.alamedacountyca.gov/youthvoting",
+    "sourceCheckedAt": "2026-11-03T04:28:52.419114+00:00",
+    "sha256": "3740c9368c4f97c246ebf5ce65437539d6325c320f1ac97deed64c6344f8e40e",
+    "sourceFile": "sources/3740c9368c4f97c246ebf5ce65437539d6325c320f1ac97deed64c6344f8e40e.source",
+    "excerptFile": "sources/006b9ea3b18e78a9d8eec59ec393948ed288e71abb58a073c82537f4d28279d9.txt",
+    "excerptSha256": "006b9ea3b18e78a9d8eec59ec393948ed288e71abb58a073c82537f4d28279d9",
+    "evidence": "Current official guideexplicitly permitsqualified16/17yearolds tovote2026Albany,Berkeley,Oaklandschoolboardelections. District schoolelectorate retained;non-schoolcontestsnotextendedtoyouth. Namedwriteinssavedseparatelypendingreaderstatus."
+  },
+  {
+    "sourceUrl": "https://www.haywardrec.org/2059/District-Election",
+    "finalUrl": "https://www.haywardrec.org/2059/District-Election",
+    "sourceCheckedAt": "2026-11-03T04:32:56.576623+00:00",
+    "sha256": "25fb20aac68893009591498b761f7c28726b2f296b566f0b2d6b95285a72c852",
+    "sourceFile": "sources/25fb20aac68893009591498b761f7c28726b2f296b566f0b2d6b95285a72c852.source",
+    "excerptFile": "sources/1d606c5b81ad35b09ebc5749d4b426ba1a5c2dbba03774f7a588412c723da985.txt",
+    "excerptSha256": "1d606c5b81ad35b09ebc5749d4b426ba1a5c2dbba03774f7a588412c723da985",
+    "evidence": "Official current electionpage saysDistricttransitionedfromatlarge tobydistrictelectionsSeptember16,2024;2026Areas2/4,2028Areas1/3/5. ExactArea2/4divisionspreservedwithoutcountywidefallback."
+  },
+  {
+    "sourceUrl": "https://www.haywardrec.org/2061/Frequently-Asked-Questions",
+    "finalUrl": "https://www.haywardrec.org/2061/Frequently-Asked-Questions",
+    "sourceCheckedAt": "2026-11-03T04:32:56.577782+00:00",
+    "sha256": "81c309748253d7fefb30ce3ab5179e2742e9a58847c99b2699fa09c84a613f77",
+    "sourceFile": "sources/81c309748253d7fefb30ce3ab5179e2742e9a58847c99b2699fa09c84a613f77.source",
+    "excerptFile": "sources/54106e214405c32f61761d467a345a465849eea2889e05c21927a9a560b8a20e.txt",
+    "excerptSha256": "54106e214405c32f61761d467a345a465849eea2889e05c21927a9a560b8a20e",
+    "evidence": "Official FAQ explainsoneDirector electedfromeachseparateelectoraldistrict andwho canrun/vote. ExactgeographicmembershipstillRiverdependency;countyGIScatalogdoesnotincludeHARDareas."
+  },
+  {
+    "sourceUrl": "https://www.larpd.org/2026-09-21-larpd-board-of-directors-candidate-forum",
+    "finalUrl": "https://www.larpd.org/2026-09-21-larpd-board-of-directors-candidate-forum",
+    "sourceCheckedAt": "2026-11-03T04:32:36.295896+00:00",
+    "sha256": "82323f56dd698cba41742257c2bd30b684f86d36f049c39f8e243d4368813fd6",
+    "sourceFile": "sources/82323f56dd698cba41742257c2bd30b684f86d36f049c39f8e243d4368813fd6.source",
+    "excerptFile": "sources/d29ae665824acc8e4e27d7b3b67fdd5dcbab691aa165d2100e801a387d2fa497.txt",
+    "excerptSha256": "d29ae665824acc8e4e27d7b3b67fdd5dcbab691aa165d2100e801a387d2fa497",
+    "evidence": "Current official candidateforumpage says3atlargeLARPDseatsupNovember3,2026. Confirmswholespecialdistrict electorate,notCityofLivermoreorcounty."
+  },
+  {
+    "sourceUrl": "https://www.fairviewfiredistrict.org/",
+    "finalUrl": "https://www.fairviewfiredistrictca.gov/",
+    "sourceCheckedAt": "2026-11-03T04:32:36.297081+00:00",
+    "sha256": "1c0d59b3a58f192834cb09146ba05fe3f1c50d5b2ed01283eb0a942a6ac17092",
+    "sourceFile": "sources/1c0d59b3a58f192834cb09146ba05fe3f1c50d5b2ed01283eb0a942a6ac17092.source",
+    "excerptFile": "sources/a758d28ee4914948fc41cb6fba19f3ffac6a484b519c45aa351738a0731291ad.txt",
+    "excerptSha256": "a758d28ee4914948fc41cb6fba19f3ffac6a484b519c45aa351738a0731291ad",
+    "evidence": "Officialdistrictidentityandgovernance source foratlargeFairviewFireProtectionDistrict. Actualsample/currentcountylistprovide2-seatfieldand3printednames. FullgeographicmembershipremainsRiverdependency."
+  },
+  {
+    "sourceUrl": "https://www.acwd.org/90/Board-of-Directors",
+    "finalUrl": "https://www.acwd.org/90/Board-of-Directors",
+    "sourceCheckedAt": "2026-11-03T04:33:30.533640+00:00",
+    "sha256": "aa1205e17170ad46d0fb004d969c199fbc3ec4480e58bcbdc1373011816c9e63",
+    "sourceFile": "sources/aa1205e17170ad46d0fb004d969c199fbc3ec4480e58bcbdc1373011816c9e63.source",
+    "excerptFile": "sources/6c511840705e051a2558b48dd9554627749cdc89ecd95921653b407edd4af5e0.txt",
+    "excerptSha256": "6c511840705e051a2558b48dd9554627749cdc89ecd95921653b407edd4af5e0",
+    "evidence": "Officialboardpageexplicitly says2022transitiontoward-based elections;votersintheACWDserviceareaelectonlyonerepresentativefortheirward. CurrentcountylistcallsWards2/3;countyGISnamesmatchingnumberedsubdivisionsZone2/3. Precise ward identitiespreserved;labelaliasexplicit."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/901ed9c2c71443639de9bc61f6f8d31b?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/901ed9c2c71443639de9bc61f6f8d31b?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:29:47.566035+00:00",
+    "sha256": "ae69663527b6db772adab57ef3a86be4dcc9587a6946b7bec68930dc38d8e5d0",
+    "sourceFile": "sources/ae69663527b6db772adab57ef3a86be4dcc9587a6946b7bec68930dc38d8e5d0.source",
+    "excerptFile": "sources/ae69663527b6db772adab57ef3a86be4dcc9587a6946b7bec68930dc38d8e5d0.txt",
+    "excerptSha256": "ae69663527b6db772adab57ef3a86be4dcc9587a6946b7bec68930dc38d8e5d0",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies city-council votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:52.121244+00:00",
+    "sha256": "f1e642cc01b7b6f002e7e417c28f5ef55cc4e8a8f1ef78591edac296a663574c",
+    "sourceFile": "sources/f1e642cc01b7b6f002e7e417c28f5ef55cc4e8a8f1ef78591edac296a663574c.source",
+    "excerptFile": "sources/f1e642cc01b7b6f002e7e417c28f5ef55cc4e8a8f1ef78591edac296a663574c.txt",
+    "excerptSha256": "f1e642cc01b7b6f002e7e417c28f5ef55cc4e8a8f1ef78591edac296a663574c",
+    "evidence": "Official-linkedFeatureLayer schemaforcity-council,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:30:52.125711+00:00",
+    "sha256": "09d3fccf78e5ef59ad54a528d0efbeb3dd889bfbb0ef0dc3471ca20a077618a8",
+    "sourceFile": "sources/09d3fccf78e5ef59ad54a528d0efbeb3dd889bfbb0ef0dc3471ca20a077618a8.source",
+    "excerptFile": "sources/09d3fccf78e5ef59ad54a528d0efbeb3dd889bfbb0ef0dc3471ca20a077618a8.txt",
+    "excerptSha256": "09d3fccf78e5ef59ad54a528d0efbeb3dd889bfbb0ef0dc3471ca20a077618a8",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked city-council votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/124cc26a72fe47588a73b8f44cfc1f61?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/124cc26a72fe47588a73b8f44cfc1f61?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:29:47.566735+00:00",
+    "sha256": "c0c7458fcef816f818c9b77317a1279eab4447dc699d79aaece6e9ee73b24f0f",
+    "sourceFile": "sources/c0c7458fcef816f818c9b77317a1279eab4447dc699d79aaece6e9ee73b24f0f.source",
+    "excerptFile": "sources/c0c7458fcef816f818c9b77317a1279eab4447dc699d79aaece6e9ee73b24f0f.txt",
+    "excerptSha256": "c0c7458fcef816f818c9b77317a1279eab4447dc699d79aaece6e9ee73b24f0f",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies ac-transit votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:52.322648+00:00",
+    "sha256": "43a9310e1996c911b61ff77928a1123d03da56bab88696307415444a76e91af8",
+    "sourceFile": "sources/43a9310e1996c911b61ff77928a1123d03da56bab88696307415444a76e91af8.source",
+    "excerptFile": "sources/43a9310e1996c911b61ff77928a1123d03da56bab88696307415444a76e91af8.txt",
+    "excerptSha256": "43a9310e1996c911b61ff77928a1123d03da56bab88696307415444a76e91af8",
+    "evidence": "Official-linkedFeatureLayer schemaforac-transit,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:30:52.336251+00:00",
+    "sha256": "5557e8514e975ee4f4e2120bab5295d21a5f1f947f29e371ab7afe37553a7e3f",
+    "sourceFile": "sources/5557e8514e975ee4f4e2120bab5295d21a5f1f947f29e371ab7afe37553a7e3f.source",
+    "excerptFile": "sources/5557e8514e975ee4f4e2120bab5295d21a5f1f947f29e371ab7afe37553a7e3f.txt",
+    "excerptSha256": "5557e8514e975ee4f4e2120bab5295d21a5f1f947f29e371ab7afe37553a7e3f",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked ac-transit votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/9c1395ebaddd41dba4ecde9a52215360?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/9c1395ebaddd41dba4ecde9a52215360?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:29:47.567294+00:00",
+    "sha256": "404c3d4ba92cf4e07f8b756ecfefc5229e9370c87e4453fcabdc0ee7250298ac",
+    "sourceFile": "sources/404c3d4ba92cf4e07f8b756ecfefc5229e9370c87e4453fcabdc0ee7250298ac.source",
+    "excerptFile": "sources/404c3d4ba92cf4e07f8b756ecfefc5229e9370c87e4453fcabdc0ee7250298ac.txt",
+    "excerptSha256": "404c3d4ba92cf4e07f8b756ecfefc5229e9370c87e4453fcabdc0ee7250298ac",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies school votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:52.372100+00:00",
+    "sha256": "9450c7ae6087f5ece4938c8ffcc06949a86ba858c2b24e02f85dd9b1b1041d56",
+    "sourceFile": "sources/9450c7ae6087f5ece4938c8ffcc06949a86ba858c2b24e02f85dd9b1b1041d56.source",
+    "excerptFile": "sources/9450c7ae6087f5ece4938c8ffcc06949a86ba858c2b24e02f85dd9b1b1041d56.txt",
+    "excerptSha256": "9450c7ae6087f5ece4938c8ffcc06949a86ba858c2b24e02f85dd9b1b1041d56",
+    "evidence": "Official-linkedFeatureLayer schemaforschool,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:30:52.377006+00:00",
+    "sha256": "8faa742025ef9899524798d3c375985287131bea6c7f8f6eab6e1e33670723ea",
+    "sourceFile": "sources/8faa742025ef9899524798d3c375985287131bea6c7f8f6eab6e1e33670723ea.source",
+    "excerptFile": "sources/8faa742025ef9899524798d3c375985287131bea6c7f8f6eab6e1e33670723ea.txt",
+    "excerptSha256": "8faa742025ef9899524798d3c375985287131bea6c7f8f6eab6e1e33670723ea",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked school votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/c028bf7aab7f4885a4f794b7abc5be06?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/c028bf7aab7f4885a4f794b7abc5be06?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:29:47.568328+00:00",
+    "sha256": "e7a588367b88c5163073934ccca6fd15fbc3f9311defd6f05b8a1e5aaba4da5a",
+    "sourceFile": "sources/e7a588367b88c5163073934ccca6fd15fbc3f9311defd6f05b8a1e5aaba4da5a.source",
+    "excerptFile": "sources/e7a588367b88c5163073934ccca6fd15fbc3f9311defd6f05b8a1e5aaba4da5a.txt",
+    "excerptSha256": "e7a588367b88c5163073934ccca6fd15fbc3f9311defd6f05b8a1e5aaba4da5a",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies special votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:53.583411+00:00",
+    "sha256": "9eabbb96b9050ee7ef670a9db5faad3d8b8e70077bb933e495d01b9a8209c65c",
+    "sourceFile": "sources/9eabbb96b9050ee7ef670a9db5faad3d8b8e70077bb933e495d01b9a8209c65c.source",
+    "excerptFile": "sources/9eabbb96b9050ee7ef670a9db5faad3d8b8e70077bb933e495d01b9a8209c65c.txt",
+    "excerptSha256": "9eabbb96b9050ee7ef670a9db5faad3d8b8e70077bb933e495d01b9a8209c65c",
+    "evidence": "Official-linkedFeatureLayer schemaforspecial,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:30:53.672547+00:00",
+    "sha256": "251e0ce517e1253e7507ae66e11f601d654d35ccbe1181c975400e62d765702a",
+    "sourceFile": "sources/251e0ce517e1253e7507ae66e11f601d654d35ccbe1181c975400e62d765702a.source",
+    "excerptFile": "sources/251e0ce517e1253e7507ae66e11f601d654d35ccbe1181c975400e62d765702a.txt",
+    "excerptSha256": "251e0ce517e1253e7507ae66e11f601d654d35ccbe1181c975400e62d765702a",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked special votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/e76e134c8ec7448e8c2b0d70ca3d6353?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/e76e134c8ec7448e8c2b0d70ca3d6353?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:50.698513+00:00",
+    "sha256": "eee7714d7ce454e0c772a7c48c7e89668c15d62688443b95bd72735e098243cb",
+    "sourceFile": "sources/eee7714d7ce454e0c772a7c48c7e89668c15d62688443b95bd72735e098243cb.source",
+    "excerptFile": "sources/eee7714d7ce454e0c772a7c48c7e89668c15d62688443b95bd72735e098243cb.txt",
+    "excerptSha256": "eee7714d7ce454e0c772a7c48c7e89668c15d62688443b95bd72735e098243cb",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies county-water votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:31:43.784236+00:00",
+    "sha256": "a9e568ebd16911c4386fa42b9b313f42d537dca68c769a36ed83573d5cc5b9c6",
+    "sourceFile": "sources/a9e568ebd16911c4386fa42b9b313f42d537dca68c769a36ed83573d5cc5b9c6.source",
+    "excerptFile": "sources/a9e568ebd16911c4386fa42b9b313f42d537dca68c769a36ed83573d5cc5b9c6.txt",
+    "excerptSha256": "a9e568ebd16911c4386fa42b9b313f42d537dca68c769a36ed83573d5cc5b9c6",
+    "evidence": "Official-linkedFeatureLayer schemaforcounty-water,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:31:43.785011+00:00",
+    "sha256": "e1a27de942537d4ed5e3157735e1e6d04025516f819d5b61a81f3d4419d6312d",
+    "sourceFile": "sources/e1a27de942537d4ed5e3157735e1e6d04025516f819d5b61a81f3d4419d6312d.source",
+    "excerptFile": "sources/e1a27de942537d4ed5e3157735e1e6d04025516f819d5b61a81f3d4419d6312d.txt",
+    "excerptSha256": "e1a27de942537d4ed5e3157735e1e6d04025516f819d5b61a81f3d4419d6312d",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked county-water votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/410b9765544e4d8eb62591cf28689dcd?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/410b9765544e4d8eb62591cf28689dcd?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:50.699485+00:00",
+    "sha256": "0703afe1f62643c57479611d9593ccf8d319526dee7ec7a30f53f59f5df5f3b2",
+    "sourceFile": "sources/0703afe1f62643c57479611d9593ccf8d319526dee7ec7a30f53f59f5df5f3b2.source",
+    "excerptFile": "sources/0703afe1f62643c57479611d9593ccf8d319526dee7ec7a30f53f59f5df5f3b2.txt",
+    "excerptSha256": "0703afe1f62643c57479611d9593ccf8d319526dee7ec7a30f53f59f5df5f3b2",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies bart votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:31:43.785841+00:00",
+    "sha256": "c9033d1561eb8aa4850e4ac6db4e4d901a436c20279dbb0cc0eb3615dca70c25",
+    "sourceFile": "sources/c9033d1561eb8aa4850e4ac6db4e4d901a436c20279dbb0cc0eb3615dca70c25.source",
+    "excerptFile": "sources/c9033d1561eb8aa4850e4ac6db4e4d901a436c20279dbb0cc0eb3615dca70c25.txt",
+    "excerptSha256": "c9033d1561eb8aa4850e4ac6db4e4d901a436c20279dbb0cc0eb3615dca70c25",
+    "evidence": "Official-linkedFeatureLayer schemaforbart,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:31:43.786602+00:00",
+    "sha256": "c7532a9d77751eae50b5992f2288e3697331ec323e32e9f4f12b964d8c50eebd",
+    "sourceFile": "sources/c7532a9d77751eae50b5992f2288e3697331ec323e32e9f4f12b964d8c50eebd.source",
+    "excerptFile": "sources/c7532a9d77751eae50b5992f2288e3697331ec323e32e9f4f12b964d8c50eebd.txt",
+    "excerptSha256": "c7532a9d77751eae50b5992f2288e3697331ec323e32e9f4f12b964d8c50eebd",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked bart votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/97e8ce525c0d4c6abeb7374a7dba008b?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/97e8ce525c0d4c6abeb7374a7dba008b?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:50.700087+00:00",
+    "sha256": "10c60d1b1733f0e6f6d32490e7a011f5885165533b5dcebad3520f73bb6a6c1c",
+    "sourceFile": "sources/10c60d1b1733f0e6f6d32490e7a011f5885165533b5dcebad3520f73bb6a6c1c.source",
+    "excerptFile": "sources/10c60d1b1733f0e6f6d32490e7a011f5885165533b5dcebad3520f73bb6a6c1c.txt",
+    "excerptSha256": "10c60d1b1733f0e6f6d32490e7a011f5885165533b5dcebad3520f73bb6a6c1c",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies ebmud votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:31:43.787160+00:00",
+    "sha256": "fa2de7282dfd675c8d5cc70a6cd2106efa38745f0129d132e5575c8fd627f7b4",
+    "sourceFile": "sources/fa2de7282dfd675c8d5cc70a6cd2106efa38745f0129d132e5575c8fd627f7b4.source",
+    "excerptFile": "sources/fa2de7282dfd675c8d5cc70a6cd2106efa38745f0129d132e5575c8fd627f7b4.txt",
+    "excerptSha256": "fa2de7282dfd675c8d5cc70a6cd2106efa38745f0129d132e5575c8fd627f7b4",
+    "evidence": "Official-linkedFeatureLayer schemaforebmud,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:31:43.793207+00:00",
+    "sha256": "b0d8f062fce4444772eecec964a793bd6a1e1b99400f0be6544a5c17051b1aac",
+    "sourceFile": "sources/b0d8f062fce4444772eecec964a793bd6a1e1b99400f0be6544a5c17051b1aac.source",
+    "excerptFile": "sources/b0d8f062fce4444772eecec964a793bd6a1e1b99400f0be6544a5c17051b1aac.txt",
+    "excerptSha256": "b0d8f062fce4444772eecec964a793bd6a1e1b99400f0be6544a5c17051b1aac",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked ebmud votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/fb0ed98720a54032a4bde9d4fe1b00f8?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/fb0ed98720a54032a4bde9d4fe1b00f8?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:50.700651+00:00",
+    "sha256": "8d2acdd1dd8fb4b60b87179f4bdc49dc0bbdbcc03982862d990312803b3f803a",
+    "sourceFile": "sources/8d2acdd1dd8fb4b60b87179f4bdc49dc0bbdbcc03982862d990312803b3f803a.source",
+    "excerptFile": "sources/8d2acdd1dd8fb4b60b87179f4bdc49dc0bbdbcc03982862d990312803b3f803a.txt",
+    "excerptSha256": "8d2acdd1dd8fb4b60b87179f4bdc49dc0bbdbcc03982862d990312803b3f803a",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies healthcare votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:31:44.305506+00:00",
+    "sha256": "890ebdae2b9d2eb11ced8739b0ac42319b11cda4d54a2625c62bfc2a06bd67c0",
+    "sourceFile": "sources/890ebdae2b9d2eb11ced8739b0ac42319b11cda4d54a2625c62bfc2a06bd67c0.source",
+    "excerptFile": "sources/890ebdae2b9d2eb11ced8739b0ac42319b11cda4d54a2625c62bfc2a06bd67c0.txt",
+    "excerptSha256": "890ebdae2b9d2eb11ced8739b0ac42319b11cda4d54a2625c62bfc2a06bd67c0",
+    "evidence": "Official-linkedFeatureLayer schemaforhealthcare,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:31:44.399167+00:00",
+    "sha256": "641dd2703999c4f9345a43579ea2af9c9b22d9ec4d12b19ff360042ed30be042",
+    "sourceFile": "sources/641dd2703999c4f9345a43579ea2af9c9b22d9ec4d12b19ff360042ed30be042.source",
+    "excerptFile": "sources/641dd2703999c4f9345a43579ea2af9c9b22d9ec4d12b19ff360042ed30be042.txt",
+    "excerptSha256": "641dd2703999c4f9345a43579ea2af9c9b22d9ec4d12b19ff360042ed30be042",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked healthcare votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/03fb44ecebdd4ea3933ebaf08cecb61e?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/03fb44ecebdd4ea3933ebaf08cecb61e?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:50.701694+00:00",
+    "sha256": "63a96ed255448a1e09578142cbdd7cfe79b3c62500fbfb4017610861779371dd",
+    "sourceFile": "sources/63a96ed255448a1e09578142cbdd7cfe79b3c62500fbfb4017610861779371dd.source",
+    "excerptFile": "sources/63a96ed255448a1e09578142cbdd7cfe79b3c62500fbfb4017610861779371dd.txt",
+    "excerptSha256": "63a96ed255448a1e09578142cbdd7cfe79b3c62500fbfb4017610861779371dd",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies sanitary votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:31:44.709006+00:00",
+    "sha256": "4a800358add42ad27f028e11482da32d2f47397c6ad93e1988c0dbf7142a755b",
+    "sourceFile": "sources/4a800358add42ad27f028e11482da32d2f47397c6ad93e1988c0dbf7142a755b.source",
+    "excerptFile": "sources/4a800358add42ad27f028e11482da32d2f47397c6ad93e1988c0dbf7142a755b.txt",
+    "excerptSha256": "4a800358add42ad27f028e11482da32d2f47397c6ad93e1988c0dbf7142a755b",
+    "evidence": "Official-linkedFeatureLayer schemaforsanitary,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:31:44.805160+00:00",
+    "sha256": "7199873f05105ee60c3e92dc0937650b2449034a7b4f6f860383e8d48e428017",
+    "sourceFile": "sources/7199873f05105ee60c3e92dc0937650b2449034a7b4f6f860383e8d48e428017.source",
+    "excerptFile": "sources/7199873f05105ee60c3e92dc0937650b2449034a7b4f6f860383e8d48e428017.txt",
+    "excerptSha256": "7199873f05105ee60c3e92dc0937650b2449034a7b4f6f860383e8d48e428017",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked sanitary votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/e52726c4404e4f63ba77923de821b916?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/e52726c4404e4f63ba77923de821b916?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:30:50.702263+00:00",
+    "sha256": "7381c2e45ed0d78f66bedd388914feb445ea26c3df0eecb9163bd65ade231a86",
+    "sourceFile": "sources/7381c2e45ed0d78f66bedd388914feb445ea26c3df0eecb9163bd65ade231a86.source",
+    "excerptFile": "sources/7381c2e45ed0d78f66bedd388914feb445ea26c3df0eecb9163bd65ade231a86.txt",
+    "excerptSha256": "7381c2e45ed0d78f66bedd388914feb445ea26c3df0eecb9163bd65ade231a86",
+    "evidence": "OfficialROV-linkedcurrent GIS item metadata;identifies college votingdistrictlayer anddirectFeatureServer. MetadataOctober2026. Catalog descriptions specify withinAlamedaCounty extent;countyportionsneverassertedastheentirecrosscounty district."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:31:45.026547+00:00",
+    "sha256": "d46d2e6504cf3810e891893c7aaa7641e6e47e60ac64022e49c64389b1cb61be",
+    "sourceFile": "sources/d46d2e6504cf3810e891893c7aaa7641e6e47e60ac64022e49c64389b1cb61be.source",
+    "excerptFile": "sources/d46d2e6504cf3810e891893c7aaa7641e6e47e60ac64022e49c64389b1cb61be.txt",
+    "excerptSha256": "d46d2e6504cf3810e891893c7aaa7641e6e47e60ac64022e49c64389b1cb61be",
+    "evidence": "Official-linkedFeatureLayer schemaforcollege,includingexactsourceDIST_NAME/DISTRICT_IDfields andpolygongeometry."
+  },
+  {
+    "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:31:45.083018+00:00",
+    "sha256": "be90fe281dee86f0edaccfb50bf6398c9a061c6b236f6dae2f473d5340b5d508",
+    "sourceFile": "sources/be90fe281dee86f0edaccfb50bf6398c9a061c6b236f6dae2f473d5340b5d508.source",
+    "excerptFile": "sources/be90fe281dee86f0edaccfb50bf6398c9a061c6b236f6dae2f473d5340b5d508.txt",
+    "excerptSha256": "be90fe281dee86f0edaccfb50bf6398c9a061c6b236f6dae2f473d5340b5d508",
+    "evidence": "CompletepublicGeoJSONresponseforofficial-linked college votingdistrictlayer. Exactsourcefeatures retained;selecteddistricts mappedtosource-backedOCDIDs. GeographiccoverageisAlamedaCountyportiononly;neverassertsfullcrosscountygeometry."
+  }
+]

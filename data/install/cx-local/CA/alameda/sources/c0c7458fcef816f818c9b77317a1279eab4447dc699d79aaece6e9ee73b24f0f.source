@@ -1,0 +1,72 @@
+{
+  "id": "124cc26a72fe47588a73b8f44cfc1f61",
+  "owner": "AlamedaCounty.CA.US",
+  "ownerId": "8d6669b1b6b359d86f72cef6fffef211",
+  "created": 1616794660000,
+  "modified": 1791416938000,
+  "guid": null,
+  "name": "AC_Transit_District_Wards",
+  "title": "AC Transit District Wards",
+  "type": "Feature Service",
+  "typeKeywords": [
+    "ArcGIS Server",
+    "Data",
+    "Feature Access",
+    "Feature Service",
+    "Metadata",
+    "Service",
+    "Singlelayer",
+    "Hosted Service"
+  ],
+  "description": "<div style='text-align:Left;font-size:12pt'><div><div><p><span>AC Transit District boundaries, within the extent of Alameda County. Boundaries represent voting districts (i.e., district assignment for each address) and may align with parcel boundaries in cases where parcels (and sometimes residences) are divided by the true city/district boundary.<\/span><\/p><\/div><\/div><div><div><p><span /><\/p><\/div><\/div><\/div>",
+  "tags": [
+    "AC Transit",
+    "District Wards",
+    "Alameda County",
+    "Open Data",
+    "ROV"
+  ],
+  "snippet": "To be used in the mapping of AC Transit District Wards within Alameda County.",
+  "thumbnail": "thumbnail/thumbnail.png",
+  "documentation": null,
+  "extent": [
+    [
+      -122.34355760925685,
+      37.45418791238701
+    ],
+    [
+      -121.87020441005961,
+      37.90668958975737
+    ]
+  ],
+  "categories": [],
+  "spatialReference": "102100",
+  "accessInformation": "Alameda County Registrar of Voters",
+  "classification": null,
+  "licenseInfo": "<div style='text-align:Left;font-size:12pt'><p><span>The data provided herein are derived from various sources and are dynamic and in an ongoing state of maintenance, correction and update, and are subject to verification by the user and/or the County of Alameda. The boundary lines depicted herein do not constitute a legal survey. While every effort is made to keep such information accurate and up-to-date, the County of Alameda makes no warranty, representation or guarantee as to the content, accuracy, timeliness or completeness of any of the information implied herein. The County of Alameda explicitly disclaims any representation and warranties, including, without limitation, the implied warranties of merchantability and fitness for a particular purpose. The County of Alameda shall not be held liable for improper or incorrect use of the data described and/or contained herein. The County of Alameda assumes no responsibility for any decisions made, or any actions taken by the user based upon information obtained from the data described and/ or contained herein.<\/span><\/p><\/div>",
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 638976,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": null,
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": true,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 0,
+  "scoreCompleteness": 96,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": -1
+}

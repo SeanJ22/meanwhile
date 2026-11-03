@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:57:30.803941+00:00",
+  "preparedAt": "2026-11-03T04:57:42.385882+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -530,21 +530,35 @@
         "The current-linked BOE New York county inventory enumerates these nine local fields. No other mayoral, borough president, prosecutor, school or special district candidate field appears in that inventory. Selected samples cover every enumerated local field; every remaining PDF style has not been compared for late changes.",
         "Blank Write-in cells are not people. Separate declared write-in certification remains acquisition work. Five held citywide charter proposals and all their explanations remain unchanged outside this candidate packet. Exact judicial and Council district reader membership joins remain the registry owner\u2019s work."
       ]
+    },
+    {
+      "state": "CA",
+      "county": "Alameda",
+      "populationRank": 22,
+      "manifest": "CA/alameda/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 95,
+      "measureContests": 0,
+      "candidacies": 239,
+      "newContests": 84,
+      "refreshedContests": 11,
+      "sourceInputSha256": "52121dc3222a52a280208a7421806c57c48fee4738b273a4f230e3d916390587",
+      "coverage": "Complete printedlocalnamed-candidatefields:84CANDIDACY228names plus11heldFirstDCARETENTIONjudges=95fields239people. One declaredwriteinReichiLee keptseparate. 30NotOnBallotgroups40filers and5withdrawn/incompleteOnBallotfilersnotprintedexcluded. Fullballotcoveragepartial:measuresunparsedandnamedwriteinreaderdisplaypending."
     }
   ],
   "sourceReviewCounties": [],
   "totals": {
-    "countiesPrepared": 21,
-    "packetsPrepared": 22,
-    "candidateAndRetentionContests": 1659,
+    "countiesPrepared": 22,
+    "packetsPrepared": 23,
+    "candidateAndRetentionContests": 1754,
     "measureContests": 71,
-    "candidacyEntries": 3766,
-    "newContestEntriesAgainstCheckedInBaseline": 1365,
-    "distinctPreparedContestIds": 1721,
-    "distinctPreparedCandidateIds": 3745,
-    "distinctNewContestsAgainstCheckedInBaseline": 1359,
+    "candidacyEntries": 4005,
+    "newContestEntriesAgainstCheckedInBaseline": 1449,
+    "distinctPreparedContestIds": 1816,
+    "distinctPreparedCandidateIds": 3984,
+    "distinctNewContestsAgainstCheckedInBaseline": 1443,
     "sourceReviewCounties": 0,
-    "distinctCountyHandoffs": 21
+    "distinctCountyHandoffs": 22
   },
   "remainingWork": [
     {

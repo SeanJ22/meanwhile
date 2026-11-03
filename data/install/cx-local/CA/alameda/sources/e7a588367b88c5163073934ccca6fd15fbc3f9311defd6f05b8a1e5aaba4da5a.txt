@@ -1,0 +1,71 @@
+{
+  "id": "c028bf7aab7f4885a4f794b7abc5be06",
+  "owner": "AlamedaCounty.CA.US",
+  "ownerId": "8d6669b1b6b359d86f72cef6fffef211",
+  "created": 1617038185000,
+  "modified": 1791417616000,
+  "guid": null,
+  "name": "East_Bay_Regional_Park_District_Wards",
+  "title": "East Bay Regional Park District Wards",
+  "type": "Feature Service",
+  "typeKeywords": [
+    "ArcGIS Server",
+    "Data",
+    "Feature Access",
+    "Feature Service",
+    "Metadata",
+    "Service",
+    "Singlelayer",
+    "Hosted Service"
+  ],
+  "description": "<div style='text-align:Left;font-size:12pt'><div><div><p style='margin:7 0 7 0;'><span>East Bay Regional Park <\/span><span>District with ward boundaries, within the extent of Alameda County; boundaries have been updated to show 2011-2012 redistricting changes.  Boundaries represent voting districts (i.e., district designation for each address) and therefore may align with parcel boundaries in cases where parcels (and sometimes residences) are divided by the true city/district boundary. <\/span><\/p><p><span /><\/p><\/div><\/div><div><div><p style='margin:7 0 7 0;'><span /><\/p><p><span /><\/p><\/div><\/div><\/div>",
+  "tags": [
+    "Alameda County",
+    "Open Data",
+    "East Bay Regional Park District",
+    "ROV"
+  ],
+  "snippet": "To be used in the mapping of East Bay Regional Park District within Alameda County.",
+  "thumbnail": "thumbnail/thumbnail.png",
+  "documentation": null,
+  "extent": [
+    [
+      -122.34355760925685,
+      37.45418791238701
+    ],
+    [
+      -121.46932575186605,
+      37.90668958975737
+    ]
+  ],
+  "categories": [],
+  "spatialReference": "102100",
+  "accessInformation": "Alameda County Registrar of Voters",
+  "classification": null,
+  "licenseInfo": "<div style='text-align:Left;font-size:12pt'><div><div><p><span>The data provided herein are derived from various sources and are dynamic and in an ongoing state of maintenance, correction and update, and are subject to verification by the user and/or the County of Alameda. The boundary lines depicted herein do not constitute a legal survey. While every effort is made to keep such information accurate and up-to-date, the County of Alameda makes no warranty, representation or guarantee as to the content, accuracy, timeliness or completeness of any of the information implied herein. The County of Alameda explicitly disclaims any representation and warranties, including, without limitation, the implied warranties of merchantability and fitness for a particular purpose. The County of Alameda shall not be held liable for improper or incorrect use of the data described and/or contained herein. The County of Alameda assumes no responsibility for any decisions made, or any actions taken by the user based upon information obtained from the data described and/ or contained herein.<\/span><\/p><\/div><\/div><\/div>",
+  "culture": "en-us",
+  "properties": null,
+  "advancedSettings": null,
+  "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer",
+  "proxyFilter": null,
+  "access": "public",
+  "size": 606208,
+  "subInfo": 0,
+  "appCategories": [],
+  "industries": [],
+  "languages": [],
+  "largeThumbnail": null,
+  "banner": null,
+  "screenshots": [],
+  "listed": false,
+  "commentsEnabled": true,
+  "numComments": 0,
+  "numRatings": 0,
+  "avgRating": 0,
+  "numViews": 0,
+  "scoreCompleteness": 98,
+  "groupDesignations": null,
+  "apiToken1ExpirationDate": -1,
+  "apiToken2ExpirationDate": -1,
+  "lastViewed": -1
+}

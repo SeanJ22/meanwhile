@@ -1,0 +1,18 @@
+[
+  {
+    "contestId": "cx-local-ca-alameda-2026-for-school-directors-berkeley",
+    "ocdId": "ocd-division/country:us/state:ca/school_district:berkeley_unified_school_district",
+    "printedName": "REICHI LEE",
+    "filingStatus": "Filing Completed",
+    "designation": "Write-in Candidate",
+    "installed": false,
+    "reason": "Nameddeclaredwritein notprintedchoice;readerstatusdistinctionpending.",
+    "provenance": {
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260",
+      "sourceOrg": "Alameda County Registrar of Voters",
+      "collectedAt": "2026-11-03T04:30:53.794320+00:00",
+      "verifiedAt": "2026-11-03T04:30:53.794320+00:00",
+      "quote": "REICHI LEE\nWrite-in Candidate"
+    }
+  }
+]

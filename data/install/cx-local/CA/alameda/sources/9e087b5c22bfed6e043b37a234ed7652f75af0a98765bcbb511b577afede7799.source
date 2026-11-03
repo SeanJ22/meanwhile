@@ -1,0 +1,2309 @@
+<!doctype html>
+<html lang="en">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+  <meta content="IE=edge" http-equiv="X-UA-Compatible"> 
+  <meta content="width=device-width, initial-scale=1" name="viewport"> 
+  <!--fixed-layout for ROV--> 
+  <title>Election Information</title> 
+  <!--ls:begin[stylesheet]--> 
+  <link rel="stylesheet" href="https://alamedacountyca.gov/acvote/include/static-rov/css/projectROV/rov-main-24102022.css?V=8" type="text/css"> 
+  <!--ls:end[stylesheet]--> 
+  <!--ls:begin[meta-keywords]--> 
+  <meta name="keywords" content=""> 
+  <!--ls:end[meta-keywords]--> 
+  <!--ls:begin[meta-description]--> 
+  <meta name="description" content=""> 
+  <!--ls:end[meta-description]--> 
+  <!--ls:begin[custom-meta-data]--> 
+  <meta name="category" content="Elections"> 
+  <!--ls:end[custom-meta-data]--> 
+  <!--ls:begin[meta-vpath]--> 
+  <meta name="vpath" content=""> 
+  <!--ls:end[meta-vpath]--> 
+  <!--ls:begin[meta-page-locale-name]--> 
+  <meta name="page-locale-name" content=""> 
+  <!--ls:end[meta-page-locale-name]--> 
+  <!--ls:begin[stylesheet]--> 
+  <link type="text/css" href="/static/css/projectROV/rov-main-fonts.css" rel="stylesheet"> 
+  <!--ls:end[stylesheet]--> 
+  <!--ls:begin[favicon]--> 
+  <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon"> 
+  <!--ls:end[favicon]--> 
+  <!--ls:begin[head-injection]-->
+  <meta property="og:description" content="">
+  <!--ls:end[head-injection]-->
+  <!--ls:begin[tracker-injection]-->
+  <!--ls:end[tracker-injection]-->
+  <!--ls:begin[script]-->
+  <!--ls:end[script]--> 
+  <!--[if lte IE 9]>
+					<script src="/global-acthemes-resources/js/html5shiv.min.js"></script>
+					<script src="/global-acthemes-resources/js/html5shiv-printshiv.min.js"></script>
+					<script src="/global-acthemes-resources/js/placeholders.jquery.min.js"></script>
+				  <![endif]--> 
+ </head> 
+ <body> 
+  <!--ls:begin[body]-->
+  <div class="ls-canvas" id="ls-canvas"> 
+   <div class="ls-row" id="siteheader"> 
+    <div class="ls-fxr" id="ls-gen56620716-ls-fxr"> 
+     <div class="ls-area" id="siteheader-area"> 
+      <div class="ls-area-body" id="ls-gen56620717-ls-area-body"> 
+       <div class="ls-cmp-wrap ls-1st" id="w1506920660274"> 
+        <!--ls:begin[component-1506920660274]--> 
+        <div>
+         <div> 
+          <!-- Google Tag Manager --> 
+          <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-KPKZ53P');</script> 
+          <!-- End Google Tag Manager --> 
+         </div> 
+         <style>
+td.gsc-input { width:3%;}
+td.gsib_a { padding:10px;}
+.gsc-search-button-v2 {
+    background: #0D6352;
+    color: #fff;
+    padding: 15px 25px;
+    margin: 15px;
+    border-radius: 3px;
+}
+.gsc-search-button-v2 svg {
+    width:18px;
+    height:18px;
+}
+/*Media Querry*/
+@media (max-width:767px){
+    td.gsc-input { width:20%;}
+    form.gsc-search-box.gsc-search-box-tools{ margin-bottom:0px;}
+    table.gsc-search-box {
+        margin-bottom:0px;
+        width:101%;
+    }
+    form.gsc-search-box{ width:80%;}
+    .gsc-input-box { border:0px;}
+    table.gstl_51.gsc-input{ width:100%; padding:0px;}
+    #navMobileSearchButton{ display:none;}
+    .gsc-search-button-v2 { margin:0px;}
+    .input-group.input-group-search .container-fluid{padding:0px;}
+    .input-group.input-group-search .container{padding:0px;}
+    .gsc-input-box span#gs_cb51{display:none;}
+}
+@media (min-width:768px){
+    form.gsc-search-box{ margin-bottom:50px;}
+    input.gsc-input { font-size:30px;}
+    .gsc-search-box-tools .gsc-search-box .gsc-input { font-size:20px;}
+    table td.gsc-search-button { display:none;}
+}
+</style> 
+         <div id="main-navigation" class="navbar navbar-fixed-top" role="application"> 
+          <div class="container"> 
+           <div class="navbar__skip_to_content"> 
+            <a href="#pageheader">Skip to Content</a> 
+           </div> 
+           <div class="row"> 
+            <div class="col-sm-8 navbar__logo_brand_wrapper"> 
+             <a data-ajax="false" href="/"><img class="navbar__logo" src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg" alt="AC Vote"></a> 
+             <span class="navbar__brandname">Official Election Site of Alameda County</span> 
+            </div> 
+            <nav class="col-md-4 col-sm-6 navbar__tools_wrapper"> 
+             <ul class="m-0 list-inline"> 
+              <li class="p-0"> <a class="btn btn-link navbar__tool_button p-0" data-cookie="ACCESSIBILITY_LANG_POPUP" tabindex="0" onclick="window.open('https://alamedacountyca.gov/rovmvp_app/mvp.do');"> Voter Profile </a> </li> 
+              <li class="p-0"> <button data-main-navigation="language" class="btn btn-link p-0 navbar__tool_button_language_selector"> English <span class="caret ml-10"></span> </button> </li> 
+              <li class="p-0"> <button data-main-navigation="search" class="btn btn-link navbar__tool_button p-0" name="Search Button" alt="Search Icon - Click here to reveal Search Controls" title="Search Icon - Click here to reveal Search Controls"> <img class="" src="https://alamedacountyca.gov/acvote/include/static/img/common/search_icon.svg" alt="Search" name="Search Icon"> </button> </li> 
+             </ul> 
+            </nav> 
+            <nav class="col-md-8 col-sm-12 navbar__main_navigation hidden"> 
+             <ul> 
+              <li> <a tabindex="-1" data-ajax="false" href="/"> <img class="" src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg" alt="AC Vote"> </a> </li> 
+              <li class="p-0"> 
+               <div class="form-group m-0"> 
+                <div class="input-group input-group-search"> 
+                 <input type="text" class="form-control" placeholder="Search" maxlength="2500"> 
+                 <span class="input-group-btn"> <button type="button" class="btn btn-default" name="Search Button" alt="Search Button - Click here to execute a Search" title="Search Button - Click here to execute a Search"> <img class="" src="https://alamedacountyca.gov/acvote/include/static/img/common/search_icon.svg" alt="Search" name="Search Icon"> </button> </span> 
+                </div> 
+               </div> </li> 
+              <li class="p-0 "> <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle" data-main-navigation="Elections"> <span class="navbar__main_navigation_label">Elections</span> <span class="caret ml-10"></span> </button> </li> 
+              <li class="p-0 "> <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle" data-main-navigation="Voting"> <span class="navbar__main_navigation_label">Voting</span> <span class="caret ml-10"></span> </button> </li> 
+              <li class="p-0 "> <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle" data-main-navigation="Resources"> <span class="navbar__main_navigation_label">Resources</span> <span class="caret ml-10"></span> </button> </li> 
+              <li class="p-0 "> <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle" data-main-navigation="Community"> <span class="navbar__main_navigation_label">Community</span> <span class="caret ml-10"></span> </button> </li> 
+              <li class="p-0 "> <button data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" class="btn btn-link navbar__main_navigation_link p-0 header_top_link dropdown-toggle" data-main-navigation="Candidates"> <span class="navbar__main_navigation_label">Candidates</span> <span class="caret ml-10"></span> </button> </li> 
+             </ul> 
+            </nav> 
+            <div class="col-md-4 hidden-sm hidden-md navbar__social_links"> 
+             <!-- Commented  - the social media icons are not showing  most of the times
+                <ul class="list-inline">
+
+                    <li>
+                        <a  data-ajax="false"  href="https://www.facebook.com/acvote/" class="ml-md-20" alt="Facebook" target="_blank">
+                            <figure class="display-inline-block"><img src="/static/img/social/fb_icon.png" alt="Facebook" name="Facebook"></figure>
+                        </a>
+                    </li>
+                    <li>
+                        <a  data-ajax="false"  href="https://x.com/ACVOTE" class="ml-md-20" alt="X" target="_blank">
+                            <figure class="display-inline-block"><img src="/static/img/social/x-logo-white.png" alt="X" name="X"></figure>
+                        </a>
+                    </li>
+                    <li>
+                        <a  data-ajax="false"  href="https://www.instagram.com/acvote/" class="ml-md-20" alt="Instagram" target="_blank">
+                            <figure class="display-inline-block"><img src="/static/img/social/instagram_icon.png" alt="Instagram" name="Instagram"></figure>
+                        </a>
+                    </li>
+                    <li>
+                        <a  data-ajax="false"  href="https://www.youtube.com/@acvote" class="ml-md-20" alt="YouTube" target="_blank">
+                            <figure class="display-inline-block"><img src="/static/img/social/youtube_icon.png" alt="YouTube" name="YouTube"></figure>
+                        </a>
+                    </li>
+                    <li>
+                        <a  data-ajax="false"  href="https://service.govdelivery.com/accounts/CAALAME/subscriber/new?topic_id=CAALAME_9" class="ml-md-20" alt="Election Results Subscription" target="_blank">
+                            <figure class="display-inline-block"><img src="/static/img/social/mail_icon.png" alt="Election Results Subscription" name="Election Results Subscription"></figure>
+                        </a>
+                    </li>
+
+                </ul>
+              --> 
+             <!-- Added the static code for social media  --> 
+             <ul class="list-inline"> 
+              <li> <a data-ajax="false" id="first-social" href="https://www.facebook.com/acvote/" class="ml-md-20" alt="Facebook" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/fb_icon.png" alt="Facebook" name="Facebook"> 
+                </figure> </a> </li> 
+              <li> <a data-ajax="false" href="https://twitter.com/ACVOTE" class="ml-md-20" alt="Twitter" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/x-icon.png" alt="Twitter" name="Twitter"> 
+                </figure> </a> </li> 
+              <li> <a data-ajax="false" href="https://www.instagram.com/acvote/" class="ml-md-20" alt="Instagram" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/instagram_icon.png" alt="Instagram" name="Instagram"> 
+                </figure> </a> </li> 
+              <li> <a data-ajax="false" href="https://www.youtube.com/channel/UCj5Xu4ud8uEgvVljSp2caDA" class="ml-md-20" alt="YouTube" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/youtube_icon.png" alt="YouTube" name="YouTube"> 
+                </figure> </a> </li> 
+              <li> <a data-ajax="false" href="https://service.govdelivery.com/accounts/CAALAME/subscriber/new?topic_id=CAALAME_9" class="ml-md-20" alt="Election Results Subscription" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/mail_icon.png" alt="Election Results Subscription" name="Election Results Subscription"> 
+                </figure> </a> </li> 
+             </ul> 
+             <!-- end  the static code for social media  --> 
+            </div> 
+            <div class="col-xs-12 navbar__main_navigation_detail"> 
+             <div class="navbar__main_navigation_detail_wrapper"> 
+              <nav> 
+               <ul class="p-0 hidden" data-main-navigation-links="Elections"> 
+                <li class="hidden-lg hidden-md"> <a data-ajax="false" data-main-navigation="Elections" class="navbar__main_navigation_detail_close"> 
+                  <svg width="18px" height="17px" viewbox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+                   <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch --> 
+                   <desc>
+                    Created with Sketch.
+                   </desc> 
+                   <defs></defs> 
+                   <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> 
+                    <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF"> 
+                     <g transform="translate(102.000000, 497.000000)" id="Active-State"> 
+                      <g transform="translate(668.000000, 0.000000)"> 
+                       <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)"> 
+                        <g id="left-arrow"> 
+                         <g> 
+                          <path d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7" id="Shape"></path> 
+                         </g> 
+                        </g> 
+                       </g> 
+                      </g> 
+                     </g> 
+                    </g> 
+                   </g> 
+                  </svg> </a> </li> 
+                <li class="header_sub_link_li"> <a href="/election-information/elections" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Election Information </a> </li> 
+                <li class="header_sub_link_li"> <a href="/election-information/archived-elections" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Archived Elections </a> </li> 
+                <li class="header_sub_link_li"> <a href="/election-information/calendar" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Calendar </a> </li> 
+                <li class="header_sub_link_li"> <a href="/election-information/election-cost" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Election Cost </a> </li> 
+               </ul> 
+              </nav> 
+              <nav> 
+               <ul class="p-0 hidden" data-main-navigation-links="Voting"> 
+                <li class="hidden-lg hidden-md"> <a data-ajax="false" data-main-navigation="Voting" class="navbar__main_navigation_detail_close"> 
+                  <svg width="18px" height="17px" viewbox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+                   <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch --> 
+                   <desc>
+                    Created with Sketch.
+                   </desc> 
+                   <defs></defs> 
+                   <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> 
+                    <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF"> 
+                     <g transform="translate(102.000000, 497.000000)" id="Active-State"> 
+                      <g transform="translate(668.000000, 0.000000)"> 
+                       <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)"> 
+                        <g id="left-arrow"> 
+                         <g> 
+                          <path d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7" id="Shape"></path> 
+                         </g> 
+                        </g> 
+                       </g> 
+                      </g> 
+                     </g> 
+                    </g> 
+                   </g> 
+                  </svg> </a> </li> 
+                <li class="header_sub_link_li"> <a href="/voting/register-to-vote" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Register to Vote </a> </li> 
+                <li class="header_sub_link_li"> <a href="/vca" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Voter's Choice Act </a> </li> 
+                <li class="header_sub_link_li"> <a href="https://alamedacountyca.gov/rov_app/vcalist" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Vote Centers </a> </li> 
+                <li class="header_sub_link_li"> <a href="/voting/voting-rights" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Voting Rights </a> </li> 
+                <li class="header_sub_link_li"> <a href="/voting/uocava" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Military and Overseas Voters </a> </li> 
+                <li class="header_sub_link_li"> <a href="/voting/ways-of-voting" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Ways of Voting </a> </li> 
+                <li class="header_sub_link_li"> <a href="https://alamedacountyca.gov/rovapps/maps/ballotdropbox_map.htm" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> 24-Hour Drop Box Map </a> </li> 
+                <li class="header_sub_link_li"> <a href="/youthvoting" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Youth Voting </a> </li> 
+               </ul> 
+              </nav> 
+              <nav> 
+               <ul class="p-0 hidden" data-main-navigation-links="Resources"> 
+                <li class="hidden-lg hidden-md"> <a data-ajax="false" data-main-navigation="Resources" class="navbar__main_navigation_detail_close"> 
+                  <svg width="18px" height="17px" viewbox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+                   <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch --> 
+                   <desc>
+                    Created with Sketch.
+                   </desc> 
+                   <defs></defs> 
+                   <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> 
+                    <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF"> 
+                     <g transform="translate(102.000000, 497.000000)" id="Active-State"> 
+                      <g transform="translate(668.000000, 0.000000)"> 
+                       <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)"> 
+                        <g id="left-arrow"> 
+                         <g> 
+                          <path d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7" id="Shape"></path> 
+                         </g> 
+                        </g> 
+                       </g> 
+                      </g> 
+                     </g> 
+                    </g> 
+                   </g> 
+                  </svg> </a> </li> 
+                <li class="header_sub_link_li"> <a href="/accessibility" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Information for Voters with Disabilities </a> </li> 
+                <li class="header_sub_link_li"> <a href="/webpolicy" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Website Accessibility </a> </li> 
+                <li class="header_sub_link_li"> <a href="/language" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Language Assistance </a> </li> 
+                <li class="header_sub_link_li"> <a href="https://alamedacountyca.gov/rov_app/edata" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Data </a> </li> 
+                <li class="header_sub_link_li"> <a href="/resources/how-to-guidelines" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> How-to Guidelines </a> </li> 
+                <li class="header_sub_link_li"> <a href="/resources/political-party-information" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Political Party Contact Information </a> </li> 
+                <li class="header_sub_link_li"> <a href="/resources/faqs" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Frequently Asked Questions </a> </li> 
+                <li class="header_sub_link_li"> <a href="https://alamedacountyca.gov/alcoecommrov_app/search.do" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_blank"> Store </a> </li> 
+                <li class="header_sub_link_li"> <a href="/resources/about-us" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> About Us </a> </li> 
+               </ul> 
+              </nav> 
+              <nav> 
+               <ul class="p-0 hidden" data-main-navigation-links="Community"> 
+                <li class="hidden-lg hidden-md"> <a data-ajax="false" data-main-navigation="Community" class="navbar__main_navigation_detail_close"> 
+                  <svg width="18px" height="17px" viewbox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+                   <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch --> 
+                   <desc>
+                    Created with Sketch.
+                   </desc> 
+                   <defs></defs> 
+                   <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> 
+                    <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF"> 
+                     <g transform="translate(102.000000, 497.000000)" id="Active-State"> 
+                      <g transform="translate(668.000000, 0.000000)"> 
+                       <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)"> 
+                        <g id="left-arrow"> 
+                         <g> 
+                          <path d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7" id="Shape"></path> 
+                         </g> 
+                        </g> 
+                       </g> 
+                      </g> 
+                     </g> 
+                    </g> 
+                   </g> 
+                  </svg> </a> </li> 
+                <li class="header_sub_link_li"> <a href="/community/laac" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Language Accessibility Advisory Committee </a> </li> 
+                <li class="header_sub_link_li"> <a href="/community/vaac" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Voting Accessibility Advisory Committee </a> </li> 
+                <li class="header_sub_link_li"> <a href="/community/events" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Events </a> </li> 
+                <li class="header_sub_link_li"> <a href="/community/partnerships" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Partnerships </a> </li> 
+                <li class="header_sub_link_li"> <a href="/community/become-an-election-worker" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Become an Election Worker </a> </li> 
+               </ul> 
+              </nav> 
+              <nav> 
+               <ul class="p-0 hidden" data-main-navigation-links="Candidates"> 
+                <li class="hidden-lg hidden-md"> <a data-ajax="false" data-main-navigation="Candidates" class="navbar__main_navigation_detail_close"> 
+                  <svg width="18px" height="17px" viewbox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+                   <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch --> 
+                   <desc>
+                    Created with Sketch.
+                   </desc> 
+                   <defs></defs> 
+                   <g id="Styleguide" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> 
+                    <g id="Icons" transform="translate(-970.000000, -908.000000)" fill="#FFFFFF"> 
+                     <g transform="translate(102.000000, 497.000000)" id="Active-State"> 
+                      <g transform="translate(668.000000, 0.000000)"> 
+                       <g id="icon/active/left-arrow" transform="translate(200.000000, 411.000000)"> 
+                        <g id="left-arrow"> 
+                         <g> 
+                          <path d="M17,7 L3.436,7 L8.766,1.711 C9.158,1.323 9.162,0.691 8.774,0.298 C8.385,-0.096 7.753,-0.099 7.359,0.289 L0.297,7.289 C-0.096,7.677 -0.1,8.31 0.288,8.703 L7.288,15.765 C7.484,15.963 7.742,16.063 8,16.063 C8.254,16.063 8.508,15.966 8.703,15.774 C9.096,15.386 9.1,14.753 8.712,14.36 L3.394,9 L17,9 C17.553,9 18,8.552 18,8 C18,7.448 17.553,7 17,7" id="Shape"></path> 
+                         </g> 
+                        </g> 
+                       </g> 
+                      </g> 
+                     </g> 
+                    </g> 
+                   </g> 
+                  </svg> </a> </li> 
+                <li class="header_sub_link_li"> <a href="/candidates/how-to-run" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> How to Run </a> </li> 
+                <li class="header_sub_link_li"> <a href="http://www.netfile.com/agency/coa" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_blank"> Campaign Finance </a> </li> 
+                <li class="header_sub_link_li"> <a href="https://alamedacountyca.gov/rov_app/electedofficials" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Elected Officials </a> </li> 
+                <li class="header_sub_link_li"> <a href="https://alamedacountyca.gov/rov_app/candidatelist" data-ajax="false" class="navbar__main_navigation_detail_link header_sub_link" target="_self"> Candidate List </a> </li> 
+               </ul> 
+              </nav> 
+              <ul class="p-0 mt-35 hidden" data-main-navigation-links="search"> 
+               <form id="search-form" method="get" action="https://acsearch.acgov.org/s/search.html?" target="_parent"> 
+                <input type="hidden" name="collection" value="acvote"> 
+                <input type="hidden" name="form" value="acvote"> 
+                <input type="hidden" name="profile" value="acvote"> 
+                <div class="form-group"> 
+                 <label for="query" class="sr-only">Search criteria</label> 
+                 <input class="navbar__main_navigation_search" required name="query" id="query" title="Search ACVOTE.org" type="text" value="" accesskey="q" placeholder="Search ACVOTE.org"> 
+                </div> 
+               </form> 
+              </ul> 
+              <ul class="p-0 hidden" data-main-navigation-links="language"> 
+               <div class="col-xs-2 pl-0"> 
+                <li> <a data-ajax="false" href="javascript:void(0)" lang="en" class="navbar__main_navigation_detail_link navbar__main_navigation_language_link">English</a> </li> 
+                <li> <a data-ajax="false" href="javascript:void(0)" lang="es" class="navbar__main_navigation_detail_link navbar__main_navigation_language_link">Español</a> </li> 
+                <li> <a data-ajax="false" href="javascript:void(0)" lang="zh" class="navbar__main_navigation_detail_link navbar__main_navigation_language_link">中文</a> </li> 
+               </div> 
+               <div class="col-xs-2 pl-0"> 
+                <li> <a data-ajax="false" href="javascript:void(0)" lang="tl" class="navbar__main_navigation_detail_link navbar__main_navigation_language_link">Tagalog</a> </li> 
+                <li> <a data-ajax="false" href="javascript:void(0)" lang="vi" class="navbar__main_navigation_detail_link navbar__main_navigation_language_link">Tiếng Việt</a> </li> 
+               </div>
+              </ul> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div id="main-mobile-navigation" class="navbar navbar-fixed-top"> 
+          <div class="container-fluid"> 
+           <div class="navbar-header"> 
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> 
+            <a class="navbar-brand navbar__logo_brand_wrapper" href="/"> <img class="navbar__logo" src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg" alt="AC Vote"> <span class="navbar__brandname">Official Election Site of Alameda County</span> </a> 
+           </div> 
+           <nav id="navbar" class="navbar-collapse collapse"> 
+            <ul class="nav navbar-nav"> 
+             <!-- mobile search working on --> 
+             <li class="p-0"> 
+              <form id="search-form" method="get" action="https://acsearch.acgov.org/s/search.html?" target="_parent"> 
+               <div class="form-group m-0"> 
+                <div class="form-group m-0"> 
+                 <div class="input-group input-group-search"> 
+                  <input type="hidden" name="collection" value="acvote"> 
+                  <input type="hidden" name="form" value="acvote"> 
+                  <input type="hidden" name="profile" value="acvote"> 
+                  <label for="query" class="sr-only">Search criteria</label> 
+                  <input class="form-control" required name="query" id="query" title="Search ACVOTE.org" type="text" value="" accesskey="q" placeholder="search acvote.org"> 
+                  <span class="input-group-btn"> <button type="submit" class="btn btn-default" name="Search Button" title="Search Button - Press here to execute a Search" alt="Search Button - Press here to execute a Search"> <img class="" src="https://alamedacountyca.gov/acvote/include/static/img/common/search_icon.svg" alt="Search" name="Search Icon"> </button> </span> 
+                 </div> 
+                </div>  
+               </div>
+              </form></li> 
+             <!-- / mobile search working on --> 
+             <li class="dropdown"> <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Elections<span class="caret"></span></a> 
+              <ul class="dropdown-menu"> 
+               <li> <a data-ajax="false" href="/election-information/elections" target="_self"> Election Information </a> </li> 
+               <li> <a data-ajax="false" href="/election-information/archived-elections" target="_self"> Archived Elections </a> </li> 
+               <li> <a data-ajax="false" href="/election-information/calendar" target="_self"> Calendar </a> </li> 
+               <li> <a data-ajax="false" href="/election-information/election-cost" target="_self"> Election Cost </a> </li> 
+              </ul> </li> 
+             <li class="dropdown"> <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Voting<span class="caret"></span></a> 
+              <ul class="dropdown-menu"> 
+               <li> <a data-ajax="false" href="/voting/register-to-vote" target="_self"> Register to Vote </a> </li> 
+               <li> <a data-ajax="false" href="/vca" target="_self"> Voter's Choice Act </a> </li> 
+               <li> <a data-ajax="false" href="https://alamedacountyca.gov/rov_app/vcalist" target="_self"> Vote Centers </a> </li> 
+               <li> <a data-ajax="false" href="/voting/voting-rights" target="_self"> Voting Rights </a> </li> 
+               <li> <a data-ajax="false" href="/voting/uocava" target="_self"> Military and Overseas Voters </a> </li> 
+               <li> <a data-ajax="false" href="/voting/ways-of-voting" target="_self"> Ways of Voting </a> </li> 
+               <li> <a data-ajax="false" href="https://alamedacountyca.gov/rovapps/maps/ballotdropbox_map.htm" target="_self"> 24-Hour Drop Box Map </a> </li> 
+               <li> <a data-ajax="false" href="/youthvoting" target="_self"> Youth Voting </a> </li> 
+              </ul> </li> 
+             <li class="dropdown"> <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Resources<span class="caret"></span></a> 
+              <ul class="dropdown-menu"> 
+               <li> <a data-ajax="false" href="/accessibility" target="_self"> Information for Voters with Disabilities </a> </li> 
+               <li> <a data-ajax="false" href="/webpolicy" target="_self"> Website Accessibility </a> </li> 
+               <li> <a data-ajax="false" href="/language" target="_self"> Language Assistance </a> </li> 
+               <li> <a data-ajax="false" href="https://alamedacountyca.gov/rov_app/edata" target="_self"> Data </a> </li> 
+               <li> <a data-ajax="false" href="/resources/how-to-guidelines" target="_self"> How-to Guidelines </a> </li> 
+               <li> <a data-ajax="false" href="/resources/political-party-information" target="_self"> Political Party Contact Information </a> </li> 
+               <li> <a data-ajax="false" href="/resources/faqs" target="_self"> Frequently Asked Questions </a> </li> 
+               <li> <a data-ajax="false" href="https://alamedacountyca.gov/alcoecommrov_app/search.do" target="_blank"> Store </a> </li> 
+               <li> <a data-ajax="false" href="/resources/about-us" target="_self"> About Us </a> </li> 
+              </ul> </li> 
+             <li class="dropdown"> <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Community<span class="caret"></span></a> 
+              <ul class="dropdown-menu"> 
+               <li> <a data-ajax="false" href="/community/laac" target="_self"> Language Accessibility Advisory Committee </a> </li> 
+               <li> <a data-ajax="false" href="/community/vaac" target="_self"> Voting Accessibility Advisory Committee </a> </li> 
+               <li> <a data-ajax="false" href="/community/events" target="_self"> Events </a> </li> 
+               <li> <a data-ajax="false" href="/community/partnerships" target="_self"> Partnerships </a> </li> 
+               <li> <a data-ajax="false" href="/community/become-an-election-worker" target="_self"> Become an Election Worker </a> </li> 
+              </ul> </li> 
+             <li class="dropdown"> <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Candidates<span class="caret"></span></a> 
+              <ul class="dropdown-menu"> 
+               <li> <a data-ajax="false" href="/candidates/how-to-run" target="_self"> How to Run </a> </li> 
+               <li> <a data-ajax="false" href="http://www.netfile.com/agency/coa" target="_blank"> Campaign Finance </a> </li> 
+               <li> <a data-ajax="false" href="https://alamedacountyca.gov/rov_app/electedofficials" target="_self"> Elected Officials </a> </li> 
+               <li> <a data-ajax="false" href="https://alamedacountyca.gov/rov_app/candidatelist" target="_self"> Candidate List </a> </li> 
+              </ul> </li> 
+             <li> <a href="https://alamedacountyca.gov/rovmvp_app/mvp.do" target="_blank" class="dropdown-toggle"> Voter Profile </a> </li> 
+             <li class="dropdown"> <a data-ajax="false" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> English <span class="caret"></span> </a> 
+              <ul class="dropdown-menu"> 
+               <li> <a data-ajax="false" href="javascript:void(0)" class="navbar__main_navigation_language_link" lang="en"> English </a> </li> 
+               <li> <a data-ajax="false" href="javascript:void(0)" class="navbar__main_navigation_language_link" lang="es"> Español </a> </li> 
+               <li> <a data-ajax="false" href="javascript:void(0)" class="navbar__main_navigation_language_link" lang="zh"> 中文 </a> </li> 
+               <li> <a data-ajax="false" href="javascript:void(0)" class="navbar__main_navigation_language_link" lang="tl"> Tagalog </a> </li> 
+               <li> <a data-ajax="false" href="javascript:void(0)" class="navbar__main_navigation_language_link" lang="vi"> Tiếng Việt </a> </li> 
+              </ul> </li> 
+            </ul> 
+           </nav>
+           <!--/.nav-collapse --> 
+          </div> 
+         </div> 
+         <div class="clickout-navbar hidden"></div> 
+         <div id="voterProfile" class="modal fade bs-example-modal-lg voter_profile" tabindex="-1" role="dialog" aria-labelledby="voterProfile"> 
+          <div class="modal-dialog modal-lg" role="document"> 
+           <div class="modal-content voter_profile__wrapper"> 
+            <div class="row"> 
+             <div class="col-md-6 voter_profile__left_content"> 
+              <h2 class="m-0 font-weight-500 font-family-roboto "> Information for Voters with Disabilities </h2> 
+              <img class="mt-40" src="/static/img/projectROV/common/language-panel-logo.svg" alt=""> 
+              <a data-ajax="false" href="/sites/acvote/accessibility.page" class="btn btn-default mt-20"> Learn More </a> 
+             </div> 
+             <div class="col-md-6 voter_profile__right_content"> 
+              <h2 class="m-0 font-weight-500 font-family-roboto "> Select your Language Preference </h2> 
+              <hr class="orange mt-20"> 
+              <div class="row"> 
+               <div class="col-xs-4"> 
+                <a data-ajax="false" href="javascript:void(0)" lang="en" class="voter_profile__link voter_profile___language_link">English</a> 
+                <a data-ajax="false" href="javascript:void(0)" lang="es" class="voter_profile__link voter_profile___language_link">Español</a> 
+                <a data-ajax="false" href="javascript:void(0)" lang="zh" class="voter_profile__link voter_profile___language_link">中文</a> 
+               </div> 
+               <div class="col-xs-4"> 
+                <a data-ajax="false" href="javascript:void(0)" lang="tl" class="voter_profile__link voter_profile___language_link">Tagalog</a> 
+                <a data-ajax="false" href="javascript:void(0)" lang="vi" class="voter_profile__link voter_profile___language_link">Tiếng Việt</a> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div id="languageSelector" class="modal fade bs-example-modal-lg voter_profile" tabindex="-1" role="dialog" aria-labelledby="languageSelector"> 
+          <div class="modal-dialog" role="document"> 
+           <div class="modal-content modal-language voter_profile__wrapper"> 
+            <div class="row"> 
+             <div class="col-md-12 voter_profile__right_content"> 
+              <h2 class="m-0 font-weight-500 font-family-roboto "> Select your Language Preference </h2> 
+              <hr class="orange mt-20"> 
+              <div class="row"> 
+               <div class="col-xs-4"> 
+                <a data-ajax="false" href="javascript:void(0)" lang="en" class="voter_profile__link voter_profile___language_link">English</a> 
+                <a data-ajax="false" href="javascript:void(0)" lang="es" class="voter_profile__link voter_profile___language_link">Español</a> 
+                <a data-ajax="false" href="javascript:void(0)" lang="zh" class="voter_profile__link voter_profile___language_link">中文</a> 
+               </div> 
+               <div class="col-xs-4"> 
+                <a data-ajax="false" href="javascript:void(0)" lang="tl" class="voter_profile__link voter_profile___language_link">Tagalog</a> 
+                <a data-ajax="false" href="javascript:void(0)" lang="vi" class="voter_profile__link voter_profile___language_link">Tiếng Việt</a> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="spacer"></div> 
+        </div> 
+        <!--ls:end[component-1506920660274]--> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="ls-row-clr"></div> 
+    </div> 
+   </div> 
+   <div class="ls-row pageheader" id="pageheader"> 
+    <div class="ls-fxr" id="ls-gen56620718-ls-fxr"> 
+     <div class="ls-area container" id="pageheader-area"> 
+      <div class="ls-area-body" id="ls-gen56620719-ls-area-body"></div> 
+     </div> 
+     <div class="ls-row-clr"></div> 
+    </div> 
+   </div> 
+   <div class="ls-row body" id="body"> 
+    <div class="ls-fxr" id="ls-gen56620720-ls-fxr"> 
+     <div class="ls-area container" id="bodycontent"> 
+      <div class="ls-area-body" id="ls-gen56620721-ls-area-body"> 
+       <div class="ls-cmp-wrap ls-1st" id="w1509074125102"> 
+        <!--ls:begin[component-1509074125102]--> 
+        <div> 
+         <script>
+    var componentID = 1509074125102;
+    
+</script> 
+         <div id="elections-main-wrapper" class="mt-60"> 
+          <section id="page-header" class="row mt-40"> 
+           <div class="col-xs-12 text-center"> 
+            <h1 class="font-size-60 mt-0 text-color-blue-dark">Election Information</h1> 
+            <p class="font-family-lato font-weight-400 m-0">Information for Past, Current, and Future Elections</p> 
+           </div> 
+           <div class="col-sm-6 col-xs-12 mt-40 dropdown dropdown-elections"> 
+            <button class="btn btn-default dropdown-toggle btn-block btn-dropdown is-selected is-select-input" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-select-input="election" data-select-input-value=""> <span>Select an Election</span> <span class="caret"></span> </button> 
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> 
+             <h6 class="dropdown__category_separator"> Current Elections </h6> 
+             <li data-select-input="election" data-select-election-id="260" data-select-input-label="November 03, 2026 - General Election" onclick="loadElection('260');"> <a title="November 03, 2026 - General Election" href="#"> November 03, 2026 - General Election </a> </li> 
+             <h6 class="dropdown__category_separator"> Previous Elections </h6> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 262 </h1> --> 
+             <li data-select-input="election" data-select-election-id="262" data-select-input-label="August 18, 2026 - Congressional District 14 Special General Election" onclick="loadElection('262');"> <a title="August 18, 2026 - Congressional District 14 Special General Election" href="#"> August 18, 2026 - Congressional District 14 Special General Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 261 </h1> --> 
+             <li data-select-input="election" data-select-election-id="261" data-select-input-label="June 16, 2026 - Congressional 14, Special Primary Election" onclick="loadElection('261');"> <a title="June 16, 2026 - Congressional 14, Special Primary Election" href="#"> June 16, 2026 - Congressional 14, Special Primary Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 259 </h1> --> 
+             <li data-select-input="election" data-select-election-id="259" data-select-input-label="June 02, 2026 - Direct Primary Election" onclick="loadElection('259');"> <a title="June 02, 2026 - Direct Primary Election" href="#"> June 02, 2026 - Direct Primary Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 258 </h1> --> 
+             <li data-select-input="election" data-select-election-id="258" data-select-input-label="November 04, 2025 - Statewide Special Election" onclick="loadElection('258');"> <a title="November 04, 2025 - Statewide Special Election" href="#"> November 04, 2025 - Statewide Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 257 </h1> --> 
+             <li data-select-input="election" data-select-election-id="257" data-select-input-label="April 15, 2025 - City of Oakland Special Municipal Election" onclick="loadElection('257');"> <a title="April 15, 2025 - City of Oakland Special Municipal Election" href="#"> April 15, 2025 - City of Oakland Special Municipal Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 252 </h1> --> 
+             <li data-select-input="election" data-select-election-id="252" data-select-input-label="November 05, 2024 - General Election" onclick="loadElection('252');"> <a title="November 05, 2024 - General Election" href="#"> November 05, 2024 - General Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 256 </h1> --> 
+             <li data-select-input="election" data-select-election-id="256" data-select-input-label="July 02, 2024 - Sunol Glen Unified School District, Special Recall Election" onclick="loadElection('256');"> <a title="July 02, 2024 - Sunol Glen Unified School District, Special Recall Election" href="#"> July 02, 2024 - Sunol Glen Unified School District, Special Recall Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 255 </h1> --> 
+             <li data-select-input="election" data-select-election-id="255" data-select-input-label="May 28, 2024 - City of Berkeley, District 4, Special Election" onclick="loadElection('255');"> <a title="May 28, 2024 - City of Berkeley, District 4, Special Election" href="#"> May 28, 2024 - City of Berkeley, District 4, Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 254 </h1> --> 
+             <li data-select-input="election" data-select-election-id="254" data-select-input-label="April 16, 2024 - City of Berkeley, District 7 Special Election" onclick="loadElection('254');"> <a title="April 16, 2024 - City of Berkeley, District 7 Special Election" href="#"> April 16, 2024 - City of Berkeley, District 7 Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 251 </h1> --> 
+             <li data-select-input="election" data-select-election-id="251" data-select-input-label="March 05, 2024 - Presidential Primary Election" onclick="loadElection('251');"> <a title="March 05, 2024 - Presidential Primary Election" href="#"> March 05, 2024 - Presidential Primary Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 253 </h1> --> 
+             <li data-select-input="election" data-select-election-id="253" data-select-input-label="November 07, 2023 - Oakland Unified School District, District 5, Special Election" onclick="loadElection('253');"> <a title="November 07, 2023 - Oakland Unified School District, District 5, Special Election" href="#"> November 07, 2023 - Oakland Unified School District, District 5, Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 248 </h1> --> 
+             <li data-select-input="election" data-select-election-id="248" data-select-input-label="November 08, 2022 - General Election" onclick="loadElection('248');"> <a title="November 08, 2022 - General Election" href="#"> November 08, 2022 - General Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 247 </h1> --> 
+             <li data-select-input="election" data-select-election-id="247" data-select-input-label="June 07, 2022 - Direct Primary Election" onclick="loadElection('247');"> <a title="June 07, 2022 - Direct Primary Election" href="#"> June 07, 2022 - Direct Primary Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 249 </h1> --> 
+             <li data-select-input="election" data-select-election-id="249" data-select-input-label="May 03, 2022 - Livermore VJ USD Special VBM Election" onclick="loadElection('249');"> <a title="May 03, 2022 - Livermore VJ USD Special VBM Election" href="#"> May 03, 2022 - Livermore VJ USD Special VBM Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 246 </h1> --> 
+             <li data-select-input="election" data-select-election-id="246" data-select-input-label="November 02, 2021 - City of Emeryville Special Election" onclick="loadElection('246');"> <a title="November 02, 2021 - City of Emeryville Special Election" href="#"> November 02, 2021 - City of Emeryville Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 245 </h1> --> 
+             <li data-select-input="election" data-select-election-id="245" data-select-input-label="September 14, 2021 - California Gubernatorial Recall Election" onclick="loadElection('245');"> <a title="September 14, 2021 - California Gubernatorial Recall Election" href="#"> September 14, 2021 - California Gubernatorial Recall Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 244 </h1> --> 
+             <li data-select-input="election" data-select-election-id="244" data-select-input-label="August 31, 2021 - 18th Assembly District Special General Election" onclick="loadElection('244');"> <a title="August 31, 2021 - 18th Assembly District Special General Election" href="#"> August 31, 2021 - 18th Assembly District Special General Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 243 </h1> --> 
+             <li data-select-input="election" data-select-election-id="243" data-select-input-label="June 29, 2021 - 18th Assembly District Special Primary Election" onclick="loadElection('243');"> <a title="June 29, 2021 - 18th Assembly District Special Primary Election" href="#"> June 29, 2021 - 18th Assembly District Special Primary Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 241 </h1> --> 
+             <li data-select-input="election" data-select-election-id="241" data-select-input-label="November 03, 2020 - General Election" onclick="loadElection('241');"> <a title="November 03, 2020 - General Election" href="#"> November 03, 2020 - General Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 240 </h1> --> 
+             <li data-select-input="election" data-select-election-id="240" data-select-input-label="March 03, 2020 - Presidential Primary Election" onclick="loadElection('240');"> <a title="March 03, 2020 - Presidential Primary Election" href="#"> March 03, 2020 - Presidential Primary Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 242 </h1> --> 
+             <li data-select-input="election" data-select-election-id="242" data-select-input-label="November 05, 2019 - Special Election" onclick="loadElection('242');"> <a title="November 05, 2019 - Special Election" href="#"> November 05, 2019 - Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 239 </h1> --> 
+             <li data-select-input="election" data-select-election-id="239" data-select-input-label="June 04, 2019 - Dublin USD Area 4 Special Election" onclick="loadElection('239');"> <a title="June 04, 2019 - Dublin USD Area 4 Special Election" href="#"> June 04, 2019 - Dublin USD Area 4 Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 238 </h1> --> 
+             <li data-select-input="election" data-select-election-id="238" data-select-input-label="May 07, 2019 - Dublin USD Special VBM Election" onclick="loadElection('238');"> <a title="May 07, 2019 - Dublin USD Special VBM Election" href="#"> May 07, 2019 - Dublin USD Special VBM Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 237 </h1> --> 
+             <li data-select-input="election" data-select-election-id="237" data-select-input-label="April 09, 2019 - City of Alameda Special Election" onclick="loadElection('237');"> <a title="April 09, 2019 - City of Alameda Special Election" href="#"> April 09, 2019 - City of Alameda Special Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 236 </h1> --> 
+             <li data-select-input="election" data-select-election-id="236" data-select-input-label="November 06, 2018 - General Election" onclick="loadElection('236');"> <a title="November 06, 2018 - General Election" href="#"> November 06, 2018 - General Election </a> </li> 
+             <!-- Check Value --> 
+             <!-- <h1> Value: 235 </h1> --> 
+             <li data-select-input="election" data-select-election-id="235" data-select-input-label="June 05, 2018 - Statewide Direct Primary Election" onclick="loadElection('235');"> <a title="June 05, 2018 - Statewide Direct Primary Election" href="#"> June 05, 2018 - Statewide Direct Primary Election </a> </li> 
+            </ul> 
+           </div> 
+           <!--<div class="col-sm-6 col-xs-12 mt-40 dropdown dropdown-elections dropdown-elections-sections opaque">
+
+        </div>--> 
+           <div class="col-xs-12 mt-40"> 
+            <hr class="mt-0 mb-0"> 
+           </div> 
+          </section> 
+          <section id="important-information" class="row mt-40"> 
+           <script type="text/javascript">
+
+window.onload = function() {
+    var socialShareButton = document.querySelector('.social_share__desktop_button');
+    socialShareButton.addEventListener('click', function() {        
+        
+            var socialBtnClasses =  socialShareButton.classList
+            var isExpanded = socialShareButton.getAttribute('aria-expanded')
+
+            if (socialBtnClasses.contains('active')) {
+                return socialShareButton.setAttribute('aria-expanded', true)
+            } 
+            return socialShareButton.setAttribute('aria-expanded', false) 
+    })
+}
+
+
+function openMobileTarget(url) {
+	window.open(url + window.location.href,'','left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0');
+}
+
+
+</script> 
+           <script language="JavaScript">
+    var pageTitle = 'November 03, 2026 - General Election';
+    if(pageTitle && pageTitle.trim())
+        document.title = "ACVOTE - " + pageTitle.trim();
+</script> 
+           <div class="dropdown-listing-sections hidden"> 
+            <button class="btn btn-default dropdown-toggle is-select-input btn-block btn-dropdown is-selected" type="button" id="electionNavigator" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-select-input="electionSection" data-select-input-value=""> <span>Jump to</span> <span class="caret"></span> </button> 
+            <ul class="dropdown-menu dropdown-menu-navigation" aria-labelledby="electionNavigator"> 
+             <li class="clicker" data-select-input="electionSection" data-select-input-label="Who is Eligible"> <a class="scroll-and-open" href="#whoiseligible"> Who is Eligible? </a> </li> 
+             <li class="clicker" data-select-input="electionSection" data-select-input-label="Polling Locations"> <a class="scroll-and-open" href="#pollinglocations"> Voting Locations </a> </li> 
+             <li class="clicker" data-select-input="electionSection" data-select-input-label="Important Dates"> <a class="scroll-and-open" href="#importantdates"> Important Dates </a> </li> 
+             <li class="clicker" data-select-input="electionSection" data-select-input-label="What's on the Ballot"> <a class="scroll-and-open" href="#whatsontheballot"> What's on the Ballot? </a> </li> 
+             <li class="clicker" data-select-input="electionSection" data-select-input-label="Candidate Listing"> <a class="scroll-and-open" href="#candidatelisting"> Candidate Listing </a> </li> 
+             <li class="clicker" data-select-input="electionSection" data-select-input-label="Audio Files"> <a class="scroll-and-open" href="#audiofiles"> Audio Files </a> </li> 
+            </ul> 
+           </div> 
+           <div class="text-center col-xs-12 page_header mt-40"> 
+            <section id="page-header" class="mt-0 row"> 
+             <div class="col-md-10 col-md-offset-1 mt-0 mt-md-40 text-color-blue-dark"> 
+              <div class="page_header text-center pb-20 pb-md-40"> 
+               <h2 id="election-name" tabindex="-1" class="page_header__page_name texr-color-blue-dark line-height-initial mt-2 mb-0 pl-15 pl-md-0 pr-15 pr-md-0">November 03, 2026 - General Election</h2> 
+               <div class="mt-20 mt-md-40 page_header__buttons"> 
+                <div id="readspeaker_button1" class="rs_skip rsbtn rs_preserve" style="display: none;"> 
+                 <a rel="nofollow" class="rsbtn_play" accesskey="L" title="Listen to this page using ReadSpeaker" href="http://app.na.readspeaker.com/cgi-bin/rsent?customerid=6923&amp;lang=en_us&amp;readid=body" onclick="this.href = 'http://app.na.readspeaker.com/cgi-bin/rsent?customerid=6923&amp;lang=en_us&amp;readid=body'+'&amp;url=' + encodeURIComponent(document.location.href);"> <span class="rsbtn_left rsimg rspart"><span class="rsbtn_text"><span>Listen</span></span></span> <span class="rsbtn_right rsimg rsplay rspart"></span> </a> 
+                </div> 
+                <button class="btn btn-share hidden-sm hidden-md hidden-lg" type="button" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="            	        
+            <a title=&quot;Twitter&quot; name=&quot;Twitter&quot; href=# onclick=&quot;openMobileTarget('https://twitter.com/intent/tweet?1=1&amp;title=Election Information&amp;text=Election Information&amp;via=ACVOTE&amp;url=')&quot; class=&quot;social_share__desktop_link&quot;>
+                <img src=&quot;\static\img\projectROV\social\twitter_icon__blue.svg&quot; alt=&quot;Twitter&quot;>
+            </a>
+            	        
+            <a title=&quot;Facebook&quot; name=&quot;Facebook&quot; href=# onclick=&quot;openMobileTarget('https://www.facebook.com/sharer/sharer.php?1=1&amp;u=')&quot; class=&quot;social_share__desktop_link&quot;>
+                <img src=&quot;\static\img\projectROV\social\fb_icon__blue.svg&quot; alt=&quot;Facebook&quot;>
+            </a>
+            	        
+            <a title=&quot;Email&quot; name=&quot;Email&quot; href=# onclick=&quot;openMobileTarget('mailto:?1=1&amp;subject=Election Information&amp;body=')&quot; class=&quot;social_share__desktop_link&quot;>
+                <img src=&quot;\static\img\projectROV\social\mail_icon__blue.svg&quot; alt=&quot;Email&quot;>
+            </a>
+
+"> Share </button> 
+                <button class="btn btn-share hidden-xs social_share__desktop_button" aria-expanded="false"> Share </button> 
+                <div class="social_share__desktop_links_wrapper"> 
+                 <a name="Twitter" href="#" onclick="window.open('https://twitter.com/intent/tweet?1=1&amp;title=Election Information&amp;text=Election Information&amp;via=ACVOTE&amp;url=' + window.location.href,'','left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0');" class="social_share__desktop_link"> <img src="\static\img\projectROV\social\twitter_icon__blue.svg" alt="Twitter"> </a> 
+                 <a name="Facebook" href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?1=1&amp;u=' + window.location.href,'','left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0');" class="social_share__desktop_link"> <img src="\static\img\projectROV\social\fb_icon__blue.svg" alt="Facebook"> </a> 
+                 <a name="Email" href="#" onclick="window.open('mailto:?1=1&amp;subject=Election Information&amp;body=' + window.location.href,'','left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0');" class="social_share__desktop_link"> <img src="\static\img\projectROV\social\mail_icon__blue.svg" alt="Email"> </a> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </section> 
+           </div> 
+           <div id="electionBody" lang="en_us"> 
+            <div class="col-md-10 col-md-offset-1"> 
+             <div class="row"> 
+              <div class="alert alert-danger"> 
+               <img src="/static/img/projectROV/common/error_icon.svg" alt="Info icon"> 
+               <span><p><em><a title="Click here for our November 3, 2026 General Election Tool Kit." href="/acvote-assets/02_election_information/PDFs/20261103/Toolkit/Alameda_County_Election_Media_Toolkit_2026_web.pdf" target="_blank">Click here for our November 3, 2026 General Election Tool Kit.</a></em></p> <p><em>DISCLAIMER: Information on this list is current as of the date it was posted.</em></p> <p>All registered voters in Alameda County will receive a Vote by Mail Ballot.</p></span> 
+              </div> 
+             </div> 
+            </div> 
+            <div class="col-xs-12"> 
+             <hr class="mt-40 mb-0"> 
+            </div> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="results"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapse1" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> Results </h3> 
+                </div> </button> 
+               <div id="collapse1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;"> 
+                <div class="panel-body"> 
+                 <p>Results will be posted shortly after 8:00 PM on Election Night.</p> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="whoiseligible"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapse2" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> Who is Eligible? </h3> 
+                </div> </button> 
+               <div id="collapse2" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;"> 
+                <div class="panel-body">
+                  All registered voters in Alameda County are eligible to vote in the November 3, 2026 General Election. 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="pollinglocations"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapse3" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> Voting Locations </h3> 
+                </div> </button> 
+               <div id="collapse3" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;"> 
+                <div class="panel-body"> 
+                 <!-- added new logic based on the ROV request Aug 27 --> 
+                 <a href="https://alamedacountyca.gov/rov_app/vcalist?electionid=260">List of Polling Locations</a> 
+                 <!-- end the new logic --> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="importantdates"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapse4" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> Important Dates </h3> 
+                </div> </button> 
+               <div id="collapse4" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;"> 
+                <div class="panel-body has-table"> 
+                 <table class="table table-default table-left"> 
+                  <caption>
+                   Important Election Dates
+                  </caption> 
+                  <thead> 
+                   <tr> 
+                    <th scope="col">Event</th> 
+                    <th scope="col">Date</th> 
+                   </tr> 
+                  </thead> 
+                  <tbody> 
+                   <tr> 
+                    <td>Start of Nomination Period for the November 3, 2026 General Election</td> 
+                    <td>July 13, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Regional Transit Measure Direct Argument Deadline for the November 3, 2026 General Election</td> 
+                    <td>August 04, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>End of Nomination Period for the November 3, 2026 General Election</td> 
+                    <td>August 07, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Lettering of Measures for the November 3, 2026 General Election</td> 
+                    <td>August 10, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Regional Transit Measure Rebuttal Argument Deadline for the November 3, 2026 General Election</td> 
+                    <td>August 11, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Ballot Measure Direct Argument Deadline for the November 3, 2026 General Election</td> 
+                    <td>August 12, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Ballot Measure Rebuttal Argument Deadline for the November 3, 2026 General Election</td> 
+                    <td>August 17, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Start of Voter Information Guide Mailing for the November 3, 2026 General Election</td> 
+                    <td>September 24, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Start of Voting Equipment Testing - November 3, 2026 General Election</td> 
+                    <td>September 28, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>First Day of Mailing Vote by Mail Ballots for the November 3, 2026 General Election</td> 
+                    <td>October 05, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>First Day of early voting for the November 3, 2026 General Election</td> 
+                    <td>October 05, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>24-hour Ballot Drop Boxes open for the November 3, 2026 General Election</td> 
+                    <td>October 05, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Start of Vote by Mail Processing for the November 3, 2026 General Election</td> 
+                    <td>October 08, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Close of Registration Period for the November 3, 2026 General Election</td> 
+                    <td>October 19, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Public Logic and Accuracy Testing - November 3, 2026 General Election</td> 
+                    <td>October 22, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>10-Day Vote Centers Open for the November 3, 2026 General Election</td> 
+                    <td>October 24, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Last Day to Request a Replacement Vote by Mail Ballot for the November 3, 2026 General Election</td> 
+                    <td>October 27, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>4-Day Vote Centers Open for the November 3, 2026 General Election</td> 
+                    <td>October 31, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Election Day for the November 3, 2026 General Election</td> 
+                    <td>November 03, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>Random Selection of Batches for the 1% Manual Tally</td> 
+                    <td>November 16, 2026</td> 
+                   </tr> 
+                   <tr> 
+                    <td>1% Manual Tally</td> 
+                    <td>November 18, 2026</td> 
+                   </tr> 
+                  </tbody> 
+                 </table> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+            <!-- START --> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="whatsontheballot"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapse5" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> What's on the Ballot? </h3> 
+                </div> </button> 
+               <div id="collapse5" class="panel-collapse collapse" aria-expanded="false"> 
+                <div class="panel-body"> 
+                 <div class="panel-group" id="accordionBallots" role="tablist" aria-multiselectable="true"> 
+                  <div class="panel panel-small"> 
+                   <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionBallots" href="#collapseballot0" aria-controls="collapseballot0" aria-expanded="true" id="collapseballotheading0"> 
+                    <div class="panel-heading"> 
+                     <h4 class="panel-title"> VOTER-NOMINATED OFFICES </h4> 
+                    </div> </button> 
+                   <div id="collapseballot0" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseballotheading0"> 
+                    <div class="panel-body"> 
+                     <div class="panel-group" id="accordionRaces" role="tablist" aria-multiselectable="true"> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace00" aria-controls="collapserace00" aria-expanded="true" id="collapseraceheading00"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> STATE </h5> 
+                       </div> </button> 
+                      <div id="collapserace00" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading00"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Governor</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Lieutenant Governor</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Secretary Of State</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Controller</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Treasurer</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Attorney General</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Insurance Commissioner</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>STATE</td> 
+                           <td>Member, State Board Of Equalization, 2nd District</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace08" aria-controls="collapserace08" aria-expanded="true" id="collapseraceheading08"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> UNITED STATES REPRESENTATIVE </h5> 
+                       </div> </button> 
+                      <div id="collapserace08" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading08"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>UNITED STATES REPRESENTATIVE</td> 
+                           <td>10th Congressional District</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>UNITED STATES REPRESENTATIVE</td> 
+                           <td>12th Congressional District</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>UNITED STATES REPRESENTATIVE</td> 
+                           <td>14th Congressional District</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>UNITED STATES REPRESENTATIVE</td> 
+                           <td>17th Congressional District</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace012" aria-controls="collapserace012" aria-expanded="true" id="collapseraceheading012"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> STATE SENATOR </h5> 
+                       </div> </button> 
+                      <div id="collapserace012" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading012"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>STATE SENATOR</td> 
+                           <td>10th State Senate District</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace013" aria-controls="collapserace013" aria-expanded="true" id="collapseraceheading013"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> MEMBER OF THE STATE ASSEMBLY </h5> 
+                       </div> </button> 
+                      <div id="collapserace013" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading013"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>MEMBER OF THE STATE ASSEMBLY</td> 
+                           <td>14th Assembly District</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>MEMBER OF THE STATE ASSEMBLY</td> 
+                           <td>16th Assembly District</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>MEMBER OF THE STATE ASSEMBLY</td> 
+                           <td>18th Assembly District</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>MEMBER OF THE STATE ASSEMBLY</td> 
+                           <td>20th Assembly District</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>MEMBER OF THE STATE ASSEMBLY</td> 
+                           <td>24th Assembly District</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                     </div> 
+                    </div> 
+                   </div> 
+                  </div> 
+                  <div class="panel panel-small"> 
+                   <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionBallots" href="#collapseballot1" aria-controls="collapseballot1" aria-expanded="true" id="collapseballotheading1"> 
+                    <div class="panel-heading"> 
+                     <h4 class="panel-title"> NONPARTISAN OFFICES </h4> 
+                    </div> </button> 
+                   <div id="collapseballot1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseballotheading1"> 
+                    <div class="panel-body"> 
+                     <div class="panel-group" id="accordionRaces" role="tablist" aria-multiselectable="true"> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace10" aria-controls="collapserace10" aria-expanded="true" id="collapseraceheading10"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> SCHOOL </h5> 
+                       </div> </button> 
+                      <div id="collapserace10" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading10"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>State Superintendent Of Public Instruction</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Ohlone Community College District Trustee, Area 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Ohlone Community College District Trustee, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Ohlone Community College District Trustee, Area 6</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Ohlone Community College District Trustee, Area 7</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Chabot - Las Positas Community College District Trustee, Area 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Chabot - Las Positas Community College District Trustee, Area 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Chabot - Las Positas Community College District Trustee, Area 6</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Peralta Community College District Trustee, Area 1, Short Term</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Peralta Community College District Trustee, Area 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Peralta Community College District Trustee, Area 5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Peralta Community College District Trustee, Area 7</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>San Joaquin Delta Community College District Trustee, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Alameda Unified School District Governing Board Member, Full Term</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Alameda Unified School District Governing Board Member, Short Term</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Castro Valley Unified School District Governing Board Member, Area 2, Short Term</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Castro Valley Unified School District Governing Board Member, Area 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Castro Valley Unified School District Governing Board Member, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Dublin Unified School District Governing Board Members, Area 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Dublin Unified School District Governing Board Members, Area 3, Short Term</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Dublin Unified School District Governing Board Members, Area 5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Emery Unified School District Governing Board Members</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Fremont Unified School District Governing Board Members, Area 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Fremont Unified School District Governing Board Members, Area 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Hayward Unified School District Governing Board Member, Area 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Hayward Unified School District Governing Board Member, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Livermore Valley Joint Unified School District Governing Board Member, Area #2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Livermore Valley Joint Unified School District Governing Board Member, Area #3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Livermore Valley Joint Unified School District Governing Board Member, Area #5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Mountain House Elementary School District Governing Board Member</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>New Haven Unified School District Governing Board Member, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>New Haven Unified School District Governing Board Member, Area 5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Newark Unified School District Governing Board Members</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Pleasanton Unified School District Governing Board Member, Area 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Pleasanton Unified School District Governing Board Member, Area 5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>San Leandro Unified School District Governing Board Member, Area 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>San Leandro Unified School District Governing Board Member, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>San Leandro Unified School District Governing Board Member, Area 6</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>San Lorenzo Unified School District Governing Board Members, Area 1</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>San Lorenzo Unified School District Governing Board Members, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>SCHOOL</td> 
+                           <td>Sunol Glen Unified School District Governing Board Member</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace141" aria-controls="collapserace141" aria-expanded="true" id="collapseraceheading141"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF ALAMEDA </h5> 
+                       </div> </button> 
+                      <div id="collapserace141" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading141"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF ALAMEDA</td> 
+                           <td>For Mayor, Alameda</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF ALAMEDA</td> 
+                           <td>For Members of City Council, Alameda</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace143" aria-controls="collapserace143" aria-expanded="true" id="collapseraceheading143"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF BERKELEY </h5> 
+                       </div> </button> 
+                      <div id="collapserace143" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading143"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF BERKELEY</td> 
+                           <td>For Rent Stabilization Board Commissioners, Berkeley</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF BERKELEY</td> 
+                           <td>For School Directors, Berkeley</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace145" aria-controls="collapserace145" aria-expanded="true" id="collapseraceheading145"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF DUBLIN </h5> 
+                       </div> </button> 
+                      <div id="collapserace145" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading145"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF DUBLIN</td> 
+                           <td>For Mayor, Dublin</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF DUBLIN</td> 
+                           <td>For Members Of City Council #2, Dublin</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF DUBLIN</td> 
+                           <td>For Members Of City Council #4, Dublin</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace148" aria-controls="collapserace148" aria-expanded="true" id="collapseraceheading148"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF EMERYVILLE </h5> 
+                       </div> </button> 
+                      <div id="collapserace148" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading148"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF EMERYVILLE</td> 
+                           <td>For Members of City Council, Emeryville</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace149" aria-controls="collapserace149" aria-expanded="true" id="collapseraceheading149"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF FREMONT </h5> 
+                       </div> </button> 
+                      <div id="collapserace149" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading149"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF FREMONT</td> 
+                           <td>For Member Of City Council #2, Fremont</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF FREMONT</td> 
+                           <td>For Member Of City Council #3, Fremont</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF FREMONT</td> 
+                           <td>For Member Of City Council #4, Fremont</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace152" aria-controls="collapserace152" aria-expanded="true" id="collapseraceheading152"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF HAYWARD </h5> 
+                       </div> </button> 
+                      <div id="collapserace152" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading152"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF HAYWARD</td> 
+                           <td>For Mayor, Hayward</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF HAYWARD</td> 
+                           <td>For Members Of City Council District #1, Hayward</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF HAYWARD</td> 
+                           <td>For Members Of City Council District #6, Hayward</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace155" aria-controls="collapserace155" aria-expanded="true" id="collapseraceheading155"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF LIVERMORE </h5> 
+                       </div> </button> 
+                      <div id="collapserace155" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading155"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF LIVERMORE</td> 
+                           <td>For Mayor, Livermore</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF LIVERMORE</td> 
+                           <td>For Member Of City Council #1, Livermore</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF LIVERMORE</td> 
+                           <td>For Member Of City Council #2, Livermore</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace158" aria-controls="collapserace158" aria-expanded="true" id="collapseraceheading158"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF NEWARK </h5> 
+                       </div> </button> 
+                      <div id="collapserace158" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading158"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF NEWARK</td> 
+                           <td>For Mayor, Newark</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF NEWARK</td> 
+                           <td>For Members Of City Council, Newark</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace160" aria-controls="collapserace160" aria-expanded="true" id="collapseraceheading160"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF PIEDMONT </h5> 
+                       </div> </button> 
+                      <div id="collapserace160" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading160"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF PIEDMONT</td> 
+                           <td>For Members of City Council, Piedmont</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace161" aria-controls="collapserace161" aria-expanded="true" id="collapseraceheading161"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF PLEASANTON </h5> 
+                       </div> </button> 
+                      <div id="collapserace161" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading161"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF PLEASANTON</td> 
+                           <td>For Mayor, Pleasanton</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF PLEASANTON</td> 
+                           <td>For Members Of City Council #1, Pleasanton</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF PLEASANTON</td> 
+                           <td>For Members Of City Council #3, Pleasanton</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace164" aria-controls="collapserace164" aria-expanded="true" id="collapseraceheading164"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF SAN LEANDRO </h5> 
+                       </div> </button> 
+                      <div id="collapserace164" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading164"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF SAN LEANDRO</td> 
+                           <td>For Mayor, San Leandro</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF SAN LEANDRO</td> 
+                           <td>For Member Of City Council #1, San Leandro</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF SAN LEANDRO</td> 
+                           <td>For Member Of City Council #2, San Leandro - Short Term</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF SAN LEANDRO</td> 
+                           <td>For Member Of City Council #3, San Leandro</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF SAN LEANDRO</td> 
+                           <td>For Member Of City Council #5, San Leandro</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace169" aria-controls="collapserace169" aria-expanded="true" id="collapseraceheading169"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF UNION CITY </h5> 
+                       </div> </button> 
+                      <div id="collapserace169" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading169"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF UNION CITY</td> 
+                           <td>For Member Of City Council #2, Union City</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF UNION CITY</td> 
+                           <td>For Member Of City Council #3, Union City</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF UNION CITY</td> 
+                           <td>For Member Of City Council #4, Union City</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace172" aria-controls="collapserace172" aria-expanded="true" id="collapseraceheading172"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> DISTRICT </h5> 
+                       </div> </button> 
+                      <div id="collapserace172" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading172"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>AC Transit District Director, Ward 1, Short Term</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>AC Transit District Director, Ward 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>AC Transit District Director, Ward 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>AC Transit District Director, Ward 5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>AC Transit District Director, Ward 7</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Alameda County Water District Director, Ward 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Alameda County Water District Director, Ward 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>BART Director, District 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>BART Director, District 6</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Byron - Bethany Irrigation District Directors</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Castro Valley Sanitary District Directors</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>City Of Alameda Healthcare District Directors</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Member, Board Of Directors, Dublin San Ramon, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>EBMUD Director, Ward 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>EBMUD Director, Ward 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>EBMUD Director, Ward 7</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>East Bay Regional Park District Director, Ward 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>East Bay Regional Park District Director, Ward 5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Eden Township Healthcare District Director, Area 1</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Eden Township Healthcare District Director, Area 3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Eden Township Healthcare District Director, Area 5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Fairview Fire Protection District Directors</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Hayward Area Recreation &amp; Park District Director, Area 2</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Hayward Area Recreation &amp; Park District Director, Area 4</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Livermore Area Recreation &amp; Park District Directors</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Member, Board Of Director, Oro Loma Sanitary Dist #1</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Member, Board Of Director, Oro Loma Sanitary Dist #3</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Member, Board Of Director, Oro Loma Sanitary Dist #5</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>DISTRICT</td> 
+                           <td>Washington Township Healthcare District Directors</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace1101" aria-controls="collapserace1101" aria-expanded="true" id="collapseraceheading1101"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF ALBANY </h5> 
+                       </div> </button> 
+                      <div id="collapserace1101" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading1101"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF ALBANY</td> 
+                           <td>For Members Of City Council, Albany</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF ALBANY</td> 
+                           <td>Members Of The Board Of Education, Albany</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace1103" aria-controls="collapserace1103" aria-expanded="true" id="collapseraceheading1103"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF BERKELEY </h5> 
+                       </div> </button> 
+                      <div id="collapserace1103" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading1103"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF BERKELEY</td> 
+                           <td>For Member Of City Council District #1, Berkeley</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF BERKELEY</td> 
+                           <td>For Member Of City Council District #4, Berkeley</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF BERKELEY</td> 
+                           <td>For Member Of City Council District #7, Berkeley</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF BERKELEY</td> 
+                           <td>For Member Of City Council District #8, Berkeley</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF BERKELEY</td> 
+                           <td>For Auditor, Berkeley</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                      <button class="panel-title collapsed" data-toggle="collapse" data-parent="#accordionRaces" href="#collapserace1108" aria-controls="collapserace1108" aria-expanded="true" id="collapseraceheading1108"> 
+                       <div class="panel-heading mt-20"> 
+                        <h5 class="panel-title"> CITY OF OAKLAND </h5> 
+                       </div> </button> 
+                      <div id="collapserace1108" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseraceheading1108"> 
+                       <div class="panel-body has-table"> 
+                        <table class="table table-default table-left"> 
+                         <thead> 
+                          <tr> 
+                           <th scope="col">office</th> 
+                           <th scope="col">seat</th> 
+                           <th scope="col">filling office</th> 
+                          </tr> 
+                         </thead> 
+                         <tbody> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For Mayor, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For Councilmember, District No. 2, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For Councilmember, District No. 4, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For Councilmember, District No. 6, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For Auditor, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For School Director, District No. 2, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For School Director, District No. 4, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                          <tr> 
+                           <td>CITY OF OAKLAND</td> 
+                           <td>For School Director, District No. 6, Oakland</td> 
+                           <td></td> 
+                          </tr> 
+                         </tbody> 
+                        </table> 
+                       </div> 
+                      </div> 
+                     </div> 
+                    </div> 
+                   </div> 
+                  </div> 
+                 </div> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+            <!-- END --> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="Measures"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapseaudio0" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> Measures </h3> 
+                </div> </button> 
+               <div id="collapseaudio0" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;"> 
+                <div class="panel-body"> 
+                 <p><a title="List of Measure Questions" href="https://alamedacountyca.gov/rov_app/measures" target="_blank">List of Measure Questions</a></p> 
+                 <p><a title="Measure RTM - Regional Transit Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/public_transit_revenue_measure.pdf" target="_blank">Measure RTM - Regional Transit Measure</a></p> 
+                 <p><a title="Measure I - Dublin USD - Parcel Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/dublin_usd_parcel_tax_measure.pdf" target="_blank">Measure I - Dublin USD - Parcel Tax Measure</a></p> 
+                 <p><a title="Measure J - San Lorenzo USD - Education Parcel Tax" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/san_lorenzo_usd_parcel_tax_measure.pdf" target="_blank">Measure J - San Lorenzo USD - Education Parcel Tax</a></p> 
+                 <p><a title="Measure K - Sunol Glen - GO Bond Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/sunol_glen_usd_bond_measure.pdf" target="_blank">Measure K - Sunol Glen - GO Bond Measure</a></p> 
+                 <p><a title="Measure L - City of Alameda - GO Bond Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_alameda_go_bond_measure.pdf" target="_blank">Measure L - City of Alameda - GO Bond Measure</a></p> 
+                 <p><a title="Measure M - City of Alameda - Charter Amendment - Amend and Repeal Outdated Provisions" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_alameda_charter_amendment_update_provisions_measure.pdf" target="_blank">Measure M - City of Alameda - Charter Amendment - Amend and Repeal Outdated Provisions</a></p> 
+                 <p><a title="Measure N - City of Alameda - Charter Amendment - Leases and Sales of Real Property Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_alameda_real_property_measure.pdf" target="_blank">Measure N - City of Alameda - Charter Amendment - Leases and Sales of Real Property Measure</a></p> 
+                 <p><a title="Measure O - City of Albany - Requirement to Zoning Changes Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_albany_zoning_measure.pdf" target="_blank">Measure O - City of Albany - Requirement to Zoning Changes Measure</a></p> 
+                 <p><a title="Measure P - City of Albany - Street Paving and Storm Drain Parcel Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_albany_street_paving_and_storm_drain_parcel_tax_measure.pdf" target="_blank">Measure P - City of Albany - Street Paving and Storm Drain Parcel Tax Measure</a></p> 
+                 <p><a title="Measure Q - City of Albany - EMS, ALS, Fire Protection Parcel Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_albany_services_parcel_tax_measure.pdf" target="_blank">Measure Q - City of Albany - EMS, ALS, Fire Protection Parcel Tax Measure</a></p> 
+                 <p><a title="Measure R - City of Albany - Business License Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_albany_general_services_measure.pdf" target="_blank">Measure R - City of Albany - Business License Tax Measure</a></p> 
+                 <p><a title="Measure S - City of Albany - Real Property Transfer Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_albany_real_property_tax_measure.pdf" target="_blank">Measure S - City of Albany - Real Property Transfer Tax Measure</a></p> 
+                 <p><a title="Measure T - City of Albany - Street Trees &amp; Streetlighting Parcel Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_albany_nonexempt_property_measure.pdf" target="_blank">Measure T - City of Albany - Street Trees &amp; Streetlighting Parcel Tax Measure</a></p> 
+                 <p><a title="Measure U - City of Berkeley - Bond Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_berkeley_bond_measure.pdf" target="_blank">Measure U - City of Berkeley - Bond Measure</a></p> 
+                 <p><a title="Measure V - City of Berkeley - Sales Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_berkeley sales tax measure.pdf" target="_blank">Measure V - City of Berkeley - Sales Tax Measure</a></p> 
+                 <p><a title="Measure W - City of Berkeley - Charter Amendment Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_berkeley_charter_amendment.pdf" target="_blank">Measure W - City of Berkeley - Charter Amendment Measure</a></p> 
+                 <p><a title="Measure X - City of Berkeley - Rent Ordinance Amendment Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_berkeley_rent_ordinance.pdf" target="_blank">Measure X - City of Berkeley - Rent Ordinance Amendment Measure</a></p> 
+                 <p><a title="Measure Y - City of Berkeley - Initiative - Arts Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_berkeley_arts_tax_measure.pdf" target="_blank">Measure Y - City of Berkeley - Initiative - Arts Tax Measure</a></p> 
+                 <p><a title="Measure Z - City of Berkeley - Initiative - Public Bank Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_berkeley_public_bank_measure.pdf" target="_blank">Measure Z - City of Berkeley - Initiative - Public Bank Measure</a></p> 
+                 <p><a title="Measure AA - City of Berkeley - Initiative - Soda Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_berkeley_soda_tax_measure.pdf" target="_blank">Measure AA - City of Berkeley - Initiative - Soda Tax Measure</a></p> 
+                 <p><a title="Measure BB - City of Emeryville - Business Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_emeryville_ordinance_measure.pdf" target="_blank">Measure BB - City of Emeryville - Business Tax Measure</a></p> 
+                 <p><a title="Measure CC - City of Hayward - Business Tax Ordinance Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_hayward_tax_measure.pdf" target="_blank">Measure CC - City of Hayward - Business Tax Ordinance Measure</a></p> 
+                 <p><a title="Measure DD - City of Newark - Newark Essential Services Protection Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_newark_business_ordinance_measure.pdf" target="_blank">Measure DD - City of Newark - Newark Essential Services Protection Measure</a></p> 
+                 <p><a title="Measure EE - City of Oakland - Charter Amendment Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_oakland_charter_amendment_provisions_measure.pdf" target="_blank">Measure EE - City of Oakland - Charter Amendment Measure</a></p> 
+                 <p><a title="Measure FF - City of Oakland - Real Property Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_oakland_real_property_tax.pdf" target="_blank">Measure FF - City of Oakland - Real Property Tax Measure</a></p> 
+                 <p><a title="Measure GG - City of Piedmont - Real Property Conveyance Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_piedmont_real_tax_measure.pdf" target="_blank">Measure GG - City of Piedmont - Real Property Conveyance Tax Measure</a></p> 
+                 <p><a title="Measure HH - City of Pleasanton - Uniform Transient Occupancy Tax Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_pleasanton_tax_measure.pdf" target="_blank">Measure HH - City of Pleasanton - Uniform Transient Occupancy Tax Measure</a></p> 
+                 <p><a title="Measure II - City of Union City - Union City Essential Services Extension Measure" href="/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_union_city_uut_measure.pdf" target="_blank">Measure II - City of Union City - Union City Essential Services Extension Measure</a></p> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="Randomized Alphabet Drawings"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapseaudio1" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> Randomized Alphabet Drawings </h3> 
+                </div> </button> 
+               <div id="collapseaudio1" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;"> 
+                <div class="panel-body"> 
+                 <p><a title="Secretary of State Randomized Alphabet Drawing" href="/acvote-assets/02_election_information/PDFs/20261103/Random Alpha/sosrandomalphanov2026.pdf" target="_blank">Secretary of State Randomized Alphabet Drawing</a></p> 
+                 <p><a title="County of Alameda Randomized Alphabet Drawing for Cross-County Multi-Legislative Districts" href="/acvote-assets/02_election_information/PDFs/20261103/Random Alpha/countyrandomalphanov2026.pdf" target="_blank">County of Alameda Randomized Alphabet Drawing for Cross-County Multi-Legislative Districts</a></p> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+            <div class="col-md-10 col-md-offset-1 mt-40" id="Composite Voter Information Guide"> 
+             <div class="panel-group is-accordion"> 
+              <div class="panel panel-default"> 
+               <button class="collapsed" data-toggle="collapse" style="width: 100%;padding: 0 0;border: 0;" data-parent="#accordion" href="#collapseaudio2" aria-expanded="false"> 
+                <div class="panel-heading"> 
+                 <h3 class="panel-title"> Composite Voter Information Guide </h3> 
+                </div> </button> 
+               <div id="collapseaudio2" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;"> 
+                <div class="panel-body"> 
+                 <p><a title="Composite Voter Information Guide" href="/acvote-assets/02_election_information/PDFs/20261103/Voter Information Guide/vig_nov2026_eng.pdf" target="_blank">Composite Voter Information Guide</a></p> 
+                </div> 
+               </div> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+           <div class="col-xs-12 mb-60"></div> 
+           <script language="javascript">
+            (function() {
+                setTimeout(function() {
+                    var paramsString = window.location.search;
+                    var urlParams = new URLSearchParams(paramsString);
+                    var electID = urlParams.get('id');
+                    loadElection(electID);
+                    jQueryROV('.dropdown-elections-sections').toggleClass('opaque');
+                    jQueryROV('#important-information').toggleClass('opaque');
+                }, 1000);
+            })();
+            </script> 
+          </section> 
+          <section id="featured-elections" class="row"> 
+           <div class="col-xs-12"> 
+            <h2 class="m-0">Elections</h2> 
+           </div> 
+           <div class="col-xs-12 mt-20"> 
+            <a href="#" class="calendar_card row ml-0 mr-0 is-election-day-card" onclick="loadElection('260');"> 
+             <div class="calendar_card__top"> 
+              <div class="row mr-0 ml-0 display-md-flex"> 
+               <div class="col-xs-12 col-sm-6 col-md-8 col-sm-push-6 col-md-push-4 calendar_card__heading"> 
+                <h3 class="text-color-white m-0 font-weight-400">General Election</h3> 
+               </div> 
+               <div class="col-xs-12 col-sm-6 col-md-4 col-sm-pull-6 col-md-pull-8 calendar_card__date display-flex align-items-center"> 
+                <img class="mr-20" src="https://www.acgov.org/acvote/include/static/img/projectROV/common/calendar_icon.svg" alt="Event"> 
+                <div> 
+                 <p class="m-0 text-color-white font-weight-400">Tuesday</p> 
+                 <p class="m-0 text-color-white font-weight-400">November 03, 2026</p> 
+                </div> 
+               </div> 
+              </div> 
+             </div> </a> 
+           </div> 
+          </section> 
+         </div> 
+        </div> 
+        <!--ls:end[component-1509074125102]--> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="ls-row-clr"></div> 
+    </div> 
+   </div> 
+   <div class="ls-row" id="pagefooter"> 
+    <div class="ls-fxr" id="ls-gen56620722-ls-fxr"> 
+     <div class="ls-area long mt-20" id="pagefooter-area"> 
+      <div class="ls-area-body" id="ls-gen56620723-ls-area-body"></div> 
+     </div> 
+     <div class="ls-row-clr"></div> 
+    </div> 
+   </div> 
+   <div class="ls-row" id="sitefooter"> 
+    <div class="ls-fxr" id="ls-gen56620724-ls-fxr"> 
+     <div class="ls-area" id="sitefooter-area"> 
+      <div class="ls-area-body" id="ls-gen56620725-ls-area-body"> 
+       <div class="ls-cmp-wrap ls-1st" id="w1506920660275"> 
+        <!--ls:begin[component-1506920660275]--> 
+        <div> 
+         <footer class="footer sticky-stopper" data-role="footer" data-tap-toggle="false"> 
+          <div class="container"> 
+           <div class="row"> 
+            <div id="footer-go-to-top" class="footer__go-top col-xs-12 text-center hidden-lg hidden-md hidden-sm"> 
+             <figure> 
+              <img src="https://alamedacountyca.gov/acvote/include/static/img/common/arrow_up_icon.svg" alt=""> 
+             </figure> 
+             <span class="display-block">top of page</span> 
+            </div> 
+           </div> 
+           <div class="row"> 
+            <div class="col-md-12"> 
+             <div class="row footer__logo_social_wrapper "> 
+              <!-- social-links --> 
+              <div class="col-xs-12 hidden-sm hidden-md hidden-lg"> 
+               <h4 class="font-weight-500 font-family-roboto text-transform-uppercase mt-30 mb-30">Follow Us</h4> 
+              </div> 
+              <!-- Commented  - the social media icons are not showing  most of the times
+                        <div id="footer-social-links" class="col-sm-4 col-sm-push-8 col-xs-12 bg-wheat text-right display-md-block display-flex justify-content-space-between">
+                                <a href="https://www.facebook.com/acvote/" class="ml-md-20" data-ajax="false" target="_blank">
+                                    <figure class="display-inline-block"><img src="/static/img/social/fb_icon.png" alt="Facebook" name="Facebook"></figure>
+                                </a>
+                                <a href="https://x.com/ACVOTE" class="ml-md-20" data-ajax="false" target="_blank">
+                                    <figure class="display-inline-block"><img src="/static/img/social/x-logo-white.png" alt="X" name="X"></figure>
+                                </a>
+                                <a href="https://www.instagram.com/acvote/" class="ml-md-20" data-ajax="false" target="_blank">
+                                    <figure class="display-inline-block"><img src="/static/img/social/instagram_icon.png" alt="Instagram" name="Instagram"></figure>
+                                </a>
+                                <a href="https://www.youtube.com/@acvote" class="ml-md-20" data-ajax="false" target="_blank">
+                                    <figure class="display-inline-block"><img src="/static/img/social/youtube_icon.png" alt="YouTube" name="YouTube"></figure>
+                                </a>
+                                <a href="https://service.govdelivery.com/accounts/CAALAME/subscriber/new?topic_id=CAALAME_9" class="ml-md-20" data-ajax="false" target="_blank">
+                                    <figure class="display-inline-block"><img src="/static/img/social/mail_icon.png" alt="Election Results Subscription" name="Election Results Subscription"></figure>
+                                </a>
+                        </div>
+                     --> 
+              <!-- Added the static code for social media  --> 
+              <div id="footer-social-links" class="col-sm-4 col-sm-push-8 col-xs-12 bg-wheat text-right display-md-block display-flex justify-content-space-between"> 
+               <a href="https://www.facebook.com/acvote/" class="ml-md-20" data-ajax="false" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/fb_icon.png" alt="Facebook" name="Facebook"> 
+                </figure> </a> 
+               <a href="https://twitter.com/ACVOTE" class="ml-md-20" data-ajax="false" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/x-icon.png" alt="Twitter" name="Twitter"> 
+                </figure> </a> 
+               <a href="https://www.instagram.com/acvote/" class="ml-md-20" data-ajax="false" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/instagram_icon.png" alt="Instagram" name="Instagram"> 
+                </figure> </a> 
+               <a href="https://www.youtube.com/channel/UCj5Xu4ud8uEgvVljSp2caDA" class="ml-md-20" data-ajax="false" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/youtube_icon.png" alt="YouTube" name="YouTube"> 
+                </figure> </a> 
+               <a href="https://service.govdelivery.com/accounts/CAALAME/subscriber/new?topic_id=CAALAME_9" class="ml-md-20" data-ajax="false" target="_blank"> 
+                <figure class="display-inline-block"> 
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/social/mail_icon.png" alt="Election Results Subscription" name="Election Results Subscription"> 
+                </figure> </a> 
+              </div> 
+              <!-- end  the static code for social media  --> 
+              <!-- /social-links --> 
+              <div id="footer-rov-logo" class="footer__logo col-sm-8 col-sm-pull-4 col-xs-12 mt-60 mt-md-0"> 
+               <a href="/" data-ajax="false"> 
+                <figure>
+                 <img src="https://alamedacountyca.gov/acvote/include/static/img/common/ACVOTE_Logo_White_Header.svg" alt="AC Vote">
+                </figure> <span class="ml-10">Official Election Site of Alameda County</span> </a> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+           <div id="footer-sitemap" class="row hidden-xs mt-40"> 
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"> 
+             <h2> Elections </h2> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/election-information/elections" target="_self"> Election Information </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/election-information/archived-elections" target="_self"> Archived Elections </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/election-information/calendar" target="_self"> Calendar </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/election-information/election-cost" target="_self"> Election Cost </a> 
+            </div> 
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"> 
+             <h2> Voting </h2> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/voting/register-to-vote" target="_self"> Register to Vote </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/vca" target="_self"> Voter's Choice Act </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="https://alamedacountyca.gov/rov_app/vcalist" target="_self"> Vote Centers </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/voting/voting-rights" target="_self"> Voting Rights </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/voting/uocava" target="_self"> Military and Overseas Voters </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/voting/ways-of-voting" target="_self"> Ways of Voting </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="https://alamedacountyca.gov/rovapps/maps/ballotdropbox_map.htm" target="_self"> 24-Hour Drop Box Map </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/youthvoting" target="_self"> Youth Voting </a> 
+            </div> 
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"> 
+             <h2> Resources </h2> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/accessibility" target="_self"> Information for Voters with Disabilities </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/webpolicy" target="_self"> Website Accessibility </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/language" target="_self"> Language Assistance </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="https://alamedacountyca.gov/rov_app/edata" target="_self"> Data </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/resources/how-to-guidelines" target="_self"> How-to Guidelines </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/resources/political-party-information" target="_self"> Political Party Contact Information </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/resources/faqs" target="_self"> Frequently Asked Questions </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="https://alamedacountyca.gov/alcoecommrov_app/search.do" target="_blank"> Store </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/resources/about-us" target="_self"> About Us </a> 
+            </div> 
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"> 
+             <h2> Community </h2> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/community/laac" target="_self"> Language Accessibility Advisory Committee </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/community/vaac" target="_self"> Voting Accessibility Advisory Committee </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/community/events" target="_self"> Events </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/community/partnerships" target="_self"> Partnerships </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/community/become-an-election-worker" target="_self"> Become an Election Worker </a> 
+            </div> 
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"> 
+             <h2> Candidates </h2> 
+             <a class="display-block sitemap_link" data-ajax="false" href="/candidates/how-to-run" target="_self"> How to Run </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="http://www.netfile.com/agency/coa" target="_blank"> Campaign Finance </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="https://alamedacountyca.gov/rov_app/electedofficials" target="_self"> Elected Officials </a> 
+             <a class="display-block sitemap_link" data-ajax="false" href="https://alamedacountyca.gov/rov_app/candidatelist" target="_self"> Candidate List </a> 
+            </div> 
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"> 
+             <h2>Related Links</h2> 
+             <a class="display-block sitemap_link" data-ajax="false" target="_blank" href="https://alamedacountyca.gov/"> County of Alameda </a> 
+             <a class="display-block sitemap_link" data-ajax="false" target="_blank" href="http://www.sos.ca.gov/"> California Secretary of State </a> 
+             <a class="display-block sitemap_link" data-ajax="false" target="_blank" href="https://www.vote411.org/"> VOTE411 </a> 
+             <a class="display-block sitemap_link" data-ajax="false" target="_blank" href="https://sccvote.sccgov.org/coalition-bay-area-election-officials"> Coalition of Bay Area Election Officials </a> 
+            </div> 
+           </div> 
+           <div class="row"> 
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 address_container text-center"> 
+             <hr class="mb-10"> 
+             <p> <span class="sitemap_link"> Registrar of Voters • 1225 Fallon Street, Rm. G-1, Oakland, CA 94612 •TOLL-FREE 1 (800) 834-6454 • TEL (510) 272-6973 • FAX (510) 272-6982 • TDD (510) 208-4967 </span> </p> 
+            </div> 
+           </div> 
+          </div> 
+         </footer> 
+         <!-- Global Site  resources  --> 
+         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+         <script type="text/javascript" src="/static/js/projectROV/rov-vendor-bundle-1.js"></script> 
+         <script type="text/javascript" src="/static/js/projectROV/rov-app-bundle-20250807.js?V=6"></script> 
+         <script type="text/javascript">
+		/*<![CDATA[*/
+		(function() {
+		var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.async = true;
+		sz.src = '//siteimproveanalytics.com/js/siteanalyze_10984.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
+		})();
+		/*]]>*/
+	</script> 
+         <!-- Google tag (gtag.js) --> 
+         <script async src="https://www.googletagmanager.com/gtag/js?id=AW-801893138"></script> 
+         <script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	 
+	  gtag('config', 'AW-801893138');
+	</script> 
+         <!-- /FOOTER --> 
+        </div> 
+        <!--ls:end[component-1506920660275]--> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="ls-row-clr"></div> 
+    </div> 
+   </div> 
+  </div>
+  <!--ls:end[body]-->
+  <!--ls:begin[page_track]-->
+  <!--ls:end[page_track]-->  
+ </body>
+</html>

@@ -1,0 +1,992 @@
+[
+  {
+    "kind": "DECLARED_WRITE_IN_READER_STATUS",
+    "status": "PENDING",
+    "names": [
+      {
+        "contestId": "cx-local-ca-alameda-2026-for-school-directors-berkeley",
+        "ocdId": "ocd-division/country:us/state:ca/school_district:berkeley_unified_school_district",
+        "printedName": "REICHI LEE",
+        "filingStatus": "Filing Completed",
+        "designation": "Write-in Candidate",
+        "installed": false,
+        "reason": "Nameddeclaredwritein notprintedchoice;readerstatusdistinctionpending.",
+        "provenance": {
+          "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260",
+          "sourceOrg": "Alameda County Registrar of Voters",
+          "collectedAt": "2026-11-03T04:30:53.794320+00:00",
+          "verifiedAt": "2026-11-03T04:30:53.794320+00:00",
+          "quote": "REICHI LEE\nWrite-in Candidate"
+        }
+      }
+    ],
+    "details": "ReichiLeeisexplicitqualifiedWrite-inCandidateincompletecountylist;notprintedregularsamplechoice. Preserve separatelyuntilsupporteddisplaydistinction."
+  },
+  {
+    "kind": "LOCAL_MEASURES",
+    "status": "PENDING_PARSE",
+    "details": "FullcountycompositeVIGcontainsallmeasuretextbutnoquestiondatainstalledhere."
+  },
+  {
+    "kind": "NOT_ON_BALLOT",
+    "status": "EXCLUDED",
+    "groups": [
+      {
+        "title": "Ohlone Community College District Trustee, Area 3",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Ohlone Community College District Trustee, Area 3 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "PHUONG NGUYEN",
+            "party": null,
+            "designation": "Management Analyst II",
+            "status": "Filing Completed",
+            "sourceNameExact": "PHUONG NGUYEN",
+            "sourceFields": [
+              "PHUONG NGUYEN",
+              "Management Analyst II",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/07/2026\nDeclaration of Candidacy File Date:\n08/07/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Ohlone Community College District Trustee, Area 4",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Ohlone Community College District Trustee, Area 4 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "ELISA MARTINEZ",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "ELISA MARTINEZ",
+            "sourceFields": [
+              "ELISA MARTINEZ",
+              "Incumbent",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/07/2026\nDeclaration of Candidacy File Date:\n08/07/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Ohlone Community College District Trustee, Area 7",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Ohlone Community College District Trustee, Area 7 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "BETTY HO",
+            "party": null,
+            "designation": "Appointed Ohlone Community College District Trustee",
+            "status": "Filing Completed",
+            "sourceNameExact": "BETTY HO",
+            "sourceFields": [
+              "BETTY HO",
+              "Appointed Ohlone Community College District Trustee",
+              "email: bettyho.ohlone@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/17/2026\nDeclaration of Candidacy File Date:\n07/17/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Peralta Community College District Trustee, Area 3",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Peralta Community College District Trustee, Area 3 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "LOUIS QUINDLEN",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "LOUIS QUINDLEN",
+            "sourceFields": [
+              "LOUIS QUINDLEN",
+              "Incumbent",
+              "2831 ATWELL AVE\nOAKLAND, CA, 94601\n(510) 846-4607\nemail: lquindlen@icloud.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/04/2026\nDeclaration of Candidacy File Date:\n08/04/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Peralta Community College District Trustee, Area 7",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Peralta Community College District Trustee, Area 7 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "SHEWEET YOHANNES",
+            "party": null,
+            "designation": "Peralta Community College District Board, Area 7",
+            "status": "Filing Completed",
+            "sourceNameExact": "SHEWEET YOHANNES",
+            "sourceFields": [
+              "SHEWEET YOHANNES",
+              "Peralta Community College District Board, Area 7",
+              "(510) 224-5020\nweb: sheweetyohannes.com\nemail: votesheweet@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/16/2026\nDeclaration of Candidacy File Date:\n07/16/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "San Joaquin Delta Community College District Trustee, Area 4",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "San Joaquin Delta Community College District Trustee, Area 4 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "CHARLES R JENNINGS",
+            "party": null,
+            "designation": "Delta College Trustee",
+            "status": "Filing Completed",
+            "sourceNameExact": "CHARLES R JENNINGS",
+            "sourceFields": [
+              "CHARLES R JENNINGS",
+              "Delta College Trustee",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nSan Joaquin County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "TONY SHAH",
+            "party": null,
+            "designation": "Retired School Administrator",
+            "status": "Filing Completed",
+            "sourceNameExact": "TONY SHAH",
+            "sourceFields": [
+              "TONY SHAH",
+              "Retired School Administrator",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nSan Joaquin County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "2 Filings"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Alameda Unified School District Governing Board Member, Short Term",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Alameda Unified School District Governing Board Member, Short Term -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "RYAN LALONDE",
+            "party": null,
+            "designation": "Alameda Unified School District Board Trustee",
+            "status": "Filing Completed",
+            "sourceNameExact": "RYAN LALONDE",
+            "sourceFields": [
+              "RYAN LALONDE",
+              "Alameda Unified School District Board Trustee",
+              "email: ryanclalonde@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/22/2026\nDeclaration of Candidacy File Date:\n07/22/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "MIKE MCMAHON",
+            "party": null,
+            "designation": "Independent Contractor",
+            "status": "Candidacy Withdrawn",
+            "sourceNameExact": "MIKE MCMAHON",
+            "sourceFields": [
+              "MIKE MCMAHON",
+              "Independent Contractor",
+              "web: www.mikemcmahon.info\nemail: mike.mcmahon@yahoo.com",
+              "Candidacy Withdrawn",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/24/2026\nDeclaration of Candidacy File Date:\n07/24/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "2 Filings"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Dublin Unified School District Governing Board Members, Area 2",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Dublin Unified School District Governing Board Members, Area 2 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "HOLDEN LOMELI",
+            "party": null,
+            "designation": "Business Manager",
+            "status": "Filing Completed",
+            "sourceNameExact": "HOLDEN LOMELI",
+            "sourceFields": [
+              "HOLDEN LOMELI",
+              "Business Manager",
+              "(209) 479-5238\nemail: holden.lomeli21@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/11/2026\nDeclaration of Candidacy File Date:\n08/11/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Fremont Unified School District Governing Board Members, Area 2",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Fremont Unified School District Governing Board Members, Area 2 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "LARRY SWEENEY",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "LARRY SWEENEY",
+            "sourceFields": [
+              "LARRY SWEENEY",
+              "Incumbent",
+              "(510) 366-5916\nweb: www.larrysweeney.com\nemail: larry4sb@aol.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/24/2026\nDeclaration of Candidacy File Date:\n07/24/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Fremont Unified School District Governing Board Members, Area 3",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Fremont Unified School District Governing Board Members, Area 3 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "DIANNE JONES",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "DIANNE JONES",
+            "sourceFields": [
+              "DIANNE JONES",
+              "Incumbent",
+              "P.O. BOX 382\nFREMONT, CA, 94536\nweb: diannejonesforeverystudent.com\nemail: djforeverystudent@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/14/2026\nDeclaration of Candidacy File Date:\n07/14/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Mountain House Elementary School District Governing Board Member",
+        "status": "Not On Ballot",
+        "voteFor": 2,
+        "headerQuote": "Mountain House Elementary School District Governing Board Member -\nNot On Ballot\nVote For: 2",
+        "candidates": [
+          {
+            "name": "TONYA ARLEDGE",
+            "party": null,
+            "designation": "",
+            "status": "Incomplete Filing",
+            "sourceNameExact": "TONYA ARLEDGE",
+            "sourceFields": [
+              "TONYA ARLEDGE",
+              "",
+              "",
+              "Incomplete Filing",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/29/2026\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "BARBARA ARMSTRONG",
+            "party": null,
+            "designation": "",
+            "status": "Incomplete Filing",
+            "sourceNameExact": "BARBARA ARMSTRONG",
+            "sourceFields": [
+              "BARBARA ARMSTRONG",
+              "",
+              "",
+              "Incomplete Filing",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/29/2026\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "2 Filings"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Newark Unified School District Governing Board Members",
+        "status": "Not On Ballot",
+        "voteFor": 2,
+        "headerQuote": "Newark Unified School District Governing Board Members -\nNot On Ballot\nVote For: 2",
+        "candidates": [
+          {
+            "name": "CHRISTINE KIZER",
+            "party": null,
+            "designation": "Special Education Teacher",
+            "status": "Filing Completed",
+            "sourceNameExact": "CHRISTINE KIZER",
+            "sourceFields": [
+              "CHRISTINE KIZER",
+              "Special Education Teacher",
+              "email: christinekizer2023@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/10/2026\nDeclaration of Candidacy File Date:\n08/10/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "JONATHAN LEDER",
+            "party": null,
+            "designation": "",
+            "status": "Incomplete Filing",
+            "sourceNameExact": "JONATHAN LEDER",
+            "sourceFields": [
+              "JONATHAN LEDER",
+              "",
+              "(408) 212-0212\nweb: www.followtheleder.com\nemail: jonathan@followtheleder.com",
+              "Incomplete Filing",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "RENU MALHOTRA",
+            "party": null,
+            "designation": "Mother/Technologist/Educator",
+            "status": "Filing Completed",
+            "sourceNameExact": "RENU MALHOTRA",
+            "sourceFields": [
+              "RENU MALHOTRA",
+              "Mother/Technologist/Educator",
+              "(510) 209-3357\nweb: renu2renew.us\nemail: renu2renew@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/07/2026\nDeclaration of Candidacy File Date:\n08/07/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "JASON MATTHEW MIGUEL",
+            "party": null,
+            "designation": "",
+            "status": "Incomplete Filing",
+            "sourceNameExact": "JASON MATTHEW MIGUEL",
+            "sourceFields": [
+              "JASON MATTHEW MIGUEL",
+              "",
+              "email: jason4nusd@gmail.com",
+              "Incomplete Filing",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "4 Filings"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Pleasanton Unified School District Governing Board Member, Area 2",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Pleasanton Unified School District Governing Board Member, Area 2 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "LAURIE WALKER",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "LAURIE WALKER",
+            "sourceFields": [
+              "LAURIE WALKER",
+              "Incumbent",
+              "web: votelaurieforschoolboard.org\nemail: laurie@votelaurie4schoolboard.org",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/04/2026\nDeclaration of Candidacy File Date:\n08/04/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "San Leandro Unified School District Governing Board Member, Area 2",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "San Leandro Unified School District Governing Board Member, Area 2 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "JACQUELINE CALDER\u00d3N PERL",
+            "party": null,
+            "designation": "San Leandro Unified School District Governing Board Member",
+            "status": "Filing Completed",
+            "sourceNameExact": "JACQUELINE CALDER\u00d3N PERL",
+            "sourceFields": [
+              "JACQUELINE CALDER\u00d3N PERL",
+              "San Leandro Unified School District Governing Board Member",
+              "email: jackiecalperlforschoolboard@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\n07/15/2026\nNomination Petition File Date:\n07/31/2026\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/31/2026\nDeclaration of Candidacy File Date:\n07/31/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "San Leandro Unified School District Governing Board Member, Area 4",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "San Leandro Unified School District Governing Board Member, Area 4 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "LEO SHERIDAN",
+            "party": null,
+            "designation": "Trustee, San Leandro Unified School District, Area 4",
+            "status": "Filing Completed",
+            "sourceNameExact": "LEO SHERIDAN",
+            "sourceFields": [
+              "LEO SHERIDAN",
+              "Trustee, San Leandro Unified School District, Area 4",
+              "(510) 909-7152\nweb: voteleosheridan.com\nemail: voteleosheridan@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\n07/17/2026\nNomination Petition File Date:\n08/05/2026\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/05/2026\nDeclaration of Candidacy File Date:\n08/05/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "San Leandro Unified School District Governing Board Member, Area 6",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "San Leandro Unified School District Governing Board Member, Area 6 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "NATASHA MARTINEZ",
+            "party": null,
+            "designation": "Appointed School Board Trustee",
+            "status": "Filing Completed",
+            "sourceNameExact": "NATASHA MARTINEZ",
+            "sourceFields": [
+              "NATASHA MARTINEZ",
+              "Appointed School Board Trustee",
+              "email: natasha.martinez12@yahoo.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\n07/15/2026\nNomination Petition File Date:\n07/17/2026\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/17/2026\nDeclaration of Candidacy File Date:\n07/17/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "San Lorenzo Unified School District Governing Board Members, Area 1",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "San Lorenzo Unified School District Governing Board Members, Area 1 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "YULIANA TORRES",
+            "party": null,
+            "designation": "Parent",
+            "status": "Filing Completed",
+            "sourceNameExact": "YULIANA TORRES",
+            "sourceFields": [
+              "YULIANA TORRES",
+              "Parent",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/04/2026\nDeclaration of Candidacy File Date:\n08/04/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "San Lorenzo Unified School District Governing Board Members, Area 4",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "San Lorenzo Unified School District Governing Board Members, Area 4 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "SAMUEL MEDINA",
+            "party": null,
+            "designation": "Governing Board Member, San Lorenzo Unified School District",
+            "status": "Filing Completed",
+            "sourceNameExact": "SAMUEL MEDINA",
+            "sourceFields": [
+              "SAMUEL MEDINA",
+              "Governing Board Member, San Lorenzo Unified School District",
+              "email: smedina@slzusd.org",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/15/2026\nDeclaration of Candidacy File Date:\n07/15/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "For Mayor, Livermore",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "For Mayor, Livermore -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "JOHN MARCHAND",
+            "party": null,
+            "designation": "Mayor",
+            "status": "Filing Completed",
+            "sourceNameExact": "JOHN MARCHAND",
+            "sourceFields": [
+              "JOHN MARCHAND",
+              "Mayor",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nCity of Livermore\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "For Member Of City Council #1, Livermore",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "For Member Of City Council #1, Livermore -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "EVAN BRANNING",
+            "party": null,
+            "designation": "Incumbent/Teacher",
+            "status": "Filing Completed",
+            "sourceNameExact": "EVAN BRANNING",
+            "sourceFields": [
+              "EVAN BRANNING",
+              "Incumbent/Teacher",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nCity of Livermore\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "AC Transit District Director, Ward 1, Short Term",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "AC Transit District Director, Ward 1, Short Term -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "HARPREET SANDHU",
+            "party": null,
+            "designation": "Appointed AC Transit District Ward 1 Director",
+            "status": "Filing Completed",
+            "sourceNameExact": "HARPREET SANDHU",
+            "sourceFields": [
+              "HARPREET SANDHU",
+              "Appointed AC Transit District Ward 1 Director",
+              "web: sandhuforactransit\nemail: sandhuforactransit@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nContra Costa County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "AC Transit District Director, Ward 7",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "AC Transit District Director, Ward 7 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "DIANE SHAW",
+            "party": null,
+            "designation": "AC Transit Board Director",
+            "status": "Filing Completed",
+            "sourceNameExact": "DIANE SHAW",
+            "sourceFields": [
+              "DIANE SHAW",
+              "AC Transit Board Director",
+              "(510) 516-4340\nweb: www.dianeshaw4transit.com\nemail: dianeshaw4transit@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nN\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/27/2026\nDeclaration of Candidacy File Date:\n07/27/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "BART Director, District 6",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "BART Director, District 6 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "LIZ AMES",
+            "party": null,
+            "designation": "Engineer/BART Director",
+            "status": "Filing Completed",
+            "sourceNameExact": "LIZ AMES",
+            "sourceFields": [
+              "LIZ AMES",
+              "Engineer/BART Director",
+              "(510) 371-1311\nemail: elect.lizames@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/06/2026\nDeclaration of Candidacy File Date:\n08/06/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Byron - Bethany Irrigation District Directors",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Byron - Bethany Irrigation District Directors -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "TIM MAGGIORE",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "TIM MAGGIORE",
+            "sourceFields": [
+              "TIM MAGGIORE",
+              "Incumbent",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nContra Costa County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\nDeclaration of Candidacy File Date:\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "City Of Alameda Healthcare District Directors",
+        "status": "Not On Ballot",
+        "voteFor": 3,
+        "headerQuote": "City Of Alameda Healthcare District Directors -\nNot On Ballot\nVote For: 3",
+        "candidates": [
+          {
+            "name": "GAYLE GODFREY CODIGA",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "GAYLE GODFREY CODIGA",
+            "sourceFields": [
+              "GAYLE GODFREY CODIGA",
+              "Incumbent",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/24/2026\nDeclaration of Candidacy File Date:\n07/24/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "ROBERT DEUTSCH",
+            "party": null,
+            "designation": "M.D./Board Director",
+            "status": "Filing Completed",
+            "sourceNameExact": "ROBERT DEUTSCH",
+            "sourceFields": [
+              "ROBERT DEUTSCH",
+              "M.D./Board Director",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/30/2026\nDeclaration of Candidacy File Date:\n07/30/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "DAVID W SAYEN",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "DAVID W SAYEN",
+            "sourceFields": [
+              "DAVID W SAYEN",
+              "Incumbent",
+              "3112 GIBBONS DR\nALAMEDA, CA, 94501\n(510) 424-7142\nweb: www.davidsayen.com\nemail: david.sayen@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/20/2026\nDeclaration of Candidacy File Date:\n07/20/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "3 Filings"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Member, Board Of Directors, Dublin San Ramon, Area 4",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Member, Board Of Directors, Dublin San Ramon, Area 4 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "GEORGEAN VONHEEDER-LEOPOLD",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "GEORGEAN VONHEEDER-LEOPOLD",
+            "sourceFields": [
+              "GEORGEAN VONHEEDER-LEOPOLD",
+              "Incumbent",
+              "7112 PORTAGE RD\nDUBLIN, CA, 94568\n(925) 719-2450\nemail: geovonleo@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/29/2026\nDeclaration of Candidacy File Date:\n07/29/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "EBMUD Director, Ward 4",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "EBMUD Director, Ward 4 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "ANDY KATZ",
+            "party": null,
+            "designation": "Utility Director/Attorney",
+            "status": "Filing Completed",
+            "sourceNameExact": "ANDY KATZ",
+            "sourceFields": [
+              "ANDY KATZ",
+              "Utility Director/Attorney",
+              "2001 ADDISON ST. STE. 300\nBERKELEY, CA, 94704\nweb: www.andykatz.com\nemail: andy@andykatz.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\n07/17/2026\nNomination Petition File Date:\n08/05/2026\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n08/05/2026\nDeclaration of Candidacy File Date:\n08/05/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Eden Township Healthcare District Director, Area 1",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Eden Township Healthcare District Director, Area 1 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "MARIELLEN FARIA",
+            "party": null,
+            "designation": "Healthcare Director/RN",
+            "status": "Filing Completed",
+            "sourceNameExact": "MARIELLEN FARIA",
+            "sourceFields": [
+              "MARIELLEN FARIA",
+              "Healthcare Director/RN",
+              "",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/16/2026\nDeclaration of Candidacy File Date:\n07/16/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Eden Township Healthcare District Director, Area 5",
+        "status": "Not On Ballot",
+        "voteFor": 1,
+        "headerQuote": "Eden Township Healthcare District Director, Area 5 -\nNot On Ballot\nVote For: 1",
+        "candidates": [
+          {
+            "name": "ED HERNANDEZ",
+            "party": null,
+            "designation": "District Director, Eden Township Healthcare District",
+            "status": "Filing Completed",
+            "sourceNameExact": "ED HERNANDEZ",
+            "sourceFields": [
+              "ED HERNANDEZ",
+              "District Director, Eden Township Healthcare District",
+              "(510) 842-6175\nweb: www.electdirectorhernandez.com\nemail: ed@electdirectorhernandez.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/31/2026\nDeclaration of Candidacy File Date:\n07/31/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "1 Filing"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Washington Township Healthcare District Directors",
+        "status": "Not On Ballot",
+        "voteFor": 3,
+        "headerQuote": "Washington Township Healthcare District Directors -\nNot On Ballot\nVote For: 3",
+        "candidates": [
+          {
+            "name": "JACOB EAPEN",
+            "party": null,
+            "designation": "Incumbent",
+            "status": "Filing Completed",
+            "sourceNameExact": "JACOB EAPEN",
+            "sourceFields": [
+              "JACOB EAPEN",
+              "Incumbent",
+              "web: drjacob.in\nemail: jacobe52@gmail.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/15/2026\nDeclaration of Candidacy File Date:\n07/15/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "BERNARD L. STEWART",
+            "party": null,
+            "designation": "Director Washington Township Hospital Healthcare District",
+            "status": "Filing Completed",
+            "sourceNameExact": "BERNARD L. STEWART",
+            "sourceFields": [
+              "BERNARD L. STEWART",
+              "Director Washington Township Hospital Healthcare District",
+              "(510) 792-7308\nemail: b_nstew@comcast.net",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/15/2026\nDeclaration of Candidacy File Date:\n07/15/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:"
+            ]
+          },
+          {
+            "name": "MICHAEL J. WALLACE",
+            "party": null,
+            "designation": "Director, Washington Township Healthcare District Board of Directors",
+            "status": "Filing Completed",
+            "sourceNameExact": "MICHAEL J. WALLACE",
+            "sourceFields": [
+              "MICHAEL J. WALLACE",
+              "Director, Washington Township Healthcare District Board of Directors",
+              "(510) 409-6192\nemail: michael.wallace@fremontbank.com",
+              "Filing Completed",
+              "Filing Agency:\nAlameda County\nIncumbent:\nY\nNomination Petition Issue Date:\nNomination Petition File Date:\nSignature in Lieu Issue Date:\nSignature in Lieu File Date:\nDeclaration of Candidacy Issue Date:\n07/13/2026\nDeclaration of Candidacy File Date:\n07/27/2026\nDeclaration of Intention Issue Date:\nDeclaration of Intention File Date:",
+              "3 Filings"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "WITHDRAWN_OR_INCOMPLETE_NOT_PRINTED",
+    "status": "EXCLUDED",
+    "rows": [
+      {
+        "contest": "Livermore Valley Joint Unified School District Governing Board Member, Area #3",
+        "name": "KATE RUNYON",
+        "raceStatus": "On Ballot",
+        "filingStatus": "Candidacy Withdrawn",
+        "samplePages": []
+      },
+      {
+        "contest": "Sunol Glen Unified School District Governing Board Member",
+        "name": "LINDA HURLEY",
+        "raceStatus": "On Ballot",
+        "filingStatus": "Candidacy Withdrawn",
+        "samplePages": []
+      },
+      {
+        "contest": "AC Transit District Director, Ward 4",
+        "name": "MARK WILLIAMS",
+        "raceStatus": "On Ballot",
+        "filingStatus": "Incomplete Filing",
+        "samplePages": []
+      },
+      {
+        "contest": "AC Transit District Director, Ward 5",
+        "name": "HERIBERTO PEREZ",
+        "raceStatus": "On Ballot",
+        "filingStatus": "Incomplete Filing",
+        "samplePages": []
+      },
+      {
+        "contest": "Livermore Area Recreation & Park District Directors",
+        "name": "SHANAVAZ NASARABADI",
+        "raceStatus": "On Ballot",
+        "filingStatus": "Incomplete Filing",
+        "samplePages": []
+      }
+    ]
+  },
+  {
+    "kind": "READER_DIVISION_MAPPING",
+    "status": "PENDING_RIVER",
+    "divisionIds": [
+      "ocd-division/country:us/state:ca/school_district:ohlone_community_college_district/trustee_area:6",
+      "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:3",
+      "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:6",
+      "ocd-division/country:us/state:ca/school_district:peralta_community_college_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:3",
+      "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:4",
+      "ocd-division/country:us/state:ca/school_district:dublin_unified_school_district/trustee_area:3",
+      "ocd-division/country:us/state:ca/school_district:dublin_unified_school_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/school_district:hayward_unified_school_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:hayward_unified_school_district/trustee_area:4",
+      "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:3",
+      "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/school_district:new_haven_unified_school_district/trustee_area:4",
+      "ocd-division/country:us/state:ca/school_district:new_haven_unified_school_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/school_district:pleasanton_unified_school_district/trustee_area:5",
+      "ocd-division/country:us/state:ca/place:dublin/council_district:2",
+      "ocd-division/country:us/state:ca/place:dublin/council_district:4",
+      "ocd-division/country:us/state:ca/place:fremont/council_district:2",
+      "ocd-division/country:us/state:ca/place:fremont/council_district:3",
+      "ocd-division/country:us/state:ca/place:fremont/council_district:4",
+      "ocd-division/country:us/state:ca/place:hayward/council_district:1",
+      "ocd-division/country:us/state:ca/place:hayward/council_district:6",
+      "ocd-division/country:us/state:ca/place:livermore/council_district:2",
+      "ocd-division/country:us/state:ca/place:pleasanton/council_district:1",
+      "ocd-division/country:us/state:ca/place:pleasanton/council_district:3",
+      "ocd-division/country:us/state:ca/place:san_leandro/council_district:1",
+      "ocd-division/country:us/state:ca/place:san_leandro/council_district:2",
+      "ocd-division/country:us/state:ca/place:san_leandro/council_district:3",
+      "ocd-division/country:us/state:ca/place:san_leandro/council_district:5",
+      "ocd-division/country:us/state:ca/place:union_city/council_district:2",
+      "ocd-division/country:us/state:ca/place:union_city/council_district:3",
+      "ocd-division/country:us/state:ca/place:union_city/council_district:4",
+      "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:3",
+      "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:4",
+      "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:5",
+      "ocd-division/country:us/state:ca/special_district:alameda_county_water_district/ward:2",
+      "ocd-division/country:us/state:ca/special_district:alameda_county_water_district/ward:3",
+      "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:4",
+      "ocd-division/country:us/state:ca/special_district:castro_valley_sanitary_district",
+      "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:3",
+      "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:7",
+      "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:3",
+      "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:5",
+      "ocd-division/country:us/state:ca/special_district:eden_township_healthcare_district/area:3",
+      "ocd-division/country:us/state:ca/special_district:fairview_fire_protection_district",
+      "ocd-division/country:us/state:ca/special_district:hayward_area_recreation_and_park_district/area:2",
+      "ocd-division/country:us/state:ca/special_district:hayward_area_recreation_and_park_district/area:4",
+      "ocd-division/country:us/state:ca/special_district:livermore_area_recreation_and_park_district",
+      "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:1",
+      "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:3",
+      "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:5",
+      "ocd-division/country:us/state:ca/place:berkeley/council_district:1",
+      "ocd-division/country:us/state:ca/place:berkeley/council_district:4",
+      "ocd-division/country:us/state:ca/place:berkeley/council_district:7",
+      "ocd-division/country:us/state:ca/place:berkeley/council_district:8",
+      "ocd-division/country:us/state:ca/place:oakland/council_district:2",
+      "ocd-division/country:us/state:ca/place:oakland/council_district:4",
+      "ocd-division/country:us/state:ca/place:oakland/council_district:6",
+      "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:2",
+      "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:4",
+      "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:6"
+    ],
+    "details": "SelectedofficialGISfeaturescoverAlamedaCountyportiononly. Do notsubstitutecountyorcityfortrusteearea,ward,districtorwholespecialdistrict. AdditionalcrosscountyportionsmustbejoinedbyRiver. HARD2/4,LARPD,Fairviewpreciseidentitieshaveofficialscopeproofbutnogeometryprepared."
+  },
+  {
+    "kind": "RANKED_CHOICE",
+    "status": "SOURCE_RULES_PRESERVED_READER_DEPENDENCY",
+    "details": "AlbanyCouncil2seatsandSchool4seatsrankupto5:voteForisnulltoavoidtreatingseatcountasmarklimit. SinglewinnerRCVscopeNotesidentifyrankingrules. Allprintednamespreserved;noinventedcontractfields."
+  },
+  {
+    "kind": "SAN_LEANDRO_TRANSITION",
+    "status": "SOURCE_RULE_CONFIRMED",
+    "details": "CurrentcityruleOnlyvotesfromeachrespectivedistrictcount,despitecouncil1/2/3/5allbeingprintedcitywide. Precisescopesretained;readerhandlingownerRiver.",
+    "sourceUrls": [
+      "https://www.sanleandro.org/197/Elections",
+      "https://www.sanleandro.org/202/Candidate-Information"
+    ]
+  }
+]

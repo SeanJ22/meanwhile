@@ -1,0 +1,710 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Alameda",
+  "populationRank": 22,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-ca-alameda-2026-ohlone-community-college-district-trustee-area-6",
+      "title": "Ohlone Community College District Trustee, Area 6",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ohlone_community_college_district/trustee_area:6",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-chabot-las-positas-community-college-district-trustee-area-2",
+      "title": "Chabot - Las Positas Community College District Trustee, Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-chabot-las-positas-community-college-district-trustee-area-3",
+      "title": "Chabot - Las Positas Community College District Trustee, Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:3",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-chabot-las-positas-community-college-district-trustee-area-6",
+      "title": "Chabot - Las Positas Community College District Trustee, Area 6",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:6",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-peralta-community-college-district-trustee-area-5",
+      "title": "Peralta Community College District Trustee, Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:peralta_community_college_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-alameda-unified-school-district-governing-board-member-full-term",
+      "title": "Alameda Unified School District Governing Board Member, Full Term",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:alameda_city_unified_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-castro-valley-unified-school-district-governing-board-member-area-2-short-term",
+      "title": "Castro Valley Unified School District Governing Board Member, Area 2, Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:2",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-castro-valley-unified-school-district-governing-board-member-area-3",
+      "title": "Castro Valley Unified School District Governing Board Member, Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:3",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-castro-valley-unified-school-district-governing-board-member-area-4",
+      "title": "Castro Valley Unified School District Governing Board Member, Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:4",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-dublin-unified-school-district-governing-board-members-area-3-short-term",
+      "title": "Dublin Unified School District Governing Board Members, Area 3, Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:dublin_unified_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-dublin-unified-school-district-governing-board-members-area-5",
+      "title": "Dublin Unified School District Governing Board Members, Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:dublin_unified_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-emery-unified-school-district-governing-board-members",
+      "title": "Emery Unified School District Governing Board Members",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:emery_unified_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-hayward-unified-school-district-governing-board-member-area-2",
+      "title": "Hayward Unified School District Governing Board Member, Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:hayward_unified_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-hayward-unified-school-district-governing-board-member-area-4",
+      "title": "Hayward Unified School District Governing Board Member, Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:hayward_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-livermore-valley-joint-unified-school-district-governing-board-member-area-2",
+      "title": "Livermore Valley Joint Unified School District Governing Board Member, Area #2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-livermore-valley-joint-unified-school-district-governing-board-member-area-3",
+      "title": "Livermore Valley Joint Unified School District Governing Board Member, Area #3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-livermore-valley-joint-unified-school-district-governing-board-member-area-5",
+      "title": "Livermore Valley Joint Unified School District Governing Board Member, Area #5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:5",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-new-haven-unified-school-district-governing-board-member-area-4",
+      "title": "New Haven Unified School District Governing Board Member, Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:new_haven_unified_school_district/trustee_area:4",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-new-haven-unified-school-district-governing-board-member-area-5",
+      "title": "New Haven Unified School District Governing Board Member, Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:new_haven_unified_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-pleasanton-unified-school-district-governing-board-member-area-5",
+      "title": "Pleasanton Unified School District Governing Board Member, Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:pleasanton_unified_school_district/trustee_area:5",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-sunol-glen-unified-school-district-governing-board-member",
+      "title": "Sunol Glen Unified School District Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sunol_glen_unified_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-mayor-alameda",
+      "title": "For Mayor, Alameda",
+      "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-alameda",
+      "title": "For Members of City Council, Alameda",
+      "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+      "candidates": 6,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-rent-stabilization-board-commissioners-berkeley",
+      "title": "For Rent Stabilization Board Commissioners, Berkeley",
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "candidates": 6,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-school-directors-berkeley",
+      "title": "For School Directors, Berkeley",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:berkeley_unified_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-mayor-dublin",
+      "title": "For Mayor, Dublin",
+      "ocdId": "ocd-division/country:us/state:ca/place:dublin",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-2-dublin",
+      "title": "For Members Of City Council #2, Dublin",
+      "ocdId": "ocd-division/country:us/state:ca/place:dublin/council_district:2",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-4-dublin",
+      "title": "For Members Of City Council #4, Dublin",
+      "ocdId": "ocd-division/country:us/state:ca/place:dublin/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-emeryville",
+      "title": "For Members of City Council, Emeryville",
+      "ocdId": "ocd-division/country:us/state:ca/place:emeryville",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-2-fremont",
+      "title": "For Member Of City Council #2, Fremont",
+      "ocdId": "ocd-division/country:us/state:ca/place:fremont/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-3-fremont",
+      "title": "For Member Of City Council #3, Fremont",
+      "ocdId": "ocd-division/country:us/state:ca/place:fremont/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-4-fremont",
+      "title": "For Member Of City Council #4, Fremont",
+      "ocdId": "ocd-division/country:us/state:ca/place:fremont/council_district:4",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-mayor-hayward",
+      "title": "For Mayor, Hayward",
+      "ocdId": "ocd-division/country:us/state:ca/place:hayward",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-district-1-hayward",
+      "title": "For Members Of City Council District #1, Hayward",
+      "ocdId": "ocd-division/country:us/state:ca/place:hayward/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-district-6-hayward",
+      "title": "For Members Of City Council District #6, Hayward",
+      "ocdId": "ocd-division/country:us/state:ca/place:hayward/council_district:6",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-2-livermore",
+      "title": "For Member Of City Council #2, Livermore",
+      "ocdId": "ocd-division/country:us/state:ca/place:livermore/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-mayor-newark",
+      "title": "For Mayor, Newark",
+      "ocdId": "ocd-division/country:us/state:ca/place:newark",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-newark",
+      "title": "For Members Of City Council, Newark",
+      "ocdId": "ocd-division/country:us/state:ca/place:newark",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-piedmont",
+      "title": "For Members of City Council, Piedmont",
+      "ocdId": "ocd-division/country:us/state:ca/place:piedmont",
+      "candidates": 5,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-mayor-pleasanton",
+      "title": "For Mayor, Pleasanton",
+      "ocdId": "ocd-division/country:us/state:ca/place:pleasanton",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-1-pleasanton",
+      "title": "For Members Of City Council #1, Pleasanton",
+      "ocdId": "ocd-division/country:us/state:ca/place:pleasanton/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-3-pleasanton",
+      "title": "For Members Of City Council #3, Pleasanton",
+      "ocdId": "ocd-division/country:us/state:ca/place:pleasanton/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-mayor-san-leandro",
+      "title": "For Mayor, San Leandro",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_leandro",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-1-san-leandro",
+      "title": "For Member Of City Council #1, San Leandro",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:1",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-2-san-leandro-short-term",
+      "title": "For Member Of City Council #2, San Leandro - Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:2",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-3-san-leandro",
+      "title": "For Member Of City Council #3, San Leandro",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-5-san-leandro",
+      "title": "For Member Of City Council #5, San Leandro",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:5",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-2-union-city",
+      "title": "For Member Of City Council #2, Union City",
+      "ocdId": "ocd-division/country:us/state:ca/place:union_city/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-3-union-city",
+      "title": "For Member Of City Council #3, Union City",
+      "ocdId": "ocd-division/country:us/state:ca/place:union_city/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-4-union-city",
+      "title": "For Member Of City Council #4, Union City",
+      "ocdId": "ocd-division/country:us/state:ca/place:union_city/council_district:4",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-ac-transit-district-director-ward-3",
+      "title": "AC Transit District Director, Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-ac-transit-district-director-ward-4",
+      "title": "AC Transit District Director, Ward 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:4",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-ac-transit-district-director-ward-5",
+      "title": "AC Transit District Director, Ward 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:5",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-alameda-county-water-district-director-ward-2",
+      "title": "Alameda County Water District Director, Ward 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:alameda_county_water_district/ward:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-alameda-county-water-district-director-ward-3",
+      "title": "Alameda County Water District Director, Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:alameda_county_water_district/ward:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-bart-director-district-4",
+      "title": "BART Director, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:4",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-castro-valley-sanitary-district-directors",
+      "title": "Castro Valley Sanitary District Directors",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:castro_valley_sanitary_district",
+      "candidates": 5,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-ebmud-director-ward-3",
+      "title": "EBMUD Director, Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-ebmud-director-ward-7",
+      "title": "EBMUD Director, Ward 7",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:7",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-east-bay-regional-park-district-director-ward-3",
+      "title": "East Bay Regional Park District Director, Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:3",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-east-bay-regional-park-district-director-ward-5",
+      "title": "East Bay Regional Park District Director, Ward 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:5",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-eden-township-healthcare-district-director-area-3",
+      "title": "Eden Township Healthcare District Director, Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:eden_township_healthcare_district/area:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-fairview-fire-protection-district-directors",
+      "title": "Fairview Fire Protection District Directors",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fairview_fire_protection_district",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-hayward-area-recreation-park-district-director-area-2",
+      "title": "Hayward Area Recreation & Park District Director, Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:hayward_area_recreation_and_park_district/area:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-hayward-area-recreation-park-district-director-area-4",
+      "title": "Hayward Area Recreation & Park District Director, Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:hayward_area_recreation_and_park_district/area:4",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-livermore-area-recreation-park-district-directors",
+      "title": "Livermore Area Recreation & Park District Directors",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:livermore_area_recreation_and_park_district",
+      "candidates": 7,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-member-board-of-director-oro-loma-sanitary-dist-1",
+      "title": "Member, Board Of Director, Oro Loma Sanitary Dist #1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:1",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-member-board-of-director-oro-loma-sanitary-dist-3",
+      "title": "Member, Board Of Director, Oro Loma Sanitary Dist #3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:3",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-member-board-of-director-oro-loma-sanitary-dist-5",
+      "title": "Member, Board Of Director, Oro Loma Sanitary Dist #5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:5",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-members-of-city-council-albany",
+      "title": "For Members Of City Council, Albany",
+      "ocdId": "ocd-division/country:us/state:ca/place:albany",
+      "candidates": 5,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-members-of-the-board-of-education-albany",
+      "title": "Members Of The Board Of Education, Albany",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:albany_city_unified_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-district-1-berkeley",
+      "title": "For Member Of City Council District #1, Berkeley",
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:1",
+      "candidates": 5,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-district-4-berkeley",
+      "title": "For Member Of City Council District #4, Berkeley",
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-district-7-berkeley",
+      "title": "For Member Of City Council District #7, Berkeley",
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-member-of-city-council-district-8-berkeley",
+      "title": "For Member Of City Council District #8, Berkeley",
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:8",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-auditor-berkeley",
+      "title": "For Auditor, Berkeley",
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-mayor-oakland",
+      "title": "For Mayor, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland",
+      "candidates": 4,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-councilmember-district-no-2-oakland",
+      "title": "For Councilmember, District No. 2, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-councilmember-district-no-4-oakland",
+      "title": "For Councilmember, District No. 4, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-councilmember-district-no-6-oakland",
+      "title": "For Councilmember, District No. 6, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland/council_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-auditor-oakland",
+      "title": "For Auditor, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland",
+      "candidates": 1,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-school-director-district-no-2-oakland",
+      "title": "For School Director, District No. 2, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-school-director-district-no-4-oakland",
+      "title": "For School Director, District No. 4, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:4",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "cx-local-ca-alameda-2026-for-school-director-district-no-6-oakland",
+      "title": "For School Director, District No. 6, Oakland",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:6",
+      "candidates": 3,
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-charles-a-smiley",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 CHARLES A. SMILEY",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kathleen-m-banke",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 KATHLEEN M. BANKE",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 MONIQUE LANGHORNE WILSON",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-therese-m-stewart",
+      "title": "Presiding Justice, Court of Appeal, First District, Division Two \u2014 THERESE M. STEWART",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-tara-m-desautels",
+      "title": "Associate Justice, Court of Appeal, First District, Division Two \u2014 TARA M. DESAUTELS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-ioana-petrou",
+      "title": "Associate Justice, Court of Appeal, First District, Division Three \u2014 IOANA PETROU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-victor-a-rodriguez",
+      "title": "Associate Justice, Court of Appeal, First District, Division Three \u2014 VICTOR A. RODRIGUEZ",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-tracie-l-brown",
+      "title": "Presiding Justice, Court of Appeal, First District, Division Four \u2014 TRACIE L. BROWN",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-mark-simons",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 MARK SIMONS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-danny-y-chou",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 DANNY Y. CHOU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-gordon-burns",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 GORDON BURNS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1,
+      "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf"
+    }
+  ],
+  "operation": "Prepared-only merge:add84localcandidatefields228printednames;preserve11heldFirstDCAcontest/candidateIDs. Completeactualcountycompositesamplechecked. PrecisescopesandAlamedacountyportiongeometryprepared;Rivermapsfullcrosscountydivisions. No production publication.",
+  "resolvedHeldContests": [],
+  "coverage": "Complete printedlocalnamed-candidatefields:84CANDIDACY228names plus11heldFirstDCARETENTIONjudges=95fields239people. One declaredwriteinReichiLee keptseparate. 30NotOnBallotgroups40filers and5withdrawn/incompleteOnBallotfilersnotprintedexcluded. Fullballotcoveragepartial:measuresunparsedandnamedwriteinreaderdisplaypending.",
+  "summary": {
+    "preparedContests": 95,
+    "preparedCandidacies": 239,
+    "newContests": 84,
+    "newCandidacies": 228,
+    "recheckedExistingContests": 11,
+    "recheckedExistingCandidacies": 11,
+    "sourceOnBallotLocalFields": 84,
+    "sourceOnBallotLocalFilers": 229,
+    "printedLocalCandidateNames": 228,
+    "namedDeclaredWriteInsPending": 1,
+    "retentionJudges": 11,
+    "actualSampleBallotPages": 592,
+    "actualSampleBallotTypes": 148,
+    "actualSampleLocalNameMatch": "228_OF_228",
+    "localNamedCandidateCoverageComplete": true,
+    "fullCountyBallotCoverage": false,
+    "preciseDivisionIdentitiesPrepared": 69,
+    "countyPortionGeometriesPrepared": 65,
+    "newReaderDivisionMappingsPending": 64,
+    "productionWrites": 0
+  },
+  "nextOwner": "River/CX-LOCAL lead:focusedcheck,precisedivisionmapping,countyportiongeometryintegration,SanLeandrotransitionreaderhandlingandRCVrules. No productionwrites.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 45 captured sources and 334 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

@@ -1,0 +1,1304 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:ohlone_community_college_district/trustee_area:6",
+    "officialName": "Ohlone Community College District Trustee Area 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "OHLONE COMM COLLEGE, AREA #6",
+    "officialDistrictID": 870,
+    "officialFeatureOBJECTID": 19,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:45.083018+00:00",
+      "verifiedAt": "2026-11-03T04:31:45.083018+00:00",
+      "quote": "OHLONE COMM COLLEGE, AREA #6"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:2",
+    "officialName": "Chabot-Las Positas Community College District Trustee Area 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CHABOT-LAS POSITAS CCD, AREA #2",
+    "officialDistrictID": 69,
+    "officialFeatureOBJECTID": 9,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:45.083018+00:00",
+      "verifiedAt": "2026-11-03T04:31:45.083018+00:00",
+      "quote": "CHABOT-LAS POSITAS CCD, AREA #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:3",
+    "officialName": "Chabot-Las Positas Community College District Trustee Area 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CHABOT-LAS POSITAS CCD, AREA #3",
+    "officialDistrictID": 70,
+    "officialFeatureOBJECTID": 18,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:45.083018+00:00",
+      "verifiedAt": "2026-11-03T04:31:45.083018+00:00",
+      "quote": "CHABOT-LAS POSITAS CCD, AREA #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:chabot_las_positas_community_college_district/trustee_area:6",
+    "officialName": "Chabot-Las Positas Community College District Trustee Area 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CHABOT-LAS POSITAS CCD, AREA #6",
+    "officialDistrictID": 73,
+    "officialFeatureOBJECTID": 15,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:45.083018+00:00",
+      "verifiedAt": "2026-11-03T04:31:45.083018+00:00",
+      "quote": "CHABOT-LAS POSITAS CCD, AREA #6"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:peralta_community_college_district/trustee_area:5",
+    "officialName": "Peralta Community College District Trustee Area 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "PERALTA COMM COLLEGE, AREA #5",
+    "officialDistrictID": 63,
+    "officialFeatureOBJECTID": 10,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:45.083018+00:00",
+      "verifiedAt": "2026-11-03T04:31:45.083018+00:00",
+      "quote": "PERALTA COMM COLLEGE, AREA #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:alameda_city_unified_school_district",
+    "officialName": "Alameda Unified School District",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "EXISTING_REGISTRY_ID",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "ALAMEDA UNIFIED SCHOOL DIST",
+    "officialDistrictID": 75,
+    "officialFeatureOBJECTID": 2,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "ALAMEDA UNIFIED SCHOOL DIST"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:2",
+    "officialName": "Castro Valley Unified School District Trustee Area 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CASTRO VALLEY UNIFIED, AREA #2",
+    "officialDistrictID": 889,
+    "officialFeatureOBJECTID": 43,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "CASTRO VALLEY UNIFIED, AREA #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:3",
+    "officialName": "Castro Valley Unified School District Trustee Area 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CASTRO VALLEY UNIFIED, AREA #3",
+    "officialDistrictID": 890,
+    "officialFeatureOBJECTID": 44,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "CASTRO VALLEY UNIFIED, AREA #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:castro_valley_unified_school_district/trustee_area:4",
+    "officialName": "Castro Valley Unified School District Trustee Area 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CASTRO VALLEY UNIFIED, AREA #4",
+    "officialDistrictID": 891,
+    "officialFeatureOBJECTID": 45,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "CASTRO VALLEY UNIFIED, AREA #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:dublin_unified_school_district/trustee_area:3",
+    "officialName": "Dublin Unified School District Trustee Area 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "DUBLIN UNIFIED, AREA #3",
+    "officialDistrictID": 789,
+    "officialFeatureOBJECTID": 24,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "DUBLIN UNIFIED, AREA #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:dublin_unified_school_district/trustee_area:5",
+    "officialName": "Dublin Unified School District Trustee Area 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "DUBLIN UNIFIED, AREA #5",
+    "officialDistrictID": 791,
+    "officialFeatureOBJECTID": 26,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "DUBLIN UNIFIED, AREA #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:emery_unified_school_district",
+    "officialName": "Emery Unified School District",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "EXISTING_REGISTRY_ID",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "EMERY UNIFIED SCHOOL DIST",
+    "officialDistrictID": 80,
+    "officialFeatureOBJECTID": 4,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "EMERY UNIFIED SCHOOL DIST"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:hayward_unified_school_district/trustee_area:2",
+    "officialName": "Hayward Unified School District Trustee Area 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "HAYWARD UNIFIED, AREA #2",
+    "officialDistrictID": 908,
+    "officialFeatureOBJECTID": 53,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "HAYWARD UNIFIED, AREA #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:hayward_unified_school_district/trustee_area:4",
+    "officialName": "Hayward Unified School District Trustee Area 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "HAYWARD UNIFIED, AREA #4",
+    "officialDistrictID": 910,
+    "officialFeatureOBJECTID": 55,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "HAYWARD UNIFIED, AREA #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:2",
+    "officialName": "Livermore Valley Joint Unified School District Trustee Area 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "LIVERMORE VALLEY JOINT USD, AREA #2",
+    "officialDistrictID": 922,
+    "officialFeatureOBJECTID": 58,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "LIVERMORE VALLEY JOINT USD, AREA #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:3",
+    "officialName": "Livermore Valley Joint Unified School District Trustee Area 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "LIVERMORE VALLEY JOINT USD, AREA #3",
+    "officialDistrictID": 923,
+    "officialFeatureOBJECTID": 59,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "LIVERMORE VALLEY JOINT USD, AREA #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:livermore_valley_joint_unified_school_district/trustee_area:5",
+    "officialName": "Livermore Valley Joint Unified School District Trustee Area 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "LIVERMORE VALLEY JOINT USD, AREA #5",
+    "officialDistrictID": 925,
+    "officialFeatureOBJECTID": 61,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "LIVERMORE VALLEY JOINT USD, AREA #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:new_haven_unified_school_district/trustee_area:4",
+    "officialName": "New Haven Unified School District Trustee Area 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "NEW HAVEN UNIFIED, AREA #4",
+    "officialDistrictID": 811,
+    "officialFeatureOBJECTID": 35,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "NEW HAVEN UNIFIED, AREA #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:new_haven_unified_school_district/trustee_area:5",
+    "officialName": "New Haven Unified School District Trustee Area 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "NEW HAVEN UNIFIED, AREA #5",
+    "officialDistrictID": 812,
+    "officialFeatureOBJECTID": 36,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "NEW HAVEN UNIFIED, AREA #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:pleasanton_unified_school_district/trustee_area:5",
+    "officialName": "Pleasanton Unified School District Trustee Area 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "PLEASANTON UNIFIED, AREA #5",
+    "officialDistrictID": 866,
+    "officialFeatureOBJECTID": 41,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "PLEASANTON UNIFIED, AREA #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:sunol_glen_unified_school_district",
+    "officialName": "Sunol Glen Unified School District",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "EXISTING_REGISTRY_ID",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "SUNOL GLEN UNIFIED SCHL DIST",
+    "officialDistrictID": 100,
+    "officialFeatureOBJECTID": 14,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "SUNOL GLEN UNIFIED SCHL DIST"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:berkeley_unified_school_district",
+    "officialName": "Berkeley Unified School District",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "EXISTING_REGISTRY_ID",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "BERKELEY UNIFIED SCHOOL DIST",
+    "officialDistrictID": 77,
+    "officialFeatureOBJECTID": 3,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "BERKELEY UNIFIED SCHOOL DIST"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:dublin/council_district:2",
+    "officialName": "Dublin City Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF DUBLIN, DISTRICT #2",
+    "officialDistrictID": 884,
+    "officialFeatureOBJECTID": 41,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF DUBLIN, DISTRICT #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:dublin/council_district:4",
+    "officialName": "Dublin City Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF DUBLIN, DISTRICT #4",
+    "officialDistrictID": 886,
+    "officialFeatureOBJECTID": 43,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF DUBLIN, DISTRICT #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:fremont/council_district:2",
+    "officialName": "Fremont City Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF FREMONT, DISTRICT #2",
+    "officialDistrictID": 782,
+    "officialFeatureOBJECTID": 23,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF FREMONT, DISTRICT #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:fremont/council_district:3",
+    "officialName": "Fremont City Council District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF FREMONT, DISTRICT #3",
+    "officialDistrictID": 783,
+    "officialFeatureOBJECTID": 24,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF FREMONT, DISTRICT #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:fremont/council_district:4",
+    "officialName": "Fremont City Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF FREMONT, DISTRICT #4",
+    "officialDistrictID": 784,
+    "officialFeatureOBJECTID": 25,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF FREMONT, DISTRICT #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:hayward/council_district:1",
+    "officialName": "Hayward City Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF HAYWARD, DISTRICT #1",
+    "officialDistrictID": 901,
+    "officialFeatureOBJECTID": 44,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF HAYWARD, DISTRICT #1"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:hayward/council_district:6",
+    "officialName": "Hayward City Council District 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF HAYWARD, DISTRICT #6",
+    "officialDistrictID": 906,
+    "officialFeatureOBJECTID": 49,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF HAYWARD, DISTRICT #6"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:livermore/council_district:2",
+    "officialName": "Livermore City Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF LIVERMORE, DISTRICT #2",
+    "officialDistrictID": 796,
+    "officialFeatureOBJECTID": 29,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF LIVERMORE, DISTRICT #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:pleasanton/council_district:1",
+    "officialName": "Pleasanton City Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF PLEASANTON, DISTRICT #1",
+    "officialDistrictID": 858,
+    "officialFeatureOBJECTID": 36,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF PLEASANTON, DISTRICT #1"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:pleasanton/council_district:3",
+    "officialName": "Pleasanton City Council District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF PLEASANTON, DISTRICT #3",
+    "officialDistrictID": 860,
+    "officialFeatureOBJECTID": 38,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF PLEASANTON, DISTRICT #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:1",
+    "officialName": "San Leandro City Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF SAN LEANDRO, DIST#1",
+    "officialDistrictID": 661,
+    "officialFeatureOBJECTID": 16,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF SAN LEANDRO, DIST#1"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:2",
+    "officialName": "San Leandro City Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF SAN LEANDRO, DIST#2",
+    "officialDistrictID": 662,
+    "officialFeatureOBJECTID": 17,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF SAN LEANDRO, DIST#2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:3",
+    "officialName": "San Leandro City Council District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF SAN LEANDRO, DIST#3",
+    "officialDistrictID": 663,
+    "officialFeatureOBJECTID": 18,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF SAN LEANDRO, DIST#3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:san_leandro/council_district:5",
+    "officialName": "San Leandro City Council District 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF SAN LEANDRO, DIST#5",
+    "officialDistrictID": 665,
+    "officialFeatureOBJECTID": 20,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF SAN LEANDRO, DIST#5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:union_city/council_district:2",
+    "officialName": "Union City City Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF UNION CITY, DISTRICT #2",
+    "officialDistrictID": 800,
+    "officialFeatureOBJECTID": 33,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF UNION CITY, DISTRICT #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:union_city/council_district:3",
+    "officialName": "Union City City Council District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF UNION CITY, DISTRICT #3",
+    "officialDistrictID": 801,
+    "officialFeatureOBJECTID": 34,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF UNION CITY, DISTRICT #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:union_city/council_district:4",
+    "officialName": "Union City City Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF UNION CITY, DISTRICT #4",
+    "officialDistrictID": 802,
+    "officialFeatureOBJECTID": 35,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF UNION CITY, DISTRICT #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:3",
+    "officialName": "AC Transit District Ward 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "A C TRANSIT DISTRICT, WARD #3",
+    "officialDistrictID": 174,
+    "officialFeatureOBJECTID": 3,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.336251+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.336251+00:00",
+      "quote": "A C TRANSIT DISTRICT, WARD #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:4",
+    "officialName": "AC Transit District Ward 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "A C TRANSIT DISTRICT, WARD #4",
+    "officialDistrictID": 175,
+    "officialFeatureOBJECTID": 4,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.336251+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.336251+00:00",
+      "quote": "A C TRANSIT DISTRICT, WARD #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:ac_transit_district/ward:5",
+    "officialName": "AC Transit District Ward 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "A C TRANSIT DISTRICT, WARD #5",
+    "officialDistrictID": 176,
+    "officialFeatureOBJECTID": 5,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.336251+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.336251+00:00",
+      "quote": "A C TRANSIT DISTRICT, WARD #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:alameda_county_water_district/ward:2",
+    "officialName": "Alameda County Water District Ward 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "ALAMEDA COUNTY WATER DIST, ZONE #2",
+    "officialDistrictID": 873,
+    "officialFeatureOBJECTID": 2,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:43.785011+00:00",
+      "verifiedAt": "2026-11-03T04:31:43.785011+00:00",
+      "quote": "ALAMEDA COUNTY WATER DIST, ZONE #2"
+    },
+    "sourceLabelAlias": "County GIS uses Zone; current candidate list and district governing source use Ward."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:alameda_county_water_district/ward:3",
+    "officialName": "Alameda County Water District Ward 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "ALAMEDA COUNTY WATER DIST, ZONE #3",
+    "officialDistrictID": 874,
+    "officialFeatureOBJECTID": 3,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:43.785011+00:00",
+      "verifiedAt": "2026-11-03T04:31:43.785011+00:00",
+      "quote": "ALAMEDA COUNTY WATER DIST, ZONE #3"
+    },
+    "sourceLabelAlias": "County GIS uses Zone; current candidate list and district governing source use Ward."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:4",
+    "officialName": "Bay Area Rapid Transit District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "DISTRICT #4, BART",
+    "officialDistrictID": 129,
+    "officialFeatureOBJECTID": 2,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:43.786602+00:00",
+      "verifiedAt": "2026-11-03T04:31:43.786602+00:00",
+      "quote": "DISTRICT #4, BART"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:castro_valley_sanitary_district",
+    "officialName": "Castro Valley Sanitary District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CASTRO VALLEY SANITARY DIST",
+    "officialDistrictID": 165,
+    "officialFeatureOBJECTID": 1,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:44.805160+00:00",
+      "verifiedAt": "2026-11-03T04:31:44.805160+00:00",
+      "quote": "CASTRO VALLEY SANITARY DIST"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:3",
+    "officialName": "East Bay Municipal Utility District Ward 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "WARD #3, EAST BAY MUD",
+    "officialDistrictID": 179,
+    "officialFeatureOBJECTID": 1,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:43.793207+00:00",
+      "verifiedAt": "2026-11-03T04:31:43.793207+00:00",
+      "quote": "WARD #3, EAST BAY MUD"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_municipal_utility_district/ward:7",
+    "officialName": "East Bay Municipal Utility District Ward 7",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "WARD #7, EAST BAY MUD",
+    "officialDistrictID": 183,
+    "officialFeatureOBJECTID": 5,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:43.793207+00:00",
+      "verifiedAt": "2026-11-03T04:31:43.793207+00:00",
+      "quote": "WARD #7, EAST BAY MUD"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:3",
+    "officialName": "East Bay Regional Park District Ward 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "EAST BAY PARK DIST, WARD #3",
+    "officialDistrictID": 161,
+    "officialFeatureOBJECTID": 3,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:53.672547+00:00",
+      "verifiedAt": "2026-11-03T04:30:53.672547+00:00",
+      "quote": "EAST BAY PARK DIST, WARD #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:east_bay_regional_park_district/ward:5",
+    "officialName": "East Bay Regional Park District Ward 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "EAST BAY PARK DIST, WARD #5",
+    "officialDistrictID": 163,
+    "officialFeatureOBJECTID": 5,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:53.672547+00:00",
+      "verifiedAt": "2026-11-03T04:30:53.672547+00:00",
+      "quote": "EAST BAY PARK DIST, WARD #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:eden_township_healthcare_district/area:3",
+    "officialName": "Eden Township Healthcare District Area 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "EDEN HEALTH CARE DIST, ZONE #3",
+    "officialDistrictID": 879,
+    "officialFeatureOBJECTID": 5,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:44.399167+00:00",
+      "verifiedAt": "2026-11-03T04:31:44.399167+00:00",
+      "quote": "EDEN HEALTH CARE DIST, ZONE #3"
+    },
+    "sourceLabelAlias": "County GIS uses Zone; current candidate list uses Area."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:fairview_fire_protection_district",
+    "officialName": "Fairview Fire Protection District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "NOT_PREPARED",
+    "provenance": {
+      "sourceUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260",
+      "sourceOrg": "Alameda County Registrar of Voters",
+      "collectedAt": "2026-11-03T04:30:53.794320+00:00",
+      "verifiedAt": "2026-11-03T04:30:53.794320+00:00",
+      "quote": "Fairview Fire Protection District Directors -\nOn Ballot\nVote For: 2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:hayward_area_recreation_and_park_district/area:2",
+    "officialName": "Hayward Area Recreation and Park District Area 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "NOT_PREPARED",
+    "provenance": {
+      "sourceUrl": "https://www.haywardrec.org/2059/District-Election",
+      "sourceOrg": "Hayward Area Recreation and Park District",
+      "collectedAt": "2026-11-03T04:32:56.576623+00:00",
+      "verifiedAt": "2026-11-03T04:32:56.576623+00:00",
+      "quote": "On September 16th, 2024, the Hayward Area Recreation and Park District (H.A.R.D.) transitioned from at-large to by-district elections. This was due to recent legal challenges under the Federal Voting Rights Act, which prompted many municipalities, counties, and districts to shift to by-district or division elections. On May 20, 2024, the H.A.R.D. The Board of Directors adopted a resolution expressing the District\u2019s intention to move to district-based elections."
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:hayward_area_recreation_and_park_district/area:4",
+    "officialName": "Hayward Area Recreation and Park District Area 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "NOT_PREPARED",
+    "provenance": {
+      "sourceUrl": "https://www.haywardrec.org/2059/District-Election",
+      "sourceOrg": "Hayward Area Recreation and Park District",
+      "collectedAt": "2026-11-03T04:32:56.576623+00:00",
+      "verifiedAt": "2026-11-03T04:32:56.576623+00:00",
+      "quote": "On September 16th, 2024, the Hayward Area Recreation and Park District (H.A.R.D.) transitioned from at-large to by-district elections. This was due to recent legal challenges under the Federal Voting Rights Act, which prompted many municipalities, counties, and districts to shift to by-district or division elections. On May 20, 2024, the H.A.R.D. The Board of Directors adopted a resolution expressing the District\u2019s intention to move to district-based elections."
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:livermore_area_recreation_and_park_district",
+    "officialName": "Livermore Area Recreation and Park District",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "NOT_PREPARED",
+    "provenance": {
+      "sourceUrl": "https://www.larpd.org/2026-09-21-larpd-board-of-directors-candidate-forum",
+      "sourceOrg": "Livermore Area Recreation and Park District",
+      "collectedAt": "2026-11-03T04:32:36.295896+00:00",
+      "verifiedAt": "2026-11-03T04:32:36.295896+00:00",
+      "quote": "Three at-large seats on the LARPD Board of Directors are up for election on November 3, 2026. The forum will give community members a chance to hear from candidates and learn more about their perspectives on issues affecting LARPD and the community."
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:1",
+    "officialName": "Oro Loma Sanitary District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "ORO LOMA SANITARY DISTRICT, DIST #1",
+    "officialDistrictID": 926,
+    "officialFeatureOBJECTID": 5,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:44.805160+00:00",
+      "verifiedAt": "2026-11-03T04:31:44.805160+00:00",
+      "quote": "ORO LOMA SANITARY DISTRICT, DIST #1"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:3",
+    "officialName": "Oro Loma Sanitary District 3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "ORO LOMA SANITARY DISTRICT, DIST #3",
+    "officialDistrictID": 928,
+    "officialFeatureOBJECTID": 7,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:44.805160+00:00",
+      "verifiedAt": "2026-11-03T04:31:44.805160+00:00",
+      "quote": "ORO LOMA SANITARY DISTRICT, DIST #3"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:oro_loma_sanitary_district/district:5",
+    "officialName": "Oro Loma Sanitary District 5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "ORO LOMA SANITARY DISTRICT, DIST #5",
+    "officialDistrictID": 930,
+    "officialFeatureOBJECTID": 9,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:31:44.805160+00:00",
+      "verifiedAt": "2026-11-03T04:31:44.805160+00:00",
+      "quote": "ORO LOMA SANITARY DISTRICT, DIST #5"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:albany_city_unified_school_district",
+    "officialName": "Albany Unified School District",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "EXISTING_REGISTRY_ID",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "ALBANY UNIFIED SCHOOL DISTRICT",
+    "officialDistrictID": 76,
+    "officialFeatureOBJECTID": 1,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "ALBANY UNIFIED SCHOOL DISTRICT"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:1",
+    "officialName": "Berkeley City Council District 1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF BERKELEY, DISTRICT #1",
+    "officialDistrictID": 525,
+    "officialFeatureOBJECTID": 9,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF BERKELEY, DISTRICT #1"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:4",
+    "officialName": "Berkeley City Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF BERKELEY, DISTRICT #4",
+    "officialDistrictID": 528,
+    "officialFeatureOBJECTID": 12,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF BERKELEY, DISTRICT #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:7",
+    "officialName": "Berkeley City Council District 7",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF BERKELEY, DISTRICT #7",
+    "officialDistrictID": 530,
+    "officialFeatureOBJECTID": 14,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF BERKELEY, DISTRICT #7"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:berkeley/council_district:8",
+    "officialName": "Berkeley City Council District 8",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF BERKELEY, DISTRICT #8",
+    "officialDistrictID": 531,
+    "officialFeatureOBJECTID": 15,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF BERKELEY, DISTRICT #8"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:oakland/council_district:2",
+    "officialName": "Oakland City Council District 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF OAKLAND, DISTRICT #2",
+    "officialDistrictID": 112,
+    "officialFeatureOBJECTID": 2,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF OAKLAND, DISTRICT #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:oakland/council_district:4",
+    "officialName": "Oakland City Council District 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF OAKLAND, DISTRICT #4",
+    "officialDistrictID": 114,
+    "officialFeatureOBJECTID": 4,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF OAKLAND, DISTRICT #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/place:oakland/council_district:6",
+    "officialName": "Oakland City Council District 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "CITY OF OAKLAND, DISTRICT #6",
+    "officialDistrictID": 116,
+    "officialFeatureOBJECTID": 6,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.125711+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.125711+00:00",
+      "quote": "CITY OF OAKLAND, DISTRICT #6"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:2",
+    "officialName": "Oakland Unified School District Trustee Area 2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "OAKLAND UNIFIED, AREA #2",
+    "officialDistrictID": 88,
+    "officialFeatureOBJECTID": 7,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "OAKLAND UNIFIED, AREA #2"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:4",
+    "officialName": "Oakland Unified School District Trustee Area 4",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "OAKLAND UNIFIED, AREA #4",
+    "officialDistrictID": 90,
+    "officialFeatureOBJECTID": 9,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "OAKLAND UNIFIED, AREA #4"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/school_district:oakland_unified_school_district/trustee_area:6",
+    "officialName": "Oakland Unified School District Trustee Area 6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "geometryCoverage": "ALAMEDA_COUNTY_PORTION_ONLY",
+    "officialFeatureName": "OAKLAND UNIFIED, AREA #6",
+    "officialDistrictID": 92,
+    "officialFeatureOBJECTID": 11,
+    "provenance": {
+      "sourceUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Alameda County Registrar of Voters / GIS",
+      "collectedAt": "2026-11-03T04:30:52.377006+00:00",
+      "verifiedAt": "2026-11-03T04:30:52.377006+00:00",
+      "quote": "OAKLAND UNIFIED, AREA #6"
+    }
+  }
+]

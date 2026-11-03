@@ -1,0 +1,508 @@
+[
+  {
+    "name": "election-hub",
+    "url": "https://acvote.alamedacountyca.gov/election-information/elections?id=260",
+    "retrievedAt": "2026-11-03T04:22:53.724267+00:00",
+    "finalUrl": "https://acvote.alamedacountyca.gov/election-information/elections?id=260",
+    "status": 200,
+    "rawHash": "9e087b5c22bfed6e043b37a234ed7652f75af0a98765bcbb511b577afede7799",
+    "file": "election-hub.html",
+    "bytes": 156667
+  },
+  {
+    "name": "home",
+    "url": "https://acvote.alamedacountyca.gov/GO",
+    "retrievedAt": "2026-11-03T04:22:53.725268+00:00",
+    "finalUrl": "https://acvote.alamedacountyca.gov/GO",
+    "status": 200,
+    "rawHash": "5399c005016b5b22d9ce62a8c102fcd2e08fa249bf18181b4a79aca88e4f77c6",
+    "file": "home.html",
+    "bytes": 69755
+  },
+  {
+    "name": "acwd-board",
+    "url": "https://www.acwd.org/90/Board-of-Directors",
+    "retrievedAt": "2026-11-03T04:33:30.533640+00:00",
+    "finalUrl": "https://www.acwd.org/90/Board-of-Directors",
+    "status": 200,
+    "rawHash": "aa1205e17170ad46d0fb004d969c199fbc3ec4480e58bcbdc1373011816c9e63",
+    "file": "acwd-board.html",
+    "bytes": 153059
+  },
+  {
+    "name": "composite-vig",
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf",
+    "retrievedAt": "2026-11-03T04:23:11.860079+00:00",
+    "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf",
+    "status": 200,
+    "rawHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "file": "composite-vig.pdf",
+    "bytes": 11727645,
+    "textFile": "composite-vig.txt",
+    "textHash": "b6fe6bbbfee7ab1b7fd1352bdd579b23351aacbb3476c93123d1a5d2eabdcb58"
+  },
+  {
+    "name": "candidate-list",
+    "url": "https://alamedacountyca.gov/rov_app/candidatelist",
+    "retrievedAt": "2026-11-03T04:23:11.860956+00:00",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/candidatelist",
+    "status": 200,
+    "rawHash": "78f397e697f967f31f1b549238012df65b3fc529d184c33b257bb19cbd650434",
+    "file": "candidate-list.html",
+    "bytes": 74435
+  },
+  {
+    "name": "candidate-list-260",
+    "url": "https://alamedacountyca.gov/rov_app/candidatelist/?electionId=260&categoryId=&raceId=&lastName=&raceStatus=&candidateStatus=",
+    "retrievedAt": "2026-11-03T04:24:04.266974+00:00",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/candidatelist/?electionId=260&categoryId=&raceId=&lastName=&raceStatus=&candidateStatus=",
+    "status": 200,
+    "rawHash": "78f397e697f967f31f1b549238012df65b3fc529d184c33b257bb19cbd650434",
+    "file": "candidate-list-260.html",
+    "bytes": 74435
+  },
+  {
+    "name": "san-leandro-elections",
+    "url": "https://www.sanleandro.org/197/Elections",
+    "retrievedAt": "2026-11-03T04:28:52.415485+00:00",
+    "finalUrl": "https://www.sanleandro.org/197/Elections",
+    "status": 200,
+    "rawHash": "db0cdd7ad1c91fa13fb09edade3460584975dcc3bc360184721e7b6f0032e373",
+    "file": "san-leandro-elections.html",
+    "bytes": 122643
+  },
+  {
+    "name": "san-leandro-transition",
+    "url": "https://www.sanleandro.org/202/Candidate-Information",
+    "retrievedAt": "2026-11-03T04:28:52.416434+00:00",
+    "finalUrl": "https://www.sanleandro.org/202/Candidate-Information",
+    "status": 200,
+    "rawHash": "14bdbbda10305bbb12f46cd481dc58d92f901a85f8ac24abd7c712b363b0ed59",
+    "file": "san-leandro-transition.html",
+    "bytes": 107616
+  },
+  {
+    "name": "county-maps",
+    "url": "https://alamedacountyca.gov/rov_app/edata?page=maps",
+    "retrievedAt": "2026-11-03T04:28:52.417175+00:00",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/edata?page=maps",
+    "status": 200,
+    "rawHash": "df58c51fff6f69c01bcc8e88f81a10e30be55f267cadfee81059cb9bc4cb610d",
+    "file": "county-maps.html",
+    "bytes": 1322887
+  },
+  {
+    "name": "berkeley-candidates",
+    "url": "https://berkeleyca.gov/your-government/elections/candidate-information",
+    "retrievedAt": "2026-11-03T04:28:52.417884+00:00",
+    "finalUrl": "https://berkeleyca.gov/your-government/elections/candidate-information",
+    "status": 200,
+    "rawHash": "9266bf0fbba9e98ed6ad283af72db8117d2591bc1dce1731b7e612da9c769a8c",
+    "file": "berkeley-candidates.html",
+    "bytes": 171104
+  },
+  {
+    "name": "berkeley-voting",
+    "url": "https://berkeleyca.gov/your-government/elections/voting-information",
+    "retrievedAt": "2026-11-03T04:28:52.418727+00:00",
+    "finalUrl": "https://berkeleyca.gov/your-government/elections/voting-information",
+    "status": 200,
+    "rawHash": "c618961f00092e5bd974d303b6afb85a82f7a24232bcc77a2e6910d712e417dc",
+    "file": "berkeley-voting.html",
+    "bytes": 167090
+  },
+  {
+    "name": "youth-voting",
+    "url": "https://acvote.alamedacountyca.gov/youthvoting",
+    "retrievedAt": "2026-11-03T04:28:52.419114+00:00",
+    "finalUrl": "https://acvote.alamedacountyca.gov/youthvoting",
+    "status": 200,
+    "rawHash": "3740c9368c4f97c246ebf5ce65437539d6325c320f1ac97deed64c6344f8e40e",
+    "file": "youth-voting.html",
+    "bytes": 79784
+  },
+  {
+    "name": "berkeley-qualified",
+    "url": "https://berkeleyca.gov/sites/default/files/Notice%20of%20Candidates%20Nov%203%202026%20-%20WEB%20Version.pdf",
+    "retrievedAt": "2026-11-03T04:29:47.565056+00:00",
+    "finalUrl": "https://berkeleyca.gov/sites/default/files/Notice%20of%20Candidates%20Nov%203%202026%20-%20WEB%20Version.pdf",
+    "status": 200,
+    "rawHash": "8929f0606c4dbf745963fdad10dbc904adb47df53ba4463ccb1e924d241d3ef5",
+    "file": "berkeley-qualified.pdf",
+    "bytes": 136107,
+    "textFile": "berkeley-qualified.txt",
+    "textHash": "092ddb0c2b2c8009c8cc414c0f3789fcc93ca337bd53656116e1de8f34ef8d85"
+  },
+  {
+    "name": "city-council-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/901ed9c2c71443639de9bc61f6f8d31b?f=pjson",
+    "retrievedAt": "2026-11-03T04:29:47.566035+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/901ed9c2c71443639de9bc61f6f8d31b?f=pjson",
+    "status": 200,
+    "rawHash": "ae69663527b6db772adab57ef3a86be4dcc9587a6946b7bec68930dc38d8e5d0",
+    "file": "city-council-gis-catalog.html",
+    "bytes": 3039
+  },
+  {
+    "name": "ac-transit-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/124cc26a72fe47588a73b8f44cfc1f61?f=pjson",
+    "retrievedAt": "2026-11-03T04:29:47.566735+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/124cc26a72fe47588a73b8f44cfc1f61?f=pjson",
+    "status": 200,
+    "rawHash": "c0c7458fcef816f818c9b77317a1279eab4447dc699d79aaece6e9ee73b24f0f",
+    "file": "ac-transit-gis-catalog.html",
+    "bytes": 3256
+  },
+  {
+    "name": "school-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/9c1395ebaddd41dba4ecde9a52215360?f=pjson",
+    "retrievedAt": "2026-11-03T04:29:47.567294+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/9c1395ebaddd41dba4ecde9a52215360?f=pjson",
+    "status": 200,
+    "rawHash": "404c3d4ba92cf4e07f8b756ecfefc5229e9370c87e4453fcabdc0ee7250298ac",
+    "file": "school-gis-catalog.html",
+    "bytes": 3478
+  },
+  {
+    "name": "special-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/c028bf7aab7f4885a4f794b7abc5be06?f=pjson",
+    "retrievedAt": "2026-11-03T04:29:47.568328+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/c028bf7aab7f4885a4f794b7abc5be06?f=pjson",
+    "status": 200,
+    "rawHash": "e7a588367b88c5163073934ccca6fd15fbc3f9311defd6f05b8a1e5aaba4da5a",
+    "file": "special-gis-catalog.html",
+    "bytes": 3520
+  },
+  {
+    "name": "county-water-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/e76e134c8ec7448e8c2b0d70ca3d6353?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:50.698513+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/e76e134c8ec7448e8c2b0d70ca3d6353?f=pjson",
+    "status": 200,
+    "rawHash": "eee7714d7ce454e0c772a7c48c7e89668c15d62688443b95bd72735e098243cb",
+    "file": "county-water-gis-catalog.html",
+    "bytes": 3256
+  },
+  {
+    "name": "bart-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/410b9765544e4d8eb62591cf28689dcd?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:50.699485+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/410b9765544e4d8eb62591cf28689dcd?f=pjson",
+    "status": 200,
+    "rawHash": "0703afe1f62643c57479611d9593ccf8d319526dee7ec7a30f53f59f5df5f3b2",
+    "file": "bart-gis-catalog.html",
+    "bytes": 3117
+  },
+  {
+    "name": "ebmud-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/97e8ce525c0d4c6abeb7374a7dba008b?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:50.700087+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/97e8ce525c0d4c6abeb7374a7dba008b?f=pjson",
+    "status": 200,
+    "rawHash": "10c60d1b1733f0e6f6d32490e7a011f5885165533b5dcebad3520f73bb6a6c1c",
+    "file": "ebmud-gis-catalog.html",
+    "bytes": 3557
+  },
+  {
+    "name": "healthcare-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/fb0ed98720a54032a4bde9d4fe1b00f8?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:50.700651+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/fb0ed98720a54032a4bde9d4fe1b00f8?f=pjson",
+    "status": 200,
+    "rawHash": "8d2acdd1dd8fb4b60b87179f4bdc49dc0bbdbcc03982862d990312803b3f803a",
+    "file": "healthcare-gis-catalog.html",
+    "bytes": 3553
+  },
+  {
+    "name": "sanitary-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/03fb44ecebdd4ea3933ebaf08cecb61e?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:50.701694+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/03fb44ecebdd4ea3933ebaf08cecb61e?f=pjson",
+    "status": 200,
+    "rawHash": "63a96ed255448a1e09578142cbdd7cfe79b3c62500fbfb4017610861779371dd",
+    "file": "sanitary-gis-catalog.html",
+    "bytes": 3267
+  },
+  {
+    "name": "college-gis-catalog",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/e52726c4404e4f63ba77923de821b916?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:50.702263+00:00",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/e52726c4404e4f63ba77923de821b916?f=pjson",
+    "status": 200,
+    "rawHash": "7381c2e45ed0d78f66bedd388914feb445ea26c3df0eecb9163bd65ade231a86",
+    "file": "college-gis-catalog.html",
+    "bytes": 3371
+  },
+  {
+    "name": "city-council-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:52.121244+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "f1e642cc01b7b6f002e7e417c28f5ef55cc4e8a8f1ef78591edac296a663574c",
+    "file": "city-council-gis-layer.html",
+    "bytes": 11497
+  },
+  {
+    "name": "city-council-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:30:52.125711+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/City_Council_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "09d3fccf78e5ef59ad54a528d0efbeb3dd889bfbb0ef0dc3471ca20a077618a8",
+    "file": "city-council-gis-features.html",
+    "bytes": 2265850
+  },
+  {
+    "name": "ac-transit-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:52.322648+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "43a9310e1996c911b61ff77928a1123d03da56bab88696307415444a76e91af8",
+    "file": "ac-transit-gis-layer.html",
+    "bytes": 11718
+  },
+  {
+    "name": "ac-transit-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:30:52.336251+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/AC_Transit_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "5557e8514e975ee4f4e2120bab5295d21a5f1f947f29e371ab7afe37553a7e3f",
+    "file": "ac-transit-gis-features.html",
+    "bytes": 1146893
+  },
+  {
+    "name": "school-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:52.372100+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "9450c7ae6087f5ece4938c8ffcc06949a86ba858c2b24e02f85dd9b1b1041d56",
+    "file": "school-gis-layer.html",
+    "bytes": 11879
+  },
+  {
+    "name": "school-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:30:52.377006+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Unified_School_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "8faa742025ef9899524798d3c375985287131bea6c7f8f6eab6e1e33670723ea",
+    "file": "school-gis-features.html",
+    "bytes": 3051179
+  },
+  {
+    "name": "special-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:30:53.583411+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "9eabbb96b9050ee7ef670a9db5faad3d8b8e70077bb933e495d01b9a8209c65c",
+    "file": "special-gis-layer.html",
+    "bytes": 11876
+  },
+  {
+    "name": "special-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:30:53.672547+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Regional_Park_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "251e0ce517e1253e7507ae66e11f601d654d35ccbe1181c975400e62d765702a",
+    "file": "special-gis-features.html",
+    "bytes": 1113433
+  },
+  {
+    "name": "candidate-list-get",
+    "url": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260",
+    "retrievedAt": "2026-11-03T04:30:53.794320+00:00",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/candidatelist?electionid=260",
+    "status": 200,
+    "rawHash": "589a66f601f50a07ab5cccd041337982d4c55f77b20c81a9096f93467900f513",
+    "file": "candidate-list-get.html",
+    "bytes": 2092941
+  },
+  {
+    "name": "county-water-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:31:43.784236+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "a9e568ebd16911c4386fa42b9b313f42d537dca68c769a36ed83573d5cc5b9c6",
+    "file": "county-water-gis-layer.html",
+    "bytes": 11666
+  },
+  {
+    "name": "county-water-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:31:43.785011+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Water_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "e1a27de942537d4ed5e3157735e1e6d04025516f819d5b61a81f3d4419d6312d",
+    "file": "county-water-gis-features.html",
+    "bytes": 447290
+  },
+  {
+    "name": "bart-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:31:43.785841+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "c9033d1561eb8aa4850e4ac6db4e4d901a436c20279dbb0cc0eb3615dca70c25",
+    "file": "bart-gis-layer.html",
+    "bytes": 11612
+  },
+  {
+    "name": "bart-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:31:43.786602+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Bay_Area_Rapid_Transit_District/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "c7532a9d77751eae50b5992f2288e3697331ec323e32e9f4f12b964d8c50eebd",
+    "file": "bart-gis-features.html",
+    "bytes": 930645
+  },
+  {
+    "name": "ebmud-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:31:43.787160+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "fa2de7282dfd675c8d5cc70a6cd2106efa38745f0129d132e5575c8fd627f7b4",
+    "file": "ebmud-gis-layer.html",
+    "bytes": 11901
+  },
+  {
+    "name": "ebmud-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:31:43.793207+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/East_Bay_Municipal_Utility_District_Wards/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "b0d8f062fce4444772eecec964a793bd6a1e1b99400f0be6544a5c17051b1aac",
+    "file": "ebmud-gis-features.html",
+    "bytes": 784166
+  },
+  {
+    "name": "healthcare-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:31:44.305506+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "890ebdae2b9d2eb11ced8739b0ac42319b11cda4d54a2625c62bfc2a06bd67c0",
+    "file": "healthcare-gis-layer.html",
+    "bytes": 11781
+  },
+  {
+    "name": "healthcare-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:31:44.399167+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Health_Care_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "641dd2703999c4f9345a43579ea2af9c9b22d9ec4d12b19ff360042ed30be042",
+    "file": "healthcare-gis-features.html",
+    "bytes": 707497
+  },
+  {
+    "name": "sanitary-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:31:44.709006+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "4a800358add42ad27f028e11482da32d2f47397c6ad93e1988c0dbf7142a755b",
+    "file": "sanitary-gis-layer.html",
+    "bytes": 11693
+  },
+  {
+    "name": "sanitary-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:31:44.805160+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Sanitary_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "7199873f05105ee60c3e92dc0937650b2449034a7b4f6f860383e8d48e428017",
+    "file": "sanitary-gis-features.html",
+    "bytes": 673208
+  },
+  {
+    "name": "college-gis-layer",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0?f=pjson",
+    "retrievedAt": "2026-11-03T04:31:45.026547+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0?f=pjson",
+    "status": 200,
+    "rawHash": "d46d2e6504cf3810e891893c7aaa7641e6e47e60ac64022e49c64389b1cb61be",
+    "file": "college-gis-layer.html",
+    "bytes": 12297
+  },
+  {
+    "name": "college-gis-features",
+    "url": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "retrievedAt": "2026-11-03T04:31:45.083018+00:00",
+    "finalUrl": "https://services5.arcgis.com/ROBnTHSNjoZ2Wm1P/arcgis/rest/services/Community_College_Districts/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "status": 200,
+    "rawHash": "be90fe281dee86f0edaccfb50bf6398c9a061c6b236f6dae2f473d5340b5d508",
+    "file": "college-gis-features.html",
+    "bytes": 1734409
+  },
+  {
+    "name": "larpd-election",
+    "url": "https://www.larpd.org/2026-09-21-larpd-board-of-directors-candidate-forum",
+    "retrievedAt": "2026-11-03T04:32:36.295896+00:00",
+    "finalUrl": "https://www.larpd.org/2026-09-21-larpd-board-of-directors-candidate-forum",
+    "status": 200,
+    "rawHash": "82323f56dd698cba41742257c2bd30b684f86d36f049c39f8e243d4368813fd6",
+    "file": "larpd-election.html",
+    "bytes": 113743
+  },
+  {
+    "name": "fairview-election",
+    "url": "https://www.fairviewfiredistrict.org/",
+    "retrievedAt": "2026-11-03T04:32:36.297081+00:00",
+    "finalUrl": "https://www.fairviewfiredistrictca.gov/",
+    "status": 200,
+    "rawHash": "1c0d59b3a58f192834cb09146ba05fe3f1c50d5b2ed01283eb0a942a6ac17092",
+    "file": "fairview-election.html",
+    "bytes": 125401
+  },
+  {
+    "name": "hard-home",
+    "url": "https://www.haywardrec.org/",
+    "retrievedAt": "2026-11-03T04:32:36.297767+00:00",
+    "finalUrl": "https://www.haywardrec.org/",
+    "status": 200,
+    "rawHash": "a1b26e137100853fabd46ab64d8b3f0756eb22216b812fa6ba831324735858fd",
+    "file": "hard-home.html",
+    "bytes": 156969
+  },
+  {
+    "name": "hard-election",
+    "url": "https://www.haywardrec.org/2059/District-Election",
+    "retrievedAt": "2026-11-03T04:32:56.576623+00:00",
+    "finalUrl": "https://www.haywardrec.org/2059/District-Election",
+    "status": 200,
+    "rawHash": "25fb20aac68893009591498b761f7c28726b2f296b566f0b2d6b95285a72c852",
+    "file": "hard-election.html",
+    "bytes": 133645
+  },
+  {
+    "name": "hard-election-faq",
+    "url": "https://www.haywardrec.org/2061/Frequently-Asked-Questions",
+    "retrievedAt": "2026-11-03T04:32:56.577782+00:00",
+    "finalUrl": "https://www.haywardrec.org/2061/Frequently-Asked-Questions",
+    "status": 200,
+    "rawHash": "81c309748253d7fefb30ce3ab5179e2742e9a58847c99b2699fa09c84a613f77",
+    "file": "hard-election-faq.html",
+    "bytes": 146742
+  },
+  {
+    "name": "candidate-list-post",
+    "url": "https://alamedacountyca.gov/rov_app/candidatelist/",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/candidatelist/",
+    "method": "POST",
+    "requestBody": "electionId=260&categoryId=&raceId=&lastName=&raceStatus=&candidateStatus=",
+    "status": 200,
+    "retrievedAt": "2026-11-03T04:24:18.849266+00:00",
+    "rawHash": "1f3c4d5c28966a2bf2301981011e4dfbc66c2cbf749f541e52f3a7fc0eb915f2",
+    "file": "candidate-list-post.html",
+    "bytes": 2456822
+  }
+]

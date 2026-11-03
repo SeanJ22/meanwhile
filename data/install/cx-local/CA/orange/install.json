@@ -1,0 +1,2330 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Orange",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-orange-3034",
+      "countyContestId": "3034",
+      "title": "North Orange County Community College District \u2014 Governing Board Member \u2014 Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:north_orange_county_community_college_district/trustee_area:1",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3036",
+      "countyContestId": "3036",
+      "title": "North Orange County Community College District \u2014 Governing Board Member \u2014 Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:north_orange_county_community_college_district/trustee_area:3",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3039",
+      "countyContestId": "3039",
+      "title": "North Orange County Community College District \u2014 Governing Board Member \u2014 Trustee Area 6",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:north_orange_county_community_college_district/trustee_area:6",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3042",
+      "countyContestId": "3042",
+      "title": "Coast Community College District \u2014 Governing Board Member \u2014 Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:coast_community_college_district/trustee_area:1",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3044",
+      "countyContestId": "3044",
+      "title": "Coast Community College District \u2014 Governing Board Member \u2014 Trustee Area 3 \u2014 Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:coast_community_college_district/trustee_area:3",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3046",
+      "countyContestId": "3046",
+      "title": "Coast Community College District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:coast_community_college_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3051",
+      "countyContestId": "3051",
+      "title": "Rancho Santiago Community College District \u2014 Governing Board Member \u2014 Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rancho_santiago_community_college_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3053",
+      "countyContestId": "3053",
+      "title": "Rancho Santiago Community College District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rancho_santiago_community_college_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3061",
+      "countyContestId": "3061",
+      "title": "South Orange County Community College District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:south_orange_county_community_college_district/trustee_area:4",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3104",
+      "countyContestId": "3104",
+      "title": "Brea Olinda Unified School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:brea_olinda_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3114",
+      "countyContestId": "3114",
+      "title": "Capistrano Unified School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:capistrano_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt317.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3116",
+      "countyContestId": "3116",
+      "title": "Capistrano Unified School District \u2014 Governing Board Member \u2014 Trustee Area 6",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:capistrano_unified_school_district/trustee_area:6",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3117",
+      "countyContestId": "3117",
+      "title": "Capistrano Unified School District \u2014 Governing Board Member \u2014 Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:capistrano_unified_school_district/trustee_area:7",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3124",
+      "countyContestId": "3124",
+      "title": "Garden Grove Unified School District \u2014 Governing Board Member \u2014 Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:garden_grove_unified_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3126",
+      "countyContestId": "3126",
+      "title": "Garden Grove Unified School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:garden_grove_unified_school_district/trustee_area:4",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3132",
+      "countyContestId": "3132",
+      "title": "Irvine Unified School District \u2014 Governing Board Member \u2014 Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:irvine_unified_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3134",
+      "countyContestId": "3134",
+      "title": "Irvine Unified School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:irvine_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt540.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3141",
+      "countyContestId": "3141",
+      "title": "Laguna Beach Unified School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:laguna_beach_unified_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3162",
+      "countyContestId": "3162",
+      "title": "Newport-Mesa Unified School District \u2014 Governing Board Member \u2014 Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:newport_mesa_unified_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3167",
+      "countyContestId": "3167",
+      "title": "Newport-Mesa Unified School District \u2014 Governing Board Member \u2014 Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:newport_mesa_unified_school_district/trustee_area:7",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3171",
+      "countyContestId": "3171",
+      "title": "Orange Unified School District \u2014 Governing Board Member \u2014 Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3174",
+      "countyContestId": "3174",
+      "title": "Orange Unified School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3175",
+      "countyContestId": "3175",
+      "title": "Orange Unified School District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3177",
+      "countyContestId": "3177",
+      "title": "Orange Unified School District \u2014 Governing Board Member \u2014 Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3187",
+      "countyContestId": "3187",
+      "title": "Placentia-Yorba Linda Unified School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:placentia_yorba_linda_unified_school_district/trustee_area:4",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3188",
+      "countyContestId": "3188",
+      "title": "Placentia-Yorba Linda Unified School District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:placentia_yorba_linda_unified_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3195",
+      "countyContestId": "3195",
+      "title": "Saddleback Valley Unified School District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:saddleback_valley_unified_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3205",
+      "countyContestId": "3205",
+      "title": "Santa Ana Unified School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santa_ana_unified_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3206",
+      "countyContestId": "3206",
+      "title": "Santa Ana Unified School District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santa_ana_unified_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3213",
+      "countyContestId": "3213",
+      "title": "Tustin Unified School District \u2014 Governing Board Member \u2014 Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:tustin_unified_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt547.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3215",
+      "countyContestId": "3215",
+      "title": "Tustin Unified School District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:tustin_unified_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3223",
+      "countyContestId": "3223",
+      "title": "Anaheim Union High School District \u2014 Governing Board Member \u2014 Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_union_high_school_district/trustee_area:1",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3224",
+      "countyContestId": "3224",
+      "title": "Anaheim Union High School District \u2014 Governing Board Member \u2014 Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_union_high_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3254",
+      "countyContestId": "3254",
+      "title": "Anaheim Elementary School District \u2014 Governing Board Member \u2014 Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_elementary_school_district/trustee_area:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3256",
+      "countyContestId": "3256",
+      "title": "Anaheim Elementary School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_elementary_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3284",
+      "countyContestId": "3284",
+      "title": "Cypress School District \u2014 Governing Board Member \u2014 Trustee Area B",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cypress_school_district/trustee_area:b",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3285",
+      "countyContestId": "3285",
+      "title": "Cypress School District \u2014 Governing Board Member \u2014 Trustee Area C",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cypress_school_district/trustee_area:c",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt81.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3291",
+      "countyContestId": "3291",
+      "title": "Fountain Valley School District \u2014 Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fountain_valley_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3305",
+      "countyContestId": "3305",
+      "title": "Fullerton School District \u2014 Governing Board Member \u2014 Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_school_district/trustee_area:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3314",
+      "countyContestId": "3314",
+      "title": "Huntington Beach City School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:huntington_beach_city_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt219.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3324",
+      "countyContestId": "3324",
+      "title": "La Habra City School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:la_habra_city_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt55.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3335",
+      "countyContestId": "3335",
+      "title": "Lowell Joint School District \u2014 Governing Board Member \u2014 Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:lowell_joint_school_district/trustee_area:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3347",
+      "countyContestId": "3347",
+      "title": "Magnolia School District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:magnolia_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt189.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-3355",
+      "countyContestId": "3355",
+      "title": "Ocean View School District \u2014 Governing Board Member \u2014 Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ocean_view_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-4004",
+      "countyContestId": "4004",
+      "title": "Orange County \u2014 Supervisor, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/county:orange/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-4005",
+      "countyContestId": "4005",
+      "title": "Orange County \u2014 Supervisor, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/county:orange/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-4902",
+      "countyContestId": "4902",
+      "title": "Aliso Viejo \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:aliso_viejo/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-4903",
+      "countyContestId": "4903",
+      "title": "Aliso Viejo \u2014 Member, City Council District 3, Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:aliso_viejo/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt279.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5001",
+      "countyContestId": "5001",
+      "title": "Anaheim \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5005",
+      "countyContestId": "5005",
+      "title": "Anaheim \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim/council_district:2",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5006",
+      "countyContestId": "5006",
+      "title": "Anaheim \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt46.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5009",
+      "countyContestId": "5009",
+      "title": "Anaheim \u2014 Member, City Council District 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim/council_district:6",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5012",
+      "countyContestId": "5012",
+      "title": "Brea \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:brea",
+      "candidates": 5,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5024",
+      "countyContestId": "5024",
+      "title": "Buena Park \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:buena_park/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5027",
+      "countyContestId": "5027",
+      "title": "Buena Park \u2014 Member, City Council District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:buena_park/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt64.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5031",
+      "countyContestId": "5031",
+      "title": "Costa Mesa \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5036",
+      "countyContestId": "5036",
+      "title": "Costa Mesa \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5037",
+      "countyContestId": "5037",
+      "title": "Costa Mesa \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5038",
+      "countyContestId": "5038",
+      "title": "Costa Mesa \u2014 Member, City Council District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5041",
+      "countyContestId": "5041",
+      "title": "Cypress \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:cypress/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt85.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5042",
+      "countyContestId": "5042",
+      "title": "Cypress \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:cypress/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5045",
+      "countyContestId": "5045",
+      "title": "Cypress \u2014 Member, City Council District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:cypress/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5062",
+      "countyContestId": "5062",
+      "title": "Fountain Valley \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:fountain_valley",
+      "candidates": 9,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5073",
+      "countyContestId": "5073",
+      "title": "Fullerton \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:fullerton/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5075",
+      "countyContestId": "5075",
+      "title": "Fullerton \u2014 Member, City Council District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:fullerton/council_district:5",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt93.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5081",
+      "countyContestId": "5081",
+      "title": "Garden Grove \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5084",
+      "countyContestId": "5084",
+      "title": "Garden Grove \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt136.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5086",
+      "countyContestId": "5086",
+      "title": "Garden Grove \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove/council_district:3",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt126.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5087",
+      "countyContestId": "5087",
+      "title": "Garden Grove \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove/council_district:4",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt131.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5092",
+      "countyContestId": "5092",
+      "title": "Huntington Beach \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:huntington_beach",
+      "candidates": 11,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5095",
+      "countyContestId": "5095",
+      "title": "Huntington Beach \u2014 City Attorney",
+      "ocdId": "ocd-division/country:us/state:ca/place:huntington_beach",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5101",
+      "countyContestId": "5101",
+      "title": "Irvine \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5102",
+      "countyContestId": "5102",
+      "title": "Irvine \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5106",
+      "countyContestId": "5106",
+      "title": "Irvine \u2014 Member, City Council District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine/council_district:5",
+      "candidates": 5,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt438.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5107",
+      "countyContestId": "5107",
+      "title": "Irvine \u2014 Member, City Council District 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine/council_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5112",
+      "countyContestId": "5112",
+      "title": "Laguna Beach \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_beach",
+      "candidates": 9,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt276.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5117",
+      "countyContestId": "5117",
+      "title": "Laguna Hills \u2014 Member, City Council \u2014 District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_hills/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt248.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5120",
+      "countyContestId": "5120",
+      "title": "Laguna Hills \u2014 Member, City Council \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_hills/council_district:4",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt247.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5126",
+      "countyContestId": "5126",
+      "title": "Laguna Woods \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_woods",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt183.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5132",
+      "countyContestId": "5132",
+      "title": "La Habra \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_habra",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5136",
+      "countyContestId": "5136",
+      "title": "Lake Forest \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:lake_forest/council_district:2",
+      "candidates": 5,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt395.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5137",
+      "countyContestId": "5137",
+      "title": "Lake Forest \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:lake_forest/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt396.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5138",
+      "countyContestId": "5138",
+      "title": "Lake Forest \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:lake_forest/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt397.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5142",
+      "countyContestId": "5142",
+      "title": "La Palma \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_palma/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt89.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5144",
+      "countyContestId": "5144",
+      "title": "La Palma \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_palma/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt87.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5154",
+      "countyContestId": "5154",
+      "title": "Los Alamitos \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_alamitos/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt227.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5155",
+      "countyContestId": "5155",
+      "title": "Los Alamitos \u2014 Member, City Council District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_alamitos/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt226.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5161",
+      "countyContestId": "5161",
+      "title": "Mission Viejo \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt308.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5162",
+      "countyContestId": "5162",
+      "title": "Mission Viejo \u2014 Member, City Council District 2, Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt306.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5163",
+      "countyContestId": "5163",
+      "title": "Mission Viejo \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5164",
+      "countyContestId": "5164",
+      "title": "Mission Viejo \u2014 Member, City Council District 4, Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5165",
+      "countyContestId": "5165",
+      "title": "Mission Viejo \u2014 Member, City Council District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:5",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5171",
+      "countyContestId": "5171",
+      "title": "Newport Beach \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5173",
+      "countyContestId": "5173",
+      "title": "Newport Beach \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5174",
+      "countyContestId": "5174",
+      "title": "Newport Beach \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5176",
+      "countyContestId": "5176",
+      "title": "Newport Beach \u2014 Member, City Council District 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5181",
+      "countyContestId": "5181",
+      "title": "Orange \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5182",
+      "countyContestId": "5182",
+      "title": "Orange \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange/council_district:1",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt444.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5185",
+      "countyContestId": "5185",
+      "title": "Orange \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5187",
+      "countyContestId": "5187",
+      "title": "Orange \u2014 Member, City Council District 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange/council_district:6",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt461.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5191",
+      "countyContestId": "5191",
+      "title": "Placentia \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:placentia/council_district:2",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5193",
+      "countyContestId": "5193",
+      "title": "Placentia \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:placentia/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt181.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5195",
+      "countyContestId": "5195",
+      "title": "Placentia \u2014 City Clerk",
+      "ocdId": "ocd-division/country:us/state:ca/place:placentia",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5200",
+      "countyContestId": "5200",
+      "title": "San Clemente \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_clemente",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5201",
+      "countyContestId": "5201",
+      "title": "San Clemente \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_clemente/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt310.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5202",
+      "countyContestId": "5202",
+      "title": "San Clemente \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_clemente/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5214",
+      "countyContestId": "5214",
+      "title": "San Juan Capistrano \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_juan_capistrano/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt314.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5221",
+      "countyContestId": "5221",
+      "title": "Santa Ana \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5223",
+      "countyContestId": "5223",
+      "title": "Santa Ana \u2014 Member, City Council Ward 2 \u2014 District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5225",
+      "countyContestId": "5225",
+      "title": "Santa Ana \u2014 Member, City Council Ward 4 \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5227",
+      "countyContestId": "5227",
+      "title": "Santa Ana \u2014 Member, City Council Ward 6 \u2014 District 6",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana/council_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5231",
+      "countyContestId": "5231",
+      "title": "Seal Beach \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:seal_beach/council_district:1",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5241",
+      "countyContestId": "5241",
+      "title": "Stanton \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:stanton/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt188.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5243",
+      "countyContestId": "5243",
+      "title": "Stanton \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:stanton/council_district:3",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt187.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5250",
+      "countyContestId": "5250",
+      "title": "Tustin \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:tustin",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5253",
+      "countyContestId": "5253",
+      "title": "Tustin \u2014 Member, City Council District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:tustin/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5271",
+      "countyContestId": "5271",
+      "title": "Westminster \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:ca/place:westminster",
+      "candidates": 5,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5272",
+      "countyContestId": "5272",
+      "title": "Westminster \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:westminster/council_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt257.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5279",
+      "countyContestId": "5279",
+      "title": "Westminster \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:westminster/council_district:4",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5282",
+      "countyContestId": "5282",
+      "title": "Yorba Linda \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:yorba_linda",
+      "candidates": 5,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt201.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5294",
+      "countyContestId": "5294",
+      "title": "Rancho Santa Margarita \u2014 Member, City Council District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_santa_margarita/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5295",
+      "countyContestId": "5295",
+      "title": "Rancho Santa Margarita \u2014 Member, City Council District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_santa_margarita/council_district:2",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt385.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-5297",
+      "countyContestId": "5297",
+      "title": "Rancho Santa Margarita \u2014 Member, City Council District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_santa_margarita/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt393.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6021",
+      "countyContestId": "6021",
+      "title": "Rossmoor Community Services District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rossmoor_community_services_district",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt232.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6064",
+      "countyContestId": "6064",
+      "title": "Serrano Water District \u2014 Director \u2014 Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:serrano_water_district/division:4",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6081",
+      "countyContestId": "6081",
+      "title": "Silverado-Modjeska Recreation And Park District \u2014 Director \u2014 Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:silverado_modjeska_recreation_and_park_district",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6131",
+      "countyContestId": "6131",
+      "title": "Midway City Sanitary District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:midway_city_sanitary_district",
+      "candidates": 6,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6161",
+      "countyContestId": "6161",
+      "title": "El Toro Water District \u2014 Director \u2014 Full Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:el_toro_water_district",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6168",
+      "countyContestId": "6168",
+      "title": "Irvine Ranch Water District \u2014 Director \u2014 Division 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:irvine_ranch_water_district/division:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6177",
+      "countyContestId": "6177",
+      "title": "Moulton Niguel Water District \u2014 Director \u2014 Full Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:moulton_niguel_water_district",
+      "candidates": 7,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6178",
+      "countyContestId": "6178",
+      "title": "Moulton Niguel Water District \u2014 Director \u2014 Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:moulton_niguel_water_district",
+      "candidates": 3,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6225",
+      "countyContestId": "6225",
+      "title": "Mesa Water District \u2014 Director \u2014 Division 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:mesa_water_district/division:5",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6261",
+      "countyContestId": "6261",
+      "title": "Trabuco Canyon Water District \u2014 Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:trabuco_canyon_water_district",
+      "candidates": 7,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6292",
+      "countyContestId": "6292",
+      "title": "Municipal Water District Of Orange County \u2014 Director \u2014 Division 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:municipal_water_district_of_orange_county/division:2",
+      "candidates": 4,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf"
+    },
+    {
+      "id": "ca-cx-local-2026-orange-6332",
+      "countyContestId": "6332",
+      "title": "Buena Park Library District \u2014 Trustee \u2014 Division 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:buena_park_library_district/division:2",
+      "candidates": 2,
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf"
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10668",
+      "countyContestId": "3189",
+      "title": "ROWLAND UNIFIED SCHOOL DISTRICT Governing Board Member, Trustee Area No. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rowland_unified_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10668.json"
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10750",
+      "countyContestId": "3233",
+      "title": "FULLERTON JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member, Trustee Area No. 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_joint_union_high_school_district/trustee_area:1",
+      "candidates": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10750.json"
+    },
+    {
+      "id": "ca-cx-local-los-angeles-10751",
+      "countyContestId": "3237",
+      "title": "FULLERTON JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member, Trustee Area No. 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_joint_union_high_school_district/trustee_area:5",
+      "candidates": 2,
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10751.json"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}) in scripts/assemble-ballot-package.mts. Local packet prepared offline only; no production writer has run. Existing statewide, legislative, judiciary and unrelated local facts stay unchanged.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS",
+    "focusedOfflineReplay": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PENDING_MAIN_SHARED_VALIDATOR",
+    "canonicalCrossCountySchoolIds": "PASS",
+    "exactElectoratesAndAtLargeResidencySeats": "PASS",
+    "sourceHashesAndQuotes": "PASS: 76 sources, 506 exact saved-source quotes",
+    "pdfNameWhitespaceNormalizations": 227,
+    "crossCountySchoolIdentityReuse": "PASS: three shared Los Angeles race IDs and corresponding candidate IDs reused in cumulative merge",
+    "countyCompleteMeaning": "All138 county-qualified local printed-candidate office blocks; reader geography and separately declared write-in display remain open."
+  },
+  "coverage": {
+    "status": "COUNTY_COMPLETE_NAMED_CANDIDATE_CONTESTS",
+    "verifiedLocalContests": 138,
+    "verifiedNamedCandidacies": 368,
+    "countyQualifiedLocalContests": 138,
+    "missingSampleBallotBlocks": [],
+    "judicialCoverage": "Statewide Supreme Court and Fourth Appellate District retention contests already held in ca.json; exact existing IDs preserved by omission from this local packet. County qualified-contest list has no Superior Court general-election contest.",
+    "declaredWriteIns": "County current election page lists Maryann Verghese for Rancho Santa Margarita District 4. Saved separately; not mixed into the complete printed sample-ballot list.",
+    "completenessBasis": "Complete named candidate blocks from actual official sample-ballot pages; official county qualified roster is a crosscheck and gap inventory, never a substitute for missing sample pages.",
+    "printedNamedCandidateCount": 368,
+    "declaredWriteInCount": 1,
+    "scope": "All 138 local named-candidate contests qualified by the county for November 3 2026: 47 school/community-college, 2 county supervisor, 77 municipal and 12 special district contests. Statewide/legislative/judicial races were already held and preserved. Local measures are outside this candidate packet."
+  },
+  "geographyDependencies": [
+    {
+      "contestId": "ca-cx-local-2026-orange-3034",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:north_orange_county_community_college_district/trustee_area:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf",
+      "officialDistrictDescription": "*SCC54-1 North Orange County Community College District Trustee Area 1 North OC College Dist, Trustee Area 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3036",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:north_orange_county_community_college_district/trustee_area:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf",
+      "officialDistrictDescription": "*SCC54-3 North Orange County Community College District Trustee Area 3 North OC College Dist, Trustee Area 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3039",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:north_orange_county_community_college_district/trustee_area:6",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf",
+      "officialDistrictDescription": "*SCC54-6 North Orange County Community College District Trustee Area 6 North OC College Dist, Trustee Area 6",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3042",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:coast_community_college_district/trustee_area:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+      "officialDistrictDescription": "*SCC12-1 Coast Community College District Trustee Area 1 Coast Comm College Dist, Trustee Area 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3044",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:coast_community_college_district/trustee_area:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf",
+      "officialDistrictDescription": "*SCC12-3 Coast Community College District Trustee Area 3 Coast Comm College Dist, Trustee Area 3, Short Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3046",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:coast_community_college_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+      "officialDistrictDescription": "*SCC12-5 Coast Community College District Trustee Area 5 Coast Comm College Dist, Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3051",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rancho_santiago_community_college_district/trustee_area:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf",
+      "officialDistrictDescription": "*SCC99-2 Rancho Santiago Community College District Trustee Area 2 Rcho Santiago Coll Dist, Trustee Area 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3053",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rancho_santiago_community_college_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf",
+      "officialDistrictDescription": "*SCC99-4 Rancho Santiago Community College District Trustee Area 4 Rcho Santiago Coll Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3061",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:south_orange_county_community_college_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+      "officialDistrictDescription": "*SCC94-4 South Orange County Community College District Trustee Area 4 South OC College Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3104",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:brea_olinda_unified_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf",
+      "officialDistrictDescription": "*SUS31-4 Brea Olinda Unified School District Trustee Area 4 Brea Olinda Unified Sch Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3114",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:capistrano_unified_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt317.pdf",
+      "officialDistrictDescription": "*SUS71-4 Capistrano Unified School District Trustee Area 4 Capistrano Unified Sch, Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3116",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:capistrano_unified_school_district/trustee_area:6",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf",
+      "officialDistrictDescription": "*SUS71-6 Capistrano Unified School District Trustee Area 6 Capistrano Unified Sch, Dist, Trustee Area 6",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3117",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:capistrano_unified_school_district/trustee_area:7",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf",
+      "officialDistrictDescription": "*SUS71-7 Capistrano Unified School District Trustee Area 7 Capistrano Unified Sch, Dist, Trustee Area 7",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3124",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:garden_grove_unified_school_district/trustee_area:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf",
+      "officialDistrictDescription": "*SUS95-2 Garden Grove Unified School District Trustee Area 2 Garden Grove Unified School, Dist, Trustee Area 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3126",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:garden_grove_unified_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+      "officialDistrictDescription": "*SUS95-4 Garden Grove Unified School District Trustee Area 4 Garden Grove Unified School, Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3132",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:irvine_unified_school_district/trustee_area:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf",
+      "officialDistrictDescription": "*SUS91-2 Irvine Unified School District Trustee Area 2 Irvine Unified Sch Dist, Trustee Area 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3134",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:irvine_unified_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt540.pdf",
+      "officialDistrictDescription": "*SUS91-4 Irvine Unified School District Trustee Area 4 Irvine Unified Sch Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3141",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:laguna_beach_unified_school_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+      "officialDistrictDescription": "*SUS81 Laguna Beach Unified School District Laguna Beach Unified Sch, Dist",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3162",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:newport_mesa_unified_school_district/trustee_area:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf",
+      "officialDistrictDescription": "*SUS11-2 Newport-Mesa Unified School District Trustee Area 2 Newport-Mesa USD, Trust Area 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3167",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:newport_mesa_unified_school_district/trustee_area:7",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+      "officialDistrictDescription": "*SUS11-7 Newport-Mesa Unified School District Trustee Area 7 Newport-Mesa USD, Trust Area 7",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3171",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "*SUS98 Orange Unified School District Orange Unified Sch Dist, Trustee Area 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3174",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "*SUS98 Orange Unified School District Orange Unified Sch Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3175",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "*SUS98 Orange Unified School District Orange Unified Sch Dist, Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3177",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "*SUS98 Orange Unified School District Orange Unified Sch Dist, Trustee Area 7",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3187",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:placentia_yorba_linda_unified_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf",
+      "officialDistrictDescription": "*SUS51-4 Placentia-Yorba Linda Unified School District Trustee Area 4 Placentia-Yorba Linda USD, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3188",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:placentia_yorba_linda_unified_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf",
+      "officialDistrictDescription": "*SUS51-5 Placentia-Yorba Linda Unified School District Trustee Area 5 Placentia-Yorba Linda USD, Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3195",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:saddleback_valley_unified_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+      "officialDistrictDescription": "*SUS92-5 Saddleback Valley Unified School District Trustee Area 5 Saddleback Valley USD, Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3205",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santa_ana_unified_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf",
+      "officialDistrictDescription": "*SUS61-4 Santa Ana Unified School District Trustee Area 4 Santa Ana Unified School District, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3206",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:santa_ana_unified_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf",
+      "officialDistrictDescription": "*SUS61-5 Santa Ana Unified School District Trustee Area 5 Santa Ana Unified School District, Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3213",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:tustin_unified_school_district/trustee_area:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt547.pdf",
+      "officialDistrictDescription": "*SUS93-3 Tustin Unified School District Trustee Area 3 Tustin Unified School Dist, Trustee Area 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3215",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:tustin_unified_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf",
+      "officialDistrictDescription": "*SUS93-5 Tustin Unified School District Trustee Area 5 Tustin Unified School, Dist, Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3223",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_union_high_school_district/trustee_area:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+      "officialDistrictDescription": "*SHS27-1 Anaheim Union High School District Trustee Area 1 Anaheim Union High Sch, Dist, Trustee Area 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3224",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_union_high_school_district/trustee_area:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf",
+      "officialDistrictDescription": "*SHS27-2 Anaheim Union High School District Trustee Area 2 Anaheim Union High Sch, Dist, Trustee Area 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3254",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_elementary_school_district/trustee_area:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+      "officialDistrictDescription": "*SES21-2 Anaheim Elementary School District Trustee Area 2 Anaheim Elementary School, Dist, Trustee Area 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3256",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:anaheim_elementary_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf",
+      "officialDistrictDescription": "*SES21-4 Anaheim Elementary School District Trustee Area 4 Anaheim Elementary School, Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3284",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cypress_school_district/trustee_area:b",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf",
+      "officialDistrictDescription": "*SES23-2 Cypress School District Trustee Area B Cypress School District, Trustee Area B",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3285",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:cypress_school_district/trustee_area:c",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt81.pdf",
+      "officialDistrictDescription": "*SES23-3 Cypress School District Trustee Area C Cypress School District, Trustee Area C",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3291",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fountain_valley_school_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf",
+      "officialDistrictDescription": "*SES01 Fountain Valley School District Fountain Valley School, Dist",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3305",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_school_district/trustee_area:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf",
+      "officialDistrictDescription": "*SES42-3 Fullerton School District Trustee Area 3 Fullerton School District, Trustee Area 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3314",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:huntington_beach_city_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt219.pdf",
+      "officialDistrictDescription": "*SES02-4 Huntington Beach City School District Trustee Area 4 Huntington Beach City SD, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3324",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:la_habra_city_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt55.pdf",
+      "officialDistrictDescription": "*SES43-4 La Habra City School District Trustee Area 4 La Habra City School, Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3335",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:lowell_joint_school_district/trustee_area:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf",
+      "officialDistrictDescription": "*SES44-4 Lowell Joint School District Trustee Area 4 Lowell Joint School Dist, Trustee Area 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3347",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:magnolia_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt189.pdf",
+      "officialDistrictDescription": "*SES25-5 Magnolia School District Trustee Area 5 Magnolia School Dist, Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-3355",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:ocean_view_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+      "officialDistrictDescription": "*SES03-5 Ocean View School District Trustee Area 5 Ocean View School Dist., Trustee Area 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-4004",
+      "ocdId": "ocd-division/country:us/state:ca/county:orange/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+      "officialDistrictDescription": "*404 4th Supervisorial District Supervisor, 4th District",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-4005",
+      "ocdId": "ocd-division/country:us/state:ca/county:orange/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "officialDistrictDescription": "*405 5th Supervisorial District Supervisor, 5th District",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-4902",
+      "ocdId": "ocd-division/country:us/state:ca/place:aliso_viejo/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+      "officialDistrictDescription": "*545-2 Aliso Viejo Council District 2 City of Aliso Viejo, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-4903",
+      "ocdId": "ocd-division/country:us/state:ca/place:aliso_viejo/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt279.pdf",
+      "officialDistrictDescription": "*545-3 Aliso Viejo Council District 3 City of Aliso Viejo, City Council, District 3, Short Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5001",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+      "officialDistrictDescription": "*502 Anaheim City of Anaheim, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5005",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+      "officialDistrictDescription": "*502-2 Anaheim Council District 2 City of Anaheim, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5006",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt46.pdf",
+      "officialDistrictDescription": "*502-3 Anaheim Council District 3 City of Anaheim, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5009",
+      "ocdId": "ocd-division/country:us/state:ca/place:anaheim/council_district:6",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf",
+      "officialDistrictDescription": "*502-6 Anaheim Council District 6 City of Anaheim, City Council, District 6",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5012",
+      "ocdId": "ocd-division/country:us/state:ca/place:brea",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf",
+      "officialDistrictDescription": "*505 Brea City of Brea, Member, City Council",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5024",
+      "ocdId": "ocd-division/country:us/state:ca/place:buena_park/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf",
+      "officialDistrictDescription": "*507-2 Buena Park Council District 2 City of Buena Park, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5027",
+      "ocdId": "ocd-division/country:us/state:ca/place:buena_park/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt64.pdf",
+      "officialDistrictDescription": "*507-5 Buena Park Council District 5 City of Buena Park, City Council, District 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5031",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+      "officialDistrictDescription": "*552 Costa Mesa City of Costa Mesa, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5036",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf",
+      "officialDistrictDescription": "*552-3 Costa Mesa Council District 3 City of Costa Mesa, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5037",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+      "officialDistrictDescription": "*552-4 Costa Mesa Council District 4 City of Costa Mesa, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5038",
+      "ocdId": "ocd-division/country:us/state:ca/place:costa_mesa/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf",
+      "officialDistrictDescription": "*552-5 Costa Mesa Council District 5 City of Costa Mesa, City Council, District 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5041",
+      "ocdId": "ocd-division/country:us/state:ca/place:cypress/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt85.pdf",
+      "officialDistrictDescription": "*510-1 Cypress Council District 1 City of Cypress, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5042",
+      "ocdId": "ocd-division/country:us/state:ca/place:cypress/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf",
+      "officialDistrictDescription": "*510-2 Cypress Council District 2 City of Cypress, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5045",
+      "ocdId": "ocd-division/country:us/state:ca/place:cypress/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf",
+      "officialDistrictDescription": "*510-5 Cypress Council District 5 City of Cypress, City Council, District 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5062",
+      "ocdId": "ocd-division/country:us/state:ca/place:fountain_valley",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf",
+      "officialDistrictDescription": "*531 Fountain Valley City of Fountain Valley, Member, City Council",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5073",
+      "ocdId": "ocd-division/country:us/state:ca/place:fullerton/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf",
+      "officialDistrictDescription": "*513-3 Fullerton Council District 3 City of Fullerton, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5075",
+      "ocdId": "ocd-division/country:us/state:ca/place:fullerton/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt93.pdf",
+      "officialDistrictDescription": "*513-5 Fullerton Council District 5 City of Fullerton, City Council, District 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5081",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf",
+      "officialDistrictDescription": "*514 Garden Grove City of Garden Grove, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5084",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt136.pdf",
+      "officialDistrictDescription": "*514-1 Garden Grove Council District 1 City of Garden Grove, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5086",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt126.pdf",
+      "officialDistrictDescription": "*514-3 Garden Grove Council District 3 City of Garden Grove, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5087",
+      "ocdId": "ocd-division/country:us/state:ca/place:garden_grove/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt131.pdf",
+      "officialDistrictDescription": "*514-4 Garden Grove Council District 4 City of Garden Grove, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5092",
+      "ocdId": "ocd-division/country:us/state:ca/place:huntington_beach",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+      "officialDistrictDescription": " *532 Huntington Beach City of Huntington Beach, Member, City Council",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5095",
+      "ocdId": "ocd-division/country:us/state:ca/place:huntington_beach",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+      "officialDistrictDescription": "*532 Huntington Beach City of Huntington Beach, City Attorney",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5101",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "*559 Irvine City of Irvine, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5102",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "*559-1 Irvine Council District 1 City of Irvine, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5106",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt438.pdf",
+      "officialDistrictDescription": "*559-5 Irvine Council District 5 City of Irvine, City Council, District 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5107",
+      "ocdId": "ocd-division/country:us/state:ca/place:irvine/council_district:6",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf",
+      "officialDistrictDescription": "*559-6 Irvine Council District 6 City of Irvine, City Council, District 6",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5112",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_beach",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt276.pdf",
+      "officialDistrictDescription": "*544 Laguna Beach City of Laguna Beach, Member, City Council",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5117",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_hills/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt248.pdf",
+      "officialDistrictDescription": "*538-1 Laguna Hills Council District 1 City of Laguna Hills, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5120",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_hills/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt247.pdf",
+      "officialDistrictDescription": "*538-4 Laguna Hills Council District 4 City of Laguna Hills, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5126",
+      "ocdId": "ocd-division/country:us/state:ca/place:laguna_woods",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt183.pdf",
+      "officialDistrictDescription": "*525 Laguna Woods City of Laguna Woods, Member, City Council",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5132",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_habra",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf",
+      "officialDistrictDescription": "*517 La Habra City of La Habra, Member, City Council",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5136",
+      "ocdId": "ocd-division/country:us/state:ca/place:lake_forest/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt395.pdf",
+      "officialDistrictDescription": "*556-2 Lake Forest Council District 2 City of Lake Forest, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5137",
+      "ocdId": "ocd-division/country:us/state:ca/place:lake_forest/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt396.pdf",
+      "officialDistrictDescription": "*556-3 Lake Forest Council District 3 City of Lake Forest, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5138",
+      "ocdId": "ocd-division/country:us/state:ca/place:lake_forest/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt397.pdf",
+      "officialDistrictDescription": "*556-4 Lake Forest Council District 4 City of Lake Forest, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5142",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_palma/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt89.pdf",
+      "officialDistrictDescription": "*511-2 La Palma Council District 2 City of La Palma, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5144",
+      "ocdId": "ocd-division/country:us/state:ca/place:la_palma/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt87.pdf",
+      "officialDistrictDescription": "*511-4 La Palma Council District 4 City of La Palma, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5154",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_alamitos/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt227.pdf",
+      "officialDistrictDescription": "*533-4 Los Alamitos Council District 4 City of Los Alamitos, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5155",
+      "ocdId": "ocd-division/country:us/state:ca/place:los_alamitos/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt226.pdf",
+      "officialDistrictDescription": "*533-5 Los Alamitos Council District 5 City of Los Alamitos, City Council, District 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5161",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt308.pdf",
+      "officialDistrictDescription": "*547-1 Mission Viejo Council District 1 City of Mission Viejo, Member, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5162",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt306.pdf",
+      "officialDistrictDescription": "*547-2 Mission Viejo Council District 2 City of Mission Viejo, Member, City Council, District 2, Short Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5163",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf",
+      "officialDistrictDescription": "*547-3 Mission Viejo Council District 3 City of Mission Viejo, Member, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5164",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf",
+      "officialDistrictDescription": "*547-4 Mission Viejo Council District 4 City of Mission Viejo, Member, City Council, District 4, Short Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5165",
+      "ocdId": "ocd-division/country:us/state:ca/place:mission_viejo/council_district:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf",
+      "officialDistrictDescription": "*547-5 Mission Viejo Council District 5 City of Mission Viejo, Member, City Council, District 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5171",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "officialDistrictDescription": "*553 Newport Beach City of Newport Beach, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5173",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "officialDistrictDescription": "*553 Newport Beach City of Newport Beach, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5174",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "officialDistrictDescription": "*553 Newport Beach City of Newport Beach, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5176",
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "officialDistrictDescription": "*553 Newport Beach City of Newport Beach, City Council, District 6",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5181",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf",
+      "officialDistrictDescription": "*563 Orange City of Orange, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5182",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt444.pdf",
+      "officialDistrictDescription": "*563-1 Orange Council District 1 City of Orange, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5185",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf",
+      "officialDistrictDescription": "*563-4 Orange Council District 4 City of Orange, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5187",
+      "ocdId": "ocd-division/country:us/state:ca/place:orange/council_district:6",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt461.pdf",
+      "officialDistrictDescription": "*563-6 Orange Council District 6 City of Orange, City Council, District 6",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5191",
+      "ocdId": "ocd-division/country:us/state:ca/place:placentia/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf",
+      "officialDistrictDescription": "*523-2 Placentia Council District 2 City of Placentia, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5193",
+      "ocdId": "ocd-division/country:us/state:ca/place:placentia/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt181.pdf",
+      "officialDistrictDescription": "*523-4 Placentia Council District 4 City of Placentia, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5195",
+      "ocdId": "ocd-division/country:us/state:ca/place:placentia",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf",
+      "officialDistrictDescription": "*523 Placentia City of Placentia, City Clerk",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5200",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_clemente",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf",
+      "officialDistrictDescription": "*548 San Clemente City of San Clemente, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5201",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_clemente/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt310.pdf",
+      "officialDistrictDescription": "*548-1 San Clemente Council District 1 City of San Clemente, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5202",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_clemente/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf",
+      "officialDistrictDescription": "*548-2 San Clemente Council District 2 City of San Clemente, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5214",
+      "ocdId": "ocd-division/country:us/state:ca/place:san_juan_capistrano/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt314.pdf",
+      "officialDistrictDescription": "*549-2 San Juan Capistrano Council District 2 City of San Juan Capistrano, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5221",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf",
+      "officialDistrictDescription": "*568 Santa Ana City of Santa Ana, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5223",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf",
+      "officialDistrictDescription": "*568-2 Santa Ana Ward Division 2 City of Santa Ana, City Council, Ward 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5225",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf",
+      "officialDistrictDescription": "*568-4 Santa Ana Ward Division 4 City of Santa Ana, City Council, Ward 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5227",
+      "ocdId": "ocd-division/country:us/state:ca/place:santa_ana/council_district:6",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf",
+      "officialDistrictDescription": "*568-6 Santa Ana Ward Division 6 City of Santa Ana, City Council, Ward 6",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5231",
+      "ocdId": "ocd-division/country:us/state:ca/place:seal_beach/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf",
+      "officialDistrictDescription": "*536-1 Seal Beach Council District 1 City of Seal Beach, City Council, Dist 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5241",
+      "ocdId": "ocd-division/country:us/state:ca/place:stanton/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt188.pdf",
+      "officialDistrictDescription": "*527-1 Stanton Council District 1 City of Stanton, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5243",
+      "ocdId": "ocd-division/country:us/state:ca/place:stanton/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt187.pdf",
+      "officialDistrictDescription": "*527-3 Stanton Council District 3 City of Stanton, City Council, District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5250",
+      "ocdId": "ocd-division/country:us/state:ca/place:tustin",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf",
+      "officialDistrictDescription": "*571 Tustin City of Tustin, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5253",
+      "ocdId": "ocd-division/country:us/state:ca/place:tustin/council_district:3",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf",
+      "officialDistrictDescription": "*571-3 Tustin Council District 3 City of Tustin, City Council District 3",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5271",
+      "ocdId": "ocd-division/country:us/state:ca/place:westminster",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+      "officialDistrictDescription": "*539 Westminster City of Westminster, Mayor",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5272",
+      "ocdId": "ocd-division/country:us/state:ca/place:westminster/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt257.pdf",
+      "officialDistrictDescription": "*539-1 Westminster Council District 1 City of Westminster, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5279",
+      "ocdId": "ocd-division/country:us/state:ca/place:westminster/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+      "officialDistrictDescription": "*539-4 Westminster Council District 4 City of Westminster, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5282",
+      "ocdId": "ocd-division/country:us/state:ca/place:yorba_linda",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt201.pdf",
+      "officialDistrictDescription": "*529 Yorba Linda City of Yorba Linda, Member, City Council",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5294",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_santa_margarita/council_district:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+      "officialDistrictDescription": "*554-1 Rancho Santa Margarita Council District 1 Rancho Santa Margarita, City Council, District 1",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5295",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_santa_margarita/council_district:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt385.pdf",
+      "officialDistrictDescription": "*554-2 Rancho Santa Margarita Council District 2 Rancho Santa Margarita, City Council, District 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-5297",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_santa_margarita/council_district:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt393.pdf",
+      "officialDistrictDescription": "*554-4 Rancho Santa Margarita Council District 4 Rancho Santa Margarita, City Council, District 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6021",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rossmoor_community_services_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt232.pdf",
+      "officialDistrictDescription": "COMRM Rossmoor Community Services District Rossmoor Community, Services Dist",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6064",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:serrano_water_district/division:4",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf",
+      "officialDistrictDescription": "WSSERR-4 Serrano Water District Division 4 Serrano Water Dist, Div. 4",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6081",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:silverado_modjeska_recreation_and_park_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "PKRSM Silverado-Modjeska Recreation and Park District Silverado-Modjeska, Recreation and Park Dist, Short Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6131",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:midway_city_sanitary_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+      "officialDistrictDescription": "SANMC Midway City Sanitary District Midway City Sanitary, Dist",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6161",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:el_toro_water_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf",
+      "officialDistrictDescription": "WSELT El Toro Water District El Toro Water Dist, Full Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6168",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:irvine_ranch_water_district/division:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "officialDistrictDescription": "WSIRVR-5 Irvine Ranch Water District Division 5 Irvine Ranch Water Dist, Div. 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6177",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:moulton_niguel_water_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+      "officialDistrictDescription": "WDMN Moulton Niguel Water District Moulton Niguel Water District, Full Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6178",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:moulton_niguel_water_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+      "officialDistrictDescription": "WDMN Moulton Niguel Water District Moulton Niguel Water District, Short Term",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6225",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:mesa_water_district/division:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf",
+      "officialDistrictDescription": "WDMESA-5 Mesa Water District Division 5 Mesa Water Dist, Div. 5",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6261",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:trabuco_canyon_water_district",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+      "officialDistrictDescription": "WDTC Trabuco Canyon Water District Trabuco Canyon Water, Dist",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6292",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:municipal_water_district_of_orange_county/division:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "officialDistrictDescription": "WMWOC-2 Municipal Water District of Orange County Division 2 Muni. Water Dist of O.C., Div. 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-2026-orange-6332",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:buena_park_library_district/division:2",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf",
+      "officialDistrictDescription": "LIBBP-2 Buena Park Library District Trustee Area 2 Buena Park Library Dist, Div. 2",
+      "nextAction": "River geography owner: attach the exact district and its boundaries to reader divisions; never replace with county or parent district geography."
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10668",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rowland_unified_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10668.json",
+      "officialDistrictDescription": "ROWLAND UNIFIED SCHOOL DISTRICT Governing Board Member, Trustee Area No. 5",
+      "nextAction": "River geography owner: map the exact shared school trustee area to readers in both counties; never substitute county geography."
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10750",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_joint_union_high_school_district/trustee_area:1",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10750.json",
+      "officialDistrictDescription": "FULLERTON JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member, Trustee Area No. 1",
+      "nextAction": "River geography owner: map the exact shared school trustee area to readers in both counties; never substitute county geography."
+    },
+    {
+      "contestId": "ca-cx-local-los-angeles-10751",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_joint_union_high_school_district/trustee_area:5",
+      "status": "NOT_IN_HELD_REGISTRY",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10751.json",
+      "officialDistrictDescription": "FULLERTON JOINT UNION HIGH SCHOOL DISTRICT Governing Board Member, Trustee Area No. 5",
+      "nextAction": "River geography owner: map the exact shared school trustee area to readers in both counties; never substitute county geography."
+    }
+  ],
+  "unmatchedRegistryDivisionCount": 130,
+  "knownSourceDifferences": [
+    {
+      "countyContestId": "5073",
+      "fact": "Official August 28 qualified roster says DANIEL KIM; September sample ballot says DANIEL H. KIM. Sample spelling retained."
+    }
+  ],
+  "nextOwner": "Main: run shared offline merge/manual-candidate checks, commit packet. River: install as data and complete exact geography mappings before claiming reader-visible coverage.",
+  "canonicalReusedContests": [
+    {
+      "countyContestId": "3189",
+      "contestId": "ca-cx-local-los-angeles-10668",
+      "candidateIds": [
+        "ca-cx-local-los-angeles-10668-vl",
+        "ca-cx-local-los-angeles-10668-vm"
+      ],
+      "ocdId": "ocd-division/country:us/state:ca/school_district:rowland_unified_school_district/trustee_area:5",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10668.json",
+      "basis": "Same November 3 2026 election, exact school district trustee area, office and complete named candidate block already prepared from official LA Interactive Sample Ballot. Canonical IDs preserved."
+    },
+    {
+      "countyContestId": "3233",
+      "contestId": "ca-cx-local-los-angeles-10750",
+      "candidateIds": [
+        "ca-cx-local-los-angeles-10750-xz",
+        "ca-cx-local-los-angeles-10750-y2"
+      ],
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_joint_union_high_school_district/trustee_area:1",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10750.json",
+      "basis": "Same November 3 2026 election, exact school district trustee area, office and complete named candidate block already prepared from official LA Interactive Sample Ballot. Canonical IDs preserved."
+    },
+    {
+      "countyContestId": "3237",
+      "contestId": "ca-cx-local-los-angeles-10751",
+      "candidateIds": [
+        "ca-cx-local-los-angeles-10751-y3",
+        "ca-cx-local-los-angeles-10751-y4"
+      ],
+      "ocdId": "ocd-division/country:us/state:ca/school_district:fullerton_joint_union_high_school_district/trustee_area:5",
+      "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10751.json",
+      "basis": "Same November 3 2026 election, exact school district trustee area, office and complete named candidate block already prepared from official LA Interactive Sample Ballot. Canonical IDs preserved."
+    }
+  ],
+  "atLargeResidencySeats": [
+    {
+      "countyContestIds": [
+        "3171",
+        "3174",
+        "3175",
+        "3177"
+      ],
+      "ocdId": "ocd-division/country:us/state:ca/school_district:orange_unified_school_district",
+      "basis": "One 2026 official sample ballot contains all four trustee-area races; official OUSD bylaw says all district voters elect each member. Exact full district electorate retained; area labels identify residency seats.",
+      "supportFile": "coverage-evidence.json"
+    },
+    {
+      "countyContestIds": [
+        "5171",
+        "5173",
+        "5174",
+        "5176"
+      ],
+      "ocdId": "ocd-division/country:us/state:ca/place:newport_beach",
+      "basis": "One official 2026 sample ballot contains all four council-district races. Official city page says population as a whole votes on council members. Exact citywide electorate retained; district labels identify residency seats.",
+      "supportFile": "coverage-evidence.json"
+    }
+  ],
+  "sourceAcquisition": {
+    "officialSampleGuidesCaptured": 268,
+    "sampleSourcesUsed": 76,
+    "nativeGovernmentTransport": "ocvote.gov native routes returned HTTP 403; complete official PDF text successfully captured through deterministic Jina Reader. Each hash expressly covers captured text, not PDF bytes. Shared LA sample sources preserve native government JSON bytes.",
+    "rateLimitRecovery": "Reader 429 responses preserved in workspace acquisition records; later paced batches acquired the remaining needed official sample guides.",
+    "evidenceFiles": [
+      "source-support.json",
+      "coverage-evidence.json",
+      "declared-write-ins.json"
+    ]
+  },
+  "preparedAt": "2026-11-03T04:02:36.506038+00:00"
+}

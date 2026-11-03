@@ -1,0 +1,82 @@
+[
+  {
+    "sourceUrl": "https://ocvote.gov/elections/2026-general-election",
+    "sourceCheckedAt": "2026-11-03T03:41:31.847528+00:00",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/elections/2026-general-election",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    },
+    "hashScope": "full exact captured text; not original PDF bytes",
+    "sha256": "15cad5e98058526bebd3a95d815ffe098aeb9c8267523f8551792e527336b0b5",
+    "sourceFile": "sources/15cad5e98058526bebd3a95d815ffe098aeb9c8267523f8551792e527336b0b5.source",
+    "quote": "*   **MEMBER, CITY COUNCIL, CITY OF RANCHO SANTA MARGARITA, DISTRICT 4**  \nMARYANN VERGHESE",
+    "use": "Current election page separately certifies declared write-in; never inserted into printed sample-ballot named list."
+  },
+  {
+    "sourceUrl": "https://ocvote.gov/elections/contests-qualified-for-the-ballot-for-the-2026-general-election",
+    "sourceCheckedAt": "2026-11-03T03:41:30.203081+00:00",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/elections/contests-qualified-for-the-ballot-for-the-2026-general-election",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    },
+    "hashScope": "full exact captured text; not original PDF bytes",
+    "sha256": "aae0c9c9601a013089ef7eeb62b71b8e08f5f895ab1a92bb7b217f60f72f9583",
+    "sourceFile": "sources/aae0c9c9601a013089ef7eeb62b71b8e08f5f895ab1a92bb7b217f60f72f9583.source",
+    "quote": "**County****Supervisors**\n\nSupervisor, 4th District\n\nSupervisor, 5th District",
+    "use": "County-qualified-contest inventory used to check scope and gaps; no Superior Court contest listed."
+  },
+  {
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/data/candlog/GEN2026/candlog.pdf",
+    "sourceCheckedAt": "2026-11-03T03:42:52.373212+00:00",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/data/candlog/GEN2026/candlog.pdf",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    },
+    "hashScope": "full exact captured text; not original PDF bytes",
+    "sha256": "756beca38c448db52cf58921484b6a3c5fdb6f70275f30cb295a9b2312fdda6b",
+    "sourceFile": "sources/756beca38c448db52cf58921484b6a3c5fdb6f70275f30cb295a9b2312fdda6b.source",
+    "quote": "Candidates: Qualified Candidates Contests: 1020 to 6400 - Contests On Ballot",
+    "use": "Official qualified candidate roster used only for candidate spelling comparison and missing-office inventory. Candidate evidence imported into ballot input always comes from actual sample-ballot blocks."
+  },
+  {
+    "sourceUrl": "https://newportbeachca.gov/i-am-a/visitor/about-newport-beach",
+    "sourceCheckedAt": "2026-11-03T03:56:53.783233+00:00",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic extraction",
+      "readerUrl": "https://r.jina.ai/https://newportbeachca.gov/i-am-a/visitor/about-newport-beach",
+      "readerHttpStatus": 200,
+      "nativeGovernmentHttpStatus": 403
+    },
+    "hashScope": "complete exact captured page text",
+    "sha256": "54d7b41170b8f67e8cb5979bc5fa035248ffdf264d2fb65799a0ca67b06ad702",
+    "sourceFile": "sources/54d7b41170b8f67e8cb5979bc5fa035248ffdf264d2fb65799a0ca67b06ad702.source",
+    "quote": "Its seven City Council Members are elected by district, but are voted on by the population as a whole.",
+    "use": "Confirms citywide electorate for all Newport Beach council district seats. Exact district seat labels remain in contest titles."
+  },
+  {
+    "sourceUrl": "https://www.orangeusd.org/uploaded/District/Departments/Board_of_Education/2013/agenda0815a.pdf",
+    "sourceCheckedAt": "2026-11-03T04:00:19.537923+00:00",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://www.orangeusd.org/uploaded/District/Departments/Board_of_Education/2013/agenda0815a.pdf",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    },
+    "hashScope": "complete exact captured official PDF text, not original PDF bytes",
+    "sha256": "3fc018505362fe39663544dce5e66e259d4c8f495a7c1bcba90e1b7c0214e47d",
+    "sourceFile": "sources/3fc018505362fe39663544dce5e66e259d4c8f495a7c1bcba90e1b7c0214e47d.source",
+    "quote": "Each Board member shall reside within the trustee area that he/she represents but shall be elected by all voters in the District.",
+    "use": "Historical official election bylaw, crosschecked against current 2026 official sample bt5 printing all four OUSD trustee-area contests on one voter ballot. Supports school-district-wide electorate and separate residency-area seat titles."
+  }
+]

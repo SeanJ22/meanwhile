@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T04:02:36.506038+00:00",
+  "status": "PASS",
+  "contests": 138,
+  "printedNamedCandidacies": 368,
+  "separateDeclaredWriteIns": 1,
+  "officialSourceArtifacts": 76,
+  "crossCountyContestsReusingCanonicalIds": 3,
+  "unmatchedRegistryDivisions": 130,
+  "sourceHashQuoteAndReceiptReplay": "PASS",
+  "productionWrites": 0,
+  "mergeAndManualCandidateValidation": "PENDING_MAIN_SHARED_VALIDATOR",
+  "dataInstalled": false,
+  "readerVisibleVerified": false
+}

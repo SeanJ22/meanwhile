@@ -1,0 +1,1935 @@
+[
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+      "reportedPdfPages": 48,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/46f1689b142cd38a7339434ae64fae85fde9abb5e8e1b361cb5aa5e0aa455d0c.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt436.pdf",
+    "sourceCheckedAt": "2026-11-03T03:47:49.094399+00:00",
+    "sha256": "46f1689b142cd38a7339434ae64fae85fde9abb5e8e1b361cb5aa5e0aa455d0c",
+    "sourceFile": "sources/46f1689b142cd38a7339434ae64fae85fde9abb5e8e1b361cb5aa5e0aa455d0c.source",
+    "excerptFile": "sources/46f1689b142cd38a7339434ae64fae85fde9abb5e8e1b361cb5aa5e0aa455d0c.source",
+    "excerptSha256": "46f1689b142cd38a7339434ae64fae85fde9abb5e8e1b361cb5aa5e0aa455d0c",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3171, 3174, 3175, 3177, 5101, 5102, 6081, 6292. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3171",
+      "3174",
+      "3175",
+      "3177",
+      "5101",
+      "5102",
+      "6081",
+      "6292"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+      "reportedPdfPages": 44,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/9d7f948d5178518da12acac4b078f46dc2fba4ae4c53f4fd1508108d314d2143.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt376.pdf",
+    "sourceCheckedAt": "2026-11-03T03:47:46.642908+00:00",
+    "sha256": "9d7f948d5178518da12acac4b078f46dc2fba4ae4c53f4fd1508108d314d2143",
+    "sourceFile": "sources/9d7f948d5178518da12acac4b078f46dc2fba4ae4c53f4fd1508108d314d2143.source",
+    "excerptFile": "sources/9d7f948d5178518da12acac4b078f46dc2fba4ae4c53f4fd1508108d314d2143.source",
+    "excerptSha256": "9d7f948d5178518da12acac4b078f46dc2fba4ae4c53f4fd1508108d314d2143",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 4005, 5171, 5173, 5174, 5176, 6168. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "4005",
+      "5171",
+      "5173",
+      "5174",
+      "5176",
+      "6168"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/573650b5674d366198d6e57df20e350ef9d558e832397b3e2dcbad680e69c8af.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt41.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:21.476031+00:00",
+    "sha256": "573650b5674d366198d6e57df20e350ef9d558e832397b3e2dcbad680e69c8af",
+    "sourceFile": "sources/573650b5674d366198d6e57df20e350ef9d558e832397b3e2dcbad680e69c8af.source",
+    "excerptFile": "sources/573650b5674d366198d6e57df20e350ef9d558e832397b3e2dcbad680e69c8af.source",
+    "excerptSha256": "573650b5674d366198d6e57df20e350ef9d558e832397b3e2dcbad680e69c8af",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3223, 3254, 4004, 5001, 5005. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3223",
+      "3254",
+      "4004",
+      "5001",
+      "5005"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/5f42e109503ac18e73b65c0802a3e1324ec2a7a6a0704fa5a930340ac5f9c330.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt111.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:24.535205+00:00",
+    "sha256": "5f42e109503ac18e73b65c0802a3e1324ec2a7a6a0704fa5a930340ac5f9c330",
+    "sourceFile": "sources/5f42e109503ac18e73b65c0802a3e1324ec2a7a6a0704fa5a930340ac5f9c330.source",
+    "excerptFile": "sources/5f42e109503ac18e73b65c0802a3e1324ec2a7a6a0704fa5a930340ac5f9c330.source",
+    "excerptSha256": "5f42e109503ac18e73b65c0802a3e1324ec2a7a6a0704fa5a930340ac5f9c330",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3039, 3237, 3305, 5073. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3039",
+      "3237",
+      "3305",
+      "5073"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/c7f94c9840aa417b1205e23c6030f0244204f433735959e27b0fe1bf995caa5b.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt388.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:43.079646+00:00",
+    "sha256": "c7f94c9840aa417b1205e23c6030f0244204f433735959e27b0fe1bf995caa5b",
+    "sourceFile": "sources/c7f94c9840aa417b1205e23c6030f0244204f433735959e27b0fe1bf995caa5b.source",
+    "excerptFile": "sources/c7f94c9840aa417b1205e23c6030f0244204f433735959e27b0fe1bf995caa5b.source",
+    "excerptSha256": "c7f94c9840aa417b1205e23c6030f0244204f433735959e27b0fe1bf995caa5b",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3061, 3195, 5294, 6261. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3061",
+      "3195",
+      "5294",
+      "6261"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/b139644681c79d7eac13df691d5a6a1415bf11598cd63f13cf42fdee45355223.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt210.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:58.515938+00:00",
+    "sha256": "b139644681c79d7eac13df691d5a6a1415bf11598cd63f13cf42fdee45355223",
+    "sourceFile": "sources/b139644681c79d7eac13df691d5a6a1415bf11598cd63f13cf42fdee45355223.source",
+    "excerptFile": "sources/b139644681c79d7eac13df691d5a6a1415bf11598cd63f13cf42fdee45355223.source",
+    "excerptSha256": "b139644681c79d7eac13df691d5a6a1415bf11598cd63f13cf42fdee45355223",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3042, 3355, 5092, 5095. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3042",
+      "3355",
+      "5092",
+      "5095"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/95d7a965d9dff8c2cd539ec98bae65d89b552a3502fe60498895b6a4fe5d05cc.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt348.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:15.987514+00:00",
+    "sha256": "95d7a965d9dff8c2cd539ec98bae65d89b552a3502fe60498895b6a4fe5d05cc",
+    "sourceFile": "sources/95d7a965d9dff8c2cd539ec98bae65d89b552a3502fe60498895b6a4fe5d05cc.source",
+    "excerptFile": "sources/95d7a965d9dff8c2cd539ec98bae65d89b552a3502fe60498895b6a4fe5d05cc.source",
+    "excerptSha256": "95d7a965d9dff8c2cd539ec98bae65d89b552a3502fe60498895b6a4fe5d05cc",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3046, 3167, 5031, 5037. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3046",
+      "3167",
+      "5031",
+      "5037"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/579a92e00800a5240b3d2da6887d630f0692792cfb7c6fafa9113b738f076581.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt259.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:18.933959+00:00",
+    "sha256": "579a92e00800a5240b3d2da6887d630f0692792cfb7c6fafa9113b738f076581",
+    "sourceFile": "sources/579a92e00800a5240b3d2da6887d630f0692792cfb7c6fafa9113b738f076581.source",
+    "excerptFile": "sources/579a92e00800a5240b3d2da6887d630f0692792cfb7c6fafa9113b738f076581.source",
+    "excerptSha256": "579a92e00800a5240b3d2da6887d630f0692792cfb7c6fafa9113b738f076581",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3126, 5271, 5279, 6131. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3126",
+      "5271",
+      "5279",
+      "6131"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+      "reportedPdfPages": 44,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/845739cd5ed8d71d02af1f522e631a9df05313ab057a588ca0e5774b7f792123.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt282.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:55.652759+00:00",
+    "sha256": "845739cd5ed8d71d02af1f522e631a9df05313ab057a588ca0e5774b7f792123",
+    "sourceFile": "sources/845739cd5ed8d71d02af1f522e631a9df05313ab057a588ca0e5774b7f792123.source",
+    "excerptFile": "sources/845739cd5ed8d71d02af1f522e631a9df05313ab057a588ca0e5774b7f792123.source",
+    "excerptSha256": "845739cd5ed8d71d02af1f522e631a9df05313ab057a588ca0e5774b7f792123",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3141, 4902, 6177, 6178. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3141",
+      "4902",
+      "6177",
+      "6178"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/cbb0197f973f82151a08d912313e6f0a34c47ea7d878db05f2a6ea171317538a.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt79.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:19.600980+00:00",
+    "sha256": "cbb0197f973f82151a08d912313e6f0a34c47ea7d878db05f2a6ea171317538a",
+    "sourceFile": "sources/cbb0197f973f82151a08d912313e6f0a34c47ea7d878db05f2a6ea171317538a.source",
+    "excerptFile": "sources/cbb0197f973f82151a08d912313e6f0a34c47ea7d878db05f2a6ea171317538a.source",
+    "excerptSha256": "cbb0197f973f82151a08d912313e6f0a34c47ea7d878db05f2a6ea171317538a",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3036, 3284, 5042. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3036",
+      "3284",
+      "5042"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/1b0466463b9d290275bca53579b17a564ca142483619f9290489979d20ce583d.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt537.pdf",
+    "sourceCheckedAt": "2026-11-03T03:58:48.581049+00:00",
+    "sha256": "1b0466463b9d290275bca53579b17a564ca142483619f9290489979d20ce583d",
+    "sourceFile": "sources/1b0466463b9d290275bca53579b17a564ca142483619f9290489979d20ce583d.source",
+    "excerptFile": "sources/1b0466463b9d290275bca53579b17a564ca142483619f9290489979d20ce583d.source",
+    "excerptSha256": "1b0466463b9d290275bca53579b17a564ca142483619f9290489979d20ce583d",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3215, 5250, 5253. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3215",
+      "5250",
+      "5253"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/10b4f20799b76291611ff7fea42247871f6af4d333dbaf6e09898f0381a12210.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt121.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:24.588862+00:00",
+    "sha256": "10b4f20799b76291611ff7fea42247871f6af4d333dbaf6e09898f0381a12210",
+    "sourceFile": "sources/10b4f20799b76291611ff7fea42247871f6af4d333dbaf6e09898f0381a12210.source",
+    "excerptFile": "sources/10b4f20799b76291611ff7fea42247871f6af4d333dbaf6e09898f0381a12210.source",
+    "excerptSha256": "10b4f20799b76291611ff7fea42247871f6af4d333dbaf6e09898f0381a12210",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3053, 3124, 5081. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3053",
+      "3124",
+      "5081"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/dca7ad017e485812322d30ed2e183599cce98642187bfdb2b6106d7c23f9fd7a.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt484.pdf",
+    "sourceCheckedAt": "2026-11-03T03:58:53.160531+00:00",
+    "sha256": "dca7ad017e485812322d30ed2e183599cce98642187bfdb2b6106d7c23f9fd7a",
+    "sourceFile": "sources/dca7ad017e485812322d30ed2e183599cce98642187bfdb2b6106d7c23f9fd7a.source",
+    "excerptFile": "sources/dca7ad017e485812322d30ed2e183599cce98642187bfdb2b6106d7c23f9fd7a.source",
+    "excerptSha256": "dca7ad017e485812322d30ed2e183599cce98642187bfdb2b6106d7c23f9fd7a",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3051, 5221, 5223. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3051",
+      "5221",
+      "5223"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/ad7d3e3cd5ad337afa0bdcb9b04804a918798c9d77c8f7656b85e157079acf0f.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt166.pdf",
+    "sourceCheckedAt": "2026-11-03T03:46:53.914316+00:00",
+    "sha256": "ad7d3e3cd5ad337afa0bdcb9b04804a918798c9d77c8f7656b85e157079acf0f",
+    "sourceFile": "sources/ad7d3e3cd5ad337afa0bdcb9b04804a918798c9d77c8f7656b85e157079acf0f.source",
+    "excerptFile": "sources/ad7d3e3cd5ad337afa0bdcb9b04804a918798c9d77c8f7656b85e157079acf0f.source",
+    "excerptSha256": "ad7d3e3cd5ad337afa0bdcb9b04804a918798c9d77c8f7656b85e157079acf0f",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3188, 5191, 5195. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3188",
+      "5191",
+      "5195"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf",
+      "reportedPdfPages": 60,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/2480c02b02324122997fa392c243475b5fbe4916803737f0063d4a403b44bf03.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt447.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:48.097728+00:00",
+    "sha256": "2480c02b02324122997fa392c243475b5fbe4916803737f0063d4a403b44bf03",
+    "sourceFile": "sources/2480c02b02324122997fa392c243475b5fbe4916803737f0063d4a403b44bf03.source",
+    "excerptFile": "sources/2480c02b02324122997fa392c243475b5fbe4916803737f0063d4a403b44bf03.source",
+    "excerptSha256": "2480c02b02324122997fa392c243475b5fbe4916803737f0063d4a403b44bf03",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5181, 5185, 6064. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5181",
+      "5185",
+      "6064"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/7852593b7fcf371c9c2d3f70b54c78d2db37b44d853d1abe64d27f4017c9a8f6.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt82.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:18.477806+00:00",
+    "sha256": "7852593b7fcf371c9c2d3f70b54c78d2db37b44d853d1abe64d27f4017c9a8f6",
+    "sourceFile": "sources/7852593b7fcf371c9c2d3f70b54c78d2db37b44d853d1abe64d27f4017c9a8f6.source",
+    "excerptFile": "sources/7852593b7fcf371c9c2d3f70b54c78d2db37b44d853d1abe64d27f4017c9a8f6.source",
+    "excerptSha256": "7852593b7fcf371c9c2d3f70b54c78d2db37b44d853d1abe64d27f4017c9a8f6",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3034, 5045. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3034",
+      "5045"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/d1bd7738f1c24fffe7d7ff811ada3d27fab9b35c42a77d8a3d2fc50dd9885a87.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt241.pdf",
+    "sourceCheckedAt": "2026-11-03T03:44:29.045703+00:00",
+    "sha256": "d1bd7738f1c24fffe7d7ff811ada3d27fab9b35c42a77d8a3d2fc50dd9885a87",
+    "sourceFile": "sources/d1bd7738f1c24fffe7d7ff811ada3d27fab9b35c42a77d8a3d2fc50dd9885a87.source",
+    "excerptFile": "sources/d1bd7738f1c24fffe7d7ff811ada3d27fab9b35c42a77d8a3d2fc50dd9885a87.source",
+    "excerptSha256": "d1bd7738f1c24fffe7d7ff811ada3d27fab9b35c42a77d8a3d2fc50dd9885a87",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3044, 5231. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3044",
+      "5231"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/969328a82591115f3de7e9aa3b85cb53d31006b5ffa4c0d29fd423be564abdb2.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt283.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:55.651547+00:00",
+    "sha256": "969328a82591115f3de7e9aa3b85cb53d31006b5ffa4c0d29fd423be564abdb2",
+    "sourceFile": "sources/969328a82591115f3de7e9aa3b85cb53d31006b5ffa4c0d29fd423be564abdb2.source",
+    "excerptFile": "sources/969328a82591115f3de7e9aa3b85cb53d31006b5ffa4c0d29fd423be564abdb2.source",
+    "excerptSha256": "969328a82591115f3de7e9aa3b85cb53d31006b5ffa4c0d29fd423be564abdb2",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5164, 6161. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5164",
+      "6161"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/e368acdccaf49137d7b93e80d9f649646e654b34ca9b0cad2717a018a00d82bd.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt291.pdf",
+    "sourceCheckedAt": "2026-11-03T03:44:29.049308+00:00",
+    "sha256": "e368acdccaf49137d7b93e80d9f649646e654b34ca9b0cad2717a018a00d82bd",
+    "sourceFile": "sources/e368acdccaf49137d7b93e80d9f649646e654b34ca9b0cad2717a018a00d82bd.source",
+    "excerptFile": "sources/e368acdccaf49137d7b93e80d9f649646e654b34ca9b0cad2717a018a00d82bd.source",
+    "excerptSha256": "e368acdccaf49137d7b93e80d9f649646e654b34ca9b0cad2717a018a00d82bd",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3117, 5165. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3117",
+      "5165"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/ace7b472b6a74a849455c5bf32559572b4e043f1528aacfe730ce2f643253afe.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt7.pdf",
+    "sourceCheckedAt": "2026-11-03T03:49:46.107651+00:00",
+    "sha256": "ace7b472b6a74a849455c5bf32559572b4e043f1528aacfe730ce2f643253afe",
+    "sourceFile": "sources/ace7b472b6a74a849455c5bf32559572b4e043f1528aacfe730ce2f643253afe.source",
+    "excerptFile": "sources/ace7b472b6a74a849455c5bf32559572b4e043f1528aacfe730ce2f643253afe.source",
+    "excerptSha256": "ace7b472b6a74a849455c5bf32559572b4e043f1528aacfe730ce2f643253afe",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3187, 5009. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3187",
+      "5009"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/79eb2a0e4f9f4ddd89f8f5819586d2892c14b40cc3348189633596afcac17715.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt10.pdf",
+    "sourceCheckedAt": "2026-11-03T03:49:48.334979+00:00",
+    "sha256": "79eb2a0e4f9f4ddd89f8f5819586d2892c14b40cc3348189633596afcac17715",
+    "sourceFile": "sources/79eb2a0e4f9f4ddd89f8f5819586d2892c14b40cc3348189633596afcac17715.source",
+    "excerptFile": "sources/79eb2a0e4f9f4ddd89f8f5819586d2892c14b40cc3348189633596afcac17715.source",
+    "excerptSha256": "79eb2a0e4f9f4ddd89f8f5819586d2892c14b40cc3348189633596afcac17715",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3224, 3256. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3224",
+      "3256"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/9046a941e9dba5587c22242b56f5655b82b30d0b00a3d10ec8c3f9837526bd00.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt71.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:21.477772+00:00",
+    "sha256": "9046a941e9dba5587c22242b56f5655b82b30d0b00a3d10ec8c3f9837526bd00",
+    "sourceFile": "sources/9046a941e9dba5587c22242b56f5655b82b30d0b00a3d10ec8c3f9837526bd00.source",
+    "excerptFile": "sources/9046a941e9dba5587c22242b56f5655b82b30d0b00a3d10ec8c3f9837526bd00.source",
+    "excerptSha256": "9046a941e9dba5587c22242b56f5655b82b30d0b00a3d10ec8c3f9837526bd00",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5024, 6332. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5024",
+      "6332"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/e0b00ea37c1379b10d42311453bb38e99fa4ed1023b3eed9e496dbfc6ae93ffb.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt301.pdf",
+    "sourceCheckedAt": "2026-11-03T03:44:31.457630+00:00",
+    "sha256": "e0b00ea37c1379b10d42311453bb38e99fa4ed1023b3eed9e496dbfc6ae93ffb",
+    "sourceFile": "sources/e0b00ea37c1379b10d42311453bb38e99fa4ed1023b3eed9e496dbfc6ae93ffb.source",
+    "excerptFile": "sources/e0b00ea37c1379b10d42311453bb38e99fa4ed1023b3eed9e496dbfc6ae93ffb.source",
+    "excerptSha256": "e0b00ea37c1379b10d42311453bb38e99fa4ed1023b3eed9e496dbfc6ae93ffb",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3116, 5163. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3116",
+      "5163"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/7683d57dbda48b5237aaa735a5393bd484bfe27c82b66f5a993f93fb624c6b1f.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt50.pdf",
+    "sourceCheckedAt": "2026-11-03T03:58:48.578977+00:00",
+    "sha256": "7683d57dbda48b5237aaa735a5393bd484bfe27c82b66f5a993f93fb624c6b1f",
+    "sourceFile": "sources/7683d57dbda48b5237aaa735a5393bd484bfe27c82b66f5a993f93fb624c6b1f.source",
+    "excerptFile": "sources/7683d57dbda48b5237aaa735a5393bd484bfe27c82b66f5a993f93fb624c6b1f.source",
+    "excerptSha256": "7683d57dbda48b5237aaa735a5393bd484bfe27c82b66f5a993f93fb624c6b1f",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3104, 5012. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3104",
+      "5012"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/5816da3030da1b46bcaf9e9204e3d99a58429cd2314098da909820b8b1a6a782.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt156.pdf",
+    "sourceCheckedAt": "2026-11-03T03:46:53.268929+00:00",
+    "sha256": "5816da3030da1b46bcaf9e9204e3d99a58429cd2314098da909820b8b1a6a782",
+    "sourceFile": "sources/5816da3030da1b46bcaf9e9204e3d99a58429cd2314098da909820b8b1a6a782.source",
+    "excerptFile": "sources/5816da3030da1b46bcaf9e9204e3d99a58429cd2314098da909820b8b1a6a782.source",
+    "excerptSha256": "5816da3030da1b46bcaf9e9204e3d99a58429cd2314098da909820b8b1a6a782",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3335, 5132. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3335",
+      "5132"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/68168a0d729687fce9aa2b0c2e98167ccff3e06993cf5e0338b08d673448c395.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt207.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:57.897739+00:00",
+    "sha256": "68168a0d729687fce9aa2b0c2e98167ccff3e06993cf5e0338b08d673448c395",
+    "sourceFile": "sources/68168a0d729687fce9aa2b0c2e98167ccff3e06993cf5e0338b08d673448c395.source",
+    "excerptFile": "sources/68168a0d729687fce9aa2b0c2e98167ccff3e06993cf5e0338b08d673448c395.source",
+    "excerptSha256": "68168a0d729687fce9aa2b0c2e98167ccff3e06993cf5e0338b08d673448c395",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3291, 5062. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3291",
+      "5062"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/b4d9bc3246d08d8c30c5931682cb29874f295807ec8d72accd86047d12fd1cc8.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt488.pdf",
+    "sourceCheckedAt": "2026-11-03T04:00:13.850300+00:00",
+    "sha256": "b4d9bc3246d08d8c30c5931682cb29874f295807ec8d72accd86047d12fd1cc8",
+    "sourceFile": "sources/b4d9bc3246d08d8c30c5931682cb29874f295807ec8d72accd86047d12fd1cc8.source",
+    "excerptFile": "sources/b4d9bc3246d08d8c30c5931682cb29874f295807ec8d72accd86047d12fd1cc8.source",
+    "excerptSha256": "b4d9bc3246d08d8c30c5931682cb29874f295807ec8d72accd86047d12fd1cc8",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3206, 5227. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3206",
+      "5227"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/c8a16fc6a7a2695d268ec7236b465d4ec23f5c469e2234772d5c14189b8273e5.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt485.pdf",
+    "sourceCheckedAt": "2026-11-03T04:00:11.401250+00:00",
+    "sha256": "c8a16fc6a7a2695d268ec7236b465d4ec23f5c469e2234772d5c14189b8273e5",
+    "sourceFile": "sources/c8a16fc6a7a2695d268ec7236b465d4ec23f5c469e2234772d5c14189b8273e5.source",
+    "excerptFile": "sources/c8a16fc6a7a2695d268ec7236b465d4ec23f5c469e2234772d5c14189b8273e5.source",
+    "excerptSha256": "c8a16fc6a7a2695d268ec7236b465d4ec23f5c469e2234772d5c14189b8273e5",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3205, 5225. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3205",
+      "5225"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/e23c7d137a9d7924839c00d1b387a3aaea8b66ba470475030202028114a21feb.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt349.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:15.986297+00:00",
+    "sha256": "e23c7d137a9d7924839c00d1b387a3aaea8b66ba470475030202028114a21feb",
+    "sourceFile": "sources/e23c7d137a9d7924839c00d1b387a3aaea8b66ba470475030202028114a21feb.source",
+    "excerptFile": "sources/e23c7d137a9d7924839c00d1b387a3aaea8b66ba470475030202028114a21feb.source",
+    "excerptSha256": "e23c7d137a9d7924839c00d1b387a3aaea8b66ba470475030202028114a21feb",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3162, 5036. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3162",
+      "5036"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/f5043ffb307174e2c9a36d59880c9fd94083d9689c6f44221bc348e2de692f31.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt366.pdf",
+    "sourceCheckedAt": "2026-11-03T03:47:46.629823+00:00",
+    "sha256": "f5043ffb307174e2c9a36d59880c9fd94083d9689c6f44221bc348e2de692f31",
+    "sourceFile": "sources/f5043ffb307174e2c9a36d59880c9fd94083d9689c6f44221bc348e2de692f31.source",
+    "excerptFile": "sources/f5043ffb307174e2c9a36d59880c9fd94083d9689c6f44221bc348e2de692f31.source",
+    "excerptSha256": "f5043ffb307174e2c9a36d59880c9fd94083d9689c6f44221bc348e2de692f31",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5038, 6225. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5038",
+      "6225"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/04b6719b54eff51c31574cf14ea2ba99bdb310cf72dbfcde463394e42e634353.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt426.pdf",
+    "sourceCheckedAt": "2026-11-03T03:47:48.869901+00:00",
+    "sha256": "04b6719b54eff51c31574cf14ea2ba99bdb310cf72dbfcde463394e42e634353",
+    "sourceFile": "sources/04b6719b54eff51c31574cf14ea2ba99bdb310cf72dbfcde463394e42e634353.source",
+    "excerptFile": "sources/04b6719b54eff51c31574cf14ea2ba99bdb310cf72dbfcde463394e42e634353.source",
+    "excerptSha256": "04b6719b54eff51c31574cf14ea2ba99bdb310cf72dbfcde463394e42e634353",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3132, 5107. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3132",
+      "5107"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf",
+      "reportedPdfPages": 44,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/f53e27ba7c0ea86667a8f1d04a05cc52f2b6f870335861f44e7e0231ce321666.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt311.pdf",
+    "sourceCheckedAt": "2026-11-03T03:44:31.542419+00:00",
+    "sha256": "f53e27ba7c0ea86667a8f1d04a05cc52f2b6f870335861f44e7e0231ce321666",
+    "sourceFile": "sources/f53e27ba7c0ea86667a8f1d04a05cc52f2b6f870335861f44e7e0231ce321666.source",
+    "excerptFile": "sources/f53e27ba7c0ea86667a8f1d04a05cc52f2b6f870335861f44e7e0231ce321666.source",
+    "excerptSha256": "f53e27ba7c0ea86667a8f1d04a05cc52f2b6f870335861f44e7e0231ce321666",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5200, 5202. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5200",
+      "5202"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt547.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt547.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/af5e450b4fa094225c1200349dcf25e03c20da1008414beae9118d4d1c402d34.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt547.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt547.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:19.188921+00:00",
+    "sha256": "af5e450b4fa094225c1200349dcf25e03c20da1008414beae9118d4d1c402d34",
+    "sourceFile": "sources/af5e450b4fa094225c1200349dcf25e03c20da1008414beae9118d4d1c402d34.source",
+    "excerptFile": "sources/af5e450b4fa094225c1200349dcf25e03c20da1008414beae9118d4d1c402d34.source",
+    "excerptSha256": "af5e450b4fa094225c1200349dcf25e03c20da1008414beae9118d4d1c402d34",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3213. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3213"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt87.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt87.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/c6f7dc1ffbc9ecdeaa96bbde25d35461df65ec37a188412d6ecb0142ecb4b239.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt87.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt87.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:43.079089+00:00",
+    "sha256": "c6f7dc1ffbc9ecdeaa96bbde25d35461df65ec37a188412d6ecb0142ecb4b239",
+    "sourceFile": "sources/c6f7dc1ffbc9ecdeaa96bbde25d35461df65ec37a188412d6ecb0142ecb4b239.source",
+    "excerptFile": "sources/c6f7dc1ffbc9ecdeaa96bbde25d35461df65ec37a188412d6ecb0142ecb4b239.source",
+    "excerptSha256": "c6f7dc1ffbc9ecdeaa96bbde25d35461df65ec37a188412d6ecb0142ecb4b239",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5144. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5144"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt232.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt232.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/57db14fb310677295606957b6777a2c0e9093814e110f6ce4671330c65125244.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt232.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt232.pdf",
+    "sourceCheckedAt": "2026-11-03T04:01:09.973223+00:00",
+    "sha256": "57db14fb310677295606957b6777a2c0e9093814e110f6ce4671330c65125244",
+    "sourceFile": "sources/57db14fb310677295606957b6777a2c0e9093814e110f6ce4671330c65125244.source",
+    "excerptFile": "sources/57db14fb310677295606957b6777a2c0e9093814e110f6ce4671330c65125244.source",
+    "excerptSha256": "57db14fb310677295606957b6777a2c0e9093814e110f6ce4671330c65125244",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 6021. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "6021"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt81.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt81.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/4270281d73881465dcb522f3e3b4c2f2629a05de2dd5e3dcc84a80f0f7085ef6.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt81.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt81.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:22.229756+00:00",
+    "sha256": "4270281d73881465dcb522f3e3b4c2f2629a05de2dd5e3dcc84a80f0f7085ef6",
+    "sourceFile": "sources/4270281d73881465dcb522f3e3b4c2f2629a05de2dd5e3dcc84a80f0f7085ef6.source",
+    "excerptFile": "sources/4270281d73881465dcb522f3e3b4c2f2629a05de2dd5e3dcc84a80f0f7085ef6.source",
+    "excerptSha256": "4270281d73881465dcb522f3e3b4c2f2629a05de2dd5e3dcc84a80f0f7085ef6",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3285. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3285"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt89.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt89.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/34ebc69e5229e9bf88dc848ff3a0e9ebd3cab38cea8ed26df82c928572e21689.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt89.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt89.pdf",
+    "sourceCheckedAt": "2026-11-03T03:54:31.472929+00:00",
+    "sha256": "34ebc69e5229e9bf88dc848ff3a0e9ebd3cab38cea8ed26df82c928572e21689",
+    "sourceFile": "sources/34ebc69e5229e9bf88dc848ff3a0e9ebd3cab38cea8ed26df82c928572e21689.source",
+    "excerptFile": "sources/34ebc69e5229e9bf88dc848ff3a0e9ebd3cab38cea8ed26df82c928572e21689.source",
+    "excerptSha256": "34ebc69e5229e9bf88dc848ff3a0e9ebd3cab38cea8ed26df82c928572e21689",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5142. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5142"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt85.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt85.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/b4ca92c5eb1abf0a0c0537e4693dc02d8ea15e11927b02a3cc97c02d7a470926.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt85.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt85.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:19.600056+00:00",
+    "sha256": "b4ca92c5eb1abf0a0c0537e4693dc02d8ea15e11927b02a3cc97c02d7a470926",
+    "sourceFile": "sources/b4ca92c5eb1abf0a0c0537e4693dc02d8ea15e11927b02a3cc97c02d7a470926.source",
+    "excerptFile": "sources/b4ca92c5eb1abf0a0c0537e4693dc02d8ea15e11927b02a3cc97c02d7a470926.source",
+    "excerptSha256": "b4ca92c5eb1abf0a0c0537e4693dc02d8ea15e11927b02a3cc97c02d7a470926",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5041. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5041"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt306.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt306.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/ee0da45dcfa6484556db839a160bbea12097c14ea9246c2773d1f7bf8a5cdd61.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt306.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt306.pdf",
+    "sourceCheckedAt": "2026-11-03T03:47:43.946436+00:00",
+    "sha256": "ee0da45dcfa6484556db839a160bbea12097c14ea9246c2773d1f7bf8a5cdd61",
+    "sourceFile": "sources/ee0da45dcfa6484556db839a160bbea12097c14ea9246c2773d1f7bf8a5cdd61.source",
+    "excerptFile": "sources/ee0da45dcfa6484556db839a160bbea12097c14ea9246c2773d1f7bf8a5cdd61.source",
+    "excerptSha256": "ee0da45dcfa6484556db839a160bbea12097c14ea9246c2773d1f7bf8a5cdd61",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5162. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5162"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt540.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt540.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/208fc7f2139bb92d74b943ccf7c9678c28ee5978302aa6a454c4504ef494122c.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt540.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt540.pdf",
+    "sourceCheckedAt": "2026-11-03T03:58:48.585541+00:00",
+    "sha256": "208fc7f2139bb92d74b943ccf7c9678c28ee5978302aa6a454c4504ef494122c",
+    "sourceFile": "sources/208fc7f2139bb92d74b943ccf7c9678c28ee5978302aa6a454c4504ef494122c.source",
+    "excerptFile": "sources/208fc7f2139bb92d74b943ccf7c9678c28ee5978302aa6a454c4504ef494122c.source",
+    "excerptSha256": "208fc7f2139bb92d74b943ccf7c9678c28ee5978302aa6a454c4504ef494122c",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3134. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3134"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt93.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt93.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/fc4d77341705979feacb28977560ae30204001ab698241916176b24464e5109a.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt93.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt93.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:19.599078+00:00",
+    "sha256": "fc4d77341705979feacb28977560ae30204001ab698241916176b24464e5109a",
+    "sourceFile": "sources/fc4d77341705979feacb28977560ae30204001ab698241916176b24464e5109a.source",
+    "excerptFile": "sources/fc4d77341705979feacb28977560ae30204001ab698241916176b24464e5109a.source",
+    "excerptSha256": "fc4d77341705979feacb28977560ae30204001ab698241916176b24464e5109a",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5075. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5075"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt126.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt126.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/57dc8eef2e6fc92f48aeee7f7a9a0cee1ef2068b9d421aa257300a2e9d46d944.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt126.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt126.pdf",
+    "sourceCheckedAt": "2026-11-03T03:46:50.467658+00:00",
+    "sha256": "57dc8eef2e6fc92f48aeee7f7a9a0cee1ef2068b9d421aa257300a2e9d46d944",
+    "sourceFile": "sources/57dc8eef2e6fc92f48aeee7f7a9a0cee1ef2068b9d421aa257300a2e9d46d944.source",
+    "excerptFile": "sources/57dc8eef2e6fc92f48aeee7f7a9a0cee1ef2068b9d421aa257300a2e9d46d944.source",
+    "excerptSha256": "57dc8eef2e6fc92f48aeee7f7a9a0cee1ef2068b9d421aa257300a2e9d46d944",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5086. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5086"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt131.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt131.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/df9a2964d6ba593a20f4340e6a3e4f672d52b37f2359193ba3a487b56a507554.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt131.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt131.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:24.657941+00:00",
+    "sha256": "df9a2964d6ba593a20f4340e6a3e4f672d52b37f2359193ba3a487b56a507554",
+    "sourceFile": "sources/df9a2964d6ba593a20f4340e6a3e4f672d52b37f2359193ba3a487b56a507554.source",
+    "excerptFile": "sources/df9a2964d6ba593a20f4340e6a3e4f672d52b37f2359193ba3a487b56a507554.source",
+    "excerptSha256": "df9a2964d6ba593a20f4340e6a3e4f672d52b37f2359193ba3a487b56a507554",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5087. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5087"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt64.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt64.pdf",
+      "reportedPdfPages": 32,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/20bbd6e1a4193cb97fa6616c83c52a6d1b26c004a284d6f6306c3424c7c1335a.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt64.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt64.pdf",
+    "sourceCheckedAt": "2026-11-03T03:58:48.585202+00:00",
+    "sha256": "20bbd6e1a4193cb97fa6616c83c52a6d1b26c004a284d6f6306c3424c7c1335a",
+    "sourceFile": "sources/20bbd6e1a4193cb97fa6616c83c52a6d1b26c004a284d6f6306c3424c7c1335a.source",
+    "excerptFile": "sources/20bbd6e1a4193cb97fa6616c83c52a6d1b26c004a284d6f6306c3424c7c1335a.source",
+    "excerptSha256": "20bbd6e1a4193cb97fa6616c83c52a6d1b26c004a284d6f6306c3424c7c1335a",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5027. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5027"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt396.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt396.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/4b35db761d3a52d40a841c8216fc7b7b2d66dcdca83ad35c97b06fb4930b1933.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt396.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt396.pdf",
+    "sourceCheckedAt": "2026-11-03T03:47:47.688706+00:00",
+    "sha256": "4b35db761d3a52d40a841c8216fc7b7b2d66dcdca83ad35c97b06fb4930b1933",
+    "sourceFile": "sources/4b35db761d3a52d40a841c8216fc7b7b2d66dcdca83ad35c97b06fb4930b1933.source",
+    "excerptFile": "sources/4b35db761d3a52d40a841c8216fc7b7b2d66dcdca83ad35c97b06fb4930b1933.source",
+    "excerptSha256": "4b35db761d3a52d40a841c8216fc7b7b2d66dcdca83ad35c97b06fb4930b1933",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5137. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5137"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt397.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt397.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/f0b4dddc0f3ee388e273779505357d5ae3c0605f9ad25c9da3e49352be7bf6d6.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt397.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt397.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:43.081326+00:00",
+    "sha256": "f0b4dddc0f3ee388e273779505357d5ae3c0605f9ad25c9da3e49352be7bf6d6",
+    "sourceFile": "sources/f0b4dddc0f3ee388e273779505357d5ae3c0605f9ad25c9da3e49352be7bf6d6.source",
+    "excerptFile": "sources/f0b4dddc0f3ee388e273779505357d5ae3c0605f9ad25c9da3e49352be7bf6d6.source",
+    "excerptSha256": "f0b4dddc0f3ee388e273779505357d5ae3c0605f9ad25c9da3e49352be7bf6d6",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5138. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5138"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt393.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt393.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/4892844c6fe4cc84078586f6d794b1dcd81419af1ba9ccc59ab07a8063ccfc97.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt393.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt393.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:21.450078+00:00",
+    "sha256": "4892844c6fe4cc84078586f6d794b1dcd81419af1ba9ccc59ab07a8063ccfc97",
+    "sourceFile": "sources/4892844c6fe4cc84078586f6d794b1dcd81419af1ba9ccc59ab07a8063ccfc97.source",
+    "excerptFile": "sources/4892844c6fe4cc84078586f6d794b1dcd81419af1ba9ccc59ab07a8063ccfc97.source",
+    "excerptSha256": "4892844c6fe4cc84078586f6d794b1dcd81419af1ba9ccc59ab07a8063ccfc97",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5297. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5297"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt189.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt189.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/0b202690bb6036745bd69ab4a47dd8fb0818a2d4300d0c0fc7ea0e50ef11e65b.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt189.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt189.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:55.653203+00:00",
+    "sha256": "0b202690bb6036745bd69ab4a47dd8fb0818a2d4300d0c0fc7ea0e50ef11e65b",
+    "sourceFile": "sources/0b202690bb6036745bd69ab4a47dd8fb0818a2d4300d0c0fc7ea0e50ef11e65b.source",
+    "excerptFile": "sources/0b202690bb6036745bd69ab4a47dd8fb0818a2d4300d0c0fc7ea0e50ef11e65b.source",
+    "excerptSha256": "0b202690bb6036745bd69ab4a47dd8fb0818a2d4300d0c0fc7ea0e50ef11e65b",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3347. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3347"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt248.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt248.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/e788e9515aca5fa55e6bec531863dcbd189e16d6d24cc41fdfe720b3fbf1ae3f.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt248.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt248.pdf",
+    "sourceCheckedAt": "2026-11-03T03:52:00.979226+00:00",
+    "sha256": "e788e9515aca5fa55e6bec531863dcbd189e16d6d24cc41fdfe720b3fbf1ae3f",
+    "sourceFile": "sources/e788e9515aca5fa55e6bec531863dcbd189e16d6d24cc41fdfe720b3fbf1ae3f.source",
+    "excerptFile": "sources/e788e9515aca5fa55e6bec531863dcbd189e16d6d24cc41fdfe720b3fbf1ae3f.source",
+    "excerptSha256": "e788e9515aca5fa55e6bec531863dcbd189e16d6d24cc41fdfe720b3fbf1ae3f",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5117. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5117"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt188.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt188.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/a171ef4b5c4a2d5371791f08833bf8b22167037295a995fc06293ceeaf53cb9e.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt188.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt188.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:55.657566+00:00",
+    "sha256": "a171ef4b5c4a2d5371791f08833bf8b22167037295a995fc06293ceeaf53cb9e",
+    "sourceFile": "sources/a171ef4b5c4a2d5371791f08833bf8b22167037295a995fc06293ceeaf53cb9e.source",
+    "excerptFile": "sources/a171ef4b5c4a2d5371791f08833bf8b22167037295a995fc06293ceeaf53cb9e.source",
+    "excerptSha256": "a171ef4b5c4a2d5371791f08833bf8b22167037295a995fc06293ceeaf53cb9e",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5241. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5241"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt395.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt395.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/10adaf77d835b977b4db4d804d5b70ca686feffe3cce41a43741808eb1f34997.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt395.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt395.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:43.080732+00:00",
+    "sha256": "10adaf77d835b977b4db4d804d5b70ca686feffe3cce41a43741808eb1f34997",
+    "sourceFile": "sources/10adaf77d835b977b4db4d804d5b70ca686feffe3cce41a43741808eb1f34997.source",
+    "excerptFile": "sources/10adaf77d835b977b4db4d804d5b70ca686feffe3cce41a43741808eb1f34997.source",
+    "excerptSha256": "10adaf77d835b977b4db4d804d5b70ca686feffe3cce41a43741808eb1f34997",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5136. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5136"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt227.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt227.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/2065b806054474f8979bcbb41c5143981699f96a070b025efe4c02a2ce1f8324.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt227.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt227.pdf",
+    "sourceCheckedAt": "2026-11-03T03:54:31.856294+00:00",
+    "sha256": "2065b806054474f8979bcbb41c5143981699f96a070b025efe4c02a2ce1f8324",
+    "sourceFile": "sources/2065b806054474f8979bcbb41c5143981699f96a070b025efe4c02a2ce1f8324.source",
+    "excerptFile": "sources/2065b806054474f8979bcbb41c5143981699f96a070b025efe4c02a2ce1f8324.source",
+    "excerptSha256": "2065b806054474f8979bcbb41c5143981699f96a070b025efe4c02a2ce1f8324",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5154. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5154"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt187.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt187.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/a7588036b9bfae2fd9269f5c72dd8f51340ca42706e77cbba594d157a96d21e5.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt187.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt187.pdf",
+    "sourceCheckedAt": "2026-11-03T03:52:00.986781+00:00",
+    "sha256": "a7588036b9bfae2fd9269f5c72dd8f51340ca42706e77cbba594d157a96d21e5",
+    "sourceFile": "sources/a7588036b9bfae2fd9269f5c72dd8f51340ca42706e77cbba594d157a96d21e5.source",
+    "excerptFile": "sources/a7588036b9bfae2fd9269f5c72dd8f51340ca42706e77cbba594d157a96d21e5.source",
+    "excerptSha256": "a7588036b9bfae2fd9269f5c72dd8f51340ca42706e77cbba594d157a96d21e5",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5243. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5243"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt308.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt308.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/9eb6958cd3056d894bff92e070f8a5b5d6f8d3b68dda1ffe28aaa7ac3d87fffb.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt308.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt308.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:43.083212+00:00",
+    "sha256": "9eb6958cd3056d894bff92e070f8a5b5d6f8d3b68dda1ffe28aaa7ac3d87fffb",
+    "sourceFile": "sources/9eb6958cd3056d894bff92e070f8a5b5d6f8d3b68dda1ffe28aaa7ac3d87fffb.source",
+    "excerptFile": "sources/9eb6958cd3056d894bff92e070f8a5b5d6f8d3b68dda1ffe28aaa7ac3d87fffb.source",
+    "excerptSha256": "9eb6958cd3056d894bff92e070f8a5b5d6f8d3b68dda1ffe28aaa7ac3d87fffb",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5161. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5161"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt201.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt201.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/b09eace22a018bc6e3ede5c800c7d94014a1cb72d718c890296220412fd24cc7.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt201.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt201.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:27.781938+00:00",
+    "sha256": "b09eace22a018bc6e3ede5c800c7d94014a1cb72d718c890296220412fd24cc7",
+    "sourceFile": "sources/b09eace22a018bc6e3ede5c800c7d94014a1cb72d718c890296220412fd24cc7.source",
+    "excerptFile": "sources/b09eace22a018bc6e3ede5c800c7d94014a1cb72d718c890296220412fd24cc7.source",
+    "excerptSha256": "b09eace22a018bc6e3ede5c800c7d94014a1cb72d718c890296220412fd24cc7",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5282. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5282"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt55.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt55.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/f02550920fca4ec514b76d1f4003221764209f1550d6af8a8a34cfcbb8f7cce7.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt55.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt55.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:43.078417+00:00",
+    "sha256": "f02550920fca4ec514b76d1f4003221764209f1550d6af8a8a34cfcbb8f7cce7",
+    "sourceFile": "sources/f02550920fca4ec514b76d1f4003221764209f1550d6af8a8a34cfcbb8f7cce7.source",
+    "excerptFile": "sources/f02550920fca4ec514b76d1f4003221764209f1550d6af8a8a34cfcbb8f7cce7.source",
+    "excerptSha256": "f02550920fca4ec514b76d1f4003221764209f1550d6af8a8a34cfcbb8f7cce7",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3324. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3324"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt314.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt314.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/bebecb80f3e0bab4150b2f02e51b8f4c8a8b7cf41e6d8fa862693caa412f3417.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt314.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt314.pdf",
+    "sourceCheckedAt": "2026-11-03T04:00:11.349559+00:00",
+    "sha256": "bebecb80f3e0bab4150b2f02e51b8f4c8a8b7cf41e6d8fa862693caa412f3417",
+    "sourceFile": "sources/bebecb80f3e0bab4150b2f02e51b8f4c8a8b7cf41e6d8fa862693caa412f3417.source",
+    "excerptFile": "sources/bebecb80f3e0bab4150b2f02e51b8f4c8a8b7cf41e6d8fa862693caa412f3417.source",
+    "excerptSha256": "bebecb80f3e0bab4150b2f02e51b8f4c8a8b7cf41e6d8fa862693caa412f3417",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5214. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5214"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt136.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt136.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/7e11fb3b7ba4aa826022071330adbe8af4648f71f5001dbf944b9c8630d0bbf1.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt136.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt136.pdf",
+    "sourceCheckedAt": "2026-11-03T03:46:53.004294+00:00",
+    "sha256": "7e11fb3b7ba4aa826022071330adbe8af4648f71f5001dbf944b9c8630d0bbf1",
+    "sourceFile": "sources/7e11fb3b7ba4aa826022071330adbe8af4648f71f5001dbf944b9c8630d0bbf1.source",
+    "excerptFile": "sources/7e11fb3b7ba4aa826022071330adbe8af4648f71f5001dbf944b9c8630d0bbf1.source",
+    "excerptSha256": "7e11fb3b7ba4aa826022071330adbe8af4648f71f5001dbf944b9c8630d0bbf1",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5084. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5084"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt46.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt46.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/7051d77b2308f63da563977eefee4c6d30cc8f6ef55b6f33cb732cf01c16644f.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt46.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt46.pdf",
+    "sourceCheckedAt": "2026-11-03T03:45:28.105088+00:00",
+    "sha256": "7051d77b2308f63da563977eefee4c6d30cc8f6ef55b6f33cb732cf01c16644f",
+    "sourceFile": "sources/7051d77b2308f63da563977eefee4c6d30cc8f6ef55b6f33cb732cf01c16644f.source",
+    "excerptFile": "sources/7051d77b2308f63da563977eefee4c6d30cc8f6ef55b6f33cb732cf01c16644f.source",
+    "excerptSha256": "7051d77b2308f63da563977eefee4c6d30cc8f6ef55b6f33cb732cf01c16644f",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5006. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5006"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt183.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt183.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/c7d1eb16233c671da934be5d51f2af64e5e35977d4b9644624f34814695d6f68.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt183.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt183.pdf",
+    "sourceCheckedAt": "2026-11-03T03:58:50.853501+00:00",
+    "sha256": "c7d1eb16233c671da934be5d51f2af64e5e35977d4b9644624f34814695d6f68",
+    "sourceFile": "sources/c7d1eb16233c671da934be5d51f2af64e5e35977d4b9644624f34814695d6f68.source",
+    "excerptFile": "sources/c7d1eb16233c671da934be5d51f2af64e5e35977d4b9644624f34814695d6f68.source",
+    "excerptSha256": "c7d1eb16233c671da934be5d51f2af64e5e35977d4b9644624f34814695d6f68",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5126. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5126"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt226.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt226.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/4c233e985603ee93881afae3017711b7bcbcf5b6243f4c1de8a20dc6bcb95051.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt226.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt226.pdf",
+    "sourceCheckedAt": "2026-11-03T03:46:56.758376+00:00",
+    "sha256": "4c233e985603ee93881afae3017711b7bcbcf5b6243f4c1de8a20dc6bcb95051",
+    "sourceFile": "sources/4c233e985603ee93881afae3017711b7bcbcf5b6243f4c1de8a20dc6bcb95051.source",
+    "excerptFile": "sources/4c233e985603ee93881afae3017711b7bcbcf5b6243f4c1de8a20dc6bcb95051.source",
+    "excerptSha256": "4c233e985603ee93881afae3017711b7bcbcf5b6243f4c1de8a20dc6bcb95051",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5155. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5155"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt385.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt385.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/67d3bd83a58fc30b985db01d9a8729647a1bd775613e87dfaeb993b0cf132dff.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt385.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt385.pdf",
+    "sourceCheckedAt": "2026-11-03T04:00:14.590872+00:00",
+    "sha256": "67d3bd83a58fc30b985db01d9a8729647a1bd775613e87dfaeb993b0cf132dff",
+    "sourceFile": "sources/67d3bd83a58fc30b985db01d9a8729647a1bd775613e87dfaeb993b0cf132dff.source",
+    "excerptFile": "sources/67d3bd83a58fc30b985db01d9a8729647a1bd775613e87dfaeb993b0cf132dff.source",
+    "excerptSha256": "67d3bd83a58fc30b985db01d9a8729647a1bd775613e87dfaeb993b0cf132dff",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5295. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5295"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt317.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt317.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/8f73b0263132f4d3254d1007251d8ca91ad3867da7492b5fc5b99800639ac9d0.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt317.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt317.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:45.775375+00:00",
+    "sha256": "8f73b0263132f4d3254d1007251d8ca91ad3867da7492b5fc5b99800639ac9d0",
+    "sourceFile": "sources/8f73b0263132f4d3254d1007251d8ca91ad3867da7492b5fc5b99800639ac9d0.source",
+    "excerptFile": "sources/8f73b0263132f4d3254d1007251d8ca91ad3867da7492b5fc5b99800639ac9d0.source",
+    "excerptSha256": "8f73b0263132f4d3254d1007251d8ca91ad3867da7492b5fc5b99800639ac9d0",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3114. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3114"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt181.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt181.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/bcb1a0bbcbf516f62d741550a7c15b56c18828f6c30219dac3dab4b00f3a8183.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt181.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt181.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:26.927089+00:00",
+    "sha256": "bcb1a0bbcbf516f62d741550a7c15b56c18828f6c30219dac3dab4b00f3a8183",
+    "sourceFile": "sources/bcb1a0bbcbf516f62d741550a7c15b56c18828f6c30219dac3dab4b00f3a8183.source",
+    "excerptFile": "sources/bcb1a0bbcbf516f62d741550a7c15b56c18828f6c30219dac3dab4b00f3a8183.source",
+    "excerptSha256": "bcb1a0bbcbf516f62d741550a7c15b56c18828f6c30219dac3dab4b00f3a8183",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5193. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5193"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt219.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt219.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/8f0a576f587bff09efce30f956a08a38d8359ec9259401f9b7961e37a5b25c11.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt219.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt219.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:22.320631+00:00",
+    "sha256": "8f0a576f587bff09efce30f956a08a38d8359ec9259401f9b7961e37a5b25c11",
+    "sourceFile": "sources/8f0a576f587bff09efce30f956a08a38d8359ec9259401f9b7961e37a5b25c11.source",
+    "excerptFile": "sources/8f0a576f587bff09efce30f956a08a38d8359ec9259401f9b7961e37a5b25c11.source",
+    "excerptSha256": "8f0a576f587bff09efce30f956a08a38d8359ec9259401f9b7961e37a5b25c11",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 3314. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "3314"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt279.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt279.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/a885f3ff139e02486c0eb0d141652ee3fb19441b9f6c66b084917b5253cd26e4.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt279.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt279.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:22.643484+00:00",
+    "sha256": "a885f3ff139e02486c0eb0d141652ee3fb19441b9f6c66b084917b5253cd26e4",
+    "sourceFile": "sources/a885f3ff139e02486c0eb0d141652ee3fb19441b9f6c66b084917b5253cd26e4.source",
+    "excerptFile": "sources/a885f3ff139e02486c0eb0d141652ee3fb19441b9f6c66b084917b5253cd26e4.source",
+    "excerptSha256": "a885f3ff139e02486c0eb0d141652ee3fb19441b9f6c66b084917b5253cd26e4",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 4903. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "4903"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt247.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt247.pdf",
+      "reportedPdfPages": 36,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/9073107f42a60f42bd9e5c5dce314f12354f85e986d82517875f8d5ba8c13a22.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt247.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt247.pdf",
+    "sourceCheckedAt": "2026-11-03T03:52:00.977706+00:00",
+    "sha256": "9073107f42a60f42bd9e5c5dce314f12354f85e986d82517875f8d5ba8c13a22",
+    "sourceFile": "sources/9073107f42a60f42bd9e5c5dce314f12354f85e986d82517875f8d5ba8c13a22.source",
+    "excerptFile": "sources/9073107f42a60f42bd9e5c5dce314f12354f85e986d82517875f8d5ba8c13a22.source",
+    "excerptSha256": "9073107f42a60f42bd9e5c5dce314f12354f85e986d82517875f8d5ba8c13a22",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5120. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5120"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt257.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt257.pdf",
+      "reportedPdfPages": 40,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/55cc47841da52d14678e923c11283c7644d42a8870594c492b7f5e66b1c0e9b9.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt257.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt257.pdf",
+    "sourceCheckedAt": "2026-11-03T03:56:18.719078+00:00",
+    "sha256": "55cc47841da52d14678e923c11283c7644d42a8870594c492b7f5e66b1c0e9b9",
+    "sourceFile": "sources/55cc47841da52d14678e923c11283c7644d42a8870594c492b7f5e66b1c0e9b9.source",
+    "excerptFile": "sources/55cc47841da52d14678e923c11283c7644d42a8870594c492b7f5e66b1c0e9b9.source",
+    "excerptSha256": "55cc47841da52d14678e923c11283c7644d42a8870594c492b7f5e66b1c0e9b9",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5272. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5272"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt438.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt438.pdf",
+      "reportedPdfPages": 44,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/98d0ec1264bdbdca4094ca0615b0772c40e0e7d9e1382fe104ac34b86c2ab3f1.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt438.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt438.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:22.977809+00:00",
+    "sha256": "98d0ec1264bdbdca4094ca0615b0772c40e0e7d9e1382fe104ac34b86c2ab3f1",
+    "sourceFile": "sources/98d0ec1264bdbdca4094ca0615b0772c40e0e7d9e1382fe104ac34b86c2ab3f1.source",
+    "excerptFile": "sources/98d0ec1264bdbdca4094ca0615b0772c40e0e7d9e1382fe104ac34b86c2ab3f1.source",
+    "excerptSha256": "98d0ec1264bdbdca4094ca0615b0772c40e0e7d9e1382fe104ac34b86c2ab3f1",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5106. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5106"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt310.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt310.pdf",
+      "reportedPdfPages": 44,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/bd938a196719f61b951ef2438f685f28e58e05f5b59e69d3066e22a43cbba57d.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt310.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt310.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:45.517528+00:00",
+    "sha256": "bd938a196719f61b951ef2438f685f28e58e05f5b59e69d3066e22a43cbba57d",
+    "sourceFile": "sources/bd938a196719f61b951ef2438f685f28e58e05f5b59e69d3066e22a43cbba57d.source",
+    "excerptFile": "sources/bd938a196719f61b951ef2438f685f28e58e05f5b59e69d3066e22a43cbba57d.source",
+    "excerptSha256": "bd938a196719f61b951ef2438f685f28e58e05f5b59e69d3066e22a43cbba57d",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5201. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5201"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt276.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt276.pdf",
+      "reportedPdfPages": 52,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/a83c9af562c813cf9edbda0e17e36a05449ae76352828b29d346098f49f68d7b.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt276.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt276.pdf",
+    "sourceCheckedAt": "2026-11-03T03:47:43.944872+00:00",
+    "sha256": "a83c9af562c813cf9edbda0e17e36a05449ae76352828b29d346098f49f68d7b",
+    "sourceFile": "sources/a83c9af562c813cf9edbda0e17e36a05449ae76352828b29d346098f49f68d7b.source",
+    "excerptFile": "sources/a83c9af562c813cf9edbda0e17e36a05449ae76352828b29d346098f49f68d7b.source",
+    "excerptSha256": "a83c9af562c813cf9edbda0e17e36a05449ae76352828b29d346098f49f68d7b",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5112. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5112"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt461.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt461.pdf",
+      "reportedPdfPages": 60,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/d83d51033956ae5144a500e1248d7e80ef5b59008180b21b23ca07905f191905.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt461.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt461.pdf",
+    "sourceCheckedAt": "2026-11-03T03:45:21.964903+00:00",
+    "sha256": "d83d51033956ae5144a500e1248d7e80ef5b59008180b21b23ca07905f191905",
+    "sourceFile": "sources/d83d51033956ae5144a500e1248d7e80ef5b59008180b21b23ca07905f191905.source",
+    "excerptFile": "sources/d83d51033956ae5144a500e1248d7e80ef5b59008180b21b23ca07905f191905.source",
+    "excerptSha256": "d83d51033956ae5144a500e1248d7e80ef5b59008180b21b23ca07905f191905",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5187. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5187"
+    ]
+  },
+  {
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete captured official-PDF extraction text; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full-PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt444.pdf",
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt444.pdf",
+      "reportedPdfPages": 64,
+      "originHttpStatus": null,
+      "httpStatusBasis": "successful SOURCE_TEXT capture of official PDF; native-government transport status not asserted",
+      "sourceTextFile": "sources/fabf6c59f05282c1a0144e0fd2e6245c0a774775344d7ec2096a43312deb049f.source"
+    },
+    "sourceUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt444.pdf",
+    "finalUrl": "https://ocvote.gov/fileadmin/user_upload/elections/GEN2026/sbs/bt444.pdf",
+    "sourceCheckedAt": "2026-11-03T03:57:46.644034+00:00",
+    "sha256": "fabf6c59f05282c1a0144e0fd2e6245c0a774775344d7ec2096a43312deb049f",
+    "sourceFile": "sources/fabf6c59f05282c1a0144e0fd2e6245c0a774775344d7ec2096a43312deb049f.source",
+    "excerptFile": "sources/fabf6c59f05282c1a0144e0fd2e6245c0a774775344d7ec2096a43312deb049f.source",
+    "excerptSha256": "fabf6c59f05282c1a0144e0fd2e6245c0a774775344d7ec2096a43312deb049f",
+    "evidence": "Complete official Orange County November 3, 2026 sample-ballot guide captured as SOURCE_TEXT through Jina Reader. Hash covers the full exact saved capture text, not original PDF bytes. Complete printed named-candidate office blocks verified for county contest IDs 5182. PDF intra-word spacing in candidate names is normalized only for display after comparison with the official qualified roster; exact sample name lines are retained in candidate provenance. Generic blank write-in lines are not people. Candidate statement pages are not used for candidate-list completeness.",
+    "countyContestIds": [
+      "5182"
+    ]
+  },
+  {
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10668.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10668.json",
+    "sourceCheckedAt": "2026-11-03T03:43:47.600872+00:00",
+    "sha256": "0fc9fe4dff54a64f4b8c576cd4819c327ddf6c9466f563d35c9c911ba82d8621",
+    "sourceFile": "sources/0fc9fe4dff54a64f4b8c576cd4819c327ddf6c9466f563d35c9c911ba82d8621.source",
+    "excerptFile": "sources/e3550337ee2b207bed5bbc3432b01837ad57f5f2c4bfe9680b04c2b1cbc1f7be.txt",
+    "excerptSha256": "e3550337ee2b207bed5bbc3432b01837ad57f5f2c4bfe9680b04c2b1cbc1f7be",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10668: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported.",
+    "countyContestIds": [
+      "3189"
+    ],
+    "sharedSourcePacket": "CA/los-angeles"
+  },
+  {
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10750.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10750.json",
+    "sourceCheckedAt": "2026-11-03T03:43:48.269426+00:00",
+    "sha256": "9716639d20da5e241f3a150473bcf4a7fde948c1f671ec1ab6ccf897c9893b59",
+    "sourceFile": "sources/9716639d20da5e241f3a150473bcf4a7fde948c1f671ec1ab6ccf897c9893b59.source",
+    "excerptFile": "sources/98d058848da513cb36847e65dcf24bc8977b6ecdd60fcf14a2edaab537e82e70.txt",
+    "excerptSha256": "98d058848da513cb36847e65dcf24bc8977b6ecdd60fcf14a2edaab537e82e70",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10750: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported.",
+    "countyContestIds": [
+      "3233"
+    ],
+    "sharedSourcePacket": "CA/los-angeles"
+  },
+  {
+    "sourceUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10751.json",
+    "finalUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10751.json",
+    "sourceCheckedAt": "2026-11-03T03:43:48.626313+00:00",
+    "sha256": "b2ba7ae70fc1521a31d4569664972b129492cdbdd5acfc194133654abbf26dee",
+    "sourceFile": "sources/b2ba7ae70fc1521a31d4569664972b129492cdbdd5acfc194133654abbf26dee.source",
+    "excerptFile": "sources/a0082fde6cb62ec2aeff4090d657e46a0aeda1687182512f1a33094019f39a59.txt",
+    "excerptSha256": "a0082fde6cb62ec2aeff4090d657e46a0aeda1687182512f1a33094019f39a59",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official Interactive Sample Ballot election4348 complete candidate block cc10751: all 2 named choices retained; 1 generic write-in slots excluded. Full English title and name field values extracted exactly from native JSON. Candidate statement prose and personal contact fields are not imported.",
+    "countyContestIds": [
+      "3237"
+    ],
+    "sharedSourcePacket": "CA/los-angeles"
+  }
+]

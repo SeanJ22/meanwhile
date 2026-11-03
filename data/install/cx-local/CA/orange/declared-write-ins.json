@@ -1,0 +1,26 @@
+[
+  {
+    "electionId": "ca-2026-11-03-general",
+    "office": "Rancho Santa Margarita \u2014 Member, City Council District 4",
+    "countyContestId": "5297",
+    "ocdId": "ocd-division/country:us/state:ca/place:rancho_santa_margarita/council_district:4",
+    "name": "MARYANN VERGHESE",
+    "status": "DECLARED_WRITE_IN_SEPARATE_FROM_PRINTED_SAMPLE_BALLOT",
+    "provenance": {
+      "sourceUrl": "https://ocvote.gov/elections/2026-general-election",
+      "sourceCheckedAt": "2026-11-03T03:41:31.847528+00:00",
+      "captureFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "provider": "Jina Reader deterministic extraction",
+        "readerUrl": "https://r.jina.ai/https://ocvote.gov/elections/2026-general-election",
+        "readerHttpStatus": 200,
+        "originHttpStatus": null
+      },
+      "hashScope": "full exact captured text; not original PDF bytes",
+      "sha256": "15cad5e98058526bebd3a95d815ffe098aeb9c8267523f8551792e527336b0b5",
+      "sourceFile": "sources/15cad5e98058526bebd3a95d815ffe098aeb9c8267523f8551792e527336b0b5.source",
+      "quote": "*   **MEMBER, CITY COUNCIL, CITY OF RANCHO SANTA MARGARITA, DISTRICT 4**  \nMARYANN VERGHESE",
+      "use": "Current election page separately certifies declared write-in; never inserted into printed sample-ballot named list."
+    }
+  }
+]

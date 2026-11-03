@@ -1,0 +1,134 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4403",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:thorp_school_district",
+      "unsd",
+      "5514820",
+      "Thorp School District"
+    ],
+    "sourceAgencyCode": "5726",
+    "sourceAgencyName": "Thorp School District (5726)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-5726",
+      "nces_leaid": "5514820",
+      "lea_name": "Thorp School District",
+      "website": "http://www.thorp.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4342",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:unity_school_district",
+      "unsd",
+      "5500750",
+      "Unity School District"
+    ],
+    "sourceAgencyCode": "0238",
+    "sourceAgencyName": "Unity School District (0238)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0238",
+      "nces_leaid": "5500750",
+      "lea_name": "Unity School District",
+      "website": "http://www.unity.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4343",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:unity_school_district",
+      "unsd",
+      "5500750",
+      "Unity School District"
+    ],
+    "sourceAgencyCode": "0238",
+    "sourceAgencyName": "Unity School District (0238)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0238",
+      "nces_leaid": "5500750",
+      "lea_name": "Unity School District",
+      "website": "http://www.unity.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4349",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:waunakee_community_school_district",
+      "unsd",
+      "5515810",
+      "Waunakee Community School District"
+    ],
+    "sourceAgencyCode": "6181",
+    "sourceAgencyName": "Waunakee Community School District (6181)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6181",
+      "nces_leaid": "5515810",
+      "lea_name": "Waunakee Community School District",
+      "website": "http://www.waunakee.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4350",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:waunakee_community_school_district",
+      "unsd",
+      "5515810",
+      "Waunakee Community School District"
+    ],
+    "sourceAgencyCode": "6181",
+    "sourceAgencyName": "Waunakee Community School District (6181)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6181",
+      "nces_leaid": "5515810",
+      "lea_name": "Waunakee Community School District",
+      "website": "http://www.waunakee.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4368",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:winter_school_district",
+      "unsd",
+      "5516860",
+      "Winter School District"
+    ],
+    "sourceAgencyCode": "6615",
+    "sourceAgencyName": "Winter School District (6615)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6615",
+      "nces_leaid": "5516860",
+      "lea_name": "Winter School District",
+      "website": "http://winter.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

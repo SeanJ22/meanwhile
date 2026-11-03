@@ -1,0 +1,98 @@
+[
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500750",
+      "sourceFile": "sources/4c48d2d4c2b9b9ebe24a277c3bf56029235d6d2ef4e8036dabc8212c2f8192fd.html",
+      "rawHash": "4c48d2d4c2b9b9ebe24a277c3bf56029235d6d2ef4e8036dabc8212c2f8192fd",
+      "exactObservedHref": "/transfer.asp?location=www.unity.k12.wi.us",
+      "publishedDistrictWebsite": "www.unity.k12.wi.us",
+      "registeredSchoolGeoid": "5500750"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.unity.k12.wi.us/page/unity-referendum-information",
+        "sourceFile": "sources/40bbaa0a9f411a6a26cd9c87f970a0edb0ccf264352b6319f4f061f69a7d09ae.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "40bbaa0a9f411a6a26cd9c87f970a0edb0ccf264352b6319f4f061f69a7d09ae",
+        "linkEvidenceKind": "PUBLISHED_EMBEDDED_URL",
+        "documentLink": {
+          "publishedUrl": "https://townofappleriver.com/",
+          "description": "Exact district native page embedded content names TownofAppleRiver and publishes its official homepage link, which links its elections page with the full signed Unity notice and ballot. Original raw HTML for every step is retained."
+        }
+      },
+      {
+        "url": "https://townofappleriver.com/",
+        "sourceFile": "sources/b2c292cf95f8f15fd1eb1a853f83440f0f2b90096b2bec8164f46e68d261ae0e.html",
+        "sourceEncoding": "identity",
+        "rawHash": "b2c292cf95f8f15fd1eb1a853f83440f0f2b90096b2bec8164f46e68d261ae0e"
+      },
+      {
+        "url": "https://townofappleriver.com/election/",
+        "sourceFile": "sources/7f8324424395d4c18f0fe6df7b27e72433225296006f5b8b7bdadcc6cc431d12.html",
+        "sourceEncoding": "identity",
+        "rawHash": "7f8324424395d4c18f0fe6df7b27e72433225296006f5b8b7bdadcc6cc431d12"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500750",
+      "sourceFile": "sources/4c48d2d4c2b9b9ebe24a277c3bf56029235d6d2ef4e8036dabc8212c2f8192fd.html",
+      "rawHash": "4c48d2d4c2b9b9ebe24a277c3bf56029235d6d2ef4e8036dabc8212c2f8192fd",
+      "exactObservedHref": "/transfer.asp?location=www.unity.k12.wi.us",
+      "publishedDistrictWebsite": "www.unity.k12.wi.us",
+      "registeredSchoolGeoid": "5500750"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.unity.k12.wi.us/page/unity-referendum-information",
+        "sourceFile": "sources/40bbaa0a9f411a6a26cd9c87f970a0edb0ccf264352b6319f4f061f69a7d09ae.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "40bbaa0a9f411a6a26cd9c87f970a0edb0ccf264352b6319f4f061f69a7d09ae",
+        "linkEvidenceKind": "PUBLISHED_EMBEDDED_URL",
+        "documentLink": {
+          "publishedUrl": "https://townofappleriver.com/",
+          "description": "Exact district native page embedded content names TownofAppleRiver and publishes its official homepage link, which links its elections page with the full signed Unity notice and ballot. Original raw HTML for every step is retained."
+        }
+      },
+      {
+        "url": "https://townofappleriver.com/",
+        "sourceFile": "sources/b2c292cf95f8f15fd1eb1a853f83440f0f2b90096b2bec8164f46e68d261ae0e.html",
+        "sourceEncoding": "identity",
+        "rawHash": "b2c292cf95f8f15fd1eb1a853f83440f0f2b90096b2bec8164f46e68d261ae0e"
+      },
+      {
+        "url": "https://townofappleriver.com/election/",
+        "sourceFile": "sources/7f8324424395d4c18f0fe6df7b27e72433225296006f5b8b7bdadcc6cc431d12.html",
+        "sourceEncoding": "identity",
+        "rawHash": "7f8324424395d4c18f0fe6df7b27e72433225296006f5b8b7bdadcc6cc431d12"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://townofdane.gov/2026/09/16/november-3-2026-general-election-information/",
+      "sourceFile": "sources/00a6acfc9073c598b13f3ab64564f04c5ca1f7dac288074de6417dca33140f0e.html.gz",
+      "rawHash": "00a6acfc9073c598b13f3ab64564f04c5ca1f7dac288074de6417dca33140f0e"
+    },
+    "basis": "Observed native official .gov page links this exact published source, with full original linking HTML saved."
+  },
+  {
+    "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://townofdane.gov/2026/09/16/november-3-2026-general-election-information/",
+      "sourceFile": "sources/00a6acfc9073c598b13f3ab64564f04c5ca1f7dac288074de6417dca33140f0e.html.gz",
+      "rawHash": "00a6acfc9073c598b13f3ab64564f04c5ca1f7dac288074de6417dca33140f0e"
+    },
+    "basis": "Observed native official .gov page links this exact published source, with full original linking HTML saved."
+  }
+]

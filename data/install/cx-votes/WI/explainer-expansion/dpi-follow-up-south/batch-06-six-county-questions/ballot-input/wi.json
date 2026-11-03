@@ -1,0 +1,389 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4403",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:thorp_school_district",
+          "divisionVintage": "2026",
+          "title": "Thorp School District — School facility improvement borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "Replacing and/or repairing school roof, HVAC system, asphalt, electrical systems, plumbing systems, fire safety equipment, worn out windows, lockers, bleachers, exterior repairs.  "
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4342",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:unity_school_district",
+          "divisionVintage": "2026",
+          "title": "Unity School District — Question I — School facility borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Unity School District, Polk County,\nWisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general\nobligation bonds in an amount not to exceed $32,000,000 for the public purpose of paying the\ncost of a school facility improvement project at the district campus consisting of: construction of\nan addition and renovations at the High School, including for career and technical education and\nautomotive space, and cafeteria and food service updates; safety, traffic flow, parking and site\nimprovements; district-wide capital maintenance and building infrastructure improvements,\nincluding roof replacement; athletic facility and accessibility improvements, and reconstruction\nof baseball, football and softball fields, the tennis courts and track; and acquisition of\nfurnishings, fixtures and equipment."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4343",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:unity_school_district",
+          "divisionVintage": "2026",
+          "title": "Unity School District — Question II — Ongoing operating revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Unity School District, Polk County,\r\nWisconsin that the revenues included in the School District budget be authorized to exceed the\r\nrevenue limit specified in Section 121.91, Wisconsin Statutes, by $600,000 beginning with the\r\n2026-2027 school year, for recurring purposes consisting of operational and maintenance\r\nexpenses."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4349",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:waunakee_community_school_district",
+          "divisionVintage": "2026",
+          "title": "Waunakee Community School District — Question 1 — Ongoing operating revenue-limit increases",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Waunakee Community School District,\r\nDane County, Wisconsin that the revenues included in the School District budget be authorized\r\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,200,000 for\r\nthe 2027-2028 school year; by an additional $2,100,000 for the 2028-2029 school year; by an\r\nadditional $2,100,000 for the 2029-2030 school year; and by an additional $2,100,000 for the\r\n2030-2031 school year (for a total of $10,500,000 and to remain at that amount thereafter), for\r\nrecurring purposes consisting of ongoing operational expenses and employee compensation\r\nexpenses."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4350",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:waunakee_community_school_district",
+          "divisionVintage": "2026",
+          "title": "Waunakee Community School District — Question 2 — School facility borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Waunakee Community School District,\r\nDane County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin\r\nStatutes, general obligation bonds in an amount not to exceed $97,500,000 for the public purpose\r\nof paying the cost of a school facility improvement project consisting of: removal of an older\r\nportion of the High School and construction of additions and renovations at the High School;\r\nrenovations at the old middle school (known as the High School South Campus); outdoor athletic\r\nfield renovations and improvements at the High School Campus; district-wide renovations,\r\ncapital maintenance and site improvements; and acquisition of furnishings, fixtures and\r\nequipment."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4368",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:winter_school_district",
+          "divisionVintage": "2026",
+          "title": "Winter School District — Four-year operating revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sawyercounty.gov/DocumentCenter/View/82967/18-Point-WSD-Type-C-Notice-of-Referendum",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "For non-recurring purposes consisting of operational expenses, including but not limited to school safety, staffing, and facility maintenance."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4403:measure",
+          "contestId": "wi-dpi-2026-referendum-4403",
+          "questionText": "Shall the School District of Thorp, Clark and Taylor Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $8,500,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide capital maintenance and building infrastructure improvements, including plumbing, electrical, HVAC, roof, asphalt and fire safety repairs and replacements; and acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "Replacing and/or repairing school roof, HVAC system, asphalt, electrical systems, plumbing systems, fire safety equipment, worn out windows, lockers, bleachers, exterior repairs.  ",
+          "provenance": {
+            "sourceUrl": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+            "sourceOrg": "Clark County Clerk",
+            "collectedAt": "2026-11-03T07:10:23.992589+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "Shall the School District of Thorp, Clark and Taylor Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $8,500,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide capital maintenance and building infrastructure improvements, including plumbing, electrical, HVAC, roof, asphalt and fire safety repairs and replacements; and acquisition of furnishings, fixtures and equipment?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4342:measure",
+          "contestId": "wi-dpi-2026-referendum-4342",
+          "questionText": "Shall the Unity School District, Polk County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $32,000,000 for the public purpose of paying the cost of a school facility improvement project at the district campus consisting of: construction of an addition and renovations at the High School, including for career and technical education and automotive space, and cafeteria and food service updates; safety, traffic flow, parking and site improvements; district-wide capital maintenance and building infrastructure improvements, including roof replacement; athletic facility and accessibility improvements, and reconstruction of baseball, football and softball fields, the tennis courts and track; and acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Unity School District, Polk County,\nWisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general\nobligation bonds in an amount not to exceed $32,000,000 for the public purpose of paying the\ncost of a school facility improvement project at the district campus consisting of: construction of\nan addition and renovations at the High School, including for career and technical education and\nautomotive space, and cafeteria and food service updates; safety, traffic flow, parking and site\nimprovements; district-wide capital maintenance and building infrastructure improvements,\nincluding roof replacement; athletic facility and accessibility improvements, and reconstruction\nof baseball, football and softball fields, the tennis courts and track; and acquisition of\nfurnishings, fixtures and equipment.",
+          "provenance": {
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+            "sourceOrg": "Town of Apple River Clerk, official Unity School District notice and ballot",
+            "collectedAt": "2026-11-03T07:10:23.959131+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "Shall the Unity School District, Polk County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $32,000,000 for the public purpose of paying the cost of a school facility improvement project at the district campus consisting of: construction of an addition and renovations at the High School, including for career and technical education and automotive space, and cafeteria and food service updates; safety, traffic flow, parking and site improvements; district-wide capital maintenance and building infrastructure improvements, including roof replacement; athletic facility and accessibility improvements, and reconstruction of baseball, football and softball fields, the tennis courts and track; and acquisition of furnishings, fixtures and equipment?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4343:measure",
+          "contestId": "wi-dpi-2026-referendum-4343",
+          "questionText": "Shall the Unity School District, Polk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $600,000 beginning with the 2026-2027 school year, for recurring purposes consisting of operational and maintenance expenses?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Unity School District, Polk County,\r\nWisconsin that the revenues included in the School District budget be authorized to exceed the\r\nrevenue limit specified in Section 121.91, Wisconsin Statutes, by $600,000 beginning with the\r\n2026-2027 school year, for recurring purposes consisting of operational and maintenance\r\nexpenses.",
+          "provenance": {
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+            "sourceOrg": "Town of Apple River Clerk, official Unity School District notice and ballot",
+            "collectedAt": "2026-11-03T07:10:23.959131+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "Shall the Unity School District, Polk County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $600,000 beginning with the 2026-2027 school year, for recurring purposes consisting of operational and maintenance expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4349:measure",
+          "contestId": "wi-dpi-2026-referendum-4349",
+          "questionText": "Shall the Waunakee Community School District, Dane County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,200,000 for the 2027-2028 school year; by an additional $2,100,000 for the 2028-2029 school year; by an additional $2,100,000 for the 2029-2030 school year; and by an additional $2,100,000 for the 2030-2031 school year (for a total of $10,500,000 and to remain at that amount thereafter), for recurring purposes consisting of ongoing operational expenses and employee compensation expenses?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Waunakee Community School District,\r\nDane County, Wisconsin that the revenues included in the School District budget be authorized\r\nto exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,200,000 for\r\nthe 2027-2028 school year; by an additional $2,100,000 for the 2028-2029 school year; by an\r\nadditional $2,100,000 for the 2029-2030 school year; and by an additional $2,100,000 for the\r\n2030-2031 school year (for a total of $10,500,000 and to remain at that amount thereafter), for\r\nrecurring purposes consisting of ongoing operational expenses and employee compensation\r\nexpenses.",
+          "provenance": {
+            "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+            "sourceOrg": "Town of Dane Clerk, official Dane County sample ballot",
+            "collectedAt": "2026-11-03T07:10:23.610134+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "Shall the Waunakee Community School District, Dane County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,200,000 for the 2027-2028 school year; by an additional $2,100,000 for the 2028-2029 school year; by an additional $2,100,000 for the 2029-2030 school year; and by an additional $2,100,000 for the 2030-2031 school year (for a total of $10,500,000 and to remain at that amount thereafter), for recurring purposes consisting of ongoing operational expenses and employee compensation expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4350:measure",
+          "contestId": "wi-dpi-2026-referendum-4350",
+          "questionText": "Shall the Waunakee Community School District, Dane County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $97,500,000 for the public purpose of paying the cost of a school facility improvement project consisting of: removal of an older portion of the High School and construction of additions and renovations at the High School; renovations at the old middle school (known as the High School South Campus); outdoor athletic field renovations and improvements at the High School Campus; district-wide renovations, capital maintenance and site improvements; and acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Waunakee Community School District,\r\nDane County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin\r\nStatutes, general obligation bonds in an amount not to exceed $97,500,000 for the public purpose\r\nof paying the cost of a school facility improvement project consisting of: removal of an older\r\nportion of the High School and construction of additions and renovations at the High School;\r\nrenovations at the old middle school (known as the High School South Campus); outdoor athletic\r\nfield renovations and improvements at the High School Campus; district-wide renovations,\r\ncapital maintenance and site improvements; and acquisition of furnishings, fixtures and\r\nequipment.",
+          "provenance": {
+            "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+            "sourceOrg": "Town of Dane Clerk, official Dane County sample ballot",
+            "collectedAt": "2026-11-03T07:10:23.610134+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "Shall the Waunakee Community School District, Dane County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $97,500,000 for the public purpose of paying the cost of a school facility improvement project consisting of: removal of an older portion of the High School and construction of additions and renovations at the High School; renovations at the old middle school (known as the High School South Campus); outdoor athletic field renovations and improvements at the High School Campus; district-wide renovations, capital maintenance and site improvements; and acquisition of furnishings, fixtures and equipment?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4368:measure",
+          "contestId": "wi-dpi-2026-referendum-4368",
+          "questionText": "Shall the School District of Winter, located in Sawyer County and Rusk County, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses, including but not limited to school safety, staffing, and facility maintenance?",
+          "officialStatement": "For non-recurring purposes consisting of operational expenses, including but not limited to school safety, staffing, and facility maintenance.",
+          "provenance": {
+            "sourceUrl": "https://www.sawyercounty.gov/DocumentCenter/View/82967/18-Point-WSD-Type-C-Notice-of-Referendum",
+            "sourceOrg": "Sawyer County Clerk, official School District of Winter TypeC notice",
+            "collectedAt": "2026-11-03T07:10:24.068744+00:00",
+            "verifiedAt": "2026-11-03T07:12:54.089963+00:00",
+            "quote": "Shall the School District of Winter, located in Sawyer County and Rusk County, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses, including but not limited to school safety, staffing, and facility maintenance?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4403",
+          "whatItDoes": "Allow the district to borrow up to $8.5 million through general obligation bonds for district-wide capital maintenance and building infrastructure improvements, including plumbing, electrical, heating and cooling, roof, asphalt and fire-safety repairs and replacements, plus furnishings, fixtures and equipment.",
+          "yesMeans": "Authorize up to $8.5 million in borrowing for those school facility improvements.",
+          "noMeans": "Reject this proposed borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+          "sourceHash": "f59e0aaa21b36bd56021864c5a8c3f413e9f5759fcc458ae01b3c7582700e886",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:12:54.089963+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4342",
+          "whatItDoes": "Allow the district to borrow up to $32 million through general obligation bonds for high-school additions and renovations, including career and technical education, automotive, cafeteria and food-service spaces; safety, traffic, parking and site work; district-wide capital maintenance and infrastructure, including roof replacement; athletic and accessibility improvements and reconstruction of fields, tennis courts and track; and furnishings, fixtures and equipment.",
+          "yesMeans": "Authorize up to $32 million in borrowing for those district-campus improvements.",
+          "noMeans": "Reject this proposed borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+          "sourceHash": "b3f507550cb58b6f79abc5facf071376f4b3975b26efd907a9f0aa2baebddd13",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:12:54.089963+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4343",
+          "whatItDoes": "Permanently raise the district’s annual state revenue limit by $600,000 beginning in the 2026–27 school year for operating and maintenance expenses.",
+          "yesMeans": "Approve the ongoing $600,000 yearly revenue-limit increase for operating and maintenance expenses.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+          "sourceHash": "b3f507550cb58b6f79abc5facf071376f4b3975b26efd907a9f0aa2baebddd13",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:12:54.089963+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4349",
+          "whatItDoes": "Permanently raise the district’s annual state revenue limit by $4.2 million in 2027–28, then add $2.1 million in each of the next three school years. The total yearly increase would be $6.3 million in 2028–29, $8.4 million in 2029–30 and $10.5 million from 2030–31 onward, for ongoing operating and employee compensation expenses.",
+          "yesMeans": "Approve those phased-in, ongoing revenue-limit increases, reaching $10.5 million a year from 2030–31 onward, for operating and employee compensation expenses.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+          "sourceHash": "96d1f5ffdb751fb78a685e615d9765680a30a28c58b2d87e7efe444b744f3169",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:12:54.089963+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4350",
+          "whatItDoes": "Allow the district to borrow up to $97.5 million through general obligation bonds to demolish an older High School portion and build additions and renovations; renovate the former middle school, now the High School South Campus; improve outdoor athletic fields at the High School Campus; make district-wide renovations, capital maintenance and site improvements; and buy furnishings, fixtures and equipment.",
+          "yesMeans": "Authorize up to $97.5 million in borrowing for those school facility improvements.",
+          "noMeans": "Reject this proposed borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+          "sourceHash": "96d1f5ffdb751fb78a685e615d9765680a30a28c58b2d87e7efe444b744f3169",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:12:54.089963+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4368",
+          "whatItDoes": "Allow the district to exceed its state revenue limit by $1.5 million a year for four school years, 2027–28 through 2030–31, for operating expenses, including school safety, staffing and facility maintenance. The increase would be temporary.",
+          "yesMeans": "Approve the temporary $1.5 million yearly revenue-limit increase for those four years and operating purposes.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.sawyercounty.gov/DocumentCenter/View/82967/18-Point-WSD-Type-C-Notice-of-Referendum",
+          "sourceHash": "265bad207f85ad888137f3a4b7124cbf1a0740f4e1284ce43ac4a2e0790b6ebf",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:12:54.089963+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:12:54.089963+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+        "finalUrl": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+        "publisher": "Clark County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:10:23.992589+00:00",
+        "httpStatus": 200,
+        "rawHash": "f59e0aaa21b36bd56021864c5a8c3f413e9f5759fcc458ae01b3c7582700e886",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+        "finalUrl": "https://storage.googleapis.com/juniper-media-library/99/2026/10/Unity%20Referendum%20Notice%20%26%20Ballot%2011%203%202026.pdf",
+        "publisher": "Town of Apple River Clerk, official Unity School District notice and ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:10:23.959131+00:00",
+        "httpStatus": 200,
+        "rawHash": "b3f507550cb58b6f79abc5facf071376f4b3975b26efd907a9f0aa2baebddd13",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500750",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500750",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:54:59.325718+00:00",
+        "httpStatus": 200,
+        "rawHash": "4c48d2d4c2b9b9ebe24a277c3bf56029235d6d2ef4e8036dabc8212c2f8192fd",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.unity.k12.wi.us/page/unity-referendum-information",
+        "finalUrl": "https://www.unity.k12.wi.us/page/unity-referendum-information",
+        "publisher": "Town of Apple River Clerk, official Unity School District notice and ballot",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:56:39.488384+00:00",
+        "httpStatus": 200,
+        "rawHash": "40bbaa0a9f411a6a26cd9c87f970a0edb0ccf264352b6319f4f061f69a7d09ae",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://townofappleriver.com/",
+        "finalUrl": "https://townofappleriver.com/",
+        "publisher": "Town of Apple River Clerk, official Unity School District notice and ballot",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T07:12:20.505463+00:00",
+        "httpStatus": 200,
+        "rawHash": "b2c292cf95f8f15fd1eb1a853f83440f0f2b90096b2bec8164f46e68d261ae0e",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://townofappleriver.com/election/",
+        "finalUrl": "https://townofappleriver.com/election/",
+        "publisher": "Town of Apple River Clerk, official Unity School District notice and ballot",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T07:09:49.510927+00:00",
+        "httpStatus": 200,
+        "rawHash": "7f8324424395d4c18f0fe6df7b27e72433225296006f5b8b7bdadcc6cc431d12",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+        "finalUrl": "https://cdn.townweb.com/townofdane.gov/wp-content/uploads/2026/09/Sample-Nov-3-Ballot-Waunakee.pdf",
+        "publisher": "Town of Dane Clerk, official Dane County sample ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:10:23.610134+00:00",
+        "httpStatus": 200,
+        "rawHash": "96d1f5ffdb751fb78a685e615d9765680a30a28c58b2d87e7efe444b744f3169",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://townofdane.gov/2026/09/16/november-3-2026-general-election-information/",
+        "finalUrl": "https://townofdane.gov/2026/09/16/november-3-2026-general-election-information/",
+        "publisher": "Town of Dane Clerk, official Dane County sample ballot",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T07:09:49.562281+00:00",
+        "httpStatus": 200,
+        "rawHash": "00a6acfc9073c598b13f3ab64564f04c5ca1f7dac288074de6417dca33140f0e",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.sawyercounty.gov/DocumentCenter/View/82967/18-Point-WSD-Type-C-Notice-of-Referendum",
+        "finalUrl": "https://www.sawyercounty.gov/DocumentCenter/View/82967/18-Point-WSD-Type-C-Notice-of-Referendum",
+        "publisher": "Sawyer County Clerk, official School District of Winter TypeC notice",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:10:24.068744+00:00",
+        "httpStatus": 200,
+        "rawHash": "265bad207f85ad888137f3a4b7124cbf1a0740f4e1284ce43ac4a2e0790b6ebf",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      }
+    ]
+  }
+}

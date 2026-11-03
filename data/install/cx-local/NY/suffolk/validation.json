@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-03T04:46:45.714Z",
+  "state": "NY",
+  "sources": 5,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 63,
+  "newContests": 16,
+  "refreshedContests": 1,
+  "candidacies": 46,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 267,
+  "unrelatedCandidateCoreFieldsPreserved": 509,
+  "unrelatedCandidateAliasEnrichments": 511,
+  "unmatchedReaderDivisionCount": 1,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ny/supreme_court:10"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:ny/supreme_court:10"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

@@ -1,0 +1,397 @@
+[
+  {
+    "town": "Southold",
+    "printedPages": [
+      1,
+      2
+    ],
+    "expectedNamedCandidates": 24,
+    "contiguousNameMatches": 24,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Babylon",
+    "printedPages": [
+      3,
+      4
+    ],
+    "expectedNamedCandidates": 24,
+    "contiguousNameMatches": 24,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Babylon",
+    "printedPages": [
+      5,
+      6
+    ],
+    "expectedNamedCandidates": 24,
+    "contiguousNameMatches": 24,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Babylon",
+    "printedPages": [
+      7,
+      8
+    ],
+    "expectedNamedCandidates": 24,
+    "contiguousNameMatches": 24,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Babylon",
+    "printedPages": [
+      9,
+      10
+    ],
+    "expectedNamedCandidates": 24,
+    "contiguousNameMatches": 24,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Babylon",
+    "printedPages": [
+      11,
+      12
+    ],
+    "expectedNamedCandidates": 24,
+    "contiguousNameMatches": 24,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      13,
+      14
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      15,
+      16
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      17,
+      18
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      19,
+      20
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      21,
+      22
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      23,
+      24
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      25,
+      26
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      27,
+      28
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      29,
+      30
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      31,
+      32
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      33,
+      34
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      35,
+      36
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Brookhaven",
+    "printedPages": [
+      37,
+      38
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "East Hampton",
+    "printedPages": [
+      39,
+      40
+    ],
+    "expectedNamedCandidates": 26,
+    "contiguousNameMatches": 26,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Huntington",
+    "printedPages": [
+      41,
+      42
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Huntington",
+    "printedPages": [
+      43,
+      44
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Huntington",
+    "printedPages": [
+      45,
+      46
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Huntington",
+    "printedPages": [
+      47,
+      48
+    ],
+    "expectedNamedCandidates": 25,
+    "contiguousNameMatches": 25,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      49,
+      50
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      51,
+      52
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      53,
+      54
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      55,
+      56
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      57,
+      58
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      59,
+      60
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      61,
+      62
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      63,
+      64
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      65,
+      66
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      67,
+      68
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Islip",
+    "printedPages": [
+      69,
+      70
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Riverhead",
+    "printedPages": [
+      71,
+      72
+    ],
+    "expectedNamedCandidates": 26,
+    "contiguousNameMatches": 22,
+    "rowInterleavedNames": [
+      "Vincent A Puleo",
+      "Jon Estreich",
+      "Daniel P Losquadro",
+      "Kenneth T Rothwell"
+    ]
+  },
+  {
+    "town": "Shelter Island",
+    "printedPages": [
+      73,
+      74
+    ],
+    "expectedNamedCandidates": 27,
+    "contiguousNameMatches": 27,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Smithtown",
+    "printedPages": [
+      75,
+      76
+    ],
+    "expectedNamedCandidates": 26,
+    "contiguousNameMatches": 26,
+    "rowInterleavedNames": []
+  },
+  {
+    "town": "Southampton",
+    "printedPages": [
+      77,
+      78
+    ],
+    "expectedNamedCandidates": 32,
+    "contiguousNameMatches": 32,
+    "rowInterleavedNames": []
+  }
+]

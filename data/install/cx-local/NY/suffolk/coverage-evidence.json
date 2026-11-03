@@ -1,0 +1,25 @@
+{
+  "status": "COUNTY_COMPLETE_LOCAL_NAMED_CANDIDATE_BLOCKS_IN_CURRENT_SAMPLE_BOOKLET",
+  "officialSamplePages": 80,
+  "ballotStyles": 39,
+  "numberedBallotPages": 78,
+  "verifiedLocalContests": 17,
+  "printedNamedCandidateCount": 46,
+  "newLocalContests": 16,
+  "refreshedHeldContests": 1,
+  "missingSampleBlocks": [],
+  "emptyOrWriteInOnlyContests": [],
+  "scopeLimits": "No school or special-district candidate field appears in this published November3 booklet. Their elections on other dates are outside this packet. Cancelled contests not appearing on the sample are not imported. Blank Write-in boxes do not identify declared candidates.",
+  "declaredWriteIns": "No separate official declaration/certification list established from sources checked. Separate write-in status remains open; no zero-write-in assertion.",
+  "measures": "All held NY measures/explainers preserved by omission. No measure input written.",
+  "rosterSupplementalIdentityCount": 1,
+  "sampleDate": "November 03, 2026",
+  "samplePublishedTime": "Mon, 05 Oct 2026 18:54:52 GMT",
+  "priorInputPathsScanned": [
+    "/workspace/meanwhile/data/ballot/2026-general/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/kings/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/new-york/ballot-input/ny.json",
+    "/workspace/meanwhile/data/install/cx-local/NY/queens/ballot-input/ny.json"
+  ],
+  "heldNyInputSha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb"
+}

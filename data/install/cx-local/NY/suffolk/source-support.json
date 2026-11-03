@@ -1,0 +1,97 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+    "finalUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+    "sourceCheckedAt": "2026-11-03T04:37:05.040209+00:00",
+    "sha256": "75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f",
+    "sourceFile": "sources/75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f.source",
+    "excerptFile": "sources/75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f.txt",
+    "excerptSha256": "75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured official source text; not original PDF/HTML bytes",
+    "evidence": "Complete official 80-page General Election2026 Sample Ballot Booklet, published Oct5, 39 styles/78 numbered ballot pages plus cover and contents. Complete local nominee blocks verified for17 offices,46 unique named choices. Blank write-ins excluded and fusion party lines deduplicated. Source text preserves exact PDF row order; several judicial grid headers precede the joint candidate grid. Quoted full pages retain that source layout, never recast all grid names as one race. Native county/apps2/www downloads returned403/1010; hash covers captured text, not PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "SUPPLEMENTAL_OFFICIAL_ROSTER_IDENTITY",
+    "sourceUrl": "https://suffolkcountyny.gov/Departments/BOE/2026-General-Election-Candidate-List",
+    "finalUrl": "https://suffolkcountyny.gov/Departments/BOE/2026-General-Election-Candidate-List",
+    "sourceCheckedAt": "2026-11-03T04:37:04.792751+00:00",
+    "sha256": "4567324d0549511206fa99a31abf44e9e5fd1bd3eb69b9898e2ea286ba05a64c",
+    "sourceFile": "sources/4567324d0549511206fa99a31abf44e9e5fd1bd3eb69b9898e2ea286ba05a64c.source",
+    "excerptFile": "sources/4567324d0549511206fa99a31abf44e9e5fd1bd3eb69b9898e2ea286ba05a64c.txt",
+    "excerptSha256": "4567324d0549511206fa99a31abf44e9e5fd1bd3eb69b9898e2ea286ba05a64c",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured official source text; not original PDF/HTML bytes",
+    "evidence": "Current official General Election Candidate List dated Sept21,2026. Crosschecks all17 local office/vote-limit/name/party blocks from actual sample. Kenneth T Rothwell individual identity quote uses this roster because the sample reader interleaves his first/last name with other office columns on printed page71. Actual complete Riverhead sample grid remains contest proof; no joined candidate quote is manufactured. All other45 candidate name quotes are exact sample text.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://suffolkcountyny.gov/Departments/BOE/2026-General-Election-Candidate-List",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.suffolkcountyny.gov/departments/boe",
+    "finalUrl": "https://www.suffolkcountyny.gov/departments/boe",
+    "sourceCheckedAt": "2026-11-03T04:36:31.769301+00:00",
+    "sha256": "841e52aea28173d3c06bee00cf3b58f01323a2bf011664c13d366957f9b0cf8c",
+    "sourceFile": "sources/841e52aea28173d3c06bee00cf3b58f01323a2bf011664c13d366957f9b0cf8c.source",
+    "excerptFile": "sources/841e52aea28173d3c06bee00cf3b58f01323a2bf011664c13d366957f9b0cf8c.txt",
+    "excerptSha256": "841e52aea28173d3c06bee00cf3b58f01323a2bf011664c13d366957f9b0cf8c",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured official source text; not original PDF/HTML bytes",
+    "evidence": "Official current county BOE home links the exact General2026 sample booklet and candidate list.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.suffolkcountyny.gov/departments/boe",
+      "readerHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+    "finalUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure",
+    "sourceCheckedAt": "2026-11-03T04:42:47.399325+00:00",
+    "sha256": "4408c37e69b82828429c33ee6adde6471ffe756a33876e8bbdad1a93a7d62414",
+    "sourceFile": "sources/4408c37e69b82828429c33ee6adde6471ffe756a33876e8bbdad1a93a7d62414.source",
+    "excerptFile": "sources/4408c37e69b82828429c33ee6adde6471ffe756a33876e8bbdad1a93a7d62414.txt",
+    "excerptSha256": "4408c37e69b82828429c33ee6adde6471ffe756a33876e8bbdad1a93a7d62414",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured official source text; not original PDF/HTML bytes",
+    "evidence": "Official New York Courts rule212.2 states Suffolk District Court districts3/5/6 consist of the Towns of Huntington/Islip/Brookhaven respectively. These exact registered town electorates are used without county widening. Captured via official page text tool after native reader challenge.",
+    "captureMetadata": {
+      "provider": "search_service_web_run official webpage text capture",
+      "originHttpStatus": null,
+      "readerUrl": null,
+      "readerHttpStatus": null
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://opendata.suffolkcountyny.gov/pages/board-of-elections",
+    "finalUrl": "https://opendata.suffolkcountyny.gov/pages/board-of-elections",
+    "sourceCheckedAt": "2026-11-03T04:37:10.558339+00:00",
+    "sha256": "0f72217951001c68d04918bbaa752732cfe794037eed0e205e7264cd8f5d212d",
+    "sourceFile": "sources/0f72217951001c68d04918bbaa752732cfe794037eed0e205e7264cd8f5d212d.source",
+    "excerptFile": "sources/0f72217951001c68d04918bbaa752732cfe794037eed0e205e7264cd8f5d212d.txt",
+    "excerptSha256": "0f72217951001c68d04918bbaa752732cfe794037eed0e205e7264cd8f5d212d",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "complete exact captured official source text; not original PDF/HTML bytes",
+    "evidence": "Official county BOE GIS discovery page. No new polygon installed; canonical held county/town electorates and held Supreme10 whole-county memberships are reused.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic full source extraction",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://opendata.suffolkcountyny.gov/pages/board-of-elections",
+      "readerHttpStatus": 200
+    }
+  }
+]

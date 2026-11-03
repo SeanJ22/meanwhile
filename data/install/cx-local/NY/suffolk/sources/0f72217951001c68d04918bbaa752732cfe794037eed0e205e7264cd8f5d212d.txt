@@ -1,0 +1,104 @@
+Title: Board of Elections
+
+URL Source: https://opendata.suffolkcountyny.gov/pages/board-of-elections
+
+Markdown Content:
+[Skip Navigation](https://opendata.suffolkcountyny.gov/pages/board-of-elections#main-region)
+
+ Add to Favorites 
+
+ Translate 
+
+ Share 
+
+ Share 
+
+ Add to Favorites 
+
+ Translate 
+
+ Share 
+
+ Share 
+
+ Follow 
+
+ Follow 
+
+ Close 
+
+*   [Sign In](https://www.arcgis.com/sharing/rest/oauth2/authorize?client_id=arcgisonline&response_type=token&redirect_uri=https%3A%2F%2Fopendata.suffolkcountyny.gov%2Fpages%2Fboard-of-elections)
+
+### Explore
+
+*   [Data](https://opendata.suffolkcountyny.gov/search?collection=dataset)
+*   [Documents](https://opendata.suffolkcountyny.gov/search?collection=document)
+*   [Apps & Maps](https://opendata.suffolkcountyny.gov/search?collection=appAndMap)
+
+*   Recent Downloads
+
+[](https://opendata.suffolkcountyny.gov/)
+
+*   [Home](https://opendata.suffolkcountyny.gov/)
+*   [Galleries](https://opendata.suffolkcountyny.gov/pages/board-of-elections "Galleries")
+    *   [Applications](https://opendata.suffolkcountyny.gov/pages/maps-apps)
+    *   [Dashboards & Stories](https://opendata.suffolkcountyny.gov/pages/dashboards)
+    *   [Data Catalog](https://opendata.suffolkcountyny.gov/search)
+    *   [**GIS Viewer**](https://gisapps.suffolkcountyny.gov/gisviewer/)
+
+*   [Departments](https://opendata.suffolkcountyny.gov/pages/board-of-elections)
+    *   [Board of Elections](https://opendata.suffolkcountyny.gov/pages/board-of-elections)
+    *   [Economic Development & Planning](https://opendata.suffolkcountyny.gov/pages/economic-development-planning)
+    *   [Fire, Rescue & Emergency Services](https://opendata.suffolkcountyny.gov/pages/fres)
+    *   [GIS](https://opendata.suffolkcountyny.gov/pages/gis)
+    *   [Health Services](https://opendata.suffolkcountyny.gov/pages/health-services)
+    *   [Suffolk County Police Department](https://opendata.suffolkcountyny.gov/pages/scpd)
+
+*   [Data Category](https://opendata.suffolkcountyny.gov/pages/board-of-elections)
+    *   [Budget](https://opendata.suffolkcountyny.gov/search?q=budget)
+    *   [County Government](https://opendata.suffolkcountyny.gov/search?q=county%20government)
+    *   [Demographics](https://opendata.suffolkcountyny.gov/search?q=demographics)
+    *   [Environment](https://opendata.suffolkcountyny.gov/search?q=environment)
+    *   [GIS](https://opendata.suffolkcountyny.gov/search?q=gis)
+    *   [Health Services](https://opendata.suffolkcountyny.gov/search?q=health%20services)
+    *   [Housing & Community](https://opendata.suffolkcountyny.gov/search?q=housing%20and%20community)
+    *   [Infrastructure](https://opendata.suffolkcountyny.gov/search?q=infrastructure)
+    *   [Parks & Recreation](https://opendata.suffolkcountyny.gov/search?q=parks%20%26%20recreation)
+    *   [Public Safety](https://opendata.suffolkcountyny.gov/search?q=public%20safety)
+    *   [Transportation](https://opendata.suffolkcountyny.gov/search?q=transportation)
+
+*   [Foundational Data](https://opendata.suffolkcountyny.gov/pages/board-of-elections)
+    *   [**Aerial Imagery**](https://opendata.suffolkcountyny.gov/pages/aerial-imagery)
+    *   [**Addressing**](https://opendata.suffolkcountyny.gov/pages/addressing)
+    *   [**Tax Parcels**](https://opendata.suffolkcountyny.gov/pages/tax-parcels)
+
+*   [External Resources](https://opendata.suffolkcountyny.gov/pages/board-of-elections)
+    *   [**ArcGIS Online Living Atlas of the World**](https://livingatlas.arcgis.com/en/home/)
+    *   [**LIGIS**](https://ligis-ligis-ug.hub.arcgis.com/)
+    *   [**NYC Open Data**](https://opendata.cityofnewyork.us/)
+    *   [**NY Public Library GIS**](https://www.nypl.org/collections/nypl-recommendations/guides/gis)
+    *   [**NYS DEC Maps**](https://www.dec.ny.gov/pubs/42937.html)
+    *   [**NYS GIS Clearinghouse**](https://gis.ny.gov/)
+    *   [**NYS Open Data**](https://data.ny.gov/)
+    *   [**USGS GIS Data**](https://www.usgs.gov/the-national-map-data-delivery/gis-data-download)
+
+*   [Help](https://opendata.suffolkcountyny.gov/pages/board-of-elections)
+    *   [**Terms & Conditions**](https://opendata.suffolkcountyny.gov/pages/terms-conditions)
+
+# Board of Elections
+
+The Suffolk County Board of Elections was established in 1935 as a bipartisan agency responsible for all aspects of the electoral process, from voter registration to election results. In 1976, with the adoption of New York State Election Law, Suffolk's Board became part of the New York State Board of Elections, with expanded regulatory duties.
+
+# View Applications
+
+# Explore Data
+
+### Suffolk County Open Data
+
+**gis@suffolkcountyny.gov**
+
+[Terms of Service](https://opendata.suffolkcountyny.gov/pages/terms-conditions)
+
+_Copyright 2026. Suffolk County GIS._
+
+ Explore Feeds

@@ -1,0 +1,11 @@
+[
+  {
+    "candidacyId": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead:kenneth-t-rothwell",
+    "name": "Kenneth T Rothwell",
+    "reason": "Sample PDF row-first text extraction interleaves Kenneth T and Rothwell across unrelated office columns. Exact official roster line supports identity; complete actual sample grid supports printed list.",
+    "samplePrintedPage": 71,
+    "samplePdfPage": 73,
+    "sampleSourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+    "sampleQuote": "Commmissioners / Comisionados Write-In \n\nEscribir-en \n\nGovernor and \n\nLieutenant Governor \n\nSee the instructions on the  (Vote for One) \n\nther side  Gobernador y\n\nConsulte las instrucciones  Vice-Gobernador l dorso  (Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nKathy  C Hochul Democratic  For Governor / para Gobernador \n\nDemocratico  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce  A Blakeman Republican  For Governor / para Gobernador \n\nRepublicano  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce  A Blakeman Conservative  For Governor / para Gobernador \n\nConservador  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy  C Hochul  Families Working Families  For Governor / para Gobernador \n\nFamilias Trabajadoras  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce  A Blakeman Vote Affordable  For Governor / para Gobernador \n\nVote Asequible  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVoter Options Opciones del Votantes \n\nTaxpayers First Los contribuyentes primero \n\nWrite-in \n\nEscribir-en"
+  }
+]

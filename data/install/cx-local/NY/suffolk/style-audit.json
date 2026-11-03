@@ -1,0 +1,936 @@
+[
+  {
+    "town": "Southold",
+    "cd": 1,
+    "sd": 1,
+    "ad": 1,
+    "electionDistrictCount": 19,
+    "printedPages": [
+      1,
+      2
+    ],
+    "pdfPages": [
+      3,
+      4
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 24
+  },
+  {
+    "town": "Babylon",
+    "cd": 2,
+    "sd": 4,
+    "ad": 9,
+    "electionDistrictCount": 26,
+    "printedPages": [
+      3,
+      4
+    ],
+    "pdfPages": [
+      5,
+      6
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 24
+  },
+  {
+    "town": "Babylon",
+    "cd": 2,
+    "sd": 4,
+    "ad": 11,
+    "electionDistrictCount": 45,
+    "printedPages": [
+      5,
+      6
+    ],
+    "pdfPages": [
+      7,
+      8
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 24
+  },
+  {
+    "town": "Babylon",
+    "cd": 2,
+    "sd": 4,
+    "ad": 12,
+    "electionDistrictCount": 26,
+    "printedPages": [
+      7,
+      8
+    ],
+    "pdfPages": [
+      9,
+      10
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 24
+  },
+  {
+    "town": "Babylon",
+    "cd": 2,
+    "sd": 8,
+    "ad": 9,
+    "electionDistrictCount": 21,
+    "printedPages": [
+      9,
+      10
+    ],
+    "pdfPages": [
+      11,
+      12
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 24
+  },
+  {
+    "town": "Babylon",
+    "cd": 2,
+    "sd": 8,
+    "ad": 11,
+    "electionDistrictCount": 36,
+    "printedPages": [
+      11,
+      12
+    ],
+    "pdfPages": [
+      13,
+      14
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 24
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 1,
+    "ad": 2,
+    "electionDistrictCount": 43,
+    "printedPages": [
+      13,
+      14
+    ],
+    "pdfPages": [
+      15,
+      16
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 1,
+    "ad": 3,
+    "electionDistrictCount": 1,
+    "printedPages": [
+      15,
+      16
+    ],
+    "pdfPages": [
+      17,
+      18
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 1,
+    "ad": 4,
+    "electionDistrictCount": 63,
+    "printedPages": [
+      17,
+      18
+    ],
+    "pdfPages": [
+      19,
+      20
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 1,
+    "ad": 5,
+    "electionDistrictCount": 1,
+    "printedPages": [
+      19,
+      20
+    ],
+    "pdfPages": [
+      21,
+      22
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 3,
+    "ad": 1,
+    "electionDistrictCount": 3,
+    "printedPages": [
+      21,
+      22
+    ],
+    "pdfPages": [
+      23,
+      24
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 3,
+    "ad": 2,
+    "electionDistrictCount": 18,
+    "printedPages": [
+      23,
+      24
+    ],
+    "pdfPages": [
+      25,
+      26
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 3,
+    "ad": 3,
+    "electionDistrictCount": 13,
+    "printedPages": [
+      25,
+      26
+    ],
+    "pdfPages": [
+      27,
+      28
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 3,
+    "ad": 4,
+    "electionDistrictCount": 21,
+    "printedPages": [
+      27,
+      28
+    ],
+    "pdfPages": [
+      29,
+      30
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 1,
+    "sd": 3,
+    "ad": 5,
+    "electionDistrictCount": 59,
+    "printedPages": [
+      29,
+      30
+    ],
+    "pdfPages": [
+      31,
+      32
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 2,
+    "sd": 3,
+    "ad": 2,
+    "electionDistrictCount": 2,
+    "printedPages": [
+      31,
+      32
+    ],
+    "pdfPages": [
+      33,
+      34
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 2,
+    "sd": 3,
+    "ad": 3,
+    "electionDistrictCount": 61,
+    "printedPages": [
+      33,
+      34
+    ],
+    "pdfPages": [
+      35,
+      36
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 2,
+    "sd": 3,
+    "ad": 5,
+    "electionDistrictCount": 6,
+    "printedPages": [
+      35,
+      36
+    ],
+    "pdfPages": [
+      37,
+      38
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Brookhaven",
+    "cd": 2,
+    "sd": 3,
+    "ad": 7,
+    "electionDistrictCount": 17,
+    "printedPages": [
+      37,
+      38
+    ],
+    "pdfPages": [
+      39,
+      40
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 6th District, Town of Brookhaven"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "East Hampton",
+    "cd": 1,
+    "sd": 1,
+    "ad": 1,
+    "electionDistrictCount": 19,
+    "printedPages": [
+      39,
+      40
+    ],
+    "pdfPages": [
+      41,
+      42
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Supervisor, Town of East Hampton",
+      "Superintendent of Highways, Town of East Hampton",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 26
+  },
+  {
+    "town": "Huntington",
+    "cd": 1,
+    "sd": 2,
+    "ad": 10,
+    "electionDistrictCount": 72,
+    "printedPages": [
+      41,
+      42
+    ],
+    "pdfPages": [
+      43,
+      44
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 3rd District, Town of Huntington"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Huntington",
+    "cd": 1,
+    "sd": 2,
+    "ad": 12,
+    "electionDistrictCount": 69,
+    "printedPages": [
+      43,
+      44
+    ],
+    "pdfPages": [
+      45,
+      46
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 3rd District, Town of Huntington"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Huntington",
+    "cd": 3,
+    "sd": 2,
+    "ad": 10,
+    "electionDistrictCount": 25,
+    "printedPages": [
+      45,
+      46
+    ],
+    "pdfPages": [
+      47,
+      48
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 3rd District, Town of Huntington"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Huntington",
+    "cd": 3,
+    "sd": 2,
+    "ad": 12,
+    "electionDistrictCount": 19,
+    "printedPages": [
+      47,
+      48
+    ],
+    "pdfPages": [
+      49,
+      50
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 3rd District, Town of Huntington"
+    ],
+    "expectedUniqueLocalCandidates": 25
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 3,
+    "ad": 5,
+    "electionDistrictCount": 2,
+    "printedPages": [
+      49,
+      50
+    ],
+    "pdfPages": [
+      51,
+      52
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 4,
+    "ad": 6,
+    "electionDistrictCount": 64,
+    "printedPages": [
+      51,
+      52
+    ],
+    "pdfPages": [
+      53,
+      54
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 4,
+    "ad": 7,
+    "electionDistrictCount": 9,
+    "printedPages": [
+      53,
+      54
+    ],
+    "pdfPages": [
+      55,
+      56
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 4,
+    "ad": 8,
+    "electionDistrictCount": 11,
+    "printedPages": [
+      55,
+      56
+    ],
+    "pdfPages": [
+      57,
+      58
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 4,
+    "ad": 9,
+    "electionDistrictCount": 8,
+    "printedPages": [
+      57,
+      58
+    ],
+    "pdfPages": [
+      59,
+      60
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 4,
+    "ad": 12,
+    "electionDistrictCount": 11,
+    "printedPages": [
+      59,
+      60
+    ],
+    "pdfPages": [
+      61,
+      62
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 8,
+    "ad": 5,
+    "electionDistrictCount": 21,
+    "printedPages": [
+      61,
+      62
+    ],
+    "pdfPages": [
+      63,
+      64
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 8,
+    "ad": 6,
+    "electionDistrictCount": 1,
+    "printedPages": [
+      63,
+      64
+    ],
+    "pdfPages": [
+      65,
+      66
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 8,
+    "ad": 7,
+    "electionDistrictCount": 76,
+    "printedPages": [
+      65,
+      66
+    ],
+    "pdfPages": [
+      67,
+      68
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 8,
+    "ad": 8,
+    "electionDistrictCount": 6,
+    "printedPages": [
+      67,
+      68
+    ],
+    "pdfPages": [
+      69,
+      70
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Islip",
+    "cd": 2,
+    "sd": 8,
+    "ad": 9,
+    "electionDistrictCount": 16,
+    "printedPages": [
+      69,
+      70
+    ],
+    "pdfPages": [
+      71,
+      72
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "District Court Judge, 5th District, Town of Islip"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Riverhead",
+    "cd": 1,
+    "sd": 1,
+    "ad": 2,
+    "electionDistrictCount": 22,
+    "printedPages": [
+      71,
+      72
+    ],
+    "pdfPages": [
+      73,
+      74
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Supervisor, Town of Riverhead",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 26
+  },
+  {
+    "town": "Shelter Island",
+    "cd": 1,
+    "sd": 1,
+    "ad": 1,
+    "electionDistrictCount": 4,
+    "printedPages": [
+      73,
+      74
+    ],
+    "pdfPages": [
+      75,
+      76
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Supervisor, Town of Shelter Island",
+      "Superintendent of Highways, Town of Shelter Island",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge",
+      "Town Justice, Town of Shelter Island"
+    ],
+    "expectedUniqueLocalCandidates": 27
+  },
+  {
+    "town": "Smithtown",
+    "cd": 1,
+    "sd": 2,
+    "ad": 8,
+    "electionDistrictCount": 92,
+    "printedPages": [
+      75,
+      76
+    ],
+    "pdfPages": [
+      77,
+      78
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Receiver of Taxes, Town of Smithtown",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 26
+  },
+  {
+    "town": "Southampton",
+    "cd": 1,
+    "sd": 1,
+    "ad": 1,
+    "electionDistrictCount": 42,
+    "printedPages": [
+      77,
+      78
+    ],
+    "pdfPages": [
+      79,
+      80
+    ],
+    "localOffices": [
+      "County Clerk",
+      "County Comptroller",
+      "Supervisor, Town of Southampton",
+      "Trustee, Town of Southampton",
+      "Justice of the Supreme Court, 10th Judicial District",
+      "County Court Judge",
+      "Family Court Judge"
+    ],
+    "expectedUniqueLocalCandidates": 32
+  }
+]

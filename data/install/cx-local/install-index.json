@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:57:49.757410+00:00",
+  "preparedAt": "2026-11-03T04:57:52.871825+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -565,21 +565,59 @@
         "County Commission and School Board districts, Port, Soil and Water Conservation, Indian Trail, Avenir and County Library taxing district retain their exact electorates. Port charter boundaries expressly cover only part of the county. Nominal district IDs and observed precinct facts are data-ready; source-backed boundary/division joins remain a River dependency. Existing Palm Beach County\u2192Fourth Appellate District membership is preserved.",
         "Original current all-contests PDF, county-embedded status HTML, official33-page voting-district PDF and official Port boundary HTML are included with hashes. The57.9MB precinct PDF remains saved in task evidence at /workspace/cx-local-work/palm-beach/raw/amendments.pdf with its original URL/hash; the filename was inherited and is not a constitutional-amendment booklet. Compact field/style observations, source acquisition metadata and reproducible audit script accompany this packet. Preparation makes no production writes."
       ]
+    },
+    {
+      "state": "NY",
+      "county": "Suffolk",
+      "populationRank": 27,
+      "manifest": "NY/suffolk/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 17,
+      "measureContests": 0,
+      "candidacies": 46,
+      "newContests": 16,
+      "refreshedContests": 1,
+      "sourceInputSha256": "aa4b29e48738fbb9045ce26f932c61c968609357519d0f333dd2348af49de8a2",
+      "coverage": {
+        "status": "COUNTY_COMPLETE_LOCAL_NAMED_CANDIDATE_BLOCKS_IN_CURRENT_SAMPLE_BOOKLET",
+        "officialSamplePages": 80,
+        "ballotStyles": 39,
+        "numberedBallotPages": 78,
+        "verifiedLocalContests": 17,
+        "printedNamedCandidateCount": 46,
+        "newLocalContests": 16,
+        "refreshedHeldContests": 1,
+        "missingSampleBlocks": [],
+        "emptyOrWriteInOnlyContests": [],
+        "scopeLimits": "No school or special-district candidate field appears in this published November3 booklet. Their elections on other dates are outside this packet. Cancelled contests not appearing on the sample are not imported. Blank Write-in boxes do not identify declared candidates.",
+        "declaredWriteIns": "No separate official declaration/certification list established from sources checked. Separate write-in status remains open; no zero-write-in assertion.",
+        "measures": "All held NY measures/explainers preserved by omission. No measure input written.",
+        "rosterSupplementalIdentityCount": 1,
+        "sampleDate": "November 03, 2026",
+        "samplePublishedTime": "Mon, 05 Oct 2026 18:54:52 GMT",
+        "priorInputPathsScanned": [
+          "/workspace/meanwhile/data/ballot/2026-general/ny.json",
+          "/workspace/meanwhile/data/install/cx-local/NY/kings/ballot-input/ny.json",
+          "/workspace/meanwhile/data/install/cx-local/NY/new-york/ballot-input/ny.json",
+          "/workspace/meanwhile/data/install/cx-local/NY/queens/ballot-input/ny.json"
+        ],
+        "heldNyInputSha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb"
+      }
     }
   ],
   "sourceReviewCounties": [],
   "totals": {
-    "countiesPrepared": 23,
-    "packetsPrepared": 24,
-    "candidateAndRetentionContests": 1769,
+    "countiesPrepared": 24,
+    "packetsPrepared": 25,
+    "candidateAndRetentionContests": 1786,
     "measureContests": 74,
-    "candidacyEntries": 4031,
-    "newContestEntriesAgainstCheckedInBaseline": 1462,
-    "distinctPreparedContestIds": 1829,
-    "distinctPreparedCandidateIds": 4005,
-    "distinctNewContestsAgainstCheckedInBaseline": 1456,
+    "candidacyEntries": 4077,
+    "newContestEntriesAgainstCheckedInBaseline": 1478,
+    "distinctPreparedContestIds": 1846,
+    "distinctPreparedCandidateIds": 4051,
+    "distinctNewContestsAgainstCheckedInBaseline": 1472,
     "sourceReviewCounties": 0,
-    "distinctCountyHandoffs": 23
+    "distinctCountyHandoffs": 24
   },
   "remainingWork": [
     {

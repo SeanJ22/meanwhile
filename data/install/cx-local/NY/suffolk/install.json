@@ -1,0 +1,239 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "Suffolk",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ny-cx-local-2026-suffolk-county-clerk",
+      "title": "Suffolk County \u2014 County Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 1,
+      "pdfPage": 3
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-county-comptroller",
+      "title": "Suffolk County \u2014 County Comptroller",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+      "candidates": 2,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 1,
+      "pdfPage": 3
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-supervisor-town-of-east-hampton",
+      "title": "Supervisor, Town of East Hampton",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 39,
+      "pdfPage": 41
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-east-hampton",
+      "title": "Superintendent of Highways, Town of East Hampton",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 39,
+      "pdfPage": 41
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead",
+      "title": "Supervisor, Town of Riverhead",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:riverhead_town",
+      "candidates": 2,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 71,
+      "pdfPage": 73
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-supervisor-town-of-shelter-island",
+      "title": "Supervisor, Town of Shelter Island",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 73,
+      "pdfPage": 75
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-shelter-island",
+      "title": "Superintendent of Highways, Town of Shelter Island",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 73,
+      "pdfPage": 75
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-receiver-of-taxes-town-of-smithtown",
+      "title": "Receiver of Taxes, Town of Smithtown",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:smithtown_town",
+      "candidates": 2,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 75,
+      "pdfPage": 77
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-supervisor-town-of-southampton",
+      "title": "Supervisor, Town of Southampton",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:southampton_town",
+      "candidates": 2,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 77,
+      "pdfPage": 79
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+      "title": "Trustee, Town of Southampton",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:southampton_town",
+      "candidates": 6,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 77,
+      "pdfPage": 79
+    },
+    {
+      "id": "ny-2026-general:supreme-court-10",
+      "title": "Justice of the Supreme Court, 10th Judicial District",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:10",
+      "candidates": 14,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 2,
+      "pdfPage": 4
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-county-court-judge",
+      "title": "Suffolk County \u2014 County Court Judge",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+      "candidates": 4,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 2,
+      "pdfPage": 4
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-family-court-judge",
+      "title": "Suffolk County \u2014 Family Court Judge",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+      "candidates": 3,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 2,
+      "pdfPage": 4
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-district-court-judge-3rd-district-town-of-huntington",
+      "title": "District Court Judge, 3rd District, Town of Huntington",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:huntington_town",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 42,
+      "pdfPage": 44
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip",
+      "title": "District Court Judge, 5th District, Town of Islip",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:islip_town",
+      "candidates": 3,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 50,
+      "pdfPage": 52
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-district-court-judge-6th-district-town-of-brookhaven",
+      "title": "District Court Judge, 6th District, Town of Brookhaven",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:brookhaven_town",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 14,
+      "pdfPage": 16
+    },
+    {
+      "id": "ny-cx-local-2026-suffolk-town-justice-town-of-shelter-island",
+      "title": "Town Justice, Town of Shelter Island",
+      "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+      "candidates": 1,
+      "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+      "printedPage": 74,
+      "pdfPage": 76
+    }
+  ],
+  "operation": "Data-only local candidate partial merge through existing ballot/manual candidate APIs. No production publication or git mutation. Preserve all unrelated statewide/legislative/measures/explainers.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS: five sources and 63 exact saved-source quotes",
+    "completeOfficialNamedCandidateBlocks": "PASS: full current county80-page sample booklet with39 styles,17 local offices and46 people",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "canonicalCrossCountyIds": "PASS: Supreme10 contest and14 exact held candidacy IDs reused; no county duplicate",
+    "allStylesCompared": "PASS: 39 complete sample styles; literal tokens preserved for row-interleaved name cells",
+    "sourceHashesAndQuotes": "PASS: 5 captured sources and 63 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "status": "COUNTY_COMPLETE_LOCAL_NAMED_CANDIDATE_BLOCKS_IN_CURRENT_SAMPLE_BOOKLET",
+    "officialSamplePages": 80,
+    "ballotStyles": 39,
+    "numberedBallotPages": 78,
+    "verifiedLocalContests": 17,
+    "printedNamedCandidateCount": 46,
+    "newLocalContests": 16,
+    "refreshedHeldContests": 1,
+    "missingSampleBlocks": [],
+    "emptyOrWriteInOnlyContests": [],
+    "scopeLimits": "No school or special-district candidate field appears in this published November3 booklet. Their elections on other dates are outside this packet. Cancelled contests not appearing on the sample are not imported. Blank Write-in boxes do not identify declared candidates.",
+    "declaredWriteIns": "No separate official declaration/certification list established from sources checked. Separate write-in status remains open; no zero-write-in assertion.",
+    "measures": "All held NY measures/explainers preserved by omission. No measure input written.",
+    "rosterSupplementalIdentityCount": 1,
+    "sampleDate": "November 03, 2026",
+    "samplePublishedTime": "Mon, 05 Oct 2026 18:54:52 GMT",
+    "priorInputPathsScanned": [
+      "/workspace/meanwhile/data/ballot/2026-general/ny.json",
+      "/workspace/meanwhile/data/install/cx-local/NY/kings/ballot-input/ny.json",
+      "/workspace/meanwhile/data/install/cx-local/NY/new-york/ballot-input/ny.json",
+      "/workspace/meanwhile/data/install/cx-local/NY/queens/ballot-input/ny.json"
+    ],
+    "heldNyInputSha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb"
+  },
+  "canonicalReusedContests": [
+    {
+      "contestId": "ny-2026-general:supreme-court-10",
+      "title": "Justice of the Supreme Court, 10th Judicial District",
+      "priorSource": "/workspace/meanwhile/data/ballot/2026-general/ny.json",
+      "candidateIds": [
+        "ny-2026-general:supreme-court-10:richard-ambro",
+        "ny-2026-general:supreme-court-10:leonard-d-steinman",
+        "ny-2026-general:supreme-court-10:mary-e-porter",
+        "ny-2026-general:supreme-court-10:joy-m-watson",
+        "ny-2026-general:supreme-court-10:stephen-l-ukeiley",
+        "ny-2026-general:supreme-court-10:eric-sachs",
+        "ny-2026-general:supreme-court-10:william-d-wexler",
+        "ny-2026-general:supreme-court-10:john-kelly",
+        "ny-2026-general:supreme-court-10:kelly-a-reape",
+        "ny-2026-general:supreme-court-10:karen-m-wilutis",
+        "ny-2026-general:supreme-court-10:john-iliou",
+        "ny-2026-general:supreme-court-10:james-a-mcdonaugh",
+        "ny-2026-general:supreme-court-10:mary-kate-mullen",
+        "ny-2026-general:supreme-court-10:anthony-r-portesy"
+      ]
+    }
+  ],
+  "geographyDependencies": "geography-dependencies.json",
+  "unmatchedRegistryDivisions": [
+    "ocd-division/country:us/state:ny/supreme_court:10"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [],
+  "sourceScope": "All current official county sample booklet local fields. Does not imply school/special elections on other dates or declared-write-in completeness.",
+  "sourceAcquisition": {
+    "sampleTransport": "Original county URLs return403/1010; full80-page official PDF captured via deterministic Jina Reader. Hash fingerprints exact complete capture text, not original PDF bytes.",
+    "primarySampleUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+    "supplementalRosterIdentityUse": "One Kenneth T Rothwell name quote uses current official roster due sample column interleaving; exact complete sample grid separately retained.",
+    "workspace": "/workspace/cx-local-work/suffolk-ny"
+  },
+  "nextOwner": "Main: shared offline merge/manual checks and commit. River: data install and reader verification; separate declared write-in status remains open.",
+  "preparedAt": "2026-11-03T04:43:56.576727+00:00"
+}

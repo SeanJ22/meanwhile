@@ -1,0 +1,155 @@
+[
+  {
+    "contestId": "ny-cx-local-2026-suffolk-county-clerk",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-county-comptroller",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-east-hampton",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-east-hampton",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:riverhead_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:riverhead_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-shelter-island",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-shelter-island",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-receiver-of-taxes-town-of-smithtown",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:smithtown_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:smithtown_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-southampton",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:southampton_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:southampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:southampton_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:southampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-2026-general:supreme-court-10",
+    "ocdId": "ocd-division/country:us/state:ny/supreme_court:10",
+    "exactRegistrationMatch": false,
+    "status": "HELD_SUPREME10_WHOLE_COUNTY_MEMBERSHIPS_PRESERVED",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/supreme_court:10. Nassau and Suffolk counties; existing10th Judicial District ID and held whole-county memberships preserved.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-county-court-judge",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-family-court-judge",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-district-court-judge-3rd-district-town-of-huntington",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:huntington_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:huntington_town. The numbered Suffolk District Court district is coterminous with the named town under NY Courts rule212.2; exact existing town electorate reused.",
+    "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:islip_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:islip_town. The numbered Suffolk District Court district is coterminous with the named town under NY Courts rule212.2; exact existing town electorate reused.",
+    "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-district-court-judge-6th-district-town-of-brookhaven",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:brookhaven_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:brookhaven_town. The numbered Suffolk District Court district is coterminous with the named town under NY Courts rule212.2; exact existing town electorate reused.",
+    "sourceUrl": "https://www.nycourts.gov/rules/rule/section-2122-divisions-court-terms-and-structure"
+  },
+  {
+    "contestId": "ny-cx-local-2026-suffolk-town-justice-town-of-shelter-island",
+    "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+    "exactRegistrationMatch": true,
+    "status": "REUSE_EXISTING_REGISTERED_EXACT_ELECTORATE",
+    "readerVisibility": "NOT_LIVE_CHECKED",
+    "basis": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town. Countywide or townwide as expressly named on the official ballot/list.",
+    "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf"
+  }
+]

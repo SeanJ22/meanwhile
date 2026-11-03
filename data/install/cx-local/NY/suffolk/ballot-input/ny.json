@@ -1,0 +1,1150 @@
+{
+  "ballots": {
+    "NY:ny-2026-11-03": {
+      "election": {
+        "id": "ny-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NY"
+      },
+      "contests": [
+        {
+          "id": "ny-cx-local-2026-suffolk-county-clerk",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+          "divisionVintage": "2026",
+          "title": "Suffolk County — County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "County Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-comptroller",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+          "divisionVintage": "2026",
+          "title": "Suffolk County — County Comptroller",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "County Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-east-hampton",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Town of East Hampton",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Comptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nDemocratic \n\nDemocratico  Thomas P\n\nDiNapoli \n\nRepublican \n\nRepublican Republicano  Joseph \n\nHernandez \n\nConservative \n\nConservative \n\nConservador  Joseph \n\nHernandez \n\nWorking \n\nFamilies Working Families Familias Trabajadoras  Thomas P\n\nDiNapoli \n\nVote Affordable \n\nVote Asequible \n\nWrite-in \n\nEscribir-en \n\nWrite-In \n\nEscribir-en \n\nGovernor and \n\nLieutenant Governor \n\n(Vote for One) \n\nGobernador yVice-Gobernador \n\n(Voto para Uno) \n\nDemocratic \n\nKathy C Hochul \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy C Hochul  Families \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(1st District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nE Christopher \n\nMurray \n\nRepublican \n\nAnthony H\n\nPalumbo \n\nConservative \n\nAnthony H\n\nPalumbo \n\nWorking \n\nFamilies \n\nE Christopher \n\nMurray \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (1st District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nTommy John \n\nSchiavoni \n\nRepublican \n\nStephen F\n\nKiely \n\nConservative \n\nStephen F\n\nKiely \n\nWorking \n\nFamilies \n\nTommy John \n\nSchiavoni \n\nWrite-in \n\nEscribir-en \n\nSee the instructions on the \n\nther side \n\nConsulte las instrucciones \n\nl dorso \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en \n\nSupervisor \n\n(Vote for One) \n\nSupervisor \n\n(Voto para Uno) \n\nDemocratic \n\nKathee \n\nBurke-Gonzalez \n\nWorking \n\nFamilies \n\nKathee \n\nBurke-Gonzalez \n\nWrite-in \n\nEscribir-en \n\nSuperintendent Of Highways \n\n(Vote for One) \n\nSuperintendente de Carreteras \n\n(Voto para Uno) \n\nDemocratic \n\nStephen K\n\nLynch \n\nRepublican \n\nStephen K\n\nLynch \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-east-hampton",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town",
+          "divisionVintage": "2026",
+          "title": "Superintendent of Highways, Town of East Hampton",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:east_hampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Comptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nDemocratic \n\nDemocratico  Thomas P\n\nDiNapoli \n\nRepublican \n\nRepublican Republicano  Joseph \n\nHernandez \n\nConservative \n\nConservative \n\nConservador  Joseph \n\nHernandez \n\nWorking \n\nFamilies Working Families Familias Trabajadoras  Thomas P\n\nDiNapoli \n\nVote Affordable \n\nVote Asequible \n\nWrite-in \n\nEscribir-en \n\nWrite-In \n\nEscribir-en \n\nGovernor and \n\nLieutenant Governor \n\n(Vote for One) \n\nGobernador yVice-Gobernador \n\n(Voto para Uno) \n\nDemocratic \n\nKathy C Hochul \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy C Hochul  Families \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(1st District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nE Christopher \n\nMurray \n\nRepublican \n\nAnthony H\n\nPalumbo \n\nConservative \n\nAnthony H\n\nPalumbo \n\nWorking \n\nFamilies \n\nE Christopher \n\nMurray \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (1st District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nTommy John \n\nSchiavoni \n\nRepublican \n\nStephen F\n\nKiely \n\nConservative \n\nStephen F\n\nKiely \n\nWorking \n\nFamilies \n\nTommy John \n\nSchiavoni \n\nWrite-in \n\nEscribir-en \n\nSee the instructions on the \n\nther side \n\nConsulte las instrucciones \n\nl dorso \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en \n\nSupervisor \n\n(Vote for One) \n\nSupervisor \n\n(Voto para Uno) \n\nDemocratic \n\nKathee \n\nBurke-Gonzalez \n\nWorking \n\nFamilies \n\nKathee \n\nBurke-Gonzalez \n\nWrite-in \n\nEscribir-en \n\nSuperintendent Of Highways \n\n(Vote for One) \n\nSuperintendente de Carreteras \n\n(Voto para Uno) \n\nDemocratic \n\nStephen K\n\nLynch \n\nRepublican \n\nStephen K\n\nLynch \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:riverhead_town",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Town of Riverhead",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:riverhead_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Write-In \n\nEscribir-en \n\nGovernor and \n\nLieutenant Governor \n\nSee the instructions on the  (Vote for One) \n\nther side  Gobernador y\n\nConsulte las instrucciones  Vice-Gobernador l dorso  (Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nKathy  C Hochul Democratic  For Governor / para Gobernador \n\nDemocratico  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce  A Blakeman Republican  For Governor / para Gobernador \n\nRepublicano  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce  A Blakeman Conservative  For Governor / para Gobernador \n\nConservador  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy  C Hochul  Families Working Families  For Governor / para Gobernador \n\nFamilias Trabajadoras  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce  A Blakeman Vote Affordable  For Governor / para Gobernador \n\nVote Asequible  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVoter Options Opciones del Votantes \n\nTaxpayers First Los contribuyentes primero \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-shelter-island",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Town of Shelter Island",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Comptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nDemocratic \n\nDemocratico  Thomas P\n\nDiNapoli \n\nRepublican \n\nRepublican Republicano  Joseph \n\nHernandez \n\nConservative \n\nConservative \n\nConservador  Joseph \n\nHernandez \n\nWorking \n\nFamilies Working Families Familias Trabajadoras  Thomas P\n\nDiNapoli \n\nVote Affordable \n\nVote Asequible \n\nWrite-in \n\nEscribir-en \n\nWrite-In \n\nEscribir-en \n\nShelter Island 001 \n\nGovernor and \n\nLieutenant Governor \n\n(Vote for One) \n\nGobernador yVice-Gobernador \n\n(Voto para Uno) \n\nDemocratic \n\nKathy C Hochul \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy C Hochul  Families \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(1st District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nE Christopher \n\nMurray \n\nRepublican \n\nAnthony H\n\nPalumbo \n\nConservative \n\nAnthony H\n\nPalumbo \n\nWorking \n\nFamilies \n\nE Christopher \n\nMurray \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (1st District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nTommy John \n\nSchiavoni \n\nRepublican \n\nStephen F\n\nKiely \n\nConservative \n\nStephen F\n\nKiely \n\nWorking \n\nFamilies \n\nTommy John \n\nSchiavoni \n\nWrite-in \n\nEscribir-en \n\nSee the instructions on the \n\nther side \n\nConsulte las instrucciones \n\nl dorso \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en \n\nSupervisor \n\n(Vote for One) \n\nSupervisor \n\n(Voto para Uno) \n\nRepublican \n\nAmber F\n\nBrach-Williams \n\nConservative \n\nAmber F\n\nBrach-Williams \n\nWrite-in \n\nEscribir-en \n\nSuperintendent Of Highways \n\n(Vote for One) \n\nSuperintendente de Carreteras \n\n(Voto para Uno) \n\nRepublican \n\nKenneth L\n\nLewis Jr \n\nConservative \n\nKenneth L\n\nLewis Jr \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-shelter-island",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+          "divisionVintage": "2026",
+          "title": "Superintendent of Highways, Town of Shelter Island",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Comptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nDemocratic \n\nDemocratico  Thomas P\n\nDiNapoli \n\nRepublican \n\nRepublican Republicano  Joseph \n\nHernandez \n\nConservative \n\nConservative \n\nConservador  Joseph \n\nHernandez \n\nWorking \n\nFamilies Working Families Familias Trabajadoras  Thomas P\n\nDiNapoli \n\nVote Affordable \n\nVote Asequible \n\nWrite-in \n\nEscribir-en \n\nWrite-In \n\nEscribir-en \n\nShelter Island 001 \n\nGovernor and \n\nLieutenant Governor \n\n(Vote for One) \n\nGobernador yVice-Gobernador \n\n(Voto para Uno) \n\nDemocratic \n\nKathy C Hochul \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy C Hochul  Families \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(1st District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nE Christopher \n\nMurray \n\nRepublican \n\nAnthony H\n\nPalumbo \n\nConservative \n\nAnthony H\n\nPalumbo \n\nWorking \n\nFamilies \n\nE Christopher \n\nMurray \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (1st District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nTommy John \n\nSchiavoni \n\nRepublican \n\nStephen F\n\nKiely \n\nConservative \n\nStephen F\n\nKiely \n\nWorking \n\nFamilies \n\nTommy John \n\nSchiavoni \n\nWrite-in \n\nEscribir-en \n\nSee the instructions on the \n\nther side \n\nConsulte las instrucciones \n\nl dorso \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en \n\nSupervisor \n\n(Vote for One) \n\nSupervisor \n\n(Voto para Uno) \n\nRepublican \n\nAmber F\n\nBrach-Williams \n\nConservative \n\nAmber F\n\nBrach-Williams \n\nWrite-in \n\nEscribir-en \n\nSuperintendent Of Highways \n\n(Vote for One) \n\nSuperintendente de Carreteras \n\n(Voto para Uno) \n\nRepublican \n\nKenneth L\n\nLewis Jr \n\nConservative \n\nKenneth L\n\nLewis Jr \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-receiver-of-taxes-town-of-smithtown",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:smithtown_town",
+          "divisionVintage": "2026",
+          "title": "Receiver of Taxes, Town of Smithtown",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:smithtown_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Comptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nDemocratic \n\nDemocratico  Thomas P\n\nDiNapoli \n\nRepublican \n\nRepublican Republicano  Joseph \n\nHernandez \n\nConservative \n\nConservative \n\nConservador  Joseph \n\nHernandez \n\nWorking \n\nFamilies Working Families Familias Trabajadoras  Thomas P\n\nDiNapoli \n\nVote Affordable \n\nVote Asequible \n\nWrite-in \n\nEscribir-en \n\nWrite-In \n\nEscribir-en \n\nSmithtown 001 \n\nGovernor and \n\nLieutenant Governor \n\n(Vote for One) \n\nGobernador yVice-Gobernador \n\n(Voto para Uno) \n\nDemocratic \n\nKathy C Hochul \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy C Hochul  Families \n\nFor Governor / para Gobernador \n\nAdrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce A Blakeman \n\nFor Governor / para Gobernador \n\nTodd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(2nd District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(2do distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nHarjot \n\nSingh \n\nRepublican \n\nMario R\n\nMattera \n\nConservative \n\nMario R\n\nMattera \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (8th District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(8vo distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nLynn M\n\nTrupiano-O'Keefe \n\nRepublican \n\nMichael J\n\nFitzpatrick \n\nConservative \n\nMichael J\n\nFitzpatrick \n\nWrite-in \n\nEscribir-en \n\nSee the instructions on the \n\nther side \n\nConsulte las instrucciones \n\nl dorso \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en \n\nReceiver \n\nOf Taxes \n\n(Vote for One) \n\nRecaudador \n\nde Impuestos \n\n(Voto para Uno) \n\nDemocratic \n\nBrianna \n\nBaker-Stines \n\nRepublican \n\nKimberly A\n\nCarros \n\nConservative \n\nKimberly A\n\nCarros \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-southampton",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:southampton_town",
+          "divisionVintage": "2026",
+          "title": "Supervisor, Town of Southampton",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:southampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Governor and \n\nLieutenant Governor \n\nSee the instructions on the  (Vote for One) \n\nther side  Gobernador y\n\nConsulte las instrucciones  Vice-Gobernador l dorso  (Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nKathy C Hochul Democratic  For Governor / para Gobernador \n\nDemocratico  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce A Blakeman Republican  For Governor / para Gobernador \n\nRepublicano  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce A Blakeman Conservative  For Governor / para Gobernador \n\nConservador  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy C Hochul  Families Working Families  For Governor / para Gobernador \n\nFamilias Trabajadoras  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce A Blakeman Vote Affordable  For Governor / para Gobernador \n\nVote Asequible  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWrite-in \n\nEscribir-en \n\nWrite-In \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(1st District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nE Christopher \n\nMurray \n\nRepublican \n\nAnthony H\n\nPalumbo \n\nConservative \n\nAnthony H\n\nPalumbo \n\nWorking \n\nFamilies \n\nE Christopher \n\nMurray \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (1st District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nTommy John \n\nSchiavoni \n\nRepublican \n\nStephen F\n\nKiely \n\nConservative \n\nStephen F\n\nKiely \n\nWorking \n\nFamilies \n\nTommy John \n\nSchiavoni \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en \n\nComptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nDemocratic \n\nThomas P\n\nDiNapoli \n\nRepublican \n\nJoseph \n\nHernandez \n\nConservative \n\nJoseph \n\nHernandez \n\nWorking \n\nFamilies \n\nThomas P\n\nDiNapoli \n\nWrite-in \n\nEscribir-en \n\nSupervisor \n\n(Vote for One) \n\nSupervisor \n\n(Voto para Uno) \n\nDemocratic \n\nMaria Z\n\nMoore \n\nRepublican \n\nRichard A\n\nCarozza \n\nConservative \n\nMaria Z\n\nMoore \n\nWrite-in \n\nEscribir-en \n\nTrustee \n\n(Vote for up to Five) \n\nFideicomisario \n\n(Voto para hasta Cinco) \n\nDemocratic \n\nMatthew L\n\nParsons \n\nRepublican \n\nJohn B\n\nCarson \n\nConservative \n\nJohn B\n\nCarson \n\nWorking \n\nFamilies \n\nMatthew L\n\nParsons \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nSara J\n\nTopping \n\nWorking \n\nFamilies \n\nSara J\n\nTopping \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nHannah \n\nPell-O'Farrell \n\nConservative \n\nHannah \n\nPell-O'Farrell \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoseph R\n\nMcLoughlin \n\nWorking \n\nFamilies \n\nJoseph R\n\nMcLoughlin \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJames W\n\nMack \n\nConservative \n\nJames W\n\nMack \n\nWorking \n\nFamilies \n\nJames W\n\nMack \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:southampton_town",
+          "divisionVintage": "2026",
+          "title": "Trustee, Town of Southampton",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:southampton_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Commmissioners / Comisionados Governor and \n\nLieutenant Governor \n\nSee the instructions on the  (Vote for One) \n\nther side  Gobernador y\n\nConsulte las instrucciones  Vice-Gobernador l dorso  (Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nKathy C Hochul Democratic  For Governor / para Gobernador \n\nDemocratico  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce A Blakeman Republican  For Governor / para Gobernador \n\nRepublicano  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce A Blakeman Conservative  For Governor / para Gobernador \n\nConservador  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy C Hochul  Families Working Families  For Governor / para Gobernador \n\nFamilias Trabajadoras  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce A Blakeman Vote Affordable  For Governor / para Gobernador \n\nVote Asequible  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWrite-in \n\nEscribir-en \n\nWrite-In \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(1st District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nE Christopher \n\nMurray \n\nRepublican \n\nAnthony H\n\nPalumbo \n\nConservative \n\nAnthony H\n\nPalumbo \n\nWorking \n\nFamilies \n\nE Christopher \n\nMurray \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (1st District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nTommy John \n\nSchiavoni \n\nRepublican \n\nStephen F\n\nKiely \n\nConservative \n\nStephen F\n\nKiely \n\nWorking \n\nFamilies \n\nTommy John \n\nSchiavoni \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en \n\nComptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nDemocratic \n\nThomas P\n\nDiNapoli \n\nRepublican \n\nJoseph \n\nHernandez \n\nConservative \n\nJoseph \n\nHernandez \n\nWorking \n\nFamilies \n\nThomas P\n\nDiNapoli \n\nWrite-in \n\nEscribir-en \n\nSupervisor \n\n(Vote for One) \n\nSupervisor \n\n(Voto para Uno) \n\nDemocratic \n\nMaria Z\n\nMoore \n\nRepublican \n\nRichard A\n\nCarozza \n\nConservative \n\nMaria Z\n\nMoore \n\nWrite-in \n\nEscribir-en \n\nTrustee \n\n(Vote for up to Five) \n\nFideicomisario \n\n(Voto para hasta Cinco) \n\nDemocratic \n\nMatthew L\n\nParsons \n\nRepublican \n\nJohn B\n\nCarson \n\nConservative \n\nJohn B\n\nCarson \n\nWorking \n\nFamilies \n\nMatthew L\n\nParsons \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nSara J\n\nTopping \n\nWorking \n\nFamilies \n\nSara J\n\nTopping \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nHannah \n\nPell-O'Farrell \n\nConservative \n\nHannah \n\nPell-O'Farrell \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoseph R\n\nMcLoughlin \n\nWorking \n\nFamilies \n\nJoseph R\n\nMcLoughlin \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJames W\n\nMack \n\nConservative \n\nJames W\n\nMack \n\nWorking \n\nFamilies \n\nJames W\n\nMack \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:10",
+          "divisionVintage": "2026",
+          "title": "Justice of the Supreme Court, 10th Judicial District",
+          "type": "CANDIDACY",
+          "voteFor": 8,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/supreme_court:10. Nassau and Suffolk counties; existing10th Judicial District ID and held whole-county memberships preserved.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "SAMPLE - VOID Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\ninuación  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-court-judge",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+          "divisionVintage": "2026",
+          "title": "Suffolk County — County Court Judge",
+          "type": "CANDIDACY",
+          "voteFor": 4,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "SAMPLE - VOID Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\ninuación  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-family-court-judge",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk",
+          "divisionVintage": "2026",
+          "title": "Suffolk County — Family Court Judge",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "SAMPLE - VOID Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\ninuación  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-3rd-district-town-of-huntington",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:huntington_town",
+          "divisionVintage": "2026",
+          "title": "District Court Judge, 3rd District, Town of Huntington",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:huntington_town. The numbered Suffolk District Court district is coterminous with the named town under NY Courts rule212.2; exact existing town electorate reused.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "SAMPLE - VOID Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nDistrict Court \n\nJudge (3rd District) \n\n(Vote for One) \n\nJuez del \n\nDistrito Tribunal \n\n(3ro distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nMatthew G\n\nKiernan \n\nRepublican \n\nMatthew G\n\nKiernan \n\nConservative \n\nMatthew G\n\nKiernan \n\nWrite-in \n\nEscribir-en \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\ninuación  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:islip_town",
+          "divisionVintage": "2026",
+          "title": "District Court Judge, 5th District, Town of Islip",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:islip_town. The numbered Suffolk District Court district is coterminous with the named town under NY Courts rule212.2; exact existing town electorate reused.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "SAMPLE - VOID Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nDistrict Court \n\nJudge (5th District) \n\n(Vote for up to Three) \n\nJuez del \n\nDistrito Tribunal \n\n(5to distrito) \n\n(Voto para hasta Tres) \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\ninuación  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nAlonzo G\n\nJacobs \n\nRepublican \n\nAlonzo G\n\nJacobs \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nPierce F\n\nCohalan \n\nRepublican \n\nPierce F\n\nCohalan \n\nConservative \n\nPierce F\n\nCohalan \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nThomas D\n\nLuciano \n\nConservative \n\nThomas D\n\nLuciano \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-6th-district-town-of-brookhaven",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:brookhaven_town",
+          "divisionVintage": "2026",
+          "title": "District Court Judge, 6th District, Town of Brookhaven",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:brookhaven_town. The numbered Suffolk District Court district is coterminous with the named town under NY Courts rule212.2; exact existing town electorate reused.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Governor and \n\nLieutenant Governor \n\nSee the instructions on the  (Vote for One) \n\nther side  Gobernador y\n\nConsulte las instrucciones  Vice-Gobernador l dorso  (Voto para Uno) \n\nOffice / Oficina \n\nDemocratic \n\nKathy  C Hochul Democratic  For Governor / para Gobernador \n\nDemocratico  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nRepublican \n\nBruce  A Blakeman Republican  For Governor / para Gobernador \n\nRepublicano  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nConservative \n\nBruce  A Blakeman Conservative  For Governor / para Gobernador \n\nConservador  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nWorking \n\nKathy  C Hochul  Families Working Families  For Governor / para Gobernador \n\nFamilias Trabajadoras  Adrienne E Adams \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVote Affordable \n\nBruce  A Blakeman Vote Affordable  For Governor / para Gobernador \n\nVote Asequible  Todd Hood \n\nFor Lieutenant Governor / para Vice-Gobernador \n\nVoter Options Opciones del Votantes \n\nWrite-in \n\nEscribir-en \n\nCD# 1; SD# 1; AD# 02 \n\nComptroller \n\n(Vote for One) \n\nContralor \n\n(Voto para Uno) \n\nDemocratic \n\nThomas P\n\nDiNapoli \n\nRepublican \n\nJoseph \n\nHernandez \n\nConservative \n\nJoseph \n\nHernandez \n\nWorking \n\nFamilies \n\nThomas P\n\nDiNapoli \n\nWrite-in \n\nEscribir-en \n\nAttorney General \n\n(Vote for One) \n\nFiscal \n\nGeneral \n\n(Voto para Uno) \n\nDemocratic \n\nLetitia A\n\nJames \n\nRepublican \n\nSaritha \n\nKomatireddy \n\nConservative \n\nSaritha \n\nKomatireddy \n\nWorking \n\nFamilies \n\nLetitia A\n\nJames \n\nWrite-in \n\nEscribir-en \n\nRepresentative in Congress (1st District) \n\n(Vote for One) \n\nRepresentante en Congreso (1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nChristopher J\n\nGallant \n\nRepublican \n\nNicholas J\n\nLaLota \n\nConservative \n\nNicholas J\n\nLaLota \n\nWrite-in \n\nEscribir-en \n\nState \n\nSenator \n\n(1st District) \n\n(Vote for One) \n\nSenador \n\nEstatol \n\n(1r distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nE Christopher \n\nMurray \n\nRepublican \n\nAnthony H\n\nPalumbo \n\nConservative \n\nAnthony H\n\nPalumbo \n\nWorking \n\nFamilies \n\nE Christopher \n\nMurray \n\nWrite-in \n\nEscribir-en \n\nMember of \n\nAssembly (2nd District) \n\n(Vote for One) \n\nMiembro De \n\nLa Asamblea \n\n(2do distrito) \n\n(Voto para Uno) \n\nDemocratic \n\nMichael J\n\nSzika \n\nRepublican \n\nJodi A\n\nGiglio \n\nConservative \n\nJodi A\n\nGiglio \n\nVoter \n\nOptions \n\nKimberly \n\nWilder \n\nWrite-in \n\nEscribir-en \n\nCounty Clerk \n\n(Vote for One) \n\nSecretario \n\ndel Condado \n\n(Voto para Uno) \n\nRepublican \n\nVincent A\n\nPuleo \n\nConservative \n\nVincent A\n\nPuleo \n\nWrite-in \n\nEscribir-en \n\nCounty Comptroller \n\n(Vote for One) \n\nJefe De \n\nFinanzas \n\ndel Condado \n\n(Voto para Uno) \n\nDemocratic \n\nJon \n\nEstreich \n\nRepublican \n\nDaniel P\n\nLosquadro \n\nConservative \n\nDaniel P\n\nLosquadro \n\nWrite-in \n\nEscribir-en Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nDistrict Court \n\nJudge (6th District) \n\n(Vote for One) \n\nJuez del \n\nDistricto \n\nTribunal \n\n(6to distrito) \n\n(Voto para Uno) \n\nRepublican \n\nPenelope J\n\nBlizzard-McGrath \n\nConservative \n\nPenelope J\n\nBlizzard-McGrath \n\nWrite-in \n\nEscribir-en \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\ninuación  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-town-justice-town-of-shelter-island",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town",
+          "divisionVintage": "2026",
+          "title": "Town Justice, Town of Shelter Island",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact electorate: ocd-division/country:us/state:ny/county:suffolk/place:shelter_island_town. Countywide or townwide as expressly named on the official ballot/list.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "SAMPLE - VOID Justice of the Supreme Court 10th Judicial District \n\n(Vote for up to Eight) See instructions below  Jueces De La Corte Supreme Ver instrucciones a\n\nont \n\nDemocratic \n\nDemocratico \n\nRepublican Republicano \n\nConservative \n\nConservador \n\nWrite-In \n\nEscribir-en \n\nCounty Court Judge \n\n(Vote for up to Four) \n\nJuez Del \n\nTribunal Condado \n\n(Voto para hasta Cuatro) \n\nFamily Court Judge \n\n(Vote for up to Three) \n\nJuez Del \n\nTribunal Familiar \n\n(Voto para hasta Tres) \n\nTown \n\nJustice \n\n(Vote for One) \n\nMagistrado del Ayuntamiento \n\n(Voto para Uno) \n\nDemocratic \n\nMary-Faith \n\nWestervelt \n\nRepublican \n\nMary-Faith \n\nWestervelt \n\nConservative \n\nMary-Faith \n\nWestervelt \n\nWrite-in \n\nEscribir-en \n\ninuación  10mo Distrito Judicial \n\n(Voto para hasta Ocho) Office / Oficina \n\nDemocratic \n\nRichard \n\nAmbro \n\nRepublican \n\nRichard \n\nAmbro \n\nConservative \n\nAnthony R\n\nPortesy \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nLeonard D\n\nSteinman \n\nRepublican \n\nLeonard D\n\nSteinman \n\nConservative \n\nLeonard D\n\nSteinman \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nMary E\n\nPorter \n\nRepublican \n\nKelly A\n\nReape \n\nConservative \n\nKelly A\n\nReape \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJoy M\n\nWatson \n\nRepublican \n\nJoy M\n\nWatson \n\nConservative \n\nJoy M\n\nWatson \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nStephen L\n\nUkeiley \n\nRepublican \n\nKaren M\n\nWilutis \n\nConservative \n\nKaren M\n\nWilutis \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nEric \n\nSachs \n\nRepublican \n\nJohn \n\nIliou \n\nConservative \n\nJohn \n\nIliou \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nWilliam D\n\nWexler \n\nRepublican \n\nJames A\n\nMcDonaugh \n\nConservative \n\nJames A\n\nMcDonaugh \n\nWrite-in \n\nEscribir-en \n\nDemocratic \n\nJohn \n\nKelly \n\nRepublican \n\nMary Kate \n\nMullen \n\nConservative \n\nMary Kate \n\nMullen \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nDaniel T\n\nDriscoll \n\nConservative \n\nDaniel T\n\nDriscoll \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnthony S\n\nSenft Jr \n\nConservative \n\nAnthony S\n\nSenft Jr \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nAnna \n\nAcquafredda \n\nConservative \n\nAnna \n\nAcquafredda \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nJames G\n\nChalifoux \n\nConservative \n\nJames G\n\nChalifoux \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nFrank A\n\nTantone \n\nConservative \n\nFrank A\n\nTantone \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nWilliam F\n\nGarbarino \n\nConservative \n\nWilliam F\n\nGarbarino \n\nWrite-in \n\nEscribir-en \n\nRepublican \n\nEvan S\n\nTanenbaum \n\nConservative \n\nEvan S\n\nTanenbaum \n\nWrite-in \n\nEscribir-en"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ny-cx-local-2026-suffolk-county-clerk:vincent-a-puleo",
+          "contestId": "ny-cx-local-2026-suffolk-county-clerk",
+          "givenName": "",
+          "familyName": "Vincent A Puleo",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Vincent A\n\nPuleo"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-comptroller:jon-estreich",
+          "contestId": "ny-cx-local-2026-suffolk-county-comptroller",
+          "givenName": "",
+          "familyName": "Jon Estreich",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Jon \n\nEstreich"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-comptroller:daniel-p-losquadro",
+          "contestId": "ny-cx-local-2026-suffolk-county-comptroller",
+          "givenName": "",
+          "familyName": "Daniel P Losquadro",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Daniel P\n\nLosquadro"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-east-hampton:kathee-burke-gonzalez",
+          "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-east-hampton",
+          "givenName": "",
+          "familyName": "Kathee Burke-Gonzalez",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Kathee \n\nBurke-Gonzalez"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-east-hampton:stephen-k-lynch",
+          "contestId": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-east-hampton",
+          "givenName": "",
+          "familyName": "Stephen K Lynch",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Stephen K\n\nLynch"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead:jerome-halpin",
+          "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead",
+          "givenName": "",
+          "familyName": "Jerome Halpin",
+          "partyLabel": "Democratic / Taxpayers First",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Jerome \n\nHalpin"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead:kenneth-t-rothwell",
+          "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-riverhead",
+          "givenName": "",
+          "familyName": "Kenneth T Rothwell",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Departments/BOE/2026-General-Election-Candidate-List",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:04.792751+00:00",
+            "verifiedAt": "2026-11-03T04:37:04.792751+00:00",
+            "quote": "Kenneth T Rothwell**Republican**, Conservative"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-shelter-island:amber-f-brach-williams",
+          "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-shelter-island",
+          "givenName": "",
+          "familyName": "Amber F Brach-Williams",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Amber F\n\nBrach-Williams"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-shelter-island:kenneth-l-lewis-jr",
+          "contestId": "ny-cx-local-2026-suffolk-superintendent-of-highways-town-of-shelter-island",
+          "givenName": "",
+          "familyName": "Kenneth L Lewis Jr",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Kenneth L\n\nLewis Jr"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-receiver-of-taxes-town-of-smithtown:brianna-baker-stines",
+          "contestId": "ny-cx-local-2026-suffolk-receiver-of-taxes-town-of-smithtown",
+          "givenName": "",
+          "familyName": "Brianna Baker-Stines",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Brianna \n\nBaker-Stines"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-receiver-of-taxes-town-of-smithtown:kimberly-a-carros",
+          "contestId": "ny-cx-local-2026-suffolk-receiver-of-taxes-town-of-smithtown",
+          "givenName": "",
+          "familyName": "Kimberly A Carros",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Kimberly A\n\nCarros"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-southampton:maria-z-moore",
+          "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-southampton",
+          "givenName": "",
+          "familyName": "Maria Z Moore",
+          "partyLabel": "Democratic / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Maria Z\n\nMoore"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-supervisor-town-of-southampton:richard-a-carozza",
+          "contestId": "ny-cx-local-2026-suffolk-supervisor-town-of-southampton",
+          "givenName": "",
+          "familyName": "Richard A Carozza",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Richard A\n\nCarozza"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton:matthew-l-parsons",
+          "contestId": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+          "givenName": "",
+          "familyName": "Matthew L Parsons",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Matthew L\n\nParsons"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton:sara-j-topping",
+          "contestId": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+          "givenName": "",
+          "familyName": "Sara J Topping",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Sara J\n\nTopping"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton:hannah-pell-o-farrell",
+          "contestId": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+          "givenName": "",
+          "familyName": "Hannah Pell-O'Farrell",
+          "partyLabel": "Democratic / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Hannah \n\nPell-O'Farrell"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton:joseph-r-mcloughlin",
+          "contestId": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+          "givenName": "",
+          "familyName": "Joseph R McLoughlin",
+          "partyLabel": "Democratic / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Joseph R\n\nMcLoughlin"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton:james-w-mack",
+          "contestId": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+          "givenName": "",
+          "familyName": "James W Mack",
+          "partyLabel": "Democratic / Conservative / Working Families",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "James W\n\nMack"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-trustee-town-of-southampton:john-b-carson",
+          "contestId": "ny-cx-local-2026-suffolk-trustee-town-of-southampton",
+          "givenName": "",
+          "familyName": "John B Carson",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "John B\n\nCarson"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:richard-ambro",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Richard Ambro",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Richard \n\nAmbro"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:leonard-d-steinman",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Leonard D Steinman",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Leonard D\n\nSteinman"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:mary-e-porter",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Mary E Porter",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Mary E\n\nPorter"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:joy-m-watson",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Joy M Watson",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Joy M\n\nWatson"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:stephen-l-ukeiley",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Stephen L Ukeiley",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Stephen L\n\nUkeiley"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:eric-sachs",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Eric Sachs",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Eric \n\nSachs"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:william-d-wexler",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "William D Wexler",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "William D\n\nWexler"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:john-kelly",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "John Kelly",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "John \n\nKelly"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:kelly-a-reape",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Kelly A Reape",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Kelly A\n\nReape"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:karen-m-wilutis",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Karen M Wilutis",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Karen M\n\nWilutis"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:john-iliou",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "John Iliou",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "John \n\nIliou"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:james-a-mcdonaugh",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "James A McDonaugh",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "James A\n\nMcDonaugh"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:mary-kate-mullen",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Mary Kate Mullen",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Mary Kate \n\nMullen"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-10:anthony-r-portesy",
+          "contestId": "ny-2026-general:supreme-court-10",
+          "givenName": "",
+          "familyName": "Anthony R Portesy",
+          "partyLabel": "Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Anthony R\n\nPortesy"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-court-judge:daniel-t-driscoll",
+          "contestId": "ny-cx-local-2026-suffolk-county-court-judge",
+          "givenName": "",
+          "familyName": "Daniel T Driscoll",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Daniel T\n\nDriscoll"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-court-judge:anthony-s-senft-jr",
+          "contestId": "ny-cx-local-2026-suffolk-county-court-judge",
+          "givenName": "",
+          "familyName": "Anthony S Senft Jr",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Anthony S\n\nSenft Jr"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-court-judge:anna-acquafredda",
+          "contestId": "ny-cx-local-2026-suffolk-county-court-judge",
+          "givenName": "",
+          "familyName": "Anna Acquafredda",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Anna \n\nAcquafredda"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-county-court-judge:james-g-chalifoux",
+          "contestId": "ny-cx-local-2026-suffolk-county-court-judge",
+          "givenName": "",
+          "familyName": "James G Chalifoux",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "James G\n\nChalifoux"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-family-court-judge:frank-a-tantone",
+          "contestId": "ny-cx-local-2026-suffolk-family-court-judge",
+          "givenName": "",
+          "familyName": "Frank A Tantone",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Frank A\n\nTantone"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-family-court-judge:william-f-garbarino",
+          "contestId": "ny-cx-local-2026-suffolk-family-court-judge",
+          "givenName": "",
+          "familyName": "William F Garbarino",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "William F\n\nGarbarino"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-family-court-judge:evan-s-tanenbaum",
+          "contestId": "ny-cx-local-2026-suffolk-family-court-judge",
+          "givenName": "",
+          "familyName": "Evan S Tanenbaum",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Evan S\n\nTanenbaum"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-3rd-district-town-of-huntington:matthew-g-kiernan",
+          "contestId": "ny-cx-local-2026-suffolk-district-court-judge-3rd-district-town-of-huntington",
+          "givenName": "",
+          "familyName": "Matthew G Kiernan",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Matthew G\n\nKiernan"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip:alonzo-g-jacobs",
+          "contestId": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip",
+          "givenName": "",
+          "familyName": "Alonzo G Jacobs",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Alonzo G\n\nJacobs"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip:pierce-f-cohalan",
+          "contestId": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip",
+          "givenName": "",
+          "familyName": "Pierce F Cohalan",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Pierce F\n\nCohalan"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip:thomas-d-luciano",
+          "contestId": "ny-cx-local-2026-suffolk-district-court-judge-5th-district-town-of-islip",
+          "givenName": "",
+          "familyName": "Thomas D Luciano",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Thomas D\n\nLuciano"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-district-court-judge-6th-district-town-of-brookhaven:penelope-j-blizzard-mcgrath",
+          "contestId": "ny-cx-local-2026-suffolk-district-court-judge-6th-district-town-of-brookhaven",
+          "givenName": "",
+          "familyName": "Penelope J Blizzard-McGrath",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Penelope J\n\nBlizzard-McGrath"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-suffolk-town-justice-town-of-shelter-island:mary-faith-westervelt",
+          "contestId": "ny-cx-local-2026-suffolk-town-justice-town-of-shelter-island",
+          "givenName": "",
+          "familyName": "Mary-Faith Westervelt",
+          "partyLabel": "Democratic / Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+            "sourceOrg": "Suffolk County Board of Elections",
+            "collectedAt": "2026-11-03T04:37:05.040209+00:00",
+            "verifiedAt": "2026-11-03T04:37:05.040209+00:00",
+            "quote": "Mary-Faith \n\nWestervelt"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:43:56.576727+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+        "finalUrl": "https://suffolkcountyny.gov/Portals/0/formsdocs/boe/General%20Election,%202026%20-%20Sample%20Ballot%20Booklet.pdf",
+        "publisher": "Suffolk County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "75b339c4412813b3177e44e6e43789f9e42abbc76131fbbbb2a28ed0046b7e9f",
+        "retrievedAt": "2026-11-03T04:37:05.040209+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete official 80-page General Election2026 Sample Ballot Booklet, published Oct5, 39 styles/78 numbered ballot pages plus cover and contents. Complete local nominee blocks verified for17 offices,46 unique named choices. Blank write-ins excluded and fusion party lines deduplicated. Source text preserves exact PDF row order; several judicial grid headers precede the joint candidate grid. Quoted full pages retain that source layout, never recast all grid names as one race. Native county/apps2/www downloads returned403/1010; hash covers captured text, not PDF bytes."
+      },
+      {
+        "requestedUrl": "https://suffolkcountyny.gov/Departments/BOE/2026-General-Election-Candidate-List",
+        "finalUrl": "https://suffolkcountyny.gov/Departments/BOE/2026-General-Election-Candidate-List",
+        "publisher": "Suffolk County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "4567324d0549511206fa99a31abf44e9e5fd1bd3eb69b9898e2ea286ba05a64c",
+        "retrievedAt": "2026-11-03T04:37:04.792751+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official General Election Candidate List dated Sept21,2026. Crosschecks all17 local office/vote-limit/name/party blocks from actual sample. Kenneth T Rothwell individual identity quote uses this roster because the sample reader interleaves his first/last name with other office columns on printed page71. Actual complete Riverhead sample grid remains contest proof; no joined candidate quote is manufactured. All other45 candidate name quotes are exact sample text."
+      }
+    ]
+  }
+}

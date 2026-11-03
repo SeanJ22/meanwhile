@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "sourceHashFiles": 5,
+  "exactSavedSourceQuotes": 63,
+  "completeLocalContests": 17,
+  "printedNamedCandidates": 46,
+  "sampleCandidateNameQuotes": 45,
+  "clearlyLabeledRosterIdentityQuotes": 1,
+  "sharedHeldContestIdsReused": 1,
+  "sharedHeldCandidacyIdsReused": 14,
+  "allStylesCompared": 39,
+  "newElectorateDivisions": 0,
+  "readerVisibility": "NOT_LIVE_VERIFIED",
+  "sharedMergeValidation": "PENDING_MAIN"
+}

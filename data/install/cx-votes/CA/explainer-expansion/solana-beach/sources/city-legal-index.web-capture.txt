@@ -1,0 +1,210 @@
+Election Information | Solana Beach (https://cityofsolanabeach.ca.gov/ru/node/1034)
+【turn750033view0】 [wordlim: 200] Crawled: 2 weeks ago; Content type: text/html; Source: open({"ref_id":"https://cityofsolanabeach.ca.gov/ru/node/1034","lineno":null}); Total lines: 207
+L0: ^{-}A A ^{+}A
+L1: 
+L2: Search [Input: Search] Submit
+L3:   * 【0†GOVERNMENT】
+L4:     * 【1†CITIZEN COMMISSIONS】
+L5:     * 【2†WEBSITE ACCESSIBILITY】
+L6:     * -【3†CITY COUNCIL】
+L7:       * 【4†City Council Work Plan】
+L8:       * 【5†Regional Appointments】
+L9:       * 【6†Council Standing Committees】
+L10:       * 【7†Election Information】
+L11:     * 【8†JOB OPPORTUNITIES】
+L12:     * 【9†LEGISLATION】
+L13:     * +【10†MEETINGS】
+L14:       * 【11†Watch Meetings Live】
+L15:       * 【12†Public Meeting Calendar】
+L16:       * 【13†City Council Meetings】
+L17:       * 【14†Participation Guide】
+L18:       * 【15†Commission & Committee Meetings】
+L19:       * 【16†Workshops & Other Meetings】
+L20:     * 【17†MUNICIPAL CODE†www.codepublishing.com】
+L21:     * 【18†PUBLIC RECORDS】
+L22:     * +【19†DEPARTMENTS】
+L23:       * 【20†City Clerk】
+L24:       * 【21†City Manager】
+L25:       * 【22†Community Development】
+L26:       * 【23†Community Services】
+L27:       * 【24†Engineering & Public Works】
+L28:       * 【25†Finance】
+L29:       * 【8†Human Resources】
+L30:       * 【26†Information Technology】
+L31:       * 【27†Public Safety Department】
+L32: ###
+L33: # Election Information
+L34: The 【28†City Council】 is made up of an elected Mayor and four district Councilmembers. On November 3, 2020, the first District elections took place for a separately elected 【28†Mayor and Councilmembers】 for 【29†District 1】 and 【30†District 3】. Councilmembers for 【31†District 2】 and 【32†District 4】 were selected by voters in those districts in the 2022 General Election.
+L35: Pursuant to 【33†Resolution 2023-057†www.cityofsolanabeach.ca.gov】, a Deputy Mayor was appointed on an annual rotation. There are no term limits for City Councilmembers.
+L36: Solana Beach's General Municipal Election is held in even numbered years on the first Tuesday after the First Monday in November. The next General Municipal Election will be held on November 3, 2026. The City contracts with the San Diego County Registrar of Voters to provide certain election services.
+L37: ## General Municipal Election - November 3, 2026
+L38: 
+L39: 【34†Check your voter registration†www.sdvote.com】
+L40: This next Municipal Election will be conducted to elect Councilmembers to represent District 2 and District 4. To run for office, you may pull nomination papers and file them only during the nomination period July 13, 2026 to August 7, 2026. Contact the City Clerk (clerkoffice@cosb.org) to make an appointment. If you begin a funding campaign you will file your forms on the City's website. See Local Election Information tab below.
+L41: 【35†Notices of Upcoming 2026 Election (all languages)†www.cityofsolanabeach.ca.gov】
+L42: ##  Local Ballot Measure C
+L43: 
+L44: The Solana Beach City Council approved the placement of Measure C - an update to the City's local hotel/lodging tax - on the November Municipal ballot for voter consideration.
+L45: 
+L46: For more information about Measure C, please visit the City’s official 【36†Measure C webpage†www.cityofsolanabeach.ca.gov】.
+L47: ## Local Election Information
+L48: 
+L49: Who are my elected City, County, State and Federal representatives?
+L50: 
+L51: 
+L52: Find your local, state and federal voting districts 【37†here†www.sdvote.com】.
+L53: 
+L54: 
+L55: City of Solana Beach Representatives:
+L56:   * 【28†Solana Beach City Council】  The following Solana Beach City Council District maps were adopted 2022 following the required census district update process.
+L57: 【38†Collective Interactive Council District Map †cityofsolanabeac.maps.arcgis.com】
+L58: 【39†2022 Council District Map (All 4 Districts】)     【29†District 1 Map】      【31†District 2 Map】        【30†District 3 Map】      【32†District 4 Map】
+L59: 
+L60: San Diego County Representative:
+L61: 
+L62:   * 【40†San Diego County of Supervisors (District 3)†www.sandiegocounty.gov】
+L63: California State Representatives:
+L64: 
+L65:   * 【41†Governor†www.gov.ca.gov】
+L66:   * 【42†38th Senate District†sd38.senate.ca.gov】
+L67:   * 【43†77th Assembly District†a77.asmdc.org】
+L68: 
+L69: U.S. House of Representatives
+L70: 
+L71:   * 【44†Senators†www.senate.gov】
+L72:   * 【45†49th Congressional District†levin.house.gov】
+L73: 
+L74: Local Candidates: November 3, 2026 Election
+L75: The nomination period for City Council candidates for Districts 2 and 4 will take place Monday, July 13, 2026 through Friday, August 7, 2026. Nomination papers will be issued to qualified voters of the City and/or designated districts during this time. 【46†Current City Council†www.cityofsolanabeach.ca.gov】. Candidates must be a registered voter of the District for which they are seeking elective office.
+L76: Nomination papers may be obtained at City Hall (635 S.  Highway 101, Solana Beach, CA) by appointment from the City Clerk. Completed nomination papers may be filed at City Hall during normal business hours (7:30 am - 5:30 pm Mon-Thurs. and alternate Fridays 8:00 am - 5:00 pm) with the City Clerk.
+L77: Find your Elective District here: 【34†San Diego Registrar of Voters: Voter Info Lookup†www.sdvote.com】
+L78: 
+L79: The following information will be updated once the documents are complete for 2026. These documents apply to the Nomination process. 2024 is below for reference:
+L80: 
+L81: 【47†2026 Local Candidate Guide†www.cityofsolanabeach.ca.gov】
+L82: ##### * Disclaimer: All information provided here is intended to address basic inquiries and may not be relied on for direction in place of meeting all required regulations necessary to meet compliance and qualification. Candidates and Authors should consult with experts that may assist in interpretation of the election process.*
+L83:   * 【48†Resolution 2026- 036 - Calling Election†www.cityofsolanabeach.ca.gov】
+L84:   * 【49†Resolution 2026- 037 - Election Consolidation†www.cityofsolanabeach.ca.gov】
+L85:   * 【50†Resolution 2026- 038 - Candidate Statement†www.cityofsolanabeach.ca.gov】
+L86: The candidate Nomination Period opened July 13, 2026 and close5 August 7, 2026 at 5:00 p.m.
+L87: If an incumbent did not file nomination papers for a district, the nomination period for that district will be extended through Wednesday, August 12, for all eligible candidates except the incumbent.
+L88: Below is a list of candidates who have qualified for the ballot for elective office.
+L89: Updates of filing and qualified status dates will be updated as they occur. All filing paperwork is confidential until the close of the Nomination Period.
+L90: Name  | Ballot Designation  | Candidate Documents
+L91:    |    |
+L92: City Councilmember District 2
+L93: Kristi Becker  | Solana Beach City Councilmember  | 【51†Candidate Statement†www.cityofsolanabeach.ca.gov】 【52†Biographical†www.cityofsolanabeach.ca.gov】
+L94:    |    |
+L95: City Councilmember District 4
+L96: Jenna Wolfe-Dellamano  | Business Owner  | 【53†Candidate Statement†www.cityofsolanabeach.ca.gov】
+L97: 
+L98: Regardless of the number of candidates for open number of seats, the qualified candidates will be placed on the ballot.
+L99: Write-In Candidates: Nomination period is September 8 – October 20
+L100: Individuals wishing to run as a write-in candidate must make an appointment with the City Clerk’s Office to pull the nomination paper, complete the required nomination documents, and file the documents by the filing deadline in order to qualify as a write-in candidate.
+L101: The City contracts with the San Diego County Registrar of Voters to provide election services for its municipal elections and complies with the Registrar's procedures and requirements for ballot preparation, translated election materials, and the administration of election services.
+L102: 
+L103: Local Ballot Measure: November 3, 2026 Election
+L104: The Solana Beach City Council approved the placement of Measure C - an update to the City's local hotel/lodging tax - on the November Municipal ballot for voter consideration. For more information about Measure C, please visit the City’s official 【36†Measure C webpage†www.cityofsolanabeach.ca.gov】.
+L105: A City Measure was been added to the November election at the July 15, 2026 Council Meeting. Resolution 2026-100 Submission of Ballot Measure and Setting Arguments
+L106: 【54†Resolution 2026-100 Ballot Measure, TOT, Arguments】
+L107: 【55†Proposed Ordinance 545†www.cityofsolanabeach.ca.gov】 Transient Occupancy Tax (TOT) Update and Increase
+L108: 
+L109: 【56†Impartial Analysis 】
+L110: Argument submittals must be accompanied by the required signature page to be obtained from the City Clerk, which has been 【57†linked here†www.cityofsolanabeach.ca.gov】.
+L111: 
+L112: If the signers of the direct arguments want to designate alternate authors for the rebuttal, a majority of the authors must sign an 【58†authorization†www.cityofsolanabeach.ca.gov】 and designate names of alternative signers.
+L113: ARGUMENT  | Argument
+L114: FOR  | Argument
+L115: AGAINST
+L116: Direct Arguments (300 words max)
+L117: Due Monday, August 3, 2026 by 5:30 p.m.     |
+L118: 【59†Argument Filed 8-3-2026】  | None received.
+L119: Rebuttals Argument – Not applicable since there was not an Argument Against filed.
+L120: The City contracts with the San Diego County Registrar of Voters to provide election services for its municipal elections and complies with the Registrar's procedures and requirements for ballot preparation, translated election materials, and the administration of election services.
+L121: 
+L122: Local Campaign Activity Rules, Codes, and Regulations
+L123: ##### * Disclaimer: All information provided here is intended to address basic inquiries and may not be relied on for direction in place of meeting all required regulations necessary to meet compliance and qualification. Candidates and Authors should consult with experts that may assist in interpretation of the election process.*
+L124: 
+L125: 【60†Campaign Finance and Communications Activity Guide 2026†www.cityofsolanabeach.ca.gov】
+L126: 
+L127: Local Election Code: 【61†Solana Beach Municipal Code †www.codepublishing.com】
+L128: In addition to meeting the State of California Elections Code, the City's Municipal Code, 【62†Chapter 2.24 Elections†www.codepublishing.com】, contains specific City regulations including, but not limited to:
+L129: ### Local Committee Contribution Limits
+L130: 
+L131: Local contribution limits are updated annually by applying the San Diego County Consumer Price Index on January 1st (per 【63†SBMC 2.24.040 A†www.codepublishing.com】). The contribution limits below were updated January 2026.
+L132:   * Candidate and Controlled Committees are limited to receiving contributions of:
+L133:     * $290 per individual
+L134:     * $8,050 for aggregate contributions (from a combination of businesses, organizations, committees, etc.)
+L135:   * Ballot Measure Committees are not subject to contribution limits.
+L136: ### Local Campaign Committee Filing Requirements
+L137: 
+L138: Activities considered campaign related for local elections of candidates and/or measures may require 【64†campaign statement filings†www.fppc.ca.gov】 per state and local codes and regulations.
+L139: 【65†The Fair Political Practices Commission (FPPC)†www.fppc.ca.gov】 requires the 【64†Form 501†www.fppc.ca.gov】 (Candidate Intention Statement) to be filed with the City Clerk prior to any expenditures or soliciting/receiving of contributions, including a Candidate's expenditure of personal funds (the Candidate Statement fee).
+L140: City Committees (including Candidate Committees) are triggered for local filings when contributions or expenditures supporting/opposing a candidate or measure reach $200. Campaign Committee 【66†Form 410†www.fppc.ca.gov】. This dollar amount is lower than the FPPC trigger of $2,000. Both filings are required, when each are triggered, in addition to the subsequent pre-election filings.
+L141: 
+L142: 【67†Political Advertising Highlights†www.cityofsolanabeach.ca.gov】
+L143: ### Local Campaign Statement Filings  【68†Search Online Filings†www.southtechhosting.com】
+L144: 
+L145: Local election campaign statements are filed with the City Clerk.
+L146: For filings prior to 2021, contact the City Clerk's office (clerkoffice@cosb.org) for records.
+L147: ### Local Citizen Initiative Filing Fee
+L148: 
+L149: A Citizen Initiative filing fee is $200, per the City's user fee study as allowed by the 【69†California Election Code†leginfo.legislature.ca.gov】.
+L150: 
+L151: Campaign Sign Regulations
+L152: 【70†Solana Beach LOCAL Campaign Sign Regulations】
+L153: There are size restrictions for campaign signage in Solana Beach. Election signs may be posted anytime before an election. All election signs must be removed within 10 days following election day. Open link above for the specifics code regulations.
+L154: 【71†County of San Diego Campaign Sign Regulations†www.cityofsolanabeach.ca.gov】 (for City's border streets outside City boundaries)
+L155: 【72†State of Ca. Dept. of Transportation Campaign Sign†www.cityofsolanabeach.ca.gov】 (regarding I-5 property right-of-way)
+L156: ##
+L157: Additional Helpful Links
+L158: 
+L159: 【73†San Diego County Registrar of Voters General Registrar of Voters Election Information†www.sdvote.com】
+L160: 【74†Vote Center Locations & Ballot Drop Box Locations†www.sdvote.com】 (active during an election since this information changes at each election)
+L161: 【75†California Secretary of State†www.sos.ca.gov】
+L162: 【76†Political Reform Act†www.fppc.ca.gov】 (Gov. Code 81000)
+L163: Note: The Elections Official, City Clerk, is responsible for coordinating and executing municipal elections, including distribution and qualification of nomination papers, and maintaining all campaign statements and conflict of interest filings required by the Fair Political Practices Commission (FPPC). It is the responsibility of all candidates/committees to follow constitutional, statutory, and City code provisions applicable to elections.
+L164: ###
+L165: 
+L166: Contact Us
+L167: 
+L168: City of Solana Beach (858) 720-2400
+L169: 
+L170: clerkoffice@cityofsolanabeach.ca.gov
+L171: 
+L172: 【77†Image: Logo】
+L173: 
+L174: # Contact Us
+L175: 
+L176: Solana Beach City Hall
+L177: 635 S. Highway 101,
+L178: Solana Beach, CA 92075
+L179: 858-720-2400
+L180: 
+L181: Monday - Thursday
+L182: 7:30 am - 5:30 pm
+L183: Every Other Friday
+L184: 8:00 am - 5:00 pm
+L185: 
+L186: Cashier Hours:
+L187: Monday – Thursday
+L188: 7:30 am – 5:00 pm
+L189: Every Other Friday
+L190: 8:00 am – 4:30 pm
+L191: # Stay Connected
+L192: 
+L193:   *  【78†E-Newsletter Signup†lp.constantcontactpages.com】
+L194:   *  【79†Facebook†www.facebook.com】
+L195:   *  【80†Twitter†twitter.com】
+L196:   *  【81†Instagram†www.instagram.com】
+L197: 
+L198: # Helpful Links
+L199: 
+L200:   * 【82†Upcoming Events】
+L201:   * 【83†Meetings】
+L202:   * 【84†Council Meetings & Public Workshops】
+L203:   * 【85†Job Opportunities†www.governmentjobs.com】
+L204:   * 【86†Website Disclaimer of Liability】
+L205: 
+L206: Please ensure Javascript is enabled for purposes of 【87†website accessibility†userway.org】
+

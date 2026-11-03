@@ -1,0 +1,35 @@
+[
+  {
+    "url": "https://cityofsolanabeach.ca.gov/ru/node/1034",
+    "finalUrl": "https://cityofsolanabeach.ca.gov/ru/node/1034",
+    "savedFile": "sources/city-legal-index.web-capture.txt",
+    "sha256": "77d4b3255db6633c3f2125012799393ec0ab8f0bec235d0d42934914b6804e3c",
+    "bytes": 15971,
+    "capturedAt": "2026-11-03T05:46:56.536613+00:00",
+    "captureKind": "CAPTURED_SOURCE_TEXT",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "note": "Exact deterministic public web-reader extraction, including original source URL and page/line references. This is not native PDF or HTML bytes. Native runtime HTTP returned503 across unrelated hosts."
+  },
+  {
+    "url": "https://www.cityofsolanabeach.ca.gov/sites/default/files/Solana%20Beach/City%20Clerk/Election%20Information/Resolutions/ballot%20measure/proposed-ord-545-tot.pdf",
+    "finalUrl": "https://www.cityofsolanabeach.ca.gov/sites/default/files/Solana%20Beach/City%20Clerk/Election%20Information/Resolutions/ballot%20measure/proposed-ord-545-tot.pdf",
+    "savedFile": "sources/full-text-and-analysis.web-capture.txt",
+    "sha256": "5b44dbe9b409b48f38645355b1a283dc3162e98b1660bb437d9cd98b06dc9b89",
+    "bytes": 17395,
+    "capturedAt": "2026-11-03T05:46:56.536613+00:00",
+    "captureKind": "CAPTURED_SOURCE_TEXT",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "note": "Exact deterministic public web-reader extraction, including original source URL and page/line references. This is not native PDF or HTML bytes. Native runtime HTTP returned503 across unrelated hosts."
+  },
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "savedFile": "sources/official-composite.web-capture.txt",
+    "sha256": "aa5f9597402238f2869498cfd258cc448be74b9f32877c27e7f33f1e6eb92963",
+    "bytes": 24171,
+    "capturedAt": "2026-11-03T05:46:56.536613+00:00",
+    "captureKind": "CAPTURED_SOURCE_TEXT",
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "note": "Exact deterministic public web-reader extraction, including original source URL and page/line references. This is not native PDF or HTML bytes. Native runtime HTTP returned503 across unrelated hosts."
+  }
+]

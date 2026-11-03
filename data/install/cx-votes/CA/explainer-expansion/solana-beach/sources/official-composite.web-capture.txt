@@ -1,0 +1,543 @@
+Composite Ballot - General 2026 (https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf)
+【turn943205view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 23; Source: open({"ref_id":"turn191779view0","lineno":2390}); Total lines: 2419
+L1875@P18: immunotherapy research, half to a single
+L1876@P18: University of California-affiliated nonprofit
+L1877@P18: medical research institute, half to
+L1878@P18: research grants. Fiscal Impact:
+L1879@P18: Increased state cost of $500 million to
+L1880@P18: $600 million annually for about 20 years
+L1881@P18: to repay the research bond, with some or
+L1882@P18: all of the cost offset if the funded
+L1883@P18: research generates revenue. Supporters:
+L1888@P18: YES NO
+L1889@P18: PROP 39 PROHIBITS CITIZENS
+L1890@P18: FROM VOTING UNLESS THEY
+L1891@P18: PRESENT GOVERNMENT-ISSUED
+L1892@P18: IDENTIFICATION. INITIATIVE
+L1893@P18: CONSTITUTIONAL AMENDMENT.
+L1894@P18: Invalidates mail ballots that do not have
+L1895@P18: last four digits of designated
+L1896@P18: government-issued identification number
+L1897@P18: written on envelope. Prohibits in-person
+L1898@P18: voting without presenting
+L1899@P18: government-issued identification. Fiscal
+L1900@P18: Impact: Costs of between tens of millions
+L1901@P18: of dollars and low hundreds of millions of
+L1902@P18: dollars each year to implement new voting
+L1903@P18: requirements. Supporters: The Transparency
+L1904@P18: Foundation; Latino American Political Assn;
+L1905@P18: Howard Jarvis Taxpayers Assn; CA Women’s
+L1906@P18: Leadership Assn Opponents: ACLU California
+L1907@P18: Action; Common Cause; League of Women
+L1908@P18: Voters of California
+L1909@P18: YES NO
+L1910@P18: PROP 40 IMPOSES ONE-TIME TAX
+L1911@P18: ON CERTAIN TAXPAYERS. INITIATIVE
+L1912@P18: CONSTITUTIONAL AMENDMENT AND
+L1913@P18: STATUTE. Imposes 5% tax on certain
+L1914@P18: taxpayers with assets over $1 billion;
+L1915@P18: revenue primarily for health care.
+L1916@P18: Exempts revenues from constitutional
+L1917@P18: requirements for school funding and
+L1918@P18: spending limit. Fiscal Impact:
+L1919@P18: Temporary revenue increase of tens of
+L1920@P18: billions of dollars spread over several
+L1921@P18: years from wealth tax on billionaires.
+L1922@P18: Possible ongoing decrease of less than
+L1923@P18: $1 billion per year in income tax revenue
+L1924@P18: from billionaires. Supporters: US Senator
+L1925@P18: Bernie Sanders; SEIU United Healthcare
+L1926@P18: Workers West Opponents: California Primary
+L1927@P18: Care Association; California School Boards
+L1928@P18: Association; California Taxpayers Association
+L1929@P18: YES NO
+L1930@P18: PROP 41 PROHIBITS NEW STATE
+L1931@P18: TAXES THAT EXCLUDE REVENUES
+L1932@P18: FROM STATE SPENDING LIMIT.
+L1933@P18: REQUIRES AUDITS FOR NEW STATE
+L1934@P18: SPECIAL TAXES. INITIATIVE
+L1935@P18: CONSTITUTIONAL AMENDMENT.
+L1936@P18: Nullifies state taxes enacted after
+L1937@P18: January 1, 2026 that exempt their
+L1938@P18: revenues from voter-approved state
+L1939@P18: spending limit. Requires pre-election and
+L1940@P18: recurring audits of programs funded by
+L1941@P18: new special taxes. Fiscal Impact: The
+L1942@P18: net fiscal effect is unknown as it depends
+L1943@P18: on future decisions by voters, the
+L1944@P18: Legislature, and other policymakers.
+L1945@P18: Supporters: CA Society of Certified Public
+L1946@P18: Accountants (CalCPAs); CalAsian Chamber of
+L1947@P18: Commerce; California Taxpayers Association
+L1948@P18: (CalTax) Opponents: US Senator Bernie
+L1949@P18: Sanders; SEIU United Healthcare Workers
+L1950@P18: West
+L1951@P18: YES NO
+L1952@P18: PROP 42 PROHIBITS NEW STATE
+L1953@P18: PERSONAL PROPERTY TAXES AND
+L1954@P18: CERTAIN RETROACTIVE STATE
+L1955@P18: TAXES. INITIATIVE CONSTITUTIONAL
+L1956@P18: AMENDMENT. Prohibits any new state
+L1957@P18: tax (1) imposed on the ownership of
+L1958@P18: personal property (all things people own
+L1959@P18: other than real estate), or (2) that applies
+L1960@P18: retroactively based on taxpayer’s past
+L1961@P18: activities. Nullifies taxes enacted after
+L1962@P18: January 1, 2026 that conflict with this
+L1963@P18: measure. Fiscal Impact: Possibility that
+L1964@P18: tax revenues will not go up as much in the
+L1965@P18: future. Supporters: CA Professional
+L1966@P18: Firefighters; State Building & Construction
+L1967@P18: Trades Council of CA; AMVETS Department of
+L1968@P18: CA Opponents: US Senator Bernie Sanders;
+L1969@P18: SEIU United Healthcare Workers West
+L1970@P18: YES NO
+L1971@P18-19: EN_19 Composite Page 19MEASURES SUBMITTED TO
+L1972@P19: THE VOTERS
+L1973@P19: STATE
+L1974@P19: STATE
+L1975@P19: COUNTY
+L1976@P19: COUNTY
+L1977@P19: CITY
+L1978@P19: CITY OF CORONADO
+L1979@P19: CITY OF LEMON GROVE
+L1980@P19: PROP 43 LIMITS VOTERS’ ABILITY
+L1981@P19: TO RAISE REVENUES FOR LOCAL
+L1982@P19: GOVERNMENT SERVICES.
+L1983@P19: LEGISLATIVE CONSTITUTIONAL
+L1984@P19: AMENDMENT. Limits voters’ ability to
+L1985@P19: pass voter-proposed local special taxes
+L1986@P19: by increasing percentage of votes needed
+L1987@P19: to approve such ballot measures from a
+L1988@P19: majority (over 50%) to two-thirds,
+L1989@P19: beginning January 1, 2027. Fiscal
+L1990@P19: Impact: Possibility that local government
+L1991@P19: tax revenues will not go up as much in the
+L1992@P19: future due to a higher vote threshold for
+L1993@P19: certain taxes. Supporters: California
+L1994@P19: Taxpayers Association; Family Business
+L1995@P19: Association of California; California Hispanic
+L1996@P19: Chambers of Commerce Opponents:
+L1997@P19: California Professional Firefighters; California
+L1998@P19: Federation of Teachers; Nurse Alliance of SEIU
+L1999@P19: CA.
+L2000@P19: YES NO
+L2001@P19: PROP 44 REQUIRES COMMUNITY
+L2002@P19: HEALTH CLINICS SPEND 90% OF
+L2003@P19: REVENUE ON PROGRAM SERVICES.
+L2004@P19: INITIATIVE STATUTE. Imposes penalties
+L2005@P19: on nonprofit Federally Qualified Health
+L2006@P19: Centers (community clinics providing
+L2007@P19: primary care to medically underserved
+L2008@P19: areas and populations) that spend less
+L2009@P19: than 90% of revenue on “program
+L2010@P19: services” advancing their charitable
+L2011@P19: purpose, including but not limited to
+L2012@P19: patient services. Fiscal Impact:
+L2013@P19: Increased state costs in the low tens of
+L2014@P19: millions of dollars per year, covered by
+L2015@P19: fees. Supporters: None submitted
+L2016@P19: Opponents: American Academy of Pediatrics
+L2017@P19: CA; CA School Nurses Org; CA Academy of
+L2018@P19: Family Physicians; CA Medical Assoc.
+L2019@P19: YES NO
+L2020@P19: PROP 45 MODIFIES
+L2021@P19: ENVIRONMENTAL REVIEW FOR
+L2022@P19: CERTAIN PROJECTS. INITIATIVE
+L2023@P19: STATUTE. Amends California
+L2024@P19: Environmental Quality Act (CEQA) to
+L2025@P19: expedite environmental review for certain
+L2026@P19: projects (including most housing,
+L2027@P19: transportation, water, and health projects)
+L2028@P19: by setting deadlines to complete
+L2029@P19: environmental review and resolve
+L2030@P19: lawsuits challenging project approvals.
+L2031@P19: Fiscal Impact: Initial costs for state and
+L2032@P19: local governments, likely in the high tens
+L2033@P19: of millions of dollars—potentially
+L2034@P19: exceeding $100 million—annually, partly
+L2035@P19: covered by fees. Uncertain, potentially
+L2036@P19: more significant positive or negative
+L2037@P19: longer-term fiscal effects. Supporters:
+L2038@P19: California Children’s Hospital Association;
+L2039@P19: California Water Association; California Council
+L2040@P19: for Affordable Housing Opponents: Coalition
+L2041@P19: for Clean Air; CA Environmental Voters;
+L2042@P19: Physicians for Social Responsibility, LA;
+L2043@P19: National Wildlife Federation
+L2044@P19: YES NO
+L2045@P19: MEASURE A A TRANSPARENT,
+L2046@P19: ACCOUNTABLE, MODERN COUNTY
+L2047@P19: GOVERNMENT Shall the San Diego
+L2048@P19: County Charter be amended to establish
+L2049@P19: an Independent Ethics Commission,
+L2050@P19: Independent Budget Analyst,
+L2051@P19: Independent Program Auditor,
+L2052@P19: confirmation of certain senior County
+L2053@P19: leaders, and optional Board of
+L2054@P19: Supervisors appointment of the Public
+L2055@P19: Defender; increase term limits from two to
+L2056@P19: three terms for the Board of Supervisors
+L2057@P19: members; require public disclosure of
+L2058@P19: spending and performance data; clarify
+L2059@P19: non-interference provisions; and update
+L2060@P19: terminology and structure?
+L2061@P19: YES NO
+L2062@P19: MEASURE B MEASURE TO FUND
+L2063@P19: SAN DIEGO COUNTY HEALTH &
+L2064@P19: SAFETY SERVICES To clean-up
+L2065@P19: sewage pollution in Tijuana River Valley,
+L2066@P19: improve wildfire prevention, emergency
+L2067@P19: response, access to healthcare, food
+L2068@P19: assistance, childhood development
+L2069@P19: services, and authorized administrative
+L2070@P19: expenses; shall the measure authorizing
+L2071@P19: a half-cent sales tax raising an estimated
+L2072@P19: $400,000,000 to $450,000,000 annually,
+L2073@P19: requiring citizen oversight, public
+L2074@P19: spending disclosure, and independent
+L2075@P19: annual audits, and lasting until ended by
+L2076@P19: voters, be adopted?
+L2077@P19: YES NO
+L2078@P19: MEASURE D Shall the measure,
+L2079@P19: increasing the permissible height of
+L2080@P19: “multiple-family developments” in the City
+L2081@P19: of Coronado’s R-4 Multiple Family
+L2082@P19: Residential Zone from the existing
+L2083@P19: maximum of 3 stories (with a maximum
+L2084@P19: height of no more than 35 feet) to a
+L2085@P19: maximum of 4 stories (with a maximum
+L2086@P19: height of no more than 42 feet), be
+L2087@P19: adopted?
+L2088@P19: YES NO
+L2089@P19: MEASURE E Shall the Measure
+L2090@P19: restricting the sale of birds in the City of
+L2091@P19: Lemon Grove, requiring that birds be
+L2092@P19: obtained exclusively from animal shelters,
+L2093@P19: humane societies, or nonprofit rescue
+L2094@P19: organizations and establishing related
+L2095@P19: regulations be adopted
+L2096@P19: YES NO
+L2097@P19-20: EN_20 Composite Page 20MEASURES SUBMITTED TO
+L2098@P20: THE VOTERS
+L2099@P20: CITY
+L2100@P20: CITY OF OCEANSIDE
+L2101@P20: CITY OF SANTEE
+L2102@P20: CITY OF SOLANA BEACH
+L2103@P20: SCHOOL
+L2104@P20: FALLBROOK UNION
+L2105@P20: ELEMENTARY SCHOOL DISTRICT
+L2106@P20: GROSSMONT-CUYAMACA
+L2107@P20: COMMUNITY COLLEGE
+L2108@P20: DISTRICT
+L2109@P20: MEASURE R To preserve the City’s
+L2110@P20: ability to continue receiving state
+L2111@P20: infrastructure funding for public works
+L2112@P20: projects, shall the Oceanside City
+L2113@P20: Charter be amended to conform to state
+L2114@P20: laws and best practices regarding
+L2115@P20: prevailing wage and fair competition,
+L2116@P20: including the use of project labor
+L2117@P20: agreements for City public works with
+L2118@P20: mandatory provisions for taxpayer
+L2119@P20: protections, transparency, and
+L2120@P20: accountability in the contracting process,
+L2121@P20: by amending Sections 301, 302, and
+L2122@P20: 303 of the Oceanside City Charter?
+L2123@P20: YES NO
+L2124@P20: MEASURE S To provide
+L2125@P20: locally-controlled funding for Oceanside
+L2126@P20: services and infrastructure, such as
+L2127@P20: keeping streets, sidewalks, parks, and
+L2128@P20: public facilities safe, clean, and
+L2129@P20: well-maintained; fixing potholes;
+L2130@P20: improving traffic; restoring/protecting local
+L2131@P20: beaches; modernizing public
+L2132@P20: safety/emergency facilities to improve
+L2133@P20: 911 emergency response/community
+L2134@P20: safety; and repairing aging infrastructure,
+L2135@P20: shall City of Oceanside’s ordinance
+L2136@P20: establishing a 1/2 cent sales tax be
+L2137@P20: adopted, providing $20,000,000 annually
+L2138@P20: for general government use for 10 years,
+L2139@P20: with independent audits and citizen
+L2140@P20: oversight?
+L2141@P20: YES NO
+L2142@P20: MEASURE Y To provide funding for
+L2143@P20: City of Santee services and
+L2144@P20: infrastructure, such as fixing streets and
+L2145@P20: potholes; keeping streets, sidewalks,
+L2146@P20: parks and public facilities safe, clean,
+L2147@P20: and well-maintained; repairing/ replacing
+L2148@P20: aging infrastructure and stormdrains;
+L2149@P20: local traffic management; fire protection,
+L2150@P20: paramedic, crime prevention, and 911
+L2151@P20: emergency response, shall City of
+L2152@P20: Santee’s measure establishing a one
+L2153@P20: cent sales tax be adopted, providing
+L2154@P20: approximately $14,000,000 annually for
+L2155@P20: city services for 10 years, with
+L2156@P20: independent audits, citizens’ committee
+L2157@P20: oversight, and all funds locally
+L2158@P20: controlled?
+L2159@P20: YES NO
+L2160@P20: MEASURE C To provide general city
+L2161@P20: services such as keeping beaches,
+L2162@P20: parks, trails, and restrooms safe, clean
+L2163@P20: and well-maintained; preventing trash
+L2164@P20: from entering local beaches/lagoons;
+L2165@P20: upgrading emergency response/safety
+L2166@P20: facilities, shall City of Solana Beach’s
+L2167@P20: measure updating the 20-year-old
+L2168@P20: transient occupancy tax (paid only by
+L2169@P20: hotel/short-term vacation rental guests
+L2170@P20: as specified in ordinance) and increasing
+L2171@P20: the rate by 1% be adopted, providing
+L2172@P20: approximately $250,000 annually until
+L2173@P20: ended by voters, with all money locally
+L2174@P20: controlled?
+L2175@P20: YES NO
+L2176@P20: MEASURE K To update local
+L2177@P20: elementary and middle schools without
+L2178@P20: increasing tax rates; replace failing
+L2179@P20: roofs, plumbing and electrical systems;
+L2180@P20: improve school safety;
+L2181@P20: construct/repair/acquire classrooms,
+L2182@P20: labs, facilities, equipment, and sites; and
+L2183@P20: qualify for State matching funds; shall
+L2184@P20: Fallbrook Union Elementary School
+L2185@P20: District’s measure be adopted,
+L2186@P20: authorizing $76,000,000 in bonds at
+L2187@P20: legal rates, levying a projected $30 per
+L2188@P20: $100,000 assessed value while bonds
+L2189@P20: are outstanding, generating $5,000,000
+L2190@P20: annually, with public oversight, audits, no
+L2191@P20: funds for administrators, all funds
+L2192@P20: staying local?
+L2193@P20: BONDS - YES BONDS - NO
+L2194@P20: MEASURE G Grossmont-Cuyamaca
+L2195@P20: Community College District Fire Safety,
+L2196@P20: Job Training, College Affordability, No
+L2197@P20: Tax Rate Increase With funds that cannot
+L2198@P20: be taken by the State and spent
+L2199@P20: elsewhere and NO tax rate increase, shall
+L2200@P20: Grossmont-Cuyamaca Community
+L2201@P20: College District’s measure to
+L2202@P20: · improve/expand career training
+L2203@P20: classrooms
+L2204@P20: · remove asbestos/mold
+L2205@P20: · reduce wildfire threats
+L2206@P20: · maintain college affordability
+L2207@P20: be adopted, authorizing $624 million of
+L2208@P20: bonds with legal rates, levies below
+L2209@P20: $25/$100,000 assessed valuation while
+L2210@P20: outstanding ($45 million annually), audits,
+L2211@P20: taxpayer oversight, full disclosure of all
+L2212@P20: spending?
+L2213@P20: BONDS - YES BONDS - NO
+L2214@P20-21: EN_21 Composite Page 21MEASURES SUBMITTED TO
+L2215@P21: THE VOTERS
+L2216@P21: SCHOOL
+L2217@P21: JAMUL-DULZURA UNION
+L2218@P21: SCHOOL DISTRICT
+L2219@P21: JULIAN UNION
+L2220@P21: HIGH SCHOOL DISTRICT
+L2221@P21: LA MESA-SPRING VALLEY
+L2222@P21: SCHOOL DISTRICT
+L2223@P21: MOUNTAIN EMPIRE
+L2224@P21: UNIFIED SCHOOL DISTRICT
+L2225@P21: SAN DIEGO UNIFIED SCHOOL
+L2226@P21: DISTRICT
+L2227@P21: SANTEE SCHOOL DISTRICT
+L2228@P21: MEASURE H With no projected
+L2229@P21: increase in current tax rates and to
+L2230@P21: repair/ replace deteriorating roofs,
+L2231@P21: plumbing, dry rot, termite damage,
+L2232@P21: electrical; upgrade aging schools to
+L2233@P21: meet current health/ safety standards;
+L2234@P21: and upgrade classrooms to support
+L2235@P21: student achievement in math, science,
+L2236@P21: technology, reading, writing, shall
+L2237@P21: Jamul-Dulzura Union School District’s
+L2238@P21: measure be adopted authorizing
+L2239@P21: $18,000,000 in bonds at legal rates,
+L2240@P21: levying $30 per $100,000 assessed
+L2241@P21: value (averaging $1,300,000 annually)
+L2242@P21: while bonds are outstanding, with citizen
+L2243@P21: oversight/ audits, all money locally
+L2244@P21: controlled?
+L2245@P21: BONDS - YES BONDS - NO
+L2246@P21: MEASURE J To repair, modernize,
+L2247@P21: and construct classrooms and career
+L2248@P21: technology facilities for college/career
+L2249@P21: readiness in agricultural science,
+L2250@P21: chemistry, math, technology, and skilled
+L2251@P21: trades; fix deteriorating facilities, roofs,
+L2252@P21: plumbing/electrical systems; and
+L2253@P21: improve school safety/security systems;
+L2254@P21: shall Julian Union High School District’s
+L2255@P21: measure authorizing $9,000,000 in
+L2256@P21: bonds at legal rates be adopted, levying
+L2257@P21: approximately $30 per $100,000
+L2258@P21: assessed value (averaging $650,000)
+L2259@P21: annually, while bonds are outstanding,
+L2260@P21: with citizen oversight, independent
+L2261@P21: audits, and all money locally-controlled?
+L2262@P21: BONDS - YES BONDS - NO
+L2263@P21: MEASURE AA La Mesa Spring
+L2264@P21: Valley School District Classroom
+L2265@P21: Repair & Upgrade Extension Measure.
+L2266@P21: To repair/upgrade deteriorating roofs,
+L2267@P21: plumbing, electrical systems; install air
+L2268@P21: conditioning/shade structures to protect
+L2269@P21: students from extreme heat; remove
+L2270@P21: asbestos/lead pipes; and upgrade
+L2271@P21: schools to current health/building
+L2272@P21: safety/disability access standards, shall
+L2273@P21: La Mesa Spring Valley School District’s
+L2274@P21: measure be adopted, authorizing
+L2275@P21: $131,000,000 in bonds at legal rates
+L2276@P21: (without increasing current tax rates),
+L2277@P21: levying $22 per $100,000 assessed
+L2278@P21: value ($9,000,000 annually) while bonds
+L2279@P21: are outstanding, with independent
+L2280@P21: oversight and audits?
+L2281@P21: BONDS - YES BONDS - NO
+L2282@P21: MEASURE L To repair, replace, or
+L2283@P21: reconstruct deteriorating classrooms,
+L2284@P21: science labs, career technical education
+L2285@P21: and school facilities at Mountain Empire
+L2286@P21: High School that don’t meet building
+L2287@P21: safety/earthquake safety standards;
+L2288@P21: remove asbestos, lead pipes, mold; and
+L2289@P21: replace/fix roofs plumbing, sewer,
+L2290@P21: electrical, and aging portables, shall
+L2291@P21: Mountain Empire Unified School
+L2292@P21: District’s measure authorizing
+L2293@P21: $23,000,000 in bonds at legal rates be
+L2294@P21: adopted, levying approximately $38 per
+L2295@P21: $100,000 of assessed valuation
+L2296@P21: ($2,542,353 annually) while bonds are
+L2297@P21: outstanding, with independent oversight,
+L2298@P21: audits, and all money locally controlled?
+L2299@P21: BONDS - YES BONDS - NO
+L2300@P21: MEASURE M SAN DIEGO UNIFIED
+L2301@P21: SCHOOL DISTRICT REPAIR, STUDENT
+L2302@P21: SAFETY, NO TAX RATE INCREASE
+L2303@P21: MEASURE To repair/upgrade all public
+L2304@P21: schools, help retain/attract teachers by:
+L2305@P21: · Repairing deteriorating roofs,
+L2306@P21: plumbing, restrooms;
+L2307@P21: · Providing safe drinking water;
+L2308@P21: · Removing asbestos, lead paint, mold;
+L2309@P21: · Upgrading outdated
+L2310@P21: career/vocational, science,
+L2311@P21: technology, engineering classrooms;
+L2312@P21: shall San Diego Unified School District’s
+L2313@P21: measure authorizing $3,500,000,000 in
+L2314@P21: bonds at legal rates, levying $32 per
+L2315@P21: $100,000 of assessed value, providing
+L2316@P21: $204,000,000 annually while bonds are
+L2317@P21: outstanding, requiring public spending
+L2318@P21: disclosure, audits, citizens oversight, be
+L2319@P21: adopted?
+L2320@P21: BONDS - YES BONDS - NO
+L2321@P21: MEASURE BB With funds that cannot
+L2322@P21: be taken by the State and spent
+L2323@P21: elsewhere, and no increase in tax rates,
+L2324@P21: shall Santee Elementary School District’s
+L2325@P21: measure:
+L2326@P21: · repairing leaky roofs, plumbing, sewer
+L2327@P21: systems
+L2328@P21: · updating inefficient heating,
+L2329@P21: ventilation, air-conditioning systems
+L2330@P21: · building multipurpose instruction
+L2331@P21: classrooms
+L2332@P21: · repairing aging schools, classrooms
+L2333@P21: be adopted authorizing $30 million of
+L2334@P21: bonds with legal rates, average levies
+L2335@P21: below $13 per $100,000 of assessed
+L2336@P21: valuation ($2.2 million annually) while
+L2337@P21: outstanding, audits, independent
+L2338@P21: oversight, and full public disclosure of all
+L2339@P21: spending?
+L2340@P21: BONDS - YES BONDS - NO
+L2341@P21-22: EN_22 Composite Page 22MEASURES SUBMITTED TO
+L2342@P22: THE VOTERS
+L2343@P22: SCHOOL
+L2344@P22: VISTA UNIFIED SCHOOL
+L2345@P22: DISTRICT
+L2346@P22: DISTRICT
+L2347@P22: RAMONA MUNICIPAL WATER
+L2348@P22: DISTRICT
+L2349@P22: PERMANENT ROAD DIVISION
+L2350@P22: NO. 1000, ZONE NO.
+L2351@P22: 9B-HARRIS ANNEX ("PRD
+L2352@P22: Zone")
+L2353@P22: PERMANENT ROAD DIVISION
+L2354@P22: NO. 1000, ZONE NO.
+L2355@P22: 13A-PALA MESA ZONE A
+L2356@P22: ("PRD Zone")
+L2357@P22: MEASURE N Without increasing
+L2358@P22: current tax rates, to repair and upgrade
+L2359@P22: aging classrooms, science labs, school
+L2360@P22: facilities, and instructional technology to
+L2361@P22: support college/career readiness in
+L2362@P22: math, science, technology, engineering,
+L2363@P22: arts, and skilled trades and fix
+L2364@P22: deteriorating roofs, plumbing, sewer, and
+L2365@P22: electrical systems shall Vista Unified
+L2366@P22: School District’s measure be adopted
+L2367@P22: authorizing $543,000,000 in bonds at
+L2368@P22: legal rates, levying $58 per $100,000
+L2369@P22: assessed value ($31,000,000 annually)
+L2370@P22: while bonds are outstanding, with citizen
+L2371@P22: oversight, independent audits, and all
+L2372@P22: money locally-controlled?
+L2373@P22: BONDS - YES BONDS - NO
+L2374@P22: MEASURE P AMENDMENT OF
+L2375@P22: PROPOSITION ‘NN’ TO MODERNIZE
+L2376@P22: THE ORDINANCE. Shall the voters of
+L2377@P22: the Ramona Municipal Water District
+L2378@P22: adopt a measure amending Proposition
+L2379@P22: ‘NN’ by (1) exempting grant funding and
+L2380@P22: donations from the calculation of
+L2381@P22: authorized expenditure limit; (2)
+L2382@P22: increasing the expenditure limit for new
+L2383@P22: projects from $1,000,000 to $10,000,000
+L2384@P22: where no debt is incurred; and (3)
+L2385@P22: establishing annual adjustments to the
+L2386@P22: expenditure limit based on the San Diego
+L2387@P22: Area Consumer Price Index beginning
+L2388@P22: January 1, 2028?
+L2389@P22: YES NO
+L2390@P22: MEASURE Q Shall the County of San
+L2391@P22: Diego, beginning Fiscal Year 2027-28
+L2392@P22: and annually thereafter, levy a special tax
+L2393@P22: of up to $1,000 per developed / $375 per
+L2394@P22: undeveloped parcel within Permanent
+L2395@P22: Road Division No. 1000, Zone No. 9B –
+L2396@P22: Harris Annex, replacing the existing
+L2397@P22: assessment? The tax may be adjusted by
+L2398@P22: up to 5% annually based on the Los
+L2399@P22: Angeles Construction Cost Index or a
+L2400@P22: comparable Southern California index
+L2401@P22: and remain until modified or dissolved by
+L2402@P22: law.
+L2403@P22: TAX - YES TAX - NO
+L2404@P22: MEASURE T Shall the County of San
+L2405@P22: Diego, beginning Fiscal Year 2027-28
+L2406@P22: and annually thereafter, levy a special tax
+L2407@P22: of up to $1,786.00 per developed /
+L2408@P22: $893.00 per undeveloped parcel within
+L2409@P22: Permanent Road Division No. 1000, Zone
+L2410@P22: No. 13A – Pala Mesa Zone A, replacing
+L2411@P22: the existing assessment? The tax may be
+L2412@P22: adjusted by up to 5% annually based on
+L2413@P22: the Los Angeles Construction Cost Index
+L2414@P22: or a comparable Southern California
+L2415@P22: index and remain until modified or
+L2416@P22: dissolved by law.
+L2417@P22: TAX - YES TAX - NO
+L2418@P22: EN_23 Composite Page 23
+

@@ -1,0 +1,29 @@
+[
+  {
+    "contestId": "ca-2026-san-diego-c",
+    "whatItDoes": "Increase Solana Beach’s tax on hotel and other short-term lodging from 13% to 14% beginning January 1, 2027. Guests staying 30 days or less pay the tax; operators collect it. The city estimates $250,000 in additional annual revenue for any general city purpose, with no fixed expiration. The measure also updates the lodging, taxable-rent, collection and record-access rules described below. The council could amend the ordinance for administration and its purposes, but a tax increase requiring voter approval would still need a public vote. Approval requires a majority vote.",
+    "yesMeans": "Approve the increase to 14% and the updated lodging-tax rules.",
+    "noMeans": "Keep the current 13% lodging-tax rate and reject these proposed updates.",
+    "parts": [
+      {
+        "id": "ca-2026-san-diego-c#rent",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Lodging and charges covered",
+        "what": "Covered lodging includes hotels, inns, short-term vacation rentals and other listed temporary accommodations, including rented rooms and accessory units. Taxable rent includes cleaning, resort, parking, pet, extra-guest, cancellation and internet charges collected by the operator. Service, booking and transaction fees that third-party platforms collect directly are excluded. The ordinance describes its lodging and rent definitions as clarifying existing law."
+      },
+      {
+        "id": "ca-2026-san-diego-c#collection",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Collection and records",
+        "what": "Platforms and booking vendors that handle rentals and payments act as the operator’s agents for collecting and remitting the tax. If an operator collects rent but fails to collect the tax, the operator must pay it. Operators must retain relevant records for three years. State short-term-rental-facilitator law would apply, allowing the city to access specified records and audit taxes in the circumstances that law permits."
+      }
+    ],
+    "sourceUrl": "https://www.cityofsolanabeach.ca.gov/sites/default/files/Solana%20Beach/City%20Clerk/Election%20Information/Resolutions/ballot%20measure/proposed-ord-545-tot.pdf",
+    "sourceHash": "8d606d91025c8ddcfc97af72677a9eca4d83dd1b2c886f8e45e75bc4668ce85b",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T05:46:56.536613+00:00",
+    "citation": "measure-source"
+  }
+]

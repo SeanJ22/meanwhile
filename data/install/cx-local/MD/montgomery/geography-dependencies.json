@@ -1,0 +1,253 @@
+[
+  {
+    "contestId": "md-local-2026-2ae5917d35d83533896a",
+    "title": "Montgomery County — County Executive",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-05fa1933419619fb8653",
+    "title": "Montgomery County — County Council At Large",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-78a672acc7d83864cb92",
+    "title": "Montgomery County — County Council District 7",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Only voters in Montgomery County Council District 7 elect this member.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-local-2026-dddfb337eb1e92a27ffb",
+    "title": "Montgomery County — Judge of the Circuit Court Circuit 6",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office. This contest elects Montgomery County judges in Circuit 6.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-be6475fa23750a22c808",
+    "title": "Montgomery County — State's Attorney",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-e681677b44353682f7b1",
+    "title": "Montgomery County — Clerk of the Circuit Court",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-6ef012d91d258aa958d2",
+    "title": "Montgomery County — Register of Wills",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-856f206188d36dbb2cd6",
+    "title": "Montgomery County — Sheriff",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-d298d9c63d278b979576",
+    "title": "Montgomery County — Board of Education At Large",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office. Candidates for numbered seats must live in that school board district. All Montgomery County voters vote in each school board contest under Education §3-901(f)(2), confirmed by all 257 ballot styles.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-17063c00de52d1ab912a",
+    "title": "Montgomery County — Board of Education District 1",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office. Candidates for numbered seats must live in that school board district. All Montgomery County voters vote in each school board contest under Education §3-901(f)(2), confirmed by all 257 ballot styles.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-4fc01f4cc3ea548cee6f",
+    "title": "Montgomery County — Board of Education District 3",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office. Candidates for numbered seats must live in that school board district. All Montgomery County voters vote in each school board contest under Education §3-901(f)(2), confirmed by all 257 ballot styles.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-local-2026-ae0f366a8c69f229edc0",
+    "title": "Montgomery County — Board of Education District 5",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "All Montgomery County voters elect this office. Candidates for numbered seats must live in that school board district. All Montgomery County voters vote in each school board contest under Education §3-901(f)(2), confirmed by all 257 ballot styles.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf"
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-2",
+    "title": "Montgomery County — County Council District 2",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:2",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Only voters in Montgomery County Council District 2 elect this member.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-3",
+    "title": "Montgomery County — County Council District 3",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:3",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Only voters in Montgomery County Council District 3 elect this member.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-4",
+    "title": "Montgomery County — County Council District 4",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:4",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Only voters in Montgomery County Council District 4 elect this member.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-1",
+    "title": "Montgomery County — County Council District 1",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:1",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Only voters in Montgomery County Council District 1 elect this member.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-6",
+    "title": "Montgomery County — County Council District 6",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:6",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Only voters in Montgomery County Council District 6 elect this member.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-5",
+    "title": "Montgomery County — County Council District 5",
+    "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:5",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Only voters in Montgomery County Council District 5 elect this member.",
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-mayor",
+    "title": "Takoma Park Mayor",
+    "ocdId": "ocd-division/country:us/state:md/place:takoma_park",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Separate November 3 city election. All Takoma Park voters elect the mayor. This is a single winner ranked choice contest. Rank up to 3 candidates, including a write-in if desired.",
+    "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot"
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-1",
+    "title": "Takoma Park City Council — Ward 1",
+    "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:1",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Separate November 3 city election. Only voters in Ward 1 elect this council member. This is a single winner ranked choice contest. Rank up to 3 candidates, including a write-in if desired.",
+    "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9130/Ward-1-Sample-Ballot",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-2",
+    "title": "Takoma Park City Council — Ward 2",
+    "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:2",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Separate November 3 city election. Only voters in Ward 2 elect this council member. This is a single winner ranked choice contest. Rank up to 3 candidates, including a write-in if desired.",
+    "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-3",
+    "title": "Takoma Park City Council — Ward 3",
+    "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:3",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Separate November 3 city election. Only voters in Ward 3 elect this council member. This is a single winner ranked choice contest. Rank up to 2 candidates, including a write-in if desired.",
+    "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9132/Ward-3-Sample-Ballot",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-4",
+    "title": "Takoma Park City Council — Ward 4",
+    "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:4",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Separate November 3 city election. Only voters in Ward 4 elect this council member. This is a single winner ranked choice contest. Rank up to 2 candidates, including a write-in if desired.",
+    "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9133/Ward-4-Sample-Ballot",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-5",
+    "title": "Takoma Park City Council — Ward 5",
+    "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:5",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Separate November 3 city election. Only voters in Ward 5 elect this council member. This is a single winner ranked choice contest. Rank up to 2 candidates, including a write-in if desired.",
+    "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9134/Ward-5-Sample-Ballot",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-6",
+    "title": "Takoma Park City Council — Ward 6",
+    "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:6",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+    "scope": "Separate November 3 city election. Only voters in Ward 6 elect this council member. This is a single winner ranked choice contest. Rank up to 3 candidates, including a write-in if desired.",
+    "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9135/Ward-6-Sample-Ballot",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  }
+]

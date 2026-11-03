@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:48:09.022932+00:00",
+  "preparedAt": "2026-11-03T05:48:16.764477+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1081,6 +1081,45 @@
         "geometryFeatures": 18,
         "missingReaderDistrictIds": 9
       }
+    },
+    {
+      "state": "MD",
+      "county": "Montgomery",
+      "populationRank": 45,
+      "manifest": "MD/montgomery/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 25,
+      "measureContests": 0,
+      "candidacies": 45,
+      "newContests": 13,
+      "refreshedContests": 12,
+      "sourceInputSha256": "f7ad40b1d9299ec6304895d782c50ffcdd1e5e3f06724881f8845d69e8c8fc0e",
+      "coverage": {
+        "status": "PARTIAL_COUNTY_MUNICIPAL_COVERAGE_WITH_COMPLETE_COUNTY_AND_TAKOMA_SAMPLES",
+        "localOffices": 25,
+        "printedNamedChoices": 45,
+        "countyLocalOffices": 18,
+        "countyPrintedNames": 34,
+        "takomaLocalOffices": 7,
+        "takomaPrintedNames": 11,
+        "countyStylesAudited": 257,
+        "countyCertifiedPdfPages": 1542,
+        "takomaSamplesAudited": 6,
+        "schoolElectorate": "ALL_COUNTY;NUMBERED_DISTRICTS_ARE_RESIDENCY_SEATS;STATUTE_AND_ALLSTYLE_PARITY_AGREE",
+        "qualifiedCountyWriteInsSeparate": 2,
+        "heldContestIdsReused": 12,
+        "heldOrdinaryCandidateIdsReused": 24,
+        "newContestCount": 13,
+        "newOrdinaryCandidateCount": 21,
+        "geographicCouncilPolygonsRetained": 13,
+        "poolesville": "TWO_COMMISSIONER_SEATS_KNOWN;ACTUAL_SAMPLE/NAMEDLIST_PENDING",
+        "wholeCountyCompleteness": "NOT_CLAIMED:POOLesvilleAND_OTHER_INDEPENDENT_MUNICIPAL_DATE_AUDIT_REMAIN_OPEN",
+        "priorInputPathsScanned": [
+          "/workspace/meanwhile/data/ballot/2026-general/md.json"
+        ],
+        "heldInputSha256": "b3dbf262a26bbdc3a004c7e0b3a596f18c6f00a347ec9b80afd02263950f94cd",
+        "readerVisibility": "PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN"
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1106,17 +1145,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 42,
-    "packetsPrepared": 43,
-    "candidateAndRetentionContests": 2476,
+    "countiesPrepared": 43,
+    "packetsPrepared": 44,
+    "candidateAndRetentionContests": 2501,
     "measureContests": 110,
-    "candidacyEntries": 5598,
-    "newContestEntriesAgainstCheckedInBaseline": 2012,
-    "distinctPreparedContestIds": 2565,
-    "distinctPreparedCandidateIds": 5537,
-    "distinctNewContestsAgainstCheckedInBaseline": 2001,
+    "candidacyEntries": 5643,
+    "newContestEntriesAgainstCheckedInBaseline": 2025,
+    "distinctPreparedContestIds": 2590,
+    "distinctPreparedCandidateIds": 5582,
+    "distinctNewContestsAgainstCheckedInBaseline": 2014,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 43
+    "distinctCountyHandoffs": 44
   },
   "remainingWork": [
     {

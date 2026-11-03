@@ -1,0 +1,39 @@
+{
+  "electionId": "md-2026-11-03",
+  "candidates": [
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-2:write-in-arian-borghei",
+      "contestId": "md-cx-local-2026-montgomery-county-council-district-2",
+      "givenName": "",
+      "familyName": "Arian Borghei",
+      "status": "ACTIVE_QUALIFIED_DECLARED_WRITE_IN",
+      "printedAsOrdinaryChoice": false,
+      "readerDisplay": "PENDING_SEPARATE_WRITE_IN_DISPLAY_SUPPORT",
+      "provenance": {
+        "sourceUrl": "https://elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.html",
+        "sourceOrg": "Maryland State Board of Elections",
+        "collectedAt": "2026-11-03T05:26:08.235443+00:00",
+        "verifiedAt": "2026-11-03T05:26:08.235443+00:00",
+        "quote": "##### Arian Borghei\n\nRepublican\n\nJurisdiction Montgomery County Status Active Filed Write-In - 03/23/2026"
+      }
+    },
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-2:write-in-joseph-abdalla",
+      "contestId": "md-cx-local-2026-montgomery-county-council-district-2",
+      "givenName": "",
+      "familyName": "Joseph Abdalla",
+      "status": "ACTIVE_QUALIFIED_DECLARED_WRITE_IN",
+      "printedAsOrdinaryChoice": false,
+      "readerDisplay": "PENDING_SEPARATE_WRITE_IN_DISPLAY_SUPPORT",
+      "provenance": {
+        "sourceUrl": "https://elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.html",
+        "sourceOrg": "Maryland State Board of Elections",
+        "collectedAt": "2026-11-03T05:26:08.235443+00:00",
+        "verifiedAt": "2026-11-03T05:26:08.235443+00:00",
+        "quote": "##### Joseph Abdalla\n\nOther Candidates\n\nJurisdiction Montgomery County Status Active Filed Write-In - 10/05/2026"
+      }
+    }
+  ],
+  "cityWriteInStatus": "NO_OFFICIAL_NAMED_TAKOMA_PARK_LIST_ACQUIRED;BLANK_SLOTS_NOT_PEOPLE",
+  "poolesvilleWriteInStatus": "UNKNOWN_ACTUAL_SAMPLE_AND_CANDIDATE_LIST_PENDING"
+}

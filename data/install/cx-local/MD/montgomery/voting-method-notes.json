@@ -1,0 +1,352 @@
+[
+  {
+    "contestId": "md-local-2026-2ae5917d35d83533896a",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Executive Vote for 1 \n\nEjecutivo del Condado Vote por Uno \n\nWill Jawando Democratic /Demócrata Democratic \n\nEsther Wells Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-05fa1933419619fb8653",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 4,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council At Large Vote for up to 4 \n\nMiembro del Concejo Representando el Condado Vote por No Más de Cuatro \n\nMarc Elrich Democratic /Demócrata Democratic \n\nScott Evan Goldberg Democratic /Demócrata Democratic \n\nLaurie-Anne Sayles Democratic /Demócrata Democratic \n\nKarla Silvestre Democratic /Demócrata Democratic \n\nSherwin Wells Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-78a672acc7d83864cb92",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council District 7 Vote for 1 \n\nConcejo del Condado Distrito 7 Vote por Uno \n\nDawn Luedtke Democratic /Demócrata Democratic \n\nHarold Maldonado Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-dddfb337eb1e92a27ffb",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 4,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Judge of the Circuit Court Circuit 6 Vote for up to 4 \n\nJuez de la Corte de Circuito Circuito 6 Vote por No Más de Cuatro \n\nSharon V. Burrell Victor M. Del Pino James J. Dietrich Catherine H. McQueen or write-in: or write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-be6475fa23750a22c808",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "State's Attorney Vote for 1 \n\nFiscal del Estado Vote por Uno \n\nJohn McCarthy Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-e681677b44353682f7b1",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Clerk of the Circuit Court Vote for 1 \n\nSecretario de la Corte del Circuito Vote por Uno \n\nKaren Bushell Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-6ef012d91d258aa958d2",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Register of Wills Vote for 1 \n\nRegistrador Testamentario Vote por Uno \n\nBarbara Ebel Democratic /Demócrata Democratic \n\nT. Dolores Reyes Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-856f206188d36dbb2cd6",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Sheriff Vote for 1 \n\nAlguacil Vote por Uno \n\nWill Milam Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-d298d9c63d278b979576",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Board of Education At Large Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Representando el Condado Vote por Uno \n\nBrenda M. Diaz Omar Lazo or write-in: or write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-17063c00de52d1ab912a",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Board of Education District 1 Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Distrito 1 Vote por Uno \n\nGrace Rivera-Oven or write-in: or write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-4fc01f4cc3ea548cee6f",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Board of Education District 3 Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Distrito 3 Vote por Uno \n\nSally A. McCarthy Cassandra \"Cassi\" Sung or write-in: or write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-local-2026-ae0f366a8c69f229edc0",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "Board of Education District 5 Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Distrito 5 Vote por Uno \n\nElma-Lorraine Diggs or write-in: or write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-2",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council District 2 Vote for 1 \n\nConcejo del Condado Distrito 2 Vote por Uno \n\nMarilyn Balcombe Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-3",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council District 3 Vote for 1 \n\nConcejo del Condado Distrito 3 Vote por Uno \n\nJud Ashman Democratic /Demócrata Democratic \n\nRicky Fai Mui Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-4",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council District 4 Vote for 1 \n\nConcejo del Condado Distrito 4 Vote por Uno \n\nKate Stewart Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-1",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council District 1 Vote for 1 \n\nConcejo del Condado Distrito 1 Vote por Uno \n\nJulie Yang Democratic /Demócrata Democratic \n\nReardon \"Sully\" Sullivan Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-6",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council District 6 Vote for 1 \n\nConcejo del Condado Distrito 6 Vote por Uno \n\nNatali Fani-González Democratic /Demócrata Democratic \n\nLouella Tham Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-montgomery-county-council-district-5",
+    "method": "PRINTED_ORDINARY_VOTE_LIMIT",
+    "voteFor": 1,
+    "rankLimit": null,
+    "rankLimitIncludesBlankWriteInSlot": null,
+    "provenance": {
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "sourceOrg": "Maryland State Board of Elections",
+      "collectedAt": "2026-11-03T05:25:30.457514+00:00",
+      "verifiedAt": "2026-11-03T05:25:30.457514+00:00",
+      "quote": "County Council District 5 Vote for 1 \n\nConcejo del Condado Distrito 5 Vote por Uno \n\nKristin Mink Democratic /Demócrata Democratic \n\nJosephine Salazar Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-mayor",
+    "method": "SINGLE_WINNER_RANKED_CHOICE",
+    "voteFor": 1,
+    "rankLimit": 3,
+    "rankLimitIncludesBlankWriteInSlot": true,
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:02.302206+00:00",
+      "verifiedAt": "2026-11-03T05:27:02.302206+00:00",
+      "quote": "Mayor - Alcalde\nRank up to 3 candidates in order of preference. - Clasifique hasta 3 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nChoice 3\nOpción 3\nTom Gagliardo\nTalisha Searcy\n/\nWrite-In\nVoto por escrito"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-1",
+    "method": "SINGLE_WINNER_RANKED_CHOICE",
+    "voteFor": 1,
+    "rankLimit": 3,
+    "rankLimitIncludesBlankWriteInSlot": true,
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9130/Ward-1-Sample-Ballot",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:03.094048+00:00",
+      "verifiedAt": "2026-11-03T05:27:03.094048+00:00",
+      "quote": "City Council -Ward 1 • ConcejoMunicipal-Distrito 1 \nRank up to 3 candidates in order of preference. • Clasifique hasta 3 candidatos en orden de preferencia. \nChoice 1 \nChoice 2 \nChoice 3 \nOpci6n 1 \nOpci6n 2 \nOpci6n 3 \nShana Fulcher \n0 \n0 \n0 \nDoug Glynn \n0 \n0 \n0 \nWrite-In / Voto Dor escrito \n0 \n0 \n0 \nEnd of ballot • Fin de la papeleta \nEnd of ballot· Fin de la papeleta \nPage 1 of 1 • Pagina 1 de 1 \n----------------"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-2",
+    "method": "SINGLE_WINNER_RANKED_CHOICE",
+    "voteFor": 1,
+    "rankLimit": 3,
+    "rankLimitIncludesBlankWriteInSlot": true,
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:02.302206+00:00",
+      "verifiedAt": "2026-11-03T05:27:02.302206+00:00",
+      "quote": "City Council - Ward 2 · Concejo Municipal — Distrito 2\nRank up to 3 candidates in order of preference. · Clasifique hasta 3 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nChoice 3\nOpción 3\nJim Della-Giacoma\nSuzy Stimler\n/\nWrite-In\nVoto por escrito"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-3",
+    "method": "SINGLE_WINNER_RANKED_CHOICE",
+    "voteFor": 1,
+    "rankLimit": 2,
+    "rankLimitIncludesBlankWriteInSlot": true,
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9132/Ward-3-Sample-Ballot",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:02.498312+00:00",
+      "verifiedAt": "2026-11-03T05:27:02.498312+00:00",
+      "quote": "City Council - Ward 3 · Concejo Municipal — Distrito 3\nRank up to 2 candidates in order of preference. · Clasifique hasta 2 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nTom Wallack\n/\nWrite-In\nVoto por escrito"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-4",
+    "method": "SINGLE_WINNER_RANKED_CHOICE",
+    "voteFor": 1,
+    "rankLimit": 2,
+    "rankLimitIncludesBlankWriteInSlot": true,
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9133/Ward-4-Sample-Ballot",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:02.536881+00:00",
+      "verifiedAt": "2026-11-03T05:27:02.536881+00:00",
+      "quote": "City Council - Ward 4 · Concejo Municipal — Distrito 4\nRank up to 2 candidates in order of preference. · Clasifique hasta 2 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nKurt U. Gilbert\n/\nWrite-In\nVoto por escrito"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-5",
+    "method": "SINGLE_WINNER_RANKED_CHOICE",
+    "voteFor": 1,
+    "rankLimit": 2,
+    "rankLimitIncludesBlankWriteInSlot": true,
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9134/Ward-5-Sample-Ballot",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:03.105826+00:00",
+      "verifiedAt": "2026-11-03T05:27:03.105826+00:00",
+      "quote": "City Council - Ward 5 · Concejo Municipal — Distrito 5\nRank up to 2 candidates in order of preference. · Clasifique hasta 2 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nCara Honzak\n/\nWrite-In\nVoto por escrito"
+    }
+  },
+  {
+    "contestId": "md-cx-local-2026-takoma-park-council-ward-6",
+    "method": "SINGLE_WINNER_RANKED_CHOICE",
+    "voteFor": 1,
+    "rankLimit": 3,
+    "rankLimitIncludesBlankWriteInSlot": true,
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9135/Ward-6-Sample-Ballot",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:03.185502+00:00",
+      "verifiedAt": "2026-11-03T05:27:03.185502+00:00",
+      "quote": "City Council - Ward 6 · Concejo Municipal — Distrito 6\nRank up to 3 candidates in order of preference. · Clasifique hasta 3 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nChoice 3\nOpción 3\nAmbroise Agosse\nAmy Wesolek\n/\nWrite-In\nVoto por escrito"
+    }
+  }
+]

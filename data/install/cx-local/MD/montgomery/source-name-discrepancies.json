@@ -1,0 +1,32 @@
+[
+  {
+    "office": "Takoma Park CouncilWard2",
+    "actualSample": "Suzy Stimler",
+    "filingsPage": "Suzy Simler",
+    "resolution": "Currentactualsamplecontrolsprintedname; nopriorheldcityidentity exists. Source discrepancyretained,not silentlyharmonized.",
+    "sampleSourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot",
+    "filingSourceUrl": "https://takomaparkmd.gov/2560/Candidate-Filings",
+    "filingProvenance": {
+      "sourceUrl": "https://takomaparkmd.gov/2560/Candidate-Filings",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:02.971254+00:00",
+      "verifiedAt": "2026-11-03T05:27:02.971254+00:00",
+      "quote": "Suzy Simler"
+    }
+  },
+  {
+    "office": "Takoma Park CouncilWard4",
+    "actualSample": "Kurt U. Gilbert",
+    "filingsPage": "Kurt Gilbert",
+    "resolution": "Actualsamplemiddleinitialretained.",
+    "sampleSourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9133/Ward-4-Sample-Ballot",
+    "filingSourceUrl": "https://takomaparkmd.gov/2560/Candidate-Filings",
+    "filingProvenance": {
+      "sourceUrl": "https://takomaparkmd.gov/2560/Candidate-Filings",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:02.971254+00:00",
+      "verifiedAt": "2026-11-03T05:27:02.971254+00:00",
+      "quote": "Kurt Gilbert"
+    }
+  }
+]

@@ -1,0 +1,279 @@
+[
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "County Executive Vote for 1",
+    "candidateNames": [
+      "Will Jawando",
+      "Esther Wells"
+    ],
+    "quote": "County Executive Vote for 1 \n\nEjecutivo del Condado Vote por Uno \n\nWill Jawando Democratic /Demócrata Democratic \n\nEsther Wells Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "County Council At Large Vote for up to 4",
+    "candidateNames": [
+      "Marc Elrich",
+      "Scott Evan Goldberg",
+      "Laurie-Anne Sayles",
+      "Karla Silvestre",
+      "Sherwin Wells"
+    ],
+    "quote": "County Council At Large Vote for up to 4 \n\nMiembro del Concejo Representando el Condado Vote por No Más de Cuatro \n\nMarc Elrich Democratic /Demócrata Democratic \n\nScott Evan Goldberg Democratic /Demócrata Democratic \n\nLaurie-Anne Sayles Democratic /Demócrata Democratic \n\nKarla Silvestre Democratic /Demócrata Democratic \n\nSherwin Wells Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 4
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "County Council District 7 Vote for 1",
+    "candidateNames": [
+      "Dawn Luedtke",
+      "Harold Maldonado"
+    ],
+    "quote": "County Council District 7 Vote for 1 \n\nConcejo del Condado Distrito 7 Vote por Uno \n\nDawn Luedtke Democratic /Demócrata Democratic \n\nHarold Maldonado Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Judge of the Circuit Court Circuit 6 Vote for up to 4",
+    "candidateNames": [
+      "Sharon V. Burrell",
+      "Victor M. Del Pino",
+      "James J. Dietrich",
+      "Catherine H. McQueen"
+    ],
+    "quote": "Judge of the Circuit Court Circuit 6 Vote for up to 4 \n\nJuez de la Corte de Circuito Circuito 6 Vote por No Más de Cuatro \n\nSharon V. Burrell Victor M. Del Pino James J. Dietrich Catherine H. McQueen or write-in: or write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito: \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 4
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "State's Attorney Vote for 1",
+    "candidateNames": [
+      "John McCarthy"
+    ],
+    "quote": "State's Attorney Vote for 1 \n\nFiscal del Estado Vote por Uno \n\nJohn McCarthy Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Clerk of the Circuit Court Vote for 1",
+    "candidateNames": [
+      "Karen Bushell"
+    ],
+    "quote": "Clerk of the Circuit Court Vote for 1 \n\nSecretario de la Corte del Circuito Vote por Uno \n\nKaren Bushell Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Register of Wills Vote for 1",
+    "candidateNames": [
+      "Barbara Ebel",
+      "T. Dolores Reyes"
+    ],
+    "quote": "Register of Wills Vote for 1 \n\nRegistrador Testamentario Vote por Uno \n\nBarbara Ebel Democratic /Demócrata Democratic \n\nT. Dolores Reyes Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Sheriff Vote for 1",
+    "candidateNames": [
+      "Will Milam"
+    ],
+    "quote": "Sheriff Vote for 1 \n\nAlguacil Vote por Uno \n\nWill Milam Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Board of Education At Large Vote for 1",
+    "candidateNames": [
+      "Brenda M. Diaz",
+      "Omar Lazo"
+    ],
+    "quote": "Board of Education At Large Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Representando el Condado Vote por Uno \n\nBrenda M. Diaz Omar Lazo or write-in: or write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Board of Education District 1 Vote for 1",
+    "candidateNames": [
+      "Grace Rivera-Oven"
+    ],
+    "quote": "Board of Education District 1 Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Distrito 1 Vote por Uno \n\nGrace Rivera-Oven or write-in: or write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Board of Education District 3 Vote for 1",
+    "candidateNames": [
+      "Sally A. McCarthy",
+      "Cassandra \"Cassi\" Sung"
+    ],
+    "quote": "Board of Education District 3 Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Distrito 3 Vote por Uno \n\nSally A. McCarthy Cassandra \"Cassi\" Sung or write-in: or write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 1,
+    "title": "Board of Education District 5 Vote for 1",
+    "candidateNames": [
+      "Elma-Lorraine Diggs"
+    ],
+    "quote": "Board of Education District 5 Vote for 1 \n\nContienda no partidista Los candidatos en esta contienda pueden estar o no estar afiliados a ningún partido político Junta de Educación Distrito 5 Vote por Uno \n\nElma-Lorraine Diggs or write-in: or write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 9,
+    "title": "County Council District 2 Vote for 1",
+    "candidateNames": [
+      "Marilyn Balcombe"
+    ],
+    "quote": "County Council District 2 Vote for 1 \n\nConcejo del Condado Distrito 2 Vote por Uno \n\nMarilyn Balcombe Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 22,
+    "title": "County Council District 3 Vote for 1",
+    "candidateNames": [
+      "Jud Ashman",
+      "Ricky Fai Mui"
+    ],
+    "quote": "County Council District 3 Vote for 1 \n\nConcejo del Condado Distrito 3 Vote por Uno \n\nJud Ashman Democratic /Demócrata Democratic \n\nRicky Fai Mui Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 25,
+    "title": "County Council District 4 Vote for 1",
+    "candidateNames": [
+      "Kate Stewart"
+    ],
+    "quote": "County Council District 4 Vote for 1 \n\nConcejo del Condado Distrito 4 Vote por Uno \n\nKate Stewart Democratic /Demócrata Democratic \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 32,
+    "title": "County Council District 1 Vote for 1",
+    "candidateNames": [
+      "Julie Yang",
+      "Reardon \"Sully\" Sullivan"
+    ],
+    "quote": "County Council District 1 Vote for 1 \n\nConcejo del Condado Distrito 1 Vote por Uno \n\nJulie Yang Democratic /Demócrata Democratic \n\nReardon \"Sully\" Sullivan Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 36,
+    "title": "County Council District 6 Vote for 1",
+    "candidateNames": [
+      "Natali Fani-González",
+      "Louella Tham"
+    ],
+    "quote": "County Council District 6 Vote for 1 \n\nConcejo del Condado Distrito 6 Vote por Uno \n\nNatali Fani-González Democratic /Demócrata Democratic \n\nLouella Tham Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "style": 56,
+    "title": "County Council District 5 Vote for 1",
+    "candidateNames": [
+      "Kristin Mink",
+      "Josephine Salazar"
+    ],
+    "quote": "County Council District 5 Vote for 1 \n\nConcejo del Condado Distrito 5 Vote por Uno \n\nKristin Mink Democratic /Demócrata Democratic \n\nJosephine Salazar Republican /Republicano Republican \n\n> or write-in:\n\nor write-in /o por escrito:",
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "takoma-ward2-sample-native",
+    "title": "Takoma Park Mayor",
+    "ward": null,
+    "candidateNames": [
+      "Tom Gagliardo",
+      "Talisha Searcy"
+    ],
+    "quote": "Mayor - Alcalde\nRank up to 3 candidates in order of preference. - Clasifique hasta 3 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nChoice 3\nOpción 3\nTom Gagliardo\nTalisha Searcy\n/\nWrite-In\nVoto por escrito",
+    "rankLimit": 3,
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "takoma-ward1-sample-native",
+    "title": "Takoma Park City Council — Ward 1",
+    "ward": 1,
+    "candidateNames": [
+      "Shana Fulcher",
+      "Doug Glynn"
+    ],
+    "quote": "City Council -Ward 1 • ConcejoMunicipal-Distrito 1 \nRank up to 3 candidates in order of preference. • Clasifique hasta 3 candidatos en orden de preferencia. \nChoice 1 \nChoice 2 \nChoice 3 \nOpci6n 1 \nOpci6n 2 \nOpci6n 3 \nShana Fulcher \n0 \n0 \n0 \nDoug Glynn \n0 \n0 \n0 \nWrite-In / Voto Dor escrito \n0 \n0 \n0 \nEnd of ballot • Fin de la papeleta \nEnd of ballot· Fin de la papeleta \nPage 1 of 1 • Pagina 1 de 1 \n----------------",
+    "rankLimit": 3,
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "takoma-ward2-sample-native",
+    "title": "Takoma Park City Council — Ward 2",
+    "ward": 2,
+    "candidateNames": [
+      "Jim Della-Giacoma",
+      "Suzy Stimler"
+    ],
+    "quote": "City Council - Ward 2 · Concejo Municipal — Distrito 2\nRank up to 3 candidates in order of preference. · Clasifique hasta 3 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nChoice 3\nOpción 3\nJim Della-Giacoma\nSuzy Stimler\n/\nWrite-In\nVoto por escrito",
+    "rankLimit": 3,
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "takoma-ward3-sample-native",
+    "title": "Takoma Park City Council — Ward 3",
+    "ward": 3,
+    "candidateNames": [
+      "Tom Wallack"
+    ],
+    "quote": "City Council - Ward 3 · Concejo Municipal — Distrito 3\nRank up to 2 candidates in order of preference. · Clasifique hasta 2 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nTom Wallack\n/\nWrite-In\nVoto por escrito",
+    "rankLimit": 2,
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "takoma-ward4-sample-native",
+    "title": "Takoma Park City Council — Ward 4",
+    "ward": 4,
+    "candidateNames": [
+      "Kurt U. Gilbert"
+    ],
+    "quote": "City Council - Ward 4 · Concejo Municipal — Distrito 4\nRank up to 2 candidates in order of preference. · Clasifique hasta 2 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nKurt U. Gilbert\n/\nWrite-In\nVoto por escrito",
+    "rankLimit": 2,
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "takoma-ward5-sample-native",
+    "title": "Takoma Park City Council — Ward 5",
+    "ward": 5,
+    "candidateNames": [
+      "Cara Honzak"
+    ],
+    "quote": "City Council - Ward 5 · Concejo Municipal — Distrito 5\nRank up to 2 candidates in order of preference. · Clasifique hasta 2 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nCara Honzak\n/\nWrite-In\nVoto por escrito",
+    "rankLimit": 2,
+    "voteFor": 1
+  },
+  {
+    "sourceKey": "takoma-ward6-sample-native",
+    "title": "Takoma Park City Council — Ward 6",
+    "ward": 6,
+    "candidateNames": [
+      "Ambroise Agosse",
+      "Amy Wesolek"
+    ],
+    "quote": "City Council - Ward 6 · Concejo Municipal — Distrito 6\nRank up to 3 candidates in order of preference. · Clasifique hasta 3 candidatos en orden de preferencia.\nChoice 1\nOpción 1\nChoice 2\nOpción 2\nChoice 3\nOpción 3\nAmbroise Agosse\nAmy Wesolek\n/\nWrite-In\nVoto por escrito",
+    "rankLimit": 3,
+    "voteFor": 1
+  }
+]

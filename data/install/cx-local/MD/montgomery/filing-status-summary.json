@@ -1,0 +1,9 @@
+{
+  "sourceBasis": "Current official local roster Montgomery section and statewide roster Montgomery circuit-judge section",
+  "ordinaryCountyRows": 34,
+  "ordinaryCountyStatus": "ACTIVE",
+  "declaredWriteInRows": 2,
+  "declaredWriteInStatus": "ACTIVE; retained separately in declared-write-ins.json",
+  "cancelledOrWithdrawnCountyRowsObserved": 0,
+  "scopeLimit": "This status summary covers the captured county and circuit-judge rosters. Takoma Park named write-in certification and Poolesville candidate/cancellation statuses remain open."
+}

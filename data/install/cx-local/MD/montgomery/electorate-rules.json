@@ -1,0 +1,54 @@
+[
+  {
+    "appliesToContestIds": [
+      "md-local-2026-d298d9c63d278b979576",
+      "md-local-2026-17063c00de52d1ab912a",
+      "md-local-2026-4fc01f4cc3ea548cee6f",
+      "md-local-2026-ae0f366a8c69f229edc0"
+    ],
+    "provenance": {
+      "sourceUrl": "https://mgaleg.maryland.gov/2026RS/Statute_Web/ged/3-901.pdf",
+      "sourceOrg": "Maryland General Assembly",
+      "collectedAt": "2026-11-03T05:25:12.868313+00:00",
+      "verifiedAt": "2026-11-03T05:25:12.868313+00:00",
+      "quote": "Elected members of the county board shall be elected by the voters \nof the entire county."
+    }
+  },
+  {
+    "appliesToContestIds": [
+      "md-local-2026-05fa1933419619fb8653",
+      "md-local-2026-78a672acc7d83864cb92",
+      "md-cx-local-2026-montgomery-county-council-district-2",
+      "md-cx-local-2026-montgomery-county-council-district-3",
+      "md-cx-local-2026-montgomery-county-council-district-4",
+      "md-cx-local-2026-montgomery-county-council-district-1",
+      "md-cx-local-2026-montgomery-county-council-district-6",
+      "md-cx-local-2026-montgomery-county-council-district-5"
+    ],
+    "provenance": {
+      "sourceUrl": "https://content.govdelivery.com/accounts/MDMONTGOMERY/bulletins/2ffe487",
+      "sourceOrg": "Montgomery County Council",
+      "collectedAt": "2026-11-03T05:33:05.330766+00:00",
+      "verifiedAt": "2026-11-03T05:33:05.330766+00:00",
+      "quote": "Seven district Councilmembers will be elected by registered voters who live in each district and four at-large members will be elected by all voters across the County."
+    }
+  },
+  {
+    "appliesToContestIds": [
+      "md-cx-local-2026-takoma-park-mayor",
+      "md-cx-local-2026-takoma-park-council-ward-1",
+      "md-cx-local-2026-takoma-park-council-ward-2",
+      "md-cx-local-2026-takoma-park-council-ward-3",
+      "md-cx-local-2026-takoma-park-council-ward-4",
+      "md-cx-local-2026-takoma-park-council-ward-5",
+      "md-cx-local-2026-takoma-park-council-ward-6"
+    ],
+    "provenance": {
+      "sourceUrl": "https://takomaparkmd.gov/1798/CITY-COUNCIL",
+      "sourceOrg": "City of Takoma Park",
+      "collectedAt": "2026-11-03T05:27:52.792257+00:00",
+      "verifiedAt": "2026-11-03T05:27:52.792257+00:00",
+      "quote": "Six members are elected by ward and are called Councilmembers, and one is elected at large and is called the Mayor."
+    }
+  }
+]

@@ -1,0 +1,573 @@
+[
+  {
+    "sourceKey": "certified-sample-native",
+    "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:25:01.599942+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/certified-sample-native.source"
+  },
+  {
+    "sourceKey": "certified-sample-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:25:30.457514+00:00",
+    "sha256": "d3393d8607eb5286dc187afaad1e7f22591857e39c2efc2768b966e9ccc41dca",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/certified-sample-reader.source"
+  },
+  {
+    "sourceKey": "council-geo-meta-native",
+    "requestedUrl": "https://gis4.montgomerycountymd.gov/arcgis/rest/services/elections/council/FeatureServer/0?f=pjson",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:26:07.022273+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/council-geo-meta-native.source"
+  },
+  {
+    "sourceKey": "council-geo-native",
+    "requestedUrl": "https://gis4.montgomerycountymd.gov/arcgis/rest/services/elections/council/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:26:06.979696+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/council-geo-native.source"
+  },
+  {
+    "sourceKey": "council-geo-reader",
+    "requestedUrl": "https://r.jina.ai/https://gis4.montgomerycountymd.gov/arcgis/rest/services/elections/council/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:04.946951+00:00",
+    "sha256": "7739dd90d4d902a92b41c56c4a40096a198b82333805eb21392318a5da1cc63b",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/council-geo-reader.source"
+  },
+  {
+    "sourceKey": "council-meta-reader",
+    "requestedUrl": "https://r.jina.ai/https://gis4.montgomerycountymd.gov/arcgis/rest/services/elections/council/FeatureServer/0?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:03.448566+00:00",
+    "sha256": "68e67c66c729e7aa3344cb95fce88791e80697e182e83a0beec1c784640436db",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/council-meta-reader.source"
+  },
+  {
+    "sourceKey": "county-council-rule-native",
+    "requestedUrl": "https://apps.montgomerycountymd.gov/basisoperating/Common/Program.aspx?ID=01D&PROGID=P01P01",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:25:12.053230+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/county-council-rule-native.source"
+  },
+  {
+    "sourceKey": "county-council-rule-native2",
+    "requestedUrl": "https://content.govdelivery.com/accounts/MDMONTGOMERY/bulletins/2ffe487",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:33:05.330766+00:00",
+    "sha256": "6643ebc38b1e9f3921d94553ba0e41491e79f666f288721ed0d04f7f8429eb1e",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/county-council-rule-native2.source"
+  },
+  {
+    "sourceKey": "county-home-native",
+    "requestedUrl": "https://www.montgomerycountymd.gov/Elections/",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:24:37.727558+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/county-home-native.source"
+  },
+  {
+    "sourceKey": "county-home-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.montgomerycountymd.gov/Elections/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:24:37.839058+00:00",
+    "sha256": "2f6b8cb1e44594167c9456c1e82c741793b9a8ed011466d25ec2b4516d756316",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/county-home-reader.source"
+  },
+  {
+    "sourceKey": "county-local-roster-reader",
+    "requestedUrl": "https://r.jina.ai/https://elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.html",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:26:08.235443+00:00",
+    "sha256": "72e7f3130a8529d742cf88d3c865b46169e51ab26c6d9c0773a71e65250bd216",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/county-local-roster-reader.source"
+  },
+  {
+    "sourceKey": "county-voter-guide-native",
+    "requestedUrl": "https://mcg.montgomerycountymd.gov/Elections/Resources/Files/pdfs/Voter%20services/voter-guide/2026-VoterInfoGuide-en.pdf",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:24:34.919986+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/county-voter-guide-native.source"
+  },
+  {
+    "sourceKey": "county-voter-guide-reader",
+    "requestedUrl": "https://r.jina.ai/https://mcg.montgomerycountymd.gov/Elections/Resources/Files/pdfs/Voter%20services/voter-guide/2026-VoterInfoGuide-en.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:25:03.295336+00:00",
+    "sha256": "6a389492120ff6becadfa7b653346ce625242a105a54ecbc261c0f42fe3c8f19",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/county-voter-guide-reader.source"
+  },
+  {
+    "sourceKey": "municipal-schedule-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.elections.maryland.gov/elections/municipal-2026.html",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:26:07.481736+00:00",
+    "sha256": "21eed996aa7b9771145f591b3ab67e8294547c59541b4072936ebbe4cccdf736",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/municipal-schedule-reader.source"
+  },
+  {
+    "sourceKey": "poolesville-doc-index-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.poolesvillemd.gov/DocumentCenter",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:29:39.358374+00:00",
+    "sha256": "81b6eeff1725ebf1eee6b2ff431967540a0d0011d29d3f92e246b05f7b944e6e",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-doc-index-reader.source"
+  },
+  {
+    "sourceKey": "poolesville-doc-script-native",
+    "requestedUrl": "https://www.poolesvillemd.gov/Areas/DocumentCenter/Assets/Scripts/docCenterFrontendAndRelatedBidAndJobsApp.react.js",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:29:06.179957+00:00",
+    "sha256": "d77a0905451acdb8d62cb8f5ad2816107d4b8c01d44c8c4062b09adee8050794",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-doc-script-native.source"
+  },
+  {
+    "sourceKey": "poolesville-document-center-native",
+    "requestedUrl": "https://www.poolesvillemd.gov/DocumentCenter",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:52.722099+00:00",
+    "sha256": "c4ff078a5286f66824927dfe24d2bedd2d0beed365f30796fc649983424388f1",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-document-center-native.source"
+  },
+  {
+    "sourceKey": "poolesville-emergency-form-native",
+    "requestedUrl": "https://www.poolesvillemd.gov/DocumentCenter/View/2068/Emergency--ballot-request---2026",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:33:56.280082+00:00",
+    "sha256": "d53891671e8c736485fa40441f08f530d1a48bb19e0c59f11008f9a9ad17955e",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-emergency-form-native.source"
+  },
+  {
+    "sourceKey": "poolesville-linked-doc-1782",
+    "requestedUrl": "https://www.poolesvillemd.gov/DocumentCenter/View/1782",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T05:27:53.080278+00:00",
+    "sha256": "63074ab46b32ae079eb27c16f9e58bb76b1b6cf0c927504a18065925a9bf4ca0",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-linked-doc-1782.source"
+  },
+  {
+    "sourceKey": "poolesville-linked-doc-1807",
+    "requestedUrl": "https://www.poolesvillemd.gov/DocumentCenter/View/1807",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T05:27:52.953455+00:00",
+    "sha256": "6c958e46527a31bdea96fd78f9aa79d2326117fb76c4b07f80331e69559d2c95",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-linked-doc-1807.source"
+  },
+  {
+    "sourceKey": "poolesville-linked-doc-447",
+    "requestedUrl": "https://www.poolesvillemd.gov/DocumentCenter/View/447",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T05:27:52.555758+00:00",
+    "sha256": "9f6f043155b76f47150f78c8c0e12cb8854a30933925c3adc37b02f8a1068ad0",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-linked-doc-447.source"
+  },
+  {
+    "sourceKey": "poolesville-linked-doc-448",
+    "requestedUrl": "https://www.poolesvillemd.gov/DocumentCenter/View/448",
+    "httpStatus": 404,
+    "retrievedAt": "2026-11-03T05:27:53.021411+00:00",
+    "sha256": "fe734c0607253f0465966476697fdf31f8575b38851889c349c596696c68b295",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-linked-doc-448.source"
+  },
+  {
+    "sourceKey": "poolesville-newsletter-native",
+    "requestedUrl": "https://www.poolesvillemd.gov/CivicSend/ViewMessage/message/304849",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:52.667473+00:00",
+    "sha256": "72a00135047b8be5bd75946d6c13f299c441aa1d6ef536f716e667f23701da50",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-newsletter-native.source"
+  },
+  {
+    "sourceKey": "poolesville-public-2026-documents",
+    "requestedUrl": "https://www.poolesvillemd.gov/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:31:04.933258+00:00",
+    "sha256": "a43b066e976166aea8fc504b96aa85c96f73d59544a35d8c265b9a2dc477eb69",
+    "requestMethod": "POST_READ_QUERY",
+    "requestJson": {
+      "folderId": "131",
+      "getDocuments": 1,
+      "imageRepo": false,
+      "renderMode": 0,
+      "loadSource": 7,
+      "requestingModuleID": 75,
+      "searchString": "",
+      "pageNumber": 1,
+      "rowsPerPage": 100,
+      "sortColumn": "DisplayName",
+      "sortOrder": 0
+    },
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-public-2026-documents.source"
+  },
+  {
+    "sourceKey": "poolesville-public-2026-folder-query",
+    "requestedUrl": "https://www.poolesvillemd.gov/admin/DocumentCenter/Home/_AjaxLoadingReact?type=0",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:31:04.891706+00:00",
+    "sha256": "242acf9f1e15e433c09998ddfaf94122d9a76f8af56fdb6f5463aca7916f7e40",
+    "requestMethod": "POST_READ_QUERY",
+    "requestJson": {
+      "value": "131",
+      "expandTree": false,
+      "loadSource": 7,
+      "selectedFolder": 131
+    },
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-public-2026-folder-query.source"
+  },
+  {
+    "sourceKey": "poolesville-public-ballot-search",
+    "requestedUrl": "https://www.poolesvillemd.gov/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:30:36.611190+00:00",
+    "sha256": "314563c9ded49bf215a8d7d98bc06af3b48624ad46b795b62ad607e524d25cf9",
+    "requestMethod": "POST_READ_QUERY",
+    "requestJson": {
+      "folderId": "1",
+      "getDocuments": 1,
+      "imageRepo": false,
+      "renderMode": 0,
+      "loadSource": 7,
+      "requestingModuleID": 75,
+      "searchString": "ballot",
+      "pageNumber": 1,
+      "rowsPerPage": 100,
+      "sortColumn": "DisplayName",
+      "sortOrder": 0
+    },
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-public-ballot-search.source"
+  },
+  {
+    "sourceKey": "poolesville-public-election-documents",
+    "requestedUrl": "https://www.poolesvillemd.gov/Admin/DocumentCenter/Home/Document_AjaxBinding?renderMode=0&loadSource=7",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:30:50.925683+00:00",
+    "sha256": "314563c9ded49bf215a8d7d98bc06af3b48624ad46b795b62ad607e524d25cf9",
+    "requestMethod": "POST_READ_QUERY",
+    "requestJson": {
+      "folderId": "71",
+      "getDocuments": 1,
+      "imageRepo": false,
+      "renderMode": 0,
+      "loadSource": 7,
+      "requestingModuleID": 75,
+      "searchString": "",
+      "pageNumber": 1,
+      "rowsPerPage": 100,
+      "sortColumn": "DisplayName",
+      "sortOrder": 0
+    },
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-public-election-documents.source"
+  },
+  {
+    "sourceKey": "poolesville-public-election-folder-query",
+    "requestedUrl": "https://www.poolesvillemd.gov/admin/DocumentCenter/Home/_AjaxLoadingReact?type=0",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:30:51.200654+00:00",
+    "sha256": "c6d9aea42fd36dc6d8bb89451b2f675d1b102999c8cde51c138f37ccd8c6a60f",
+    "requestMethod": "POST_READ_QUERY",
+    "requestJson": {
+      "value": "71",
+      "expandTree": false,
+      "loadSource": 7,
+      "selectedFolder": 71
+    },
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-public-election-folder-query.source"
+  },
+  {
+    "sourceKey": "poolesville-public-folder-query",
+    "requestedUrl": "https://www.poolesvillemd.gov/admin/DocumentCenter/Home/_AjaxLoadingReact?type=0",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:30:36.584838+00:00",
+    "sha256": "b0916f9f7508967e3afd1998489173b3e82933fe1f6a78bde6e5b81c11c506e2",
+    "requestMethod": "POST_READ_QUERY",
+    "requestJson": {
+      "value": "1",
+      "expandTree": false,
+      "loadSource": 7,
+      "selectedFolder": 1
+    },
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-public-folder-query.source"
+  },
+  {
+    "sourceKey": "poolesville-site-search-native",
+    "requestedUrl": "https://www.poolesvillemd.gov/Search?searchPhrase=ballot",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:29:05.799675+00:00",
+    "sha256": "f6c4cf03fd39167c8217d699c617c82d272ecb134b3b4531c675fb01c25ad59a",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-site-search-native.source"
+  },
+  {
+    "sourceKey": "poolesville-voting-native",
+    "requestedUrl": "https://www.poolesvillemd.gov/285/Voting-Elections",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:26:06.914286+00:00",
+    "sha256": "694f0257ff1671ebc208a64d8002c4c839ed130127ed141a5a952f741327e4b4",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/poolesville-voting-native.source"
+  },
+  {
+    "sourceKey": "school-rule-native",
+    "requestedUrl": "https://mgaleg.maryland.gov/2026RS/Statute_Web/ged/3-901.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:25:12.868313+00:00",
+    "sha256": "904ac41e5476cf0d4f17e28960f985b609851e7f68e240c0e487bd4dcd09c06d",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/school-rule-native.source"
+  },
+  {
+    "sourceKey": "school-rule-reader",
+    "requestedUrl": "https://r.jina.ai/https://mgaleg.maryland.gov/2026RS/Statute_Web/ged/3-901.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:25:13.057620+00:00",
+    "sha256": "09fc365911e0aa47137b903e566507e0572b40117f20b510777dd2dfd8df476e",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/school-rule-reader.source"
+  },
+  {
+    "sourceKey": "state-index-native",
+    "requestedUrl": "https://elections.maryland.gov/elections/2026/index.html",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:24:34.959756+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/state-index-native.source"
+  },
+  {
+    "sourceKey": "state-index-reader",
+    "requestedUrl": "https://r.jina.ai/https://elections.maryland.gov/elections/2026/index.html",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:24:36.755632+00:00",
+    "sha256": "8ddb38b85ea6ddcad75f1d078eb1717a5c66c91e650218be8e5c0b6641995bc7",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/state-index-reader.source"
+  },
+  {
+    "sourceKey": "state-roster-native",
+    "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:25:01.599411+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/state-roster-native.source"
+  },
+  {
+    "sourceKey": "statewide-roster-reader",
+    "requestedUrl": "https://r.jina.ai/https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.html",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:37:19.401015+00:00",
+    "sha256": "262693d1f3c5dceae64f56a1e4b76c0c905fba6f1b63f10d0ebc3775ede4d7b8",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/statewide-roster-reader.source"
+  },
+  {
+    "sourceKey": "takoma-council-rule-native",
+    "requestedUrl": "https://takomaparkmd.gov/1798/CITY-COUNCIL",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:52.792257+00:00",
+    "sha256": "770cd98800b7ef6c5c5603c3241327cbe6812db1e2905e45ac0a93ff7986e0ae",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-council-rule-native.source"
+  },
+  {
+    "sourceKey": "takoma-election-native",
+    "requestedUrl": "https://takomaparkmd.gov/2534/City-Election-2026",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:26:07.362355+00:00",
+    "sha256": "27e1a16f21bb4e4258aaed45b24c9a768e113558e4cc3409841617f2f6315f8a",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-election-native.source"
+  },
+  {
+    "sourceKey": "takoma-filings-native",
+    "requestedUrl": "https://takomaparkmd.gov/2560/Candidate-Filings",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:02.971254+00:00",
+    "sha256": "ff10cccf383e68c49ca28307a7347f4f943faf43fbb1c9e731094952c36ddd90",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-filings-native.source"
+  },
+  {
+    "sourceKey": "takoma-voting-native",
+    "requestedUrl": "https://takomaparkmd.gov/2535/Voting-Process",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:26:07.491176+00:00",
+    "sha256": "0f7ccdc477d0784fa2f1c810e9d566d79d5c99a32b0dbce097f37a7efd8515c4",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-voting-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward-geo-native",
+    "requestedUrl": "https://services5.arcgis.com/LHTfxJAc8MAYk58X/arcgis/rest/services/TkPk_Ward_Boundaries_2022/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:29:36.030491+00:00",
+    "sha256": "f2f7cd009d945bc906edceb6f2cc4a9e1ca1fca0a9a568aeca8c3a8211095158",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward-geo-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward-map-native",
+    "requestedUrl": "https://takomaparkmd.gov/399/WARD-MAP-STREET-DIRECTORY",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:52.265287+00:00",
+    "sha256": "4fa5a9ef8ad9303dddb5feb32b4dade5177a1e71619145e761e164ec21dad962",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward-map-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward-meta-native",
+    "requestedUrl": "https://services5.arcgis.com/LHTfxJAc8MAYk58X/arcgis/rest/services/TkPk_Ward_Boundaries_2022/FeatureServer/0?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:29:35.505730+00:00",
+    "sha256": "8db8ab4b684a4aeac01b00e79c24be1d7f631ad7505499247f992017fb7b5a2f",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward-meta-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward1-sample-native",
+    "requestedUrl": "https://takomaparkmd.gov/DocumentCenter/View/9130/Ward-1-Sample-Ballot",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:03.094048+00:00",
+    "sha256": "c24230dd6ff7dccd5c2d909bbc7f2061b0b5e615ee1ff492daf0781e644b5a5c",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward1-sample-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward2-sample-native",
+    "requestedUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:02.302206+00:00",
+    "sha256": "f9990cd5c3c854545334aaa056f46687dca00da93a9204926552ad000e11e81e",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward2-sample-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward3-sample-native",
+    "requestedUrl": "https://takomaparkmd.gov/DocumentCenter/View/9132/Ward-3-Sample-Ballot",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:02.498312+00:00",
+    "sha256": "c5db0fab98d6480208d1ffb31c84f9d9de1da9791c2871f088464e87b3327a34",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward3-sample-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward4-sample-native",
+    "requestedUrl": "https://takomaparkmd.gov/DocumentCenter/View/9133/Ward-4-Sample-Ballot",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:02.536881+00:00",
+    "sha256": "ebcf50ae0086ed993635f6895a0a906177798b116d06e694dff3d08e10d7fc95",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward4-sample-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward5-sample-native",
+    "requestedUrl": "https://takomaparkmd.gov/DocumentCenter/View/9134/Ward-5-Sample-Ballot",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:03.105826+00:00",
+    "sha256": "9e0356bea4be42aa3aac4606b070e5d1fac4442e1afaf4b0ac2f5c461ecd1c58",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward5-sample-native.source"
+  },
+  {
+    "sourceKey": "takoma-ward6-sample-native",
+    "requestedUrl": "https://takomaparkmd.gov/DocumentCenter/View/9135/Ward-6-Sample-Ballot",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:27:03.185502+00:00",
+    "sha256": "5bbf802fab15817fb0f3f6b3c210e08276fc13a82053b63970be7b82bf4c6de3",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-ward6-sample-native.source"
+  },
+  {
+    "sourceKey": "takoma-webmap-data-native",
+    "requestedUrl": "https://tkpk.maps.arcgis.com/sharing/rest/content/items/6f25a27da2aa4afa93d155f8141c99f7/data?f=json",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:29:06.695787+00:00",
+    "sha256": "32c10d105f8f1af793658204bbf155277e7161ab3e5a5e6030eb44f1a41db1e8",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-webmap-data-native.source"
+  },
+  {
+    "sourceKey": "takoma-webmap-meta-native",
+    "requestedUrl": "https://tkpk.maps.arcgis.com/sharing/rest/content/items/6f25a27da2aa4afa93d155f8141c99f7?f=json",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:29:06.179544+00:00",
+    "sha256": "a8f2059a4713b24cf0afa6e5c40417461f37a9362cd6ecd2711907be003138ee",
+    "requestMethod": "GET",
+    "requestJson": null,
+    "scratchSourceFile": "/workspace/cx-local-work/montgomery-md/takoma-webmap-meta-native.source"
+  }
+]

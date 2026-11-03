@@ -1,0 +1,434 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MD",
+  "county": "Montgomery",
+  "countyFips": "24031",
+  "populationRank": 45,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MD",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "md-local-2026-2ae5917d35d83533896a",
+      "title": "Montgomery County \u2014 County Executive",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-05fa1933419619fb8653",
+      "title": "Montgomery County \u2014 County Council At Large",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 5,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-78a672acc7d83864cb92",
+      "title": "Montgomery County \u2014 County Council District 7",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-dddfb337eb1e92a27ffb",
+      "title": "Montgomery County \u2014 Judge of the Circuit Court Circuit 6",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 4,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-be6475fa23750a22c808",
+      "title": "Montgomery County \u2014 State's Attorney",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-e681677b44353682f7b1",
+      "title": "Montgomery County \u2014 Clerk of the Circuit Court",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-6ef012d91d258aa958d2",
+      "title": "Montgomery County \u2014 Register of Wills",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-856f206188d36dbb2cd6",
+      "title": "Montgomery County \u2014 Sheriff",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-d298d9c63d278b979576",
+      "title": "Montgomery County \u2014 Board of Education At Large",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-17063c00de52d1ab912a",
+      "title": "Montgomery County \u2014 Board of Education District 1",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-4fc01f4cc3ea548cee6f",
+      "title": "Montgomery County \u2014 Board of Education District 3",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-local-2026-ae0f366a8c69f229edc0",
+      "title": "Montgomery County \u2014 Board of Education District 5",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-2",
+      "title": "Montgomery County \u2014 County Council District 2",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:2",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 9
+    },
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-3",
+      "title": "Montgomery County \u2014 County Council District 3",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 22
+    },
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-4",
+      "title": "Montgomery County \u2014 County Council District 4",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 25
+    },
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-1",
+      "title": "Montgomery County \u2014 County Council District 1",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 32
+    },
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-6",
+      "title": "Montgomery County \u2014 County Council District 6",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:6",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 36
+    },
+    {
+      "id": "md-cx-local-2026-montgomery-county-council-district-5",
+      "title": "Montgomery County \u2014 County Council District 5",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 56
+    },
+    {
+      "id": "md-cx-local-2026-takoma-park-mayor",
+      "title": "Takoma Park Mayor",
+      "ocdId": "ocd-division/country:us/state:md/place:takoma_park",
+      "candidates": 2,
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": null
+    },
+    {
+      "id": "md-cx-local-2026-takoma-park-council-ward-1",
+      "title": "Takoma Park City Council \u2014 Ward 1",
+      "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:1",
+      "candidates": 2,
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9130/Ward-1-Sample-Ballot",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 1
+    },
+    {
+      "id": "md-cx-local-2026-takoma-park-council-ward-2",
+      "title": "Takoma Park City Council \u2014 Ward 2",
+      "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:2",
+      "candidates": 2,
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9131/Ward-2-Sample-Ballot",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 2
+    },
+    {
+      "id": "md-cx-local-2026-takoma-park-council-ward-3",
+      "title": "Takoma Park City Council \u2014 Ward 3",
+      "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:3",
+      "candidates": 1,
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9132/Ward-3-Sample-Ballot",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 3
+    },
+    {
+      "id": "md-cx-local-2026-takoma-park-council-ward-4",
+      "title": "Takoma Park City Council \u2014 Ward 4",
+      "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:4",
+      "candidates": 1,
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9133/Ward-4-Sample-Ballot",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 4
+    },
+    {
+      "id": "md-cx-local-2026-takoma-park-council-ward-5",
+      "title": "Takoma Park City Council \u2014 Ward 5",
+      "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:5",
+      "candidates": 1,
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9134/Ward-5-Sample-Ballot",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 5
+    },
+    {
+      "id": "md-cx-local-2026-takoma-park-council-ward-6",
+      "title": "Takoma Park City Council \u2014 Ward 6",
+      "ocdId": "ocd-division/country:us/state:md/place:takoma_park/ward:6",
+      "candidates": 2,
+      "sourceUrl": "https://takomaparkmd.gov/DocumentCenter/View/9135/Ward-6-Sample-Ballot",
+      "evidenceClass": "ACTUAL_COMPLETE_OFFICIAL_SAMPLE_BLOCK",
+      "witnessStyle": 6
+    }
+  ],
+  "operation": "Partial state data merge through existing candidate APIs. Preserve all unrelated statewide, legislative, retention and measure records and explainers. Preserve the separate municipal electorates and ranked choice instructions. No production, publication or git operations.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS: 29 source/excerpt hashes and 77 exact quotes, including 70 input quotes",
+    "completeOfficialNamedCandidateBlocks": "PASS:18countyoffices/34namesacrossall257styles;7Takomaoffices/11namesfromall6nativecitysamples",
+    "canonicalIdentityReuse": "PASS: 12 held contest IDs and 24 held candidate IDs reused; all ready MD packet inputs compared",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "allCountyStylesAudited": "PASS: all 257 styles / 1542 PDF pages; 18 distinct local offices / 34 names",
+    "schoolElectorateRule": "PASS: current Education section 3-901(f)(2) and identical school choices across every county style",
+    "takomaSamples": "PASS: six native current samples / seven local offices / 11 printed names",
+    "unrelatedContestsPreserved": 324,
+    "unrelatedCandidateCoreFieldsPreserved": 647,
+    "localValidationFile": "local-validation.json",
+    "sharedValidationFile": "validation.json",
+    "sourceHashesAndQuotes": "PASS: 29 captured sources and 70 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "status": "PARTIAL_COUNTY_MUNICIPAL_COVERAGE_WITH_COMPLETE_COUNTY_AND_TAKOMA_SAMPLES",
+    "localOffices": 25,
+    "printedNamedChoices": 45,
+    "countyLocalOffices": 18,
+    "countyPrintedNames": 34,
+    "takomaLocalOffices": 7,
+    "takomaPrintedNames": 11,
+    "countyStylesAudited": 257,
+    "countyCertifiedPdfPages": 1542,
+    "takomaSamplesAudited": 6,
+    "schoolElectorate": "ALL_COUNTY;NUMBERED_DISTRICTS_ARE_RESIDENCY_SEATS;STATUTE_AND_ALLSTYLE_PARITY_AGREE",
+    "qualifiedCountyWriteInsSeparate": 2,
+    "heldContestIdsReused": 12,
+    "heldOrdinaryCandidateIdsReused": 24,
+    "newContestCount": 13,
+    "newOrdinaryCandidateCount": 21,
+    "geographicCouncilPolygonsRetained": 13,
+    "poolesville": "TWO_COMMISSIONER_SEATS_KNOWN;ACTUAL_SAMPLE/NAMEDLIST_PENDING",
+    "wholeCountyCompleteness": "NOT_CLAIMED:POOLesvilleAND_OTHER_INDEPENDENT_MUNICIPAL_DATE_AUDIT_REMAIN_OPEN",
+    "priorInputPathsScanned": [
+      "/workspace/meanwhile/data/ballot/2026-general/md.json"
+    ],
+    "heldInputSha256": "b3dbf262a26bbdc3a004c7e0b3a596f18c6f00a347ec9b80afd02263950f94cd",
+    "readerVisibility": "PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN"
+  },
+  "canonicalReusedContests": [
+    {
+      "contestId": "md-local-2026-2ae5917d35d83533896a",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-2ae5917d35d83533896a:faa829512cb5ee4f",
+        "md-local-2026-2ae5917d35d83533896a:11db9e504a9b1d2b"
+      ],
+      "title": "Montgomery County \u2014 County Executive",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-05fa1933419619fb8653",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-05fa1933419619fb8653:21d1c10daf855fec",
+        "md-local-2026-05fa1933419619fb8653:f12076aa024defdc",
+        "md-local-2026-05fa1933419619fb8653:3d1fb0c81ca06fd9",
+        "md-local-2026-05fa1933419619fb8653:e9b89d8088f225e4",
+        "md-local-2026-05fa1933419619fb8653:d5061cc20a1005e6"
+      ],
+      "title": "Montgomery County \u2014 County Council At Large",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-78a672acc7d83864cb92",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-78a672acc7d83864cb92:33b4a472e45e7a46",
+        "md-local-2026-78a672acc7d83864cb92:5774b13572fdb272"
+      ],
+      "title": "Montgomery County \u2014 County Council District 7",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7"
+    },
+    {
+      "contestId": "md-local-2026-dddfb337eb1e92a27ffb",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-dddfb337eb1e92a27ffb:6a0666883a5d87f4",
+        "md-local-2026-dddfb337eb1e92a27ffb:73f0a67be7c02a12",
+        "md-local-2026-dddfb337eb1e92a27ffb:0e20fadf3ff55971",
+        "md-local-2026-dddfb337eb1e92a27ffb:00e74b8e01fbb83d"
+      ],
+      "title": "Montgomery County \u2014 Judge of the Circuit Court Circuit 6",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-be6475fa23750a22c808",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-be6475fa23750a22c808:a17ab94a9c45fad0"
+      ],
+      "title": "Montgomery County \u2014 State's Attorney",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-e681677b44353682f7b1",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-e681677b44353682f7b1:382f3a93b23d4482"
+      ],
+      "title": "Montgomery County \u2014 Clerk of the Circuit Court",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-6ef012d91d258aa958d2",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-6ef012d91d258aa958d2:b38cc0c52c889b72",
+        "md-local-2026-6ef012d91d258aa958d2:7dfa2d692652d0ea"
+      ],
+      "title": "Montgomery County \u2014 Register of Wills",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-856f206188d36dbb2cd6",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-856f206188d36dbb2cd6:bb36d6eb4084fe1c"
+      ],
+      "title": "Montgomery County \u2014 Sheriff",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-d298d9c63d278b979576",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-d298d9c63d278b979576:0eaccd6a0c376fe6",
+        "md-local-2026-d298d9c63d278b979576:4fd5e1d645eb4d32"
+      ],
+      "title": "Montgomery County \u2014 Board of Education At Large",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-17063c00de52d1ab912a",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-17063c00de52d1ab912a:364864b01a1cfa5d"
+      ],
+      "title": "Montgomery County \u2014 Board of Education District 1",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-4fc01f4cc3ea548cee6f",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-4fc01f4cc3ea548cee6f:4578fabdf5f25053",
+        "md-local-2026-4fc01f4cc3ea548cee6f:4ce6ca120e636ac1"
+      ],
+      "title": "Montgomery County \u2014 Board of Education District 3",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    },
+    {
+      "contestId": "md-local-2026-ae0f366a8c69f229edc0",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "candidateIds": [
+        "md-local-2026-ae0f366a8c69f229edc0:afb1ce70798beb5e"
+      ],
+      "title": "Montgomery County \u2014 Board of Education District 5",
+      "ocdId": "ocd-division/country:us/state:md/county:montgomery"
+    }
+  ],
+  "geographyDependencies": "geography-dependencies.json",
+  "unmatchedRegistryDivisions": [
+    "ocd-division/country:us/state:md/county:montgomery/council_district:1",
+    "ocd-division/country:us/state:md/county:montgomery/council_district:2",
+    "ocd-division/country:us/state:md/county:montgomery/council_district:3",
+    "ocd-division/country:us/state:md/county:montgomery/council_district:4",
+    "ocd-division/country:us/state:md/county:montgomery/council_district:5",
+    "ocd-division/country:us/state:md/county:montgomery/council_district:6",
+    "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+    "ocd-division/country:us/state:md/place:takoma_park/ward:1",
+    "ocd-division/country:us/state:md/place:takoma_park/ward:2",
+    "ocd-division/country:us/state:md/place:takoma_park/ward:3",
+    "ocd-division/country:us/state:md/place:takoma_park/ward:4",
+    "ocd-division/country:us/state:md/place:takoma_park/ward:5",
+    "ocd-division/country:us/state:md/place:takoma_park/ward:6"
+  ],
+  "unmatchedRegistryDivisionCount": 13,
+  "retainedExactCouncilPolygons": 13,
+  "pendingCoverage": "pending-coverage.json",
+  "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_ELECTORATE_JOINS",
+  "sourceAcquisition": {
+    "primaryCountySampleUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+    "countyTransport": "Native state PDF returned 403. Complete official 1542-page PDF reader text returned 200; its hash covers the capture, not original PDF bytes. All six native city sample PDFs returned 200. Six Takoma ward geometries were captured natively. Seven county council geometries were parsed from complete official GeoJSON in reader text after native county GIS returned 403.",
+    "municipalCaptureMethod": "Takoma Park Voting Process links six current ward PDFs. Poolesville public CivicPlus Document Center uses anonymous read queries with loadSource=7. Its published 2026 folder 131 currently contains only emergency application 2068. Public request bodies and source hashes are retained in acquisition-route-log.json. No editing, draft or archived mode, sign-in or voter identity was used.",
+    "workspace": "/workspace/cx-local-work/montgomery-md"
+  },
+  "nextOwner": "Main: review and commit frozen packet. River: install exact geography and verify ranked choice and separate write-in display. Acquisition: continue Poolesville actual sample/complete official candidate list and the independent municipal date audit.",
+  "preparedAt": "2026-11-03T05:38:48.176246+00:00",
+  "countyCoverageStatus": "PARTIAL_MUNICIPAL_COVERAGE"
+}

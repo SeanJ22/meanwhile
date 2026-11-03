@@ -1,0 +1,24 @@
+{
+  "status": "PARTIAL_COUNTY_MUNICIPAL_COVERAGE",
+  "countyAdministeredElection": "COMPLETE_ALL257CERTIFIED_STYLES_18LOCAL_OFFICES_34PRINTED_NAMES",
+  "takomaPark": "COMPLETE_ALL6CITYSAMPLES_7OFFICES_11PRINTED_NAMES",
+  "poolesville": {
+    "status": "ACTUAL_SAMPLE_AND_COMPLETE_NAMED_LIST_NOT_ACQUIRED",
+    "electionDate": "2026-11-03",
+    "knownOffice": "TownCommissioners,expiredtermsof2Commissioners",
+    "sourceUrl": "https://www.poolesvillemd.gov/285/Voting-Elections",
+    "routesChecked": [
+      "Currentofficialvotingpage:onlyabsenteeapplicationlink",
+      "PublicDocumentCenterFrontend=7root/BoardofElections71/2026folder131:onepublisheddocument,Emergencyapplication2068",
+      "Publicballotsearch:0publishedmatches",
+      "Source-linkedlegacysample/formdocumentIDs447/448/1782/1807:404",
+      "Currentofficialnewsletter:confirmsseparateelection,noactualsample/candidatelist",
+      "Websearch:noofficialcurrentnamedballotfound"
+    ],
+    "nextOwner": "River/acquisition:officialcurrenttownsampleorcompleteofficialcandidateblock;donotclaimcoverageorfillnamesfromthirdparties."
+  },
+  "otherMunicipalities": "NoexhaustiveindependentmunicipalNovember-dateauditclaimed;statecountystylesdonotstandinforseparatecityelections.",
+  "writeIns": "Twoofficialcountywriteinsseparate;city/townnamedwriteincertificationremainsopen.",
+  "existingMeasuresAndLegislativeRaces": "UNCHANGED_BY_OMISSION",
+  "statewideDanFriedmanRetention": "EXISTING_STATEWIDE_ID_UNCHANGED;NO_COUNTY_DUPLICATE"
+}

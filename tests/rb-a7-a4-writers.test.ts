@@ -50,12 +50,8 @@ test("replacing a bare state association queues the old root and newly served lo
     await db.query("UPDATE place_page SET stale_at=NULL");
     assert.equal(await db.transaction(query=>fileEntityPlaces(query,BODY,[served(SECOND)],GOVERNMENT).then(filed=>filed.moved)),false);
     assert.deepEqual(await db.query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL"),[],"unchanged source territory leaves the queue empty");
+    assert.equal(await db.transaction(query=>fileEntityPlaces(query,BODY,[{placeId:ROOT,boundaryYear:0,basis:"SERVICE_AREA"}],GOVERNMENT).then(filed=>filed.moved)),false,"a state is not filed again for a body that holds a place within it, so the next filing does not unfile it");
   }finally{await db.pg.close();}
-});
-
-test("a state is not filed again for an entity that holds a place within it, so the next filing does not unfile it", async () => {
-  const db = await fixture();
-  try { assert.deepEqual(await db.transaction(query => fileEntityPlaces(query, BODY, [{ placeId: ROOT, boundaryYear: 0, basis: "SERVICE_AREA" }])), { moved: false, removed: [] }); } finally { await db.pg.close(); }
 });
 
 test("a refused fact cannot file an additional place or queue its readers",async()=>{

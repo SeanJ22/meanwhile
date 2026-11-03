@@ -29,8 +29,7 @@ const encodedBoard = /^source:[^:]+:body:([^:]+)/;
 
 /**
  * The slices a published calendar or registration reaches, read after its rows are in place. A calendar's partition reaches the meetings of
- * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places
- * its rows name without a board. A history partition reaches only the history; only the cards that now differ from those held are marked; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
+ * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places its rows name without a board. A history partition reaches only the history; only the cards that now differ from those held are marked; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
  * A registration reaches the bodies card of every place it names. A registry's runtime model is held on the shelf, whose version moves with the pointer.
  */
 async function slicesOfPublication(query: Query, input: { readonly recordClass: string; readonly scope: string }): Promise<readonly SliceMark[]> {

@@ -101,11 +101,9 @@ test("a calendar, a confirmation, a history and a registration published mark th
       "a state's family reaches every board its rows name, under the name the board was folded into, and the place a row names without a board");
     assert.deepEqual(await marked({ recordClass: "REGISTRATION", scope: "US-AZ:registration:v1" }), ["place:bodies"]);
     assert.deepEqual(await marked({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: "US-AZ:reader-registry-runtime" }), [], "the registry is held on the shelf, whose version moves with the pointer");
-    // Once the board's cards are built, a calendar read again marks nothing; a row that differs marks the cards it is on.
     const { cardInputs } = await import("../lib/reader/slice-meetings.ts");
     await writeSlices(db.query, await buildSlices(db.query, new Map([[BODY, new Set<SliceCard>(MEETING_CARDS)]])), await cardInputs(db.query, [BODY]));
-    const later = (id: string, title: string, rawHash: string) => db.publish({ id, recordClass: "MEETING", scope: CURRENT, sourceId: "legistar", at: "2026-10-24T09:00:00.000Z",
-      value: { ...header, generatedAt: "2026-10-24T09:00:00.000Z", sources: [{ ...header.sources[0]!, acquisitions: [{ source: "legistar", rawHash }] }], meetings: [meeting("m1", { title })], agendaDocuments: [] } });
+    const later = (id: string, title: string, rawHash: string) => db.publish({ id, recordClass: "MEETING", scope: CURRENT, sourceId: "legistar", at: "2026-10-24T09:00:00.000Z", value: { ...header, generatedAt: "2026-10-24T09:00:00.000Z", sources: [{ ...header.sources[0]!, acquisitions: [{ source: "legistar", rawHash }] }], meetings: [meeting("m1", { title })], agendaDocuments: [] } });
     await later("cv-2", "m1", "b".repeat(64)); assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT }), [], "only the moments and bytes a calendar was read at moved: nothing is marked");
     await later("cv-3", "Moved to 7 PM", "c".repeat(64)); assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT }), ["board:history", "board:meetings"], "a row that differs marks the cards it is on");
     const { slicesOf } = await import("../lib/core/slice-marks.ts");

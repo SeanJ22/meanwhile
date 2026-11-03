@@ -137,12 +137,10 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
 const CHECKED_EVERY_MS = 6 * 3_600_000;
 const checkedIn = (detail: unknown) => Math.floor(Date.parse(/"checkedAt":"([^"]+)"/.exec(String(detail))?.[1] ?? "") / CHECKED_EVERY_MS);
 
-const ROWS_DIGEST_SQL = `SELECT r.promotion_key AS key,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(${UNSTAMPED_SQL("r.value::text")}),',' ORDER BY r.ordinal)) AS digest
-  FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection=$5 AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2`;
+const ROWS_DIGEST_SQL = `SELECT r.promotion_key AS key,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(${UNSTAMPED_SQL("r.value::text")}),',' ORDER BY r.ordinal)) AS digest FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection=$5 AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2`;
 
 /** What each card of these boards and places shows, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back: calendars without the moments they were read at, the six hours they were last read or confirmed in, and the sittings. */
 export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
-  if (!subjects.length) return new Map();
   const { boardRows, canonicalOf, names, partitions, places } = await calendarsOf(query, subjects, false);
   const current = partitions.filter(row => !String(row.scope).endsWith(HISTORY)), none: Row[] = [];
   const digest = (rows: readonly Row[], collection: string) => rows.length ? query(ROWS_DIGEST_SQL, [rows.map(row => String(row.key)), names, places, rows.map(row => String(row.version)), collection]) : none;
@@ -150,8 +148,7 @@ export async function cardInputs(query: Query, subjects: readonly string[]): Pro
   const canon = (board: unknown) => canonicalOf.get(String(board)) ?? String(board), state = new Map(boardRows.map(row => [String(row.id), String(row.state).toUpperCase()])), out = new Map<string, string>();
   for (const subject of subjects) {
     const mine = (from: readonly Row[]) => from.filter(row => canon(row.body) === subject).map(row => [row.key, row.digest]);
-    const held = (old: boolean) => partitions.filter(row => String(row.scope).endsWith(HISTORY) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope))))
-      .map(row => [row.scope, row.shown, checkedIn(row.confirmation)]);
+    const held = (old: boolean) => partitions.filter(row => String(row.scope).endsWith(HISTORY) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope)))).map(row => [row.scope, row.shown, checkedIn(row.confirmation)]);
     out.set(`${subject}\tmeetings`, hash([held(false), mine(calendars), mine(sittings)]));
     out.set(`${subject}\thistory`, hash([held(true), mine(calendars)]));
     out.set(`${subject}\tagenda`, hash(mine(papers)));

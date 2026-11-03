@@ -1,0 +1,76 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ia-cx-2026-malaka-township-appointments",
+      "title": "Malaka Township — Measure MAL: Appoint township officers",
+      "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:malaka_township",
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf"
+    },
+    {
+      "id": "ia-cx-2026-richland-township-appointments",
+      "title": "Richland Township — Measure RCH: Appoint township officers",
+      "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:richland_township",
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf"
+    },
+    {
+      "id": "ia-cx-2026-hickory-grove-township-appointments",
+      "title": "Hickory Grove Township — Measure HG: Appoint township officers",
+      "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:hickory_grove_township",
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf"
+    },
+    {
+      "id": "ia-cx-2026-clear-creek-township-appointments",
+      "title": "Clear Creek Township — Measure CC: Appoint township officers",
+      "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:clear_creek_township",
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf"
+    },
+    {
+      "id": "ia-cx-2026-mariposa-township-appointments",
+      "title": "Mariposa Township — Measure MAR: Appoint township officers",
+      "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:mariposa_township",
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf"
+    },
+    {
+      "id": "ia-cx-2026-elk-creek-township-appointments",
+      "title": "Elk Creek Township — Measure EC: Appoint township officers",
+      "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:elk_creek_township",
+      "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 6,
+    "newPlainLanguageExplanations": 6,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "IA",
+    "newMeasures": 6,
+    "newExplanations": 6,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

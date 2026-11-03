@@ -1,0 +1,415 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-malaka-township-appointments",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:malaka_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Malaka Township — Measure MAL: Appoint township officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf",
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:03.558790+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Malaka Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-richland-township-appointments",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:richland_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Richland Township — Measure RCH: Appoint township officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf",
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:01.820692+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Richland Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-hickory-grove-township-appointments",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:hickory_grove_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Hickory Grove Township — Measure HG: Appoint township officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf",
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:03.113070+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Hickory Grove Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-clear-creek-township-appointments",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:clear_creek_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Clear Creek Township — Measure CC: Appoint township officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf",
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:02.742466+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Clear Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-mariposa-township-appointments",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:mariposa_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Mariposa Township — Measure MAR: Appoint township officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf",
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:03.639293+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Mariposa Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-elk-creek-township-appointments",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:jasper/place:elk_creek_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Elk Creek Township — Measure EC: Appoint township officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf",
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:02.857102+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Elk Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-malaka-township-appointments:measure",
+          "contestId": "ia-cx-2026-malaka-township-appointments",
+          "officialNumber": "MAL",
+          "questionText": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Malaka Township by appointment as the terms of office of the incumbent township officers expire?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:03.558790+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Malaka Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-richland-township-appointments:measure",
+          "contestId": "ia-cx-2026-richland-township-appointments",
+          "officialNumber": "RCH",
+          "questionText": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Richland Township by appointment as the terms of office of the incumbent township officers expire?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:01.820692+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Richland Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-hickory-grove-township-appointments:measure",
+          "contestId": "ia-cx-2026-hickory-grove-township-appointments",
+          "officialNumber": "HG",
+          "questionText": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Hickory Grove Township by appointment as the terms of office of the incumbent township officers expire?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:03.113070+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Hickory Grove Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-clear-creek-township-appointments:measure",
+          "contestId": "ia-cx-2026-clear-creek-township-appointments",
+          "officialNumber": "CC",
+          "questionText": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Clear Creek Township by appointment as the terms of office of the incumbent township officers expire?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:02.742466+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Clear Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-mariposa-township-appointments:measure",
+          "contestId": "ia-cx-2026-mariposa-township-appointments",
+          "officialNumber": "MAR",
+          "questionText": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Mariposa Township by appointment as the terms of office of the incumbent township officers expire?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:03.639293+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Mariposa Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-elk-creek-township-appointments:measure",
+          "contestId": "ia-cx-2026-elk-creek-township-appointments",
+          "officialNumber": "EC",
+          "questionText": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Elk Creek Township by appointment as the terms of office of the incumbent township officers expire?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf",
+            "sourceOrg": "Jasper County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:27:02.857102+00:00",
+            "verifiedAt": "2026-11-03T07:38:47.474237+00:00",
+            "quote": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Elk Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-malaka-township-appointments",
+          "whatItDoes": "Allows the Jasper County board of supervisors to appoint Malaka Township’s trustees and clerk as the current officers’ terms expire.",
+          "yesMeans": "Have the county board appoint these officers as current terms expire.",
+          "noMeans": "Do not approve appointments as the current terms expire.",
+          "parts": [],
+          "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf",
+          "sourceHash": "e8268a94e3f89c51c19c31d7e440bc5f45ef2f6cafd26f4e7418426c04051407",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:38:47.474237+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-richland-township-appointments",
+          "whatItDoes": "Allows the Jasper County board of supervisors to appoint Richland Township’s trustees and clerk as the current officers’ terms expire.",
+          "yesMeans": "Have the county board appoint these officers as current terms expire.",
+          "noMeans": "Do not approve appointments as the current terms expire.",
+          "parts": [],
+          "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf",
+          "sourceHash": "e4944741a3ddfd713dbde160110e8dc0309f4c5ad4840bcd49d13d1a9ea5a47c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:38:47.474237+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-hickory-grove-township-appointments",
+          "whatItDoes": "Allows the Jasper County board of supervisors to appoint Hickory Grove Township’s trustees and clerk as the current officers’ terms expire.",
+          "yesMeans": "Have the county board appoint these officers as current terms expire.",
+          "noMeans": "Do not approve appointments as the current terms expire.",
+          "parts": [],
+          "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf",
+          "sourceHash": "c1c0a23dc2b9378959dbb18db6e42f0ec772ca535f8fa18ee66aebea8ee33965",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:38:47.474237+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-clear-creek-township-appointments",
+          "whatItDoes": "Allows the Jasper County board of supervisors to appoint Clear Creek Township’s trustees and clerk as the current officers’ terms expire.",
+          "yesMeans": "Have the county board appoint these officers as current terms expire.",
+          "noMeans": "Do not approve appointments as the current terms expire.",
+          "parts": [],
+          "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf",
+          "sourceHash": "99649ae0b680f7985ee0ec28c816dc211daa6a6916feaf8a89deff23eccefe78",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:38:47.474237+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-mariposa-township-appointments",
+          "whatItDoes": "Allows the Jasper County board of supervisors to appoint Mariposa Township’s trustees and clerk as the current officers’ terms expire.",
+          "yesMeans": "Have the county board appoint these officers as current terms expire.",
+          "noMeans": "Do not approve appointments as the current terms expire.",
+          "parts": [],
+          "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf",
+          "sourceHash": "e67727659f59a7fd729652f4ac6bbe56e865ee4bd6b3287096bd04b699f7b246",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:38:47.474237+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-elk-creek-township-appointments",
+          "whatItDoes": "Allows the Jasper County board of supervisors to appoint Elk Creek Township’s trustees and clerk as the current officers’ terms expire.",
+          "yesMeans": "Have the county board appoint these officers as current terms expire.",
+          "noMeans": "Do not approve appointments as the current terms expire.",
+          "parts": [],
+          "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf",
+          "sourceHash": "b9e872c7493eb7d374b95e361da29745ed7f0a3bb38dabaf47018ff9b367f6eb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:38:47.474237+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:38:47.474237+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf",
+        "finalUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf",
+        "httpStatus": 200,
+        "rawHash": "a5cfd72c9e6b2023b98c18b992ccbabd17e52fe5432d5ae521f600916ef16bce",
+        "retrievedAt": "2026-11-03T07:27:03.558790+00:00",
+        "publisher": "Jasper County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned two-page sample linked by current official Nov3,2026 county election page. Complete bounded appointment question and official measure number visually verified against native crop. Raw OCR preserved separately."
+      },
+      {
+        "requestedUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf",
+        "finalUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf",
+        "httpStatus": 200,
+        "rawHash": "4fa23f14d8c65fe6d6d02f8d07d4ff17e453f200f94ec87ba7a6a17cd3df09e2",
+        "retrievedAt": "2026-11-03T07:27:01.820692+00:00",
+        "publisher": "Jasper County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned two-page sample linked by current official Nov3,2026 county election page. Complete bounded appointment question and official measure number visually verified against native crop. Raw OCR preserved separately."
+      },
+      {
+        "requestedUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf",
+        "finalUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf",
+        "httpStatus": 200,
+        "rawHash": "b1400817cecf1aae26d64108a3d1c41610a653f1676d7d7d8c649d42e4d79493",
+        "retrievedAt": "2026-11-03T07:27:03.113070+00:00",
+        "publisher": "Jasper County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned two-page sample linked by current official Nov3,2026 county election page. Complete bounded appointment question and official measure number visually verified against native crop. Raw OCR preserved separately."
+      },
+      {
+        "requestedUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf",
+        "finalUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf",
+        "httpStatus": 200,
+        "rawHash": "0b479f869e3f063e05c4c91b3c3908ee2586116e105d3bc2ba1734260b506947",
+        "retrievedAt": "2026-11-03T07:27:02.742466+00:00",
+        "publisher": "Jasper County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned two-page sample linked by current official Nov3,2026 county election page. Complete bounded appointment question and official measure number visually verified against native crop. Raw OCR preserved separately."
+      },
+      {
+        "requestedUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf",
+        "finalUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf",
+        "httpStatus": 200,
+        "rawHash": "b05e80f14408c6dc1884867ab6774bf775ba0d9d18ab7e81d1d5b30985aca8b0",
+        "retrievedAt": "2026-11-03T07:27:03.639293+00:00",
+        "publisher": "Jasper County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned two-page sample linked by current official Nov3,2026 county election page. Complete bounded appointment question and official measure number visually verified against native crop. Raw OCR preserved separately."
+      },
+      {
+        "requestedUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf",
+        "finalUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf",
+        "httpStatus": 200,
+        "rawHash": "c26694dcb57defd9cc9e0de3e47be93d6814d44ad04e8c4005cbdd5f08b105ed",
+        "retrievedAt": "2026-11-03T07:27:02.857102+00:00",
+        "publisher": "Jasper County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native scanned two-page sample linked by current official Nov3,2026 county election page. Complete bounded appointment question and official measure number visually verified against native crop. Raw OCR preserved separately."
+      }
+    ]
+  }
+}

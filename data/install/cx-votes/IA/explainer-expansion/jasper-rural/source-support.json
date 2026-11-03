@@ -1,0 +1,254 @@
+[
+  {
+    "contestId": "ia-cx-2026-malaka-township-appointments",
+    "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_malaka_township_51962.pdf",
+    "rawHash": "a5cfd72c9e6b2023b98c18b992ccbabd17e52fe5432d5ae521f600916ef16bce",
+    "sourceFile": "sources/a5cfd72c9e6b2023b98c18b992ccbabd17e52fe5432d5ae521f600916ef16bce.source",
+    "sourceTextFile": "sources/2a48403443f99bf4da26843deb867ba034ea5cb737fc38c27b763964ee8af471.txt",
+    "excerpt": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Malaka Township by appointment as the terms of office of the incumbent township officers expire?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Malaka Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "yesMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Malaka Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "noMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Malaka Township by appointment as the terms of office of the incumbent township officers expire?"
+      ]
+    },
+    "semanticConditions": [
+      "Terms-expire condition retained; no claim of immediate removal, shortened terms or cancellation of a particular election.",
+      "No change in officer count, term length or duties inferred.",
+      "Whole-cousub mapping limited to this exact township, with no incorporated-city intersection in native Census2025 place/COUSUB polygons."
+    ],
+    "inventoryScope": "Six wholly rural Jasper township questions prepared independently. Current48advertised samples have19distinct township appointment fields; thirteen city-overlapping Census township geographies remain unresolved. School LL already separate. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        30,
+        480,
+        235
+      ],
+      "dpi": 420,
+      "scope": "Complete native appointment field including label, full operative question and YES/NO ovals. Canonical question retains exact operative language; no text from adjacent statewide field included."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-richland-township-appointments",
+    "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_richland_township_91822.pdf",
+    "rawHash": "4fa23f14d8c65fe6d6d02f8d07d4ff17e453f200f94ec87ba7a6a17cd3df09e2",
+    "sourceFile": "sources/4fa23f14d8c65fe6d6d02f8d07d4ff17e453f200f94ec87ba7a6a17cd3df09e2.source",
+    "sourceTextFile": "sources/39a651030a4089f7078701381e42b0021e7ac41c0f4631a38c4734cd6cf2343e.txt",
+    "excerpt": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Richland Township by appointment as the terms of office of the incumbent township officers expire?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Richland Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "yesMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Richland Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "noMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Richland Township by appointment as the terms of office of the incumbent township officers expire?"
+      ]
+    },
+    "semanticConditions": [
+      "Terms-expire condition retained; no claim of immediate removal, shortened terms or cancellation of a particular election.",
+      "No change in officer count, term length or duties inferred.",
+      "Whole-cousub mapping limited to this exact township, with no incorporated-city intersection in native Census2025 place/COUSUB polygons."
+    ],
+    "inventoryScope": "Six wholly rural Jasper township questions prepared independently. Current48advertised samples have19distinct township appointment fields; thirteen city-overlapping Census township geographies remain unresolved. School LL already separate. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        30,
+        480,
+        235
+      ],
+      "dpi": 420,
+      "scope": "Complete native appointment field including label, full operative question and YES/NO ovals. Canonical question retains exact operative language; no text from adjacent statewide field included."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-hickory-grove-township-appointments",
+    "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_hickory_grove_township_81357.pdf",
+    "rawHash": "b1400817cecf1aae26d64108a3d1c41610a653f1676d7d7d8c649d42e4d79493",
+    "sourceFile": "sources/b1400817cecf1aae26d64108a3d1c41610a653f1676d7d7d8c649d42e4d79493.source",
+    "sourceTextFile": "sources/98abd371f3d549e9f46c750e8ffa3ed9870d039d6620d64541ec0773aad7b9c8.txt",
+    "excerpt": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Hickory Grove Township by appointment as the terms of office of the incumbent township officers expire?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Hickory Grove Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "yesMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Hickory Grove Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "noMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Hickory Grove Township by appointment as the terms of office of the incumbent township officers expire?"
+      ]
+    },
+    "semanticConditions": [
+      "Terms-expire condition retained; no claim of immediate removal, shortened terms or cancellation of a particular election.",
+      "No change in officer count, term length or duties inferred.",
+      "Whole-cousub mapping limited to this exact township, with no incorporated-city intersection in native Census2025 place/COUSUB polygons."
+    ],
+    "inventoryScope": "Six wholly rural Jasper township questions prepared independently. Current48advertised samples have19distinct township appointment fields; thirteen city-overlapping Census township geographies remain unresolved. School LL already separate. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        30,
+        480,
+        235
+      ],
+      "dpi": 420,
+      "scope": "Complete native appointment field including label, full operative question and YES/NO ovals. Canonical question retains exact operative language; no text from adjacent statewide field included."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-clear-creek-township-appointments",
+    "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_clear_creek_township_40528.pdf",
+    "rawHash": "0b479f869e3f063e05c4c91b3c3908ee2586116e105d3bc2ba1734260b506947",
+    "sourceFile": "sources/0b479f869e3f063e05c4c91b3c3908ee2586116e105d3bc2ba1734260b506947.source",
+    "sourceTextFile": "sources/6e58219f9658fc65575e154676292eceec987dcc3a6f8fa2a28186c50e6b8fa7.txt",
+    "excerpt": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Clear Creek Township by appointment as the terms of office of the incumbent township officers expire?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Clear Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "yesMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Clear Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "noMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Clear Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+      ]
+    },
+    "semanticConditions": [
+      "Terms-expire condition retained; no claim of immediate removal, shortened terms or cancellation of a particular election.",
+      "No change in officer count, term length or duties inferred.",
+      "Whole-cousub mapping limited to this exact township, with no incorporated-city intersection in native Census2025 place/COUSUB polygons."
+    ],
+    "inventoryScope": "Six wholly rural Jasper township questions prepared independently. Current48advertised samples have19distinct township appointment fields; thirteen city-overlapping Census township geographies remain unresolved. School LL already separate. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        30,
+        480,
+        235
+      ],
+      "dpi": 420,
+      "scope": "Complete native appointment field including label, full operative question and YES/NO ovals. Canonical question retains exact operative language; no text from adjacent statewide field included."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-mariposa-township-appointments",
+    "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_mariposa_township_99157.pdf",
+    "rawHash": "b05e80f14408c6dc1884867ab6774bf775ba0d9d18ab7e81d1d5b30985aca8b0",
+    "sourceFile": "sources/b05e80f14408c6dc1884867ab6774bf775ba0d9d18ab7e81d1d5b30985aca8b0.source",
+    "sourceTextFile": "sources/46b9c023a282a00fe4ffa9d5f5a773fac153de162998de9e39560f95feb5507e.txt",
+    "excerpt": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Mariposa Township by appointment as the terms of office of the incumbent township officers expire?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Mariposa Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "yesMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Mariposa Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "noMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Mariposa Township by appointment as the terms of office of the incumbent township officers expire?"
+      ]
+    },
+    "semanticConditions": [
+      "Terms-expire condition retained; no claim of immediate removal, shortened terms or cancellation of a particular election.",
+      "No change in officer count, term length or duties inferred.",
+      "Whole-cousub mapping limited to this exact township, with no incorporated-city intersection in native Census2025 place/COUSUB polygons."
+    ],
+    "inventoryScope": "Six wholly rural Jasper township questions prepared independently. Current48advertised samples have19distinct township appointment fields; thirteen city-overlapping Census township geographies remain unresolved. School LL already separate. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        365,
+        30,
+        480,
+        235
+      ],
+      "dpi": 420,
+      "scope": "Complete native appointment field including label, full operative question and YES/NO ovals. Canonical question retains exact operative language; no text from adjacent statewide field included."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-elk-creek-township-appointments",
+    "sourceUrl": "https://jaspercountyelections.iowa.gov/files/sample_ballots/1201_elk_creek_township_61630.pdf",
+    "rawHash": "c26694dcb57defd9cc9e0de3e47be93d6814d44ad04e8c4005cbdd5f08b105ed",
+    "sourceFile": "sources/c26694dcb57defd9cc9e0de3e47be93d6814d44ad04e8c4005cbdd5f08b105ed.source",
+    "sourceTextFile": "sources/493d93e9d49055f49654d04dd5fdac8292634db6c77c49af18ab398c1d707508.txt",
+    "excerpt": "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Elk Creek Township by appointment as the terms of office of the incumbent township officers expire?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Elk Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "yesMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Elk Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+      ],
+      "noMeans": [
+        "Shall the Jasper County Board of Supervisors fill the offices of Trustees and Clerk of Elk Creek Township by appointment as the terms of office of the incumbent township officers expire?"
+      ]
+    },
+    "semanticConditions": [
+      "Terms-expire condition retained; no claim of immediate removal, shortened terms or cancellation of a particular election.",
+      "No change in officer count, term length or duties inferred.",
+      "Whole-cousub mapping limited to this exact township, with no incorporated-city intersection in native Census2025 place/COUSUB polygons."
+    ],
+    "inventoryScope": "Six wholly rural Jasper township questions prepared independently. Current48advertised samples have19distinct township appointment fields; thirteen city-overlapping Census township geographies remain unresolved. School LL already separate. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "cropBoxPoints": [
+        245,
+        510.28,
+        360,
+        715.28
+      ],
+      "dpi": 420,
+      "scope": "Complete native appointment field including label, full operative question and YES/NO ovals. Canonical question retains exact operative language; no text from adjacent statewide field included."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

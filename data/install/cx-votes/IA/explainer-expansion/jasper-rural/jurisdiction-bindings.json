@@ -1,0 +1,110 @@
+[
+  {
+    "contestId": "ia-cx-2026-malaka-township-appointments",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:jasper/place:malaka_township",
+      "cousub",
+      "1909992802",
+      "Malaka township"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact named legal township matches existing Census2025 whole-cousub registry. Native Census2025 place/cousub comparison found no incorporated-city intersections for this township; this avoids assigning excluded city voters to a rural township measure. Comparison fingerprints and source geometry retained in companion review.",
+    "additionalGeographyEvidence": {
+      "sourcePath": "geography-source-review.json",
+      "censusCousubGeoid": "1909992802",
+      "incorporatedCityIntersections": [],
+      "comparison": "Full all-Iowa2025 Census PLACE LSAD25 polygons against this exact COUSUB polygon; both-direction vertex containment and proper edge intersections. Data-only identity check; no geometry or reader code changed."
+    }
+  },
+  {
+    "contestId": "ia-cx-2026-richland-township-appointments",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:jasper/place:richland_township",
+      "cousub",
+      "1909993597",
+      "Richland township"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact named legal township matches existing Census2025 whole-cousub registry. Native Census2025 place/cousub comparison found no incorporated-city intersections for this township; this avoids assigning excluded city voters to a rural township measure. Comparison fingerprints and source geometry retained in companion review.",
+    "additionalGeographyEvidence": {
+      "sourcePath": "geography-source-review.json",
+      "censusCousubGeoid": "1909993597",
+      "incorporatedCityIntersections": [],
+      "comparison": "Full all-Iowa2025 Census PLACE LSAD25 polygons against this exact COUSUB polygon; both-direction vertex containment and proper edge intersections. Data-only identity check; no geometry or reader code changed."
+    }
+  },
+  {
+    "contestId": "ia-cx-2026-hickory-grove-township-appointments",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:jasper/place:hickory_grove_township",
+      "cousub",
+      "1909991920",
+      "Hickory Grove township"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact named legal township matches existing Census2025 whole-cousub registry. Native Census2025 place/cousub comparison found no incorporated-city intersections for this township; this avoids assigning excluded city voters to a rural township measure. Comparison fingerprints and source geometry retained in companion review.",
+    "additionalGeographyEvidence": {
+      "sourcePath": "geography-source-review.json",
+      "censusCousubGeoid": "1909991920",
+      "incorporatedCityIntersections": [],
+      "comparison": "Full all-Iowa2025 Census PLACE LSAD25 polygons against this exact COUSUB polygon; both-direction vertex containment and proper edge intersections. Data-only identity check; no geometry or reader code changed."
+    }
+  },
+  {
+    "contestId": "ia-cx-2026-clear-creek-township-appointments",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:jasper/place:clear_creek_township",
+      "cousub",
+      "1909990711",
+      "Clear Creek township"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact named legal township matches existing Census2025 whole-cousub registry. Native Census2025 place/cousub comparison found no incorporated-city intersections for this township; this avoids assigning excluded city voters to a rural township measure. Comparison fingerprints and source geometry retained in companion review.",
+    "additionalGeographyEvidence": {
+      "sourcePath": "geography-source-review.json",
+      "censusCousubGeoid": "1909990711",
+      "incorporatedCityIntersections": [],
+      "comparison": "Full all-Iowa2025 Census PLACE LSAD25 polygons against this exact COUSUB polygon; both-direction vertex containment and proper edge intersections. Data-only identity check; no geometry or reader code changed."
+    }
+  },
+  {
+    "contestId": "ia-cx-2026-mariposa-township-appointments",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:jasper/place:mariposa_township",
+      "cousub",
+      "1909992871",
+      "Mariposa township"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact named legal township matches existing Census2025 whole-cousub registry. Native Census2025 place/cousub comparison found no incorporated-city intersections for this township; this avoids assigning excluded city voters to a rural township measure. Comparison fingerprints and source geometry retained in companion review.",
+    "additionalGeographyEvidence": {
+      "sourcePath": "geography-source-review.json",
+      "censusCousubGeoid": "1909992871",
+      "incorporatedCityIntersections": [],
+      "comparison": "Full all-Iowa2025 Census PLACE LSAD25 polygons against this exact COUSUB polygon; both-direction vertex containment and proper edge intersections. Data-only identity check; no geometry or reader code changed."
+    }
+  },
+  {
+    "contestId": "ia-cx-2026-elk-creek-township-appointments",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:jasper/place:elk_creek_township",
+      "cousub",
+      "1909991182",
+      "Elk Creek township"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact named legal township matches existing Census2025 whole-cousub registry. Native Census2025 place/cousub comparison found no incorporated-city intersections for this township; this avoids assigning excluded city voters to a rural township measure. Comparison fingerprints and source geometry retained in companion review.",
+    "additionalGeographyEvidence": {
+      "sourcePath": "geography-source-review.json",
+      "censusCousubGeoid": "1909991182",
+      "incorporatedCityIntersections": [],
+      "comparison": "Full all-Iowa2025 Census PLACE LSAD25 polygons against this exact COUSUB polygon; both-direction vertex containment and proper edge intersections. Data-only identity check; no geometry or reader code changed."
+    }
+  }
+]

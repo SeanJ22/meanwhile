@@ -1,0 +1,246 @@
+{
+  "method": "Native Census2025 500k cartographic COUSUB and PLACE shapefile polygons/DBF read with Pythonstdlib. Incorporated city filter PLACE LSAD25. Bounding boxes, both directions even-odd vertex containment and proper edge intersections used. Touching generalized boundaries may conservatively mark possible intersections; no city absence inferred from centroid alone.",
+  "limitations": "This is comparison to the held TIGER_GENZ2025 geography, not a new election boundary. Whole-rural candidates still require exact official question and current sample verification. Any city intersection stays unresolved; no subtraction alias or custom geometry invented.",
+  "sources": [
+    {
+      "requestedUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_19_cousub_500k.zip",
+      "finalUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_19_cousub_500k.zip",
+      "httpStatus": 200,
+      "rawHash": "7cea1d700a455e0804a03546ba2b64dc95d21cb5a2cd585e72dc042c2a922c54",
+      "retrievedAt": "2026-11-03T07:27:03.384449+00:00",
+      "sourceFile": "sources/7cea1d700a455e0804a03546ba2b64dc95d21cb5a2cd585e72dc042c2a922c54.census-native.zip",
+      "nativeFormat": "ZIP"
+    },
+    {
+      "requestedUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_19_place_500k.zip",
+      "finalUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_19_place_500k.zip",
+      "httpStatus": 200,
+      "rawHash": "eaa8df4949e5dfb687b4c47b1c6f8a784935eb0572cf4fe49b137b7b6d7bbb70",
+      "retrievedAt": "2026-11-03T07:29:25.730838+00:00",
+      "sourceFile": "sources/eaa8df4949e5dfb687b4c47b1c6f8a784935eb0572cf4fe49b137b7b6d7bbb70.census-native.zip",
+      "nativeFormat": "ZIP"
+    }
+  ],
+  "townships": [
+    {
+      "township": "Independence",
+      "cousubGeoid": "1909992022",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Baxter",
+          "geoid": "1904915"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Des Moines",
+      "cousubGeoid": "1909990975",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Prairie City",
+          "geoid": "1964470"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Malaka",
+      "cousubGeoid": "1909992802",
+      "censusIncorporatedCityIntersections": [],
+      "wholeCousubCandidate": true
+    },
+    {
+      "township": "Rock Creek",
+      "cousubGeoid": "1909993672",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Oakland Acres",
+          "geoid": "1958170"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Richland",
+      "cousubGeoid": "1909993597",
+      "censusIncorporatedCityIntersections": [],
+      "wholeCousubCandidate": true
+    },
+    {
+      "township": "Hickory Grove",
+      "cousubGeoid": "1909991920",
+      "censusIncorporatedCityIntersections": [],
+      "wholeCousubCandidate": true
+    },
+    {
+      "township": "Newton",
+      "cousubGeoid": "1909993102",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Lambs Grove",
+          "geoid": "1942870"
+        },
+        {
+          "name": "Newton",
+          "geoid": "1956505"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Lynn Grove",
+      "cousubGeoid": "1909992736",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Lynnville",
+          "geoid": "1947595"
+        },
+        {
+          "name": "Sully",
+          "geoid": "1976035"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Clear Creek",
+      "cousubGeoid": "1909990711",
+      "censusIncorporatedCityIntersections": [],
+      "wholeCousubCandidate": true
+    },
+    {
+      "township": "Mariposa",
+      "cousubGeoid": "1909992871",
+      "censusIncorporatedCityIntersections": [],
+      "wholeCousubCandidate": true
+    },
+    {
+      "township": "Washington",
+      "cousubGeoid": "1909994512",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Colfax",
+          "geoid": "1915060"
+        },
+        {
+          "name": "Mitchellville",
+          "geoid": "1952950"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Sherman",
+      "cousubGeoid": "1909993861",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Colfax",
+          "geoid": "1915060"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Buena Vista",
+      "cousubGeoid": "1909990381",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Newton",
+          "geoid": "1956505"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Kellogg",
+      "cousubGeoid": "1909992301",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Kellogg",
+          "geoid": "1940440"
+        },
+        {
+          "name": "Newton",
+          "geoid": "1956505"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Mound Prairie",
+      "cousubGeoid": "1909993033",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Prairie City",
+          "geoid": "1964470"
+        },
+        {
+          "name": "Colfax",
+          "geoid": "1915060"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Poweshiek",
+      "cousubGeoid": "1909993471",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Valeria",
+          "geoid": "1980175"
+        },
+        {
+          "name": "Mingo",
+          "geoid": "1952815"
+        },
+        {
+          "name": "Colfax",
+          "geoid": "1915060"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Palo Alto",
+      "cousubGeoid": "1909993267",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Reasnor",
+          "geoid": "1965955"
+        },
+        {
+          "name": "Newton",
+          "geoid": "1956505"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Fairview",
+      "cousubGeoid": "1909991293",
+      "censusIncorporatedCityIntersections": [
+        {
+          "name": "Monroe",
+          "geoid": "1953355"
+        }
+      ],
+      "wholeCousubCandidate": false
+    },
+    {
+      "township": "Elk Creek",
+      "cousubGeoid": "1909991182",
+      "censusIncorporatedCityIntersections": [],
+      "wholeCousubCandidate": true
+    }
+  ],
+  "preparedTownships": [
+    "Malaka",
+    "Richland",
+    "Hickory Grove",
+    "Clear Creek",
+    "Mariposa",
+    "Elk Creek"
+  ],
+  "extractorScriptScope": "Pythonstdlib DBF/SHP parser; full all-Iowa incorporated PLACE polygons, LSAD25; both-direction vertex containment and proper segment intersections, after bbox filtering. Not centroid-only."
+}

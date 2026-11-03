@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://jaspercountyelections.iowa.gov/elections/info/november_3rd_general_election_2026_11_03",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T07:20:28.552292+00:00",
+  "sourceFile": "sources/008a23876fe1f1085a8061232293ceab11a124f9822d6b9c07a422caf2bbd360.official-index.html",
+  "originalSha256": "008a23876fe1f1085a8061232293ceab11a124f9822d6b9c07a422caf2bbd360",
+  "archivedSha256": "008a23876fe1f1085a8061232293ceab11a124f9822d6b9c07a422caf2bbd360",
+  "advertisedSampleStyles": 48,
+  "nativeSamplesRecovered": 48,
+  "completeFieldVerificationScope": "All48 page2 images machine-scanned; the six ordinary-row appointment fields independently visually checked against saved bounded native crops. No claim that every unprepared field has passed full native visual review.",
+  "preparedHere": 6,
+  "sourceInventoryLimit": "19distinct township appointment questions across25rural sample appearances;13city-overlapping township geographies held. PCM LL school is separately prepared. No separate certified exhaustive Jasper or Iowa local denominator claimed."
+}

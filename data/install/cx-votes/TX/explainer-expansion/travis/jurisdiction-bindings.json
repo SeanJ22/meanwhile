@@ -1,0 +1,327 @@
+[
+  {
+    "contestId": "tx-cx-2026-elgin-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:elgin",
+      "place",
+      "4823044",
+      "Elgin city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Elgin Proposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:manor",
+      "place",
+      "4846440",
+      "Manor city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Manor Proposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-b",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:manor",
+      "place",
+      "4846440",
+      "Manor city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Manor Proposition B",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-c",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:manor",
+      "place",
+      "4846440",
+      "Manor city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Manor Proposition C",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-d",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:manor",
+      "place",
+      "4846440",
+      "Manor city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Manor Proposition D",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-b",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition B",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-c",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition C",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-d",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition D",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-e",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition E",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-f",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition F",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-g",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition G",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-h",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition H",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-i",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition I",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-j",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition J",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-k",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition K",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-l",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition L",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-m",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition M",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-n",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:pflugerville",
+      "place",
+      "4857176",
+      "Pflugerville city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "City of Pflugerville Proposition N",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-coupland-isd-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/school_district:coupland_independent_school_district",
+      "unsd",
+      "4815420",
+      "Coupland Independent School District"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "Coupland ISD\nProposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-del-valle-isd-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district",
+      "unsd",
+      "4816620",
+      "Del Valle Independent School District"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "Del Valle ISD Proposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-leander-isd-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "unsd",
+      "4827030",
+      "Leander Independent School District"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "Leander ISD Proposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-round-rock-isd-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "unsd",
+      "4838080",
+      "Round Rock Independent School District"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "Round Rock Independent School\nDistrict Proposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-manor-isd-proposition-a",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/school_district:manor_independent_school_district",
+      "unsd",
+      "4828890",
+      "Manor Independent School District"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "Manor ISD Proposition A",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  },
+  {
+    "contestId": "tx-cx-2026-manor-isd-proposition-b",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/school_district:manor_independent_school_district",
+      "unsd",
+      "4828890",
+      "Manor Independent School District"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "sourceIdentityHeading": "Manor ISD Proposition B",
+    "matchingRule": "Exact city or named independent school district; full registered division rather than Travis County subset. No unrelated special-district or proposed annexation geography substituted."
+  }
+]

@@ -1,0 +1,732 @@
+[
+  {
+    "contestId": "tx-cx-2026-elgin-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "The legal sale of all alcoholic\nbeverages including mixed\nbeverages.",
+    "fields": {
+      "whatItDoes": [
+        "The legal sale of all alcoholic\nbeverages including mixed\nbeverages."
+      ],
+      "yesMeans": [
+        "The legal sale of all alcoholic\nbeverages including mixed\nbeverages."
+      ],
+      "noMeans": [
+        "The legal sale of all alcoholic\nbeverages including mixed\nbeverages."
+      ]
+    },
+    "printedPage": 4,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "No claim that all alcohol sales are currently prohibited; existing sales categories are not inferred."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall Section 1.05 of the City\nCharter be amended to reorganize\nthe existing list of the City's\nparticular powers into separate\nprovisions for clarity, without\nsubstantively changing or\nexpanding those powers?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 1.05 of the City\nCharter be amended to reorganize\nthe existing list of the City's\nparticular powers into separate\nprovisions for clarity, without\nsubstantively changing or\nexpanding those powers?"
+      ],
+      "yesMeans": [
+        "Shall Section 1.05 of the City\nCharter be amended to reorganize\nthe existing list of the City's\nparticular powers into separate\nprovisions for clarity, without\nsubstantively changing or\nexpanding those powers?"
+      ],
+      "noMeans": [
+        "Shall Section 1.05 of the City\nCharter be amended to reorganize\nthe existing list of the City's\nparticular powers into separate\nprovisions for clarity, without\nsubstantively changing or\nexpanding those powers?"
+      ]
+    },
+    "printedPage": 4,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-b",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall Section 1.07 of the City\nCharter be amended to revise the\nCity's annexation and disannexation\nauthority and procedures to require\ncompliance with applicable state\nlaw, clarify the rights and obligations\nof residents and property within\nannexed territory, and require\npayment of City taxes and\nassessments owed before\ndisannexation?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 1.07 of the City\nCharter be amended to revise the\nCity's annexation and disannexation\nauthority and procedures to require\ncompliance with applicable state\nlaw, clarify the rights and obligations\nof residents and property within\nannexed territory, and require\npayment of City taxes and\nassessments owed before\ndisannexation?"
+      ],
+      "yesMeans": [
+        "Shall Section 1.07 of the City\nCharter be amended to revise the\nCity's annexation and disannexation\nauthority and procedures to require\ncompliance with applicable state\nlaw, clarify the rights and obligations\nof residents and property within\nannexed territory, and require\npayment of City taxes and\nassessments owed before\ndisannexation?"
+      ],
+      "noMeans": [
+        "Shall Section 1.07 of the City\nCharter be amended to revise the\nCity's annexation and disannexation\nauthority and procedures to require\ncompliance with applicable state\nlaw, clarify the rights and obligations\nof residents and property within\nannexed territory, and require\npayment of City taxes and\nassessments owed before\ndisannexation?"
+      ]
+    },
+    "printedPage": 4,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-c",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall Section 7.01(i) of the City\nCharter be amended to correct the\nword “insure” to “ensure”?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 7.01(i) of the City\nCharter be amended to correct the\nword “insure” to “ensure”?"
+      ],
+      "yesMeans": [
+        "Shall Section 7.01(i) of the City\nCharter be amended to correct the\nword “insure” to “ensure”?"
+      ],
+      "noMeans": [
+        "Shall Section 7.01(i) of the City\nCharter be amended to correct the\nword “insure” to “ensure”?"
+      ]
+    },
+    "printedPage": 4,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-manor-proposition-d",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall Section 10.11 of the City\nCharter be amended to repeal the\nestablishment and requirement for\nCommunity Committees?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 10.11 of the City\nCharter be amended to repeal the\nestablishment and requirement for\nCommunity Committees?"
+      ],
+      "yesMeans": [
+        "Shall Section 10.11 of the City\nCharter be amended to repeal the\nestablishment and requirement for\nCommunity Committees?"
+      ],
+      "noMeans": [
+        "Shall Section 10.11 of the City\nCharter be amended to repeal the\nestablishment and requirement for\nCommunity Committees?"
+      ]
+    },
+    "printedPage": 5,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to authorize\nmonthly compensation for members\nof the City Council in the amount of\nseven hundred fifty dollars\n($750.00) per month for the Mayor\nand five hundred dollars ($500.00)\nper month for Council Members?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to authorize\nmonthly compensation for members\nof the City Council in the amount of\nseven hundred fifty dollars\n($750.00) per month for the Mayor\nand five hundred dollars ($500.00)\nper month for Council Members?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to authorize\nmonthly compensation for members\nof the City Council in the amount of\nseven hundred fifty dollars\n($750.00) per month for the Mayor\nand five hundred dollars ($500.00)\nper month for Council Members?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to authorize\nmonthly compensation for members\nof the City Council in the amount of\nseven hundred fifty dollars\n($750.00) per month for the Mayor\nand five hundred dollars ($500.00)\nper month for Council Members?"
+      ]
+    },
+    "printedPage": 5,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-b",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to add a new\nsection requiring the City Council to\nadopt protections governing the\ncollection, use, retention, and\noversight of data, facial recognition,\nand surveillance technologies, to\nestablish transparent approval\nprocesses for such technologies,\nand to require a responsible artificial\nintelligence framework?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to add a new\nsection requiring the City Council to\nadopt protections governing the\ncollection, use, retention, and\noversight of data, facial recognition,\nand surveillance technologies, to\nestablish transparent approval\nprocesses for such technologies,\nand to require a responsible artificial\nintelligence framework?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to add a new\nsection requiring the City Council to\nadopt protections governing the\ncollection, use, retention, and\noversight of data, facial recognition,\nand surveillance technologies, to\nestablish transparent approval\nprocesses for such technologies,\nand to require a responsible artificial\nintelligence framework?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to add a new\nsection requiring the City Council to\nadopt protections governing the\ncollection, use, retention, and\noversight of data, facial recognition,\nand surveillance technologies, to\nestablish transparent approval\nprocesses for such technologies,\nand to require a responsible artificial\nintelligence framework?"
+      ]
+    },
+    "printedPage": 5,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-c",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to revise the\nprocedures for adopting ordinances,\nincluding eliminating the\nrequirement that a proposed\nordinance be read at two Council\nmeetings and instead requiring an\nadditional reading only when the\nCity Council determines that an\namendment substantively changes\nthe ordinance, and revising related\nnotice and public-availability\nprocedures?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise the\nprocedures for adopting ordinances,\nincluding eliminating the\nrequirement that a proposed\nordinance be read at two Council\nmeetings and instead requiring an\nadditional reading only when the\nCity Council determines that an\namendment substantively changes\nthe ordinance, and revising related\nnotice and public-availability\nprocedures?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise the\nprocedures for adopting ordinances,\nincluding eliminating the\nrequirement that a proposed\nordinance be read at two Council\nmeetings and instead requiring an\nadditional reading only when the\nCity Council determines that an\namendment substantively changes\nthe ordinance, and revising related\nnotice and public-availability\nprocedures?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise the\nprocedures for adopting ordinances,\nincluding eliminating the\nrequirement that a proposed\nordinance be read at two Council\nmeetings and instead requiring an\nadditional reading only when the\nCity Council determines that an\namendment substantively changes\nthe ordinance, and revising related\nnotice and public-availability\nprocedures?"
+      ]
+    },
+    "printedPage": 5,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-d",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to lower, from\nfifteen percent (15%) to ten percent\n(10%), the percentage of qualified\nvoters required to sign a petition for\nan initiative, referendum, or\nnonbinding referendum?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to lower, from\nfifteen percent (15%) to ten percent\n(10%), the percentage of qualified\nvoters required to sign a petition for\nan initiative, referendum, or\nnonbinding referendum?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to lower, from\nfifteen percent (15%) to ten percent\n(10%), the percentage of qualified\nvoters required to sign a petition for\nan initiative, referendum, or\nnonbinding referendum?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to lower, from\nfifteen percent (15%) to ten percent\n(10%), the percentage of qualified\nvoters required to sign a petition for\nan initiative, referendum, or\nnonbinding referendum?"
+      ]
+    },
+    "printedPage": 5,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-e",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to revise City\nCouncil meeting and agenda\nprocedures, including requiring that\nan item submitted by a Council\nMember with the support of a\nsecond Council Member be placed\non an agenda within sixty (60) days,\nrequiring the Mayor to include such\nitems on the agenda, and clarifying\nthe Council's meetings requirements\nwith City-created boards and\ncommissions?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise City\nCouncil meeting and agenda\nprocedures, including requiring that\nan item submitted by a Council\nMember with the support of a\nsecond Council Member be placed\non an agenda within sixty (60) days,\nrequiring the Mayor to include such\nitems on the agenda, and clarifying\nthe Council's meetings requirements\nwith City-created boards and\ncommissions?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise City\nCouncil meeting and agenda\nprocedures, including requiring that\nan item submitted by a Council\nMember with the support of a\nsecond Council Member be placed\non an agenda within sixty (60) days,\nrequiring the Mayor to include such\nitems on the agenda, and clarifying\nthe Council's meetings requirements\nwith City-created boards and\ncommissions?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise City\nCouncil meeting and agenda\nprocedures, including requiring that\nan item submitted by a Council\nMember with the support of a\nsecond Council Member be placed\non an agenda within sixty (60) days,\nrequiring the Mayor to include such\nitems on the agenda, and clarifying\nthe Council's meetings requirements\nwith City-created boards and\ncommissions?"
+      ]
+    },
+    "printedPage": 5,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-f",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to provide that\nvoter petition requirements be\ncompleted in compliance with state\nlaw and extending, from two (2)\nweeks to four (4) weeks, the\ndeadline to file a supplementary\npetition after a petition is certified\ninsufficient?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to provide that\nvoter petition requirements be\ncompleted in compliance with state\nlaw and extending, from two (2)\nweeks to four (4) weeks, the\ndeadline to file a supplementary\npetition after a petition is certified\ninsufficient?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to provide that\nvoter petition requirements be\ncompleted in compliance with state\nlaw and extending, from two (2)\nweeks to four (4) weeks, the\ndeadline to file a supplementary\npetition after a petition is certified\ninsufficient?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to provide that\nvoter petition requirements be\ncompleted in compliance with state\nlaw and extending, from two (2)\nweeks to four (4) weeks, the\ndeadline to file a supplementary\npetition after a petition is certified\ninsufficient?"
+      ]
+    },
+    "printedPage": 5,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-g",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to revise the\nrequirements governing the\ndevelopment and content of the\nCitys annual budget, including\nrequiring that the City Manager\nprepare and present the budget in\naccordance with Government\nFinance Officers Association budget\n-award guidelines, requiring\ncomparative budget information and\na five-year financial forecast, and to\nadd a new charter section requiring\na publicly accessible reporting\nsystem and final close-out reports\nfor major capital projects?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise the\nrequirements governing the\ndevelopment and content of the\nCitys annual budget, including\nrequiring that the City Manager\nprepare and present the budget in\naccordance with Government\nFinance Officers Association budget\n-award guidelines, requiring\ncomparative budget information and\na five-year financial forecast, and to\nadd a new charter section requiring\na publicly accessible reporting\nsystem and final close-out reports\nfor major capital projects?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise the\nrequirements governing the\ndevelopment and content of the\nCitys annual budget, including\nrequiring that the City Manager\nprepare and present the budget in\naccordance with Government\nFinance Officers Association budget\n-award guidelines, requiring\ncomparative budget information and\na five-year financial forecast, and to\nadd a new charter section requiring\na publicly accessible reporting\nsystem and final close-out reports\nfor major capital projects?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to revise the\nrequirements governing the\ndevelopment and content of the\nCitys annual budget, including\nrequiring that the City Manager\nprepare and present the budget in\naccordance with Government\nFinance Officers Association budget\n-award guidelines, requiring\ncomparative budget information and\na five-year financial forecast, and to\nadd a new charter section requiring\na publicly accessible reporting\nsystem and final close-out reports\nfor major capital projects?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-h",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to authorize\nthe mayor alone to excuse the City\nManager from attending a meeting?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to authorize\nthe mayor alone to excuse the City\nManager from attending a meeting?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to authorize\nthe mayor alone to excuse the City\nManager from attending a meeting?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to authorize\nthe mayor alone to excuse the City\nManager from attending a meeting?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-i",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to allow City\nCouncil to appoint residents of the\ncity's ETJ as non-voting advisory\nparticipants on city boards and\ncommissions?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to allow City\nCouncil to appoint residents of the\ncity's ETJ as non-voting advisory\nparticipants on city boards and\ncommissions?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to allow City\nCouncil to appoint residents of the\ncity's ETJ as non-voting advisory\nparticipants on city boards and\ncommissions?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to allow City\nCouncil to appoint residents of the\ncity's ETJ as non-voting advisory\nparticipants on city boards and\ncommissions?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-j",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to provide that\nthe Mayor and City Council set the\nstrategic direction and general\npolicy framework of the City?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to provide that\nthe Mayor and City Council set the\nstrategic direction and general\npolicy framework of the City?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to provide that\nthe Mayor and City Council set the\nstrategic direction and general\npolicy framework of the City?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to provide that\nthe Mayor and City Council set the\nstrategic direction and general\npolicy framework of the City?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-k",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City Charter be amended\nto allow public comment during\nremoval proceedings without\nrequiring City Council approval?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City Charter be amended\nto allow public comment during\nremoval proceedings without\nrequiring City Council approval?"
+      ],
+      "yesMeans": [
+        "Shall the City Charter be amended\nto allow public comment during\nremoval proceedings without\nrequiring City Council approval?"
+      ],
+      "noMeans": [
+        "Shall the City Charter be amended\nto allow public comment during\nremoval proceedings without\nrequiring City Council approval?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-l",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to remove the\nrequirement that the Municipal\nCourt Judge reside within the City?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to remove the\nrequirement that the Municipal\nCourt Judge reside within the City?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to remove the\nrequirement that the Municipal\nCourt Judge reside within the City?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to remove the\nrequirement that the Municipal\nCourt Judge reside within the City?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-m",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to add a new\nSection 11.05 specifying how the\npublic may participate in City\nCouncil meetings, including the\nsubmission of written comments on\nagenda items and participation by\nremote communication to the extent\npermitted by state law?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to add a new\nSection 11.05 specifying how the\npublic may participate in City\nCouncil meetings, including the\nsubmission of written comments on\nagenda items and participation by\nremote communication to the extent\npermitted by state law?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to add a new\nSection 11.05 specifying how the\npublic may participate in City\nCouncil meetings, including the\nsubmission of written comments on\nagenda items and participation by\nremote communication to the extent\npermitted by state law?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to add a new\nSection 11.05 specifying how the\npublic may participate in City\nCouncil meetings, including the\nsubmission of written comments on\nagenda items and participation by\nremote communication to the extent\npermitted by state law?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-pflugerville-proposition-n",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City of Pflugerville City\nCharter be amended to make non-\nsubstantive technical and\nconforming corrections, including\nstandardizing capitalization\nthroughout the Charter; adopting\nlanguage conforming with state law,\nand amending or deleting language\nthat is unnecessary or duplicative of\nstate law?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Pflugerville City\nCharter be amended to make non-\nsubstantive technical and\nconforming corrections, including\nstandardizing capitalization\nthroughout the Charter; adopting\nlanguage conforming with state law,\nand amending or deleting language\nthat is unnecessary or duplicative of\nstate law?"
+      ],
+      "yesMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to make non-\nsubstantive technical and\nconforming corrections, including\nstandardizing capitalization\nthroughout the Charter; adopting\nlanguage conforming with state law,\nand amending or deleting language\nthat is unnecessary or duplicative of\nstate law?"
+      ],
+      "noMeans": [
+        "Shall the City of Pflugerville City\nCharter be amended to make non-\nsubstantive technical and\nconforming corrections, including\nstandardizing capitalization\nthroughout the Charter; adopting\nlanguage conforming with state law,\nand amending or deleting language\nthat is unnecessary or duplicative of\nstate law?"
+      ]
+    },
+    "printedPage": 6,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "FOR approves the stated charter amendment; AGAINST does not adopt it. Conditions and exceptions remain in plain explanation."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-coupland-isd-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "THIS IS A TAX INCREASE.\nRatifying the Ad Valorem tax rate of\n$1.192200 in Coupland\nIndependent School District for the\ncurrent year, a rate that will result in\nan increase of 4.14% percent in\nMaintenance and Operations tax\nrevenue for the district for the\ncurrent year as compared to the\npreceding year, which is an\nadditional $86,933.",
+    "fields": {
+      "whatItDoes": [
+        "THIS IS A TAX INCREASE.\nRatifying the Ad Valorem tax rate of\n$1.192200 in Coupland\nIndependent School District for the\ncurrent year, a rate that will result in\nan increase of 4.14% percent in\nMaintenance and Operations tax\nrevenue for the district for the\ncurrent year as compared to the\npreceding year, which is an\nadditional $86,933."
+      ],
+      "yesMeans": [
+        "THIS IS A TAX INCREASE.\nRatifying the Ad Valorem tax rate of\n$1.192200 in Coupland\nIndependent School District for the\ncurrent year, a rate that will result in\nan increase of 4.14% percent in\nMaintenance and Operations tax\nrevenue for the district for the\ncurrent year as compared to the\npreceding year, which is an\nadditional $86,933."
+      ],
+      "noMeans": [
+        "THIS IS A TAX INCREASE.\nRatifying the Ad Valorem tax rate of\n$1.192200 in Coupland\nIndependent School District for the\ncurrent year, a rate that will result in\nan increase of 4.14% percent in\nMaintenance and Operations tax\nrevenue for the district for the\ncurrent year as compared to the\npreceding year, which is an\nadditional $86,933."
+      ]
+    },
+    "printedPage": 7,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "Districtwide maintenance-and-operations revenue increase is not presented as the change in every homeowner’s tax bill.",
+      "Current-year wording retained; no assumed renewal term or sunset.",
+      "Coupland operative source does not state the valuation denominator; no per-$100 unit is inferred."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-del-valle-isd-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.0328 per $100 valuation in Del\nValle Independent School District\nfor the current year, a rate that will\nresult in an increase of 19.5%\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $20,038,349.",
+    "fields": {
+      "whatItDoes": [
+        "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.0328 per $100 valuation in Del\nValle Independent School District\nfor the current year, a rate that will\nresult in an increase of 19.5%\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $20,038,349."
+      ],
+      "yesMeans": [
+        "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.0328 per $100 valuation in Del\nValle Independent School District\nfor the current year, a rate that will\nresult in an increase of 19.5%\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $20,038,349."
+      ],
+      "noMeans": [
+        "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.0328 per $100 valuation in Del\nValle Independent School District\nfor the current year, a rate that will\nresult in an increase of 19.5%\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $20,038,349."
+      ]
+    },
+    "printedPage": 8,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "Districtwide maintenance-and-operations revenue increase is not presented as the change in every homeowner’s tax bill.",
+      "Current-year wording retained; no assumed renewal term or sunset."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-leander-isd-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.1169 per $100 valuation in\nLeander Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.72\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,066,324.",
+    "fields": {
+      "whatItDoes": [
+        "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.1169 per $100 valuation in\nLeander Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.72\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,066,324."
+      ],
+      "yesMeans": [
+        "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.1169 per $100 valuation in\nLeander Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.72\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,066,324."
+      ],
+      "noMeans": [
+        "THIS IS A TAX INCREASE.\nRatifying the ad valorem tax rate of\n$1.1169 per $100 valuation in\nLeander Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.72\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,066,324."
+      ]
+    },
+    "printedPage": 8,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "Districtwide maintenance-and-operations revenue increase is not presented as the change in every homeowner’s tax bill.",
+      "Current-year wording retained; no assumed renewal term or sunset."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-round-rock-isd-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "THIS IS A TAX INCREASE\nRatifying the ad valorem tax rate of\n$0.9484 per $100 valuation in\nRound Rock Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.09\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,313,099.",
+    "fields": {
+      "whatItDoes": [
+        "THIS IS A TAX INCREASE\nRatifying the ad valorem tax rate of\n$0.9484 per $100 valuation in\nRound Rock Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.09\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,313,099."
+      ],
+      "yesMeans": [
+        "THIS IS A TAX INCREASE\nRatifying the ad valorem tax rate of\n$0.9484 per $100 valuation in\nRound Rock Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.09\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,313,099."
+      ],
+      "noMeans": [
+        "THIS IS A TAX INCREASE\nRatifying the ad valorem tax rate of\n$0.9484 per $100 valuation in\nRound Rock Independent School\nDistrict for the current year, a rate\nthat will result in an increase of 3.09\npercent in maintenance and\noperations tax revenue for the\nDistrict for the current year as\ncompared to the preceding year,\nwhich is an additional $12,313,099."
+      ]
+    },
+    "printedPage": 9,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "Districtwide maintenance-and-operations revenue increase is not presented as the change in every homeowner’s tax bill.",
+      "Current-year wording retained; no assumed renewal term or sunset."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-manor-isd-proposition-a",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $391,500,000 for\n(1) school facilities, including\ncampus renovations and district-\nwide safety and security upgrades,\nand (2) buses, and the levy of taxes\nsufficient to pay the principal of and\ninterest on the bonds.",
+    "fields": {
+      "whatItDoes": [
+        "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $391,500,000 for\n(1) school facilities, including\ncampus renovations and district-\nwide safety and security upgrades,\nand (2) buses, and the levy of taxes\nsufficient to pay the principal of and\ninterest on the bonds."
+      ],
+      "yesMeans": [
+        "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $391,500,000 for\n(1) school facilities, including\ncampus renovations and district-\nwide safety and security upgrades,\nand (2) buses, and the levy of taxes\nsufficient to pay the principal of and\ninterest on the bonds."
+      ],
+      "noMeans": [
+        "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $391,500,000 for\n(1) school facilities, including\ncampus renovations and district-\nwide safety and security upgrades,\nand (2) buses, and the levy of taxes\nsufficient to pay the principal of and\ninterest on the bonds."
+      ]
+    },
+    "printedPage": 8,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "Bond principal and tax authorization are distinguished. No debt term, interest total or household tax estimate invented."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-cx-2026-manor-isd-proposition-b",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $8,500,000 for\nschool technology improvements\nand the levy of taxes sufficient to\npay the principal of and interest on\nthe bonds.",
+    "fields": {
+      "whatItDoes": [
+        "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $8,500,000 for\nschool technology improvements\nand the levy of taxes sufficient to\npay the principal of and interest on\nthe bonds."
+      ],
+      "yesMeans": [
+        "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $8,500,000 for\nschool technology improvements\nand the levy of taxes sufficient to\npay the principal of and interest on\nthe bonds."
+      ],
+      "noMeans": [
+        "THIS IS A PROPERTY TAX\nINCREASE; the issuance of bonds\nin the amount of $8,500,000 for\nschool technology improvements\nand the levy of taxes sufficient to\npay the principal of and interest on\nthe bonds."
+      ]
+    },
+    "printedPage": 8,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "Bond principal and tax authorization are distinguished. No debt term, interest total or household tax estimate invented."
+    ],
+    "extraction": "pdftotext -raw on all18nativepages. Each field begins at exact English Proposition label and ends before corresponding Spanish heading; complete English operative wording retained.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

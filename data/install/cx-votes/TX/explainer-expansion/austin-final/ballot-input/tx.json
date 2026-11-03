@@ -1,0 +1,270 @@
+{
+  "ballots": {
+    "TX:tx-2026-11-03-general": {
+      "election": {
+        "id": "tx-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 November General Election",
+        "state": "TX"
+      },
+      "contests": [
+        {
+          "id": "tx-ba01-2026-austin-proposition-i",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:austin",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "City of Austin Proposition I — Affordability and efficiency reviews",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:48:22.916693+00:00",
+            "quote": "Shall the City Charter be amended\nto require an Independent\nAffordability and Efficiency Initiative\non a regular basis and before any\ntax rate increase election and\nrequiring the independent contractor\nto identify annual and multi-year\nsavings that exceed the cost of the\ncontractor’s service?"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-j",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:austin",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "City of Austin Proposition J — Technical charter corrections",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:48:22.916693+00:00",
+            "quote": "Shall the City Charter be amended\nto make non-substantive corrections\nof typographical errors, punctuation,\nand sentence structure, and to\nchange or remove language that is\nmoot or unenforceable because it\nhas been superseded by state law\nor by a final court order?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "tx-ba01-2026-austin-proposition-i:measure",
+          "contestId": "tx-ba01-2026-austin-proposition-i",
+          "officialNumber": "Proposition I",
+          "questionText": "Shall the City Charter be amended\nto require an Independent\nAffordability and Efficiency Initiative\non a regular basis and before any\ntax rate increase election and\nrequiring the independent contractor\nto identify annual and multi-year\nsavings that exceed the cost of the\ncontractor’s service?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:48:22.916693+00:00",
+            "quote": "Shall the City Charter be amended\nto require an Independent\nAffordability and Efficiency Initiative\non a regular basis and before any\ntax rate increase election and\nrequiring the independent contractor\nto identify annual and multi-year\nsavings that exceed the cost of the\ncontractor’s service?"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-j:measure",
+          "contestId": "tx-ba01-2026-austin-proposition-j",
+          "officialNumber": "Proposition J",
+          "questionText": "Shall the City Charter be amended\nto make non-substantive corrections\nof typographical errors, punctuation,\nand sentence structure, and to\nchange or remove language that is\nmoot or unenforceable because it\nhas been superseded by state law\nor by a final court order?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+            "sourceOrg": "Travis County Clerk",
+            "collectedAt": "2026-10-20T23:05:12.035Z",
+            "verifiedAt": "2026-11-03T04:48:22.916693+00:00",
+            "quote": "Shall the City Charter be amended\nto make non-substantive corrections\nof typographical errors, punctuation,\nand sentence structure, and to\nchange or remove language that is\nmoot or unenforceable because it\nhas been superseded by state law\nor by a final court order?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "tx-ba01-2026-austin-proposition-i",
+          "whatItDoes": "Requires an Independent Affordability and Efficiency Initiative regularly and before any tax-rate-increase election. The independent contractor must identify annual and multi-year savings exceeding the cost of its services.",
+          "yesMeans": "Adopt the review and savings-identification requirements.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "0fd2be3b7d31d8595410ea54f274ad9a5222c3918b1494057eed7791db65c253",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:48:22.916693+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "tx-ba01-2026-austin-proposition-j",
+          "whatItDoes": "Makes nonsubstantive corrections to typographical errors, punctuation and sentence structure, and changes or removes language that is moot or unenforceable because state law or a final court order has superseded it.",
+          "yesMeans": "Adopt the proposed technical and conforming changes.",
+          "noMeans": "Do not adopt this charter amendment.",
+          "parts": [],
+          "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+          "sourceHash": "5764a510854ac04fc6ad6b6fa7d3b824ba196d44827b7286e56bc87a07c827d7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T04:48:22.916693+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:48:22.916693+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/index.shtml",
+        "finalUrl": "https://www.sos.state.tx.us/elections/index.shtml",
+        "httpStatus": 200,
+        "rawHash": "d14d618b2638928d9595bd9df98420693aac017af91ef548c810918bbb4e24f2",
+        "retrievedAt": "2026-10-14T05:04:37.506177Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+        "finalUrl": "https://www.sos.state.tx.us/elections/laws/2026-november-general-election.shtml",
+        "httpStatus": 200,
+        "rawHash": "9dbcab4cb3f5b0a488524c7f252ceebe36523efedf79dfaa2cb789fe0bfdb1ac",
+        "retrievedAt": "2026-10-14T05:05:05.416381Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+        "retrievedAt": "2026-10-14T05:06:23.519615+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+        "retrievedAt": "2026-10-14T05:06:21.480230+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "All17 names in this exact declared-write-in certification are now held:14core, DallasDA, Judge276 and DA31. The31st numeral was checked directly against the saved PDF image and corroborated by the Governor's exact office/county statement. Later certification updates remain standing acquisition work."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-sample-ballot.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-sample-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "01ac33580fb4359f8613ada4d62e40885221291bedb8fd84a0c1cbc4d811930d",
+        "retrievedAt": "2026-10-14T05:06:20.805752+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewedEvidence": "Official election-office source downloaded and converted locally."
+      },
+      {
+        "requestedUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/SD22_Ballot-Certification-final.pdf",
+        "finalUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/SD22_Ballot-Certification-final.pdf",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:08:10.043Z",
+        "rawHash": "33bd44264f6f2f464dc8a20dfc7cc289cfc9ea4de0bf64cb62034c565f712401",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official candidate certification or sample ballot; source columns and all candidate fields replayed by scripts/ba01-tx-ca.py."
+      },
+      {
+        "requestedUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/HD93_Ballot-Certification-final.pdf",
+        "finalUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/notices/ballot_certification/HD93_Ballot-Certification-final.pdf",
+        "publisher": "Texas Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:08:10.212Z",
+        "rawHash": "41b936baf732adfe4e73f076e0ae35325ac9f20d15288c45668f2343cde02f79",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official candidate certification or sample ballot; source columns and all candidate fields replayed by scripts/ba01-tx-ca.py."
+      },
+      {
+        "requestedUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "finalUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "publisher": "Travis County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-20T23:05:12.035Z",
+        "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official candidate certification or sample ballot; source columns and all candidate fields replayed by scripts/ba01-tx-ca.py."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+        "retrievedAt": "2026-10-20T22:52:30.537Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "All 254 county sections replayed from the final certification; only explicitly countywide offices imported by scripts/ba01-tx-counties.py."
+      },
+      {
+        "requestedUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+        "httpStatus": 200,
+        "rawHash": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+        "retrievedAt": "2026-10-20T23:31:05.471162+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Texas Secretary of State",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "All17 names in this exact declared-write-in certification are now held:14core, DallasDA, Judge276 and DA31. The31st numeral was checked directly against the saved PDF image and corroborated by the Governor's exact office/county statement. Later certification updates remain standing acquisition work."
+      },
+      {
+        "requestedUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "finalUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:17:59.902777+00:00",
+        "rawHash": "b3f78d947f068c3cc9c82ff175fb5912f9f84d1123cb3c42e0272283f4524218",
+        "publisher": "Texas Office of Court Administration",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact October 2026 court jurisdiction map PDF; all254 county entries replayed from page2. Imported district electorates agree with every county section in the official candidate certification. District274 remains an explicit conflict."
+      },
+      {
+        "requestedUrl": "https://capitol.texas.gov/tlodocs/892/billtext/html/HB00016F.htm",
+        "finalUrl": "https://capitol.texas.gov/tlodocs/892/billtext/html/HB00016F.htm",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:26:08.577555+00:00",
+        "rawHash": "4d395eb3150b3167efaffeee0998b8e7667c127a908507da58ff9b13cceb9071",
+        "publisher": "Texas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact official source bytes replayed by ba01-tx-district-courts.py. October court map covers254 counties. HB16 section1.06 and signed history resolve district274's obsolete Guadalupe certification entry; the losing value is retained in the comparison report."
+      },
+      {
+        "requestedUrl": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=892&Bill=HB16",
+        "finalUrl": "https://capitol.texas.gov/BillLookup/History.aspx?LegSess=892&Bill=HB16",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:24:49.314200+00:00",
+        "rawHash": "007725e2454e0f57b6ed4a5b1f51134d309b357ac129033318bf725cbaaaafb0",
+        "publisher": "Texas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Exact official source bytes replayed by ba01-tx-district-courts.py. October court map covers254 counties. HB16 section1.06 and signed history resolve district274's obsolete Guadalupe certification entry; the losing value is retained in the comparison report."
+      },
+      {
+        "requestedUrl": "https://gov.texas.gov/news/post/governor-abbott-appoints-timmons-as-district-attorney-of-the-31st-judicial-district-in-gray-hemphill-lipscomb-roberts-and-wheeler-counties",
+        "finalUrl": "https://gov.texas.gov/news/post/governor-abbott-appoints-timmons-as-district-attorney-of-the-31st-judicial-district-in-gray-hemphill-lipscomb-roberts-and-wheeler-counties",
+        "httpStatus": 200,
+        "rawHash": "faad2a76a78d056ebf54a0cdb6d0c2d53ed67f27acd69519e0ad8dc7e0d36456",
+        "retrievedAt": "2026-10-21T00:24:54.434109+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "publisher": "Office of the Texas Governor",
+        "reviewedEvidence": "Exact Governor appointment announcement explicitly confirms LeslieTimmons, DistrictAttorney31, thefive counties, and a term expiring December31,2026. It corroborates the certified write-in office's visually reviewed numeral."
+      },
+      {
+        "requestedUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "finalUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+        "httpStatus": 200,
+        "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+        "retrievedAt": "2026-10-20T23:05:12.035Z",
+        "publisher": "Travis County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native18page official Travis Nov3,2026 master ballot. Austin8previouslyheld are A–H; fullnativepage4 includes missingI/J. English full operative questions independently read. JSpanishheading mislabelsI; preserved in semanticConditions and not used to relabel EnglishJ. New2 complete explanations only; no unrelated facts changed."
+      }
+    ]
+  }
+}

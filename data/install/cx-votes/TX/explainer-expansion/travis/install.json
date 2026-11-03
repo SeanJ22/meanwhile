@@ -1,0 +1,190 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "TX",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "tx-cx-2026-elgin-proposition-a",
+      "title": "Elgin Proposition A — Alcoholic beverage sales",
+      "ocdId": "ocd-division/country:us/state:tx/place:elgin",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-manor-proposition-a",
+      "title": "Manor Proposition A — Municipal powers",
+      "ocdId": "ocd-division/country:us/state:tx/place:manor",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-manor-proposition-b",
+      "title": "Manor Proposition B — Annexation and disannexation",
+      "ocdId": "ocd-division/country:us/state:tx/place:manor",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-manor-proposition-c",
+      "title": "Manor Proposition C — City Manager duties wording",
+      "ocdId": "ocd-division/country:us/state:tx/place:manor",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-manor-proposition-d",
+      "title": "Manor Proposition D — Community Committees",
+      "ocdId": "ocd-division/country:us/state:tx/place:manor",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-a",
+      "title": "Pflugerville Proposition A — Mayor and council compensation",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-b",
+      "title": "Pflugerville Proposition B — Data and technology safeguards",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-c",
+      "title": "Pflugerville Proposition C — Ordinance adoption procedures",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-d",
+      "title": "Pflugerville Proposition D — Petition signature threshold",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-e",
+      "title": "Pflugerville Proposition E — Council meeting agendas",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-f",
+      "title": "Pflugerville Proposition F — Supplemental petition deadline",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-g",
+      "title": "Pflugerville Proposition G — Budgets and capital-project reporting",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-h",
+      "title": "Pflugerville Proposition H — City Manager meeting attendance",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-i",
+      "title": "Pflugerville Proposition I — Advisory participants from outside city limits",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-j",
+      "title": "Pflugerville Proposition J — Strategic and policy direction",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-k",
+      "title": "Pflugerville Proposition K — Public comment in removal proceedings",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-l",
+      "title": "Pflugerville Proposition L — Municipal judge residency",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-m",
+      "title": "Pflugerville Proposition M — Public participation at council meetings",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-pflugerville-proposition-n",
+      "title": "Pflugerville Proposition N — Technical charter corrections",
+      "ocdId": "ocd-division/country:us/state:tx/place:pflugerville",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-coupland-isd-proposition-a",
+      "title": "Coupland ISD Proposition A — Tax-rate ratification",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:coupland_independent_school_district",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-del-valle-isd-proposition-a",
+      "title": "Del Valle ISD Proposition A — Tax-rate ratification",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:del_valle_independent_school_district",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-leander-isd-proposition-a",
+      "title": "Leander ISD Proposition A — Tax-rate ratification",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:leander_independent_school_district",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-round-rock-isd-proposition-a",
+      "title": "Round Rock ISD Proposition A — Tax-rate ratification",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:round_rock_independent_school_district",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-manor-isd-proposition-a",
+      "title": "Manor ISD Proposition A — Facilities and buses bonds",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:manor_independent_school_district",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    },
+    {
+      "id": "tx-cx-2026-manor-isd-proposition-b",
+      "title": "Manor ISD Proposition B — Technology bonds",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:manor_independent_school_district",
+      "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 25,
+    "newPlainLanguageExplanations": 25,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "TX",
+    "newMeasures": 25,
+    "newExplanations": 25,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

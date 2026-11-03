@@ -1,0 +1,60 @@
+[
+  {
+    "contestId": "tx-ba01-2026-austin-proposition-i",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City Charter be amended\nto require an Independent\nAffordability and Efficiency Initiative\non a regular basis and before any\ntax rate increase election and\nrequiring the independent contractor\nto identify annual and multi-year\nsavings that exceed the cost of the\ncontractor’s service?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City Charter be amended\nto require an Independent\nAffordability and Efficiency Initiative\non a regular basis and before any\ntax rate increase election and\nrequiring the independent contractor\nto identify annual and multi-year\nsavings that exceed the cost of the\ncontractor’s service?"
+      ],
+      "yesMeans": [
+        "Shall the City Charter be amended\nto require an Independent\nAffordability and Efficiency Initiative\non a regular basis and before any\ntax rate increase election and\nrequiring the independent contractor\nto identify annual and multi-year\nsavings that exceed the cost of the\ncontractor’s service?"
+      ],
+      "noMeans": [
+        "Shall the City Charter be amended\nto require an Independent\nAffordability and Efficiency Initiative\non a regular basis and before any\ntax rate increase election and\nrequiring the independent contractor\nto identify annual and multi-year\nsavings that exceed the cost of the\ncontractor’s service?"
+      ]
+    },
+    "printedPage": 4,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "Requirement is to identify savings, not a promise that those savings will be realized. No fixed regular-review interval is inferred."
+    ],
+    "extraction": "Exact English PropositionI/J heading through complete first English question mark; avoids mislabeled SpanishJcaption.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "tx-ba01-2026-austin-proposition-j",
+    "sourceUrl": "https://votetravis.gov/wp-content/uploads/G26-Bedsheet-Ballot-Corrected-Final2.pdf",
+    "rawHash": "fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea",
+    "sourceFile": "sources/fad1c5a7d794e59d23cb12f616c29c4ab3ff94571c04f61cb6aa89231babb3ea.source",
+    "sourceTextFile": "sources/a7a65c83f057e3def748d244c6703c4e6deace2e14b5541afea5d9e293026208.txt",
+    "excerpt": "Shall the City Charter be amended\nto make non-substantive corrections\nof typographical errors, punctuation,\nand sentence structure, and to\nchange or remove language that is\nmoot or unenforceable because it\nhas been superseded by state law\nor by a final court order?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City Charter be amended\nto make non-substantive corrections\nof typographical errors, punctuation,\nand sentence structure, and to\nchange or remove language that is\nmoot or unenforceable because it\nhas been superseded by state law\nor by a final court order?"
+      ],
+      "yesMeans": [
+        "Shall the City Charter be amended\nto make non-substantive corrections\nof typographical errors, punctuation,\nand sentence structure, and to\nchange or remove language that is\nmoot or unenforceable because it\nhas been superseded by state law\nor by a final court order?"
+      ],
+      "noMeans": [
+        "Shall the City Charter be amended\nto make non-substantive corrections\nof typographical errors, punctuation,\nand sentence structure, and to\nchange or remove language that is\nmoot or unenforceable because it\nhas been superseded by state law\nor by a final court order?"
+      ]
+    },
+    "printedPage": 4,
+    "ballotChoiceLabels": [
+      "FOR",
+      "AGAINST"
+    ],
+    "semanticConditions": [
+      "English operative field clearly labeled PropositionJ; corresponding Spanish heading is miscaptioned PropositionI in source. English complete question retained, caption conflict preserved here."
+    ],
+    "extraction": "Exact English PropositionI/J heading through complete first English question mark; avoids mislabeled SpanishJcaption.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "tx-ba01-2026-austin-proposition-i",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:austin",
+      "place",
+      "4805000",
+      "Austin city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "matchingRule": "Exact City of Austin identity. Full place division, not TravisCounty subset."
+  },
+  {
+    "contestId": "tx-ba01-2026-austin-proposition-j",
+    "registryDivision": [
+      "ocd-division/country:us/state:tx/place:austin",
+      "place",
+      "4805000",
+      "Austin city"
+    ],
+    "registryPath": "repository:data/derived/registration/tx.json",
+    "registryFileSha256": "70f794b8a0f29ee4cab1a1280eda9f848c38693b30ee6d9921a4155e9b431fb1",
+    "matchingRule": "Exact City of Austin identity. Full place division, not TravisCounty subset."
+  }
+]

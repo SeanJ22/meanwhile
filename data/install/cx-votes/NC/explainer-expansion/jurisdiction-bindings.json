@@ -1,0 +1,707 @@
+[
+  {
+    "contestId": "nc-sbe-2026:bladen-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:bladen",
+    "registeredDivisionIndex": 98,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:bladen",
+      "county",
+      "37017",
+      "Bladen County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:brunswick-county-school-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:brunswick",
+    "registeredDivisionIndex": 114,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:brunswick",
+      "county",
+      "37019",
+      "Brunswick County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:buncombe-county-open-space-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:buncombe",
+    "registeredDivisionIndex": 121,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:buncombe",
+      "county",
+      "37021",
+      "Buncombe County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:buncombe-county-housing-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:buncombe",
+    "registeredDivisionIndex": 121,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:buncombe",
+      "county",
+      "37021",
+      "Buncombe County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-kannapolis-parks-and-recreation-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:kannapolis",
+    "registeredDivisionIndex": 1503,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:kannapolis",
+      "place",
+      "3735200",
+      "Kannapolis city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:cabarrus-county-school-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:cabarrus",
+    "registeredDivisionIndex": 152,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:cabarrus",
+      "county",
+      "37025",
+      "Cabarrus County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:cabarrus-county-community-college-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:cabarrus",
+    "registeredDivisionIndex": 152,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:cabarrus",
+      "county",
+      "37025",
+      "Cabarrus County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:columbus-county-malt-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+    "registeredDivisionIndex": 254,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:columbus",
+      "county",
+      "37047",
+      "Columbus County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:columbus-county-unfortified-wine-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+    "registeredDivisionIndex": 254,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:columbus",
+      "county",
+      "37047",
+      "Columbus County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:columbus-county-mixed-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+    "registeredDivisionIndex": 254,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:columbus",
+      "county",
+      "37047",
+      "Columbus County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:columbus-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+    "registeredDivisionIndex": 254,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:columbus",
+      "county",
+      "37047",
+      "Columbus County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:currituck-board-of-education-election-method-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:currituck",
+    "registeredDivisionIndex": 291,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:currituck",
+      "county",
+      "37053",
+      "Currituck County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:currituck-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:currituck",
+    "registeredDivisionIndex": 291,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:currituck",
+      "county",
+      "37053",
+      "Currituck County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:currituck-board-of-commissioners-structure-change-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:currituck",
+    "registeredDivisionIndex": 291,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:currituck",
+      "county",
+      "37053",
+      "Currituck County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:dare-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:dare",
+    "registeredDivisionIndex": 296,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:dare",
+      "county",
+      "37055",
+      "Dare County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-raleigh-housing-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:raleigh",
+    "registeredDivisionIndex": 1700,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:raleigh",
+      "place",
+      "3755000",
+      "Raleigh city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-raleigh-transportation-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:raleigh",
+    "registeredDivisionIndex": 1700,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:raleigh",
+      "place",
+      "3755000",
+      "Raleigh city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-greensboro-parks-and-recreation-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+    "registeredDivisionIndex": 1437,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:greensboro",
+      "place",
+      "3728000",
+      "Greensboro city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-greensboro-firefighting-facilities-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+    "registeredDivisionIndex": 1437,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:greensboro",
+      "place",
+      "3728000",
+      "Greensboro city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-greensboro-transportation-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+    "registeredDivisionIndex": 1437,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:greensboro",
+      "place",
+      "3728000",
+      "Greensboro city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-greensboro-municipal-building-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+    "registeredDivisionIndex": 1437,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:greensboro",
+      "place",
+      "3728000",
+      "Greensboro city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:city-of-greensboro-housing-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+    "registeredDivisionIndex": 1437,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:greensboro",
+      "place",
+      "3728000",
+      "Greensboro city"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:guilford-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:guilford",
+    "registeredDivisionIndex": 431,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:guilford",
+      "county",
+      "37081",
+      "Guilford County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:henderson-county-open-space-preservation-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:henderson",
+    "registeredDivisionIndex": 491,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:henderson",
+      "county",
+      "37089",
+      "Henderson County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:hoke-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:hoke",
+    "registeredDivisionIndex": 507,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:hoke",
+      "county",
+      "37093",
+      "Hoke County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:town-of-pollocksville-mixed-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/place:pollocksville",
+    "registeredDivisionIndex": 1689,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:pollocksville",
+      "place",
+      "3753200",
+      "Pollocksville town"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:jones-county-mixed-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:jones",
+    "registeredDivisionIndex": 574,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:jones",
+      "county",
+      "37103",
+      "Jones County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:town-of-grifton-mixed-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/place:grifton",
+    "registeredDivisionIndex": 1439,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:grifton",
+      "place",
+      "3728200",
+      "Grifton town"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:macon-county-malt-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:macon",
+    "registeredDivisionIndex": 609,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:macon",
+      "county",
+      "37113",
+      "Macon County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:macon-county-unfortified-wine-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:macon",
+    "registeredDivisionIndex": 609,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:macon",
+      "county",
+      "37113",
+      "Macon County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:macon-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:macon",
+    "registeredDivisionIndex": 609,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:macon",
+      "county",
+      "37113",
+      "Macon County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:mcdowell-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:mcdowell",
+    "registeredDivisionIndex": 645,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:mcdowell",
+      "county",
+      "37111",
+      "McDowell County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:new-hanover-county-school-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:new_hanover",
+    "registeredDivisionIndex": 720,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:new_hanover",
+      "county",
+      "37129",
+      "New Hanover County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:perquimans-county-abc-store-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:perquimans",
+    "registeredDivisionIndex": 776,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:perquimans",
+      "county",
+      "37143",
+      "Perquimans County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:perquimans-county-mixed-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:perquimans",
+    "registeredDivisionIndex": 776,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:perquimans",
+      "county",
+      "37143",
+      "Perquimans County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:person-county-school-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:person",
+    "registeredDivisionIndex": 782,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:person",
+      "county",
+      "37145",
+      "Person County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:sampson-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:sampson",
+    "registeredDivisionIndex": 916,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:sampson",
+      "county",
+      "37163",
+      "Sampson County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:scotland-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:scotland",
+    "registeredDivisionIndex": 936,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:scotland",
+      "county",
+      "37165",
+      "Scotland County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:union-county-jail-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:union",
+    "registeredDivisionIndex": 997,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:union",
+      "county",
+      "37179",
+      "Union County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:town-of-knightdale-parks-and-recreation-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:knightdale",
+    "registeredDivisionIndex": 1518,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:knightdale",
+      "place",
+      "3736080",
+      "Knightdale town"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:wake-county-school-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:wake",
+    "registeredDivisionIndex": 1016,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:wake",
+      "county",
+      "37183",
+      "Wake County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:wake-county-community-college-bonds-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:wake",
+    "registeredDivisionIndex": 1016,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:wake",
+      "county",
+      "37183",
+      "Wake County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:town-of-mount-olive-charter-amendment-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/place:mount_olive",
+    "registeredDivisionIndex": 1620,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/place:mount_olive",
+      "place",
+      "3745100",
+      "Mount Olive town"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:wayne-county-malt-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:wayne",
+    "registeredDivisionIndex": 1071,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:wayne",
+      "county",
+      "37191",
+      "Wayne County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:wayne-county-unfortified-wine-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:wayne",
+    "registeredDivisionIndex": 1071,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:wayne",
+      "county",
+      "37191",
+      "Wayne County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:wayne-county-mixed-beverage-election",
+    "ocdId": "ocd-division/country:us/state:nc/county:wayne",
+    "registeredDivisionIndex": 1071,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:wayne",
+      "county",
+      "37191",
+      "Wayne County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  },
+  {
+    "contestId": "nc-sbe-2026:yadkin-county-local-sales-and-use-tax-referendum",
+    "ocdId": "ocd-division/country:us/state:nc/county:yadkin",
+    "registeredDivisionIndex": 1117,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nc/county:yadkin",
+      "county",
+      "37197",
+      "Yadkin County"
+    ],
+    "registryPath": "data/derived/registration/nc.json",
+    "registrySha256": "17d4fc17456975689e536ffd21dd6316ea86023e3101eadc5934c31ef0751102",
+    "registeredGovernment": null,
+    "basis": "Exact existing Census county or incorporated place row matched to the authority named in the official question/title. No fire district widened to county scope."
+  }
+]

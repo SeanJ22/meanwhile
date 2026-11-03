@@ -1,0 +1,20 @@
+{
+  "sourceUrl": "https://www.ncsbe.gov/results-data/candidate-lists",
+  "sourceHtmlPath": "sources/2dbdaadbbb6bc2553a5e53e0ad2ae15f59fb3ff773c5ee0b31de5ab08cc40955.html",
+  "sourceHtmlSha256": "2dbdaadbbb6bc2553a5e53e0ad2ae15f59fb3ff773c5ee0b31de5ab08cc40955",
+  "publishedLink": {
+    "text": "Download the County-Specific November 2026 General Election Referendum List (PDF)",
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+  },
+  "electionAssociationQuote": "CRITERIA: Election: 11/03/2026, Show Contest w/o Candidate: N, County: ALL COUNTIES, Data Source: FULL COUNTY VIEW",
+  "questionsMetadataPath": "sources/d2124f3cd515959a548e78fc1a1ec96d71ac668508ad0ac00a7adc68cf07650f.json",
+  "inventorySummary": {
+    "sourceFile": "sources/83bda7293910d844292cd3b8c93ccab556b535f34d28b3666069172fa20d3be7.source",
+    "uniqueMeasureHeadings": 54,
+    "statewideMeasureHeadings": 3,
+    "localMeasureHeadings": 51,
+    "knownAlreadyExplained": 6,
+    "newExplanations": 47,
+    "unresolved": 1
+  }
+}

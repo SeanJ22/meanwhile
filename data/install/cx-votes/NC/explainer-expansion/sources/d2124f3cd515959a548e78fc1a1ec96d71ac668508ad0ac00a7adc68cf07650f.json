@@ -1,0 +1,9 @@
+{
+  "url": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf",
+  "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T03:43:35.852712+00:00",
+  "sha256": "83bda7293910d844292cd3b8c93ccab556b535f34d28b3666069172fa20d3be7",
+  "bytes": 433629,
+  "file": "nc-referendums-current.pdf"
+}

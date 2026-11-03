@@ -1,0 +1,103 @@
+{
+  "reviewedAt": "2026-11-03T03:59:47.637662+00:00",
+  "recordsReviewed": 47,
+  "savedPrimaryPdfHash": "83bda7293910d844292cd3b8c93ccab556b535f34d28b3666069172fa20d3be7",
+  "financialAmountsRatesInterestAndAnnualEstimates": "PASS; all printed amounts/rates and estimate qualification are represented, including New Hanover grant assumption",
+  "currentResponseChoicesAndDirection": "PASS; Yes/No versus For/Against properly map approval/rejection, no reversal",
+  "materialTermAndScopeConditions": "PASS; three explicit maximum qualifiers now stated as up to",
+  "jurisdictionFipsAndExistingIds": "PASS47exact currentregistryrows; cross-county towns use existing placeID, not countywide scope",
+  "neutralityUnsupportedConsequences": "PASS; NO rejects only proposed authority, no unsupported tax savings or project cancellation claims",
+  "sourceHashesAndExactQuestionExcerpts": "PASS",
+  "issues": [
+    {
+      "contestId": "nc-sbe-2026:cabarrus-county-school-bonds-referendum",
+      "severity": "QUALIFIER_CLARIFICATION",
+      "detail": "Printed authorization is an explicit maximum. Add up to before the principal amount in whatItDoes and yesMeans. The draft permits the stated amount but should make this maximum clear.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:cabarrus-county-school-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:cabarrus-county-community-college-bonds-referendum",
+      "severity": "QUALIFIER_CLARIFICATION",
+      "detail": "Printed authorization is an explicit maximum. Add up to before the principal amount in whatItDoes and yesMeans. The draft permits the stated amount but should make this maximum clear.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:cabarrus-county-community-college-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-raleigh-housing-bonds-referendum",
+      "severity": "QUALIFIER_CLARIFICATION",
+      "detail": "Printed authorization is an explicit maximum. Add up to before the principal amount in whatItDoes and yesMeans. The draft permits the stated amount but should make this maximum clear.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-raleigh-housing-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-raleigh-transportation-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-greensboro-parks-and-recreation-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-greensboro-firefighting-facilities-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-greensboro-transportation-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-greensboro-municipal-building-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:city-of-greensboro-housing-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:wake-county-school-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    },
+    {
+      "contestId": "nc-sbe-2026:wake-county-community-college-bonds-referendum",
+      "severity": "PUNCTUATION",
+      "detail": "Remove doubled commas after dollar values; Cabarrus yesMeans also carries a trailing comma in the amount token.",
+      "resolution": "CORRECTED_AND_RECHECKED"
+    }
+  ],
+  "notModified": true,
+  "modelCalls": 0,
+  "networkCalls": 0,
+  "status": "PASS",
+  "currentPacketSha256": "1989c463f9b1b910af20f0944e42f2d938b626f9195b27a3bb384d9016f92bb4",
+  "remainingIssues": []
+}

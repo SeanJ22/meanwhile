@@ -1,0 +1,269 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NC",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NC",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 47,
+    "newPlainLanguageExplanations": 47,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingSourceGaps": 1
+  },
+  "subjects": [
+    {
+      "id": "nc-sbe-2026:bladen-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:bladen",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:brunswick-county-school-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:brunswick",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:buncombe-county-open-space-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:buncombe",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:buncombe-county-housing-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:buncombe",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-kannapolis-parks-and-recreation-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:kannapolis",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:cabarrus-county-school-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:cabarrus",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:cabarrus-county-community-college-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:cabarrus",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:columbus-county-malt-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:columbus-county-unfortified-wine-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:columbus-county-mixed-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:columbus-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:columbus",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:currituck-board-of-education-election-method-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:currituck",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:currituck-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:currituck",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:currituck-board-of-commissioners-structure-change-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:currituck",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:dare-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:dare",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-raleigh-housing-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-raleigh-transportation-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-greensboro-parks-and-recreation-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-greensboro-firefighting-facilities-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-greensboro-transportation-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-greensboro-municipal-building-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:city-of-greensboro-housing-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:greensboro",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:guilford-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:guilford",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:henderson-county-open-space-preservation-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:henderson",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:hoke-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:hoke",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:town-of-pollocksville-mixed-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/place:pollocksville",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:jones-county-mixed-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:jones",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:town-of-grifton-mixed-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/place:grifton",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:macon-county-malt-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:macon",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:macon-county-unfortified-wine-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:macon",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:macon-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:macon",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:mcdowell-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:mcdowell",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:new-hanover-county-school-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:new_hanover",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:perquimans-county-abc-store-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:perquimans",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:perquimans-county-mixed-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:perquimans",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:person-county-school-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:person",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:sampson-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:sampson",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:scotland-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:scotland",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:union-county-jail-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:union",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:town-of-knightdale-parks-and-recreation-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:knightdale",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:wake-county-school-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:wake-county-community-college-bonds-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:town-of-mount-olive-charter-amendment-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/place:mount_olive",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:wayne-county-malt-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:wayne",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:wayne-county-unfortified-wine-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:wayne",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:wayne-county-mixed-beverage-election",
+      "ocdId": "ocd-division/country:us/state:nc/county:wayne",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    },
+    {
+      "id": "nc-sbe-2026:yadkin-county-local-sales-and-use-tax-referendum",
+      "ocdId": "ocd-division/country:us/state:nc/county:yadkin",
+      "sourceUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/referendums_20261103.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndOriginalCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "independentSemanticReview": "PASS",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplayWithHeldTranslations": "PASS",
+    "parentSourceArtifactHashAndCredentialChecks": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS"
+  },
+  "sourceFormat": "Original official PDF bytes; full source and deterministic text retained.",
+  "reviewedScratchPacketSha256": "1989c463f9b1b910af20f0944e42f2d938b626f9195b27a3bb384d9016f92bb4",
+  "canonicalInputSha256": "de29cbc45e773745a01a8f1af59fb18b5636d3bb20ed7de01c6c26069fd87fba",
+  "nextOwner": "Root: finish merge/authority checks and READY commit; River: install as data and verify listed explanations with official links live."
+}

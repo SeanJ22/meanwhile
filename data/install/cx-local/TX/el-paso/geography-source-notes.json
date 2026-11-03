@@ -1,0 +1,80 @@
+{
+  "features": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:2",
+      "sourceKey": "gis-commissioner-polygons",
+      "originalFeatureId": 9
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:4",
+      "sourceKey": "gis-commissioner-polygons",
+      "originalFeatureId": 11
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:1",
+      "sourceKey": "gis-city-polygons",
+      "originalFeatureId": 19
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:8",
+      "sourceKey": "gis-city-polygons",
+      "originalFeatureId": 26
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:5",
+      "sourceKey": "gis-city-polygons",
+      "originalFeatureId": 27
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:6",
+      "sourceKey": "gis-city-polygons",
+      "originalFeatureId": 28
+    }
+  ],
+  "format": "Original unmodified GeoJSON features parsed from exact complete public reader responses of government GIS queries; no original native-query-byte hash claimed.",
+  "scope": "Six precise polygons staged for River reconciliation. Official county currently linked commissioner/city maps supplied separately. Never use fourcommissionerpolygons as sevenjusticepolygons.",
+  "missingShapes": [
+    "JusticePrecincts1–7"
+  ],
+  "matchedRegistryElectorateReconciliation": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lower_valley_water_district",
+      "heldBoundarySource": "Texas public water system service area TX0710154",
+      "issue": "A service-area source is not assumed to be the legal electoral boundary. Reconcile to current official county electoral map and exact54subprecinct list before reader scope claim. Existing institutional OCD reused.",
+      "historicalLegalReference": {
+        "sourceKey": "tceq-water-lvwd",
+        "file": "geography-historical-lvwd.geojson",
+        "districtId": "5505000",
+        "featureId": 302052,
+        "sourceUpdated": "2004-12-15",
+        "sourceAccuracy": "NP",
+        "sourceComments": "scaled and positioned",
+        "use": "Historical legal-district reference; not verified current electoral polygon."
+      }
+    }
+  ],
+  "district205HeldCountyMembershipsPreserved": [
+    "Culberson",
+    "El Paso",
+    "Hudspeth"
+  ],
+  "district8NewWholeCountyMembers": [
+    "Andrews",
+    "Brewster",
+    "Crane",
+    "Crockett",
+    "Culberson",
+    "El Paso",
+    "Hudspeth",
+    "Jeff Davis",
+    "Loving",
+    "Pecos",
+    "Presidio",
+    "Reagan",
+    "Reeves",
+    "Terrell",
+    "Upton",
+    "Ward",
+    "Winkler"
+  ]
+}

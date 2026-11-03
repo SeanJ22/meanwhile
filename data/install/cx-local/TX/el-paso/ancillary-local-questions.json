@@ -1,0 +1,26 @@
+{
+  "action": "ANCILLARY_ONLY_NO_MEASURE_OR_EXPLAINER_UPDATE",
+  "count": 7,
+  "sources": [
+    {
+      "sourceKey": "doc29",
+      "excerptFile": "sources/doc29.extract.txt",
+      "scope": "Four HorizonRegionalMUD propositions A–D, only MountainShadowUnit1definedarea, not entire MUD"
+    },
+    {
+      "sourceKey": "doc32",
+      "excerptFile": "sources/doc32.extract.txt",
+      "scope": "YsletaISDtaxrate PropositionA"
+    },
+    {
+      "sourceKey": "doc33",
+      "excerptFile": "sources/doc33.extract.txt",
+      "scope": "SocorroISDtaxratification PropositionA"
+    },
+    {
+      "sourceKey": "doc35",
+      "excerptFile": "sources/doc35.extract.txt",
+      "scope": "TornilloISDtaxratification PropositionA, alongside fourcandidatefields"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "sourcePage": "https://epcountyvotestx.gov/voter-information/current-election",
+  "samples": [
+    {
+      "sourceKey": "doc28",
+      "pages": 1,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/817/original/1._LVWD_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc28.pdf",
+      "sha256": "f04933cfe6f029d9480f7470043d46bdb36e3facc8e270050f24c56fb9396538",
+      "sourceCheckedAt": "2026-11-03T06:55:34.220449+00:00"
+    },
+    {
+      "sourceKey": "doc29",
+      "pages": 2,
+      "hasLocalNames": false,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/819/original/2._HMUD_Mtn_Shadow_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc29.pdf",
+      "sha256": "80ada5c5a85723d624cc3c33de8e69ae4e3186dda1ae69ecc8a703c82df12c03",
+      "sourceCheckedAt": "2026-11-03T06:55:34.209053+00:00"
+    },
+    {
+      "sourceKey": "doc30",
+      "pages": 1,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/821/original/3._EPCWID4_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc30.pdf",
+      "sha256": "347b84000ff1c5a4e84fa43a02711bfde6e7f9583f246cced74caad5ec96a2dc",
+      "sourceCheckedAt": "2026-11-03T06:55:34.992790+00:00"
+    },
+    {
+      "sourceKey": "doc31",
+      "pages": 1,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/823/original/4._Canutillo_ISD_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc31.pdf",
+      "sha256": "55ed75a08d024e0132d7419007c5a0d2a157c55b843b9d7409bf175de88d0ad9",
+      "sourceCheckedAt": "2026-11-03T06:55:35.262033+00:00"
+    },
+    {
+      "sourceKey": "doc32",
+      "pages": 1,
+      "hasLocalNames": false,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/825/original/5._Ysleta_ISD_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc32.pdf",
+      "sha256": "d8aeb1892bc6c49025a2bbabec62c5842a8412ac1ea5fd52ac5f216a098518c9",
+      "sourceCheckedAt": "2026-11-03T06:55:35.208232+00:00"
+    },
+    {
+      "sourceKey": "doc33",
+      "pages": 1,
+      "hasLocalNames": false,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/816/original/6._Socorro_ISD_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc33.pdf",
+      "sha256": "b5cabbcdd3c106e79d6d2a76a41a6383f3fad1c94f2044fe9f1f307863b8000e",
+      "sourceCheckedAt": "2026-11-03T06:55:35.451761+00:00"
+    },
+    {
+      "sourceKey": "doc34",
+      "pages": 1,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/818/original/7._Fabens_ISD_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc34.pdf",
+      "sha256": "ec0ebaba8033aedda41ea6e6b00d2007ae8dcb259e4fb21f67075a3fcfb95162",
+      "sourceCheckedAt": "2026-11-03T06:55:35.703290+00:00"
+    },
+    {
+      "sourceKey": "doc35",
+      "pages": 1,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/820/original/8._Tornillo_ISD_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc35.pdf",
+      "sha256": "1c15073ff554bf2fd927516140cf243de12f6bbe92266142e5c7dc069e090eea",
+      "sourceCheckedAt": "2026-11-03T06:55:35.847029+00:00"
+    },
+    {
+      "sourceKey": "doc36",
+      "pages": 1,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/822/original/9._Vinton_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc36.pdf",
+      "sha256": "120ce839feba0f258c8fb0258fefb95ea208cdef0e1bf323209e437954102b32",
+      "sourceCheckedAt": "2026-11-03T06:55:35.805580+00:00"
+    },
+    {
+      "sourceKey": "doc37",
+      "pages": 1,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/824/original/10._City_of_EP_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc37.pdf",
+      "sha256": "be1a26fb7ee23169cf02e912b02f5f97c15360d8ebb2a59e61e87e34ad44fc52",
+      "sourceCheckedAt": "2026-11-03T06:55:36.036330+00:00"
+    },
+    {
+      "sourceKey": "doc38",
+      "pages": 7,
+      "hasLocalNames": true,
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/815/original/11._Federal_State_County_Ballot.pdf?1789660550",
+      "sourceFile": "sources/doc38.pdf",
+      "sha256": "cdb43152a132333b0623fa25c6eed276af4bc335046358cc5b4ccccfa78919cd",
+      "sourceCheckedAt": "2026-11-03T06:55:36.092436+00:00"
+    }
+  ],
+  "officialSamplesCaptured": 11,
+  "physicalPages": 18,
+  "ordinaryCandidateProofSamples": 8,
+  "ordinaryCandidateProofPages": 14,
+  "personalVoterLookupUsed": false
+}

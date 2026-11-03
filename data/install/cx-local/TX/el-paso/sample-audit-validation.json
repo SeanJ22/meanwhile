@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T07:11:45.172366+00:00",
+  "officialNativeSamplePdfs": 11,
+  "nativeSamplePages": 18,
+  "completeLocalCandidateFields": 54,
+  "printedNamedCandidates": 87,
+  "independentExtraction": "Original PDF word coordinates: exact printed numeric selection-code columns, candidate name words and party labels; all87choices match complete-block extraction without paragraph/header parser reuse. No spelling, punctuation or glyph-space edits.",
+  "perSample": [
+    {
+      "sourceKey": "doc28",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 4
+    },
+    {
+      "sourceKey": "doc29",
+      "pages": 2,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 0
+    },
+    {
+      "sourceKey": "doc30",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 4
+    },
+    {
+      "sourceKey": "doc31",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 8
+    },
+    {
+      "sourceKey": "doc32",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 0
+    },
+    {
+      "sourceKey": "doc33",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 0
+    },
+    {
+      "sourceKey": "doc34",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 7
+    },
+    {
+      "sourceKey": "doc35",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 7
+    },
+    {
+      "sourceKey": "doc36",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 4
+    },
+    {
+      "sourceKey": "doc37",
+      "pages": 1,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 16
+    },
+    {
+      "sourceKey": "doc38",
+      "pages": 7,
+      "dateHeaderHash": "PASS",
+      "independentLocalNamedSelections": 37
+    }
+  ],
+  "cityIndependentActualSampleNamesMatched": 16,
+  "courtCountyMembersExactHeldRegistryMatches": 17,
+  "held205CountyMembersPreserved": 3,
+  "heldOfficeIdsReused": 19,
+  "heldCandidateIdsReused": 22,
+  "unmodifiedPreciseGISFeatures": 6,
+  "separateCancellationNames": 11,
+  "separateDeclaredWriteIns": 1,
+  "productionWrites": false
+}

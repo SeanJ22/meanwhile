@@ -1,0 +1,1079 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/817/original/1._LVWD_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/817/original/1._LVWD_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:34.220449+00:00",
+    "sha256": "f04933cfe6f029d9480f7470043d46bdb36e3facc8e270050f24c56fb9396538",
+    "sourceFile": "sources/doc28.pdf",
+    "excerptFile": "sources/doc28.extract.txt",
+    "excerptSha256": "935b7e1f050522fe4cbbccb914e250f1996687843d9fc8065a2651449ec0ae91",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/819/original/2._HMUD_Mtn_Shadow_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/819/original/2._HMUD_Mtn_Shadow_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:34.209053+00:00",
+    "sha256": "80ada5c5a85723d624cc3c33de8e69ae4e3186dda1ae69ecc8a703c82df12c03",
+    "sourceFile": "sources/doc29.pdf",
+    "excerptFile": "sources/doc29.extract.txt",
+    "excerptSha256": "08deb4cb7f3310ca068e39e10eafc4deebdb1b331c0f697d7081d3866b18d4b8",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/821/original/3._EPCWID4_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/821/original/3._EPCWID4_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:34.992790+00:00",
+    "sha256": "347b84000ff1c5a4e84fa43a02711bfde6e7f9583f246cced74caad5ec96a2dc",
+    "sourceFile": "sources/doc30.pdf",
+    "excerptFile": "sources/doc30.extract.txt",
+    "excerptSha256": "af049030eba7a6cb7b165884654e86652aa7fceaa6337ab2952392469348cd32",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/823/original/4._Canutillo_ISD_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/823/original/4._Canutillo_ISD_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:35.262033+00:00",
+    "sha256": "55ed75a08d024e0132d7419007c5a0d2a157c55b843b9d7409bf175de88d0ad9",
+    "sourceFile": "sources/doc31.pdf",
+    "excerptFile": "sources/doc31.extract.txt",
+    "excerptSha256": "ecfd6994d17e22dfeb0950526e0f3c22ce5f31b15ee593733d29a65288d4b4c2",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/825/original/5._Ysleta_ISD_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/825/original/5._Ysleta_ISD_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:35.208232+00:00",
+    "sha256": "d8aeb1892bc6c49025a2bbabec62c5842a8412ac1ea5fd52ac5f216a098518c9",
+    "sourceFile": "sources/doc32.pdf",
+    "excerptFile": "sources/doc32.extract.txt",
+    "excerptSha256": "16479a10416e37c07fd25de949536d63591290de73eedee715af2861e57ef49c",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/816/original/6._Socorro_ISD_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/816/original/6._Socorro_ISD_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:35.451761+00:00",
+    "sha256": "b5cabbcdd3c106e79d6d2a76a41a6383f3fad1c94f2044fe9f1f307863b8000e",
+    "sourceFile": "sources/doc33.pdf",
+    "excerptFile": "sources/doc33.extract.txt",
+    "excerptSha256": "93b40a647d0a91ade1b3f802a76da128f9b349432c0dc48d05d4d825fbdb5936",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/818/original/7._Fabens_ISD_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/818/original/7._Fabens_ISD_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:35.703290+00:00",
+    "sha256": "ec0ebaba8033aedda41ea6e6b00d2007ae8dcb259e4fb21f67075a3fcfb95162",
+    "sourceFile": "sources/doc34.pdf",
+    "excerptFile": "sources/doc34.extract.txt",
+    "excerptSha256": "b5713d883951320b5f312274dc98018461138b68e362b00bcb919a09c93c6570",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/820/original/8._Tornillo_ISD_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/820/original/8._Tornillo_ISD_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:35.847029+00:00",
+    "sha256": "1c15073ff554bf2fd927516140cf243de12f6bbe92266142e5c7dc069e090eea",
+    "sourceFile": "sources/doc35.pdf",
+    "excerptFile": "sources/doc35.extract.txt",
+    "excerptSha256": "3a5db36474ac287db0d1c37d4c9dff64a0e482f9b80395c71af5fc64fa01b587",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/822/original/9._Vinton_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/822/original/9._Vinton_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:35.805580+00:00",
+    "sha256": "120ce839feba0f258c8fb0258fefb95ea208cdef0e1bf323209e437954102b32",
+    "sourceFile": "sources/doc36.pdf",
+    "excerptFile": "sources/doc36.extract.txt",
+    "excerptSha256": "f6b8a24b9fa13559f0796ec003af4e923815503623ce6a7d11ee845f47bd75ac",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/824/original/10._City_of_EP_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/824/original/10._City_of_EP_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:36.036330+00:00",
+    "sha256": "be1a26fb7ee23169cf02e912b02f5f97c15360d8ebb2a59e61e87e34ad44fc52",
+    "sourceFile": "sources/doc37.pdf",
+    "excerptFile": "sources/doc37.extract.txt",
+    "excerptSha256": "01bc9fb8508f22309176995d9a657a4fb0edbbc392f50a0901ca0ec1225ecfd5",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/815/original/11._Federal_State_County_Ballot.pdf?1789660550",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/815/original/11._Federal_State_County_Ballot.pdf?1789660550",
+    "sourceCheckedAt": "2026-11-03T06:55:36.092436+00:00",
+    "sha256": "cdb43152a132333b0623fa25c6eed276af4bc335046358cc5b4ccccfa78919cd",
+    "sourceFile": "sources/doc38.pdf",
+    "excerptFile": "sources/doc38.extract.txt",
+    "excerptSha256": "aba7e0188bf1b105b762d4baa0286318d7705c8f5700803d2d23162d3a5bdaf5",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Complete current native official El Paso County November 3, 2026 sample PDF linked by the current election page. Original PDF bytes and full text retained. Candidate fields are complete named office blocks; three measure-only samples and one mixed tax/trustee sample are preserved ancillary without measure changes.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://epcountyvotestx.gov/voter-information/current-election",
+    "finalUrl": "https://epcountyvotestx.gov/voter-information/current-election",
+    "sourceCheckedAt": "2026-11-03T06:54:57.747561+00:00",
+    "sha256": "5a68ed91c324e68b751cdc98cf648ede8697f0a60b02cad86423124777a603cc",
+    "sourceFile": "sources/current.html",
+    "excerptFile": "sources/current.extract.txt",
+    "excerptSha256": "d073baa7b4c9c9edaeb58e361fb692bb739d34e22847415ab1d6696a7d9ba831",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official current election authority linking page: all eleven sample PDFs, named write-in supplement and cancellation orders. No voter lookup or individual voter record used.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/election-2026-11-03.php",
+    "finalUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/election-2026-11-03.php",
+    "sourceCheckedAt": "2026-11-03T06:57:12.779313+00:00",
+    "sha256": "a53fa16eef45187a42779aac6560a6b6f5652bbc0cf7b89c0c0decca077cdff8",
+    "sourceFile": "sources/city-reader.txt",
+    "excerptFile": "sources/city-reader.txt",
+    "excerptSha256": "a53fa16eef45187a42779aac6560a6b6f5652bbc0cf7b89c0c0decca077cdff8",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Current official city election documentation and filing archive. Four district offices and four-year terms; the filing archive includes Jacqueline P. Horn while both actual city and county samples omit her. No withdrawal or qualification status inferred.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/election-2026-11-03.php",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/2026-11-03/docs/Sample-Ballot.pdf",
+    "finalUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/2026-11-03/docs/Sample-Ballot.pdf",
+    "sourceCheckedAt": "2026-11-03T07:04:45.377904+00:00",
+    "sha256": "79aada687fb3afa9345e8451e8ffbc349a0465b60e3f53b3261b6362d0b78e94",
+    "sourceFile": "sources/city-sample-reader.txt",
+    "excerptFile": "sources/city-sample-reader.txt",
+    "excerptSha256": "79aada687fb3afa9345e8451e8ffbc349a0465b60e3f53b3261b6362d0b78e94",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Independent official city sample confirms the same four complete city named lists, 16 choices. Its selection numbers are TBD; county current final PDF supplies the ordinary input. No filed-name supplement substituted.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/2026-11-03/docs/Sample-Ballot.pdf",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.fabensisd.net/board-of-trustees/board-elections",
+    "finalUrl": "https://www.fabensisd.net/board-of-trustees/board-elections",
+    "sourceCheckedAt": "2026-11-03T06:58:06.262501+00:00",
+    "sha256": "ead3d11f20e57a6a950162cf2d642574597d6b8bd035a0c4f9a0676f431ca59b",
+    "sourceFile": "sources/fabens-reader.txt",
+    "excerptFile": "sources/fabens-reader.txt",
+    "excerptSha256": "ead3d11f20e57a6a950162cf2d642574597d6b8bd035a0c4f9a0676f431ca59b",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Current official Fabens election page identifies the 2026 numbered places and links the official board policy manual, establishing TASB authority.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.fabensisd.net/board-of-trustees/board-elections",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.fabensisd.net/board-of-trustees/fisd-board-policy-manual",
+    "finalUrl": "https://www.fabensisd.net/board-of-trustees/fisd-board-policy-manual",
+    "sourceCheckedAt": "2026-11-03T06:59:54.526884+00:00",
+    "sha256": "115a8b9aa46f87b0210867a877410811a01a1c6086e423027cdb0ed699804d19",
+    "sourceFile": "sources/fabens-policy-reader.txt",
+    "excerptFile": "sources/fabens-policy-reader.txt",
+    "excerptSha256": "115a8b9aa46f87b0210867a877410811a01a1c6086e423027cdb0ed699804d19",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Official district page links TASB account 438 policy manual. Authority link for district-specific BBB local election rules.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.fabensisd.net/board-of-trustees/fisd-board-policy-manual",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB",
+    "finalUrl": "https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB",
+    "sourceCheckedAt": "2026-11-03T07:01:48.924031+00:00",
+    "sha256": "b46acbc0e8d7c01693a5321cc7482191f6611fb31404962a3914bac10d75b27c",
+    "sourceFile": "sources/fabens-bbb-reader.txt",
+    "excerptFile": "sources/fabens-bbb-reader.txt",
+    "excerptSha256": "b46acbc0e8d7c01693a5321cc7482191f6611fb31404962a3914bac10d75b27c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "District-specific BBB(LOCAL) says election is by place and sets 2026 Places 1/2/4, four-year terms and plurality. These are districtwide numbered places, not territorial trustee districts.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.tisd.us/page/board-elections",
+    "finalUrl": "https://www.tisd.us/page/board-elections",
+    "sourceCheckedAt": "2026-11-03T07:00:39.637065+00:00",
+    "sha256": "ec109869aeadbf40851063f23ffe94422c3c9165f34404d0bfad4c63485668a6",
+    "sourceFile": "sources/tornillo-elections.html",
+    "excerptFile": "sources/tornillo-elections.extract.txt",
+    "excerptSha256": "808f3bc2c0442f5ead2a1f99229fd677313202eb09930f2cb61fb48465438fe6",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official current Tornillo election page. Its public embedded Nuxt page data links district TASB account 443. Rendered page is image-heavy; original full HTML retained, no missing rendered body invented.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://pol.tasb.org/PolicyOnline/PolicyDetails?key=443&code=BBB",
+    "finalUrl": "https://pol.tasb.org/PolicyOnline/PolicyDetails?key=443&code=BBB#legalTabContent",
+    "sourceCheckedAt": "2026-11-03T07:03:17.686973+00:00",
+    "sha256": "24511b2d49212a338325fd261f06e624327f2ddbfc655e1a7acda364c96e5f5d",
+    "sourceFile": "sources/tornillo-bbb-reader.txt",
+    "excerptFile": "sources/tornillo-bbb-reader.txt",
+    "excerptSha256": "24511b2d49212a338325fd261f06e624327f2ddbfc655e1a7acda364c96e5f5d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "District-specific BBB(LOCAL) says election is by place, four-year terms, 2026 Places 4/5/6/7, plurality. No territorial trustee districts or whole-city substitution.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://pol.tasb.org/PolicyOnline/PolicyDetails?key=443&code=BBB",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/788/original/LVWD_Notice_of_General_Election_with_Exhibit_A.pdf?1788209110",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/788/original/LVWD_Notice_of_General_Election_with_Exhibit_A.pdf?1788209110",
+    "sourceCheckedAt": "2026-11-03T06:55:27.439934+00:00",
+    "sha256": "92fbfa3f03b0c101c67036e8873aeda0e5a3a3ba9e56e4dedf58ade2cf12c233",
+    "sourceFile": "sources/doc01.pdf",
+    "excerptFile": "sources/doc01.extract.txt",
+    "excerptSha256": "1e15fd2fcff2f3a041c58baeaa27f5aa41d05581ff9576c6d5b782179c816c75",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current Lower Valley Water District notice: registered district voters elect three directors, positions1/2/3.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/833/original/EP_County_WCID_4_Notice_of_Election_-_Nov_3_2026.pdf?1790702407",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/833/original/EP_County_WCID_4_Notice_of_Election_-_Nov_3_2026.pdf?1790702407",
+    "sourceCheckedAt": "2026-11-03T06:55:28.470542+00:00",
+    "sha256": "a6a69e68c9644173bbfe00148c1f36dccf7da4eeee577923a44cdd50c445a954",
+    "sourceFile": "sources/doc06.pdf",
+    "excerptFile": "sources/doc06.extract.txt",
+    "excerptSha256": "79e48907844726d93047cc6a6de270c5e1390689e91a5606f8007069193396be",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current WCID4 notice: registered district voters elect positions1/2/5 for four-year terms; scanned original and exact OCR saved.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Tesseract English OCR at 144 DPI; original scanned PDF retained. Cancellation/status supplement only, no ordinary candidate proof."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/787/original/CISD_Notice_of_General_Election_with_Exhibit_A_%281%29.pdf?1788208948",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/787/original/CISD_Notice_of_General_Election_with_Exhibit_A_%281%29.pdf?1788208948",
+    "sourceCheckedAt": "2026-11-03T06:55:28.498087+00:00",
+    "sha256": "4f3ee310345538f1b4de4d56f51d75c33ce4026071166fb3f9b7ec8822c2a4fa",
+    "sourceFile": "sources/doc07.pdf",
+    "excerptFile": "sources/doc07.extract.txt",
+    "excerptSha256": "0759f1531a84030b369498c81ddfc28e610c5e924d22e62c3661716328176e86",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current Canutillo notice explicitly calls four at-large positions: three full four-year seats and one unexpired two-year seat.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/785/original/BdApproved__2026_ORDER_ELECTION_11.2026_CLINT_ISD_FNL.pdf?1787852562",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/785/original/BdApproved__2026_ORDER_ELECTION_11.2026_CLINT_ISD_FNL.pdf?1787852562",
+    "sourceCheckedAt": "2026-11-03T06:55:30.543413+00:00",
+    "sha256": "5f19eb823e88330eafd33996a4c918914692409c214b9d3967fcf84883ce1cc4",
+    "sourceFile": "sources/doc13.pdf",
+    "excerptFile": "sources/doc13.extract.txt",
+    "excerptSha256": "0f844b2737704700df7c25a080aea7fdfb736d888ed5b41200595966b8e4a86a",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current Clint ISD election order calls November3,2026 with Districts1/2/4 and at-large full terms and District3 special term. Later cancellation documents have internal date/district errors, retained separately.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/764/original/OrderofGeneralElection.pdf?1784224020",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/764/original/OrderofGeneralElection.pdf?1784224020",
+    "sourceCheckedAt": "2026-11-03T06:55:30.808299+00:00",
+    "sha256": "ef01bf1330feb521db0d57d9a312030d43ad89be2b60015610d50fb82afb3a22",
+    "sourceFile": "sources/doc15.pdf",
+    "excerptFile": "sources/doc15.extract.txt",
+    "excerptSha256": "1b24fec807fa9756465dd74ab3abd03c8fa766c79ebd85736c5f1410bfdd617e",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current Fabens general election order, numbered Places1/2/4. OCR supplement only; ordinary choices from actual native sample.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Tesseract English OCR at 144 DPI; original scanned PDF retained. Cancellation/status supplement only, no ordinary candidate proof."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/789/original/TISD_Notice_of_Election_with_Exhibit_A_%281%29.pdf?1788209246",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/789/original/TISD_Notice_of_Election_with_Exhibit_A_%281%29.pdf?1788209246",
+    "sourceCheckedAt": "2026-11-03T06:55:31.977017+00:00",
+    "sha256": "3fd9ba29feec7098e553904b6e20e55d9e209cfc95b524de5c135ba52649b813",
+    "sourceFile": "sources/doc17.pdf",
+    "excerptFile": "sources/doc17.extract.txt",
+    "excerptSha256": "1ce4298076f68a06d3402bac3562f016fe842dbfb8b9c1ab029ace8f0d1babfb",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current Tornillo notice elects positions4/5/6/7, each four years, districtwide registered electorate.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/794/original/Vinton_Notice_of_General_Election_2026.pdf?1788445369",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/794/original/Vinton_Notice_of_General_Election_2026.pdf?1788445369",
+    "sourceCheckedAt": "2026-11-03T06:55:31.925988+00:00",
+    "sha256": "252a15f7d1a849b9aef2795110a2855376a832e7bdb4e22342d01bc24cec0a63",
+    "sourceFile": "sources/doc18.pdf",
+    "excerptFile": "sources/doc18.extract.txt",
+    "excerptSha256": "539c68fcd758a7e4bd98b98ab9ed4c3c02ab37fe5347e6793b1598c1366c9bba",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current Vinton notice elects alderman Places3/4/5. OCR is limited to first two substantive pages; original complete21page PDF retained.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Tesseract English OCR at 144 DPI; original scanned PDF retained. Cancellation/status supplement only, no ordinary candidate proof."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/796/original/City_of_El_Paso_Notice_of_General_Election_-_November_3__2026.pdf?1788463070",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/796/original/City_of_El_Paso_Notice_of_General_Election_-_November_3__2026.pdf?1788463070",
+    "sourceCheckedAt": "2026-11-03T06:55:31.817905+00:00",
+    "sha256": "66dda265924bba67f176a936488c160af62751ab62435dc5e5dd639d3365fede",
+    "sourceFile": "sources/doc19.pdf",
+    "excerptFile": "sources/doc19.extract.txt",
+    "excerptSha256": "01e04e987bd4a09ec1cbc5f4509fd1a18e08e15b2d163b7de1428cbf56a16cc2",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current City of El Paso general election notice: precise representative districts1/5/6/8.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/797/original/City_of_El_Paso_Reso_calling_for_the_November_3_2026_General_Election.pdf?1788463070",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/797/original/City_of_El_Paso_Reso_calling_for_the_November_3_2026_General_Election.pdf?1788463070",
+    "sourceCheckedAt": "2026-11-03T06:55:32.237800+00:00",
+    "sha256": "955360a3b7f7d483e2cc1157fa85428043aafabac142916c84e3b585c82bde52",
+    "sourceFile": "sources/doc20.pdf",
+    "excerptFile": "sources/doc20.extract.txt",
+    "excerptSha256": "2a33c3d8f8992044d2da9ee9de0d1e7246eaca96df3a7fb869a7ee4097cf910c",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current City of El Paso resolution orders four district representative offices for four-year terms.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/806/original/November_2026_Order_of_Election001_%282%29_%281%29.pdf?1788965827",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/806/original/November_2026_Order_of_Election001_%282%29_%281%29.pdf?1788965827",
+    "sourceCheckedAt": "2026-11-03T06:55:34.522507+00:00",
+    "sha256": "1c18872b12fc4949141db11c03fe736267e049a4c5904a315ff89f91e835b4ec",
+    "sourceFile": "sources/doc25.pdf",
+    "excerptFile": "sources/doc25.extract.txt",
+    "excerptSha256": "ae28f28e5a761d15dcdb8a46f44e8119ab53dbccb04ca346ba901fec49c3ef38",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current county officers notice, scope corroboration; not a substitute candidate list.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/843/original/Notice_of_Election_Nov_2026.pdf?1791556704",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/843/original/Notice_of_Election_Nov_2026.pdf?1791556704",
+    "sourceCheckedAt": "2026-11-03T06:55:34.223546+00:00",
+    "sha256": "1161ad2c33560ce8aa84f873dfeff6aa5a97e2296b3a144ec61b9c307ea41022",
+    "sourceFile": "sources/doc26.pdf",
+    "excerptFile": "sources/doc26.extract.txt",
+    "excerptSha256": "27f410ee3fdf23c77fdf7d2c62e0a4ef2f5535358e32a669bfd35165fbf4a9c5",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current general/local election notice, scope corroboration; not a substitute sample.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+    "sourceCheckedAt": "2026-11-03T06:55:29.465379+00:00",
+    "sha256": "e4e96de3de0d46452e59c55ab622199b762c8348ccf6e162ceb14bc89f088a6e",
+    "sourceFile": "sources/doc11.pdf",
+    "excerptFile": "sources/doc11.extract.txt",
+    "excerptSha256": "d55911a65761adc4562a67ec1a82a61c0e93d593b8f2558949ff215c3f77d2b5",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Explicit Clint ISD cancellation order for Districts1/2/4 and at-large, but prints November2,2026 and conflicting Sigifredo Montes District3 recital versus operative District4 table. Preserve source conflict, do not silently correct.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Tesseract English OCR at 144 DPI; original scanned PDF retained. Cancellation/status supplement only, no ordinary candidate proof."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/808/original/1744_001.pdf?1788986960",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/808/original/1744_001.pdf?1788986960",
+    "sourceCheckedAt": "2026-11-03T06:55:29.634041+00:00",
+    "sha256": "bdb2aba67a59f7051908100be1b0869f6cc8022e4c5febb8794db68d1a0bf9d2",
+    "sourceFile": "sources/doc12.pdf",
+    "excerptFile": "sources/doc12.extract.txt",
+    "excerptSha256": "0d85b44b1aac04bb9884a216db5b44cfb60ac68a6447a70901c5392399d7b461",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Explicit Clint ISD District3 special cancellation order, Eunice A.Elias, but prints November2,2026. Current county page files it under November3; preserve date conflict and original evidence.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Tesseract English OCR at 144 DPI; original scanned PDF retained. Cancellation/status supplement only, no ordinary candidate proof."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/814/original/Town_of_Clint-Order_of_Cancellation.pdf?1789510774",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/814/original/Town_of_Clint-Order_of_Cancellation.pdf?1789510774",
+    "sourceCheckedAt": "2026-11-03T06:55:32.813373+00:00",
+    "sha256": "7039267389769bde5c49d5f6092d127ed3c3e8affe45c73b0f54d5b0cbea002b",
+    "sourceFile": "sources/doc22.pdf",
+    "excerptFile": "sources/doc22.extract.txt",
+    "excerptSha256": "344ebc9ea3da4f5188004424cb868f0be0c2203416c0816491fe17b18044defd",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Town of Clint explicit November3 cancellation ordinance declares Mayor Rose Hernandez and alderpersons Dino Coronado/Andy Venzor elected. No ordinary choices imported.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Tesseract English OCR at 144 DPI; original scanned PDF retained. Cancellation/status supplement only, no ordinary candidate proof."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/827/original/EPCAD_Order_of_Cancellation_9.17.26.pdf?1789743419",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/827/original/EPCAD_Order_of_Cancellation_9.17.26.pdf?1789743419",
+    "sourceCheckedAt": "2026-11-03T06:55:33.313695+00:00",
+    "sha256": "b64a6b84452a1f4038c642f3b25689d168de544a934e3d23ac95bd7363969a8e",
+    "sourceFile": "sources/doc23.pdf",
+    "excerptFile": "sources/doc23.extract.txt",
+    "excerptSha256": "a3fa98b8b29fc2d33858c3ccf8aeb6b73dc8130d4e56c3cf6f10bd9b3d88727b",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "El Paso Central Appraisal District explicit November3 cancellation order declares Eduardo Mena, John Fleming and Alfred Gonzalez elected to Places1/2/3. No ordinary choices imported.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Tesseract English OCR at 144 DPI; original scanned PDF retained. Cancellation/status supplement only, no ordinary candidate proof."
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/829/original/Write-In1.pdf?1790178390",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/829/original/Write-In1.pdf?1790178390",
+    "sourceCheckedAt": "2026-11-03T06:55:36.730685+00:00",
+    "sha256": "3fbdc8846898d2cccc3c277db52cf82099a9936d001fbb7e89f22c79c46ebf6b",
+    "sourceFile": "sources/doc39.pdf",
+    "excerptFile": "sources/doc39.extract.txt",
+    "excerptSha256": "d14aeb8d1bf820b933d8939d143aec8e36553965d0d11af6be3374300d3916dc",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current named declared-write-in supplement: local Brandi Stevenson for Canutillo trustees, exact precinct scope. Statewide named rows remain outside this local input.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+    "finalUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+    "sourceCheckedAt": "2026-11-03T06:56:25.931070+00:00",
+    "sha256": "94ee7dba5aa14e2de640100d9f6297c0410d1441a9d352768d701ade481d221c",
+    "sourceFile": "sources/statute22.html",
+    "excerptFile": "sources/statute22.extract.txt",
+    "excerptSha256": "c460b44178b427bdc81e1a653b784063cfaee433c047b5cd19992e1e79040270",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Native official Texas Legislature Chapter22, exact regional eighth court17county definition; geography supplement.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+    "finalUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+    "sourceCheckedAt": "2026-11-03T06:56:25.188837+00:00",
+    "sha256": "3f926f0a7d2eba3ab4adc8c446a1d69173a1fdc1135c26ec3bb62f2a096d85fe",
+    "sourceFile": "sources/statute24.html",
+    "excerptFile": "sources/statute24.extract.txt",
+    "excerptSha256": "ed54c79480dcc5051c8e1fedbc3b962a1ed1c1e4bc68e441ea8eb83e41472d9d",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Native official Texas Legislature Chapter24, exact held district-court electorates:205 spans Culberson/ElPaso/Hudspeth, six other districts wholeElPaso.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://epcountyvotestx.gov/maps/county-commissioner-maps",
+    "finalUrl": "https://epcountyvotestx.gov/maps/county-commissioner-maps",
+    "sourceCheckedAt": "2026-11-03T06:58:02.795200+00:00",
+    "sha256": "364fcffba5a59450b44ef9896e1eb240ec2d176ee0bd45856b5726dc5f7c55e7",
+    "sourceFile": "sources/maps-commissioner-correct.html",
+    "excerptFile": "sources/maps-commissioner-correct.extract.txt",
+    "excerptSha256": "0573c023e31617eb39af19f41fcde0b673acc3278f3d2241110551ad7caa122b",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official county elections current commissioner map index, links adopted planC2333.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://epcountyvotestx.gov/maps/justice-of-the-peace-maps",
+    "finalUrl": "https://epcountyvotestx.gov/maps/justice-of-the-peace-maps",
+    "sourceCheckedAt": "2026-11-03T06:57:11.247001+00:00",
+    "sha256": "680f440d06d6b7e5c4bec56d1d49c9ae63e9fc8f577dfec15060b79bd5a4bacb",
+    "sourceFile": "sources/maps-justice.html",
+    "excerptFile": "sources/maps-justice.extract.txt",
+    "excerptSha256": "35cbb1263440b8f7f356dc3a4d5c269aa4030cc76d40047fd5492035e8855418",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official county elections current justice precinct1–7 map index. Distinct from county commissioner precincts.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://epcountyvotestx.gov/maps/water-district-maps",
+    "finalUrl": "https://epcountyvotestx.gov/maps/water-district-maps",
+    "sourceCheckedAt": "2026-11-03T06:57:11.649453+00:00",
+    "sha256": "69b0b4ea534db0dead0880efb8b5c0e9105edba58b248318e792e06a67dad1a1",
+    "sourceFile": "sources/maps-water.html",
+    "excerptFile": "sources/maps-water.extract.txt",
+    "excerptSha256": "b97c059fdaaef3c46cd2679daace3e34a9519a471bcb6957624496a75b9f2bb8",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official county elections current water-district map index, including LowerValley and Fabens/WCID4.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://epcountyvotestx.gov/maps/city-representatives-map",
+    "finalUrl": "https://epcountyvotestx.gov/maps/city-representatives-map",
+    "sourceCheckedAt": "2026-11-03T06:57:11.773682+00:00",
+    "sha256": "0634cc5ce27e1d59fc9696d352fbd273b220317a1003c8987dae3f64aea89f41",
+    "sourceFile": "sources/maps-city.html",
+    "excerptFile": "sources/maps-city.extract.txt",
+    "excerptSha256": "5c029d2631131466eb32a9aa919e3b0bfc99f4bdde9a041378e11e4361225541",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official county elections current city representative1–8 map index.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/421/original/2025_COMM_DIST_1_4_REDIST_MAP.pdf?1769721189",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/421/original/2025_COMM_DIST_1_4_REDIST_MAP.pdf?1769721189",
+    "sourceCheckedAt": "2026-11-03T06:59:05.177653+00:00",
+    "sha256": "bf6b9c77c1435ed36216c170aa1b0d4c494b6697420262b29bab02329758d0fb",
+    "sourceFile": "sources/map-commissioner-all.pdf",
+    "excerptFile": "sources/map-commissioner-all.extract.txt",
+    "excerptSha256": "4794cba26bfcd3c3daf26cbd995f197fd41615beb0ae86ada14a91deb376cd55",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official current linked county commissioner precinct map, PlanC2333, boundary evidence; not justice precinct geometry.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/021/original/2025_JP_DIST_1_7_REDIST.pdf?1769722570",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/021/original/2025_JP_DIST_1_7_REDIST.pdf?1769722570",
+    "sourceCheckedAt": "2026-11-03T06:59:04.646851+00:00",
+    "sha256": "a33bca5986a9683e6054f74d07e58c00cdddb5dbc65d3551011f1ccb18a07329",
+    "sourceFile": "sources/map-justice-all.pdf",
+    "excerptFile": "sources/map-justice-all.extract.txt",
+    "excerptSha256": "1a8cd2c1370d361e3f9940c60234accdd8a828108645ff43b8524c9bd37f66bb",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official current linked justice precinct1–7 map, boundary evidence; exact polygons remain pending.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/001/749/original/2025_FABENS_WTR_REDIST.pdf?1787243964",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/001/749/original/2025_FABENS_WTR_REDIST.pdf?1787243964",
+    "sourceCheckedAt": "2026-11-03T06:59:04.014844+00:00",
+    "sha256": "fa14e5500e131fee7dee46c461a98340e60402355bc68755f4664bccfa4b0455",
+    "sourceFile": "sources/map-wcid4.pdf",
+    "excerptFile": "sources/map-wcid4.extract.txt",
+    "excerptSha256": "c70d8d4efe101abdf931b6a8f8a974c75616141e8b8e5fbd348226601b50743b",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official current linked Fabens WaterDistrict/WCID4 election map, identifies precinct172.1. Not fullFabensISD or city electorate.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/030/original/2025_LOWER_VALLEY_WTR_REDIST.pdf?1787243101",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/030/original/2025_LOWER_VALLEY_WTR_REDIST.pdf?1787243101",
+    "sourceCheckedAt": "2026-11-03T06:59:04.482538+00:00",
+    "sha256": "a6a7c28040265833fca899f9666c51b4e1b27bef910f3f3832b6e5ced9ccb9e8",
+    "sourceFile": "sources/map-lvwd.pdf",
+    "excerptFile": "sources/map-lvwd.extract.txt",
+    "excerptSha256": "37a7f553fb8a9a520c12f726144715181b11d8b9392f02819e509e659cb0c17d",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official current linked LowerValleyWaterDistrict electoral boundary map. Held reader currently references a public water service area; River must reconcile electoral shape.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/004/717/original/LOWER_VALLEY_WATER_DISTRICT.PDF?1787243216",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/004/717/original/LOWER_VALLEY_WATER_DISTRICT.PDF?1787243216",
+    "sourceCheckedAt": "2026-11-03T06:59:03.914183+00:00",
+    "sha256": "74ce62468c835629e3fa12c785c5aab7c3a4bfdef14a548b754aa350fc63990a",
+    "sourceFile": "sources/map-lvwd-precincts.pdf",
+    "excerptFile": "sources/map-lvwd-precincts.extract.txt",
+    "excerptSha256": "37998d3253810c6698dd4e03d738f60d1c2469772d990e256b26f14a7cd693bc",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official August14,2026 LowerValleyWaterDistrict precise21precinct54subprecinct electorate list. Do not widen split precincts.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/482/original/2025_ALLCITY_REPS_REDIST.pdf?1777577617",
+    "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/482/original/2025_ALLCITY_REPS_REDIST.pdf?1777577617",
+    "sourceCheckedAt": "2026-11-03T06:59:05.301455+00:00",
+    "sha256": "e194eb1070481ca0ba94039b676abb0f785da2ebc6a3edb26a8e12d671ad710b",
+    "sourceFile": "sources/map-city-all.pdf",
+    "excerptFile": "sources/map-city-all.extract.txt",
+    "excerptSha256": "afa46496fac19e628a73f64400d15b5a23474697ffefab6bb4c98caec10d443c",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Official current linked CityRepresentativeDistricts1–8 electoral map.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=True)"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/4f18f6ec49324832846c53dff2aa5bc4/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/4f18f6ec49324832846c53dff2aa5bc4/data?f=json",
+    "sourceCheckedAt": "2026-11-03T07:01:46.863526+00:00",
+    "sha256": "444b11e6fe38fab2138c385ee02ce41d1a02bb784ee136dfe3c61ac0afeed1f1",
+    "sourceFile": "sources/gis-districting.json",
+    "excerptFile": "sources/gis-districting.json",
+    "excerptSha256": "444b11e6fe38fab2138c385ee02ce41d1a02bb784ee136dfe3c61ac0afeed1f1",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "City GIS public webmap points to official government RepresentativeDistricts service; geometry-only authority chain.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/fbc304e35ae8414596651edb74726db4/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/fbc304e35ae8414596651edb74726db4/data?f=json",
+    "sourceCheckedAt": "2026-11-03T07:01:47.102229+00:00",
+    "sha256": "ee9a61d59994b99bdf041033548731214eafdabc27aed72cac2a9e46d27cbe28",
+    "sourceFile": "sources/gis-locator.json",
+    "excerptFile": "sources/gis-locator.json",
+    "excerptSha256": "ee9a61d59994b99bdf041033548731214eafdabc27aed72cac2a9e46d27cbe28",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "City GIS public district-locator webmap points to official government RepresentativeDistricts service; geometry-only authority chain.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T07:03:11.390765+00:00",
+    "sha256": "af457ae1e7d0aac6e47703dc81e0208a75aa315036dd6aa227b4b4a675461b6c",
+    "sourceFile": "sources/gis-city.txt",
+    "excerptFile": "sources/gis-city.txt",
+    "excerptSha256": "af457ae1e7d0aac6e47703dc81e0208a75aa315036dd6aa227b4b4a675461b6c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Government GIS native representative district layer metadata via exact public reader capture. Geometry evidence only; incumbent fields are not candidate proof.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0?f=pjson",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T07:03:11.962640+00:00",
+    "sha256": "4425ad8836a1978ecec880b6d6568b64413c0202abadf7810a9f54d363e6cbb3",
+    "sourceFile": "sources/gis-city-polygons.txt",
+    "excerptFile": "sources/gis-city-polygons.txt",
+    "excerptSha256": "4425ad8836a1978ecec880b6d6568b64413c0202abadf7810a9f54d363e6cbb3",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Complete exact public reader capture of government GIS GeoJSON query, eight original city district features. Selected unchanged1/5/6/8 staged for River. Hash covers reader HTTP capture, not native query response.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T07:01:46.865307+00:00",
+    "sha256": "886c6602570e6b912986399aacafacf04101353d3b6f9ec6166d4c77983e0e67",
+    "sourceFile": "sources/gis-commissioner-reader.txt",
+    "excerptFile": "sources/gis-commissioner-reader.txt",
+    "excerptSha256": "886c6602570e6b912986399aacafacf04101353d3b6f9ec6166d4c77983e0e67",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Government GIS commissioner layer metadata via exact public reader capture. Four named precincts, distinct from seven justice precincts.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0?f=pjson",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T07:03:12.132050+00:00",
+    "sha256": "ae4e1c508648bdbc0a93160c8f85f61e1d5bef553ff5b1a593c4e38c9a487fe3",
+    "sourceFile": "sources/gis-commissioner-polygons.txt",
+    "excerptFile": "sources/gis-commissioner-polygons.txt",
+    "excerptSha256": "ae4e1c508648bdbc0a93160c8f85f61e1d5bef553ff5b1a593c4e38c9a487fe3",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact public reader HTTP capture bytes, not origin PDF/HTML bytes",
+    "evidence": "Complete exact public reader capture of government GIS GeoJSON query, four original commissioner features. Selected unchanged2/4 staged for River. Hash covers reader HTTP capture, not native query response.",
+    "captureMetadata": {
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact saved reader text"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://tx.omniballot.us/sites/48141/default/app/site-config.json?cb=1753196191149",
+    "finalUrl": "https://tx.omniballot.us/sites/48141/default/app/site-config.json?cb=1753196191149",
+    "sourceCheckedAt": "2026-11-03T06:56:24.761735+00:00",
+    "sha256": "de14ba0ac1dd498f295d196084d57479d7e74cef92ef5746ec4fd300ec219c77",
+    "sourceFile": "sources/omni-config.json",
+    "excerptFile": "sources/omni-config.json",
+    "excerptSha256": "de14ba0ac1dd498f295d196084d57479d7e74cef92ef5746ec4fd300ec219c77",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "County-linked accessible sample module public configuration. Public UI requires voter lookup/session; none submitted. Original public static account configuration retained as discovery only.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "GEOGRAPHY_AUTHORITY",
+    "sourceUrl": "https://www.txcourts.gov/8thcoa/",
+    "finalUrl": "https://www.txcourts.gov/8thcoa/",
+    "sourceCheckedAt": "2026-11-03T06:56:25.146004+00:00",
+    "sha256": "d21d7435d68453863a89f11574e0f74c4c974d5541140bf0e693eeb8c722bfb1",
+    "sourceFile": "sources/coa8.html",
+    "excerptFile": "sources/coa8.extract.txt",
+    "excerptSha256": "f4efb29e8864bd9f90a647aa597a43b9406d4c5440610ee1130d644cb4b30b9c",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current native official Eighth Court page supplies exact17whole-county electorate for regional chief justice office, not statewide or ElPaso-only.",
+    "captureMetadata": {
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "UTF-8 HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0?f=pjson",
+    "finalUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T07:05:06.852561+00:00",
+    "sha256": "f31c1a9e2b16dc0396e72ad84b174a503ed81df98be66b7293f8819f6fe48ee5",
+    "sourceFile": "sources/tceq-water-meta.json",
+    "excerptFile": "sources/tceq-water-meta.json",
+    "excerptSha256": "f31c1a9e2b16dc0396e72ad84b174a503ed81df98be66b7293f8819f6fe48ee5",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Native official Texas Commission on Environmental Quality water-district layer metadata. Geography supplement only.",
+    "captureMetadata": {
+      "originHttpStatus": 200
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0/query?where=UPPER%28NAME%29+LIKE+%27%25LOWER+VALLEY%25%27&outFields=%2A&outSR=4326&f=geojson",
+    "finalUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0/query?where=UPPER%28NAME%29+LIKE+%27%25LOWER+VALLEY%25%27&outFields=%2A&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T07:05:06.877014+00:00",
+    "sha256": "7676576c399c654650e9f9340e80d2576324d58e9a8427ea92913bb73e2aebc1",
+    "sourceFile": "sources/tceq-water-lvwd.json",
+    "excerptFile": "sources/tceq-water-lvwd.json",
+    "excerptSha256": "7676576c399c654650e9f9340e80d2576324d58e9a8427ea92913bb73e2aebc1",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Native official TCEQ legal water-district feature for Lower Valley Water District, district5505000. Metadata UPDATED is December15,2004, accuracy NP and comments scaled and positioned. Historical legal-boundary reference only; reconcile to current county2026 electoral map and54splitprecinct list, not automatically current reader geography.",
+    "captureMetadata": {
+      "originHttpStatus": 200
+    }
+  }
+]

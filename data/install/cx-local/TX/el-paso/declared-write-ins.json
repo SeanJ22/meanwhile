@@ -1,0 +1,17 @@
+{
+  "count": 1,
+  "candidates": [
+    {
+      "name": "Brandi Stevenson",
+      "officeAsListed": "Canutillo Independent School District Board of Trustees",
+      "contestId": "tx-cx-local-2026-el-paso-canutillo-independent-school-district-board-of-trustees-at-large-unexpired-two-year-term",
+      "officialStatus": "DECLARED_WRITE_IN",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/829/original/Write-In1.pdf?1790178390",
+      "sourceKey": "doc39",
+      "quote": "Precinct (Precincto) 2.1.2, 3, 4, 5, 12, 43.2, 184.1.3, 192, 193, 227\n\n                                     Canutillo Independent School District Board of Trustees       Brandi Stevenson                               (Mesa Directiva del Distrito Escolar Independiente de Canutillo)",
+      "scopeNote": "List does not print term label. Actual current Canutillo two-year special sample is the soleCanutillofield with a write-in slot. Assigned only to that specialfield; ordinaryprintedname list remains PatsyMendoza. Exactofficialprecinctscope is retained in quote."
+    }
+  ],
+  "genericWriteInBlankImported": false,
+  "statewideWriteIns": "Outside localpacket; existing statewide records unchanged."
+}

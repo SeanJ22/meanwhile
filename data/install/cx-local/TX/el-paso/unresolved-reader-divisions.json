@@ -1,0 +1,255 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:2",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-2"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:4",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-4"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:1",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-1"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:2",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-2"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:3",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-3"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:4",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-4"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:5",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-5"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:6",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-1",
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-2"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:7",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-7"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:8",
+    "contestIds": [
+      "tx-cx-local-2026-court-of-appeals-8-chief-justice"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": true,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:120",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-120"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:168",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-168"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:171",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-171"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:205",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-205"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:210",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-210"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:243",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-243"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:327",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-327"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:1",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-1"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:5",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-5"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:6",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-6"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:8",
+    "contestIds": [
+      "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-8"
+    ],
+    "exactRegistryMatch": false,
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "geometrySupplied": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  }
+]

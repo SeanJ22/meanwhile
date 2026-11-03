@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:18:47.584940+00:00",
+  "preparedAt": "2026-11-03T07:18:58.198356+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1710,6 +1710,20 @@
           "Existingstatelegislativeandmeasuredataremainpreserved;noquestioninstallfromthiscandidatepacket."
         ]
       }
+    },
+    {
+      "state": "TX",
+      "county": "El Paso County",
+      "populationRank": 70,
+      "manifest": "TX/el-paso/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 54,
+      "measureContests": 0,
+      "candidacies": 87,
+      "newContests": 35,
+      "refreshedContests": 19,
+      "sourceInputSha256": "5ce86022b2f38b49af449809a47d01ab314bb51cebfb2538bcef496145050bd6",
+      "coverage": "COMPLETE_LOCAL_NAMED_BLOCKS_IN_ALL_11_CURRENT_COUNTY_POSTED_COMPOSITE_ENTITY_SAMPLES"
     }
   ],
   "sourceReviewCounties": [
@@ -1735,17 +1749,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 66,
-    "packetsPrepared": 67,
-    "candidateAndRetentionContests": 3499,
+    "countiesPrepared": 67,
+    "packetsPrepared": 68,
+    "candidateAndRetentionContests": 3553,
     "measureContests": 115,
-    "candidacyEntries": 7829,
-    "newContestEntriesAgainstCheckedInBaseline": 2931,
-    "distinctPreparedContestIds": 3553,
-    "distinctPreparedCandidateIds": 7706,
-    "distinctNewContestsAgainstCheckedInBaseline": 2899,
+    "candidacyEntries": 7916,
+    "newContestEntriesAgainstCheckedInBaseline": 2966,
+    "distinctPreparedContestIds": 3607,
+    "distinctPreparedCandidateIds": 7793,
+    "distinctNewContestsAgainstCheckedInBaseline": 2934,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 67
+    "distinctCountyHandoffs": 68
   },
   "remainingWork": [
     {

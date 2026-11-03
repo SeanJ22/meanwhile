@@ -1,0 +1,1343 @@
+{
+  "scope": "All11currentcounty-postedentityandfederal-state-countycompositesamples",
+  "localCandidateFields": 54,
+  "ordinaryPrintedNames": 87,
+  "allLocalBlocks": [
+    {
+      "sourceKey": "doc28",
+      "page": 1,
+      "title": "Lower Valley Water District, Board of Directors, Place 1",
+      "names": [
+        [
+          "Rosalinda Alarcon Vigil",
+          null,
+          "5"
+        ],
+        [
+          "Maria G. Mendoza",
+          null,
+          "6"
+        ]
+      ],
+      "quote": "Lower Valley Water District, Board of Directors, Place 1\n                   (Mesa Directiva del Distrito de Agua del Valle Bajo, Lugar Núm. 1)\n                           Rosalinda Alarcon Vigil              5\n                           Maria G. Mendoza                  6",
+      "contestId": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-1",
+      "canonicalTitle": "Lower Valley Water District, Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lower_valley_water_district",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc28",
+      "page": 1,
+      "title": "Lower Valley Water District, Board of Directors, Place 2",
+      "names": [
+        [
+          "Rod Chavez",
+          null,
+          "9"
+        ]
+      ],
+      "quote": "                     Lower Valley Water District, Board of Directors, Place 2\n                   (Mesa Directiva del Distrito de Agua del Valle Bajo, Lugar Núm. 2)\n                      Rod Chavez                       9",
+      "contestId": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-2",
+      "canonicalTitle": "Lower Valley Water District, Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lower_valley_water_district",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc28",
+      "page": 1,
+      "title": "Lower Valley Water District, Board of Directors, Place 3",
+      "names": [
+        [
+          "Henry A. Trujillo",
+          null,
+          "12"
+        ]
+      ],
+      "quote": "                     Lower Valley Water District, Board of Directors, Place 3\n                   (Mesa Directiva del Distrito de Agua del Valle Bajo, Lugar Núm. 3)\n                         Henry A. Trujillo                    12",
+      "contestId": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-3",
+      "canonicalTitle": "Lower Valley Water District, Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lower_valley_water_district",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc30",
+      "page": 1,
+      "title": "El Paso County Water Control and Improvement District No. 4 Board of Directors",
+      "names": [
+        [
+          "Samuel Madrid",
+          null,
+          "31"
+        ]
+      ],
+      "quote": "El Paso County Water Control and Improvement District No. 4 Board of Directors\n       (Mesa Directiva del Distrito de Control y Mejoramiento del Agua Núm. 4 del Condado de El Paso)\n                                       Director for Position No. 1\n                                           (Director de Puesto Núm. 1)\n                                         Vote for One\n                                              (Vote por Uno)\n                        Samuel Madrid                    31",
+      "contestId": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-1",
+      "canonicalTitle": "El Paso County Water Control and Improvement District No. 4 Director, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:el_paso_county_water_control_and_improvement_district_4",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc30",
+      "page": 1,
+      "title": "Director for Position No. 2",
+      "names": [
+        [
+          "Luz Marquez",
+          null,
+          "34"
+        ],
+        [
+          "Jorge Carrasco, Jr.",
+          null,
+          "35"
+        ]
+      ],
+      "quote": "                                       Director for Position No. 2\n                                           (Director de Puesto Núm. 2)\n                                         Vote for One\n                                              (Vote por Uno)\n                          Luz Marquez                      34\n                             Jorge Carrasco, Jr.                  35",
+      "contestId": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-2",
+      "canonicalTitle": "El Paso County Water Control and Improvement District No. 4 Director, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:el_paso_county_water_control_and_improvement_district_4",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc30",
+      "page": 1,
+      "title": "Director for Position No. 5",
+      "names": [
+        [
+          "Joe T. Solis",
+          null,
+          "38"
+        ]
+      ],
+      "quote": "                                       Director for Position No. 5\n                                           (Director de Puesto Núm. 5)\n                                         Vote for One\n                                              (Vote por Uno)\n                            Joe T. Solis                        38",
+      "contestId": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-5",
+      "canonicalTitle": "El Paso County Water Control and Improvement District No. 4 Director, Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:el_paso_county_water_control_and_improvement_district_4",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc31",
+      "page": 1,
+      "title": "Canutillo Independent School District Board of Trustees",
+      "names": [
+        [
+          "Patsy Mendoza",
+          null,
+          "41"
+        ]
+      ],
+      "quote": "Canutillo Independent School District Board of Trustees\n                    (Mesa Directiva del Distrito Escolar Independiente de Canutillo)\n                                          District at Large, 2 Year Term\n                                         (Distrito en General, Término de 2 años)\n                           Patsy Mendoza                    41\n                              Write-In (Voto Escrito)",
+      "contestId": "tx-cx-local-2026-el-paso-canutillo-independent-school-district-board-of-trustees-at-large-unexpired-two-year-term",
+      "canonicalTitle": "Canutillo Independent School District Board of Trustees, At Large — Unexpired Two-Year Term",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:canutillo_independent_school_district",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": 2
+    },
+    {
+      "sourceKey": "doc31",
+      "page": 1,
+      "title": "Canutillo Independent School District Board of Trustees",
+      "names": [
+        [
+          "Cindy Andrade Carrillo",
+          null,
+          "44"
+        ],
+        [
+          "Breanne Barnes",
+          null,
+          "45"
+        ],
+        [
+          "Sergio Martinez",
+          null,
+          "46"
+        ],
+        [
+          "Guadalupe Montañez",
+          null,
+          "47"
+        ],
+        [
+          "Blanca Trout",
+          null,
+          "48"
+        ],
+        [
+          "Ryan Escamilla",
+          null,
+          "49"
+        ],
+        [
+          "Dr. Pedro Galaviz",
+          null,
+          "50"
+        ]
+      ],
+      "quote": "                         Canutillo Independent School District Board of Trustees\n                    (Mesa Directiva del Distrito Escolar Independiente de Canutillo)\n                                                 District at Large\n                                                    (Distrito en General)\n                                    Vote for no more than 3\n                                          (Vote por no más de 3)\n                          Cindy Andrade Carrillo              44\n                         Breanne Barnes                    45\n                             Sergio Martinez                    46\n                        Guadalupe Montañez               47\n                          Blanca Trout                      48\n                        Ryan Escamilla                    49\n                              Dr. Pedro Galaviz                   50",
+      "contestId": "tx-cx-local-2026-el-paso-canutillo-independent-school-district-board-of-trustees-at-large-three-seats",
+      "canonicalTitle": "Canutillo Independent School District Board of Trustees, At Large — Three Seats",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:canutillo_independent_school_district",
+      "namedChoiceCount": 7,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 3,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc34",
+      "page": 1,
+      "title": "Fabens Independent School District Board of Trustees, Place 1",
+      "names": [
+        [
+          "Alberto Sanchez",
+          null,
+          "76"
+        ],
+        [
+          "Angel Ornelas Jr.",
+          null,
+          "77"
+        ]
+      ],
+      "quote": "Fabens Independent School District Board of Trustees, Place 1\n               (Mesa Directiva del Distrito Escolar Independiente de Fabens, Lugar Núm. 1)\n                             Alberto Sanchez                   76\n                           Angel Ornelas Jr.                   77",
+      "contestId": "tx-cx-local-2026-el-paso-fabens-independent-school-district-board-of-trustees-place-1",
+      "canonicalTitle": "Fabens Independent School District Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fabens_independent_school_district",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc34",
+      "page": 1,
+      "title": "Fabens Independent School District Board of Trustees, Place 2",
+      "names": [
+        [
+          "Benjamin Morales",
+          null,
+          "80"
+        ],
+        [
+          "Maria (Lupe) Ornelas",
+          null,
+          "81"
+        ],
+        [
+          "Gloria Sepulveda Hernandez",
+          null,
+          "82"
+        ]
+      ],
+      "quote": "                  Fabens Independent School District Board of Trustees, Place 2\n               (Mesa Directiva del Distrito Escolar Independiente de Fabens, Lugar Núm. 2)\n                         Benjamin Morales                  80\n                           Maria (Lupe) Ornelas                81\n                             Gloria Sepulveda Hernandez         82",
+      "contestId": "tx-cx-local-2026-el-paso-fabens-independent-school-district-board-of-trustees-place-2",
+      "canonicalTitle": "Fabens Independent School District Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fabens_independent_school_district",
+      "namedChoiceCount": 3,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc34",
+      "page": 1,
+      "title": "Fabens Independent School District Board of Trustees, Place 4",
+      "names": [
+        [
+          "Julieta Sepulveda Ramirez",
+          null,
+          "85"
+        ],
+        [
+          "Raymundo Calzadias",
+          null,
+          "86"
+        ]
+      ],
+      "quote": "                  Fabens Independent School District Board of Trustees, Place 4\n               (Mesa Directiva del Distrito Escolar Independiente de Fabens, Lugar Núm. 4)\n                                 Julieta Sepulveda Ramirez           85\n                      Raymundo Calzadias               86",
+      "contestId": "tx-cx-local-2026-el-paso-fabens-independent-school-district-board-of-trustees-place-4",
+      "canonicalTitle": "Fabens Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fabens_independent_school_district",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc35",
+      "page": 1,
+      "title": "Tornillo Independent School District Board of Trustees, Place 4",
+      "names": [
+        [
+          "Estela Pacheco",
+          null,
+          "93"
+        ],
+        [
+          "Ida Carbajal Estrada",
+          null,
+          "94"
+        ]
+      ],
+      "quote": "                        Tornillo Independent School District Board of Trustees, Place 4\n               (Mesa Directiva del Distrito Escolar Independiente de Tornillo, Lugar Núm. 4)\n                             Estela Pacheco                    93\n                             Ida Carbajal Estrada                94",
+      "contestId": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-4",
+      "canonicalTitle": "Tornillo Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc35",
+      "page": 1,
+      "title": "Tornillo Independent School District Board of Trustees, Place 5",
+      "names": [
+        [
+          "Bryan Alvarez",
+          null,
+          "97"
+        ]
+      ],
+      "quote": "                        Tornillo Independent School District Board of Trustees, Place 5\n               (Mesa Directiva del Distrito Escolar Independiente de Tornillo, Lugar Núm. 5)\n                          Bryan Alvarez                      97",
+      "contestId": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-5",
+      "canonicalTitle": "Tornillo Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc35",
+      "page": 1,
+      "title": "Tornillo Independent School District Board of Trustees, Place 6",
+      "names": [
+        [
+          "Ofelia Bosquez",
+          null,
+          "100"
+        ],
+        [
+          "Lupita Alcala",
+          null,
+          "101"
+        ]
+      ],
+      "quote": "                        Tornillo Independent School District Board of Trustees, Place 6\n               (Mesa Directiva del Distrito Escolar Independiente de Tornillo, Lugar Núm. 6)\n                              Ofelia Bosquez                    100\n                             Lupita Alcala                      101",
+      "contestId": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-6",
+      "canonicalTitle": "Tornillo Independent School District Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc35",
+      "page": 1,
+      "title": "Tornillo Independent School District Board of Trustees, Place 7",
+      "names": [
+        [
+          "Carmen Bonilla",
+          null,
+          "104"
+        ],
+        [
+          "Irma Elias",
+          null,
+          "105"
+        ]
+      ],
+      "quote": "                        Tornillo Independent School District Board of Trustees, Place 7\n               (Mesa Directiva del Distrito Escolar Independiente de Tornillo, Lugar Núm. 7)\n                      Carmen Bonilla                    104\n                          Irma Elias                         105",
+      "contestId": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-7",
+      "canonicalTitle": "Tornillo Independent School District Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc36",
+      "page": 1,
+      "title": "Village of Vinton, Alderman, Place No. 3",
+      "names": [
+        [
+          "Paula Monrreal",
+          null,
+          "108"
+        ]
+      ],
+      "quote": "Village of Vinton, Alderman, Place No. 3\n                                (Pueblo de Vinton, Regidor, Lugar Núm. 3)\n                          Paula Monrreal                    108",
+      "contestId": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-3",
+      "canonicalTitle": "Village of Vinton, Alderman, Place No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:vinton",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc36",
+      "page": 1,
+      "title": "Village of Vinton, Alderman, Place No. 4",
+      "names": [
+        [
+          "Lourdes (Lulu) Cloud",
+          null,
+          "111"
+        ],
+        [
+          "Richard Tovar Jr.",
+          null,
+          "112"
+        ]
+      ],
+      "quote": "                                   Village of Vinton, Alderman, Place No. 4\n                                (Pueblo de Vinton, Regidor, Lugar Núm. 4)\n                          Lourdes (Lulu) Cloud                111\n                           Richard Tovar Jr.                   112",
+      "contestId": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-4",
+      "canonicalTitle": "Village of Vinton, Alderman, Place No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:vinton",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc36",
+      "page": 1,
+      "title": "Village of Vinton, Alderman, Place No. 5",
+      "names": [
+        [
+          "Santos Lucero",
+          null,
+          "115"
+        ]
+      ],
+      "quote": "                                   Village of Vinton, Alderman, Place No. 5\n                                (Pueblo de Vinton, Regidor, Lugar Núm. 5)\n                          Santos Lucero                     115",
+      "contestId": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-5",
+      "canonicalTitle": "Village of Vinton, Alderman, Place No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:vinton",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc37",
+      "page": 1,
+      "title": "City of El Paso, Representative, District 1",
+      "names": [
+        [
+          "\"MJK\" Matthew James Kozik",
+          null,
+          "118"
+        ],
+        [
+          "Sam Armijo",
+          null,
+          "119"
+        ],
+        [
+          "Daniela Garcia",
+          null,
+          "120"
+        ],
+        [
+          "Alejandra \"Ale\" Chávez",
+          null,
+          "121"
+        ]
+      ],
+      "quote": "City of El Paso, Representative, District 1\n                           (Ciudad de El Paso, Representante, Distrito Núm. 1)\n                           \"MJK\" Matthew James Kozik          118\n                    Sam Armijo                       119\n                           Daniela Garcia                     120\n                            Alejandra \"Ale\" Chávez              121",
+      "contestId": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-1",
+      "canonicalTitle": "City of El Paso, Representative, District 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:1",
+      "namedChoiceCount": 4,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc37",
+      "page": 1,
+      "title": "City of El Paso, Representative, District 5",
+      "names": [
+        [
+          "Ivan Niño",
+          null,
+          "124"
+        ],
+        [
+          "Richard Genera",
+          null,
+          "125"
+        ]
+      ],
+      "quote": "                                 City of El Paso, Representative, District 5\n                           (Ciudad de El Paso, Representante, Distrito Núm. 5)\n                             Ivan Niño                         124\n                           Richard Genera                    125",
+      "contestId": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-5",
+      "canonicalTitle": "City of El Paso, Representative, District 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:5",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc37",
+      "page": 1,
+      "title": "City of El Paso, Representative, District 6",
+      "names": [
+        [
+          "Jesse Moreno",
+          null,
+          "128"
+        ],
+        [
+          "Art Fierro",
+          null,
+          "129"
+        ],
+        [
+          "Claudia Contreras Siller",
+          null,
+          "130"
+        ],
+        [
+          "Pedro Fernandez Jr.",
+          null,
+          "131"
+        ],
+        [
+          "Hector Alba",
+          null,
+          "132"
+        ]
+      ],
+      "quote": "                                 City of El Paso, Representative, District 6\n                           (Ciudad de El Paso, Representante, Distrito Núm. 6)\n                           Jesse Moreno                      128\n                               Art Fierro                         129\n                           Claudia Contreras Siller             130\n                         Pedro Fernandez Jr.                 131\n                          Hector Alba                       132",
+      "contestId": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-6",
+      "canonicalTitle": "City of El Paso, Representative, District 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:6",
+      "namedChoiceCount": 5,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc37",
+      "page": 1,
+      "title": "City of El Paso, Representative, District 8",
+      "names": [
+        [
+          "Matthew Guzman",
+          null,
+          "135"
+        ],
+        [
+          "Arturo Alluin",
+          null,
+          "136"
+        ],
+        [
+          "Johnny J. Gonzalez",
+          null,
+          "137"
+        ],
+        [
+          "Chris Canales",
+          null,
+          "138"
+        ],
+        [
+          "Laura Ochoa-Todd",
+          null,
+          "139"
+        ]
+      ],
+      "quote": "                                 City of El Paso, Representative, District 8\n                           (Ciudad de El Paso, Representante, Distrito Núm. 8)\n                        Matthew Guzman                  135\n                             Arturo Alluin                       136\n                          Johnny J. Gonzalez                  137\n                            Chris Canales                     138\n                          Laura Ochoa-Todd                 139",
+      "contestId": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-8",
+      "canonicalTitle": "City of El Paso, Representative, District 8",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:8",
+      "namedChoiceCount": 5,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": 4
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 4,
+      "title": "Chief Justice, 8th Court of Appeals District",
+      "names": [
+        [
+          "Maria Salas Mendoza",
+          "Dem",
+          "253"
+        ]
+      ],
+      "quote": "                              Chief Justice, 8th Court of Appeals District\n                              (Juez Presidente, Corte de Apelaciones del 8 Distrito)\n                        Maria Salas Mendoza           Dem         253",
+      "contestId": "tx-cx-local-2026-court-of-appeals-8-chief-justice",
+      "canonicalTitle": "Chief Justice, 8th Court of Appeals District",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:8",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 4,
+      "title": "District Judge, 120th Judicial District",
+      "names": [
+        [
+          "Ben Ivey",
+          "Rep",
+          "256"
+        ],
+        [
+          "Chris Anchondo",
+          "Dem",
+          "257"
+        ]
+      ],
+      "quote": "                                      District Judge, 120th Judicial District\n                                     (Juez del Distrito, 120 Distrito Judicial)\n                     Ben Ivey                       Rep          256\n                          Chris Anchondo               Dem         257",
+      "contestId": "tx-ba01-2026-district-judge-120",
+      "canonicalTitle": "DISTRICT JUDGE, 120TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:120",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 4,
+      "title": "District Judge, 168th Judicial District",
+      "names": [
+        [
+          "R. Wayne Pritchard",
+          "Rep",
+          "260"
+        ],
+        [
+          "Bernardo Cruz",
+          "Dem",
+          "261"
+        ]
+      ],
+      "quote": "                                      District Judge, 168th Judicial District\n                                     (Juez del Distrito, 168 Distrito Judicial)\n                           R. Wayne Pritchard               Rep          260\n                        Bernardo Cruz                Dem         261",
+      "contestId": "tx-ba01-2026-district-judge-168",
+      "canonicalTitle": "DISTRICT JUDGE, 168TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:168",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 4,
+      "title": "District Judge, 171st Judicial District",
+      "names": [
+        [
+          "Amanda Enriquez",
+          "Dem",
+          "264"
+        ]
+      ],
+      "quote": "                                      District Judge, 171st Judicial District\n                                     (Juez del Distrito, 171 Distrito Judicial)\n                    Amanda Enriquez              Dem         264",
+      "contestId": "tx-ba01-2026-district-judge-171",
+      "canonicalTitle": "DISTRICT JUDGE, 171ST JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:171",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 4,
+      "title": "District Judge, 205th Judicial District",
+      "names": [
+        [
+          "Francisco X. Dominguez",
+          "Dem",
+          "267"
+        ]
+      ],
+      "quote": "                                      District Judge, 205th Judicial District\n                                     (Juez del Distrito, 205 Distrito Judicial)\n                         Francisco X. Dominguez          Dem         267",
+      "contestId": "tx-ba01-2026-district-judge-205",
+      "canonicalTitle": "DISTRICT JUDGE, 205TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:205",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "District Judge, 210th Judicial District",
+      "names": [
+        [
+          "Alyssa G. Perez",
+          "Dem",
+          "270"
+        ]
+      ],
+      "quote": "District Judge, 210th Judicial District\n                                     (Juez del Distrito, 210 Distrito Judicial)\n                         Alyssa G. Perez               Dem         270",
+      "contestId": "tx-ba01-2026-district-judge-210",
+      "canonicalTitle": "DISTRICT JUDGE, 210TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:210",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "District Judge, 243rd Judicial District",
+      "names": [
+        [
+          "Selena N. Solis",
+          "Dem",
+          "273"
+        ]
+      ],
+      "quote": "                                      District Judge, 243rd Judicial District\n                                     (Juez del Distrito, 243 Distrito Judicial)\n                        Selena N. Solis               Dem         273",
+      "contestId": "tx-ba01-2026-district-judge-243",
+      "canonicalTitle": "DISTRICT JUDGE, 243RD JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:243",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "District Judge, 327th Judicial District",
+      "names": [
+        [
+          "Monique Velarde Reyes",
+          "Dem",
+          "276"
+        ]
+      ],
+      "quote": "                                      District Judge, 327th Judicial District\n                                     (Juez del Distrito, 327 Distrito Judicial)\n                      Monique Velarde Reyes          Dem         276",
+      "contestId": "tx-ba01-2026-district-judge-327",
+      "canonicalTitle": "DISTRICT JUDGE, 327TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:327",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "County Judge",
+      "names": [
+        [
+          "Minerva Torres Shelton",
+          "Rep",
+          "279"
+        ],
+        [
+          "Ricardo Samaniego",
+          "Dem",
+          "280"
+        ]
+      ],
+      "quote": "                                      County Judge\n                                               (Juez del Condado)\n                        Minerva Torres Shelton             Rep          279\n                         Ricardo Samaniego             Dem         280",
+      "contestId": "tx-ba01-2026-county-48141-county_judge",
+      "canonicalTitle": "COUNTY JUDGE",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "Judge, County Court at Law No. 1",
+      "names": [
+        [
+          "Ruth Reyes",
+          "Dem",
+          "283"
+        ]
+      ],
+      "quote": "                                   Judge, County Court at Law No. 1\n                                      (Juez, Corte de Ley del Condado Núm. 1)\n                       Ruth Reyes                 Dem         283",
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_1",
+      "canonicalTitle": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "Judge, County Court at Law No. 2",
+      "names": [
+        [
+          "Frances M. Maldonado",
+          "Dem",
+          "286"
+        ]
+      ],
+      "quote": "                                   Judge, County Court at Law No. 2\n                                      (Juez, Corte de Ley del Condado Núm. 2)\n                        Frances M. Maldonado          Dem         286",
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_2",
+      "canonicalTitle": "JUDGE, COUNTY COURT AT LAW NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "Judge, County Court at Law No. 3",
+      "names": [
+        [
+          "Melissa Baeza",
+          "Dem",
+          "289"
+        ]
+      ],
+      "quote": "                                   Judge, County Court at Law No. 3\n                                      (Juez, Corte de Ley del Condado Núm. 3)\n                         Melissa Baeza                Dem         289",
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_3",
+      "canonicalTitle": "JUDGE, COUNTY COURT AT LAW NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "Judge, County Court at Law No. 4",
+      "names": [
+        [
+          "Eunice Reyes",
+          "Dem",
+          "292"
+        ]
+      ],
+      "quote": "                                   Judge, County Court at Law No. 4\n                                      (Juez, Corte de Ley del Condado Núm. 4)\n                        Eunice Reyes                Dem         292",
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_4",
+      "canonicalTitle": "JUDGE, COUNTY COURT AT LAW NO. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "Judge, County Court at Law No. 5",
+      "names": [
+        [
+          "Jesus Rodriguez",
+          "Dem",
+          "295"
+        ]
+      ],
+      "quote": "                                   Judge, County Court at Law No. 5\n                                      (Juez, Corte de Ley del Condado Núm. 5)\n                         Jesus Rodriguez               Dem         295",
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_5",
+      "canonicalTitle": "JUDGE, COUNTY COURT AT LAW NO. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 5,
+      "title": "Judge, County Court at Law No. 6",
+      "names": [
+        [
+          "M. Sue Kurita",
+          "Dem",
+          "298"
+        ]
+      ],
+      "quote": "                                   Judge, County Court at Law No. 6\n                                      (Juez, Corte de Ley del Condado Núm. 6)\n                      M. Sue Kurita                Dem         298",
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_6",
+      "canonicalTitle": "JUDGE, COUNTY COURT AT LAW NO. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "Judge, County Court at Law No. 7",
+      "names": [
+        [
+          "Ruben Morales",
+          "Dem",
+          "301"
+        ]
+      ],
+      "quote": "Judge, County Court at Law No. 7\n                                      (Juez, Corte de Ley del Condado Núm. 7)\n                     Ruben Morales               Dem         301",
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_7",
+      "canonicalTitle": "JUDGE, COUNTY COURT AT LAW NO. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "Judge, County Criminal Court at Law No. 1",
+      "names": [
+        [
+          "Linda Perez",
+          "Dem",
+          "304"
+        ]
+      ],
+      "quote": "                              Judge, County Criminal Court at Law No. 1\n                                 (Juez, Corte Criminal de Ley del Condado Núm. 1)\n                         Linda Perez                 Dem         304",
+      "contestId": "tx-cx-local-2026-el-paso-judge-county-criminal-court-at-law-no-1",
+      "canonicalTitle": "Judge, County Criminal Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "Judge, County Criminal Court at Law No. 2",
+      "names": [
+        [
+          "Robert S. Anchondo",
+          "Dem",
+          "307"
+        ]
+      ],
+      "quote": "                              Judge, County Criminal Court at Law No. 2\n                                 (Juez, Corte Criminal de Ley del Condado Núm. 2)\n                        Robert S. Anchondo            Dem         307",
+      "contestId": "tx-cx-local-2026-el-paso-judge-county-criminal-court-at-law-no-2",
+      "canonicalTitle": "Judge, County Criminal Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "Judge, County Probate Court No. 1",
+      "names": [
+        [
+          "Patricia B. Chew",
+          "Dem",
+          "310"
+        ]
+      ],
+      "quote": "                                  Judge, County Probate Court No. 1\n                                  (Juez, Corte Testamentaria del Condado Núm. 1)\n                             Patricia B. Chew              Dem         310",
+      "contestId": "tx-ba01-2026-county-48141-judge_probate_court_no_1",
+      "canonicalTitle": "JUDGE, PROBATE COURT NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "Judge, County Probate Court No. 2",
+      "names": [
+        [
+          "Gabriella M. Reed",
+          "Dem",
+          "313"
+        ]
+      ],
+      "quote": "                                  Judge, County Probate Court No. 2\n                                  (Juez, Corte Testamentaria del Condado Núm. 2)\n                           Gabriella M. Reed              Dem         313",
+      "contestId": "tx-ba01-2026-county-48141-judge_probate_court_no_2",
+      "canonicalTitle": "JUDGE, PROBATE COURT NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "District Clerk",
+      "names": [
+        [
+          "Norma Favela Barceleau",
+          "Dem",
+          "316"
+        ]
+      ],
+      "quote": "                                                  District Clerk\n                                            (Secretario del Distrito)\n                    Norma Favela Barceleau         Dem         316",
+      "contestId": "tx-ba01-2026-county-48141-district_clerk",
+      "canonicalTitle": "DISTRICT CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "County Clerk",
+      "names": [
+        [
+          "Delia Briones",
+          "Dem",
+          "319"
+        ]
+      ],
+      "quote": "                                       County Clerk\n                                           (Secretario del Condado)\n                           Delia Briones                Dem         319",
+      "contestId": "tx-ba01-2026-county-48141-county_clerk",
+      "canonicalTitle": "COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": 1,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "County Commissioner, Precinct No. 2",
+      "names": [
+        [
+          "Matt Sistrunk",
+          "Rep",
+          "322"
+        ],
+        [
+          "Miguel (Mike) Teran",
+          "Dem",
+          "323"
+        ]
+      ],
+      "quote": "                            County Commissioner, Precinct No. 2\n                            (Comisionado del Condado, Precinto Núm. 2)\n                        Matt Sistrunk                    Rep          322\n                         Miguel (Mike) Teran             Dem         323",
+      "contestId": "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-2",
+      "canonicalTitle": "County Commissioner, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:2",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 6,
+      "title": "County Commissioner, Precinct No. 4",
+      "names": [
+        [
+          "Leo Arcos",
+          "Rep",
+          "326"
+        ],
+        [
+          "Annette Griego",
+          "Dem",
+          "327"
+        ]
+      ],
+      "quote": "                            County Commissioner, Precinct No. 4\n                            (Comisionado del Condado, Precinto Núm. 4)\n                       Leo Arcos                      Rep          326\n                        Annette Griego               Dem         327",
+      "contestId": "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-4",
+      "canonicalTitle": "County Commissioner, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:4",
+      "namedChoiceCount": 2,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 1",
+      "names": [
+        [
+          "Denise Butterworth",
+          "Dem",
+          "330"
+        ]
+      ],
+      "quote": "Justice of the Peace, Precinct No. 1\n                                         (Juez de Paz, Precinto Núm. 1)\n                        Denise Butterworth             Dem         330",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-1",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:1",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 2",
+      "names": [
+        [
+          "Christie Saiz",
+          "Dem",
+          "333"
+        ]
+      ],
+      "quote": "                                    Justice of the Peace, Precinct No. 2\n                                         (Juez de Paz, Precinto Núm. 2)\n                            Christie Saiz                 Dem         333",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-2",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:2",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 3",
+      "names": [
+        [
+          "Josh Herrera",
+          "Dem",
+          "336"
+        ]
+      ],
+      "quote": "                                    Justice of the Peace, Precinct No. 3\n                                         (Juez de Paz, Precinto Núm. 3)\n                         Josh Herrera                 Dem         336",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-3",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:3",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 4",
+      "names": [
+        [
+          "Rebeca Bustamante",
+          "Dem",
+          "339"
+        ]
+      ],
+      "quote": "                                    Justice of the Peace, Precinct No. 4\n                                         (Juez de Paz, Precinto Núm. 4)\n                      Rebeca Bustamante            Dem         339",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-4",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:4",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 5",
+      "names": [
+        [
+          "Dora Oaxaca Rivera",
+          "Dem",
+          "342"
+        ]
+      ],
+      "quote": "                                    Justice of the Peace, Precinct No. 5\n                                         (Juez de Paz, Precinto Núm. 5)\n                       Dora Oaxaca Rivera            Dem         342",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-5",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:5",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 6, Place 1",
+      "names": [
+        [
+          "Ruben Lujan",
+          "Dem",
+          "345"
+        ]
+      ],
+      "quote": "                               Justice of the Peace, Precinct No. 6, Place 1\n                                  (Juez de Paz, Precinto Núm. 6, Lugar Núm. 1)\n                     Ruben Lujan                 Dem         345",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-1",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 6, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:6",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 6, Place 2",
+      "names": [
+        [
+          "Enedina \"Nina\" Serna",
+          "Dem",
+          "348"
+        ]
+      ],
+      "quote": "                               Justice of the Peace, Precinct No. 6, Place 2\n                                  (Juez de Paz, Precinto Núm. 6, Lugar Núm. 2)\n                        Enedina \"Nina\" Serna           Dem         348",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-2",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 6, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:6",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    },
+    {
+      "sourceKey": "doc38",
+      "page": 7,
+      "title": "Justice of the Peace, Precinct No. 7",
+      "names": [
+        [
+          "Humberto \"Beto\" Enriquez",
+          "Dem",
+          "351"
+        ]
+      ],
+      "quote": "                                    Justice of the Peace, Precinct No. 7\n                                         (Juez de Paz, Precinto Núm. 7)\n                      Humberto \"Beto\" Enriquez        Dem         351",
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-7",
+      "canonicalTitle": "Justice of the Peace, Precinct No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:7",
+      "namedChoiceCount": 1,
+      "sourceNamedBlockComplete": true,
+      "voteFor": null,
+      "termYears": null
+    }
+  ],
+  "allPrintedSelectionCodes": [
+    "5",
+    "6",
+    "9",
+    "12",
+    "31",
+    "34",
+    "35",
+    "38",
+    "41",
+    "44",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "76",
+    "77",
+    "80",
+    "81",
+    "82",
+    "85",
+    "86",
+    "93",
+    "94",
+    "97",
+    "100",
+    "101",
+    "104",
+    "105",
+    "108",
+    "111",
+    "112",
+    "115",
+    "118",
+    "119",
+    "120",
+    "121",
+    "124",
+    "125",
+    "128",
+    "129",
+    "130",
+    "131",
+    "132",
+    "135",
+    "136",
+    "137",
+    "138",
+    "139",
+    "253",
+    "256",
+    "257",
+    "260",
+    "261",
+    "264",
+    "267",
+    "270",
+    "273",
+    "276",
+    "279",
+    "280",
+    "283",
+    "286",
+    "289",
+    "292",
+    "295",
+    "298",
+    "301",
+    "304",
+    "307",
+    "310",
+    "313",
+    "316",
+    "319",
+    "322",
+    "323",
+    "326",
+    "327",
+    "330",
+    "333",
+    "336",
+    "339",
+    "342",
+    "345",
+    "348",
+    "351"
+  ],
+  "candidateDisplayWhitespaceRepairs": 0,
+  "scopeLimit": "Complete entity/composite blocks, not all individual voter-specific styles. No registered voter lookup or session was used. Three measure-only samples and tax portion of mixedTornillo sample remain ancillary. Every actual named local office in current supplied11PDFs is included."
+}

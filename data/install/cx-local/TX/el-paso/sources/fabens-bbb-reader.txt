@@ -1,0 +1,288 @@
+Title: Policy Code BBB – Board Members: Elections – Fabens ISD Board Policy Manual
+
+URL Source: https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB
+
+Markdown Content:
+[Skip Navigation](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#main-content)
+
+*   [Home](https://pol.tasb.org/PolicyOnline?key=438)
+*   [Resource Links](https://pol.tasb.org/PolicyOnline/ResourceLinks?key=438)
+*    Help 
+
+ Help
+
+Each policy code may have a Legal Framework, a Local Policy, an Exhibit, a Regulation, or Related Links tab. For more information regarding board policy manual structure, read the [Introduction](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=A18).
+
+**Previous Policy** and **Next Policy** — Navigate alphabetically to the previous or next policy code in the board policy manual.
+
+**Copy link** — Copies the policy code page URL (website link).
+
+**Table of Contents** — Select to navigate each document section.
+
+**Search the policy manual** — Search for a topic or phrase in the board policy manual.
+
+**Browse All Policies** — Browse and filter by code, topic, and subtopic.
+
+Browse All Policies
+
+Find content across the site by entering terms below.
+
+![Image 1](https://pol.tasb.org/images/u293_green.svg)
+Browse All Policies
+
+##### Browse All Policies
+
+_Click on a section to view the topics._
+
+*   [Legal](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legalTabContent)
+*   [Local](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#localTabContent)
+*   [Regulation](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#regulationsTabContent)
+*   [Exhibit](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#exhibitTabContent)
+*   [Links](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#relatedLinksTabContent)
+
+*   [Legal Framework](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legalTabContent)
+*   [Local Policy](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#localTabContent)
+*   [Regulation](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#regulationsTabContent)
+*   [Exhibit](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#exhibitTabContent)
+*   [Related Links](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#relatedLinksTabContent)
+
+*   [Membership](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-01)
+*   [Increase in Membership](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-01-01)
+*   [Terms](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-02)
+*   [Changing Term Lengths](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-02-01)
+*   [Uniform Election Dates](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-03)
+*   [Changing Uniform Election Date](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-03-01)
+*   [Joint Elections](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-04)
+*   [Required](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-04-01)
+*   [Methods of Election - Options](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05)
+*   [At Large](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-01)
+*   [Position or Place](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-02)
+*   [Single-Member Districts](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03)
+*   [On Board's Motion](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03-01)
+*   [By Voter Petition](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03-02)
+*   [Board Member Districts](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03-03)
+*   [Residency for First Election](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03-04)
+*   [Number and Term](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03-05)
+*   [Redistricting](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03-06)
+*   [Phase-in Option](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-05-03-07)
+*   [Boundary Change Notice](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-06)
+*   [Methods of Voting - Options](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-07)
+*   [Plurality](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-07-04)
+*   [Cumulative](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-07-05)
+*   [Majority](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#legal-07-06)
+
+Note: If the district is subject to a court order or other binding legal determination, the district shall conduct its elections in accordance with that court order or determination, applicable law, and this policy. To the extent of any conflict, the court order or other legal determination shall prevail. [See BBB(LOCAL)]
+
+## Membership
+
+The board consists of the number of members that the district had on September 1, 1995.Education Code 11.051(b)
+
+### Increase in Membership
+
+A board that has three or five members may by resolution increase the membership to seven. A board that votes to increase its membership must consider whether the district would benefit from also adopting a single-member election system under Education Code 11.052. [See Single-Member Districts, below.]
+
+A resolution increasing the number of trustees takes effect with the second regular election of trustees that occurs after the adoption of the resolution. The resolution must provide for a transition in the number of trustees so that when the transition is complete, trustees are elected as provided by Education Code 11.059 (terms).
+
+Education Code 11.051(c)
+
+## Terms
+
+A trustee of a district serves a term of three or four years.
+
+Elections for trustees with three-year terms shall be held annually. The terms of one-third of the trustees, or as near to one-third as possible, expire each year.
+
+Elections for trustees with four-year terms shall be held biennially. The terms of one-half of the trustees, or as near to one-half as possible, expire every two years.
+
+Board policy must state the schedule on which specific terms expire.
+
+Education Code 11.059
+
+### Changing Term Lengths
+
+Not later than December 31, 2030, the board of trustees may adopt a resolution changing the length of the terms of its trustees until the date the November election is canvassed. The resolution must provide for staggered terms of either three or four years and specify the manner in which the transition from the length of the former term to the modified term is made. The transition must begin with the first regular election for trustees that occurs after the board adopts the resolution, and a trustee who serves on the date the resolution is adopted shall serve the remainder of that term. Education Code 11.059(e)
+
+Note: For website posting requirements regarding trustee information, see CQA.
+
+## Uniform Election Dates
+
+Each general or special election of board members shall be on one of the following dates:
+
+1.   The first Saturday in May.
+2.   The first Tuesday after the first Monday in November.
+
+Election Code 41.001(a)
+
+### Changing Uniform Election Date
+
+The board of an independent school district that holds its general election for officers on a date other than the November uniform election date may change the date on which it holds its general election for officers to the November uniform election date. Election Code 41.0052
+
+## Joint Elections
+
+### Required
+
+A district trustee election shall be held on the same date as:
+
+1.   The election for the members of the governing body of a municipality located in the district;
+2.   The general election for state and county officers, which is held on the first Tuesday after the first Monday in November in even-numbered years under Election Code 41.002;
+3.   The election for the members of the governing body of a hospital district, if the school district:
+    1.   Is wholly or partly located in a county with a population of less than 50,000 that is adjacent to a county with a population of more than three million; and
+    2.   Held its election for board members jointly with the election for the members of the governing body of the hospital district before May 2007; or
+
+4.   The election for the members of the governing board of a public junior college district in which the school district is wholly or partly located.
+
+Elections held on the same date as provided above shall be held as a joint election under Election Code Chapter 271, and the voters shall be served by common polling places consistent with Election Code 271.003(b).
+
+Education Code 11.0581(a)-(c)
+
+A board may enter into an agreement with another political subdivision holding an election on the same day in all or part of the same county to hold the elections jointly. The terms of a joint election agreement must be stated in an order, resolution, or other official action adopted by the board. Election Code 271.002
+
+## Methods of Election — Options
+
+### At Large
+
+In a district in which the positions of trustees are not designated by number or in which the trustees are not elected from single-member trustee districts, the candidates receiving the highest number of votes shall fill the positions the terms of which are normally expiring. Education Code 11.057(b)
+
+### Position or Place
+
+The positions on the board shall be designated by number in any district in which the board by resolution orders that all candidates for trustee be voted on and elected separately for positions on the board and that all candidates be designated on the official ballot according to the number of the positions for which they seek election.
+
+Not later than the 60th day before the date of an election, the board must make the resolution and number the positions on the board in the order in which the terms of office expire. Once a board has ordered the election of trustees by numbered positions, neither the board nor their successors may rescind the action.
+
+Education Code 11.058(c)-(f)
+
+### Single-Member Districts
+
+#### On Board's Motion
+
+Except as provided below, the board, on its own motion, may order that trustees of the district are to be elected from single-member districts or that not fewer than 70 percent of the members of the board are to be elected from single-member districts with the remaining board members to be elected from the district at large.
+
+If a majority of the area of a district is located in a county with a population of less than 10,000, a board, on its own motion, may order that trustees of the district are to be elected from single-member districts or that not fewer than 50 percent of the members of the board are to be elected from single-member districts with the remaining board members to be elected from the district at large.
+
+Before adopting an order, a board must:
+
+1.   Hold a public hearing at which registered voters of a district are given an opportunity to comment on whether or not they favor the election of trustees in the manner proposed by the board; and
+2.   Publish notice of the hearing in a newspaper that has general circulation in the district, not later than the seventh day before the date of the hearing.
+
+An order adopted by the board must be entered not later than the 120th day before the date of the first election at which all or some of the trustees are elected from single-member districts authorized by the order.
+
+Education Code 11.052(a)-(d)
+
+#### By Voter Petition
+
+If at least 15 percent or 15,000 of the registered voters of the district, whichever is less, sign and present to the board a petition requesting submission to the voters of the proposition that trustees be elected in a specific manner, which must be generally described on the petition and which must be a manner of election the board could have ordered on its own motion, the board shall order that the appropriate proposition be placed on the ballot at the first regular election of trustees held after the 120th day after the date the petition is submitted to the board. The proposition must specify the number of trustees to be elected from single-member districts. Beginning with the first regular election of trustees held after an election at which a majority of the registered voters voting approve the proposition, trustees shall be elected in the manner prescribed by the approved proposition. Education Code 11.052(e)
+
+#### Board Member Districts
+
+If single-member districts are adopted or approved by either method described above, the board shall divide the district into the appropriate number of trustee districts, based on the number of members that are to be elected from single-member districts, and shall number each trustee district. The trustee districts must be compact and contiguous and must be as nearly as practicable of equal population. In a district with 150,000 or more students in average daily attendance, the boundary of a trustee district shall not cross a county election precinct boundary except at a point at which the district boundary crosses the county election precinct boundary. Trustee districts must be drawn not later than the 90th day before the date of the first election of trustees from those districts. Education Code 11.052(f)
+
+#### Residency for First Election
+
+Residents of each trustee district are entitled to elect one trustee to the board. A trustee elected to represent a trustee district at the first election of members must be a resident of the district the trustee represents not later than the 90th day after the date election returns are canvassed, or the 60th day after the date of a final judgment in an election contest filed concerning that trustee district. A trustee vacates the office if the trustee fails to move into the district the trustee represents within the time provided. [For more information on residency, see BBA and BBC.] Education Code 11.052(g)
+
+#### Number and Term
+
+At the first election at which some or all of the trustees are elected from single-member trustee districts and after each redistricting, all positions on a board shall be filled. The trustees then elected shall draw lots for staggered terms as provided by Education Code 11.059 (terms). Education Code 11.052(h)
+
+#### Redistricting
+
+Not later than the 90th day before the date of the first regular board election at which trustees may officially recognize and act on the last preceding federal census, a board shall redivide a district into the appropriate number of trustee districts if the census data indicates that the population of the most populous district exceeds the population of the least populous district by more than 10 percent. Redivision of a district shall be in the manner provided above at Board Member Districts. Education Code 11.052(i)
+
+#### Phase-in Option
+
+The board of a district that adopts a redistricting plan may provide for the trustees in office when the plan is adopted or the district is redistricted to serve for the remainder of their terms in accordance with this provision. The trustee district and any at-large positions provided by the district's plan shall be filled as the staggered terms of trustees then in office expire. Not later than the 90th day before the date of the first election from trustee districts and after each redistricting, a board shall determine the order in which the positions will be filled. Education Code 11.053
+
+## Boundary Change Notice
+
+A district that changes its boundaries or the boundaries of districts used to elect members to the board shall not later than the 30th day after the date the change is adopted:
+
+1.   Notify the voter registrar of the county in which the area subject to the boundary change is located of the adopted boundary change; and 
+2.   Provide the voter registrar with a map of an adopted boundary change in a format that is compatible with the mapping format used by the registrar's office.
+
+Election Code 42.0615
+
+## Methods of Voting — Options
+
+### Plurality
+
+Except as otherwise provided at Majority, below, to be elected to a public office, a candidate elected at large, at large by position, or by single-member districts must receive more votes than any other candidate for the office. Education Code 11.057(a), (b); Election Code 2.001
+
+### Cumulative
+
+The board of a district that elects its trustees at large or at large by position may order that elections for trustees be held using the cumulative voting procedure.
+
+If a board adopts an order requiring the use of cumulative voting, only the board member positions that were scheduled to be filled at the election are filled through the use of cumulative voting.
+
+At an election at which more than one board member position is to be filled, all of the positions that are to be filled at the election shall be voted on as one race by all the voters of a district. Each voter is entitled to cast a number of votes equal to the number of positions to be filled at the election.
+
+A voter may cast one or more of the specified number of votes for any one or more candidates in any combination. Only whole votes may be cast and counted. If a voter casts more than the number of votes to which the voter is entitled in the election, none of the voter's votes may be counted in that election. If a voter casts fewer votes than entitled, all of the voter's votes are counted in that election.
+
+The candidates who are elected are those, in the number to be elected, receiving the highest number of votes.
+
+A district that adopts an order requiring the use of cumulative voting may not elect its members by position as provided by Education Code 11.058.
+
+Education Code 11.054
+
+### Majority
+
+The board of a district in which the positions of trustees are designated by number or in which the trustees are elected from single-member districts may provide by resolution, not later than the 180th day before the date of an election, that a candidate must receive a majority of the votes cast for a position or in a trustee district, as applicable, to be elected.
+
+The resolution is effective until rescinded by a subsequent resolution adopted not later than the 180th day before the date of the first election to which the rescission applies.
+
+Education Code 11.057(c)
+
+FABENS ISD
+
+BBB(LEGAL)-P
+
+UPDATE 126
+
+DATE ISSUED: 10/29/2025
+
+*   [Membership](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-01)
+*   [Method of Election](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-02)
+*   [Election Date](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-03)
+*   [Terms and Election Schedule](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-04)
+*   [Places 1, 2, and 4](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-04-01)
+*   [Places 3, 5, 6, and 7](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-04-02)
+*   [Method of Voting](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-05)
+*   [Plurality](https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB#local-05-01)
+
+Adopted: 3/22/2023
+
+## Membership
+
+The Board shall consist of seven members.
+
+## Method of Election
+
+Election of Board members shall be by place.
+
+## Election Date
+
+General election of Board members shall be on the November uniform election date.
+
+## Terms and Election Schedule
+
+Board members shall be elected for four-year terms, with elections conducted biennially, as follows:
+
+### Places 1, 2, and 4
+
+The election for places 1, 2, and 4 shall be held in 2026, 2030, 2034, and in four-year intervals thereafter.
+
+### Places 3, 5, 6, and 7
+
+The election for places 3, 5, 6, and 7 shall be held in 2024, 2028, 2032, and in four-year intervals thereafter.
+
+## Method of Voting
+
+### Plurality
+
+To be elected, a candidate must receive more votes than any other candidate for the place.
+
+FABENS ISD
+
+BBB(LOCAL)-X
+
+LDU 2023.03
+
+DATE ISSUED: 5/3/2023

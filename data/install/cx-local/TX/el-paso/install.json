@@ -1,0 +1,819 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "El Paso County",
+  "countyFips": "48141",
+  "populationRank": 70,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "counts": {
+    "officialCountySamplePdfs": 11,
+    "physicalSamplePages": 18,
+    "localCandidateFields": 54,
+    "ordinaryPrintedChoices": 87,
+    "refreshedContests": 19,
+    "newContests": 35,
+    "reusedCandidateIds": 22,
+    "newCandidateIds": 65,
+    "incomingRegionalCourtCountyMemberships": 17,
+    "unmatchedReaderDivisions": 21,
+    "selectedGeographyPolygons": 6,
+    "declaredLocalWriteIns": 1,
+    "separateCancellationNames": 11,
+    "ancillaryLocalQuestions": 7
+  },
+  "coverage": "COMPLETE_LOCAL_NAMED_BLOCKS_IN_ALL_11_CURRENT_COUNTY_POSTED_COMPOSITE_ENTITY_SAMPLES",
+  "subjects": [
+    {
+      "id": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-1",
+      "title": "Lower Valley Water District, Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lower_valley_water_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc28",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-2",
+      "title": "Lower Valley Water District, Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lower_valley_water_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc28",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-3",
+      "title": "Lower Valley Water District, Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lower_valley_water_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc28",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-1",
+      "title": "El Paso County Water Control and Improvement District No. 4 Director, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:el_paso_county_water_control_and_improvement_district_4",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc30",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-2",
+      "title": "El Paso County Water Control and Improvement District No. 4 Director, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:el_paso_county_water_control_and_improvement_district_4",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc30",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-5",
+      "title": "El Paso County Water Control and Improvement District No. 4 Director, Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:el_paso_county_water_control_and_improvement_district_4",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc30",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-canutillo-independent-school-district-board-of-trustees-at-large-unexpired-two-year-term",
+      "title": "Canutillo Independent School District Board of Trustees, At Large \u2014 Unexpired Two-Year Term",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:canutillo_independent_school_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc31",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-canutillo-independent-school-district-board-of-trustees-at-large-three-seats",
+      "title": "Canutillo Independent School District Board of Trustees, At Large \u2014 Three Seats",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:canutillo_independent_school_district",
+      "printedCandidates": 7,
+      "sampleVerified": true,
+      "sourceWitness": "doc31",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-fabens-independent-school-district-board-of-trustees-place-1",
+      "title": "Fabens Independent School District Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fabens_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc34",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-fabens-independent-school-district-board-of-trustees-place-2",
+      "title": "Fabens Independent School District Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fabens_independent_school_district",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "doc34",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-fabens-independent-school-district-board-of-trustees-place-4",
+      "title": "Fabens Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:fabens_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc34",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-4",
+      "title": "Tornillo Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc35",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-5",
+      "title": "Tornillo Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc35",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-6",
+      "title": "Tornillo Independent School District Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc35",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-7",
+      "title": "Tornillo Independent School District Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tornillo_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc35",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-3",
+      "title": "Village of Vinton, Alderman, Place No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:vinton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc36",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-4",
+      "title": "Village of Vinton, Alderman, Place No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:vinton",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc36",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-5",
+      "title": "Village of Vinton, Alderman, Place No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:vinton",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc36",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-1",
+      "title": "City of El Paso, Representative, District 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:1",
+      "printedCandidates": 4,
+      "sampleVerified": true,
+      "sourceWitness": "doc37",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-5",
+      "title": "City of El Paso, Representative, District 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:5",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc37",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-6",
+      "title": "City of El Paso, Representative, District 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:6",
+      "printedCandidates": 5,
+      "sampleVerified": true,
+      "sourceWitness": "doc37",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-8",
+      "title": "City of El Paso, Representative, District 8",
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:8",
+      "printedCandidates": 5,
+      "sampleVerified": true,
+      "sourceWitness": "doc37",
+      "samplePage": 1
+    },
+    {
+      "id": "tx-cx-local-2026-court-of-appeals-8-chief-justice",
+      "title": "Chief Justice, 8th Court of Appeals District",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:8",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-120",
+      "title": "DISTRICT JUDGE, 120TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:120",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-168",
+      "title": "DISTRICT JUDGE, 168TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:168",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-171",
+      "title": "DISTRICT JUDGE, 171ST JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:171",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-205",
+      "title": "DISTRICT JUDGE, 205TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:205",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-210",
+      "title": "DISTRICT JUDGE, 210TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:210",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-243",
+      "title": "DISTRICT JUDGE, 243RD JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:243",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-327",
+      "title": "DISTRICT JUDGE, 327TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:327",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-county_judge",
+      "title": "COUNTY JUDGE",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_1",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_2",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_3",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_4",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_5",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_6",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 5
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_7",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-judge-county-criminal-court-at-law-no-1",
+      "title": "Judge, County Criminal Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-judge-county-criminal-court-at-law-no-2",
+      "title": "Judge, County Criminal Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_probate_court_no_1",
+      "title": "JUDGE, PROBATE COURT NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-judge_probate_court_no_2",
+      "title": "JUDGE, PROBATE COURT NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-district_clerk",
+      "title": "DISTRICT CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-ba01-2026-county-48141-county_clerk",
+      "title": "COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-2",
+      "title": "County Commissioner, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:2",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-4",
+      "title": "County Commissioner, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:4",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 6
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-1",
+      "title": "Justice of the Peace, Precinct No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:1",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-2",
+      "title": "Justice of the Peace, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:2",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-3",
+      "title": "Justice of the Peace, Precinct No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:3",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-4",
+      "title": "Justice of the Peace, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:4",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-5",
+      "title": "Justice of the Peace, Precinct No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:5",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-1",
+      "title": "Justice of the Peace, Precinct No. 6, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:6",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-2",
+      "title": "Justice of the Peace, Precinct No. 6, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:6",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    },
+    {
+      "id": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-7",
+      "title": "Justice of the Peace, Precinct No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:7",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "doc38",
+      "samplePage": 7
+    }
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:2",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-2"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/commissioner_precinct:4",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-county-commissioner-precinct-no-4"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:1",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-1"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:2",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-2"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:3",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-3"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:4",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-4"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:5",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-5"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:6",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-1",
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-2"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso/justice_precinct:7",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-7"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:8",
+      "contestIds": [
+        "tx-cx-local-2026-court-of-appeals-8-chief-justice"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": true,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:120",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-120"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:168",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-168"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:171",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-171"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:205",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-205"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:210",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-210"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:243",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-243"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:327",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-327"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:1",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-1"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:5",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-5"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:6",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-6"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:el_paso/council_district:8",
+      "contestIds": [
+        "tx-cx-local-2026-el-paso-city-of-el-paso-representative-district-8"
+      ],
+      "exactRegistryMatch": false,
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "geometrySupplied": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    }
+  ],
+  "proofFiles": [
+    "source-support.json",
+    "coverage-evidence.json",
+    "sample-index.json",
+    "identity-reuse-comparison.json",
+    "unresolved-reader-divisions.json",
+    "geography-source-notes.json",
+    "geography-source-polygons.geojson",
+    "separate-status-records.json",
+    "declared-write-ins.json",
+    "ancillary-local-questions.json",
+    "source-route-log.json",
+    "geography-historical-lvwd.geojson",
+    "sample-audit-validation.json",
+    "validation.json",
+    "HANDOFF.md"
+  ],
+  "limits": [
+    "Complete current public county composite/entity samples; personalized individual voter styles were not queried. No personal voter identity or session used.",
+    "Seven held district court IDs reused, including the 205th three-county membership. New 8th Court chief justice has the exact seventeen-county electorate.",
+    "Twenty-one unmatched reader divisions are listed. Six precise GIS polygons are staged; seven justice-precinct polygons remain pending. Lower Valley existing service-area geography must be reconciled to the current electoral map. TCEQ legal feature is a historical2004reference only.",
+    "Clint ISD cancellation documents print November2 and one contradictory district recital. Those source conflicts are retained outside ordinary choices.",
+    "The city filing archive includes Jacqueline P. Horn; both actual city and county samples omit her. No withdrawal or disqualification is inferred.",
+    "All held statewide, legislative, congressional races, measures and explainers are preserved. Parent/River owns latest merge, installation, reader joins and live checks."
+  ],
+  "sourceAcquisition": {
+    "nativeOfficialCountyPdfBytes": true,
+    "nativeCandidateProofPdfCount": 8,
+    "readersUsedForCandidateProof": false,
+    "governmentGisGeometryFormat": "CompletepublicreaderJSONcapture; exactraw captureandparsed originalfeatures bothretained"
+  },
+  "latestCxVotesRef": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+  "dataOnly": true,
+  "productionWrites": false,
+  "createdAt": "2026-11-03T07:08:09.402924+00:00",
+  "validation": {
+    "sourceHashes": "PASS",
+    "savedSourceQuotes": 158,
+    "sourceCaptures": 57,
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "independentOriginalPdfCoordinateNameCountAudit": "PASS",
+    "unrelatedContestsPreserved": 1717,
+    "unrelatedCandidateCoreFieldsPreserved": 2144,
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 57 captured sources and 158 exact saved-source quotes"
+  }
+}

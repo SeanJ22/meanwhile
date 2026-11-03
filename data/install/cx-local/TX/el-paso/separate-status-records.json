@@ -1,0 +1,336 @@
+{
+  "cancelledOrDeclaredElected": [
+    {
+      "office": "Town of Clint Mayor",
+      "name": "Rose Hernandez",
+      "status": "CANCELLED_DECLARED_ELECTED",
+      "sourceKey": "doc22",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/814/original/Town_of_Clint-Order_of_Cancellation.pdf?1789510774",
+      "sourceCheckedAt": "2026-11-03T06:55:32.813373+00:00",
+      "note": "Explicit cancellation ordinance, November3,2026.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "Town of Clint Alderperson",
+      "name": "Dino Coronado",
+      "status": "CANCELLED_DECLARED_ELECTED",
+      "sourceKey": "doc22",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/814/original/Town_of_Clint-Order_of_Cancellation.pdf?1789510774",
+      "sourceCheckedAt": "2026-11-03T06:55:32.813373+00:00",
+      "note": "Explicit cancellation ordinance, November3,2026.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "Town of Clint Alderperson",
+      "name": "Andy Venzor",
+      "status": "CANCELLED_DECLARED_ELECTED",
+      "sourceKey": "doc22",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/814/original/Town_of_Clint-Order_of_Cancellation.pdf?1789510774",
+      "sourceCheckedAt": "2026-11-03T06:55:32.813373+00:00",
+      "note": "Explicit cancellation ordinance, November3,2026.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "El Paso Central Appraisal District Place1",
+      "name": "Eduardo Mena",
+      "status": "CANCELLED_DECLARED_ELECTED",
+      "sourceKey": "doc23",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/827/original/EPCAD_Order_of_Cancellation_9.17.26.pdf?1789743419",
+      "sourceCheckedAt": "2026-11-03T06:55:33.313695+00:00",
+      "note": "Explicit cancellation order, November3,2026.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "El Paso Central Appraisal District Place2",
+      "name": "John Fleming",
+      "status": "CANCELLED_DECLARED_ELECTED",
+      "sourceKey": "doc23",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/827/original/EPCAD_Order_of_Cancellation_9.17.26.pdf?1789743419",
+      "sourceCheckedAt": "2026-11-03T06:55:33.313695+00:00",
+      "note": "Explicit cancellation order, November3,2026.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "El Paso Central Appraisal District Place3",
+      "name": "Alfred Gonzalez",
+      "status": "CANCELLED_DECLARED_ELECTED",
+      "sourceKey": "doc23",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/827/original/EPCAD_Order_of_Cancellation_9.17.26.pdf?1789743419",
+      "sourceCheckedAt": "2026-11-03T06:55:33.313695+00:00",
+      "note": "Explicit cancellation order, November3,2026.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "Clint ISD District1",
+      "name": "Sandra Ivonne Shay",
+      "status": "CANCELLATION_DOCUMENT_DECLARED_ELECTED_WITH_INTERNAL_CONFLICT",
+      "sourceKey": "doc11",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+      "sourceCheckedAt": "2026-11-03T06:55:29.465379+00:00",
+      "note": "County files current cancellation under November3. Original itself prints November2 and SigifredoMontesDistrict3 in recital but District4 in operative table. Date/recital conflict retained, no correction invented.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "Clint ISD District2",
+      "name": "Edna L. Reyes",
+      "status": "CANCELLATION_DOCUMENT_DECLARED_ELECTED_WITH_INTERNAL_CONFLICT",
+      "sourceKey": "doc11",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+      "sourceCheckedAt": "2026-11-03T06:55:29.465379+00:00",
+      "note": "County files current cancellation under November3. Original itself prints November2 and SigifredoMontesDistrict3 in recital but District4 in operative table. Date/recital conflict retained, no correction invented.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "Clint ISD District4",
+      "name": "Sigifredo Montes",
+      "status": "CANCELLATION_DOCUMENT_DECLARED_ELECTED_WITH_INTERNAL_CONFLICT",
+      "sourceKey": "doc11",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+      "sourceCheckedAt": "2026-11-03T06:55:29.465379+00:00",
+      "note": "County files current cancellation under November3. Original itself prints November2 and SigifredoMontesDistrict3 in recital but District4 in operative table. Date/recital conflict retained, no correction invented.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "Clint ISD At-Large",
+      "name": "Jim Pendell",
+      "status": "CANCELLATION_DOCUMENT_DECLARED_ELECTED_WITH_INTERNAL_CONFLICT",
+      "sourceKey": "doc11",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+      "sourceCheckedAt": "2026-11-03T06:55:29.465379+00:00",
+      "note": "County files current cancellation under November3. Original itself prints November2 and SigifredoMontesDistrict3 in recital but District4 in operative table. Date/recital conflict retained, no correction invented.",
+      "ordinaryCandidateImported": false
+    },
+    {
+      "office": "Clint ISD District3 — Special",
+      "name": "Eunice A. Elias",
+      "status": "CANCELLATION_DOCUMENT_DECLARED_ELECTED_WITH_INTERNAL_CONFLICT",
+      "sourceKey": "doc12",
+      "sourceUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/808/original/1744_001.pdf?1788986960",
+      "sourceCheckedAt": "2026-11-03T06:55:29.634041+00:00",
+      "note": "County files current cancellation under November3. Original itself prints November2. Date conflict retained, no correction invented.",
+      "ordinaryCandidateImported": false
+    }
+  ],
+  "ordinaryPrintedSoleChoiceFields": [
+    {
+      "contestId": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-2",
+      "title": "Lower Valley Water District, Board of Directors, Place 2",
+      "name": "Rod Chavez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-lower-valley-water-district-board-of-directors-place-3",
+      "title": "Lower Valley Water District, Board of Directors, Place 3",
+      "name": "Henry A. Trujillo",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-1",
+      "title": "El Paso County Water Control and Improvement District No. 4 Director, Position 1",
+      "name": "Samuel Madrid",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-el-paso-county-water-control-and-improvement-district-no-4-director-position-5",
+      "title": "El Paso County Water Control and Improvement District No. 4 Director, Position 5",
+      "name": "Joe T. Solis",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-canutillo-independent-school-district-board-of-trustees-at-large-unexpired-two-year-term",
+      "title": "Canutillo Independent School District Board of Trustees, At Large — Unexpired Two-Year Term",
+      "name": "Patsy Mendoza",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-tornillo-independent-school-district-board-of-trustees-place-5",
+      "title": "Tornillo Independent School District Board of Trustees, Place 5",
+      "name": "Bryan Alvarez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-3",
+      "title": "Village of Vinton, Alderman, Place No. 3",
+      "name": "Paula Monrreal",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-village-of-vinton-alderman-place-no-5",
+      "title": "Village of Vinton, Alderman, Place No. 5",
+      "name": "Santos Lucero",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-court-of-appeals-8-chief-justice",
+      "title": "Chief Justice, 8th Court of Appeals District",
+      "name": "Maria Salas Mendoza",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-171",
+      "title": "DISTRICT JUDGE, 171ST JUDICIAL DISTRICT",
+      "name": "Amanda Enriquez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-205",
+      "title": "DISTRICT JUDGE, 205TH JUDICIAL DISTRICT",
+      "name": "Francisco X. Dominguez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-210",
+      "title": "DISTRICT JUDGE, 210TH JUDICIAL DISTRICT",
+      "name": "Alyssa G. Perez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-243",
+      "title": "DISTRICT JUDGE, 243RD JUDICIAL DISTRICT",
+      "name": "Selena N. Solis",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-district-judge-327",
+      "title": "DISTRICT JUDGE, 327TH JUDICIAL DISTRICT",
+      "name": "Monique Velarde Reyes",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_1",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "name": "Ruth Reyes",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_2",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 2",
+      "name": "Frances M. Maldonado",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_3",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 3",
+      "name": "Melissa Baeza",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_4",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 4",
+      "name": "Eunice Reyes",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_5",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 5",
+      "name": "Jesus Rodriguez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_6",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 6",
+      "name": "M. Sue Kurita",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_county_court_at_law_no_7",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 7",
+      "name": "Ruben Morales",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-judge-county-criminal-court-at-law-no-1",
+      "title": "Judge, County Criminal Court at Law No. 1",
+      "name": "Linda Perez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-judge-county-criminal-court-at-law-no-2",
+      "title": "Judge, County Criminal Court at Law No. 2",
+      "name": "Robert S. Anchondo",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_probate_court_no_1",
+      "title": "JUDGE, PROBATE COURT NO. 1",
+      "name": "Patricia B. Chew",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-judge_probate_court_no_2",
+      "title": "JUDGE, PROBATE COURT NO. 2",
+      "name": "Gabriella M. Reed",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-district_clerk",
+      "title": "DISTRICT CLERK",
+      "name": "Norma Favela Barceleau",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-ba01-2026-county-48141-county_clerk",
+      "title": "COUNTY CLERK",
+      "name": "Delia Briones",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-1",
+      "title": "Justice of the Peace, Precinct No. 1",
+      "name": "Denise Butterworth",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-2",
+      "title": "Justice of the Peace, Precinct No. 2",
+      "name": "Christie Saiz",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-3",
+      "title": "Justice of the Peace, Precinct No. 3",
+      "name": "Josh Herrera",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-4",
+      "title": "Justice of the Peace, Precinct No. 4",
+      "name": "Rebeca Bustamante",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-5",
+      "title": "Justice of the Peace, Precinct No. 5",
+      "name": "Dora Oaxaca Rivera",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-1",
+      "title": "Justice of the Peace, Precinct No. 6, Place 1",
+      "name": "Ruben Lujan",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-6-place-2",
+      "title": "Justice of the Peace, Precinct No. 6, Place 2",
+      "name": "Enedina \"Nina\" Serna",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    },
+    {
+      "contestId": "tx-cx-local-2026-el-paso-justice-of-the-peace-precinct-no-7",
+      "title": "Justice of the Peace, Precinct No. 7",
+      "name": "Humberto \"Beto\" Enriquez",
+      "status": "SOLE_ORDINARY_PRINTED_CHOICE_NOT_INFERRED_CANCELLED"
+    }
+  ],
+  "filingArchiveDifference": [
+    {
+      "name": "Jacqueline P. Horn",
+      "office": "City of El Paso Representative District5",
+      "sourceKey": "city-reader",
+      "status": "FILING_ARCHIVE_ROW_ABSENT_FROM_BOTH_CURRENT_CITY_AND_COUNTY_SAMPLES",
+      "action": "No ordinarychoice imported, no withdrawal/disqualification inferred."
+    }
+  ],
+  "localQualificationRegisterLimit": "County current named write-in list acquired; independent city/school qualification archives not represented as exhaustive status history."
+}

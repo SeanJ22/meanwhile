@@ -1,0 +1,892 @@
+{
+  "routes": [
+    {
+      "requestedUrl": "https://www.arcgis.com/sharing/rest/search?f=json&num=100&q=El%20Paso%20County%20Commissioner%20Precincts",
+      "finalUrl": "https://www.arcgis.com/sharing/rest/search?f=json&num=100&q=El%20Paso%20County%20Commissioner%20Precincts",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:53.490229+00:00",
+      "sha256": "100d2fd9b64d7a75ff2131a95d413fef1f1634adf2a6a395784b8401f1aea088",
+      "contentType": "application/json;charset=utf-8",
+      "key": "arcgis-search"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/election-2026-11-03.php",
+      "finalUrl": "https://r.jina.ai/https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/election-2026-11-03.php",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:57:12.779313+00:00",
+      "sha256": "a53fa16eef45187a42779aac6560a6b6f5652bbc0cf7b89c0c0decca077cdff8",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "city-reader"
+    },
+    {
+      "requestedUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/2026-11-03/docs/Sample-Ballot.pdf",
+      "finalUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/2026-11-03/docs/Sample-Ballot.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:04:44.622387+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "city-sample-native",
+      "portableResponseFile": "sources/failed-routes/city-sample-native.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/2026-11-03/docs/Sample-Ballot.pdf",
+      "finalUrl": "https://r.jina.ai/https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/2026-11-03/docs/Sample-Ballot.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:04:45.377904+00:00",
+      "sha256": "79aada687fb3afa9345e8451e8ffbc349a0465b60e3f53b3261b6362d0b78e94",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "city-sample-reader"
+    },
+    {
+      "requestedUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/election-2026-11-03.php",
+      "finalUrl": "https://www2.elpasotexas.gov/municipal-clerk/CCElectionDocs/elections/election-2026-11-03.php",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:54:56.487413+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "city",
+      "portableResponseFile": "sources/failed-routes/city.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://www.txcourts.gov/8thcoa/",
+      "finalUrl": "https://www.txcourts.gov/8thcoa/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:56:25.146004+00:00",
+      "sha256": "d21d7435d68453863a89f11574e0f74c4c974d5541140bf0e693eeb8c722bfb1",
+      "contentType": "text/html; charset=utf-8",
+      "key": "coa8"
+    },
+    {
+      "requestedUrl": "https://www.epcountytx.gov/gis/",
+      "finalUrl": "https://www.epcountytx.gov/gis/",
+      "httpStatus": 404,
+      "retrievedAt": "2026-11-03T06:58:04.259347+00:00",
+      "sha256": "2b5a57ff1706d405c4df2eddfe395a6951171278fc3d832bd61a6889c30db863",
+      "contentType": "text/html; charset=utf-8",
+      "key": "county-gis",
+      "portableResponseFile": "sources/failed-routes/county-gis.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://epcountyvotestx.gov/voter-information/current-election",
+      "finalUrl": "https://epcountyvotestx.gov/voter-information/current-election",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:54:57.747561+00:00",
+      "sha256": "5a68ed91c324e68b751cdc98cf648ede8697f0a60b02cad86423124777a603cc",
+      "contentType": "text/html; charset=utf-8",
+      "key": "current"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/788/original/LVWD_Notice_of_General_Election_with_Exhibit_A.pdf?1788209110",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/788/original/LVWD_Notice_of_General_Election_with_Exhibit_A.pdf?1788209110",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:27.439934+00:00",
+      "sha256": "92fbfa3f03b0c101c67036e8873aeda0e5a3a3ba9e56e4dedf58ade2cf12c233",
+      "contentType": "application/pdf",
+      "key": "doc01"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/840/original/Notice_of_Election_-_Mountain_Shadow_Unit-1_Defined_Area_Election_-_El_Paso_Times_Legal_Notice_Publication_-_English_and_Spanish.pdf?1791412347",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/840/original/Notice_of_Election_-_Mountain_Shadow_Unit-1_Defined_Area_Election_-_El_Paso_Times_Legal_Notice_Publication_-_English_and_Spanish.pdf?1791412347",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:28.139826+00:00",
+      "sha256": "5adb7b4ba59a630f3cd70a5cf123803513ec1847123e774d8283ad28c54a0e31",
+      "contentType": "application/pdf",
+      "key": "doc02"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/791/original/English-Order_Calling_Confirmation__Bond_and_Maintenance_Tax_Election_for_MSU-1_Defined_Area_-_74.778_acre_tract_-_7-23-26.pdf?1788364767",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/791/original/English-Order_Calling_Confirmation__Bond_and_Maintenance_Tax_Election_for_MSU-1_Defined_Area_-_74.778_acre_tract_-_7-23-26.pdf?1788364767",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:28.051093+00:00",
+      "sha256": "c47efc50b08905ca847ca48071b9596e99834844ad7e2845883c23f1bec55b1c",
+      "contentType": "application/pdf",
+      "key": "doc03"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/792/original/SPANISH_-_Order_Calling_Confirmation__Bond_and_Maintenance_Tax_Election_for_MSU-1_Defined_Area_-_74.778_acre_tract_-_7-23-26.pdf?1788364767",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/792/original/SPANISH_-_Order_Calling_Confirmation__Bond_and_Maintenance_Tax_Election_for_MSU-1_Defined_Area_-_74.778_acre_tract_-_7-23-26.pdf?1788364767",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:28.060073+00:00",
+      "sha256": "5aa2e19a41743f5d3342c221901a4d3f66ea5654d87bd7ce8d6f463d2e24d72d",
+      "contentType": "application/pdf",
+      "key": "doc04"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/769/original/Notice_of_Horizon_RMUD_-_Mountain_Shadow_Defined_Area_Election_-_November_3_2026.pdf?1785774708",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/769/original/Notice_of_Horizon_RMUD_-_Mountain_Shadow_Defined_Area_Election_-_November_3_2026.pdf?1785774708",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:27.203531+00:00",
+      "sha256": "5675638cb41ae62e3b1f9c286e7bbd7eacb15593d1e190d65b8da462176ef2fe",
+      "contentType": "application/pdf",
+      "key": "doc05"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/833/original/EP_County_WCID_4_Notice_of_Election_-_Nov_3_2026.pdf?1790702407",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/833/original/EP_County_WCID_4_Notice_of_Election_-_Nov_3_2026.pdf?1790702407",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:28.470542+00:00",
+      "sha256": "a6a69e68c9644173bbfe00148c1f36dccf7da4eeee577923a44cdd50c445a954",
+      "contentType": "application/pdf",
+      "key": "doc06"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/787/original/CISD_Notice_of_General_Election_with_Exhibit_A_%281%29.pdf?1788208948",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/787/original/CISD_Notice_of_General_Election_with_Exhibit_A_%281%29.pdf?1788208948",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:28.498087+00:00",
+      "sha256": "4f3ee310345538f1b4de4d56f51d75c33ce4026071166fb3f9b7ec8822c2a4fa",
+      "contentType": "application/pdf",
+      "key": "doc07"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/801/original/YSLETA_ISD_NOV_2026_-_Notice_of_Voter-Approval_Tax_Rate_Election.pdf?1788472813",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/801/original/YSLETA_ISD_NOV_2026_-_Notice_of_Voter-Approval_Tax_Rate_Election.pdf?1788472813",
+      "httpStatus": 503,
+      "retrievedAt": "2026-11-03T06:55:33.082095+00:00",
+      "sha256": "2f85832e31ca57711e6107af6b142363351ae516adb71c69afc643fac26be7f6",
+      "contentType": "text/plain",
+      "key": "doc08",
+      "portableResponseFile": "sources/failed-routes/doc08.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/800/original/YSLETA_ISD_NOV_2026_-_Notice_of_Voter-Approval_Tax_Rate_Election_-_Spanish.pdf?1788472813",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/800/original/YSLETA_ISD_NOV_2026_-_Notice_of_Voter-Approval_Tax_Rate_Election_-_Spanish.pdf?1788472813",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:29.441846+00:00",
+      "sha256": "5ef732c80babf691c0ab025b4b7d5bde2ab9d7769461aeb9e6bb0f16b4ce4931",
+      "contentType": "application/pdf",
+      "key": "doc09"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/802/original/09042026_SISD_Notice_of_TAX_Election_English__Spanish--revised.pdf?1788884002",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/802/original/09042026_SISD_Notice_of_TAX_Election_English__Spanish--revised.pdf?1788884002",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:29.219344+00:00",
+      "sha256": "53b5fb5f6e1b11aa31e538a184574ec634915dc796b0aa84dc0f0c2a028c62cf",
+      "contentType": "application/pdf",
+      "key": "doc10"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/807/original/1743_001.pdf?1788986960",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:29.465379+00:00",
+      "sha256": "e4e96de3de0d46452e59c55ab622199b762c8348ccf6e162ceb14bc89f088a6e",
+      "contentType": "application/pdf",
+      "key": "doc11"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/808/original/1744_001.pdf?1788986960",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/808/original/1744_001.pdf?1788986960",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:29.634041+00:00",
+      "sha256": "bdb2aba67a59f7051908100be1b0869f6cc8022e4c5febb8794db68d1a0bf9d2",
+      "contentType": "application/pdf",
+      "key": "doc12"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/785/original/BdApproved__2026_ORDER_ELECTION_11.2026_CLINT_ISD_FNL.pdf?1787852562",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/785/original/BdApproved__2026_ORDER_ELECTION_11.2026_CLINT_ISD_FNL.pdf?1787852562",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:30.543413+00:00",
+      "sha256": "5f19eb823e88330eafd33996a4c918914692409c214b9d3967fcf84883ce1cc4",
+      "contentType": "application/pdf",
+      "key": "doc13"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/790/original/FabensISDNoticeofElection.pdf?1788300698",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/790/original/FabensISDNoticeofElection.pdf?1788300698",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:31.513188+00:00",
+      "sha256": "b447e494d94d95cf471d121f84cba5254003222cb0c0a473adaf435f1f6dd7f4",
+      "contentType": "application/pdf",
+      "key": "doc14"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/764/original/OrderofGeneralElection.pdf?1784224020",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/764/original/OrderofGeneralElection.pdf?1784224020",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:30.808299+00:00",
+      "sha256": "ef01bf1330feb521db0d57d9a312030d43ad89be2b60015610d50fb82afb3a22",
+      "contentType": "application/pdf",
+      "key": "doc15"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/803/original/09042026_TISD_Notice_of_TAX_Election_English___Spanish--revised.pdf?1788884268",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/803/original/09042026_TISD_Notice_of_TAX_Election_English___Spanish--revised.pdf?1788884268",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:30.887798+00:00",
+      "sha256": "490db2e6d58874a34c37f14021c64d52757733c24da5edad834581d61d1bc70d",
+      "contentType": "application/pdf",
+      "key": "doc16"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/789/original/TISD_Notice_of_Election_with_Exhibit_A_%281%29.pdf?1788209246",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/789/original/TISD_Notice_of_Election_with_Exhibit_A_%281%29.pdf?1788209246",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:31.977017+00:00",
+      "sha256": "3fd9ba29feec7098e553904b6e20e55d9e209cfc95b524de5c135ba52649b813",
+      "contentType": "application/pdf",
+      "key": "doc17"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/794/original/Vinton_Notice_of_General_Election_2026.pdf?1788445369",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/794/original/Vinton_Notice_of_General_Election_2026.pdf?1788445369",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:31.925988+00:00",
+      "sha256": "252a15f7d1a849b9aef2795110a2855376a832e7bdb4e22342d01bc24cec0a63",
+      "contentType": "application/pdf",
+      "key": "doc18"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/796/original/City_of_El_Paso_Notice_of_General_Election_-_November_3__2026.pdf?1788463070",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/796/original/City_of_El_Paso_Notice_of_General_Election_-_November_3__2026.pdf?1788463070",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:31.817905+00:00",
+      "sha256": "66dda265924bba67f176a936488c160af62751ab62435dc5e5dd639d3365fede",
+      "contentType": "application/pdf",
+      "key": "doc19"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/797/original/City_of_El_Paso_Reso_calling_for_the_November_3_2026_General_Election.pdf?1788463070",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/797/original/City_of_El_Paso_Reso_calling_for_the_November_3_2026_General_Election.pdf?1788463070",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:32.237800+00:00",
+      "sha256": "955360a3b7f7d483e2cc1157fa85428043aafabac142916c84e3b585c82bde52",
+      "contentType": "application/pdf",
+      "key": "doc20"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/798/original/City_of_El_Paso_Resoluci%C3%B3n_convocando_a_las_elecciones_generales_del_3_de_noviembre_de_2026.pdf?1788463070",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/798/original/City_of_El_Paso_Resoluci%C3%B3n_convocando_a_las_elecciones_generales_del_3_de_noviembre_de_2026.pdf?1788463070",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:32.888080+00:00",
+      "sha256": "1d0ed3f95e3a28a27d6f8cb6e07810c7018316f48b12644c2dd79847c7cf8eb5",
+      "contentType": "application/pdf",
+      "key": "doc21"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/814/original/Town_of_Clint-Order_of_Cancellation.pdf?1789510774",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/814/original/Town_of_Clint-Order_of_Cancellation.pdf?1789510774",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:32.813373+00:00",
+      "sha256": "7039267389769bde5c49d5f6092d127ed3c3e8affe45c73b0f54d5b0cbea002b",
+      "contentType": "application/pdf",
+      "key": "doc22"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/827/original/EPCAD_Order_of_Cancellation_9.17.26.pdf?1789743419",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/827/original/EPCAD_Order_of_Cancellation_9.17.26.pdf?1789743419",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:33.313695+00:00",
+      "sha256": "b64a6b84452a1f4038c642f3b25689d168de544a934e3d23ac95bd7363969a8e",
+      "contentType": "application/pdf",
+      "key": "doc23"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/753/original/Notice_to_File_CAD_2026.pdf?1781715539",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/753/original/Notice_to_File_CAD_2026.pdf?1781715539",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:33.337054+00:00",
+      "sha256": "a7b208f6a0a3a334ccca5985498bb322dfd9387f76e669f9e1c0c2e9f48e396c",
+      "contentType": "application/pdf",
+      "key": "doc24"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/806/original/November_2026_Order_of_Election001_%282%29_%281%29.pdf?1788965827",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/806/original/November_2026_Order_of_Election001_%282%29_%281%29.pdf?1788965827",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:34.522507+00:00",
+      "sha256": "1c18872b12fc4949141db11c03fe736267e049a4c5904a315ff89f91e835b4ec",
+      "contentType": "application/pdf",
+      "key": "doc25"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/843/original/Notice_of_Election_Nov_2026.pdf?1791556704",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/843/original/Notice_of_Election_Nov_2026.pdf?1791556704",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:34.223546+00:00",
+      "sha256": "1161ad2c33560ce8aa84f873dfeff6aa5a97e2296b3a144ec61b9c307ea41022",
+      "contentType": "application/pdf",
+      "key": "doc26"
+    },
+    {
+      "requestedUrl": "https://tx.omniballot.us/sites/48141/default/app/home",
+      "finalUrl": "https://tx.omniballot.us/sites/48141/default/app/home",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:34.713842+00:00",
+      "sha256": "2e7f0de439c88642ee4e5e7d55f43ac80648493f98f01fcf5ddb4d446f52c0b7",
+      "contentType": "text/html",
+      "key": "doc27"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/817/original/1._LVWD_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/817/original/1._LVWD_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:34.220449+00:00",
+      "sha256": "f04933cfe6f029d9480f7470043d46bdb36e3facc8e270050f24c56fb9396538",
+      "contentType": "application/pdf",
+      "key": "doc28"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/819/original/2._HMUD_Mtn_Shadow_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/819/original/2._HMUD_Mtn_Shadow_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:34.209053+00:00",
+      "sha256": "80ada5c5a85723d624cc3c33de8e69ae4e3186dda1ae69ecc8a703c82df12c03",
+      "contentType": "application/pdf",
+      "key": "doc29"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/821/original/3._EPCWID4_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/821/original/3._EPCWID4_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:34.992790+00:00",
+      "sha256": "347b84000ff1c5a4e84fa43a02711bfde6e7f9583f246cced74caad5ec96a2dc",
+      "contentType": "application/pdf",
+      "key": "doc30"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/823/original/4._Canutillo_ISD_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/823/original/4._Canutillo_ISD_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:35.262033+00:00",
+      "sha256": "55ed75a08d024e0132d7419007c5a0d2a157c55b843b9d7409bf175de88d0ad9",
+      "contentType": "application/pdf",
+      "key": "doc31"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/825/original/5._Ysleta_ISD_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/825/original/5._Ysleta_ISD_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:35.208232+00:00",
+      "sha256": "d8aeb1892bc6c49025a2bbabec62c5842a8412ac1ea5fd52ac5f216a098518c9",
+      "contentType": "application/pdf",
+      "key": "doc32"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/816/original/6._Socorro_ISD_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/816/original/6._Socorro_ISD_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:35.451761+00:00",
+      "sha256": "b5cabbcdd3c106e79d6d2a76a41a6383f3fad1c94f2044fe9f1f307863b8000e",
+      "contentType": "application/pdf",
+      "key": "doc33"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/818/original/7._Fabens_ISD_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/818/original/7._Fabens_ISD_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:35.703290+00:00",
+      "sha256": "ec0ebaba8033aedda41ea6e6b00d2007ae8dcb259e4fb21f67075a3fcfb95162",
+      "contentType": "application/pdf",
+      "key": "doc34"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/820/original/8._Tornillo_ISD_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/820/original/8._Tornillo_ISD_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:35.847029+00:00",
+      "sha256": "1c15073ff554bf2fd927516140cf243de12f6bbe92266142e5c7dc069e090eea",
+      "contentType": "application/pdf",
+      "key": "doc35"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/822/original/9._Vinton_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/822/original/9._Vinton_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:35.805580+00:00",
+      "sha256": "120ce839feba0f258c8fb0258fefb95ea208cdef0e1bf323209e437954102b32",
+      "contentType": "application/pdf",
+      "key": "doc36"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/824/original/10._City_of_EP_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/824/original/10._City_of_EP_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:36.036330+00:00",
+      "sha256": "be1a26fb7ee23169cf02e912b02f5f97c15360d8ebb2a59e61e87e34ad44fc52",
+      "contentType": "application/pdf",
+      "key": "doc37"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/815/original/11._Federal_State_County_Ballot.pdf?1789660550",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/815/original/11._Federal_State_County_Ballot.pdf?1789660550",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:36.092436+00:00",
+      "sha256": "cdb43152a132333b0623fa25c6eed276af4bc335046358cc5b4ccccfa78919cd",
+      "contentType": "application/pdf",
+      "key": "doc38"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/829/original/Write-In1.pdf?1790178390",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/006/829/original/Write-In1.pdf?1790178390",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:55:36.730685+00:00",
+      "sha256": "3fbdc8846898d2cccc3c277db52cf82099a9936d001fbb7e89f22c79c46ebf6b",
+      "contentType": "application/pdf",
+      "key": "doc39"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://pol.tasb.org/Policy/Download/438?filename=BBB(LOCAL).pdf",
+      "finalUrl": "https://r.jina.ai/https://pol.tasb.org/Policy/Download/438?filename=BBB(LOCAL).pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:01:49.598177+00:00",
+      "sha256": "16c0c5953c4e4caefb287075b6ce0cb9c6617cd83f107177c157bfdf3630e947",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "fabens-bbb-pdf-reader"
+    },
+    {
+      "requestedUrl": "https://pol.tasb.org/Policy/Download/438?filename=BBB(LOCAL).pdf",
+      "finalUrl": "https://pol.tasb.org/Policy/Download/438?filename=BBB(LOCAL).pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:00:37.549878+00:00",
+      "sha256": "1f2e1251b1d5fab2f47bbfe3e09b149064e61571f98a5e02c6ace5f86bacb1d5",
+      "contentType": "text/html",
+      "key": "fabens-bbb-pdf",
+      "portableResponseFile": "sources/failed-routes/fabens-bbb-pdf.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB",
+      "finalUrl": "https://r.jina.ai/https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:01:48.924031+00:00",
+      "sha256": "b46acbc0e8d7c01693a5321cc7482191f6611fb31404962a3914bac10d75b27c",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "fabens-bbb-reader"
+    },
+    {
+      "requestedUrl": "https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB",
+      "finalUrl": "https://pol.tasb.org/PolicyOnline/PolicyDetails?key=438&code=BBB",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:00:37.548797+00:00",
+      "sha256": "1f2e1251b1d5fab2f47bbfe3e09b149064e61571f98a5e02c6ace5f86bacb1d5",
+      "contentType": "text/html",
+      "key": "fabens-bbb",
+      "portableResponseFile": "sources/failed-routes/fabens-bbb.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://www.fabensisd.net/board-of-trustees/board-elections",
+      "finalUrl": "https://www.fabensisd.net/board-of-trustees/board-elections",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:56:23.311800+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "fabens-board",
+      "portableResponseFile": "sources/failed-routes/fabens-board.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://www.fabensisd.net/board-of-trustees/fisd-board-policy-manual",
+      "finalUrl": "https://r.jina.ai/https://www.fabensisd.net/board-of-trustees/fisd-board-policy-manual",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:54.526884+00:00",
+      "sha256": "115a8b9aa46f87b0210867a877410811a01a1c6086e423027cdb0ed699804d19",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "fabens-policy-reader"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://www.fabensisd.net/board-of-trustees/board-elections",
+      "finalUrl": "https://r.jina.ai/https://www.fabensisd.net/board-of-trustees/board-elections",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:58:06.262501+00:00",
+      "sha256": "ead3d11f20e57a6a950162cf2d642574597d6b8bd035a0c4f9a0676f431ca59b",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "fabens-reader"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+      "finalUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:03:11.962640+00:00",
+      "sha256": "4425ad8836a1978ecec880b6d6568b64413c0202abadf7810a9f54d363e6cbb3",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "gis-city-polygons"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0?f=pjson",
+      "finalUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/arcgis/rest/services/RepresentativeDistricts/FeatureServer/0?f=pjson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:03:11.390765+00:00",
+      "sha256": "af457ae1e7d0aac6e47703dc81e0208a75aa315036dd6aa227b4b4a675461b6c",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "gis-city"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+      "finalUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:03:12.132050+00:00",
+      "sha256": "ae4e1c508648bdbc0a93160c8f85f61e1d5bef553ff5b1a593c4e38c9a487fe3",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "gis-commissioner-polygons"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0?f=pjson",
+      "finalUrl": "https://r.jina.ai/https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer/0?f=pjson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:01:46.865307+00:00",
+      "sha256": "886c6602570e6b912986399aacafacf04101353d3b6f9ec6166d4c77983e0e67",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "gis-commissioner-reader"
+    },
+    {
+      "requestedUrl": "https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer?f=pjson",
+      "finalUrl": "https://gis.elpasotexas.gov/dev/rest/services/Planning/CountyCommissionerPrecincts/FeatureServer?f=pjson",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:00:36.846559+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "gis-commissioner",
+      "portableResponseFile": "sources/failed-routes/gis-commissioner.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://www.arcgis.com/sharing/rest/search?f=json&num=100&q=%22El%20Paso%22%20%28%22Council%20Districts%22%20OR%20%22Justice%20of%20the%20Peace%22%29",
+      "finalUrl": "https://www.arcgis.com/sharing/rest/search?f=json&num=100&q=%22El%20Paso%22%20%28%22Council%20Districts%22%20OR%20%22Justice%20of%20the%20Peace%22%29",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:00:39.228379+00:00",
+      "sha256": "bdf67b03f7a082c88aebadaa778b9cb89ff8b580ea475b7168acffed90c7e236",
+      "contentType": "application/json;charset=utf-8",
+      "key": "gis-council-search"
+    },
+    {
+      "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/4f18f6ec49324832846c53dff2aa5bc4/data?f=json",
+      "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/4f18f6ec49324832846c53dff2aa5bc4/data?f=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:01:46.863526+00:00",
+      "sha256": "444b11e6fe38fab2138c385ee02ce41d1a02bb784ee136dfe3c61ac0afeed1f1",
+      "contentType": "application/json;charset=utf-8",
+      "key": "gis-districting"
+    },
+    {
+      "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/fbc304e35ae8414596651edb74726db4/data?f=json",
+      "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/fbc304e35ae8414596651edb74726db4/data?f=json",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:01:47.102229+00:00",
+      "sha256": "ee9a61d59994b99bdf041033548731214eafdabc27aed72cac2a9e46d27cbe28",
+      "contentType": "application/json;charset=utf-8",
+      "key": "gis-locator"
+    },
+    {
+      "requestedUrl": "https://www.arcgis.com/sharing/rest/search?f=json&num=100&q=owner%3AVelozRX%40elpasotexas.gov_CoEPGIS",
+      "finalUrl": "https://www.arcgis.com/sharing/rest/search?f=json&num=100&q=owner%3AVelozRX%40elpasotexas.gov_CoEPGIS",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:00:39.037346+00:00",
+      "sha256": "aac6a199c7a0deb7d3771f661191cbb98bd8bae430707061dda9ce13034297fb",
+      "contentType": "application/json;charset=utf-8",
+      "key": "gis-texas-search"
+    },
+    {
+      "requestedUrl": "https://www.lvwd.org/board-of-directors",
+      "finalUrl": "https://www.lvwd.org/board-of-directors",
+      "httpStatus": 404,
+      "retrievedAt": "2026-11-03T06:58:04.058486+00:00",
+      "sha256": "0ab7d6f28b969908dd1723c1902a1b949787c54e28e9d7fcf7b5ff97cdb2ae3c",
+      "contentType": "text/html",
+      "key": "lvwd-board",
+      "portableResponseFile": "sources/failed-routes/lvwd-board.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://www.lvwd.org/",
+      "finalUrl": "https://www.lvwd.org/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:53.220941+00:00",
+      "sha256": "b24940b59dc9b378f8fa06a1477cf4be0eb7fdf0111d622912334057c4eacda3",
+      "contentType": "text/html",
+      "key": "lvwd-home"
+    },
+    {
+      "requestedUrl": "https://www.lvwd.org/public_notices/main.js",
+      "finalUrl": "https://www.lvwd.org/public_notices/main.js",
+      "httpStatus": 404,
+      "retrievedAt": "2026-11-03T07:01:46.348727+00:00",
+      "sha256": "0ab7d6f28b969908dd1723c1902a1b949787c54e28e9d7fcf7b5ff97cdb2ae3c",
+      "contentType": "text/html",
+      "key": "lvwd-js",
+      "portableResponseFile": "sources/failed-routes/lvwd-js.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://www.lvwd.org/public_notices/main.html?value=0",
+      "finalUrl": "https://www.lvwd.org/public_notices/main.html?value=0",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:00:37.851704+00:00",
+      "sha256": "53ce1c3972b7148ef5a71f201b8203a9087dc0c421d4f515face48337de4c0e4",
+      "contentType": "text/html",
+      "key": "lvwd-notices"
+    },
+    {
+      "requestedUrl": "https://www.lvwd.org/js/publicNotices.js",
+      "finalUrl": "https://www.lvwd.org/js/publicNotices.js",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:03:11.979260+00:00",
+      "sha256": "83fbc3d52c7045d71132a85ee54eb6cb698074ec22ee26e8a10797d494930723",
+      "contentType": "application/javascript",
+      "key": "lvwd-publicnotices-js"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/482/original/2025_ALLCITY_REPS_REDIST.pdf?1777577617",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/482/original/2025_ALLCITY_REPS_REDIST.pdf?1777577617",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:05.301455+00:00",
+      "sha256": "e194eb1070481ca0ba94039b676abb0f785da2ebc6a3edb26a8e12d671ad710b",
+      "contentType": "application/pdf",
+      "key": "map-city-all"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/421/original/2025_COMM_DIST_1_4_REDIST_MAP.pdf?1769721189",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/421/original/2025_COMM_DIST_1_4_REDIST_MAP.pdf?1769721189",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:05.177653+00:00",
+      "sha256": "bf6b9c77c1435ed36216c170aa1b0d4c494b6697420262b29bab02329758d0fb",
+      "contentType": "application/pdf",
+      "key": "map-commissioner-all"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/021/original/2025_JP_DIST_1_7_REDIST.pdf?1769722570",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/021/original/2025_JP_DIST_1_7_REDIST.pdf?1769722570",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:04.646851+00:00",
+      "sha256": "a33bca5986a9683e6054f74d07e58c00cdddb5dbc65d3551011f1ccb18a07329",
+      "contentType": "application/pdf",
+      "key": "map-justice-all"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/004/717/original/LOWER_VALLEY_WATER_DISTRICT.PDF?1787243216",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/004/717/original/LOWER_VALLEY_WATER_DISTRICT.PDF?1787243216",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:03.914183+00:00",
+      "sha256": "74ce62468c835629e3fa12c785c5aab7c3a4bfdef14a548b754aa350fc63990a",
+      "contentType": "application/pdf",
+      "key": "map-lvwd-precincts"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/030/original/2025_LOWER_VALLEY_WTR_REDIST.pdf?1787243101",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/002/030/original/2025_LOWER_VALLEY_WTR_REDIST.pdf?1787243101",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:04.482538+00:00",
+      "sha256": "a6a7c28040265833fca899f9666c51b4e1b27bef910f3f3832b6e5ced9ccb9e8",
+      "contentType": "application/pdf",
+      "key": "map-lvwd"
+    },
+    {
+      "requestedUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/001/749/original/2025_FABENS_WTR_REDIST.pdf?1787243964",
+      "finalUrl": "https://ep-county-elections-production.s3.amazonaws.com/documents/files/000/001/749/original/2025_FABENS_WTR_REDIST.pdf?1787243964",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:04.014844+00:00",
+      "sha256": "fa14e5500e131fee7dee46c461a98340e60402355bc68755f4664bccfa4b0455",
+      "contentType": "application/pdf",
+      "key": "map-wcid4"
+    },
+    {
+      "requestedUrl": "https://epcountyvotestx.gov/maps/city-representatives-map",
+      "finalUrl": "https://epcountyvotestx.gov/maps/city-representatives-map",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:57:11.773682+00:00",
+      "sha256": "0634cc5ce27e1d59fc9696d352fbd273b220317a1003c8987dae3f64aea89f41",
+      "contentType": "text/html; charset=utf-8",
+      "key": "maps-city"
+    },
+    {
+      "requestedUrl": "https://epcountyvotestx.gov/maps/county-commissioner-maps",
+      "finalUrl": "https://epcountyvotestx.gov/maps/county-commissioner-maps",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:58:02.795200+00:00",
+      "sha256": "364fcffba5a59450b44ef9896e1eb240ec2d176ee0bd45856b5726dc5f7c55e7",
+      "contentType": "text/html; charset=utf-8",
+      "key": "maps-commissioner-correct"
+    },
+    {
+      "requestedUrl": "https://epcountyvotestx.gov/maps/county-commissioner-precincts-1-4-maps",
+      "finalUrl": "https://epcountyvotestx.gov/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:57:11.398618+00:00",
+      "sha256": "99ffd85f33e65cbd5f9cf35eb72763e8ab82aa6cfb5d22ba69793184a1a58cfd",
+      "contentType": "text/html; charset=utf-8",
+      "key": "maps-commissioner"
+    },
+    {
+      "requestedUrl": "https://epcountyvotestx.gov/maps/justice-of-the-peace-maps",
+      "finalUrl": "https://epcountyvotestx.gov/maps/justice-of-the-peace-maps",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:57:11.247001+00:00",
+      "sha256": "680f440d06d6b7e5c4bec56d1d49c9ae63e9fc8f577dfec15060b79bd5a4bacb",
+      "contentType": "text/html; charset=utf-8",
+      "key": "maps-justice"
+    },
+    {
+      "requestedUrl": "https://epcountyvotestx.gov/maps/water-district-maps",
+      "finalUrl": "https://epcountyvotestx.gov/maps/water-district-maps",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:57:11.649453+00:00",
+      "sha256": "69b0b4ea534db0dead0880efb8b5c0e9105edba58b248318e792e06a67dad1a1",
+      "contentType": "text/html; charset=utf-8",
+      "key": "maps-water"
+    },
+    {
+      "requestedUrl": "https://tx.omniballot.us/sites/48141/default/app/site-config.json?cb=1753196191149",
+      "finalUrl": "https://tx.omniballot.us/sites/48141/default/app/site-config.json?cb=1753196191149",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:56:24.761735+00:00",
+      "sha256": "de14ba0ac1dd498f295d196084d57479d7e74cef92ef5746ec4fd300ec219c77",
+      "contentType": "application/octet-stream",
+      "key": "omni-config"
+    },
+    {
+      "requestedUrl": "https://tx.omniballot.us/sites/48141/default/app/global.json",
+      "finalUrl": "https://tx.omniballot.us/sites/48141/default/app/global.json",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:57:11.756879+00:00",
+      "sha256": "a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938",
+      "contentType": "application/xml",
+      "key": "omni-global",
+      "portableResponseFile": "sources/failed-routes/omni-global.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://tx.omniballot.us/published/48141/lookups.json",
+      "finalUrl": "https://tx.omniballot.us/published/48141/lookups.json",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:57:12.104785+00:00",
+      "sha256": "a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938",
+      "contentType": "application/xml",
+      "key": "omni-lookups",
+      "portableResponseFile": "sources/failed-routes/omni-lookups.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://tx.omniballot.us/sites/src/sites/main.js?cb=1753196191149",
+      "finalUrl": "https://tx.omniballot.us/sites/src/sites/main.js?cb=1753196191149",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:58:05.859359+00:00",
+      "sha256": "8f4576326d110d5c5ace35d745a3966971d20439da2901ae48054f625e9ec573",
+      "contentType": "application/x-javascript",
+      "key": "omni-main"
+    },
+    {
+      "requestedUrl": "https://tx.omniballot.us/48141/app/global.json",
+      "finalUrl": "https://tx.omniballot.us/48141/app/global.json",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T06:58:03.821872+00:00",
+      "sha256": "a824bc7739e226e1b40ea0f8c4e4f4c6f796fc3b4abfa6e9abe3bd119a30d938",
+      "contentType": "application/xml",
+      "key": "omni-root-global",
+      "portableResponseFile": "sources/failed-routes/omni-root-global.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+      "finalUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:56:25.931070+00:00",
+      "sha256": "94ee7dba5aa14e2de640100d9f6297c0410d1441a9d352768d701ade481d221c",
+      "contentType": "text/html",
+      "key": "statute22"
+    },
+    {
+      "requestedUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+      "finalUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:56:25.188837+00:00",
+      "sha256": "3f926f0a7d2eba3ab4adc8c446a1d69173a1fdc1135c26ec3bb62f2a096d85fe",
+      "contentType": "text/html",
+      "key": "statute24"
+    },
+    {
+      "requestedUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0/query?where=UPPER%28NAME%29+LIKE+%27%25LOWER+VALLEY%25%27&outFields=%2A&outSR=4326&f=geojson",
+      "finalUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0/query?where=UPPER%28NAME%29+LIKE+%27%25LOWER+VALLEY%25%27&outFields=%2A&outSR=4326&f=geojson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:05:06.877014+00:00",
+      "sha256": "7676576c399c654650e9f9340e80d2576324d58e9a8427ea92913bb73e2aebc1",
+      "contentType": "application/geo+json; charset=UTF-8",
+      "key": "tceq-water-lvwd"
+    },
+    {
+      "requestedUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0?f=pjson",
+      "finalUrl": "https://gisweb.tceq.texas.gov/arcgis/rest/services/Public/WaterDistricts/MapServer/0?f=pjson",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:05:06.852561+00:00",
+      "sha256": "f31c1a9e2b16dc0396e72ad84b174a503ed81df98be66b7293f8819f6fe48ee5",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "tceq-water-meta"
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://pol.tasb.org/PolicyOnline/PolicyDetails?key=443&code=BBB",
+      "finalUrl": "https://r.jina.ai/https://pol.tasb.org/PolicyOnline/PolicyDetails?key=443&code=BBB",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:03:17.686973+00:00",
+      "sha256": "24511b2d49212a338325fd261f06e624327f2ddbfc655e1a7acda364c96e5f5d",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "tornillo-bbb-reader"
+    },
+    {
+      "requestedUrl": "https://www.tisd.us/page/board-elections",
+      "finalUrl": "https://www.tisd.us/page/board-elections",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:00:39.637065+00:00",
+      "sha256": "ec109869aeadbf40851063f23ffe94422c3c9165f34404d0bfad4c63485668a6",
+      "contentType": "text/html;charset=utf-8",
+      "key": "tornillo-elections"
+    },
+    {
+      "requestedUrl": "https://www.tisd.us/",
+      "finalUrl": "https://www.tisd.us/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:54.388689+00:00",
+      "sha256": "eed94419bd911c4233d36492405d566c75b63ae5d32ac99cf947688576d8e1e5",
+      "contentType": "text/html;charset=utf-8",
+      "key": "tornillo-home"
+    },
+    {
+      "requestedUrl": "https://vintontx.govoffice2.com/index.asp?SEC=6D3946CA-4ED5-435C-80A8-6EB46B4D4587&Type=B_BASIC",
+      "finalUrl": "https://vintontx.govoffice2.com/index.asp?SEC=6D3946CA-4ED5-435C-80A8-6EB46B4D4587&Type=B_BASIC",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:59:53.399968+00:00",
+      "sha256": "48fbd0f025f1a690beef45fb9376865268c38ce9ea053711dc639d51e5d475bc",
+      "contentType": "text/html",
+      "key": "vinton-council"
+    },
+    {
+      "requestedUrl": "https://epcwcid4.myruralwater.com/",
+      "finalUrl": "https://epcwcid4.myruralwater.com/",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:03:11.499462+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "wcid4-home",
+      "portableResponseFile": "sources/failed-routes/wcid4-home.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://epcwcid4.myruralwater.com/documents/1083/7-22-25_Reg_Agenda.pdf",
+      "finalUrl": "https://epcwcid4.myruralwater.com/documents/1083/7-22-25_Reg_Agenda.pdf",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T07:03:11.578300+00:00",
+      "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+      "contentType": "text/plain; charset=UTF-8",
+      "key": "wcid4-rule-agenda",
+      "portableResponseFile": "sources/failed-routes/wcid4-rule-agenda.response",
+      "notCandidateEvidence": true
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://epcwcid4.myruralwater.com/documents/1083/7-22-25_Reg_Agenda.pdf",
+      "finalUrl": "https://r.jina.ai/https://epcwcid4.myruralwater.com/documents/1083/7-22-25_Reg_Agenda.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:04:46.157807+00:00",
+      "sha256": "1130b000eec8c23a5e8b47bded13fd277568d51d2a82e7e77da3f8991b1486fd",
+      "contentType": "text/plain; charset=utf-8",
+      "key": "wcid4-rule-reader"
+    }
+  ],
+  "personalVoterLookupUsed": false,
+  "sessionOrCaptchaSubmitted": false,
+  "note": "AccessiblepublicUIconfigurationread; no voteridentityorAPI session submitted. Staticpublicglobal/lookup pathsdeny; native countyPDFroutefullysucceeds. NativecityGIS403, completepublicreaderJSONquerycaptures succeed."
+}

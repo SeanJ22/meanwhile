@@ -1,0 +1,16 @@
+{
+  "state": "RI",
+  "officialUniqueMeasures": 106,
+  "officialLocalSlots": 103,
+  "heldStatewide": 5,
+  "newMunicipalExplainers": 94,
+  "earlierPreparedLocalExplainers": 7,
+  "combinedPublicationAdmission": "PASS",
+  "actualReaderAndExactJurisdictions": "PASS",
+  "savedSourceInputCandidateFacts": "UNCHANGED; existing merge may add identity aliases",
+  "productionWrites": 0,
+  "snapshot": "f09ad76e41c0be69808173cb32dc9bb53bb96b50",
+  "checkedAt": "2026-11-03T09:00:55.742389+00:00",
+  "method": "Combined current data-only packet replay through existing merge, manual authority admission, translation reader and jurisdiction selection. Every106 question has its explainer; saved candidate facts unchanged. Later Providence and Tiverton operative-text improvements included.",
+  "publication": "Offline source/reader replay; River installs and checks live."
+}

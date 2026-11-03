@@ -1,0 +1,892 @@
+{
+  "state": "RI",
+  "electionDate": "2026-11-03",
+  "coverageBasis": "Current official full-state ENR measure inventory reconciled to an original native official sample ballot for each of Rhode Island\u2019s39 municipalities; exact local question-number sets match in all39.",
+  "nativeSamples": 39,
+  "allBallotStylesClaim": false,
+  "officialEnrMeasureSlots": 108,
+  "statewideQuestionSlots": 5,
+  "localQuestionSlots": 103,
+  "charihoDuplicateLocalSlotsCollapsed": 2,
+  "uniqueStateAndLocalMeasures": 106,
+  "existingExplainedUniqueMeasures": 12,
+  "newExplainedUniqueMeasures": 94,
+  "newMunicipalPackets": 20,
+  "allLocalSlotsMapped": true,
+  "allNewQuestionRecordsPassedAdmissionAndReader": true,
+  "scopeLimitation": "Reconciliation describes the complete current official ENR table and the current39-town sample catalogue. It does not claim every ballot style was sampled or make an unsupported claim about measures absent from these official sources.",
+  "packets": [
+    {
+      "path": "municipal/barrington/ballot-input/ri.json",
+      "newMeasures": 4,
+      "inputSha256": "402195d27edaad08c5c2e1f3f1f86d46328d55b264ea90c3e74493f5103bdcf2"
+    },
+    {
+      "path": "municipal/central-falls/ballot-input/ri.json",
+      "newMeasures": 4,
+      "inputSha256": "aee6d48e8344f72a125db1bc29cf07e31172cba18c009f9a6d3b2818262af035"
+    },
+    {
+      "path": "municipal/charlestown/ballot-input/ri.json",
+      "newMeasures": 4,
+      "inputSha256": "863e53f765a32716bd39f121f68747d8223b713b9faaf9c75b1aaa58fdba00d7"
+    },
+    {
+      "path": "municipal/coventry/ballot-input/ri.json",
+      "newMeasures": 2,
+      "inputSha256": "ae05bd43d7c6bcc4e9aff2703ba57379a1b0787a1ccaecbac971a0cd957d5301"
+    },
+    {
+      "path": "municipal/foster/ballot-input/ri.json",
+      "newMeasures": 3,
+      "inputSha256": "b815919fdd7e105497475e0848fcfcfd027f094e55ded0f3cdf50f5433da8371"
+    },
+    {
+      "path": "municipal/glocester/ballot-input/ri.json",
+      "newMeasures": 5,
+      "inputSha256": "5a350e20bc7bc82fad62f1f8c029e0396ac8cfe3cac17c8d600f4e4f36053592"
+    },
+    {
+      "path": "municipal/hopkinton/ballot-input/ri.json",
+      "newMeasures": 1,
+      "inputSha256": "b01627a5970102fb3bdc561ebea61caf6a0c28ff4fa30e8550f0120a09e3c518"
+    },
+    {
+      "path": "municipal/jamestown/ballot-input/ri.json",
+      "newMeasures": 1,
+      "inputSha256": "a8ffd4901f00a48742b6180a46d7b7cd5f19cbab9d2e67c5141eee0e464ca12c"
+    },
+    {
+      "path": "municipal/johnston/ballot-input/ri.json",
+      "newMeasures": 1,
+      "inputSha256": "bebd72af9ba9c1770c4f1a1d5cb0630f97634b0d238f408ffa3a2e972e926f10"
+    },
+    {
+      "path": "municipal/little-compton/ballot-input/ri.json",
+      "newMeasures": 12,
+      "inputSha256": "02e41ad2c6b529448d30a57d964776e5de72b1eeefc844b6555baa58abbf7213"
+    },
+    {
+      "path": "municipal/narragansett/ballot-input/ri.json",
+      "newMeasures": 1,
+      "inputSha256": "89cf55fc9616fa6d0bf3788bd1f19e5eb4b0458bad900d28954d6d243d9f2b97"
+    },
+    {
+      "path": "municipal/north-smithfield/ballot-input/ri.json",
+      "newMeasures": 10,
+      "inputSha256": "c95be975ce393361119cee47536dce494c8a6264ad392d70aa534c16c6b6f8fa"
+    },
+    {
+      "path": "municipal/pawtucket/ballot-input/ri.json",
+      "newMeasures": 7,
+      "inputSha256": "c4f23b970ebff777aa5de462d9f6e0c886ae7d746371a4640d76c536cb7a0aee"
+    },
+    {
+      "path": "municipal/portsmouth/ballot-input/ri.json",
+      "newMeasures": 2,
+      "inputSha256": "2873fae4034f9866a6603068dd92bb23e27ba2943e3e3f19de4bf0a6d30eeec5"
+    },
+    {
+      "path": "municipal/providence/ballot-input/ri.json",
+      "newMeasures": 2,
+      "inputSha256": "22d868133f5dd12ad649a8a9d07ed71682b7b79d689b11401de2fb88e7b97cf0",
+      "fullOrdinanceMaterialConditions": "Complete current adopted divestment ordinance now used for existingquestion7 record; finalofficialballotquestion unchanged."
+    },
+    {
+      "path": "municipal/scituate/ballot-input/ri.json",
+      "newMeasures": 1,
+      "inputSha256": "78f478cba7099f146e8eb54ee8db215bdd9a279e50f8454b1c3ad9c601e05548"
+    },
+    {
+      "path": "municipal/smithfield/ballot-input/ri.json",
+      "newMeasures": 16,
+      "inputSha256": "8538dde8f298a2e8b991897015ff816fd934ff1b1640046ec9084f730ec72596"
+    },
+    {
+      "path": "municipal/south-kingstown/ballot-input/ri.json",
+      "newMeasures": 1,
+      "inputSha256": "0ee27ad33ee8787fc00f3a168c9897f6b6b801117f3aba3b679b2429928a8e06"
+    },
+    {
+      "path": "municipal/tiverton/ballot-input/ri.json",
+      "newMeasures": 13,
+      "inputSha256": "b08fb95827957fb4433fcb2aa96e6e8fbf86d3902a652116d815bcf1e46d273e",
+      "fullCharterMaterialConditions": "Twelve existingcharterexplainerrecords enrichedfromfullnative19-pageofficialproposal; allpagesvisuallyread, separatecompleteOCRhashed; finalofficialquestions+parcelquestion18 unchanged."
+    },
+    {
+      "path": "municipal/westerly/ballot-input/ri.json",
+      "newMeasures": 4,
+      "inputSha256": "d8e55e7061dd6b06ae2f312ea2e32521d91de79b9cb69ea35fd3e8ae1e4c3668"
+    }
+  ],
+  "localSlots": [
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4ed5-08df1e27a60d",
+      "municipality": "BARRINGTON",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-barrington-2026:question-6",
+      "packet": "municipal/barrington/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-0856-08df1e27a696",
+      "municipality": "BARRINGTON",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-barrington-2026:question-7",
+      "packet": "municipal/barrington/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-e7ae-08df1e27a6a4",
+      "municipality": "BARRINGTON",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-barrington-2026:question-8",
+      "packet": "municipal/barrington/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-9323-08df1e27a6b4",
+      "municipality": "BARRINGTON",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-barrington-2026:question-9",
+      "packet": "municipal/barrington/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-9f22-08df1e27a891",
+      "municipality": "CENTRAL FALLS",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-central-falls-2026:question-6",
+      "packet": "municipal/central-falls/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-204c-08df1e27a8a1",
+      "municipality": "CENTRAL FALLS",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-central-falls-2026:question-7",
+      "packet": "municipal/central-falls/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6300-08df1e27a8b0",
+      "municipality": "CENTRAL FALLS",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-central-falls-2026:question-8",
+      "packet": "municipal/central-falls/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-1b1f-08df1e27a8bf",
+      "municipality": "CENTRAL FALLS",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-central-falls-2026:question-9",
+      "packet": "municipal/central-falls/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6db2-08df1e27a978",
+      "municipality": "CHARLESTOWN",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-chariho-2026:question-6",
+      "packet": "ballot-input/ri.json",
+      "sameDistrictMeasure": "Chariho Regional School District, one electorate source-backed by prior packet"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-d70c-08df1e27a987",
+      "municipality": "CHARLESTOWN",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-charlestown-2026:question-7",
+      "packet": "municipal/charlestown/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-ce87-08df1e27a996",
+      "municipality": "CHARLESTOWN",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-charlestown-2026:question-8",
+      "packet": "municipal/charlestown/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-79ca-08df1e27a9a5",
+      "municipality": "CHARLESTOWN",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-charlestown-2026:question-9",
+      "packet": "municipal/charlestown/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6f1a-08df1e27a9b4",
+      "municipality": "CHARLESTOWN",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-charlestown-2026:question-10",
+      "packet": "municipal/charlestown/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-b85b-08df1e27acdc",
+      "municipality": "CRANSTON",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-cranston-2026:question-6",
+      "packet": "ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-29ca-08df1e27acec",
+      "municipality": "CRANSTON",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-cranston-2026:question-7",
+      "packet": "ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-f22d-08df1e27acfb",
+      "municipality": "CRANSTON",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-cranston-2026:question-8",
+      "packet": "ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6f65-08df1e27ad0b",
+      "municipality": "CRANSTON",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-cranston-2026:question-9",
+      "packet": "ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-8ffb-08df1e27ad1a",
+      "municipality": "CRANSTON",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-cranston-2026:question-10",
+      "packet": "ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-bd5a-08df1e27ad2b",
+      "municipality": "CRANSTON",
+      "officialQuestionNumber": 11,
+      "contestId": "ri-cranston-2026:question-11",
+      "packet": "ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-b5d3-08df1e27ab0e",
+      "municipality": "COVENTRY",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-coventry-2026:question-6",
+      "packet": "municipal/coventry/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-069c-08df1e27ab21",
+      "municipality": "COVENTRY",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-coventry-2026:question-7",
+      "packet": "municipal/coventry/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-46a8-08df1e27b057",
+      "municipality": "FOSTER",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-foster-2026:question-6",
+      "packet": "municipal/foster/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-d31c-08df1e27b068",
+      "municipality": "FOSTER",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-foster-2026:question-7",
+      "packet": "municipal/foster/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-002d-08df1e27b07b",
+      "municipality": "FOSTER",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-foster-2026:question-8",
+      "packet": "municipal/foster/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-db03-08df1e27b0f4",
+      "municipality": "GLOCESTER",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-glocester-2026:question-6",
+      "packet": "municipal/glocester/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-3b53-08df1e27b105",
+      "municipality": "GLOCESTER",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-glocester-2026:question-7",
+      "packet": "municipal/glocester/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6e86-08df1e27b116",
+      "municipality": "GLOCESTER",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-glocester-2026:question-8",
+      "packet": "municipal/glocester/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-3a53-08df1e27b127",
+      "municipality": "GLOCESTER",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-glocester-2026:question-9",
+      "packet": "municipal/glocester/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-5223-08df1e27b13a",
+      "municipality": "GLOCESTER",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-glocester-2026:question-10",
+      "packet": "municipal/glocester/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-9dc0-08df1e27b1c3",
+      "municipality": "HOPKINTON",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-chariho-2026:question-6",
+      "packet": "ballot-input/ri.json",
+      "sameDistrictMeasure": "Chariho Regional School District, one electorate source-backed by prior packet"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6168-08df1e27b1d3",
+      "municipality": "HOPKINTON",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-hopkinton-2026:question-7",
+      "packet": "municipal/hopkinton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-c5e8-08df1e27b236",
+      "municipality": "JAMESTOWN",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-jamestown-2026:question-6",
+      "packet": "municipal/jamestown/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-9bfc-08df1e27b32e",
+      "municipality": "JOHNSTON",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-johnston-2026:question-6",
+      "packet": "municipal/johnston/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-f9b8-08df1e27b4a8",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-little-compton-2026:question-6",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-a7f2-08df1e27b4ba",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-little-compton-2026:question-7",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-0832-08df1e27b4cb",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-little-compton-2026:question-8",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-e73d-08df1e27b4da",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-little-compton-2026:question-9",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-c620-08df1e27b4ea",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-little-compton-2026:question-10",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4447-08df1e27b4fb",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 11,
+      "contestId": "ri-little-compton-2026:question-11",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-397c-08df1e27b50b",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 12,
+      "contestId": "ri-little-compton-2026:question-12",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-c020-08df1e27b51b",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 13,
+      "contestId": "ri-little-compton-2026:question-13",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-5c33-08df1e27b52c",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 14,
+      "contestId": "ri-little-compton-2026:question-14",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4d36-08df1e27b53c",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 15,
+      "contestId": "ri-little-compton-2026:question-15",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-d0ac-08df1e27b54b",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 16,
+      "contestId": "ri-little-compton-2026:question-16",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-62e5-08df1e27b55b",
+      "municipality": "LITTLE COMPTON",
+      "officialQuestionNumber": 17,
+      "contestId": "ri-little-compton-2026:question-17",
+      "packet": "municipal/little-compton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-5741-08df1e27b624",
+      "municipality": "NARRAGANSETT",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-narragansett-2026:question-6",
+      "packet": "municipal/narragansett/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-09dc-08df1e27b88f",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-north-smithfield-2026:question-6",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-00a6-08df1e27b8a0",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-north-smithfield-2026:question-7",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-0ddc-08df1e27b8b1",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-north-smithfield-2026:question-8",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-d703-08df1e27b8c2",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-north-smithfield-2026:question-9",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-3e2f-08df1e27b8d3",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-north-smithfield-2026:question-10",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6469-08df1e27b8e3",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 11,
+      "contestId": "ri-north-smithfield-2026:question-11",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-8812-08df1e27b8f3",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 12,
+      "contestId": "ri-north-smithfield-2026:question-12",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-51f3-08df1e27b904",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 13,
+      "contestId": "ri-north-smithfield-2026:question-13",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-fe48-08df1e27b914",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 14,
+      "contestId": "ri-north-smithfield-2026:question-14",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-aac4-08df1e27b925",
+      "municipality": "NORTH SMITHFIELD",
+      "officialQuestionNumber": 15,
+      "contestId": "ri-north-smithfield-2026:question-15",
+      "packet": "municipal/north-smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-b84b-08df1e27ba2e",
+      "municipality": "PAWTUCKET",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-pawtucket-2026:question-6",
+      "packet": "municipal/pawtucket/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-8bb0-08df1e27ba3f",
+      "municipality": "PAWTUCKET",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-pawtucket-2026:question-7",
+      "packet": "municipal/pawtucket/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-d461-08df1e27ba50",
+      "municipality": "PAWTUCKET",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-pawtucket-2026:question-8",
+      "packet": "municipal/pawtucket/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-500c-08df1e27ba63",
+      "municipality": "PAWTUCKET",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-pawtucket-2026:question-9",
+      "packet": "municipal/pawtucket/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-2478-08df1e27ba74",
+      "municipality": "PAWTUCKET",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-pawtucket-2026:question-10",
+      "packet": "municipal/pawtucket/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-bf2b-08df1e27ba84",
+      "municipality": "PAWTUCKET",
+      "officialQuestionNumber": 11,
+      "contestId": "ri-pawtucket-2026:question-11",
+      "packet": "municipal/pawtucket/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-0d63-08df1e27ba95",
+      "municipality": "PAWTUCKET",
+      "officialQuestionNumber": 12,
+      "contestId": "ri-pawtucket-2026:question-12",
+      "packet": "municipal/pawtucket/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-3d39-08df1e27bace",
+      "municipality": "PORTSMOUTH",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-portsmouth-2026:question-6",
+      "packet": "municipal/portsmouth/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-71b2-08df1e27bae9",
+      "municipality": "PORTSMOUTH",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-portsmouth-2026:question-7",
+      "packet": "municipal/portsmouth/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-2d50-08df1e27bd1e",
+      "municipality": "PROVIDENCE",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-providence-2026:question-6",
+      "packet": "municipal/providence/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-96d4-08df1e27bd2f",
+      "municipality": "PROVIDENCE",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-providence-2026:question-7",
+      "packet": "municipal/providence/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-048a-08df1e27bd65",
+      "municipality": "RICHMOND",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-chariho-2026:question-6",
+      "packet": "ballot-input/ri.json",
+      "sameDistrictMeasure": "Chariho Regional School District, one electorate source-backed by prior packet"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-0c22-08df1e27bdfe",
+      "municipality": "SCITUATE",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-scituate-2026:question-6",
+      "packet": "municipal/scituate/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-ff6b-08df1e27be33",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-smithfield-2026:question-6",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-2515-08df1e27be46",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-smithfield-2026:question-7",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-c9ad-08df1e27be58",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-smithfield-2026:question-8",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-8eb6-08df1e27be6a",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-smithfield-2026:question-9",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-e525-08df1e27be7b",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-smithfield-2026:question-10",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4039-08df1e27be8d",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 11,
+      "contestId": "ri-smithfield-2026:question-11",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6cdc-08df1e27be9f",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 12,
+      "contestId": "ri-smithfield-2026:question-12",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-aa8e-08df1e27beb0",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 13,
+      "contestId": "ri-smithfield-2026:question-13",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-636e-08df1e27bec2",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 14,
+      "contestId": "ri-smithfield-2026:question-14",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-3634-08df1e27bed3",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 15,
+      "contestId": "ri-smithfield-2026:question-15",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4ffc-08df1e27bee4",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 16,
+      "contestId": "ri-smithfield-2026:question-16",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-58d2-08df1e27bef5",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 17,
+      "contestId": "ri-smithfield-2026:question-17",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-7a8e-08df1e27bf06",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 18,
+      "contestId": "ri-smithfield-2026:question-18",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4fe2-08df1e27bf17",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 19,
+      "contestId": "ri-smithfield-2026:question-19",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-b90f-08df1e27bf27",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 20,
+      "contestId": "ri-smithfield-2026:question-20",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6dd0-08df1e27bf38",
+      "municipality": "SMITHFIELD",
+      "officialQuestionNumber": 21,
+      "contestId": "ri-smithfield-2026:question-21",
+      "packet": "municipal/smithfield/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-986b-08df1e27bf8f",
+      "municipality": "SOUTH KINGSTOWN",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-south-kingstown-2026:question-6",
+      "packet": "municipal/south-kingstown/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-47c2-08df1e27c029",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-tiverton-2026:question-6",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-a4e2-08df1e27c03a",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-tiverton-2026:question-7",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-48ff-08df1e27c04c",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-tiverton-2026:question-8",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-fe83-08df1e27c05e",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-tiverton-2026:question-9",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-1ede-08df1e27c070",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 10,
+      "contestId": "ri-tiverton-2026:question-10",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-5405-08df1e27c081",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 11,
+      "contestId": "ri-tiverton-2026:question-11",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4e6f-08df1e27c094",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 12,
+      "contestId": "ri-tiverton-2026:question-12",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-45aa-08df1e27c0a5",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 13,
+      "contestId": "ri-tiverton-2026:question-13",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-1f3d-08df1e27c0b7",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 14,
+      "contestId": "ri-tiverton-2026:question-14",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-6169-08df1e27c0c8",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 15,
+      "contestId": "ri-tiverton-2026:question-15",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-d3ab-08df1e27c0d9",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 16,
+      "contestId": "ri-tiverton-2026:question-16",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-3e53-08df1e27c0eb",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 17,
+      "contestId": "ri-tiverton-2026:question-17",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-5319-08df1e27c0fe",
+      "municipality": "TIVERTON",
+      "officialQuestionNumber": 18,
+      "contestId": "ri-tiverton-2026:question-18",
+      "packet": "municipal/tiverton/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-1004-08df1e27c386",
+      "municipality": "WESTERLY",
+      "officialQuestionNumber": 6,
+      "contestId": "ri-westerly-2026:question-6",
+      "packet": "municipal/westerly/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-4427-08df1e27c398",
+      "municipality": "WESTERLY",
+      "officialQuestionNumber": 7,
+      "contestId": "ri-westerly-2026:question-7",
+      "packet": "municipal/westerly/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-5f96-08df1e27c3aa",
+      "municipality": "WESTERLY",
+      "officialQuestionNumber": 8,
+      "contestId": "ri-westerly-2026:question-8",
+      "packet": "municipal/westerly/ballot-input/ri.json"
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-bcc3-08df1e27c3bb",
+      "municipality": "WESTERLY",
+      "officialQuestionNumber": 9,
+      "contestId": "ri-westerly-2026:question-9",
+      "packet": "municipal/westerly/ballot-input/ri.json"
+    }
+  ],
+  "statewideHeldContestIds": [
+    "ri-sos-2026-general-question-1",
+    "ri-sos-2026-general-question-2",
+    "ri-sos-2026-general-question-3",
+    "ri-sos-2026-general-question-4",
+    "ri-sos-2026-general-question-5"
+  ],
+  "sourceInventory": "../official-samples/inventory.json",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "modelCalls": 0,
+  "sampleNumberReconciliation": "sample-number-reconciliation.json",
+  "statewideSlots": [
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-2e8c-08df1e27a4c5",
+      "officialTitle": "1. HIGHER EDUCATION FACILITIES - $275,000,000",
+      "contestId": "ri-sos-2026-general-question-1",
+      "basis": "Existing statewide measures and checked saved translations; parent owns final combined replay."
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-84af-08df1e27a4d7",
+      "officialTitle": "2. HOUSING AND HOMEOWNERSHIP - $120,000,000",
+      "contestId": "ri-sos-2026-general-question-2",
+      "basis": "Existing statewide measures and checked saved translations; parent owns final combined replay."
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-251e-08df1e27a51d",
+      "officialTitle": "3. ECONOMIC DEVELOPMENT - $100,000,000",
+      "contestId": "ri-sos-2026-general-question-3",
+      "basis": "Existing statewide measures and checked saved translations; parent owns final combined replay."
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-d4dc-08df1e27a545",
+      "officialTitle": "4. CULTURAL ECONOMY - $50,000,000",
+      "contestId": "ri-sos-2026-general-question-4",
+      "basis": "Existing statewide measures and checked saved translations; parent owns final combined replay."
+    },
+    {
+      "sourceBallotItemId": "01000000-59ac-daed-aaac-08df1e27a5e4",
+      "officialTitle": "5. GREEN ECONOMY BONDS - $55,000,000",
+      "contestId": "ri-sos-2026-general-question-5",
+      "basis": "Existing statewide measures and checked saved translations; parent owns final combined replay."
+    }
+  ]
+}

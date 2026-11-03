@@ -1,0 +1,529 @@
+{
+  "scope": "Current39municipalitysamplecataloguevscompleteofficialENRlocalquestioninventory;oneactualsamplepermunicipality,notallballotstyles.",
+  "towns": [
+    {
+      "municipality": "BARRINGTON",
+      "precinct": "0101",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "BRISTOL",
+      "precinct": "0201",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "BURRILLVILLE",
+      "precinct": "0301",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "CENTRAL FALLS",
+      "precinct": "0401",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "CHARLESTOWN",
+      "precinct": "0501",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "COVENTRY",
+      "precinct": "0601",
+      "enrLocalNumbers": [
+        6,
+        7
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "CRANSTON",
+      "precinct": "0701",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "CUMBERLAND",
+      "precinct": "0801",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "EAST GREENWICH",
+      "precinct": "0901",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "EAST PROVIDENCE",
+      "precinct": "1001",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "EXETER",
+      "precinct": "1101",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "FOSTER",
+      "precinct": "1201",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "GLOCESTER",
+      "precinct": "1301",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "HOPKINTON",
+      "precinct": "1401",
+      "enrLocalNumbers": [
+        6,
+        7
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "JAMESTOWN",
+      "precinct": "1501",
+      "enrLocalNumbers": [
+        6
+      ],
+      "sampleLocalNumbers": [
+        6
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "JOHNSTON",
+      "precinct": "1601",
+      "enrLocalNumbers": [
+        6
+      ],
+      "sampleLocalNumbers": [
+        6
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "LINCOLN",
+      "precinct": "1701",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "LITTLE COMPTON",
+      "precinct": "1801",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "MIDDLETOWN",
+      "precinct": "1901",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "NARRAGANSETT",
+      "precinct": "2001",
+      "enrLocalNumbers": [
+        6
+      ],
+      "sampleLocalNumbers": [
+        6
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "NEWPORT",
+      "precinct": "2101",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "NEW SHOREHAM",
+      "precinct": "2201",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "NORTH KINGSTOWN",
+      "precinct": "2301",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "NORTH PROVIDENCE",
+      "precinct": "2401",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "NORTH SMITHFIELD",
+      "precinct": "2501",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "PAWTUCKET",
+      "precinct": "2601",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "PORTSMOUTH",
+      "precinct": "2701",
+      "enrLocalNumbers": [
+        6,
+        7
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "PROVIDENCE",
+      "precinct": "2801",
+      "enrLocalNumbers": [
+        6,
+        7
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "RICHMOND",
+      "precinct": "2901",
+      "enrLocalNumbers": [
+        6
+      ],
+      "sampleLocalNumbers": [
+        6
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "SCITUATE",
+      "precinct": "3001",
+      "enrLocalNumbers": [
+        6
+      ],
+      "sampleLocalNumbers": [
+        6
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "SMITHFIELD",
+      "precinct": "3102",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "SOUTH KINGSTOWN",
+      "precinct": "3201",
+      "enrLocalNumbers": [
+        6
+      ],
+      "sampleLocalNumbers": [
+        6
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "TIVERTON",
+      "precinct": "3301",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "WARREN",
+      "precinct": "3401",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "WARWICK",
+      "precinct": "3501",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "WESTERLY",
+      "precinct": "3601",
+      "enrLocalNumbers": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "sampleLocalNumbers": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "matches": true
+    },
+    {
+      "municipality": "WEST GREENWICH",
+      "precinct": "3701",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "WEST WARWICK",
+      "precinct": "3801",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    },
+    {
+      "municipality": "WOONSOCKET",
+      "precinct": "3901",
+      "enrLocalNumbers": [],
+      "sampleLocalNumbers": [],
+      "matches": true
+    }
+  ],
+  "allQuestionNumberSetsMatch": true
+}

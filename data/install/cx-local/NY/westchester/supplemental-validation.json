@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-03T06:05:39.127763+00:00",
+  "allNativeHashesAndPrimaryAndSupplementalQuotes": "PASS",
+  "quotes": 1146,
+  "all17LegislativeDistricts": "PASS",
+  "all69NamedLocalRosterOfficeGroupsInActualSamples": "PASS",
+  "candidacies": 130,
+  "numberedSheetOfficePartyAudits": 68,
+  "ardlseyAdditionalPrintedNames": [
+    "Michael J. Wiskind",
+    "Saboor Syed"
+  ],
+  "heldBlankFields": 2,
+  "libraryBlankColumns": "54/55 independently visually inspected; no printed people",
+  "supreme9StableCandidateIdsPreserved": 5,
+  "wholeCountySupreme9MembershipIdsPreserved": 5,
+  "fullPublishedStyleParity": false,
+  "productionWrites": false
+}

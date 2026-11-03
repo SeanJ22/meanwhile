@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Running for Office Forms</title>
+	<link href="https://citizenparticipation.westchestercountyny.gov/component/finder/search?format=opensearch&amp;Itemid=101" rel="search" title="OpenSearch BOE" type="application/opensearchdescription+xml">
+	<link href="/images/stories/assets/favicon.png" rel="icon" sizes="any">
+	<link href="/images/stories/assets/favicon.png#2" rel="icon" type="image/svg+xml">
+	<link href="/images/stories/assets/favicon.png#3" rel="apple-touch-icon">
+
+        <link href="/plugins/system/screenreader/screenreader/libraries/controller/css/accessible.css?1792436037" rel="stylesheet">
+	<link href="/plugins/system/screenreader/screenreader/libraries/controller/css/extras.css?1792436037" rel="stylesheet">
+	<link href="/media/vendor/bootstrap/css/bootstrap.min.css?5.3.8" rel="stylesheet">
+	<link href="/media/vendor/joomla-custom-elements/css/joomla-alert.min.css?0.4.1" rel="stylesheet">
+	<link href="/media/system/css/joomla-fontawesome.min.css?5.0.53" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<link href="/templates/yootheme/css/theme.12.css?1793214374" rel="stylesheet">
+	<link href="/templates/yootheme/css/custom.css?5.0.53" rel="stylesheet">
+	<link href="/media/plg_system_jcepro/site/css/content.min.css?86aa0286b6232c4a5b58f892ce080277" rel="stylesheet">
+	<style>#accessibility-links #text_plugin{width:80px;}</style>
+	<style>:focus{outline: 2px solid #9c3967 !important;}</style>
+	<style>div.gpt_float_switcher .gt-selected,div.gpt_float_switcher,div.gpt_options{background-color:#ffffff}div.gpt_float_switcher,div.gpt_float_switcher div.gt-selected div.gpt-current-lang,div.gpt_float_switcher, div.gpt_float_switcher div.gpt_options a{color:#000000;font-size: 15px}div.gpt_float_switcher{border-radius:5px}div.gpt_float_switcher img,svg.svg-inline--fa{box-sizing:border-box;width:20px}</style>
+
+        <script src="/media/vendor/jquery/js/jquery.min.js?3.7.1"></script>
+	<script src="/media/legacy/js/jquery-noconflict.min.js?504da4"></script>
+	<script src="/plugins/system/screenreader/screenreader/languages/en-GB.js?1792436037"></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/tts/soundmanager/soundmanager2.js?44f269"></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/tts/responsivevoice.js?44f269" defer></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/tts/tts.js?1792436037" defer></script>
+	<script src="/plugins/system/screenreader/screenreader/libraries/controller/controller.js?1792436037" defer></script>
+	<script src="/media/mod_gptranslate/js/responsivevoice.js?44f269" defer></script>
+	<script src="/media/mod_gptranslate/js/jsonrepair/index.js?44f269" type="module"></script>
+	<script src="/media/mod_gptranslate/js/gptranslate.js?44f269" data-gt-orig-url="/run-for-office/overview" data-gt-orig-domain="citizenparticipation.westchestercountyny.gov" data-gt-widget-id="10111" type="module"></script>
+	<script src="/media/com_wrapper/js/iframe-height.min.js?44f269" defer></script>
+	<script src="/media/vendor/awesomplete/js/awesomplete.min.js?1.1.7" defer></script>
+	<script type="application/json" class="joomla-script-options new">{"joomla.jtext":{"JLIB_JS_AJAX_ERROR_OTHER":"An error has occurred while fetching the JSON data: HTTP %s status code.","JLIB_JS_AJAX_ERROR_PARSE":"A parse error has occurred while processing the following JSON data:<br><code style=\"color:inherit;white-space:pre-wrap;padding:0;margin:0;border:0;background:inherit;\">%s<\/code>","ERROR":"Error","MESSAGE":"Message","NOTICE":"Notice","WARNING":"Warning","SUCCESS":"Success","JCLOSE":"Close","JOK":"OK","JOPEN":"Open"},"finder-search":{"url":"\/component\/finder\/?task=suggestions.suggest&amp;format=json&amp;tmpl=component&amp;Itemid=101"},"system.paths":{"root":"","rootFull":"https:\/\/citizenparticipation.westchestercountyny.gov\/","base":"","baseFull":"https:\/\/citizenparticipation.westchestercountyny.gov\/"},"csrf.token":"0bbb248372d319d98c03d1f90b0bd5ee"}</script>
+	<script src="/media/system/js/core.min.js?a3d8f8"></script>
+	<script src="/media/vendor/bootstrap/js/toast.min.js?5.3.8" type="module"></script>
+	<script src="/media/com_finder/js/finder.min.js?755761" type="module"></script>
+	<script src="/media/system/js/messages.min.js?9a4811" type="module"></script>
+	<script src="/templates/yootheme/vendor/assets/uikit/dist/js/uikit.min.js?5.0.53"></script>
+	<script src="/templates/yootheme/vendor/assets/uikit/dist/js/uikit-icons-fuse.min.js?5.0.53"></script>
+	<script src="/templates/yootheme/assets/site/js/theme.js?5.0.53"></script>
+	<script>window.soundManager.url = "https://citizenparticipation.westchestercountyny.gov/plugins/system/screenreader/screenreader/libraries/tts/soundmanager/swf/";
+window.soundManager.debugMode = false;
+window.soundManager.defaultOptions.volume = 80;
+var screenReaderConfigOptions = {"screenReaderVolume":"80","screenReaderVoiceSpeed":"normal","chunkLength":300,"position":"bottomleft","template":"accessible.css","templateOrientation":"vertical","templateVariant":"standard","scrolling":"fixed","targetAppendto":"html","targetAppendMode":"bottom","enableDarkMode":1,"enableAccessibilityStatement":0,"hideOnMobile":0,"useMinimizedToolbar":1,"statusMinimizedToolbar":"closed","minimizedToolbarOnlyMobile":0,"fontsizeMinimizedToolbar":0,"fontsizeRestoreOnClose":0,"hoverMinimizedToolbar":0,"preload":1,"preloadTimeout":3000,"autoBackgroundColor":1,"readPage":1,"readChildNodes":1,"excludeScripts":1,"ieHighContrast":1,"ieHighContrastAdvanced":1,"selectedStorage":"session","gtranslateIntegration":0,"selectMainpageareaText":0,"resetButtonBehavior":"fontsize","readElementsHovering":0,"elementsHoveringSelector":"p","elementsToexcludeCustom":"","readImages":0,"readImagesAttribute":"alt","readImagesOrdering":"before","readImagesHovering":0,"mainpageSelector":"*[name*=main], *[class*=main], *[id*=main], *[id*=container], *[class*=container]","showlabel":1,"screenreaderIcon":"audio","screenreader":1,"highcontrast":1,"highcontrastAlternate":1,"colorHue":180,"colorBrightness":6,"rootTarget":1,"dyslexicFont":1,"grayHues":1,"spacingSize":1,"spacingSizeMin":0,"spacingSizeMax":10,"pageZoom":1,"bigCursor":1,"readingGuides":1,"readability":1,"readabilitySelector":"div.item-page,#content,div[itemprop=articleBody],div.item-content","hideImages":1,"hideAlsoVideosIframes":1,"customColors":1,"customColorsCssSelectors":"","fontsize":0,"fontsizeDefault":80,"fontsizeMin":50,"fontsizeMax":200,"fontsizeSelector":"","fontSizeHeadersIncrement":20,"preserveOriginalSpacing":0,"toolbarBgcolor":"#eeeeee","volumeGradientColorStart":"#dae8fe","volumeGradientColorEnd":"#f2f7fa","highlightLinks":0,"stopAnimations":0,"respectReducedMotion":0,"readingMask":0,"colorOverlay":0,"presets":0,"presetVision":1,"presetDyslexia":1,"presetFocus":1,"presetMotor":1,"presetSeizure":1,"webSpeechRate":"0.9","webSpeechPitch":"1","webSpeechVoiceSelector":1,"webSpeechPreferQuality":1,"readerEngine":"proxy_responsive","useMobileReaderEngine":0,"mobileReaderEngine":"proxy_responsive","proxyResponsiveApikey":"kWyXm5dC","proxyResponsiveLanguageGender":"auto","proxyResponsiveReadingMode":"native","generateMissingImagesAlt":0,"fixHeadingsStructure":0,"fixLowContrastText":0,"fixMissingAriaRoles":0,"fixMissingFormLabels":0,"validateAndFixFocusOrder":0,"showSkipToContents":0,"skipToContentsSelector":"","removeLinksTarget":0,"volume_accesskeys":1,"accesskey_play":"P","accesskey_pause":"E","accesskey_stop":"S","accesskey_increase":"O","accesskey_decrease":"U","accesskey_reset":"R","accesskey_highcontrast":"H","accesskey_highcontrast2":"J","accesskey_highcontrast3":"K","accesskey_dyslexic":"D","accesskey_grayhues":"G","accesskey_spacingsize_increase":"M","accesskey_spacingsize_decrease":"N","accesskey_pagezoomsize_increase":"X","accesskey_pagezoomsize_decrease":"Y","accesskey_pagezoomsize_reset":"Z","accesskey_skiptocontents":"C","accesskey_bigcursor":"W","accesskey_reading_guides":"V","accesskey_readability":"Q","accesskey_hideimages":"F","accesskey_minimized":"L","accesskey_increase_volume":"+","accesskey_decrease_volume":"-","accesskey_change_text_color":"I","accesskey_change_background_color":"B","accesskey_highlight_links":"A","accesskey_stop_animations":"T","accesskey_reading_mask":"6","accesskey_color_overlay":"7","baseURI":"https://citizenparticipation.westchestercountyny.gov/","proxyBaseURI":"https://citizenparticipation.westchestercountyny.gov/plugins/system/screenreader/screenreader/libraries/tts/","assetsBaseURI":"https://citizenparticipation.westchestercountyny.gov/plugins/system/screenreader/screenreader/libraries/controller/css/images/","token":"8c2aa45693b05a18b927eef04e024e9a63d449e410b67945d1f051e188fe869a","langCode":"en","labeltext":"Screen Reader","enableAccessibilityStatementText":"Accessibility statement","enableAccessibilityStatementIsFile":0,"enableAccessibilityStatementLink":"","aiAltEndpoint":""};</script>
+	<script>var gptServerSideLink = "https://citizenparticipation.westchestercountyny.gov/index.php?option=com_ajax&plugin=gptranslate&format=json";var gptFormToken = "c8d19519219349c7148a17104e9da8c7";var gptLiveSite = "https://citizenparticipation.westchestercountyny.gov/";var gptStorage = window.sessionStorage;var gptMaxTranslationsPerRequest = 100;var maxCharactersPerRequest = 2048;var gptRewriteLanguageUrl = 0;var gptRewriteLanguageAlias = 0;var gptRewriteLanguageAliasOriginalLanguage = 0;var gptExcludedAliasSlugs = "";var gptAutoSetLanguageDirection = 0;var gptServersideTranslations = 0;var gptLanguageSwitchRedirect = 0;var gptServersideTranslationsLanguageSwitchingMode = "url";var gptServersideTranslationsMatchquotes = 1;var gptRewriteDefaultLanguageUrl = 0;var gptRewritePageLinks = 0;var gptRewritePageLinksExclusions = "";var gptRewriteFormActions = 0;var gptTransliterateUrls = 0;var gptForceAsciiUrlAliases = 0;var gptTranslateMetadata = 0;var gptTranslatePlaceholders = 0;var gptTranslateAltImages = 0;var chatgptClassesAltimagesExcluded = "";var gptTranslateSrcImages = 0;var gptTranslateSrcIframes = 0;var gptTranslateSrcVideos = 0;var gptTranslateIframeLocale = 0;var gptTranslateTitles = 0;var gptTranslateValues = 0;var gptMetadataChosenEngine = 0;var gptSetHtmlLang = 0;var gptAddCanonical = 0;var gptAddAlternate = 0;var gptSubfolderInstallation = 0;var gptIgnoreQuerystring = 0;var gptChatgptGtranslateRequestDelay = 0;var gptInitialTranslationDelay = 0;var gptCssSelectorRealtimeTranslationsRetrigger = "";var gptRealtimeTranslationsRetriggerEvents = "['click']";var gptRealtimeTranslationsRetriggerEventsDelay = 200;var gptRealtimeTranslationsRetriggerForceGoogle = 0;var gptRealtimeTranslationsRetriggerDoNotRevert = 0;var gptRealtimeTranslationsRetriggerScopeSelector = "";var chatgptApiKey = [];var chatgptApiModel = "gpt-3.5-turbo";var chatgptTranslationMode = "client";var chatgptRequestMessage = "Compile this JSON object key-value pairs adding the translation into '{{target}}' language to the empty value from the original '{{source}}' language of the key and return me only a parsable JSON object without any surrounding characters, preserve and return in the JSON object the key in the original '{{source}}' language within double quotes: '{{translations}}'. Pay attention to not skip any key and translate all keys. Return only a parsable JSON object with no surrounding text, explanations, or markdown formatting. Ensure the response is valid JSON and can be parsed directly.";var chatgptRequestConversationMode = "user";var chatgptEnableReader = 1;var chatgptResponsivevoiceLanguageGender = "auto";var chatgptResponsivevoiceReadingMode = "native";var chatgptResponsivevoiceApiKey = "MXQg7jpJ";var chatgptChunksize = "200";var chatgptCssSelectorLeafnodesExcluded = "a.nturl";var chatgptWordsLeafnodesExcluded = "";var chatgptMetadataWordsLeafnodesExcluded = "";var chatgptWordsMinLength = "0";var chatgptFlattenInnerFormattingTags = 0;var chatgptFlattenInnerFormattingTagsToRemove = "strong,em,u,b,i";var chatgptWrapExcludedWords = 0;var gptApplyDictionaryToAliases = 0;var chatgptMainpageSelector = "*[name*=main], *[class*=main], *[id*=main], *[id*=container], *[class*=container]";var chatgptElementsToExcludeCustom = "";var chatgptPopupFontsize = 15;var chatgptDraggableWidget = 0;var gptAudioVolume = 100;var gptVoiceSpeed = "normal";var gTranslateEngine = 1;var gTranslateMethod = 0;var translateEngineValue = "1";var gptPopupShadow = 1;var gptDisableControl = 0;var svgIconArrow = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 285 285"><path d="M282 76.5l-14.2-14.3a9 9 0 0 0-13.1 0L142.5 174.4 30.3 62.2a9 9 0 0 0-13.2 0L3 76.5a9 9 0 0 0 0 13.1l133 133a9 9 0 0 0 13.1 0l133-133a9 9 0 0 0 0-13z" style="fill:%23000000"/></svg>';</script>
+	<script>var MOD_GPTRANSLATE_TRANSLATING="Page translation in progress";var MOD_GPTRANSLATE_TRANSLATING_WAIT="Please wait...";var MOD_GPTRANSLATE_TRANSLATING_COMPLETE="Page translation completed";var MOD_GPTRANSLATE_READING_INPROGRESS="Text reading in progress";var MOD_GPTRANSLATE_READING_END="Text reading completed";var MOD_GPTRANSLATE_READING_EMPTY="No text to read on this page";var MOD_GPTRANSLATE_CHOOSE_LANGUAGE="Choose your language";var MOD_GPTRANSLATE_LANGUAGE_NAME_AF="Afrikaans";var MOD_GPTRANSLATE_LANGUAGE_NAME_SQ="Albanian";var MOD_GPTRANSLATE_LANGUAGE_NAME_AM="Amharic";var MOD_GPTRANSLATE_LANGUAGE_NAME_AR="Arabic";var MOD_GPTRANSLATE_LANGUAGE_NAME_HY="Armenian";var MOD_GPTRANSLATE_LANGUAGE_NAME_AZ="Azerbaijani";var MOD_GPTRANSLATE_LANGUAGE_NAME_EU="Basque";var MOD_GPTRANSLATE_LANGUAGE_NAME_BE="Belarusian";var MOD_GPTRANSLATE_LANGUAGE_NAME_BN="Bengali";var MOD_GPTRANSLATE_LANGUAGE_NAME_BS="Bosnian";var MOD_GPTRANSLATE_LANGUAGE_NAME_BG="Bulgarian";var MOD_GPTRANSLATE_LANGUAGE_NAME_CA="Catalan";var MOD_GPTRANSLATE_LANGUAGE_NAME_CEB="Cebuano";var MOD_GPTRANSLATE_LANGUAGE_NAME_NY="Chichewa";var MOD_GPTRANSLATE_LANGUAGE_NAME_ZH_CN="Chinese";var MOD_GPTRANSLATE_LANGUAGE_NAME_ZH_TW="Chinese (Traditional)";var MOD_GPTRANSLATE_LANGUAGE_NAME_CO="Corsican";var MOD_GPTRANSLATE_LANGUAGE_NAME_HR="Croatian";var MOD_GPTRANSLATE_LANGUAGE_NAME_CS="Czech";var MOD_GPTRANSLATE_LANGUAGE_NAME_DA="Danish";var MOD_GPTRANSLATE_LANGUAGE_NAME_NL="Dutch";var MOD_GPTRANSLATE_LANGUAGE_NAME_EN="English";var MOD_GPTRANSLATE_LANGUAGE_NAME_EO="Esperanto";var MOD_GPTRANSLATE_LANGUAGE_NAME_ET="Estonian";var MOD_GPTRANSLATE_LANGUAGE_NAME_TL="Filipino";var MOD_GPTRANSLATE_LANGUAGE_NAME_FI="Finnish";var MOD_GPTRANSLATE_LANGUAGE_NAME_FR="French";var MOD_GPTRANSLATE_LANGUAGE_NAME_FY="Frisian";var MOD_GPTRANSLATE_LANGUAGE_NAME_GL="Galician";var MOD_GPTRANSLATE_LANGUAGE_NAME_KA="Georgian";var MOD_GPTRANSLATE_LANGUAGE_NAME_DE="German";var MOD_GPTRANSLATE_LANGUAGE_NAME_EL="Greek";var MOD_GPTRANSLATE_LANGUAGE_NAME_GU="Gujarati";var MOD_GPTRANSLATE_LANGUAGE_NAME_HT="Haitian Creole";var MOD_GPTRANSLATE_LANGUAGE_NAME_HA="Hausa";var MOD_GPTRANSLATE_LANGUAGE_NAME_HAW="Hawaiian";var MOD_GPTRANSLATE_LANGUAGE_NAME_IW="Hebrew";var MOD_GPTRANSLATE_LANGUAGE_NAME_HI="Hindi";var MOD_GPTRANSLATE_LANGUAGE_NAME_HMN="Hmong";var MOD_GPTRANSLATE_LANGUAGE_NAME_HU="Hungarian";var MOD_GPTRANSLATE_LANGUAGE_NAME_IS="Icelandic";var MOD_GPTRANSLATE_LANGUAGE_NAME_IG="Igbo";var MOD_GPTRANSLATE_LANGUAGE_NAME_ID="Indonesian";var MOD_GPTRANSLATE_LANGUAGE_NAME_GA="Irish";var MOD_GPTRANSLATE_LANGUAGE_NAME_IT="Italian";var MOD_GPTRANSLATE_LANGUAGE_NAME_JA="Japanese";var MOD_GPTRANSLATE_LANGUAGE_NAME_JW="Javanese";var MOD_GPTRANSLATE_LANGUAGE_NAME_KN="Kannada";var MOD_GPTRANSLATE_LANGUAGE_NAME_KK="Kazakh";var MOD_GPTRANSLATE_LANGUAGE_NAME_KL="Kalaallisut";var MOD_GPTRANSLATE_LANGUAGE_NAME_KM="Khmer";var MOD_GPTRANSLATE_LANGUAGE_NAME_KO="Korean";var MOD_GPTRANSLATE_LANGUAGE_NAME_KU="Kurdish (Kurmanji)";var MOD_GPTRANSLATE_LANGUAGE_NAME_KY="Kyrgyz";var MOD_GPTRANSLATE_LANGUAGE_NAME_LO="Lao";var MOD_GPTRANSLATE_LANGUAGE_NAME_LA="Latin";var MOD_GPTRANSLATE_LANGUAGE_NAME_LV="Latvian";var MOD_GPTRANSLATE_LANGUAGE_NAME_LT="Lithuanian";var MOD_GPTRANSLATE_LANGUAGE_NAME_LB="Luxembourgish";var MOD_GPTRANSLATE_LANGUAGE_NAME_MK="Macedonian";var MOD_GPTRANSLATE_LANGUAGE_NAME_MG="Malagasy";var MOD_GPTRANSLATE_LANGUAGE_NAME_MS="Malay";var MOD_GPTRANSLATE_LANGUAGE_NAME_ML="Malayalam";var MOD_GPTRANSLATE_LANGUAGE_NAME_MT="Maltese";var MOD_GPTRANSLATE_LANGUAGE_NAME_MI="Maori";var MOD_GPTRANSLATE_LANGUAGE_NAME_MR="Marathi";var MOD_GPTRANSLATE_LANGUAGE_NAME_MN="Mongolian";var MOD_GPTRANSLATE_LANGUAGE_NAME_MY="Myanmar (Burmese)";var MOD_GPTRANSLATE_LANGUAGE_NAME_NE="Nepali";var MOD_GPTRANSLATE_LANGUAGE_NAME_NO="Norwegian";var MOD_GPTRANSLATE_LANGUAGE_NAME_PS="Pashto";var MOD_GPTRANSLATE_LANGUAGE_NAME_FA="Persian";var MOD_GPTRANSLATE_LANGUAGE_NAME_PL="Polish";var MOD_GPTRANSLATE_LANGUAGE_NAME_PT="Portuguese";var MOD_GPTRANSLATE_LANGUAGE_NAME_PA="Punjabi";var MOD_GPTRANSLATE_LANGUAGE_NAME_RO="Romanian";var MOD_GPTRANSLATE_LANGUAGE_NAME_RU="Russian";var MOD_GPTRANSLATE_LANGUAGE_NAME_SM="Samoan";var MOD_GPTRANSLATE_LANGUAGE_NAME_GD="Scottish Gaelic";var MOD_GPTRANSLATE_LANGUAGE_NAME_SR="Serbian";var MOD_GPTRANSLATE_LANGUAGE_NAME_ST="Sesotho";var MOD_GPTRANSLATE_LANGUAGE_NAME_SN="Shona";var MOD_GPTRANSLATE_LANGUAGE_NAME_SD="Sindhi";var MOD_GPTRANSLATE_LANGUAGE_NAME_SI="Sinhala";var MOD_GPTRANSLATE_LANGUAGE_NAME_SK="Slovak";var MOD_GPTRANSLATE_LANGUAGE_NAME_SL="Slovenian";var MOD_GPTRANSLATE_LANGUAGE_NAME_SO="Somali";var MOD_GPTRANSLATE_LANGUAGE_NAME_ES="Spanish";var MOD_GPTRANSLATE_LANGUAGE_NAME_SU="Sundanese";var MOD_GPTRANSLATE_LANGUAGE_NAME_SW="Swahili";var MOD_GPTRANSLATE_LANGUAGE_NAME_SV="Swedish";var MOD_GPTRANSLATE_LANGUAGE_NAME_TG="Tajik";var MOD_GPTRANSLATE_LANGUAGE_NAME_TA="Tamil";var MOD_GPTRANSLATE_LANGUAGE_NAME_TE="Telugu";var MOD_GPTRANSLATE_LANGUAGE_NAME_TH="Thai";var MOD_GPTRANSLATE_LANGUAGE_NAME_TR="Turkish";var MOD_GPTRANSLATE_LANGUAGE_NAME_UK="Ukrainian";var MOD_GPTRANSLATE_LANGUAGE_NAME_UR="Urdu";var MOD_GPTRANSLATE_LANGUAGE_NAME_UZ="Uzbek";var MOD_GPTRANSLATE_LANGUAGE_NAME_VI="Vietnamese";var MOD_GPTRANSLATE_LANGUAGE_NAME_CY="Welsh";var MOD_GPTRANSLATE_LANGUAGE_NAME_XH="Xhosa";var MOD_GPTRANSLATE_LANGUAGE_NAME_YI="Yiddish";var MOD_GPTRANSLATE_LANGUAGE_NAME_YO="Yoruba";var MOD_GPTRANSLATE_LANGUAGE_NAME_ZU="Zulu";</script>
+	<script>window.gptranslateSettings = window.gptranslateSettings || {};window.gptranslateSettings['10111'] = {"default_language":"en","languages":["af","sq","am","ar","hy","az","eu","be","bn","bs","bg","ca","ceb","ny","zh","co","hr","cs","da","nl","en","eo","et","tl","fi","fr","fy","gl","ka","de","el","gu","ht","ha","haw","iw","hi","hmn","hu","is","ig","id","ga","it","ja","jw","kn","kk","km","ko","ku","ky","lo","la","lv","lt","lb","mk","mg","ms","ml","mt","mi","mr","mn","my","ne","no","ps","fa","pl","pt","pa","ro","ru","sm","gd","sr","st","sn","sd","si","sk","sl","so","es","su","sw","sv","tg","ta","te","th","tr","uk","ur","uz","vi","cy","xh","yi","yo","zu"],"wrapper_selector":"#gpt-wrapper-10111","float_switcher_open_direction":"top","detect_browser_language":"0","detect_current_language":"0","detect_default_language":"0","autotranslate_detected_language":"0","always_detect_autotranslated_language":"0","widget_text_color":"#000000","show_language_titles":"1","enable_dropdown":"1","enable_modal":"0","equal_widths":"0","reader_button_position":"top","custom_css":"#gpt_float_wrapper {\r\nmargin: 0 0 0 80px;}","alt_flags":{"en":"usa","es":"mexico"},"switcher_horizontal_position":"left","switcher_vertical_position":"bottom","flags_location":"https:\/\/citizenparticipation.westchestercountyny.gov\/media\/mod_gptranslate\/flags\/","flag_loading":"local","flag_style":"2d","hide_flags":0,"widget_max_height":"260","incremental_enabled":0,"incremental_show_progress_popup":0,"incremental_caseinsensitive":0,"incremental_filter_excluded_words":0,"incremental_filter_dictionary_keys":0,"incremental_excluded_css_selectors":".hits,.item-page-hits,.article-hits,.modified-date,.modified,.created-date,.created,.article-info,.item-info,.print-icon,.email-icon,.pdf-icon,.datetime,.date-time,.numarticoli,.numarticles,.item-meta,.article-meta,.copyrights,.copyright-notice,.powered-by,.powered,.footer-text,.footer-info,.counter,.visit-counter,.meta-info,.visually-hidden,[role=tooltip]","incremental_excluded_text_patterns":"","incremental_preserve_new_texts":1};</script>
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://citizenparticipation.westchestercountyny.gov/","name":"Home"}},{"@type":"ListItem","position":2,"item":{"name":"Run for Office"}}],"@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/BreadcrumbList/0"}</script>
+	<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/Organization/base","name":"BOE","url":"https://citizenparticipation.westchestercountyny.gov/"},{"@type":"WebSite","@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/WebSite/base","url":"https://citizenparticipation.westchestercountyny.gov/","name":"BOE","publisher":{"@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/Organization/base"},"potentialAction":{"@type":"SearchAction","target":"https://citizenparticipation.westchestercountyny.gov/component/finder/search?q={search_term_string}\u0026amp;Itemid=101","query-input":"required name=search_term_string"}},{"@type":"WebPage","@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/WebPage/base","url":"https://citizenparticipation.westchestercountyny.gov/run-for-office/overview","name":"Running for Office Forms","isPartOf":{"@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/WebSite/base"},"about":{"@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/Organization/base"},"inLanguage":"en-GB"},{"@type":"Article","@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/com_content/article/2565","name":"Running for Office Forms","headline":"Running for Office Forms","inLanguage":"en-GB","thumbnailUrl":"images/stories/primaryImages/speaker.jpg","isPartOf":{"@id":"https://citizenparticipation.westchestercountyny.gov/#/schema/WebPage/base"}}]}</script>
+	<script>window.yootheme ||= {}; yootheme.theme = {"i18n":{"close":{"label":"Close"},"totop":{"label":"Back to top"},"marker":{"label":"Open"},"navbarToggleIcon":{"label":"Open Menu"},"paginationPrevious":{"label":"Previous page"},"paginationNext":{"label":"Next Page"},"searchIcon":{"toggle":"Open Search","submit":"Submit Search"},"slider":{"next":"Next slide","previous":"Previous slide","slideX":"Slide %s","slideLabel":"%s of %s"},"slideshow":{"next":"Next slide","previous":"Previous slide","slideX":"Slide %s","slideLabel":"%s of %s"},"lightboxPanel":{"next":"Next slide","previous":"Previous slide","slideLabel":"%s of %s","close":"Close"}}};</script>
+	<script async src="https://docaccess.com/docbox.js"></script>
+	<script defer src="https://www.westchestercountyny.gov/ExternalLinkWarning.js"></script>
+	<link rel="stylesheet" href="https://use.typekit.net/lmh6uec.css">
+    
+<link rel="stylesheet" href="https://use.typekit.net/iqf2dwz.css">
+	<script async src="https://siteimproveanalytics.com/js/siteanalyze_1302966.js"></script>
+
+    </head>
+    <body class="">
+
+        <div class="uk-hidden-visually uk-notification uk-notification-top-left uk-width-auto">
+            <div class="uk-notification-message">
+                <a href="#tm-main" class="uk-link-reset">Skip to main content</a>
+            </div>
+        </div>
+
+        
+        
+        <div class="tm-page">
+
+                        
+
+
+<header class="tm-header-mobile uk-hidden@m">
+
+
+    
+        <div class="uk-navbar-container">
+
+            <div class="uk-container uk-container-expand">
+                <nav class="uk-navbar" uk-navbar="{&quot;align&quot;:&quot;center&quot;,&quot;container&quot;:&quot;.tm-header-mobile&quot;,&quot;boundary&quot;:&quot;.tm-header-mobile .uk-navbar-container&quot;}">
+
+                                        <div class="uk-navbar-left ">
+
+                                                    
+<div class="uk-navbar-item" id="module-10112">
+
+    
+    
+<div class="uk-margin-remove-last-child custom" ><p><a href="https://www.westchestercountyny.gov"><img src="/images/stories/assets/westchester-horizontal-mark-white-300x83.png" alt="Westchester County Home" width="110" class="float-none" /></a></p></div>
+
+</div>
+
+                        
+                        
+                        
+                    </div>
+                    
+                    
+                                        <div class="uk-navbar-right">
+
+                                                    
+                        
+                                                    <a uk-toggle href="#tm-dialog-mobile" class="uk-navbar-toggle" aria-controls="tm-dialog-mobile">
+
+        
+        <div uk-navbar-toggle-icon></div>
+
+        
+    </a>
+                        
+                    </div>
+                    
+                </nav>
+            </div>
+
+        </div>
+
+    
+
+
+
+        <div id="tm-dialog-mobile" uk-offcanvas="container: true; overlay: true" mode="slide" flip>
+        <div class="uk-offcanvas-bar uk-flex uk-flex-column" aria-label="Menu">
+
+                        <button class="uk-offcanvas-close uk-close-large" type="button" uk-close uk-toggle="cls: uk-close-large; mode: media; media: @s"></button>
+            
+                        <div class="uk-margin-auto-bottom">
+                
+<div class="uk-panel" id="module-menu-dialog-mobile">
+
+    
+    
+<ul class="uk-nav uk-nav-default uk-nav-divider uk-nav-accordion" uk-nav="targets: &gt; .js-accordion">
+    
+	<li class="item-408"><a href="https://www.westchestercountyny.gov" class="main_site_link">Westchester Home</a></li>
+	<li class="item-409"><a href="https://www.westchestercountyny.gov/departments" class="main_site_link">Departments</a></li>
+	<li class="item-566"><a href="https://meetings.westchestercountyny.gov/BoardAndCommisionsAjax/Home/Index" target="_blank" title="opens a new window" class="main_site_link">Boards and Commissions</a></li>
+	<li class="item-410"><a href="https://emergencyservices.westchestercountyny.gov/severe-weather/phone-numbers-and-links" class="main_site_link">Alerts</a></li>
+	<li class="item-412"><a href="https://www.westchestercountyny.gov/contact-us/contacts" class="main_site_link">Contacts</a></li>
+	<li class="item-101"><a href="/" class="department_site_link">Board of Elections</a></li>
+	<li class="item-755 js-accordion uk-parent"><a href>Voting <span uk-nav-parent-icon></span></a>
+	<ul class="uk-nav-sub">
+
+		<li class="item-215"><a href="/voting/overview">Overview</a></li>
+		<li class="item-213"><a href="/voting/request-an-election-ballot">Request an Election Ballot</a></li>
+		<li class="item-492"><a href="/voting/early-voting-2026">Early Voting 2026</a></li>
+		<li class="item-208"><a href="/voting/register-to-vote">Register to Vote</a></li>
+		<li class="item-207"><a href="/voting/election-inspectors">Election Inspectors</a></li>
+		<li class="item-415"><a href="/voting/additional-voting-information">Additional Voting Information</a></li>
+		<li class="item-269"><a href="/voting/contact-us">Contact Us</a></li></ul></li>
+	<li class="item-209"><a href="/find-polling-place">Find Your Ballot and Polling Place</a></li>
+	<li class="item-756 js-accordion uk-parent"><a href>Election Dates <span uk-nav-parent-icon></span></a>
+	<ul class="uk-nav-sub">
+
+		<li class="item-206"><a href="/election-dates/overview">Overview</a></li>
+		<li class="item-210"><a href="/election-dates/enrollment-figures-and-election-results">Enrollment Figures and Election Results</a></li></ul></li>
+	<li class="item-757 uk-active js-accordion uk-open uk-parent"><a href>Run for Office <span uk-nav-parent-icon></span></a>
+	<ul class="uk-nav-sub">
+
+		<li class="item-211 uk-active"><a href="/run-for-office/overview">Overview</a></li>
+		<li class="item-212"><a href="/run-for-office/campaign-finance-forms">Campaign Finance Forms</a></li></ul></li>
+	<li class="item-414"><a href="/election-results">Election Results</a></li>
+	<li class="item-476"><a href="/voting/contact-us">Contact Us</a></li></ul>
+
+</div>
+
+            </div>
+            
+            
+        </div>
+    </div>
+    
+    
+    
+
+</header>
+
+
+
+
+<header class="tm-header uk-visible@m">
+
+
+
+        <div uk-sticky media="@m" cls-active="uk-navbar-sticky" sel-target=".uk-navbar-container">
+    
+        <div class="uk-navbar-container uk-navbar-primary">
+
+            <div class="uk-container uk-container-large">
+                <nav class="uk-navbar" uk-navbar="{&quot;align&quot;:&quot;center&quot;,&quot;container&quot;:&quot;.tm-header &gt; [uk-sticky]&quot;,&quot;boundary&quot;:&quot;.tm-header .uk-navbar-container&quot;}">
+
+                                        <div class="uk-navbar-left ">
+
+                                                    
+<div class="uk-navbar-item" id="module-117">
+
+    
+    
+<div class="uk-margin-remove-last-child custom" ><p><a href="https://www.westchestercountyny.gov"><img src="/images/stories/assets/westchester-primary-logo-white-300x59.png" alt="Westchester County Logo" width="227" height="45" class="float-none" /></a></p></div>
+
+</div>
+
+                        
+                        
+                        
+                    </div>
+                    
+                    
+                                        <div class="uk-navbar-right">
+
+                                                    
+                        
+                                                    
+<div class="uk-navbar-item" id="module-tm-1">
+
+    
+    
+
+    <form action="/component/finder/search?Itemid=101" method="get" role="search" class="uk-search js-finder-searchform uk-search-navbar"><span uk-search-icon></span><input name="q" class="js-finder-search-query uk-search-input" placeholder="Search" required aria-label="Search" type="search"><input type="hidden" name="Itemid" value="101"></form>
+    
+
+</div>
+<a uk-toggle href="#tm-dialog" aria-controls="tm-dialog" class="uk-navbar-toggle">
+
+                <span class="uk-margin-xsmall-right uk-text-middle">Menu</span>
+        
+        <div uk-navbar-toggle-icon></div>
+
+        
+    </a>
+                        
+                    </div>
+                    
+                </nav>
+            </div>
+
+        </div>
+
+        </div>
+    
+
+
+
+
+
+
+        <div id="tm-dialog" uk-offcanvas="container: true" mode="slide" flip>
+        <div class="uk-offcanvas-bar uk-flex uk-flex-column" aria-label="Menu">
+
+            <button class="uk-offcanvas-close uk-close-large" type="button" uk-close uk-toggle="cls: uk-close-large; mode: media; media: @s"></button>
+
+                        <div class="uk-margin-auto-bottom tm-height-expand">
+                
+<div class="uk-panel" id="module-menu-dialog">
+
+    
+    
+<ul class="uk-nav uk-nav-secondary uk-nav-divider uk-nav-accordion" uk-nav="targets: &gt; .js-accordion">
+    
+	<li class="item-408"><a href="https://www.westchestercountyny.gov" class="main_site_link">Westchester Home</a></li>
+	<li class="item-409"><a href="https://www.westchestercountyny.gov/departments" class="main_site_link">Departments</a></li>
+	<li class="item-566"><a href="https://meetings.westchestercountyny.gov/BoardAndCommisionsAjax/Home/Index" target="_blank" title="opens a new window" class="main_site_link">Boards and Commissions</a></li>
+	<li class="item-410"><a href="https://emergencyservices.westchestercountyny.gov/severe-weather/phone-numbers-and-links" class="main_site_link">Alerts</a></li>
+	<li class="item-412"><a href="https://www.westchestercountyny.gov/contact-us/contacts" class="main_site_link">Contacts</a></li>
+	<li class="item-101"><a href="/" class="department_site_link">Board of Elections</a></li>
+	<li class="item-755 js-accordion uk-parent"><a href>Voting <span uk-nav-parent-icon></span></a>
+	<ul class="uk-nav-sub">
+
+		<li class="item-215"><a href="/voting/overview">Overview</a></li>
+		<li class="item-213"><a href="/voting/request-an-election-ballot">Request an Election Ballot</a></li>
+		<li class="item-492"><a href="/voting/early-voting-2026">Early Voting 2026</a></li>
+		<li class="item-208"><a href="/voting/register-to-vote">Register to Vote</a></li>
+		<li class="item-207"><a href="/voting/election-inspectors">Election Inspectors</a></li>
+		<li class="item-415"><a href="/voting/additional-voting-information">Additional Voting Information</a></li>
+		<li class="item-269"><a href="/voting/contact-us">Contact Us</a></li></ul></li>
+	<li class="item-209"><a href="/find-polling-place">Find Your Ballot and Polling Place</a></li>
+	<li class="item-756 js-accordion uk-parent"><a href>Election Dates <span uk-nav-parent-icon></span></a>
+	<ul class="uk-nav-sub">
+
+		<li class="item-206"><a href="/election-dates/overview">Overview</a></li>
+		<li class="item-210"><a href="/election-dates/enrollment-figures-and-election-results">Enrollment Figures and Election Results</a></li></ul></li>
+	<li class="item-757 uk-active js-accordion uk-open uk-parent"><a href>Run for Office <span uk-nav-parent-icon></span></a>
+	<ul class="uk-nav-sub">
+
+		<li class="item-211 uk-active"><a href="/run-for-office/overview">Overview</a></li>
+		<li class="item-212"><a href="/run-for-office/campaign-finance-forms">Campaign Finance Forms</a></li></ul></li>
+	<li class="item-414"><a href="/election-results">Election Results</a></li>
+	<li class="item-476"><a href="/voting/contact-us">Contact Us</a></li></ul>
+
+</div>
+
+            </div>
+            
+            
+        </div>
+    </div>
+    
+    
+    
+
+
+</header>
+
+            
+            <div id="module-10115" class="builder"><!-- Builder #module-10115 --><style class="uk-margin-remove-adjacent">#module-10115\#0{padding-top: 5px;}</style>
+<div id="module-10115#0" class="uk-section uk-section-xsmall" style="background-color: #E7F9EF;">
+    
+        
+        
+        
+            
+                                <div class="uk-container">                
+                    
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div class="uk-text-left@m uk-text-center" uk-slider="finite: 1;">
+    <div class="uk-position-relative">
+                <div class="uk-slider-container">        
+            <div class="uk-slider-items uk-grid">                                <div class="uk-width-1-1 uk-width-1-1@m uk-width-1-1@l uk-flex">
+<div class="el-item uk-width-1-1 uk-panel uk-margin-remove-first-child">
+    
+        
+            
+                                                
+            
+            
+                
+                
+                    
+
+        
+                <div class="el-title uk-h2 uk-text-primary uk-margin-small-top uk-margin-remove-bottom">General Election Results 2026</div>        
+        
+    
+        
+        
+                <div class="el-content uk-panel uk-margin-small-top"><p><a href="https://www.westchestercountyny.gov/boe99/">Unofficial results</a> for the General Election will be available shortly after 9:00pm on November 3, 2026</p></div>        
+        
+        
+
+                
+                
+            
+        
+    
+</div></div>                            </div>
+                </div>        
+                
+
+    <div class="uk-visible@s uk-position-medium uk-position-center-left-out" uk-inverse uk-toggle="cls: uk-position-center-left-out uk-position-center-left; mode: media; media: @s">    <a class="el-slidenav" href="#" uk-slidenav-previous uk-slider-item="previous"></a>    </div>
+    <div class="uk-visible@s uk-position-medium uk-position-center-right-out" uk-inverse uk-toggle="cls: uk-position-center-right-out uk-position-center-right; mode: media; media: @s">    <a class="el-slidenav" href="#" uk-slidenav-next uk-slider-item="next"></a>    </div>
+        
+    </div>
+        
+<div class="uk-margin-xsmall-top" uk-inverse>
+    <ul class="el-nav uk-slider-nav uk-dotnav uk-flex-center" uk-margin></ul>
+</div>    
+</div>
+                
+            
+        
+    
+</div>
+    
+</div>
+                                </div>                
+            
+        
+    
+</div></div>
+
+            <main id="tm-main" class="tm-main uk-section uk-section-default" uk-height-viewport="expand: true">
+
+                                <div class="uk-container">
+
+                    
+                    <div class="uk-grid" uk-grid>
+                        <div class="uk-width-expand@m">
+
+                    
+                                                            
+
+<nav class="uk-margin-medium-bottom" aria-label="Breadcrumb">
+    <ul class="uk-breadcrumb">
+    
+            <li>            <a href="https://citizenparticipation.westchestercountyny.gov/"><span>Home</span></a>
+            </li>    
+            <li>            <span aria-current="page">Run for Office</span>            </li>    
+    </ul>
+</nav>
+                            
+                
+                <div id="system-message-container" aria-live="polite"></div>
+
+                
+<article id="article-2565" class="uk-article" data-permalink="https://citizenparticipation.westchestercountyny.gov/run-for-office/overview" typeof="Article" vocab="https://schema.org/">
+
+    <meta property="name" content="Running for Office Forms">
+    <meta property="author" typeof="Person" content="Sharon">
+    <meta property="dateModified" content="2026-07-21T18:19:05-04:00">
+    <meta property="datePublished" content="2009-10-15T16:18:15-04:00">
+    <meta class="uk-margin-remove-adjacent" property="articleSection" content="Voting">
+
+            
+    
+                        
+                    <h1 property="headline" class="uk-margin-top uk-margin-remove-bottom uk-article-title">
+                Running for Office Forms            </h1>
+        
+        
+        
+        
+        
+                <div class="uk-margin-medium-top" property="text">
+
+            
+                            
+<p>If you have any questions about the forms listed below, contact us or visit either <a href="http://www.elections.ny.gov/" target="_blank" rel="noopener" title="opens New York State Board of Elections Web site in a new window">New York State Board of Elections</a> or the <a href="http://www.vote411.org" target="_blank" rel="noopener" title="opens in a new window">League of Women Voters of New York State Education Foundation</a>.</p>
+<p>When completing any form, be sure to hand print all information neatly and clearly.</p>
+<p><strong>Running for Office and Petition Forms</strong></p>
+<p><a href="/images/stories/pdfs/2026/running-for-elective-office.pdf" target="_blank" title="opens pdf file in a new window">Running for Office Packet</a></p>
+<p><a href="/images/stories/pdfs/2026/OFFICES_TO_BE_ELECTED_2026.pdf" target="_blank" title="opens PDF in new window">2026 Offices to be Elected</a></p>
+<p><a href="/images/stories/pdfs/2026/ReqSig%202-20-26.pdf" target="_blank">2026 Required Signatures</a></p>
+<p><a href="/images/stories/pdfs/2026/Political_Subdivision_021726.pdf" target="_blank" title="pdf file opens in new window">2026 Political Subdivisions</a></p>
+<p><a href="/images/stories/pdfs/poll-watcher-certificate-9-12-24.pdf" target="_blank" title="opens pdf file in a new window">Poll Watcher Certificate</a></p>
+<p><a href="/images/stories/pdfs/2023/coverSheet.pdf" target="_blank" title="opens pdf document in a new window">Sample Cover Sheets</a></p>
+<p><a href="/images/stories/pdfs/DesignatingPetitionNoLines.pdf" target="_blank" title="opens pdf file in new window">Sample Designating Petition</a></p>
+<p><a href="/images/stories/pdfs/IndNomPetition.pdf" target="_blank" title="opens pdf file in new window">Sample Independent Nominating Petition</a></p>
+<p><a href="/images/stories/pdfs/2023/otbpetition.pdf" target="_blank" title="opens pdf file in a new window">Sample Opportunity to Ballot Petition</a></p>
+<p><a href="/images/stories/pdfs/2026/sample_cert_of_acceptance.pdf" target="_blank" title="opens pdf file in a new window">Sample Certificate of Acceptance</a></p>
+<p><a href="/images/stories/pdfs/2023/certacceptform.pdf" target="_blank" title="opens pdf file in a new window">Sample Certificate of Acceptance By Member of Committee to Receive Notices on Opportunity to Ballot Petition</a></p>
+<p><a href="/images/stories/pdfs/certDecline.pdf" target="_blank" title="opens pdf file in a new window">Sample Certificate of Declination</a></p>
+<p><a href="/images/stories/pdfs/BOE_CertificateofSubstitution.pdf" target="_blank" title="opens pdf document in a new window">Sample Certificate of Substitution</a></p>
+<p><a href="/images/stories/pdfs/BOE_CertificateofAuthorization.pdf" target="_blank" title="opens pdf document in a new window">Sample Certificate of Authorization</a></p>
+<p><a href="/images/stories/pdfs/certofnomination.pdf" target="_blank" title="opens pdf document in a new window">Sample Certificate of Nomination</a></p>
+<p><a href="/images/stories/pdfs/CertofSubstbyPartyCom.pdf" target="_blank" title="opens pdf document in a new window">Sample Certificate Substitution by Committee</a></p>
+<p><a href="/images/stories/pdfs/NominDesigObjections.pdf" target="_blank" title="opens pdf document in a new window">Sample Nomination Designation Requirements</a></p>
+<p><a href="/images/stories/pdfs/2026/sample-general-objection-form-for-web.pdf" target="_blank" title="opens pdf file in new window">General Objection Form</a></p>
+<p><a href="/images/stories/pdfs/2023/general-and-specifications-of-objections-guidelines-2023.pdf" target="_blank" title="opens pdf file in new window">General and Specifications of Objections Guidelines</a></p>
+<p><a href="/images/stories/pdfs/2025/petition-foil.pdf" target="_blank" title="opens pdf file in a new window">Request for Petitions and Certificates Copies</a></p>
+<p>&nbsp;</p>
+<p><strong>Village Election Petition Forms</strong></p>
+<p><a href="/images/stories/pdfs/vlgPetitionCounty.pdf" target="_blank" title="opens a new window">Sample Village Designating Petition run by County Board of Elections</a></p>
+<p><a href="/images/stories/pdfs/vlgPetitionVlg.pdf" target="_blank" title="opens a new window">Sample Village Designating Petition run by Village</a></p>
+<p><a href="/images/stories/pdfs/vlgIndPetitionCounty.pdf" target="_blank" title="opens a new window">Sample Village Independent Nominating Petition run by County Board of Elections</a></p>
+<p><a href="/images/stories/pdfs/vlgIndPetitionVlg.pdf" target="_blank" title="opens a new window">Sample Village Independent Nominating Petition run by Village</a></p>
+<p><a href="/images/stories/pdfs/certofnominationvillage.pdf" target="_blank" title="opens a new window">Certificate of Nomination For Use at Village and Town Caucus</a></p>
+<p>&nbsp;</p>            
+        </div>
+        
+        
+        
+        
+        
+        
+        
+    
+</article>
+
+
+                
+                                                </div>
+
+                        
+<aside id="tm-sidebar" class="tm-sidebar uk-width-1-5@m uk-flex-first@m">
+    
+<div class="uk-grid uk-child-width-1-1" uk-grid>    <div>
+<div class="uk-panel" id="module-10052">
+
+    
+        <h2 class="uk-h2">
+
+                Run for Office        
+        </h2>
+
+    
+    
+<ul class="uk-nav uk-nav-default">
+    
+	<li class="item-260 uk-active"><a href="/run-for-office/overview">Run for Office</a></li>
+	<li class="item-261"><a href="/campaign-finance-forms">Campaign Finance Forms</a></li></ul>
+
+</div>
+</div>    <div>
+<div class="uk-panel" id="module-10106">
+
+    
+        <h2>
+
+                Highlights        
+        </h2>
+
+    
+    
+<div class="uk-grid-margin uk-grid tm-grid-expand uk-child-width-1-1">
+    
+        
+<div class="uk-width-1-1">
+    
+        
+            
+            
+            
+                
+                    
+<div class="uk-accordion-default" uk-accordion="collapsible: true;">
+        
+<div class="el-item">
+    <a class="el-title uk-accordion-title" href>Election Dates and Calendar <span uk-accordion-icon></span></a>
+
+    <div class="uk-accordion-content">
+    
+        <picture><source type="image/webp" srcset="/media/yootheme/cache/a3/calendar2-a373af19.webp 270w" sizes="(min-width: 270px) 270px"><img class="el-image" src="/images/stories/highlights/calendar2.jpg" alt loading="lazy" width="270" height="180"></picture>        <div class="el-content uk-panel uk-margin-top"><p><a href="https://citizenparticipation.westchestergov.com/election-dates/overview">To check annual election dates, refer to the list below. If you need…</a></p></div>                
+    
+    </div>
+</div>        
+<div class="el-item">
+    <a class="el-title uk-accordion-title" href>Request an Election Ballot <span uk-accordion-icon></span></a>
+
+    <div class="uk-accordion-content">
+    
+        <picture><source type="image/webp" srcset="/media/yootheme/cache/0c/absenteevote-0c9696a5.webp 270w" sizes="(min-width: 270px) 270px"><img class="el-image" src="/images/stories/highlights/absenteevote.jpg" alt loading="lazy" width="270" height="180"></picture>        <div class="el-content uk-panel uk-margin-top"><p><a href="/voting/request-an-election-ballot">Early Mail Ballot Who May Apply for an Early Mail Ballot? Any…</a></p></div>                
+    
+    </div>
+</div>    
+</div>
+                
+            
+        
+    
+</div>
+    
+</div>
+</div>
+</div>    <div>
+<div class="uk-panel" id="module-10111">
+
+    
+    <div class="gptranslate_wrapper" id="gpt-wrapper-10111"></div>
+</div>
+</div></div>
+</aside>
+
+                    </div>
+                     
+                </div>
+                
+            </main>
+
+            
+
+                        <footer>
+                <!-- Builder #footer -->
+<div class="uk-section-secondary uk-section uk-section-xsmall">
+    
+        
+        
+        
+            
+                                <div class="uk-container uk-container-large">                
+                    
+<div class="uk-grid-margin uk-grid tm-grid-expand" uk-grid>
+    
+        
+<div class="uk-width-1-2@m">
+    
+        
+            
+            
+            
+                
+                    
+<div class="uk-panel">
+    
+    
+<div class="uk-margin-remove-last-child custom" ><p><a href="/">Board of Elections</a> | <a href="/voting/overview">Voting</a> | <a href="/find-polling-place">Finding a Polling Place</a> | <a href="/election-dates/overview">Election Dates and Calendars</a> | <a href="/run-for-office/overview">Run For Office</a></p></div>
+
+</div>
+<ul class="uk-list">        <li class="el-item">
+
+
+    <div class="uk-child-width-expand uk-grid-small uk-flex-middle" uk-grid>        <div class="uk-width-auto"></div>        <div>
+                    </div>
+    </div>
+    <div class="el-content uk-panel"><div style="color: #bcbcbc;">Westchester County © 2026</div>
+<div style="color: #bcbcbc;">148 Martine Avenue, White Plains, NY 10601</div>
+<div style="color: #bcbcbc;">(914) 995-2000</div>
+<div><a href="https://www.westchestercountyny.gov/disclaimer" title="Privacy" style="color: #bcbcbc; text-underline-offset: 3.5px;">Privacy / Disclaimer</a></div>
+<div><a href="https://www.westchestercountyny.gov/digital-content-accessibility-policy" style="color: #bcbcbc; text-underline-offset: 3.5px;">Digital Content Accessibility Policy</a></div></div>
+
+</li>
+    </ul>
+                
+            
+        
+    
+</div>
+<div class="uk-width-1-2@m">
+    
+        
+            
+            
+            
+                
+                    
+<div class="uk-panel uk-width-2xlarge uk-text-right">
+    
+    <iframe     id="blockrandom-10107"
+    name=""
+    src="https://hostedlandingpages.net/5E500BF4-9D48-4E00-98EE-5B0E197206CF/"
+    width="100%"
+    height="200"
+    loading="eager"
+    title="Newsletter Subscription Form"
+    class="mod-wrapper wrapper">
+    No iframes</iframe>
+
+</div>
+<div class="uk-margin uk-text-right">    <ul class="uk-child-width-auto uk-grid-small uk-flex-inline uk-flex-middle" uk-grid>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.facebook.com/westchestergov" aria-label="Facebook" target="_blank"><span uk-icon="icon: facebook;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://twitter.com/westchestergov" aria-label="X/Twitter" target="_blank"><span uk-icon="icon: x;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.youtube.com/channel/UCC774tkGUZw8xoZtHhuQUsQ" aria-label="YouTube" target="_blank"><span uk-icon="icon: youtube;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.instagram.com/westchester_county_government/" aria-label="Instagram" target="_blank"><span uk-icon="icon: instagram;"></span></a></li>
+            <li class="el-item">
+<a class="el-link uk-icon-button" href="https://www.linkedin.com/company/westchester-county" aria-label="LinkedIn" target="_blank"><span uk-icon="icon: linkedin;"></span></a></li>
+    
+    </ul></div>
+                
+            
+        
+    
+</div>
+    
+</div>
+                                </div>                
+            
+        
+    
+</div>            </footer>
+            
+        </div>
+
+        
+        
+        
+
+    </body>
+</html>

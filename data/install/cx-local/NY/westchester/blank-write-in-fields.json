@@ -1,0 +1,51 @@
+{
+  "kind": "ACTUAL_SAMPLE_BLANK_WRITE_IN_FIELDS",
+  "fields": [
+    {
+      "id": "ny-cx-local-2026-westchester-village-ardsley-village-justice",
+      "electionId": "ny-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:ny/place:ardsley",
+      "title": "Village of Ardsley — Village Justice",
+      "provenance": {
+        "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4A3496C25F84403D950AB1BD0749AEF3.pdf",
+        "sourceOrg": "Westchester County Board of Elections — current official sample ballot",
+        "collectedAt": "2026-11-03T05:52:56.173569+00:00",
+        "verifiedAt": "2026-11-03T05:52:56.173569+00:00",
+        "quote": "53\nVillage Justice/\nJuez de la Villa\n(Vote for one/Vote  por uno)\n      \nWrite-in/Por  escrito"
+      },
+      "reason": "Only a blank write-in space is printed; no named candidate is printed. Named declared write-in filings have not been established by a separate current official source."
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-mount-kisco-library-trustee",
+      "electionId": "ny-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:ny/special_district:mount_kisco_public_library",
+      "title": "Mount Kisco Public Library — Library Trustee",
+      "provenance": {
+        "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/B51C112E9CAE48309C9715766CC702CE.pdf",
+        "sourceOrg": "Westchester County Board of Elections — current official sample ballot",
+        "collectedAt": "2026-11-03T05:46:31.618509+00:00",
+        "verifiedAt": "2026-11-03T05:46:31.618509+00:00",
+        "quote": "Office/ \nOficina \n1 \nGovernor and Lieutenant \nGovernor/ \nGobernador y Vicegobernador \n(Vote for one/Vote por uno) \n2 \nComptroller/ \nContralor \n(Vote for one/Vote por uno) \n3 \nAttorney General/ \nFiscal General \n(Vote for one/Vote por uno) \n4 \nRepresentative in Congress/ \nRepresentante al Congreso \n17th District/Distrito #17 \n(Vote for one/Vote por uno) \n5 \nState Senator/ \nSenador Estatal \n40th District/Distrito #40 \n(Vote for one/Vote por uno) \n6 \nMember of Assembly/ \nMiembro de la Asamblea \n93rd District/Distrito #93 \n(Vote for one/Vote por uno) \n7 \nCounty Legislator/ \nLegislador de el Condado \n2nd District/Distrito #2 \n(Vote for one/Vote por uno) \n45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos) \n48 \n49 \n50 \nState Supreme Court Justice/ \nJuez de la Corte Suprema \n9th Judicial District/Distrito Judicial #9 \n(Vote for up to three/Vote por hasta tres) \n54 \n55 \nLibrary Trustee/ \nFiduciaro De Biblioteca \n(Vote for up to two/Vote por hasta dos) \nDemocratic \nA \nDemocratic \n1 Kathy C. Hochul \nfor Governor/ por Gobernador \nAdrienne E. Adams \nfor Lieutenant Governor/ por Vicegobernador \nDemocratic \n2 \nThomas P. \nDiNapoli \nDemocratic \n3 \nLetitia A. \nJames \nDemocratic \n4 \nCait \nConley \nDemocratic \n5 \nPeter B. \nHarckham \nDemocratic \n6 \nChris \nBurdick \nDemocratic \n7 \nErika Lang \nPierce \nDemocratic \n45 \nThomas G. \nLuzio \nDemocratic \n46 \nMichael P. \nMcGuirk \nDemocratic \n48 \nMaria G. \nRosa \nDemocratic \n49 \nGeorge E. \nFufidio \nDemocratic \n50 \nAlden H. \nWolfe \nRepublican \nB \nRepublican \n1 Bruce A. Blakeman \nfor Governor/ por Gobernador \nTodd Hood \nfor Lieutenant Governor/ por Vicegobernador \nRepublican \n2 \nJoseph \nHernandez \nRepublican \n3 \nSaritha \nKomatireddy \nRepublican \n4 \nMike \nLawler \nRepublican \n5 \nSergio J. \nEsposito \nRepublican \n6 \nBraille \nDiaz \nRepublican \n7 \nJozef \nVala \nRepublican \n48 \nRichard S. \nFava Pastilha \nRepublican \n49 \nGeorge E. \nFufidio \nRepublican \n50 \nJohn \nCiampoli \nConservative \nC \nConservative \n1 Bruce A. Blakeman \nfor Governor/ por Gobernador \nTodd Hood \nfor Lieutenant Governor/ por Vicegobernador \nConservative \n2 \nJoseph \nHernandez \nConservative \n3 \nSaritha \nKomatireddy \nConservative \n4 \nMike \nLawler \nConservative \n5 \nSergio J. \nEsposito \nConservative \n6 \nBraille \nDiaz \nConservative \n48 \nRichard S. \nFava Pastilha \nConservative \n50 \nAlden H. \nWolfe \nWorking Families \nD \nWorking Families \n1 Kathy C. Hochul \nfor Governor/ por Gobernador \nAdrienne E. Adams \nfor Lieutenant Governor/ por Vicegobernador \nWorking Families \n2 \nThomas P. \nDiNapoli \nWorking Families \n3 \nLetitia A. \nJames \nWorking Families \n4 \nCait \nConley \nWorking Families \n5 \nPeter B. \nHarckham \nWorking Families \n7 \nErika Lang \nPierce \nWorking Families \n48 \nMaria G. \nRosa \nVote Affordable \nE \nVote Affordable \n1 Bruce A. Blakeman \nfor Governor/ por Gobernador \nTodd Hood \nfor Lieutenant Governor/ por Vicegobernador \nKisco United \nF \nKisco United \n45 \nSean D. \nMoran \nKisco United \n46 \nJennifer A. \nRego-Vallejos \nWrite-in/ \nPor escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito \nWrite-in/Por escrito"
+      },
+      "reason": "Only two blank write-in spaces are printed; no named candidates are printed. Exact library-district applicability remains to be mapped; named declared write-in filings have not been established by a separate current official source."
+    }
+  ],
+  "scopeProofs": [
+    {
+      "sourceUrl": "https://citizenparticipation.westchestercountyny.gov/images/stories/pdfs/2026/OFFICES_TO_BE_ELECTED_2026.pdf",
+      "sourceOrg": "Westchester County Board of Elections — Offices to Be Elected (Unofficial List as of July 21, 2026)",
+      "collectedAt": "2026-11-03T05:57:55.500591+00:00",
+      "verifiedAt": "2026-11-03T05:57:55.500591+00:00",
+      "quote": "Village of Ardsley           Village Trustee (2)                     2 yrs       2028\n                                   Village Justice                         4 yrs       2030"
+    },
+    {
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/B51C112E9CAE48309C9715766CC702CE.pdf",
+      "sourceOrg": "Westchester County Board of Elections — current official sample ballot",
+      "collectedAt": "2026-11-03T05:46:31.618509+00:00",
+      "verifiedAt": "2026-11-03T05:46:31.618509+00:00",
+      "quote": "Sheet No: 52 PROP \n7 Election Districts \nCounty of Westchester \n17th Congressional District\n40th Senatorial District \n93rd Assembly District\n2nd Legislative District\nTown of: Mount Kisco \nVillage of: Mount Kisco\nE.D.(s): 1 / 7 \n\nProposal one, Village proposition one\nMOUNT KISCO VOLUNTEER AMBULANCE CORPS SERVICE AWARD PROGRAM AMENDMENT\nAt the next General Election to be held on the 3rd day of November, 2026\nShall the Board of Trustees of the Village/Town of Mount Kisco amend the current Service Award Program for the Mount \nKisco Volunteer Ambulance Corps to (i) increase the maximum allowable points for training from 15 to 25 points annually; \n(ii) \n \nincrease the maximum allowable points for drills, seminars, and meeting attendance from 10 to 20 points annually; and \n(iii) increase the maximum allowable points for Tour of Duty from 1/4th point for 6 hours to 1/6th of a point per hour to align \nwith New York State General Municipal Law Section 219-e effective January 1, 2027.\nPropuesta uno, Proposición de la aldea uno\nENMIENDA AL PROGRAMA DE PREMIOS AL SERVICIO DEL CUERPO VOLUNTARIO DE AMBULANCIAS DE \nMOUNT KISCO\nEn las próximas elecciones generales que se celebrarán el día 3 de noviembre de 2026\n¿Deberá la Junta de Síndicos de la Aldea/Ciudad de Mount Kisco modificar el actual Programa de Premios al Servicio \npara el Cuerpo de Ambulancias Voluntarias de Mount Kisco para (i) aumentar el máximo de puntos permitidos para \nla formación de 15 a 25 puntos anuales; (ii) aumentar el máximo de puntos permitidos para simulacros, seminarios y \nasistencia a reuniones de 10 a 20 puntos anuales; y (iii) aumentar los puntos máximos permitidos para el periodo de \nservicio de 1/4 de punto durante 6 horas a 1/6 de punto par hora para alinearse con la Sección 219-e de la Ley General \nMunicipal del Estado de Nueva York, vigente a partir del 1 de enero de 2027.\nYes/Sí No/No"
+    }
+  ],
+  "libraryStandingBylawsSource": "https://mountkiscolibrary.org/wp-content/uploads/MKPL-Bylaws-APPROVED-12.17.19.pdf",
+  "namedDeclaredWriteInCoverage": "OPEN: blank printed spaces establish no candidate person; no named write-in filing imported."
+}

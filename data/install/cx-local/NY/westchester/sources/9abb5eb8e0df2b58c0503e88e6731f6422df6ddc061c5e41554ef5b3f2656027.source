@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=11">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Search Polling Place Location</title>
+    <script src="/PollingLocation/Scripts/modernizr-2.6.2.js"></script>
+
+    <link href="/PollingLocation/Content/jquery-ui.css" rel="stylesheet"/>
+<link href="/PollingLocation/Content/jquery-ui.structure.css" rel="stylesheet"/>
+<link href="/PollingLocation/Content/jquery-ui.theme.css" rel="stylesheet"/>
+<link href="/PollingLocation/Content/bootstrap.css" rel="stylesheet"/>
+<link href="/PollingLocation/Content/site.css" rel="stylesheet"/>
+
+</head>
+<body style="overflow-x:hidden">
+
+
+    
+
+    <div class="container body-content">
+        
+
+
+<form method="post" onsubmit="showResults(); return false;">
+    <h5>You can search for your ballot and polling location either by Free Text Search OR by providing Street Number, Street Name and Zip Code</h5>
+	<h5>We make every effort to keep this information as up-to-date as possible. Nevertheless, we recommend that you verify your polling place location in advance.  Note that some polling places may be closed or combined with another polling place, especially during primary and local elections.</h5>
+	<h5>If you have trouble locating your polling place, contact (914) 995-5700.</h5>
+    <div class="spacer">
+        <input id="mapAddress1" name="mapAddress1" type="hidden" value="" />
+        <input id="mapAddress2" name="mapAddress2" type="hidden" value="" />
+        <input id="mapAddress3" name="mapAddress3" type="hidden" value="" />
+        <input id="mapAddress4" name="mapAddress4" type="hidden" value="" />
+        <input id="mapAddress5" name="mapAddress5" type="hidden" value="" />
+        <input id="mapAddress6" name="mapAddress6" type="hidden" value="" />
+        <input id="mapAddress7" name="mapAddress7" type="hidden" value="" />
+        <input id="mapAddress8" name="mapAddress8" type="hidden" value="" />
+        <input id="mapAddress9" name="mapAddress9" type="hidden" value="" />
+        <input id="mapAddress10" name="mapAddress10" type="hidden" value="" />
+        <input id="address1" name="address1" type="hidden" value="" />
+        <input id="address2" name="address2" type="hidden" value="" />
+        <input id="address3" name="address3" type="hidden" value="" />
+        <input id="address4" name="address4" type="hidden" value="" />
+        <input id="address5" name="address5" type="hidden" value="" />
+        <input id="address6" name="address6" type="hidden" value="" />
+        <input id="address7" name="address7" type="hidden" value="" />
+        <input id="address8" name="address8" type="hidden" value="" />
+        <input id="address9" name="address9" type="hidden" value="" />
+        <input id="address10" name="address10" type="hidden" value="" />
+        <input id="range1" name="range1" type="hidden" value="" />
+        <input id="range2" name="range2" type="hidden" value="" />
+        <input id="range3" name="range3" type="hidden" value="" />
+        <input id="range4" name="range4" type="hidden" value="" />
+        <input id="range5" name="range5" type="hidden" value="" />
+        <input id="range6" name="range6" type="hidden" value="" />
+        <input id="range7" name="range7" type="hidden" value="" />
+        <input id="range8" name="range8" type="hidden" value="" />
+        <input id="range9" name="range9" type="hidden" value="" />
+        <input id="range10" name="range10" type="hidden" value="" />
+        <input id="precinct1" name="precinct1" type="hidden" value="" />
+        <input id="precinct2" name="precinct2" type="hidden" value="" />
+        <input id="precinct3" name="precinct3" type="hidden" value="" />
+        <input id="precinct4" name="precinct4" type="hidden" value="" />
+        <input id="precinct5" name="precinct5" type="hidden" value="" />
+        <input id="precinct6" name="precinct6" type="hidden" value="" />
+        <input id="precinct7" name="precinct7" type="hidden" value="" />
+        <input id="precinct8" name="precinct8" type="hidden" value="" />
+        <input id="precinct9" name="precinct9" type="hidden" value="" />
+        <input id="precinct10" name="precinct10" type="hidden" value="" />
+        <input id="subdivision1" name="subdivision1" type="hidden" value="" />
+        <input id="subdivision2" name="subdivision2" type="hidden" value="" />
+        <input id="subdivision3" name="subdivision3" type="hidden" value="" />
+        <input id="subdivision4" name="subdivision4" type="hidden" value="" />
+        <input id="subdivision5" name="subdivision5" type="hidden" value="" />
+        <input id="subdivision6" name="subdivision6" type="hidden" value="" />
+        <input id="subdivision7" name="subdivision7" type="hidden" value="" />
+        <input id="subdivision8" name="subdivision8" type="hidden" value="" />
+        <input id="subdivision9" name="subdivision9" type="hidden" value="" />
+        <input id="subdivision10" name="subdivision10" type="hidden" value="" />
+        <input id="sampleBallot1" name="sampleBallot1" type="hidden" value="" />
+        <input id="sampleBallot2" name="sampleBallot2" type="hidden" value="" />
+        <input id="sampleBallot3" name="sampleBallot3" type="hidden" value="" />
+        <input id="sampleBallot4" name="sampleBallot4" type="hidden" value="" />
+        <input id="sampleBallot5" name="sampleBallot5" type="hidden" value="" />
+        <input id="sampleBallot6" name="sampleBallot6" type="hidden" value="" />
+        <input id="sampleBallot7" name="sampleBallot7" type="hidden" value="" />
+        <input id="sampleBallot8" name="sampleBallot8" type="hidden" value="" />
+        <input id="sampleBallot9" name="sampleBallot9" type="hidden" value="" />
+        <input id="sampleBallot10" name="sampleBallot10" type="hidden" value="" />
+        <input id="searchedAddress" name="searchedAddress" type="hidden" value="" />
+    </div>
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+            <h4>Find Your Ballot And Polling Place Location by Free Text</h4>
+            <div class="row">
+                <div class="input-group col-sm-12">
+                    <input type="text" id="address" name="address" class="form-control" placeholder="Enter your address here..." />
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="spacer col-sm-12">
+                    <b>IMP: </b><i>Press Enter key after providing search or choose one of the search results when you type the free text.</i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default" style="display:none">
+        <div class="panel-body">
+            <h4>Find Your Ballot And Polling Place Location by Street Number, Street Name and Zip Code</h4>
+            <div class="row text-danger col-sm-12" id="errorMessages">
+            </div>
+            <div class="row">
+                <label class="control-label col-sm-2" for="StreetNumberLabel">Street Number</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="StreetNumber" name="StreetNumber" placeholder="Enter your street number here..." type="text" value="" />
+                </div>
+            </div>
+            <div class="row spacer">
+                <label class="control-label col-sm-2" for="StreetNameLabel">Street Name</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="StreetName" name="StreetName" placeholder="Enter your street name here..." type="text" value="" />
+                </div>
+            </div>
+            <div class="row spacer">
+                <label class="control-label col-sm-2" for="ZipCodeLabel">Zip Code</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="ZipCode" name="ZipCode" placeholder="Enter your zip code here..." type="text" value="" />
+                </div>
+            </div>
+            <div class="row spacer col-sm-12">
+                <input type="button" id="searchExact" value="Search" class="btn btn-primary" />
+                <input type="button" id="searchClear" value="Clear" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+<div id="resultDiv">
+</div>
+
+
+
+    </div>
+
+    
+
+    <script src="/PollingLocation/Scripts/jquery-1.10.2.js"></script>
+<script src="/PollingLocation/Scripts/jquery-1.12.4.js"></script>
+
+    <script src="/PollingLocation/Scripts/jquery-ui.js"></script>
+
+    <script src="/PollingLocation/Scripts/jquery.validate.js"></script>
+<script src="/PollingLocation/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script src="/PollingLocation/Scripts/bootstrap.js"></script>
+<script src="/PollingLocation/Scripts/respond.js"></script>
+
+
+    
+    <script type="text/javascript">
+        var alreadySearched = false;
+        $(document).ready(function () {
+
+            $("#address").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/PollingLocation/Home/GetAddresses",
+                        type: "POST",
+                        dataType: "json",
+                        data: { address: request.term },
+                        success: function (data) {
+                            initializeHiddenFields();
+                            var i = 1;
+                            response($.map(data, function (item) {
+                                document.getElementById("address" + i.toString()).value = item.AddressDetails;
+                                document.getElementById("precinct" + i.toString()).value = item.PrecinctDetails;
+                                document.getElementById("range" + i.toString()).value = item.AddressRange;
+                                document.getElementById("mapAddress" + i.toString()).value = item.mapAddress.streetName + ";;;" + item.mapAddress.cityStateZip + ";;;" + item.mapAddress.latitude + ";;;" + item.mapAddress.longitude;
+                                document.getElementById("subdivision" + i.toString()).value = item.Subdivisions;
+                                document.getElementById("sampleBallot" + i.toString()).value = item.SampleBallot;
+                                i = i + 1;
+                                return { label: item.AddressDetails, value: item.AddressDetails, id: item.AddressDetails };
+                            }))
+
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    var addressDetails = '';
+                    var precinctDetails = '';
+                    var range = '';
+                    var mapAddress = '';
+                    var subdivisions = '';
+                    var sampleBallot = '';
+                    for (var i = 1; i < 11; i++) {
+                        if (document.getElementById("address" + i.toString()).value == ui.item.value) {
+                            $("#searchedAddress").val(ui.item.value);
+                            addressDetails = document.getElementById("address" + i.toString()).value;
+                            precinctDetails = document.getElementById("precinct" + i.toString()).value;
+                            range = document.getElementById("range" + i.toString()).value;
+                            mapAddress = document.getElementById("mapAddress" + i.toString()).value;
+                            subdivisions = document.getElementById("subdivision" + i.toString()).value;
+                            sampleBallot = document.getElementById("sampleBallot" + i.toString()).value;
+                            alreadySearched = false;
+                            break;
+                        }
+                    }
+                    initializeHiddenFields();
+                    document.getElementById("address1").value = addressDetails;
+                    document.getElementById("precinct1").value = precinctDetails;
+                    document.getElementById("range1").value = range;
+                    document.getElementById("mapAddress1").value = mapAddress;
+                    document.getElementById("subdivision1").value = subdivisions;
+                    document.getElementById("sampleBallot1").value = sampleBallot;
+                    showResults();
+                    initSecondSearch();
+                },
+                minLength: 3
+            }).keyup(function (e) {
+                if (e.which === 13 && $('#address').val().length >= 3) {
+                    alreadySearched = false;
+                    $('#address').autocomplete('close');
+                    initSecondSearch();
+                    $("#searchedAddress").val($('#address').val());
+                    //showResults();
+                }
+                else if ($('#address').val().length < 3) {
+                    init();
+                }
+            }).blur(function (e) {
+                if (!alreadySearched && $('#address').val().length >= 3) {
+                    $('#address').autocomplete('close');
+                    initSecondSearch();
+                    $("#searchedAddress").val($('#address').val());
+                    //showResults();
+                }
+
+            }).change(function (e) {
+                alreadySearched = false;
+            });
+
+            function init(initAddress) {
+                $('#address').autocomplete('close');
+                initializeHiddenFields();
+                if ($("#result") != null && $("#result") != undefined)
+                    $("#result").html('');
+                $("#errorMessages").html('');
+                if (initAddress == true) {
+                    $('#address').val('');
+                }
+            }
+
+            function initializeHiddenFields() {
+                for (var i = 1; i < 11; i++) {
+                    document.getElementById("address" + i.toString()).value = '';
+                    document.getElementById("precinct" + i.toString()).value = '';
+                    document.getElementById("range" + i.toString()).value = '';
+                    document.getElementById("mapAddress" + i.toString()).value = '';
+                    document.getElementById("subdivision" + i.toString()).value = '';
+                    document.getElementById("sampleBallot" + i.toString()).value = '';
+                }
+            }
+
+            $('#searchClear').on('click', function () {
+                init(true);
+                initSecondSearch();
+            });
+
+            $('#searchExact').on('click', function () {
+                init(true);
+                var errors = secondSearchErrorMessages();
+                if (errors != '') {
+                    $("#errorMessages").html(errors);
+                }
+                else {
+                    
+                    alreadySearched = false;
+                    var addressDetails = $("#StreetName").val().trim() + ' ' + $("#ZipCode").val().trim();
+                    if ($("#StreetNumber").val().trim() != '')
+                        addressDetails = $("#StreetNumber").val().trim() + ' ' + addressDetails;
+                    $.ajax({
+                        url: "/PollingLocation/Home/GetAddresses",
+                        type: "POST",
+                        dataType: "json",
+                        data: { address: addressDetails, exact: true },
+                        success: function (data) {
+                            initializeHiddenFields();
+                            var i = 1;
+                            $.map(data, function (item) {
+                                document.getElementById("address" + i.toString()).value = item.AddressDetails;
+                                document.getElementById("precinct" + i.toString()).value = item.PrecinctDetails;
+                                document.getElementById("range" + i.toString()).value = item.AddressRange;
+                                document.getElementById("mapAddress" + i.toString()).value = item.mapAddress.streetName + ";;;" + item.mapAddress.cityStateZip + ";;;" + item.mapAddress.latitude + ";;;" + item.mapAddress.longitude;
+                                document.getElementById("subdivision" + i.toString()).value = item.Subdivisions;
+                                document.getElementById("sampleBallot" + i.toString()).value = item.SampleBallot;
+                                i = i + 1;
+                            });
+                            $("#searchedAddress").val(addressDetails);
+                            showResults();
+                        }
+                    });
+                }
+            });
+
+            function secondSearchErrorMessages() {
+                var searchErrors = '';
+                if ($('#StreetName').val().trim() == '')
+                    searchErrors += 'Please provide the street number.';
+                if ($('#ZipCode').val().trim() == '') {
+                    if (searchErrors != '') searchErrors += "<BR/>";
+                    searchErrors += 'Please provide the zip code number.';
+                }
+                return searchErrors;
+            }
+
+            function initSecondSearch() {
+                $('#StreetNumber').val('');
+                $('#StreetName').val('');
+                $('#ZipCode').val('');
+            }
+        })
+
+
+
+        function showResults() {
+            if (alreadySearched) return;
+            var parentDiv = document.getElementById("resultDiv");
+            var childDiv = document.getElementById("result");
+            if (childDiv == null) {
+                childDiv = document.createElement('div');
+                childDiv.id = 'result';
+                parentDiv.appendChild(childDiv);
+            }
+            childDiv.innerHTML = "";
+
+            var totalRecords = 0;
+
+            var childDetails = "<div class='row col-sm-12 spacer'>You searched for the following address: <br/><b>" + $("#searchedAddress").val() + "</b></div>";
+
+            for (var i = 1; i < 11; i++) {
+                if (document.getElementById("address" + i.toString()).value == '') {
+                    break;
+                }
+                totalRecords = totalRecords + 1;
+            }
+
+            if (totalRecords >= 10) {
+                childDetails += "<div class='row col-sm-12 spacer'>";
+                //childDetails += "Total Number of Records(s) Found: <b>" + totalRecords.toString() + "</b>";
+                childDetails += "<b>IMP:</b> <i>A maximum of only top 10 results are shown. You can refine your search if you want more results!</i>";
+                //childDetails += "(only top 10 are shown)";
+                childDetails += "</div>";
+            }
+
+            if (totalRecords > 0) {
+                childDetails += "<div class='row showForBigScreensOnly spacer'>";
+                childDetails += "<div class='col-sm-1 HeaderFont'>Address Range</div>";
+                childDetails += "<div class='col-sm-2 HeaderFont'>Sample Ballot</div>";
+                childDetails += "<div class='col-sm-3 HeaderFont'>Subdivisions</div>";
+                childDetails += "<div class='col-sm-3 HeaderFont'>Polling Place Location</div>";
+                childDetails += "<div class='col-sm-3 HeaderFont'>Map Location</div>";
+                childDetails += "</div>";
+                for (var i = 1; i < 11; i++) {
+                    if (document.getElementById("address" + i.toString()).value != '') {
+                        childDetails += "<hr class='hrLessSpace' />";
+                        childDetails += "<div class='row'>";
+                        childDetails += "<div class='col-sm-1'>";
+                        childDetails += "<span class='showForSmallScreensOnly HeaderFont'>Address range:<BR/></span>";
+                        childDetails += document.getElementById("range" + i.toString()).value;
+                        childDetails += "</div>";
+                        childDetails += "<div class='col-sm-2'>";
+                        childDetails += "<span class='showForSmallScreensOnly HeaderFont'><BR/>Sample Ballot:<BR/></span>";
+                        childDetails += document.getElementById("sampleBallot" + i.toString()).value;
+                        childDetails += "</div>";
+                        childDetails += "<div class='col-sm-3'>";
+                        childDetails += "<span class='showForSmallScreensOnly HeaderFont'><BR/>Subdivisions: <BR/></span>";
+                        childDetails += document.getElementById("subdivision" + i.toString()).value;
+                        childDetails += "</div>";
+                        childDetails += "<div class='col-sm-3'>";
+                        childDetails += "<span class='showForSmallScreensOnly HeaderFont'><BR/>Your polling place location:<BR/></span>";
+
+                        var streetName = document.getElementById("mapAddress" + i.toString()).value.split(';;;')[0];
+                        var cityStateZip = document.getElementById("mapAddress" + i.toString()).value.split(';;;')[1];
+                        var latitude = document.getElementById("mapAddress" + i.toString()).value.split(';;;')[2];
+                        var longitude = document.getElementById("mapAddress" + i.toString()).value.split(';;;')[3];
+
+                        childDetails += document.getElementById("precinct" + i.toString()).value +
+                                        "<BR/><a href='https://www.google.com/maps/place/" +
+                                        streetName + ", " + cityStateZip +
+                                        "' target='_blank'>Get Directions</a><br/>";
+                        childDetails += "</div>";
+
+                        childDetails += "<div class='col-sm-3'>";
+                        childDetails += "<object width='300' height='230' title='Map Section for Voter Polling Place' data='https://www.google.com/maps/embed/v1/place?key=AIzaSyBoO8Ya6mv9090PkAFxtGloHyypvvDP4wY&amp;q=address:" + streetName + ", " + cityStateZip + "' type='text/html'></object>";
+                        childDetails += "</div>";                       
+                        
+                        childDetails += "</div>";
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            else {
+                childDetails += "<div class='row col-sm-12 spacer'>";
+                childDetails += "<b>IMP:</b> <i>There are no records found for your search criteria. You can choose the menu - Instructions OR click on the button - Instructions on the top if using a small mobile device, to view instructions.</i>";
+                childDetails += "</div>";
+            }
+
+            childDiv.innerHTML = childDetails;
+            alreadySearched = true;
+        }
+    </script>
+
+</body>
+</html>

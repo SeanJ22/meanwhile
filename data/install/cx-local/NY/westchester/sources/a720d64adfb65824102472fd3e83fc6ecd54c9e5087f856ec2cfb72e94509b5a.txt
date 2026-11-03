@@ -1,0 +1,432 @@
+Office/ 
+Oficina 
+1 
+Governor and Lieutenant 
+Governor/ 
+Gobernador y Vicegobernador 
+(Vote for one/Vote por uno) 
+2 
+Comptroller/ 
+Contralor 
+(Vote for one/Vote por uno) 
+3 
+Attorney General/ 
+Fiscal General 
+(Vote for one/Vote por uno) 
+4 
+Representative in Congress/ 
+Representante al Congreso 
+17th District/Distrito #17 
+(Vote for one/Vote por uno) 
+5 
+State Senator/ 
+Senador Estatal 
+35th District/Distrito #35 
+(Vote for one/Vote por uno) 
+6 
+Member of Assembly/ 
+Miembro de la Asamblea 
+92nd District/Distrito #92 
+(Vote for one/Vote por uno) 
+7 
+County Legislator/ 
+Legislador de el Condado 
+3rd District/Distrito #3 
+(Vote for one/Vote por uno) 
+39 
+Supervisor/ 
+Supervisor 
+(Vote for one/Vote por uno) 
+40 
+Councilmember/ 
+Miembro del Consejo 
+(Unexpired 
+Term/Término Vigente) 
+(Vote for one/Vote por 
+uno) 
+41 
+Town Clerk/ 
+Secretario Municipal 
+(Vote for one/Vote por uno) 
+43 
+Superintendent of 
+Highways/ 
+Superintendente De 
+Carreteras 
+(Vote for one/Vote por 
+uno) 
+45 
+46 
+Village Trustee/ 
+Síndico de Pueblo 
+(Vote for up to two/Vote por hasta dos) 
+48 
+49 
+50 
+State Supreme Court Justice/ 
+Juez de la Corte Suprema 
+9th Judicial District/Distrito Judicial #9 
+(Vote for up to three/Vote por hasta tres) 
+52 
+Town Justice/ 
+Juez Municipal 
+(Vote for one/Vote por uno) 
+Democratic 
+A 
+Democratic 
+1 Kathy C. Hochul 
+for Governor/ por Gobernador 
+Adrienne E. Adams 
+for Lieutenant Governor/ por Vicegobernador 
+Democratic 
+2 
+Thomas P. 
+DiNapoli 
+Democratic 
+3 
+Letitia A. 
+James 
+Democratic 
+4 
+Cait 
+Conley 
+Democratic 
+5 
+Andrea 
+Stewart-Cousins 
+Democratic 
+6 
+MaryJane C. 
+Shimsky 
+Democratic 
+7 
+Michael L. 
+Peppard 
+Democratic 
+39 
+Thomas J. 
+Abinanti 
+Democratic 
+40 
+Anna T. 
+Nelson 
+Democratic 
+43 
+Frank R. 
+Hrotko 
+Democratic 
+48 
+Maria G. 
+Rosa 
+Democratic 
+49 
+George E. 
+Fufidio 
+Democratic 
+50 
+Alden H. 
+Wolfe 
+Republican 
+B 
+Republican 
+1 Bruce A. Blakeman 
+for Governor/ por Gobernador 
+Todd Hood 
+for Lieutenant Governor/ por Vicegobernador 
+Republican 
+2 
+Joseph 
+Hernandez 
+Republican 
+3 
+Saritha 
+Komatireddy 
+Republican 
+4 
+Mike 
+Lawler 
+Republican 
+5 
+Anthony J. 
+Merante 
+Republican 
+6 
+Bob 
+Welch 
+Republican 
+7 
+Margaret A. 
+Cunzio 
+Republican 
+39 
+Carl 
+Fulgenzi, Jr. 
+Republican 
+40 
+Gail A. 
+Wind 
+Republican 
+41 
+Emily A. 
+Costanza 
+Republican 
+43 
+Richard B. 
+Benkwitt 
+Republican 
+48 
+Richard S. 
+Fava Pastilha 
+Republican 
+49 
+George E. 
+Fufidio 
+Republican 
+50 
+John 
+Ciampoli 
+Republican 
+52 
+Mark A. 
+Rubeo, Jr. 
+Conservative 
+C 
+Conservative 
+1 Bruce A. Blakeman 
+for Governor/ por Gobernador 
+Todd Hood 
+for Lieutenant Governor/ por Vicegobernador 
+Conservative 
+2 
+Joseph 
+Hernandez 
+Conservative 
+3 
+Saritha 
+Komatireddy 
+Conservative 
+4 
+Mike 
+Lawler 
+Conservative 
+6 
+Bob 
+Welch 
+Conservative 
+7 
+Margaret A. 
+Cunzio 
+Conservative 
+41 
+Emily A. 
+Costanza 
+Conservative 
+48 
+Richard S. 
+Fava Pastilha 
+Conservative 
+50 
+Alden H. 
+Wolfe 
+Conservative 
+52 
+Mark A. 
+Rubeo, Jr. 
+Working Families 
+D 
+Working Families 
+1 Kathy C. Hochul 
+for Governor/ por Gobernador 
+Adrienne E. Adams 
+for Lieutenant Governor/ por Vicegobernador 
+Working Families 
+2 
+Thomas P. 
+DiNapoli 
+Working Families 
+3 
+Letitia A. 
+James 
+Working Families 
+4 
+Cait 
+Conley 
+Working Families 
+5 
+Andrea 
+Stewart-Cousins 
+Working Families 
+6 
+MaryJane C. 
+Shimsky 
+Working Families 
+48 
+Maria G. 
+Rosa 
+Vote Affordable 
+E 
+Vote Affordable 
+1 Bruce A. Blakeman 
+for Governor/ por Gobernador 
+Todd Hood 
+for Lieutenant Governor/ por Vicegobernador 
+Vote Affordable 
+39 
+Carl 
+Fulgenzi, Jr. 
+Vote Affordable 
+43 
+Richard B. 
+Benkwitt 
+Family First Party 
+F 
+Family First Party 
+45 
+W. Paul 
+Alvarez 
+Pleasantville 
+Civic Party 
+G 
+Pleasantville Civic Party 
+45 
+Nicole 
+Asquith 
+Write-in/ 
+Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+Write-in/Por escrito 
+WESTCHESTER COUNTY OFFICIAL BALLOT INSTRUCTIONS FOR GENERAL ELECTION
+CONDADO DE WESTCHESTER BOLETA OFICIAL INSTRUCCIONES PARA LAS ELECCIONES GENERALES
+  
+1. Mark the oval  to the left of the name of your choice. 
+ 
+ 
+2.  To vote for a candidate whose name is not printed on the 
+ballot, print the name clearly in the box labeled “Write-
+In”, staying within the box.
+3.  To vote on a question or proposal, mark the oval below 
+your choice.
+4.  Any mark or writing outside the spaces provided for 
+voting may void the entire ballot. 
+5.  You have a right to a replacement ballot. If you make a 
+mistake or want to change your vote, call the Board of 
+Elections at (914) 995-5700 for instructions on how to 
+obtain a new ballot. 
+6. The number of choices is listed for each contest. 
+7. Do not mark the ballot for more candidates than allowed. 
+If you do, your vote in that contest will not count.
+Remember to vote
+both sides
+1. Marque el óvalo a la izquierda del nombre de su
+preferencia. 
+2.  Para votar por un candidato cuyo nombre no está
+impreso en la boleta, escriba el nombre claramente
+en la casilla etiquetado “Por Escrito”, permaneciendo 
+dentro de la casilla.
+3.  Cualquier marca o escritura fuera de los espacios
+previstos para la votación puede anular toda la boleta.
+4.  Para votar sobre una pregunta o propuesta, marque el
+óvalo debajo de su elección.
+5.  Tiene derecho a una boleta de reemplazo. Si comete
+un error o desea cambiar su voto, llame a la Junta
+Electoral al (914) 995-5700 para recibir instrucciones
+sobre cómo obtener una nueva boleta.
+6.  El número de opciones se enumera para cada concurso.
+7.  No marque la boleta para más candidatos de los
+permitidos. Si lo hace, su voto en ese concurso no
+contará.
+Recuerda votar
+ambos lados
+Sheet No: 54 
+6 Election Districts 
+County of Westchester 
+17th Congressional District
+35th Senatorial District 
+92nd Assembly District
+3rd Legislative District
+Town of: Mount Pleasant 
+Village of: Pleasantville
+E.D.(s): 13 / 15, 20, 31, 43 
+
+WESTCHESTER COUNTY OFFICIAL BALLOT INSTRUCTIONS FOR GENERAL ELECTION
+CONDADO DE WESTCHESTER BOLETA OFICIAL INSTRUCCIONES PARA LAS ELECCIONES GENERALES
+1. Mark the oval  to the left of the name of your choice. 
+ 
+ 
+2.  To vote for a candidate whose name is not printed on the 
+ballot, print the name clearly in the box labeled “Write-
+In”, staying within the box.
+3.  To vote on a question or proposal, mark the oval below 
+your choice.
+4.  Any mark or writing outside the spaces provided for 
+voting may void the entire ballot. 
+5.  You have a right to a replacement ballot. If you make a 
+mistake or want to change your vote, call the Board of 
+Elections at (914) 995-5700 for instructions on how to 
+obtain a new ballot. 
+6. The number of choices is listed for each contest. 
+7. Do not mark the ballot for more candidates than allowed. 
+If you do, your vote in that contest will not count.
+Remember to vote
+both sides
+1.  Marque el óvalo a la izquierda del nombre de su
+preferencia. 
+2.  Para votar por un candidato cuyo nombre no está
+impreso en la boleta, escriba el nombre claramente
+en la casilla etiquetado “Por Escrito”, permaneciendo 
+dentro de la casilla.
+3.  Cualquier marca o escritura fuera de los espacios
+previstos para la votación puede anular toda la boleta.
+4.  Para votar sobre una pregunta o propuesta, marque el
+óvalo debajo de su elección.
+5. Tiene der
+ 
+echo a una boleta de reemplazo. Si comete
+un error o desea cambiar su voto, llame a la Junta
+Electoral al (914) 995-5700 para recibir instrucciones
+sobre cómo obtener una nueva boleta.
+6.  El número de opciones se enumera para cada concurso.
+7.  No marque la boleta para más candidatos de los
+permitidos. Si lo hace, su voto en ese concurso no
+contará.
+Recuerda votar
+ambos lados
+OFFICIAL BALLOT
+BOLETA OFICIAL
+ 
+GENERAL ELECTION 
+NOVEMBER 3, 2026
+STATE OF NEW YORK
+COUNTY OF 
+WESTCHESTER
+ELECCIONES GENERALES 
+3 DE NOVIEMBRE DE 2026
+ESTADO DE NUEVA YORK
+CONDADO DE 
+WESTCHESTER
+17TH CONGRESSIONAL DISTRICT
+35TH SENATORIAL DISTRICT
+92ND ASSEMBLY DISTRICT
+3RD LEGISLATIVE DISTRICT
+TOWN OF: MOUNT PLEASANT
+VILLAGE OF: PLEASANTVILLE
+ELECTION DISTRICT:
+PHOENIX GRAPHICS,
+ROCHESTER, NY
+Sheet # 54 
+  ________________

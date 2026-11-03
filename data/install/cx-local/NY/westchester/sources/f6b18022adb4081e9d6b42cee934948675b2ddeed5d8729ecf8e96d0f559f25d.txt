@@ -1,0 +1,11 @@
+Search Polling Place Location
+You can search for your ballot and polling location either by Free Text Search OR by providing Street Number, Street Name and Zip Code
+We make every effort to keep this information as up-to-date as possible. Nevertheless, we recommend that you verify your polling place location in advance.  Note that some polling places may be closed or combined with another polling place, especially during primary and local elections.
+If you have trouble locating your polling place, contact (914) 995-5700.
+Find Your Ballot And Polling Place Location by Free Text
+IMP:
+Press Enter key after providing search or choose one of the search results when you type the free text.
+Find Your Ballot And Polling Place Location by Street Number, Street Name and Zip Code
+Street Number
+Street Name
+Zip Code

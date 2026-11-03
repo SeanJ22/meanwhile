@@ -1,0 +1,1165 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "Westchester County",
+  "countyFips": "36119",
+  "populationRank": 50,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-7",
+      "title": "Westchester County Legislator \u2014 District 7",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:7",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        50,
+        12,
+        51,
+        47,
+        68,
+        49
+      ],
+      "portablePrimarySampleSheet": 50,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/0C5355A920014108A690F695F1380A0B.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-mamaroneck-supervisor",
+      "title": "Town of Mamaroneck \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:mamaroneck_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        50,
+        51,
+        49
+      ],
+      "portablePrimarySampleSheet": 50,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/0C5355A920014108A690F695F1380A0B.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-mamaroneck-councilmember-unexpired-term",
+      "title": "Town of Mamaroneck \u2014 Councilmember \u2014 Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:mamaroneck_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        50,
+        51,
+        49
+      ],
+      "portablePrimarySampleSheet": 50,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/0C5355A920014108A690F695F1380A0B.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-larchmont-village-mayor",
+      "title": "Village of Larchmont \u2014 Village Mayor",
+      "ocdId": "ocd-division/country:us/state:ny/place:larchmont",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        50
+      ],
+      "portablePrimarySampleSheet": 50,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/0C5355A920014108A690F695F1380A0B.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-larchmont-village-trustee",
+      "title": "Village of Larchmont \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:larchmont",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        50
+      ],
+      "portablePrimarySampleSheet": 50,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/0C5355A920014108A690F695F1380A0B.pdf"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-9",
+      "title": "Supreme Court Justice, District 9",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:9",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "actualSampleSheets": [
+        50,
+        67,
+        71,
+        54,
+        64,
+        8,
+        59,
+        22,
+        20,
+        12,
+        66,
+        70,
+        9,
+        11,
+        35,
+        5,
+        36,
+        51,
+        26,
+        19,
+        17,
+        23,
+        33,
+        73,
+        24,
+        6,
+        31,
+        29,
+        76,
+        61,
+        69,
+        13,
+        57,
+        63,
+        55,
+        1,
+        27,
+        7,
+        3,
+        58,
+        47,
+        34,
+        42,
+        15,
+        32,
+        21,
+        72,
+        53,
+        37,
+        14,
+        52,
+        74,
+        30,
+        46,
+        68,
+        40,
+        38,
+        28,
+        16,
+        65,
+        41,
+        48,
+        60,
+        45,
+        44,
+        49,
+        75
+      ],
+      "portablePrimarySampleSheet": 58,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/8A1762D9E9084F57A0F32BC134FD2FC0.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-6",
+      "title": "Westchester County Legislator \u2014 District 6",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:6",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        67,
+        46
+      ],
+      "portablePrimarySampleSheet": 67,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1449785798804FB7B3EEA81DBF1D4543.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-4",
+      "title": "Westchester County Legislator \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        71,
+        73,
+        57,
+        60,
+        75
+      ],
+      "portablePrimarySampleSheet": 71,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/187554AAA68347A798F0C6D13E937508.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-somers-supervisor",
+      "title": "Town of Somers \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:somers_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        71,
+        70
+      ],
+      "portablePrimarySampleSheet": 71,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/187554AAA68347A798F0C6D13E937508.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-somers-councilmember-unexpired-term",
+      "title": "Town of Somers \u2014 Councilmember \u2014 Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:somers_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        71,
+        70
+      ],
+      "portablePrimarySampleSheet": 71,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/187554AAA68347A798F0C6D13E937508.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-3",
+      "title": "Westchester County Legislator \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        54,
+        55,
+        58,
+        53,
+        44
+      ],
+      "portablePrimarySampleSheet": 54,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-mount-pleasant-supervisor",
+      "title": "Town of Mount Pleasant \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:mount_pleasant_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        54,
+        55,
+        53
+      ],
+      "portablePrimarySampleSheet": 54,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-mount-pleasant-councilmember-unexpired-term",
+      "title": "Town of Mount Pleasant \u2014 Councilmember \u2014 Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:mount_pleasant_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        54,
+        55,
+        53
+      ],
+      "portablePrimarySampleSheet": 54,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-mount-pleasant-town-clerk",
+      "title": "Town of Mount Pleasant \u2014 Town Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:mount_pleasant_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        54,
+        55,
+        53
+      ],
+      "portablePrimarySampleSheet": 54,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-mount-pleasant-superintendent-of-highways",
+      "title": "Town of Mount Pleasant \u2014 Superintendent of Highways",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:mount_pleasant_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        54,
+        55,
+        53
+      ],
+      "portablePrimarySampleSheet": 54,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-pleasantville-village-trustee",
+      "title": "Village of Pleasantville \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:pleasantville",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        54
+      ],
+      "portablePrimarySampleSheet": 54,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-mount-pleasant-town-justice",
+      "title": "Town of Mount Pleasant \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:mount_pleasant_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        54,
+        55,
+        53
+      ],
+      "portablePrimarySampleSheet": 54,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-11",
+      "title": "Westchester County Legislator \u2014 District 11",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:11",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        64,
+        8,
+        6,
+        65
+      ],
+      "portablePrimarySampleSheet": 64,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1AF58B51C1334DC69D100EB6251741A0.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-pelham-supervisor",
+      "title": "Town of Pelham \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:pelham_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        64,
+        65
+      ],
+      "portablePrimarySampleSheet": 64,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1AF58B51C1334DC69D100EB6251741A0.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-pelham-town-clerk",
+      "title": "Town of Pelham \u2014 Town Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:pelham_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        64,
+        65
+      ],
+      "portablePrimarySampleSheet": 64,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1AF58B51C1334DC69D100EB6251741A0.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-pelham-village-trustee",
+      "title": "Village of Pelham \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:pelham",
+      "type": "CANDIDACY",
+      "candidates": 6,
+      "actualSampleSheets": [
+        64
+      ],
+      "portablePrimarySampleSheet": 64,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1AF58B51C1334DC69D100EB6251741A0.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-2",
+      "title": "Westchester County Legislator \u2014 District 2",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        59,
+        66,
+        70,
+        52,
+        28,
+        48
+      ],
+      "portablePrimarySampleSheet": 59,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1E858210679447C7BD3265090CF30C58.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-north-salem-supervisor",
+      "title": "Town of North Salem \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:north_salem_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        59
+      ],
+      "portablePrimarySampleSheet": 59,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1E858210679447C7BD3265090CF30C58.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-16",
+      "title": "Westchester County Legislator \u2014 District 16",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:16",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        22
+      ],
+      "portablePrimarySampleSheet": 22,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/2239DCEA046F4DF585B3640C415B81C8.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-city-yonkers-city-court-judge",
+      "title": "City of Yonkers \u2014 City Court Judge",
+      "ocdId": "ocd-division/country:us/state:ny/place:yonkers",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        22,
+        20,
+        26,
+        19,
+        17,
+        23,
+        24,
+        27,
+        21
+      ],
+      "portablePrimarySampleSheet": 22,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/2239DCEA046F4DF585B3640C415B81C8.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-14",
+      "title": "Westchester County Legislator \u2014 District 14",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:14",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        20,
+        26,
+        17
+      ],
+      "portablePrimarySampleSheet": 20,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/2335580727E44F2B8ABF07E9EF62DBBD.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-city-rye-councilmember-unexpired-term",
+      "title": "City of Rye \u2014 Councilmember \u2014 Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:ny/place:rye",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        12
+      ],
+      "portablePrimarySampleSheet": 12,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/298F9BC3D2284873AF739C4D2E2619CB.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-pound-ridge-supervisor",
+      "title": "Town of Pound Ridge \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:pound_ridge_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        66
+      ],
+      "portablePrimarySampleSheet": 66,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/2E583E7451994D68BAA08D7845425B65.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-10",
+      "title": "Westchester County Legislator \u2014 District 10",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:10",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        9,
+        5,
+        33,
+        7,
+        3,
+        32
+      ],
+      "portablePrimarySampleSheet": 9,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/331632E54CB74D23A9DC66B03914F973.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-1",
+      "title": "Westchester County Legislator \u2014 District 1",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        11,
+        29,
+        72,
+        74
+      ],
+      "portablePrimarySampleSheet": 11,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3344EB050D494D04B88730534ECEE482.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-12",
+      "title": "Westchester County Legislator \u2014 District 12",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:12",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        35,
+        42,
+        40,
+        38,
+        41
+      ],
+      "portablePrimarySampleSheet": 35,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/336D103811B548E9A9114B0C4ED39D93.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-greenburgh-supervisor",
+      "title": "Town of Greenburgh \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:greenburgh_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        35,
+        36,
+        42,
+        37,
+        40,
+        38,
+        41
+      ],
+      "portablePrimarySampleSheet": 35,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/336D103811B548E9A9114B0C4ED39D93.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-greenburgh-town-clerk",
+      "title": "Town of Greenburgh \u2014 Town Clerk",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:greenburgh_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        35,
+        36,
+        42,
+        37,
+        40,
+        38,
+        41
+      ],
+      "portablePrimarySampleSheet": 35,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/336D103811B548E9A9114B0C4ED39D93.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-greenburgh-town-justice",
+      "title": "Town of Greenburgh \u2014 Town Justice",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:greenburgh_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        35,
+        36,
+        42,
+        37,
+        40,
+        38,
+        41
+      ],
+      "portablePrimarySampleSheet": 35,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/336D103811B548E9A9114B0C4ED39D93.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-8",
+      "title": "Westchester County Legislator \u2014 District 8",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:8",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        36,
+        37,
+        14,
+        16
+      ],
+      "portablePrimarySampleSheet": 36,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3BB2A947681A4AF4B5302A50D1C6BB73.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-mamaroneck-village-trustee",
+      "title": "Village of Mamaroneck \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:mamaroneck",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "actualSampleSheets": [
+        51,
+        68
+      ],
+      "portablePrimarySampleSheet": 51,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3F8A4287673641AEAAE89BA1D63D851D.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-mamaroneck-village-justice",
+      "title": "Village of Mamaroneck \u2014 Village Justice",
+      "ocdId": "ocd-division/country:us/state:ny/place:mamaroneck",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        51,
+        68
+      ],
+      "portablePrimarySampleSheet": 51,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3F8A4287673641AEAAE89BA1D63D851D.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-17",
+      "title": "Westchester County Legislator \u2014 District 17",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:17",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        19,
+        23
+      ],
+      "portablePrimarySampleSheet": 19,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/43E22E6C5A8D4271B80DBD6FD62E74B2.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-eastchester-supervisor",
+      "title": "Town of Eastchester \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:eastchester_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        33,
+        76,
+        34,
+        32
+      ],
+      "portablePrimarySampleSheet": 33,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4C0B3281C36346B1B17475ADA0186F54.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-tuckahoe-village-trustee",
+      "title": "Village of Tuckahoe \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:tuckahoe_3675583",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        33
+      ],
+      "portablePrimarySampleSheet": 33,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4C0B3281C36346B1B17475ADA0186F54.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-tuckahoe-village-justice",
+      "title": "Village of Tuckahoe \u2014 Village Justice",
+      "ocdId": "ocd-division/country:us/state:ny/place:tuckahoe_3675583",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        33
+      ],
+      "portablePrimarySampleSheet": 33,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4C0B3281C36346B1B17475ADA0186F54.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-yorktown-supervisor",
+      "title": "Town of Yorktown \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:yorktown_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        73,
+        72,
+        74,
+        75
+      ],
+      "portablePrimarySampleSheet": 73,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4CFD769FC085478986423DFB660B0154.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-15",
+      "title": "Westchester County Legislator \u2014 District 15",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:15",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        24,
+        76,
+        27,
+        34,
+        21
+      ],
+      "portablePrimarySampleSheet": 24,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4EBE5CB12EF043468A434070406F5751.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-9",
+      "title": "Westchester County Legislator \u2014 District 9",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:9",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        31,
+        61,
+        63,
+        30
+      ],
+      "portablePrimarySampleSheet": 31,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/55D450D27BAC462B8C0F94BAF155280F.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-cortlandt-supervisor",
+      "title": "Town of Cortlandt \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:cortlandt_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        31,
+        29,
+        30
+      ],
+      "portablePrimarySampleSheet": 31,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/55D450D27BAC462B8C0F94BAF155280F.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-croton-on-hudson-village-trustee",
+      "title": "Village of Croton-on-Hudson \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:croton_on_hudson",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "actualSampleSheets": [
+        31
+      ],
+      "portablePrimarySampleSheet": 31,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/55D450D27BAC462B8C0F94BAF155280F.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-croton-on-hudson-village-justice",
+      "title": "Village of Croton-on-Hudson \u2014 Village Justice",
+      "ocdId": "ocd-division/country:us/state:ny/place:croton_on_hudson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        31
+      ],
+      "portablePrimarySampleSheet": 31,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/55D450D27BAC462B8C0F94BAF155280F.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-ossining-supervisor",
+      "title": "Town of Ossining \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:ossining_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        61,
+        63,
+        60
+      ],
+      "portablePrimarySampleSheet": 61,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/6304805421BA43DB9B7B5970761598EA.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-5",
+      "title": "Westchester County Legislator \u2014 District 5",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        69,
+        13,
+        15,
+        45
+      ],
+      "portablePrimarySampleSheet": 69,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/66057120CEDD47C697671006AD24B032.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-city-white-plains-councilmember-unexpired-3-year-term",
+      "title": "City of White Plains \u2014 Councilmember \u2014 Unexpired 3 Year Term",
+      "ocdId": "ocd-division/country:us/state:ny/place:white_plains",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        13,
+        15,
+        14,
+        16
+      ],
+      "portablePrimarySampleSheet": 13,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/679B786BD5BE4404BF267334E571165B.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-city-white-plains-councilmember-unexpired-1-year-term",
+      "title": "City of White Plains \u2014 Councilmember \u2014 Unexpired 1 Year Term",
+      "ocdId": "ocd-division/country:us/state:ny/place:white_plains",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        13,
+        15,
+        14,
+        16
+      ],
+      "portablePrimarySampleSheet": 13,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/679B786BD5BE4404BF267334E571165B.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-new-castle-supervisor",
+      "title": "Town of New Castle \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:new_castle_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        57
+      ],
+      "portablePrimarySampleSheet": 57,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/681C5D8166964F9E92A528851B67528F.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-ossining-village-mayor",
+      "title": "Village of Ossining \u2014 Village Mayor",
+      "ocdId": "ocd-division/country:us/state:ny/place:ossining",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        63
+      ],
+      "portablePrimarySampleSheet": 63,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/6DFE3D72CE1D401492C8BA398F17ED07.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-ossining-village-trustee",
+      "title": "Village of Ossining \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:ossining",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        63
+      ],
+      "portablePrimarySampleSheet": 63,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/6DFE3D72CE1D401492C8BA398F17ED07.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-sleepy-hollow-village-trustee",
+      "title": "Village of Sleepy Hollow \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:sleepy_hollow",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "actualSampleSheets": [
+        55
+      ],
+      "portablePrimarySampleSheet": 55,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/741CFAD3E05141EBA8FE2EE573003377.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-county-legislator-13",
+      "title": "Westchester County Legislator \u2014 District 13",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/legislative_district:13",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        1
+      ],
+      "portablePrimarySampleSheet": 1,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/7501BB26B19A44AB8499A0EBD6433272.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-city-mount-vernon-city-court-judge",
+      "title": "City of Mount Vernon \u2014 City Court Judge",
+      "ocdId": "ocd-division/country:us/state:ny/place:mount_vernon",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        1
+      ],
+      "portablePrimarySampleSheet": 1,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/7501BB26B19A44AB8499A0EBD6433272.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-north-castle-supervisor",
+      "title": "Town of North Castle \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:north_castle_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        58
+      ],
+      "portablePrimarySampleSheet": 58,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/8A1762D9E9084F57A0F32BC134FD2FC0.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-irvington-village-trustee",
+      "title": "Village of Irvington \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:irvington",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        42
+      ],
+      "portablePrimarySampleSheet": 42,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/9B72955E1B6C432C8A271B981CFFE173.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-irvington-village-justice",
+      "title": "Village of Irvington \u2014 Village Justice",
+      "ocdId": "ocd-division/country:us/state:ny/place:irvington",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        42
+      ],
+      "portablePrimarySampleSheet": 42,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/9B72955E1B6C432C8A271B981CFFE173.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-tarrytown-village-trustee",
+      "title": "Village of Tarrytown \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:tarrytown",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "actualSampleSheets": [
+        37
+      ],
+      "portablePrimarySampleSheet": 37,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/AE10A307540A4F1C92A3157E900D2FBC.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-mount-kisco-village-trustee",
+      "title": "Village of Mount Kisco \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:mount_kisco",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "actualSampleSheets": [
+        52
+      ],
+      "portablePrimarySampleSheet": 52,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/B51C112E9CAE48309C9715766CC702CE.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-dobbs-ferry-village-trustee",
+      "title": "Village of Dobbs Ferry \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:dobbs_ferry",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "actualSampleSheets": [
+        40
+      ],
+      "portablePrimarySampleSheet": 40,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/DEF795B4B23D427880F2C36C5BF2936E.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-bedford-supervisor",
+      "title": "Town of Bedford \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:bedford_town",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        28
+      ],
+      "portablePrimarySampleSheet": 28,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/E2875DE27729442F9EA8F09FA6CA8425.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-pelham-manor-village-trustee",
+      "title": "Village of Pelham Manor \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:pelham_manor",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "actualSampleSheets": [
+        65
+      ],
+      "portablePrimarySampleSheet": 65,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/EC8D01816CC84A30915B0CDD8EB8A3F7.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-hastings-on-hudson-village-trustee",
+      "title": "Village of Hastings-on-Hudson \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:hastings_on_hudson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "actualSampleSheets": [
+        41
+      ],
+      "portablePrimarySampleSheet": 41,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/F00CA8CA0A1A452499D2990055048E14.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-lewisboro-supervisor",
+      "title": "Town of Lewisboro \u2014 Supervisor",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:lewisboro_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        48
+      ],
+      "portablePrimarySampleSheet": 48,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/F409D10BF730407EBEAE6906C08BB5AB.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-town-ossining-superintendent-of-highways",
+      "title": "Town of Ossining \u2014 Superintendent of Highways",
+      "ocdId": "ocd-division/country:us/state:ny/county:westchester/place:ossining_town",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "actualSampleSheets": [
+        60
+      ],
+      "portablePrimarySampleSheet": 60,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/F485ACDF86B44B0EA06D6FB81F38B43B.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-westchester-village-ardsley-village-trustee",
+      "title": "Village of Ardsley \u2014 Village Trustee",
+      "ocdId": "ocd-division/country:us/state:ny/place:ardsley",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4A3496C25F84403D950AB1BD0749AEF3.pdf",
+      "sampleScopeJoin": "Exact names match current county Ardsley office rows; county offices schedule independently identifies village scope. Unnumbered PDF has no municipality panel."
+    }
+  ],
+  "sourceKind": "CURRENT_OFFICIAL_COUNTY_AND_CITY_SAMPLE_BALLOTS_PLUS_EXPLICITLY_LABELED_UNOFFICIAL_COUNTY_LIST_SUPPLEMENTS",
+  "operation": "Prepared data only. Actual samples prove all 69 named local office groups/130 candidacies on the current county candidate publication, with two additional blank write-in-only fields kept held. Preserve Supreme Court 9 contest/five candidate IDs and five whole-county membership IDs; all existing state/federal/legislative and measure records remain unchanged. No production or git.",
+  "counts": {
+    "contests": 69,
+    "candidacies": 130,
+    "newContests": 68,
+    "refreshedContests": 1,
+    "preservedHeldCandidateIds": 5,
+    "heldWriteInOnlyContests": 2,
+    "measures": 0,
+    "portableNativeCountySamplePdfs": 68,
+    "portableMunicipalSamplePdfs": 1,
+    "acquiredNumberedSheets": 67,
+    "sourceFiles": 80
+  },
+  "coverage": {
+    "individuallyCompleteCandidateOffices": 69,
+    "allPrintedNamesInEachImportedOffice": true,
+    "all69NamedLocalOfficeGroupsInCurrentCountyUnofficialRosterProvenInActualSamples": true,
+    "fullCountyBallotParity": false,
+    "publishedStyleAcquisitionExhaustive": false,
+    "scope": "67 acquired numbered sheets plus one unnumbered Ardsley GENERAL county export; dated North Castle municipal Sheet58 corroborates current sample family. All acquired occurrences of each named numbered-sheet office independently match the complete current county roster candidate/party set. No claim that the public lookup was exhaustively traversed or that all sheet numbers/styles were acquired.",
+    "sourceLabels": "Candidate publication is explicitly 2026 UNOFFICIAL GENERAL ELECTION CANDIDATE LIST; office schedule explicitly UNOFFICIAL LIST as of 7/21/26. Both are official county publications used only as supplements to actual samples, never described as samples.",
+    "blankFields": "Ardsley Village Justice and Mount Kisco Library Trustee have blank write-in spaces only and are held. No blank slot becomes a person.",
+    "remaining": [
+      "Full published sample style parity and public lookup address/style applicability are unproved.",
+      "Named declared write-in filings remain open; no inference from blank sample slots.",
+      "Exact Mount Kisco Public Library district applicability and 17 county legislative district boundaries require installation/review.",
+      "Any additional independently administered school or special election fields not represented in acquired samples remain an open acquisition gap.",
+      "Existing measures are preserved, with no new measure or absence assertion from this candidate-office packet."
+    ]
+  },
+  "unmatchedDivisions": [
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:1",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:10",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:11",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:12",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:13",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:14",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:15",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:16",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:17",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:2",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:3",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:4",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:5",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:6",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:7",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:8",
+    "ocd-division/country:us/state:ny/county:westchester/legislative_district:9",
+    "ocd-division/country:us/state:ny/special_district:mount_kisco_public_library",
+    "ocd-division/country:us/state:ny/supreme_court:9"
+  ],
+  "readerApplicability": {
+    "status": "RIVER_DIVISION_INSTALL_AND_LIVE_CHECK_REQUIRED",
+    "missingRegistryDivisions": [
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:1",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:10",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:11",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:12",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:13",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:14",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:15",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:16",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:17",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:2",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:3",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:4",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:5",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:6",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:7",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:8",
+      "ocd-division/country:us/state:ny/county:westchester/legislative_district:9",
+      "ocd-division/country:us/state:ny/special_district:mount_kisco_public_library",
+      "ocd-division/country:us/state:ny/supreme_court:9"
+    ],
+    "existingWholeCountyCourtMembershipsRefreshed": [
+      {
+        "id": "ny-2026-court-membership:dutchess->9",
+        "memberOcdId": "ocd-division/country:us/state:ny/county:dutchess",
+        "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+        "provenance": {
+          "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+          "sourceOrg": "New York State Board of Elections",
+          "collectedAt": "2026-11-03T05:57:34.141422+00:00",
+          "verifiedAt": "2026-11-03T05:57:34.141422+00:00",
+          "quote": "Office:   Supreme Court Justice\nDistrict: 9\nCounties: Dutchess, Orange, Putnam, Rockland & Westchester\nVote For: 3"
+        }
+      },
+      {
+        "id": "ny-2026-court-membership:orange->9",
+        "memberOcdId": "ocd-division/country:us/state:ny/county:orange",
+        "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+        "provenance": {
+          "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+          "sourceOrg": "New York State Board of Elections",
+          "collectedAt": "2026-11-03T05:57:34.141422+00:00",
+          "verifiedAt": "2026-11-03T05:57:34.141422+00:00",
+          "quote": "Office:   Supreme Court Justice\nDistrict: 9\nCounties: Dutchess, Orange, Putnam, Rockland & Westchester\nVote For: 3"
+        }
+      },
+      {
+        "id": "ny-2026-court-membership:putnam->9",
+        "memberOcdId": "ocd-division/country:us/state:ny/county:putnam",
+        "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+        "provenance": {
+          "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+          "sourceOrg": "New York State Board of Elections",
+          "collectedAt": "2026-11-03T05:57:34.141422+00:00",
+          "verifiedAt": "2026-11-03T05:57:34.141422+00:00",
+          "quote": "Office:   Supreme Court Justice\nDistrict: 9\nCounties: Dutchess, Orange, Putnam, Rockland & Westchester\nVote For: 3"
+        }
+      },
+      {
+        "id": "ny-2026-court-membership:rockland->9",
+        "memberOcdId": "ocd-division/country:us/state:ny/county:rockland",
+        "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+        "provenance": {
+          "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+          "sourceOrg": "New York State Board of Elections",
+          "collectedAt": "2026-11-03T05:57:34.141422+00:00",
+          "verifiedAt": "2026-11-03T05:57:34.141422+00:00",
+          "quote": "Office:   Supreme Court Justice\nDistrict: 9\nCounties: Dutchess, Orange, Putnam, Rockland & Westchester\nVote For: 3"
+        }
+      },
+      {
+        "id": "ny-2026-court-membership:westchester->9",
+        "memberOcdId": "ocd-division/country:us/state:ny/county:westchester",
+        "districtOcdId": "ocd-division/country:us/state:ny/supreme_court:9",
+        "provenance": {
+          "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+          "sourceOrg": "New York State Board of Elections",
+          "collectedAt": "2026-11-03T05:57:34.141422+00:00",
+          "verifiedAt": "2026-11-03T05:57:34.141422+00:00",
+          "quote": "Office:   Supreme Court Justice\nDistrict: 9\nCounties: Dutchess, Orange, Putnam, Rockland & Westchester\nVote For: 3"
+        }
+      }
+    ],
+    "noWholeTownOrVillageDistrictLinksInvented": true
+  },
+  "validation": {
+    "focusedChecker": "/workspace/cx-local-work/validate.mts",
+    "candidateSetAndPartyAudit": "candidate-party-audit.json",
+    "productionWrites": "NONE",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 80 captured sources and 206 exact saved-source quotes"
+  }
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T06:02:57.214895+00:00",
+  "preparedAt": "2026-11-03T06:06:24.623110+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1210,6 +1210,36 @@
       }
     },
     {
+      "state": "NY",
+      "county": "Westchester County",
+      "populationRank": 50,
+      "manifest": "NY/westchester/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 69,
+      "measureContests": 0,
+      "candidacies": 130,
+      "newContests": 68,
+      "refreshedContests": 1,
+      "sourceInputSha256": "29361caa41462c4b5fa933132c5dd7835b51f8fabc3347ec7d7a55062bed3294",
+      "coverage": {
+        "individuallyCompleteCandidateOffices": 69,
+        "allPrintedNamesInEachImportedOffice": true,
+        "all69NamedLocalOfficeGroupsInCurrentCountyUnofficialRosterProvenInActualSamples": true,
+        "fullCountyBallotParity": false,
+        "publishedStyleAcquisitionExhaustive": false,
+        "scope": "67 acquired numbered sheets plus one unnumbered Ardsley GENERAL county export; dated North Castle municipal Sheet58 corroborates current sample family. All acquired occurrences of each named numbered-sheet office independently match the complete current county roster candidate/party set. No claim that the public lookup was exhaustively traversed or that all sheet numbers/styles were acquired.",
+        "sourceLabels": "Candidate publication is explicitly 2026 UNOFFICIAL GENERAL ELECTION CANDIDATE LIST; office schedule explicitly UNOFFICIAL LIST as of 7/21/26. Both are official county publications used only as supplements to actual samples, never described as samples.",
+        "blankFields": "Ardsley Village Justice and Mount Kisco Library Trustee have blank write-in spaces only and are held. No blank slot becomes a person.",
+        "remaining": [
+          "Full published sample style parity and public lookup address/style applicability are unproved.",
+          "Named declared write-in filings remain open; no inference from blank sample slots.",
+          "Exact Mount Kisco Public Library district applicability and 17 county legislative district boundaries require installation/review.",
+          "Any additional independently administered school or special election fields not represented in acquired samples remain an open acquisition gap.",
+          "Existing measures are preserved, with no new measure or absence assertion from this candidate-office packet."
+        ]
+      }
+    },
+    {
       "state": "MO",
       "county": "St. Louis",
       "populationRank": 53,
@@ -1266,17 +1296,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 48,
-    "packetsPrepared": 49,
-    "candidateAndRetentionContests": 2660,
+    "countiesPrepared": 49,
+    "packetsPrepared": 50,
+    "candidateAndRetentionContests": 2729,
     "measureContests": 113,
-    "candidacyEntries": 5958,
-    "newContestEntriesAgainstCheckedInBaseline": 2165,
-    "distinctPreparedContestIds": 2752,
-    "distinctPreparedCandidateIds": 5897,
-    "distinctNewContestsAgainstCheckedInBaseline": 2154,
+    "candidacyEntries": 6088,
+    "newContestEntriesAgainstCheckedInBaseline": 2233,
+    "distinctPreparedContestIds": 2821,
+    "distinctPreparedCandidateIds": 6027,
+    "distinctNewContestsAgainstCheckedInBaseline": 2222,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 49
+    "distinctCountyHandoffs": 50
   },
   "remainingWork": [
     {

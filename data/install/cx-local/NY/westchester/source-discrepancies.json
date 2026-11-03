@@ -1,0 +1,22 @@
+{
+  "nativeTextExtraction": {
+    "method": "Final Office/Oficina plate only. Native PDF reading order displaces first letters in two names and duplicates overlapping glyphs in another; visible names are corroborated by correctly ordered fusion cells in the same office and exact current county roster.",
+    "aliases": {
+      "S Maria F. lippen": "Maria F. Slippen",
+      "R Maria G. osa": "Maria G. Rosa",
+      "Alden H. Wololfe": "Alden H. Wolfe"
+    },
+    "nativeBytesAndExactUnreorderedCellsRetained": true
+  },
+  "partyTypography": {
+    "printedSmallCellLabels": [
+      "Vote Affortable",
+      "Vote Affordabl e"
+    ],
+    "canonicalPartyLabel": "Vote Affordable",
+    "basis": "The same sample row heading and current county roster say Vote Affordable. Exact printed cell labels are retained in source quotes; no candidate identity is inferred from party."
+  },
+  "lookupApplicability": "Some street/precinct link labels do not agree with the downloaded PDF jurisdiction panel. Printed PDF scope governs. No claim of address-to-ballot-style completeness; the unnumbered Ardsley PDF is joined to exact Ardsley office rows in two current county publications.",
+  "candidateListPublicationLabel": "2026 UNOFFICIAL GENERAL ELECTION CANDIDATE LIST",
+  "officesSchedulePublicationLabel": "UNOFFICIAL LIST as of 7/21/26"
+}

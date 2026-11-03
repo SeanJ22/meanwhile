@@ -1,0 +1,7268 @@
+[
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 07",
+    "samples": [
+      {
+        "sheet": 50,
+        "names": [
+          "Anant Nambiar"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "anantnambiar",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 12,
+        "names": [
+          "Anant Nambiar"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "anantnambiar",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 51,
+        "names": [
+          "Anant Nambiar"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "anantnambiar",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 47,
+        "names": [
+          "Anant Nambiar"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "anantnambiar",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 68,
+        "names": [
+          "Anant Nambiar"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "anantnambiar",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 49,
+        "names": [
+          "Anant Nambiar"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "anantnambiar",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-MAMARONECK",
+    "samples": [
+      {
+        "sheet": 50,
+        "names": [
+          "Jaine Elkind Eney"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "jaineelkindeney",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 51,
+        "names": [
+          "Jaine Elkind Eney"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "jaineelkindeney",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 49,
+        "names": [
+          "Jaine Elkind Eney"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "jaineelkindeney",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNCILMEMBER-UNEXP.-MAMARONECK",
+    "samples": [
+      {
+        "sheet": 50,
+        "names": [
+          "Andrew M. Regenstreich"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "andrewmregenstreich",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 51,
+        "names": [
+          "Andrew M. Regenstreich"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "andrewmregenstreich",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 49,
+        "names": [
+          "Andrew M. Regenstreich"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "andrewmregenstreich",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "MAYOR-VILLAGE OF LARCHMONT",
+    "samples": [
+      {
+        "sheet": 50,
+        "names": [
+          "Brigid Brennan"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "brigidbrennan",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF LARCHMONT",
+    "samples": [
+      {
+        "sheet": 50,
+        "names": [
+          "Peter Fanelli",
+          "Terence Pare"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "peterfanelli",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "terencepare",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPREME COURT JUSTICE- 9TH JD",
+    "samples": [
+      {
+        "sheet": 50,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 67,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 71,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 54,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 64,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 8,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 59,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 22,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 20,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 12,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 66,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 70,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 9,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 11,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 35,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 5,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 36,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 51,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 26,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 19,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 17,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 23,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 33,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 73,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 24,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 6,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 31,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 29,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 76,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 61,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 69,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 13,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 57,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 63,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 55,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 1,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 27,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 7,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 3,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 58,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 47,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 34,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 42,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 15,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 32,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 21,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 72,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 53,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 37,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 14,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 52,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 74,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 30,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 46,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 68,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 40,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 38,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 28,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 16,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 65,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 41,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 48,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 60,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 45,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 44,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 49,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 75,
+        "names": [
+          "Maria G. Rosa",
+          "George E. Fufidio",
+          "Alden H. Wolfe",
+          "Richard S. Fava Pastilha",
+          "John Ciampoli"
+        ],
+        "candidates": 5,
+        "partyChoices": [
+          [
+            "aldenhwolfe",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ],
+          [
+            "georgeefufidio",
+            [
+              "Democratic",
+              "Republican"
+            ]
+          ],
+          [
+            "johnciampoli",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "mariagrosa",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "richardsfavapastilha",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 06",
+    "samples": [
+      {
+        "sheet": 67,
+        "names": [
+          "Nancy E. Barr"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "nancyebarr",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 46,
+        "names": [
+          "Nancy E. Barr"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "nancyebarr",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 04",
+    "samples": [
+      {
+        "sheet": 71,
+        "names": [
+          "Vedat Gashi",
+          "John J. Campobasso"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johnjcampobasso",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "vedatgashi",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 73,
+        "names": [
+          "Vedat Gashi",
+          "John J. Campobasso"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johnjcampobasso",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "vedatgashi",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 57,
+        "names": [
+          "Vedat Gashi",
+          "John J. Campobasso"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johnjcampobasso",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "vedatgashi",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 60,
+        "names": [
+          "Vedat Gashi",
+          "John J. Campobasso"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johnjcampobasso",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "vedatgashi",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 75,
+        "names": [
+          "Vedat Gashi",
+          "John J. Campobasso"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johnjcampobasso",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "vedatgashi",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-SOMERS",
+    "samples": [
+      {
+        "sheet": 71,
+        "names": [
+          "Teresa Laura Clifford",
+          "Robert G. Scorrano"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "robertgscorrano",
+            [
+              "Republican",
+              "Somers Strong"
+            ]
+          ],
+          [
+            "teresalauraclifford",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 70,
+        "names": [
+          "Teresa Laura Clifford",
+          "Robert G. Scorrano"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "robertgscorrano",
+            [
+              "Republican",
+              "Somers Strong"
+            ]
+          ],
+          [
+            "teresalauraclifford",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNCILMEMBER - UNEXP.-SOMERS",
+    "samples": [
+      {
+        "sheet": 71,
+        "names": [
+          "Rita M. Romeu",
+          "Gina M. Arena"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "ginamarena",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "ritamromeu",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 70,
+        "names": [
+          "Rita M. Romeu",
+          "Gina M. Arena"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "ginamarena",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "ritamromeu",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 03",
+    "samples": [
+      {
+        "sheet": 54,
+        "names": [
+          "Michael L. Peppard",
+          "Margaret A. Cunzio"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "margaretacunzio",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "michaellpeppard",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 55,
+        "names": [
+          "Michael L. Peppard",
+          "Margaret A. Cunzio"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "margaretacunzio",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "michaellpeppard",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 58,
+        "names": [
+          "Michael L. Peppard",
+          "Margaret A. Cunzio"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "margaretacunzio",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "michaellpeppard",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 53,
+        "names": [
+          "Michael L. Peppard",
+          "Margaret A. Cunzio"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "margaretacunzio",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "michaellpeppard",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 44,
+        "names": [
+          "Michael L. Peppard",
+          "Margaret A. Cunzio"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "margaretacunzio",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "michaellpeppard",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-MT.PLEASANT",
+    "samples": [
+      {
+        "sheet": 54,
+        "names": [
+          "Thomas J. Abinanti",
+          "Carl Fulgenzi, Jr."
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "carlfulgenzijr",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "thomasjabinanti",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 55,
+        "names": [
+          "Thomas J. Abinanti",
+          "Carl Fulgenzi, Jr."
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "carlfulgenzijr",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "thomasjabinanti",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 53,
+        "names": [
+          "Thomas J. Abinanti",
+          "Carl Fulgenzi, Jr."
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "carlfulgenzijr",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "thomasjabinanti",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNCILMEMBER-UNEXP.-MT PLEASANT",
+    "samples": [
+      {
+        "sheet": 54,
+        "names": [
+          "Anna T. Nelson",
+          "Gail A. Wind"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "annatnelson",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "gailawind",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 55,
+        "names": [
+          "Anna T. Nelson",
+          "Gail A. Wind"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "annatnelson",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "gailawind",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 53,
+        "names": [
+          "Anna T. Nelson",
+          "Gail A. Wind"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "annatnelson",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "gailawind",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TOWN CLERK - MT.PLEASANT",
+    "samples": [
+      {
+        "sheet": 54,
+        "names": [
+          "Emily A. Costanza"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "emilyacostanza",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 55,
+        "names": [
+          "Emily A. Costanza"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "emilyacostanza",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 53,
+        "names": [
+          "Emily A. Costanza"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "emilyacostanza",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERINTENDENT OF HIGHWAYS-MT.PLEASANT",
+    "samples": [
+      {
+        "sheet": 54,
+        "names": [
+          "Frank R. Hrotko",
+          "Richard B. Benkwitt"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "frankrhrotko",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "richardbbenkwitt",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 55,
+        "names": [
+          "Frank R. Hrotko",
+          "Richard B. Benkwitt"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "frankrhrotko",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "richardbbenkwitt",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 53,
+        "names": [
+          "Frank R. Hrotko",
+          "Richard B. Benkwitt"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "frankrhrotko",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "richardbbenkwitt",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF PLEASANTVILLE",
+    "samples": [
+      {
+        "sheet": 54,
+        "names": [
+          "W. Paul Alvarez",
+          "Nicole Asquith"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "nicoleasquith",
+            [
+              "Pleasantville Civic Party"
+            ]
+          ],
+          [
+            "wpaulalvarez",
+            [
+              "Family First Party"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TOWN JUSTICE-MT.PLEASANT",
+    "samples": [
+      {
+        "sheet": 54,
+        "names": [
+          "Mark A. Rubeo, Jr."
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "markarubeojr",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 55,
+        "names": [
+          "Mark A. Rubeo, Jr."
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "markarubeojr",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 53,
+        "names": [
+          "Mark A. Rubeo, Jr."
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "markarubeojr",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 11",
+    "samples": [
+      {
+        "sheet": 64,
+        "names": [
+          "Terry A. Clements",
+          "Edwinna Herrera"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwinnaherrera",
+            [
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "terryaclements",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 8,
+        "names": [
+          "Terry A. Clements",
+          "Edwinna Herrera"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwinnaherrera",
+            [
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "terryaclements",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 6,
+        "names": [
+          "Terry A. Clements",
+          "Edwinna Herrera"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwinnaherrera",
+            [
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "terryaclements",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 65,
+        "names": [
+          "Terry A. Clements",
+          "Edwinna Herrera"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwinnaherrera",
+            [
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "terryaclements",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-PELHAM",
+    "samples": [
+      {
+        "sheet": 64,
+        "names": [
+          "Theresa K. Mohan",
+          "Scott E. Wolfgang"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "scottewolfgang",
+            [
+              "Neighborhood Party"
+            ]
+          ],
+          [
+            "theresakmohan",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 65,
+        "names": [
+          "Theresa K. Mohan",
+          "Scott E. Wolfgang"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "scottewolfgang",
+            [
+              "Neighborhood Party"
+            ]
+          ],
+          [
+            "theresakmohan",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TOWN CLERK - PELHAM",
+    "samples": [
+      {
+        "sheet": 64,
+        "names": [
+          "Eileen R. Miller",
+          "Maureen Borsella"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "eileenrmiller",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "maureenborsella",
+            [
+              "Neighborhood Party"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 65,
+        "names": [
+          "Eileen R. Miller",
+          "Maureen Borsella"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "eileenrmiller",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "maureenborsella",
+            [
+              "Neighborhood Party"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF PELHAM",
+    "samples": [
+      {
+        "sheet": 64,
+        "names": [
+          "Kristen M. Burke",
+          "Krystal Howell",
+          "Russell L. Solomon",
+          "Paul Anzilotti",
+          "Arthur S. Long",
+          "Everitt P. Speros"
+        ],
+        "candidates": 6,
+        "partyChoices": [
+          [
+            "arthurslong",
+            [
+              "Neighborhood Party"
+            ]
+          ],
+          [
+            "everittpsperos",
+            [
+              "Neighborhood Party"
+            ]
+          ],
+          [
+            "kristenmburke",
+            [
+              "Democratic",
+              "Community Party"
+            ]
+          ],
+          [
+            "krystalhowell",
+            [
+              "Democratic",
+              "Community Party"
+            ]
+          ],
+          [
+            "paulanzilotti",
+            [
+              "Neighborhood Party"
+            ]
+          ],
+          [
+            "russelllsolomon",
+            [
+              "Democratic",
+              "Community Party"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 02",
+    "samples": [
+      {
+        "sheet": 59,
+        "names": [
+          "Erika Lang Pierce",
+          "Jozef Vala"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "erikalangpierce",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "jozefvala",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 66,
+        "names": [
+          "Erika Lang Pierce",
+          "Jozef Vala"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "erikalangpierce",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "jozefvala",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 70,
+        "names": [
+          "Erika Lang Pierce",
+          "Jozef Vala"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "erikalangpierce",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "jozefvala",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 52,
+        "names": [
+          "Erika Lang Pierce",
+          "Jozef Vala"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "erikalangpierce",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "jozefvala",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 28,
+        "names": [
+          "Erika Lang Pierce",
+          "Jozef Vala"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "erikalangpierce",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "jozefvala",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 48,
+        "names": [
+          "Erika Lang Pierce",
+          "Jozef Vala"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "erikalangpierce",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "jozefvala",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-NORTH SALEM",
+    "samples": [
+      {
+        "sheet": 59,
+        "names": [
+          "Katherine J. Daniels",
+          "Warren J. Lucas"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "katherinejdaniels",
+            [
+              "Democratic",
+              "Balanced Rock"
+            ]
+          ],
+          [
+            "warrenjlucas",
+            [
+              "Republican",
+              "Conservative / North Salem Local"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 16",
+    "samples": [
+      {
+        "sheet": 22,
+        "names": [
+          "Shanae V. Williams",
+          "Dan D'Amico"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "dandamico",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "shanaevwilliams",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "CITY COURT JUDGE-YONKERS",
+    "samples": [
+      {
+        "sheet": 22,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 20,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 26,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 19,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 17,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 23,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 24,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 27,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 21,
+        "names": [
+          "Alexandra R. Bisesi"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "alexandrarbisesi",
+            [
+              "Democratic",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 14",
+    "samples": [
+      {
+        "sheet": 20,
+        "names": [
+          "David Tubiolo",
+          "Bebe Ahmed"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "bebeahmed",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "davidtubiolo",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 26,
+        "names": [
+          "David Tubiolo",
+          "Bebe Ahmed"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "bebeahmed",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "davidtubiolo",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 17,
+        "names": [
+          "David Tubiolo",
+          "Bebe Ahmed"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "bebeahmed",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "davidtubiolo",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNCILMEMBER -UNEXP.-RYE CITY",
+    "samples": [
+      {
+        "sheet": 12,
+        "names": [
+          "Emily S. Baldwin"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "emilysbaldwin",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-POUND RIDGE",
+    "samples": [
+      {
+        "sheet": 66,
+        "names": [
+          "Kevin C. Hansan"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "kevinchansan",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 10",
+    "samples": [
+      {
+        "sheet": 9,
+        "names": [
+          "Judah J. Holstein"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "judahjholstein",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 5,
+        "names": [
+          "Judah J. Holstein"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "judahjholstein",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 33,
+        "names": [
+          "Judah J. Holstein"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "judahjholstein",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 7,
+        "names": [
+          "Judah J. Holstein"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "judahjholstein",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 3,
+        "names": [
+          "Judah J. Holstein"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "judahjholstein",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 32,
+        "names": [
+          "Judah J. Holstein"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "judahjholstein",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 01",
+    "samples": [
+      {
+        "sheet": 11,
+        "names": [
+          "Colin D. Smith",
+          "Elena Muñiz-Walker"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "colindsmith",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "elenamunizwalker",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 29,
+        "names": [
+          "Colin D. Smith",
+          "Elena Muñiz-Walker"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "colindsmith",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "elenamunizwalker",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 72,
+        "names": [
+          "Colin D. Smith",
+          "Elena Muñiz-Walker"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "colindsmith",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "elenamunizwalker",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 74,
+        "names": [
+          "Colin D. Smith",
+          "Elena Muñiz-Walker"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "colindsmith",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "elenamunizwalker",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 12",
+    "samples": [
+      {
+        "sheet": 35,
+        "names": [
+          "David Imamura",
+          "Laurie Duffalo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "davidimamura",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "laurieduffalo",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 42,
+        "names": [
+          "David Imamura",
+          "Laurie Duffalo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "davidimamura",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "laurieduffalo",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 40,
+        "names": [
+          "David Imamura",
+          "Laurie Duffalo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "davidimamura",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "laurieduffalo",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 38,
+        "names": [
+          "David Imamura",
+          "Laurie Duffalo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "davidimamura",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "laurieduffalo",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 41,
+        "names": [
+          "David Imamura",
+          "Laurie Duffalo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "davidimamura",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "laurieduffalo",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-GREENBURGH",
+    "samples": [
+      {
+        "sheet": 35,
+        "names": [
+          "Paul J. Feiner"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "pauljfeiner",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 36,
+        "names": [
+          "Paul J. Feiner"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "pauljfeiner",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 42,
+        "names": [
+          "Paul J. Feiner"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "pauljfeiner",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 37,
+        "names": [
+          "Paul J. Feiner"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "pauljfeiner",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 40,
+        "names": [
+          "Paul J. Feiner"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "pauljfeiner",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 38,
+        "names": [
+          "Paul J. Feiner"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "pauljfeiner",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 41,
+        "names": [
+          "Paul J. Feiner"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "pauljfeiner",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TOWN CLERK - GREENBURGH",
+    "samples": [
+      {
+        "sheet": 35,
+        "names": [
+          "Lisa M. Nero"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "lisamnero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 36,
+        "names": [
+          "Lisa M. Nero"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "lisamnero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 42,
+        "names": [
+          "Lisa M. Nero"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "lisamnero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 37,
+        "names": [
+          "Lisa M. Nero"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "lisamnero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 40,
+        "names": [
+          "Lisa M. Nero"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "lisamnero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 38,
+        "names": [
+          "Lisa M. Nero"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "lisamnero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 41,
+        "names": [
+          "Lisa M. Nero"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "lisamnero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TOWN JUSTICE-GREENBURGH",
+    "samples": [
+      {
+        "sheet": 35,
+        "names": [
+          "Amy R. Foote"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "amyrfoote",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 36,
+        "names": [
+          "Amy R. Foote"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "amyrfoote",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 42,
+        "names": [
+          "Amy R. Foote"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "amyrfoote",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 37,
+        "names": [
+          "Amy R. Foote"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "amyrfoote",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 40,
+        "names": [
+          "Amy R. Foote"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "amyrfoote",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 38,
+        "names": [
+          "Amy R. Foote"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "amyrfoote",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 41,
+        "names": [
+          "Amy R. Foote"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "amyrfoote",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 08",
+    "samples": [
+      {
+        "sheet": 36,
+        "names": [
+          "Jewel Williams Johnson"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "jewelwilliamsjohnson",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 37,
+        "names": [
+          "Jewel Williams Johnson"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "jewelwilliamsjohnson",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 14,
+        "names": [
+          "Jewel Williams Johnson"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "jewelwilliamsjohnson",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 16,
+        "names": [
+          "Jewel Williams Johnson"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "jewelwilliamsjohnson",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF MAMARONECK",
+    "samples": [
+      {
+        "sheet": 51,
+        "names": [
+          "Maria DeRose",
+          "Daniel Kushnick",
+          "Ellen L. Silver"
+        ],
+        "candidates": 3,
+        "partyChoices": [
+          [
+            "danielkushnick",
+            [
+              "Democratic",
+              "Building Bridges Party"
+            ]
+          ],
+          [
+            "ellenlsilver",
+            [
+              "Democratic",
+              "Building Bridges Party"
+            ]
+          ],
+          [
+            "mariaderose",
+            [
+              "Democratic",
+              "Building Bridges Party"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 68,
+        "names": [
+          "Maria DeRose",
+          "Daniel Kushnick",
+          "Ellen L. Silver"
+        ],
+        "candidates": 3,
+        "partyChoices": [
+          [
+            "danielkushnick",
+            [
+              "Democratic",
+              "Building Bridges Party"
+            ]
+          ],
+          [
+            "ellenlsilver",
+            [
+              "Democratic",
+              "Building Bridges Party"
+            ]
+          ],
+          [
+            "mariaderose",
+            [
+              "Democratic",
+              "Building Bridges Party"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "VILLAGE JUSTICE-VILLAGE OF MAMARONECK",
+    "samples": [
+      {
+        "sheet": 51,
+        "names": [
+          "Christie L. Derrico"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "christielderrico",
+            [
+              "Republican / Building Bridges Party",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 68,
+        "names": [
+          "Christie L. Derrico"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "christielderrico",
+            [
+              "Republican / Building Bridges Party",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 17",
+    "samples": [
+      {
+        "sheet": 19,
+        "names": [
+          "Wilson A. Terrero",
+          "Leslye A. Oquendo-Thomas"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "leslyeaoquendothomas",
+            [
+              "Working Families"
+            ]
+          ],
+          [
+            "wilsonaterrero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 23,
+        "names": [
+          "Wilson A. Terrero",
+          "Leslye A. Oquendo-Thomas"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "leslyeaoquendothomas",
+            [
+              "Working Families"
+            ]
+          ],
+          [
+            "wilsonaterrero",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-EASTCHESTER",
+    "samples": [
+      {
+        "sheet": 33,
+        "names": [
+          "Cat Sayles",
+          "Anthony S. Colavita"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "anthonyscolavita",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "catsayles",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 76,
+        "names": [
+          "Cat Sayles",
+          "Anthony S. Colavita"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "anthonyscolavita",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "catsayles",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 34,
+        "names": [
+          "Cat Sayles",
+          "Anthony S. Colavita"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "anthonyscolavita",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "catsayles",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 32,
+        "names": [
+          "Cat Sayles",
+          "Anthony S. Colavita"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "anthonyscolavita",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ],
+          [
+            "catsayles",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF TUCKAHOE",
+    "samples": [
+      {
+        "sheet": 33,
+        "names": [
+          "Darryl L. Taylor",
+          "Harmeet S. Goindi"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "darrylltaylor",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "harmeetsgoindi",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "VILLAGE JUSTICE-VILLAGE OF TUCKAHOE",
+    "samples": [
+      {
+        "sheet": 33,
+        "names": [
+          "Aisha M. Scholes",
+          "David O. Fuller, Jr."
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "aishamscholes",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "davidofullerjr",
+            [
+              "Republican",
+              "Vote Affordable"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-YORKTOWN",
+    "samples": [
+      {
+        "sheet": 73,
+        "names": [
+          "Jann Mirchandani",
+          "Edward A. Lachterman"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwardalachterman",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "jannmirchandani",
+            [
+              "Democratic",
+              "Community First"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 72,
+        "names": [
+          "Jann Mirchandani",
+          "Edward A. Lachterman"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwardalachterman",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "jannmirchandani",
+            [
+              "Democratic",
+              "Community First"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 74,
+        "names": [
+          "Jann Mirchandani",
+          "Edward A. Lachterman"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwardalachterman",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "jannmirchandani",
+            [
+              "Democratic",
+              "Community First"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 75,
+        "names": [
+          "Jann Mirchandani",
+          "Edward A. Lachterman"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "edwardalachterman",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "jannmirchandani",
+            [
+              "Democratic",
+              "Community First"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 15",
+    "samples": [
+      {
+        "sheet": 24,
+        "names": [
+          "Kisha D. Skipper",
+          "James Nolan"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "jamesnolan",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "kishadskipper",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 76,
+        "names": [
+          "Kisha D. Skipper",
+          "James Nolan"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "jamesnolan",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "kishadskipper",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 27,
+        "names": [
+          "Kisha D. Skipper",
+          "James Nolan"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "jamesnolan",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "kishadskipper",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 34,
+        "names": [
+          "Kisha D. Skipper",
+          "James Nolan"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "jamesnolan",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "kishadskipper",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 21,
+        "names": [
+          "Kisha D. Skipper",
+          "James Nolan"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "jamesnolan",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ],
+          [
+            "kishadskipper",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 09",
+    "samples": [
+      {
+        "sheet": 31,
+        "names": [
+          "Emiljana Ulaj",
+          "Gaetano V. Ventrone"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "emiljanaulaj",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "gaetanovventrone",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 61,
+        "names": [
+          "Emiljana Ulaj",
+          "Gaetano V. Ventrone"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "emiljanaulaj",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "gaetanovventrone",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 63,
+        "names": [
+          "Emiljana Ulaj",
+          "Gaetano V. Ventrone"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "emiljanaulaj",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "gaetanovventrone",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 30,
+        "names": [
+          "Emiljana Ulaj",
+          "Gaetano V. Ventrone"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "emiljanaulaj",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "gaetanovventrone",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-CORTLANDT",
+    "samples": [
+      {
+        "sheet": 31,
+        "names": [
+          "Richard H. Becker",
+          "Sheri Ann Cook"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "richardhbecker",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "sherianncook",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 29,
+        "names": [
+          "Richard H. Becker",
+          "Sheri Ann Cook"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "richardhbecker",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "sherianncook",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 30,
+        "names": [
+          "Richard H. Becker",
+          "Sheri Ann Cook"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "richardhbecker",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "sherianncook",
+            [
+              "Republican"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF CROTON ON HUDSON",
+    "samples": [
+      {
+        "sheet": 31,
+        "names": [
+          "Leonard S. Simon",
+          "Maria F. Slippen",
+          "Mary Lynn Dlabola"
+        ],
+        "candidates": 3,
+        "partyChoices": [
+          [
+            "leonardssimon",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "mariafslippen",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "marylynndlabola",
+            [
+              "Voice of Croton"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "VILLAGE JUSTICE-VILLAGE OF CROTON ON HUDSON",
+    "samples": [
+      {
+        "sheet": 31,
+        "names": [
+          "Ali Raza Jaffery",
+          "Sam R. Watkins, Jr."
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "alirazajaffery",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "samrwatkinsjr",
+            [
+              "Voice of Croton"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-OSSINING",
+    "samples": [
+      {
+        "sheet": 61,
+        "names": [
+          "Elizabeth R. Feldman"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "elizabethrfeldman",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 63,
+        "names": [
+          "Elizabeth R. Feldman"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "elizabethrfeldman",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 60,
+        "names": [
+          "Elizabeth R. Feldman"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "elizabethrfeldman",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 05",
+    "samples": [
+      {
+        "sheet": 69,
+        "names": [
+          "Jennifer L. Puja",
+          "Frank Schanne"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "frankschanne",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "jenniferlpuja",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 13,
+        "names": [
+          "Jennifer L. Puja",
+          "Frank Schanne"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "frankschanne",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "jenniferlpuja",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 15,
+        "names": [
+          "Jennifer L. Puja",
+          "Frank Schanne"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "frankschanne",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "jenniferlpuja",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 45,
+        "names": [
+          "Jennifer L. Puja",
+          "Frank Schanne"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "frankschanne",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "jenniferlpuja",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNCILMEMBER-3 YR.UNEXP. TERM-WHITE PLAINS",
+    "samples": [
+      {
+        "sheet": 13,
+        "names": [
+          "Thomas J. Caruso, Jr.",
+          "John Cambareri"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johncambareri",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "thomasjcarusojr",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 15,
+        "names": [
+          "Thomas J. Caruso, Jr.",
+          "John Cambareri"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johncambareri",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "thomasjcarusojr",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 14,
+        "names": [
+          "Thomas J. Caruso, Jr.",
+          "John Cambareri"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johncambareri",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "thomasjcarusojr",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 16,
+        "names": [
+          "Thomas J. Caruso, Jr.",
+          "John Cambareri"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "johncambareri",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "thomasjcarusojr",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNCILMEMBER-1 YR.UNEXP. TERM-WHITE PLAINS",
+    "samples": [
+      {
+        "sheet": 13,
+        "names": [
+          "Valerie Simmons",
+          "Kathy Guglielmo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "kathyguglielmo",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "valeriesimmons",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 15,
+        "names": [
+          "Valerie Simmons",
+          "Kathy Guglielmo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "kathyguglielmo",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "valeriesimmons",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 14,
+        "names": [
+          "Valerie Simmons",
+          "Kathy Guglielmo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "kathyguglielmo",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "valeriesimmons",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      },
+      {
+        "sheet": 16,
+        "names": [
+          "Valerie Simmons",
+          "Kathy Guglielmo"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "kathyguglielmo",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "valeriesimmons",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-NEW CASTLE",
+    "samples": [
+      {
+        "sheet": 57,
+        "names": [
+          "Victoria Bayard Tipp"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "victoriabayardtipp",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "MAYOR-VILLAGE OF OSSINING",
+    "samples": [
+      {
+        "sheet": 63,
+        "names": [
+          "Rika Levin"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "rikalevin",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF OSSINING",
+    "samples": [
+      {
+        "sheet": 63,
+        "names": [
+          "Dana White",
+          "Patrick H. Yost"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "danawhite",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "patrickhyost",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF SLEEPY HOLLOW",
+    "samples": [
+      {
+        "sheet": 55,
+        "names": [
+          "Rodolphe Boulanger",
+          "Meghan Raderstrong",
+          "Patrick Sheeran"
+        ],
+        "candidates": 3,
+        "partyChoices": [
+          [
+            "meghanraderstrong",
+            [
+              "Democratic",
+              "Transparent Accountable Government (T.A.G.) Party"
+            ]
+          ],
+          [
+            "patricksheeran",
+            [
+              "Transparent Accountable Government (T.A.G.) Party"
+            ]
+          ],
+          [
+            "rodolpheboulanger",
+            [
+              "Democratic",
+              "Transparent Accountable Government (T.A.G.) Party"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "COUNTY LEGISLATOR DISTRICT 13",
+    "samples": [
+      {
+        "sheet": 1,
+        "names": [
+          "Tyrae Woodson-Samuels"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "tyraewoodsonsamuels",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "CITY COURT JUDGE-MT. VERNON",
+    "samples": [
+      {
+        "sheet": 1,
+        "names": [
+          "Nichelle A. Johnson"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "nichelleajohnson",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-NORTH CASTLE",
+    "samples": [
+      {
+        "sheet": 58,
+        "names": [
+          "Joseph A. Rende",
+          "Melvin D. Orellana"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "josepharende",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "melvindorellana",
+            [
+              "Republican",
+              "Conservative"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE- VILLAGE OF IRVINGTON",
+    "samples": [
+      {
+        "sheet": 42,
+        "names": [
+          "Josie Bloom",
+          "Kent M. Kleiman"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "josiebloom",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "kentmkleiman",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "VILLAGE JUSTICE-VILLAGE OF IRVINGTON",
+    "samples": [
+      {
+        "sheet": 42,
+        "names": [
+          "Danielle S. Farber"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "daniellesfarber",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE- VILLAGE OF TARRYTOWN",
+    "samples": [
+      {
+        "sheet": 37,
+        "names": [
+          "Paul J. Rinaldi",
+          "Thomas E. Mitchell",
+          "Elizabeth S. Schubert"
+        ],
+        "candidates": 3,
+        "partyChoices": [
+          [
+            "elizabethsschubert",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "pauljrinaldi",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "thomasemitchell",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE- VILLAGE OF MT KISCO",
+    "samples": [
+      {
+        "sheet": 52,
+        "names": [
+          "Thomas G. Luzio",
+          "Michael P. McGuirk",
+          "Sean D. Moran",
+          "Jennifer A. Rego-Vallejos"
+        ],
+        "candidates": 4,
+        "partyChoices": [
+          [
+            "jenniferaregovallejos",
+            [
+              "Kisco United"
+            ]
+          ],
+          [
+            "michaelpmcguirk",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "seandmoran",
+            [
+              "Kisco United"
+            ]
+          ],
+          [
+            "thomasgluzio",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF DOBBS FERRY",
+    "samples": [
+      {
+        "sheet": 40,
+        "names": [
+          "Jessica Bloom Galen",
+          "Laura Rothrock",
+          "Nitin Gupta"
+        ],
+        "candidates": 3,
+        "partyChoices": [
+          [
+            "jessicabloomgalen",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "laurarothrock",
+            [
+              "Democratic"
+            ]
+          ],
+          [
+            "nitingupta",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-BEDFORD",
+    "samples": [
+      {
+        "sheet": 28,
+        "names": [
+          "Ellen Z. Calves",
+          "Don Scott"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "donscott",
+            [
+              "Republican"
+            ]
+          ],
+          [
+            "ellenzcalves",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE-VILLAGE OF PELHAM MANOR",
+    "samples": [
+      {
+        "sheet": 65,
+        "names": [
+          "Christopher J. Dlutowski",
+          "Ryan J. Kurtz",
+          "Bridget A. Bennett",
+          "Joseph J. Liberatore"
+        ],
+        "candidates": 4,
+        "partyChoices": [
+          [
+            "bridgetabennett",
+            [
+              "Republican",
+              "Neighborhood Party"
+            ]
+          ],
+          [
+            "christopherjdlutowski",
+            [
+              "Democratic",
+              "Manor Together"
+            ]
+          ],
+          [
+            "josephjliberatore",
+            [
+              "Republican",
+              "Neighborhood Party"
+            ]
+          ],
+          [
+            "ryanjkurtz",
+            [
+              "Democratic",
+              "Manor Together"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "TRUSTEE- VILLAGE OF HASTINGS ON HUDSON",
+    "samples": [
+      {
+        "sheet": 41,
+        "names": [
+          "Morgen L. Fleisig",
+          "Samantha J. Merton"
+        ],
+        "candidates": 2,
+        "partyChoices": [
+          [
+            "morgenlfleisig",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ],
+          [
+            "samanthajmerton",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERVISOR-LEWISBORO",
+    "samples": [
+      {
+        "sheet": 48,
+        "names": [
+          "Antonio J. Goncalves"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "antoniojgoncalves",
+            [
+              "Democratic",
+              "Working Families"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  },
+  {
+    "office": "SUPERINTENDENT OF HIGHWAYS-OSSINING",
+    "samples": [
+      {
+        "sheet": 60,
+        "names": [
+          "Peter J. Connolly"
+        ],
+        "candidates": 1,
+        "partyChoices": [
+          [
+            "peterjconnolly",
+            [
+              "Democratic"
+            ]
+          ]
+        ]
+      }
+    ],
+    "candidateSetEveryAcquiredSampleMatchesOfficialCurrentRoster": true,
+    "partyLinesMatchCurrentRoster": true
+  }
+]

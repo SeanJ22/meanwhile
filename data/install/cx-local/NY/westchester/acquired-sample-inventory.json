@@ -1,0 +1,2624 @@
+[
+  {
+    "sheet": 50,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/0C5355A920014108A690F695F1380A0B.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.316187+00:00",
+    "sha256": "d84fa593fed131f7b1d9f616d88d8412f9a4cd799620151cbd7f8ad820cec0b1",
+    "sourceFile": "sources/d84fa593fed131f7b1d9f616d88d8412f9a4cd799620151cbd7f8ad820cec0b1.source",
+    "printedScope": "Sheet No: 50\n6 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n91st Assembly District\n7th Legislative District\nTown of: Mamaroneck\nVillage of: Larchmont\nE.D.(s): 6 / 10, 26",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n7th District/Distrito  #7\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40\nCouncilmember/\nMiembro del Consejo\n(Unexpired \nTerm/Término  Vigente)\n(Vote for one/Vote  por \nuno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          42
+        ],
+        "header": "42\nVillage Mayor/\nAlcalde de Pueblo\n(Vote for one/Vote \npor uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45\n46\nVillage Trustee/\nSíndico de Pueblo\n(Vote for up to two/Vote  por hasta dos)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 67,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1449785798804FB7B3EEA81DBF1D4543.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.212666+00:00",
+    "sha256": "8ff9db75f82e56eea096e0a060625a26019bbb6b260f7f94fcad382f0748c44c",
+    "sourceFile": "sources/8ff9db75f82e56eea096e0a060625a26019bbb6b260f7f94fcad382f0748c44c.source",
+    "printedScope": "Sheet No: 67 \n25 Election Districts \nCounty of Westchester \n16th Congressional District \n37th Senatorial District \n91st Assembly District \n6th Legislative District \nTown of: Rye \nE.D.(s): 5 / 23, 25 / 27, 29 / 31",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n6th District/Distrito  #6\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 71,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/187554AAA68347A798F0C6D13E937508.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.403793+00:00",
+    "sha256": "92969f90c83299b4734996d3054a020fdb9ed8dcc674ab725e866714da509111",
+    "sourceFile": "sources/92969f90c83299b4734996d3054a020fdb9ed8dcc674ab725e866714da509111.source",
+    "printedScope": "Sheet No: 71\n12 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n94th Assembly District\n4th Legislative District\nTown of: Somers\nE.D.(s): 3 / 5, 8 / 12, 14, 15, 17, 18",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n4th District/Distrito  #4\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40\nCouncilmember/\nMiembro del Consejo\n(Unexpired \nTerm/Término  Vigente)\n(Vote for one/Vote  por \nuno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 54,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/19F48E2EF59E42D69108DD67ABB5CABA.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.074418+00:00",
+    "sha256": "4fd1d15ccf82350e5e12fc823938e206ef3c915d8988d79ccd89ef73574d70ed",
+    "sourceFile": "sources/4fd1d15ccf82350e5e12fc823938e206ef3c915d8988d79ccd89ef73574d70ed.source",
+    "printedScope": "Sheet No: 54 \n6 Election Districts \nCounty of Westchester \n17th Congressional District\n35th Senatorial District \n92nd Assembly District\n3rd Legislative District\nTown of: Mount Pleasant \nVillage of: Pleasantville\nE.D.(s): 13 / 15, 20, 31, 43",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7 \nCounty Legislator/ \nLegislador de el Condado \n3rd District/Distrito #3 \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40 \nCouncilmember/ \nMiembro del Consejo \n(Unexpired \nTerm/Término Vigente) \n(Vote for one/Vote por \nuno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          43
+        ],
+        "header": "43 \nSuperintendent of \nHighways/ \nSuperintendente De \nCarreteras \n(Vote for one/Vote por \nuno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48 \n49 \n50 \nState Supreme Court Justice/ \nJuez de la Corte Suprema \n9th Judicial District/Distrito Judicial #9 \n(Vote for up to three/Vote por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 64,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1AF58B51C1334DC69D100EB6251741A0.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:34.175284+00:00",
+    "sha256": "0a32bd94cf49ae487da590bb9dc887c7c2cb7f7acb2239f90a723bd7b6f387cc",
+    "sourceFile": "sources/0a32bd94cf49ae487da590bb9dc887c7c2cb7f7acb2239f90a723bd7b6f387cc.source",
+    "printedScope": "Sheet No: 64\n5 Election Districts\nCounty of Westchester\n16th Congressional District\n34th Senatorial District\n88th Assembly District\n11th Legislative District\nTown of: Pelham\nVillage of: Pelham\nE.D.(s): 1 / 5",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de  el Condado\n11\n11th  Dis\nDistric\nrict/Dis\nDistririto  #1\n#11 \n(Vote  for  one\noneVote  po\npor  uno\nuno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          45,
+          46,
+          47
+        ],
+        "header": "45 \n46 \n47 \nVillag\nillage  Trus\nrustee\nee/ \nSíndic\níndico  de  Puebl\nueblo \n(Vote for up to three/Vot e  p or hast a tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 8,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1DCC4343E4DD4BB29E7E1CA738450E66.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:34.029020+00:00",
+    "sha256": "a8637aad7152354aa712c50060dfdbb171f1b8a44ffd61affff7941f65289ae4",
+    "sourceFile": "sources/a8637aad7152354aa712c50060dfdbb171f1b8a44ffd61affff7941f65289ae4.source",
+    "printedScope": "Sheet No: 8\n5 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n11th Legislative District\nCity of: New Rochelle\nE.D.(s): 14, 21, 43, 45, 69",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n11th District/Distrito  #11\n(Vote for oneVote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 59,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/1E858210679447C7BD3265090CF30C58.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.885795+00:00",
+    "sha256": "7af939f972c8d4b6ca66f803f67497cbc065dbdd1fbde749f79624d2a8cd9d76",
+    "sourceFile": "sources/7af939f972c8d4b6ca66f803f67497cbc065dbdd1fbde749f79624d2a8cd9d76.source",
+    "printedScope": "Sheet No: 59\n8 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n93rd Assembly District\n2nd Legislative District\nTown of: North Salem\nE.D.(s): 1 / 8",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n2nd District/Distrito  #2\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 22,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/2239DCEA046F4DF585B3640C415B81C8.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:29.933268+00:00",
+    "sha256": "b8d00ea28b472ee9ec5a48b26bf8083abc5ca7216ea2fab30b8fdaa7d2dc9e12",
+    "sourceFile": "sources/b8d00ea28b472ee9ec5a48b26bf8083abc5ca7216ea2fab30b8fdaa7d2dc9e12.source",
+    "printedScope": "Sheet No: 22 \n51 Election Districts \nCounty of Westchester \n16th Congressional District \n35th Senatorial District \n90th Assembly District \n16th Legislative District \nCity of: Yonkers \nWard 1 \nE.D.(s): 5, 6, 9, 10 \nWard 2 \nE.D.(s): 12, 16 \nWard 3 \nE.D.(s): 4, 10, 17, 21 \nWard 4 \nE.D.(s): 1 \nWard 6 \nE.D.(s): 1 / 4, 6 / 17, 20, 22, 24, 28, \n32, 33 \nWard 7 \nE.D.(s): 1, 4, 14 / 17, 19 / 21, 25, \n29 / 31 \nWard 10 \nE.D.(s): 3 / 6, 17",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de  el Condado\n16\n16th  Dis\nDistric\nrict/Dis\nDistririto  #1\n#16 \n(Vote  for  one\none/Vote  po\npor  uno\nuno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50 \nState Supreme Court Justice/\nJuez de  la   Corte   Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51 \nCity Court Judge/ \nJuez de la Corte de la Ciudad \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 20,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/2335580727E44F2B8ABF07E9EF62DBBD.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.032278+00:00",
+    "sha256": "fed46a46de0f0775eb8713015addfdb122ef0e8b268866b872984dd0c27e13b5",
+    "sourceFile": "sources/fed46a46de0f0775eb8713015addfdb122ef0e8b268866b872984dd0c27e13b5.source",
+    "printedScope": "Sheet No: 20\n23 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n90th Assembly District\n14th Legislative District\nCity of: Yonkers\nWard 2\nE.D.(s): 1 / 3, 5, 6, 9, 10\nWard 9\nE.D.(s): 9, 10, 17\nWard 12\nE.D.(s): 1, 3, 5, 8, 10 / 12, 15 / 20",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n14th District/Distrito  #14\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51\nCity Court Judge/\nJuez de la Corte de la Ciudad\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 12,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/298F9BC3D2284873AF739C4D2E2619CB.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:29.470924+00:00",
+    "sha256": "7d84da2b6e93c3d7536f7288862d959929a88a795fd050745a5a1089e4534ea3",
+    "sourceFile": "sources/7d84da2b6e93c3d7536f7288862d959929a88a795fd050745a5a1089e4534ea3.source",
+    "printedScope": "Sheet No: 12\n14 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n91st Assembly District\n7th Legislative District\nCity of: Rye\nE.D.(s): 1 / 14",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n7th District/Distrito  #7\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          36
+        ],
+        "header": "36\nCouncilmember/\nMiembro del Consejo \n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 66,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/2E583E7451994D68BAA08D7845425B65.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.179483+00:00",
+    "sha256": "5cfb18b9da5d3ee1a12664059b1b229f927af64ee84b1a704b6e44b25ca472b0",
+    "sourceFile": "sources/5cfb18b9da5d3ee1a12664059b1b229f927af64ee84b1a704b6e44b25ca472b0.source",
+    "printedScope": "Sheet No: 66\n4 Election Districts\nCounty of Westchester\n17th Congressional District\n37th Senatorial District\n93rd Assembly District\n2nd Legislative District\nTown of: Pound Ridge\nE.D.(s): 1 / 4",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n2nd District/Distrito  #2\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 70,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/31DDD2C509904F5786BD1E601192823D.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.291191+00:00",
+    "sha256": "fc323e7ec00e382ae330b5650cc43005d46b028d9603ecf243a26aa7b040d099",
+    "sourceFile": "sources/fc323e7ec00e382ae330b5650cc43005d46b028d9603ecf243a26aa7b040d099.source",
+    "printedScope": "Sheet No: 70\n6 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n94th Assembly District\n2nd Legislative District\nTown of: Somers\nE.D.(s): 1, 2, 6, 7, 13, 16",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n2nd District/Distrito  #2\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40\nCouncilmember/\nMiembro del Consejo\n(Unexpired \nTerm/Término  Vigente)\n(Vote for one/Vote  por \nuno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 9,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/331632E54CB74D23A9DC66B03914F973.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.804035+00:00",
+    "sha256": "3ae4b17595c8484bd7d35f7d4b5f64b33531276c8bb1998e995976923d0210da",
+    "sourceFile": "sources/3ae4b17595c8484bd7d35f7d4b5f64b33531276c8bb1998e995976923d0210da.source",
+    "printedScope": "Sheet No: 9\n1 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n91st Assembly District\n10th Legislative District\nCity of: New Rochelle\nE.D.(s): 3",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n10th District/Distrito  #10\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 11,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3344EB050D494D04B88730534ECEE482.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.901710+00:00",
+    "sha256": "7b4db9242ffe5eb9cf2ff5cb8c552455a79452f9372e0bd92b934073b22613c5",
+    "sourceFile": "sources/7b4db9242ffe5eb9cf2ff5cb8c552455a79452f9372e0bd92b934073b22613c5.source",
+    "printedScope": "Sheet No: 11 PROP\n22 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n95th Assembly District\n1st Legislative District\nCity of: Peekskill\nE.D.(s): 1 / 11, 13 / 23\n\n___\nProposal one, City proposition one\nTHE FIELD LIBRARY BUDGET PROPOSITION\nSHALL THE ANNUAL CONTRIBUTION OF THE CITY OF PEEKSKILL FOR THE OPERATING BUDGET OF THE FIELD \nLIBRARY BE INCREASED BY SIXTY-SEVEN THOUSAND FIVE HUNDRED ($67,500) DOLLARS TO THE SUM OF \nONE MILLION EIGHT HUNDRED FORTY-FIVE THOUSAND FIVE HUNDRED DOLLARS ($1,845,500) ANNUALLY \nBEGINNING JANUARY 1, 2027?\nPropuesta uno, Proposición de la ciudad uno\nPROPUESTA PRESUPUESTARIA DE THE FIELD LIBRARY\n¿DEBE AUMENTARSE LA CONTRIBUCIÓN ANUAL DE LA CIUDAD DE PEEKSKILL AL PRESUPUESTO OPERATIVO \nDE THE FIELD LIBRARY EN SESENTA Y SIETE MIL QUINIENTOS DÓLARES ($67,500), ALCANZANDO LA SUMA \nDE UN MILLÓN OCHOCIENTOS CUARENTA Y CINCO MIL QUINIENTOS DÓLARES ($1,845,500) ANUALMENTE, A \nPARTIR DEL 1 DE ENERO DE 2027?\nYes/Sí No/No",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n1st District/Distrito  #1\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 35,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/336D103811B548E9A9114B0C4ED39D93.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.451824+00:00",
+    "sha256": "e2dc19337b836bc9f00a01773052f42c621fb238b8ec3aca484ee9de4ce002c2",
+    "sourceFile": "sources/e2dc19337b836bc9f00a01773052f42c621fb238b8ec3aca484ee9de4ce002c2.source",
+    "printedScope": "Sheet No: 35\n6 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n88th Assembly District\n12th Legislative District\nTown of: Greenburgh\nE.D.(s): 33 / 35, 49, 69, 75",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n12th District/Distrito #12 \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 5,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3A853A85EE724E6590B68BE512C26778.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.767494+00:00",
+    "sha256": "9aff3565a315e5e0997202544a74ee7c4aa3e6044481ae824d9a345205a18779",
+    "sourceFile": "sources/9aff3565a315e5e0997202544a74ee7c4aa3e6044481ae824d9a345205a18779.source",
+    "printedScope": "Sheet No: 5\n2 Election Districts\nCounty of Westchester\n16th Congressional District\n34th Senatorial District\n91st Assembly District\n10th Legislative District\nCity of: New Rochelle\nE.D.(s): 2, 19",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n10th District/Distrito  #10\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 36,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3BB2A947681A4AF4B5302A50D1C6BB73.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.892917+00:00",
+    "sha256": "e930b955d2a9ad493292b65d003b7a9e151e409b02aff9094111efcaa4d67d49",
+    "sourceFile": "sources/e930b955d2a9ad493292b65d003b7a9e151e409b02aff9094111efcaa4d67d49.source",
+    "printedScope": "Sheet No: 36\n20 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n92nd Assembly District\n8th Legislative District\nTown of: Greenburgh\nE.D.(s): 26 / 30, 41, 42, 44 / 48, 56, 61, 63, 64, 67, 68, 71, 78",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n8th District/Distrito  #8\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41\nTown Clerk/\nSecretario  Municipal\n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 51,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/3F8A4287673641AEAAE89BA1D63D851D.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.327022+00:00",
+    "sha256": "0ce951d7cb2938f6085e8f5e761cf7326f45ace65edadd0d9925bb2191d79351",
+    "sourceFile": "sources/0ce951d7cb2938f6085e8f5e761cf7326f45ace65edadd0d9925bb2191d79351.source",
+    "printedScope": "Sheet No: 51 \n9 Election Districts \nCounty of Westchester \n16th Congressional District\n37th Senatorial District \n91st Assembly District\n7th Legislative District\nTown of: Mamaroneck \nVillage of: Mamaroneck\nE.D.(s): 1 / 5, 17, 22, 23, 27",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7 \nCounty Legislator/ \nLegislador de el Condado \n7th District/Distrito #7 \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40 \nCouncilmember/ \nMiembro del Consejo \n(Unexpired \nTerm/Término Vigente) \n(Vote for one/Vote por \nuno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46,
+          47
+        ],
+        "header": "45 \n46 \n47 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to three/Vote por hasta tres)",
+        "partyCells": 6
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48 \n49 \n50 \nState Supreme Court Justice/ \nJuez de la Corte Suprema \n9th Judicial District/Distrito Judicial #9 \n(Vote for up to three/Vote por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          53
+        ],
+        "header": "53 \nVillage Justice/ \nJuez de la Villa \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 26,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/425AD46AEFC6481982CBA6716DB93408.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.191656+00:00",
+    "sha256": "4b2ed6ef5977e6d5a3e11e7131e7cee1970ba786f67d038a792882f403abb964",
+    "sourceFile": "sources/4b2ed6ef5977e6d5a3e11e7131e7cee1970ba786f67d038a792882f403abb964.source",
+    "printedScope": "Sheet No: 26 \n8 Election Districts \nCounty of Westchester \n16th Congressional District \n37th Senatorial District \n90th Assembly District \n14th Legislative District \nCity of: Yonkers \nWard 11 \nE.D.(s): 10, 13, 21 \nWard 12 \nE.D.(s): 2, 4, 6, 7, 9",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n14th District/Distrito #14 \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51 \nCity Court Judge/ \nJuez de la Corte de la Ciudad \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 19,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/43E22E6C5A8D4271B80DBD6FD62E74B2.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.374666+00:00",
+    "sha256": "bb4c5d3b98940e8042302dc3ae64d1ad883e9f5d954c392541345e8b65b3f78d",
+    "sourceFile": "sources/bb4c5d3b98940e8042302dc3ae64d1ad883e9f5d954c392541345e8b65b3f78d.source",
+    "printedScope": "Sheet No: 19\n27 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n89th Assembly District\n17th Legislative District\nCity of: Yonkers\nWard 1\nE.D.(s): 2, 3, 22, 26\nWard 2\nE.D.(s): 8, 26\nWard 4\nE.D.(s): 2, 3, 5 / 12, 15, 16, 18, 19\nWard 8\nE.D.(s): 1 / 3, 6, 9, 15, 23",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n17th District/Distrito  #17\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51\nCity Court Judge/\nJuez de la Corte de la Ciudad\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 17,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4450F9BBB77F4AF2B2374C51678C270A.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.200698+00:00",
+    "sha256": "35d929c48f3a59b6fd1fef306fd8e4eb18c4209ee08f93130fb50942cfde6173",
+    "sourceFile": "sources/35d929c48f3a59b6fd1fef306fd8e4eb18c4209ee08f93130fb50942cfde6173.source",
+    "printedScope": "Sheet No: 17\n14 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n89th Assembly District\n14th Legislative District\nCity of: Yonkers\nWard 2\nE.D.(s): 11\nWard 9\nE.D.(s): 1 / 8, 11 / 13, 15, 16",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n14th District/Distrito  #14\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51\nCity Court Judge/\nJuez de la Corte de la Ciudad\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 23,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4895B657A6CE48E5B7DFE8CB72DCFFF3.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:29.651438+00:00",
+    "sha256": "bc070fcdf24eacb7c3e4a676bce1efc01e86e292f1090a4cc0efa5a08c7a7c21",
+    "sourceFile": "sources/bc070fcdf24eacb7c3e4a676bce1efc01e86e292f1090a4cc0efa5a08c7a7c21.source",
+    "printedScope": "Sheet No: 23 \n22 Election Districts \nCounty of Westchester \n16th Congressional District \n35th Senatorial District \n90th Assembly District \n17th Legislative District \nCity of: Yonkers \nWard 1 \nE.D.(s): 4 \nWard 2 \nE.D.(s): 7, 18 \nWard 4 \nE.D.(s): 4, 17 \nWard 7 \nE.D.(s): 2, 3, 5 / 9, 11, 13, 26 \nWard 8 \nE.D.(s): 5, 7, 10, 12, 13, 26, 28",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n17th District/Distrito #17 \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "50\n51 \nCity Court Judge/ \nJuez de la Corte de la Ciudad \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 33,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4C0B3281C36346B1B17475ADA0186F54.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.461098+00:00",
+    "sha256": "9596285534ba92cd6d4805225ebfb8034ed737bffba8e7b1400e75c031169cad",
+    "sourceFile": "sources/9596285534ba92cd6d4805225ebfb8034ed737bffba8e7b1400e75c031169cad.source",
+    "printedScope": "Sheet No: 33\n7 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n10th Legislative District\nTown of: Eastchester\nVillage of: Tuckahoe\nE.D.(s): 10 / 14, 32, 33",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n10th District/Distrito #10 \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          53
+        ],
+        "header": "53 \nVillage Justice/ \nJuez de la Villa \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      }
+    ]
+  },
+  {
+    "sheet": 73,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4CFD769FC085478986423DFB660B0154.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.655524+00:00",
+    "sha256": "6a93fc7896232a26f26543e14638899381bba6aaafb69009930c1fe32882c228",
+    "sourceFile": "sources/6a93fc7896232a26f26543e14638899381bba6aaafb69009930c1fe32882c228.source",
+    "printedScope": "Sheet No: 73\n20 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n94th Assembly District\n4th Legislative District\nTown of: Yorktown\nE.D.(s): 2, 4, 6, 7, 11, 12, 15 / 17, 20, 21, 24, 26, 29, 31, 33 / 35, 37, 39",
+    "created": "D:20260921132239-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n4th District/Distrito  #4\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 24,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/4EBE5CB12EF043468A434070406F5751.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.246782+00:00",
+    "sha256": "dc00fb9c75d777c978b43e91f50cecbe7a565c0e679bc3505e84a53c77338fff",
+    "sourceFile": "sources/dc00fb9c75d777c978b43e91f50cecbe7a565c0e679bc3505e84a53c77338fff.source",
+    "printedScope": "Sheet No: 24 \n6 Election Districts \nCounty of Westchester \n16th Congressional District \n35th Senatorial District \n92nd Assembly District \n15th Legislative District \nCity of: Yonkers \nWard 3 \nE.D.(s): 1, 11, 15, 19 \nWard 6 \nE.D.(s): 18 \nWard 10 \nE.D.(s): 13",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n15th District/Distrito #15 \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de  la   Corte   Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51 \nCity Court Judge/ \nJuez de la Corte de la Ciudad \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 6,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/50FF8ECD94E84BA0AAFC2B2869907C78.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.994820+00:00",
+    "sha256": "84c28130629a6f647098d82675819f918a1f0ddc431050500155e18f63ff70e6",
+    "sourceFile": "sources/84c28130629a6f647098d82675819f918a1f0ddc431050500155e18f63ff70e6.source",
+    "printedScope": "Sheet No: 6\n22 Election Districts\nCounty of Westchester\n16th Congressional District\n34th Senatorial District\n91st Assembly District\n11th Legislative District\nCity of: New Rochelle\nE.D.(s): 1, 5, 6, 8, 9, 18, 20, 22 / 26, 28, 29, 52, 54, 64, 70, 71, 74 / 75",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n11th District/Distrito  #11\n(Vote for oneVote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 31,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/55D450D27BAC462B8C0F94BAF155280F.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.921535+00:00",
+    "sha256": "53b595f1630760471bdaae49e6d4edee83de615540e8498ea8302aa45ab32135",
+    "sourceFile": "sources/53b595f1630760471bdaae49e6d4edee83de615540e8498ea8302aa45ab32135.source",
+    "printedScope": "Sheet No: 31 PROP\n8 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n95th Assembly District\n9th Legislative District\nTown of: Cortlandt\nVillage of: Croton-on-Hudson\nE.D.(s): 6 / 10, 25, 31, 39 \n\nProposal one, Village proposition one\nVILLAGE OF CROTON-ON-HUDSON VOLUNTEER EMS SERVICE AWARD PROGRAM\nON NOVEMBER 19, 2025, THE VILLAGE BOARD OF THE VILLAGE OF CROTON-ON-HUDSON ADOPTED A RESOLUTION, AUTHORIZING, PURSUANT TO ARTICLE 11-AAA OF THE GENERAL MUNICIPAL LAW OF THE STATE OF NEW YORK, A PUBLIC REFERENDUM OF ELIGIBLE \nVOTERS OF THE VILLAGE OF CROTON-ON-HUDSON, WHICH SHALL SEEK APPROVAL FOR THE ESTABLISHMENT OF A DEFINED BENEFIT SERVICE AWARD PROGRAM FOR VOLUNTEER RIDING MEMBERS OF THE CROTON-ON-HUDSON VOLUNTEER EMS, EFFECTIVE JANUARY \n1, 2026. \nUNDER THE PROPOSED PROGRAM, ELIGIBLE VOLUNTEER RIDING MEMBERS SHALL RECEIVE, GENERALLY BEGINNING AT AGE 60, LIFETIME SERVICE AWARDS OF $30 PER MONTH FOR EACH YEAR OF SERVICE CREDIT EARNED AFTER CALENDAR YEAR 2025. SHOULD A \nPARTICIPANT AGE 60 OR OLDER BECOME OR CONTINUE TO BE A VOLUNTEER RIDING MEMBER, HE OR SHE SHALL CONTINUE TO HAVE THE OPPORTUNITY TO EARN SERVICE CREDIT AND ADDITIONAL SERVICE AWARDS. BENEFITS SHALL BE PAID UNDER THE PROGRAM \nFOR DEATH OR DISABLEMENT BEFORE AGE 60. \nTHE ESTIMATED 2026 COST OF THE PROGRAM PAYABLE BY THE VILLAGE OF CROTON-ON-HUDSON IN 2027 FOR CURRENT VOLUNTEER RIDING MEMBERS MAY BE AS MUCH AS $35,000 INCLUDING AN ANNUAL ADMINISTRATION FEE OF ABOUT $2,750; SUCH ESTIMATED COST \nSHALL BE ABOUT $2,700 PER VOLUNTEER RIDING MEMBER. \nTHE SERVICE AWARD PROGRAM SHALL BE ADMINISTERED BY THE NEW YORK STATE COMPTROLLER OR HIS DESIGNEE(S) IN ACCORDANCE WITH ARTICLE 11-AAA AND APPLICABLE RULES AND REGULATIONS. \nTHEREFORE, SHALL THE STATED RESOLUTION TO ESTABLISH THE VILLAGE OF CROTON-ON-HUDSON VOLUNTEER EMS SERVICE AWARD PROGRAM BE APPROVED?\nPropuesta uno, Proposición de la aldea uno\nVILLAGE OF CROTON-ON-HUDSON PROGRAMA DE RECONOCIMIENTO POR SERVICIOS DE VOLUNTARIOS DE EMERGENCIAS MÉDICAS (EMS)\nEL 19 DE NOVIEMBRE DE 2025, LA JUNTA MUNICIPAL DE LA LOCALIDAD DE CROTON-ON-HUDSON APROBÓ UNA RESOLUCIÓN QUE AUTORIZA, DE CONFORMIDAD CON EL ARTÍCULO 11-AAA DE LA LEY GENERAL DE MUNICIPIOS DEL ESTADO DE NUEVA \nYORK, LA CELEBRACIÓN DE UN REFERÉNDUM PÚBLICO ENTRE LOS VOTANTES HABILITADOS DE LA LOCALIDAD DE CROTON-ON-HUDSON, CON EL FIN DE OBTENER LA APROBACIÓN PARA ESTABLECER UN PROGRAMA DE PREMIOS POR SERVICIO \nDE BENEFICIO DEFINIDO PARA LOS MIEMBROS VOLUNTARIOS OPERATIVOS DEL SERVICIO VOLUNTARIO DE EMERGENCIAS MÉDICAS (EMS) DE CROTON-ON-HUDSON, CON VIGENCIA A PARTIR DEL 1 DE ENERO DE 2026. \nBAJO EL PROGRAMA PROPUESTO, LOS MIEMBROS VOLUNTARIOS OPERATIVOS ELEGIBLES RECIBIRÁN, POR LO GENERAL A PARTIR DE LOS 60 AÑOS DE EDAD, PREMIOS VITALICIOS POR SERVICIO DE 30 DÓLARES MENSUALES POR CADA AÑO DE \nCRÉDITO DE SERVICIO OBTENIDO DESPUÉS DEL AÑO CALENDARIO 2025. SI UN PARTICIPANTE DE 60 AÑOS O MÁS SE INCORPORA O CONTINÚA COMO MIEMBRO VOLUNTARIO OPERATIVO, SEGUIRÁ TENIENDO LA OPORTUNIDAD DE ACUMULAR \nCRÉDITOS DE SERVICIO Y OBTENER PREMIOS ADICIONALES. EL PROGRAMA TAMBIÉN PREVÉ EL PAGO DE BENEFICIOS EN CASO DE FALLECIMIENTO O INCAPACIDAD ANTES DE LOS 60 AÑOS DE EDAD. \nSE ESTIMA QUE EL COSTO DEL PROGRAMA CORRESPONDIENTE AL AÑO 2026, PAGADERO POR LA LOCALIDAD DE CROTON-ON-HUDSON EN 2027 PARA LOS ACTUALES MIEMBROS VOLUNTARIOS OPERATIVOS, PODRÍA ASCENDER A HASTA 35.000 \nDÓLARES, INCLUIDA UNA CUOTA ANUAL DE ADMINISTRACIÓN DE APROXIMADAMENTE 2.750 DÓLARES. DICHO COSTO ESTIMADO SERÍA DE ALREDEDOR DE 2.700 DÓLARES POR CADA MIEMBRO VOLUNTARIO OPERATIVO. \nEL PROGRAMA DE PREMIOS POR SERVICIO SERÁ ADMINISTRADO POR EL CONTRALOR DEL ESTADO DE NUEVA YORK O POR LA(S) PERSONA(S) DESIGNADA(S) POR ESTE, DE CONFORMIDAD CON EL ARTICULO 11-AAA Y CON LAS NORMAS Y \nREGLAMENTOS APLICABLES. \nPOR LO TANTO, ¿DEBE APROBARSE LA RESOLUCIÓN ANTES DESCRITA PARA ESTABLECER EL PROGRAMA DE PREMIOS POR SERVICIO DEL SERVICIO VOLUNTARIO DE EMERGENCIAS MÉDICAS (EMS) DE LA LOCALIDAD DE CROTON-ON-HUDSON?\nYes/Sí No/No",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n9th District/Distrito #9 \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote for uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 5
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          53
+        ],
+        "header": "53 \nVillage Justice/ \nJuez de la Villa \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      }
+    ]
+  },
+  {
+    "sheet": 29,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/5B62A8E80EF14996B75999095600CE50.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.022811+00:00",
+    "sha256": "066541a2f9987e742ba68f4d2a13f26774676a51d8c06d9d2f8e562e3b10127d",
+    "sourceFile": "sources/066541a2f9987e742ba68f4d2a13f26774676a51d8c06d9d2f8e562e3b10127d.source",
+    "printedScope": "Sheet No: 29 \n13 Election Districts \nCounty of Westchester \n17th Congressional District \n40th Senatorial District \n95th Assembly District \n1st Legislative District \nTown of: Cortlandt \nE.D.(s): 11 / 15, 18, 20, 21, 24, 26 / 28, 35",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n1st District/Distrito #1 \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote for uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 76,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/5EC237149F134FC6AC2E92652C7EBF45.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.598053+00:00",
+    "sha256": "01496e6e7c32bca9c8248e6840e51232d396e0e6bed272711dfb2a1d7876dbe6",
+    "sourceFile": "sources/01496e6e7c32bca9c8248e6840e51232d396e0e6bed272711dfb2a1d7876dbe6.source",
+    "printedScope": "Sheet No: 76 PROP\n7 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n15th Legislative District\nTown of: Eastchester\nVillage of: Bronxville\nE.D.(s): 16 / 22\n \n\nProposal one, Village proposition one\nPROPOSITION TO CHANGE THE DATE OF THE ANNUAL BRONXVILLE VILLAGE ELECTION\nShould the date of the annual Bronxville Village Election be changed from the third Tuesday in March to the Tuesday next \nsucceeding the first Monday in November each year?\nYES means the Election date will change to November, with present office holders’ terms extending until November \nelections. NO means the election will remain in March.\nPropuesta uno, Proposición de la aldea uno\nPROPUESTA PARA CAMBIAR LA FECHA DE LA ELECCIÓN ANUAL DE LA ALDEA DE BRONXVILLE\n¿Debería cambiarse la fecha de la elección anual de la Aldea de Bronxville del tercer martes de marzo al martes \nsiguiente al primer lunes de noviembre de cada año?\nSÍ significa que la fecha de las elecciones se cambiará a noviembre, y los mandatos de los titulares del cargo se \nextenderán hasta las elecciones de noviembre. NO significa que las elecciones se mantendrán en marzo.\nYes/Sí No/No",
+    "created": "D:20260921132239-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n15th District/Distrito  #15\n(Vote for one/Vote  por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 61,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/6304805421BA43DB9B7B5970761598EA.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.654525+00:00",
+    "sha256": "10dd2b59c3f6b3f8aaafc8907b888b4ee60626cfed3c0acb6547355390e59dec",
+    "sourceFile": "sources/10dd2b59c3f6b3f8aaafc8907b888b4ee60626cfed3c0acb6547355390e59dec.source",
+    "printedScope": "Sheet No: 61\n6 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n95th Assembly District\n9th Legislative District\nTown of: Ossining\nE.D.(s): 15, 16, 19, 26, 27, 29",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n9th District/Distrito #9 \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 69,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/66057120CEDD47C697671006AD24B032.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.803792+00:00",
+    "sha256": "f835e60c97548becbf3a9f069d94b4a2f09ddb41e79cb1992308badf54829deb",
+    "sourceFile": "sources/f835e60c97548becbf3a9f069d94b4a2f09ddb41e79cb1992308badf54829deb.source",
+    "printedScope": "Sheet No: 69 \n19 Election Districts \nCounty of Westchester \n16th Congressional District \n37th Senatorial District \n88th Assembly District \n5th Legislative District \nTown of: Scarsdale \nE.D.(s): 1 / 19",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n5th District/Distrito  #5\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 13,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/679B786BD5BE4404BF267334E571165B.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.919122+00:00",
+    "sha256": "7cbcb0e240da58b065862423e000213a734bd75360cc3860be7300f51dfe335b",
+    "sourceFile": "sources/7cbcb0e240da58b065862423e000213a734bd75360cc3860be7300f51dfe335b.source",
+    "printedScope": "Sheet No: 13\n17 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n5th Legislative District\nCity of: White Plains\nE.D.(s): 2 / 7, 9 / 15, 35, 36, 42, 43",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n5th District/Distrito  #5\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          37
+        ],
+        "header": "37\nCouncilmember  (3 Year Term)/\nMiembro del Consejo (Terminos  3 años)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          38
+        ],
+        "header": "38\nCouncilmember  (1 Year Term)/\nMiembro del Consejo (Término  1 año)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 57,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/681C5D8166964F9E92A528851B67528F.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.859372+00:00",
+    "sha256": "e54c3ec4c121fa2e67925071a0f6e7daa4bd777fb195775983eeb4fcbc4e0ccc",
+    "sourceFile": "sources/e54c3ec4c121fa2e67925071a0f6e7daa4bd777fb195775983eeb4fcbc4e0ccc.source",
+    "printedScope": "Sheet No: 57\n16 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n93rd Assembly District\n4th Legislative District\nTown of: New Castle\nE.D.(s): 1 / 16",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n4th District/Distrito  #4\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 63,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/6DFE3D72CE1D401492C8BA398F17ED07.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.585340+00:00",
+    "sha256": "eea47a8df5fa0d48fc2ea4d2b39a2244367d9479f414d45d8dab16ee95f145ff",
+    "sourceFile": "sources/eea47a8df5fa0d48fc2ea4d2b39a2244367d9479f414d45d8dab16ee95f145ff.source",
+    "printedScope": "Sheet No: 63\n17 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n95th Assembly District\n9th Legislative District\nTown of: Ossining\nVillage of: Ossining\nE.D.(s): 1 / 12, 18, 21 / 23, 30",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de  el Condado\n9th  Dis\nDistric\nrict/Dis\nDistririto  #9 \n(Vote  for  one\none/Vote  po\npor  uno\nuno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          44
+        ],
+        "header": "44 \nVillage Mayor/ \nAlcalde de Pueblo \n(Vote for one/Vote \npor uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 55,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/741CFAD3E05141EBA8FE2EE573003377.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.483270+00:00",
+    "sha256": "5fb36bb51a25bfb213ada2c48c4be3d7687ad14165584a9d1b8961dd392e4b9f",
+    "sourceFile": "sources/5fb36bb51a25bfb213ada2c48c4be3d7687ad14165584a9d1b8961dd392e4b9f.source",
+    "printedScope": "Sheet No: 55 \n8 Election Districts \nCounty of Westchester \n17th Congressional District\n35th Senatorial District \n92nd Assembly District\n3rd Legislative District\nTown of: Mount Pleasant \nVillage of: Sleepy Hollow\nE.D.(s): 1 / 7, 33",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7 \nCounty Legislator/ \nLegislador de el Condado \n3rd District/Distrito #3 \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40 \nCouncilmember/ \nMiembro del Consejo \n(Unexpired \nTerm/Término Vigente) \n(Vote for one/Vote por \nuno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          43
+        ],
+        "header": "43 \nSuperintendent of \nHighways/ \nSuperintendente De \nCarreteras \n(Vote for one/Vote por \nuno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          45,
+          46,
+          47
+        ],
+        "header": "45 \n46 \n47 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to three/Vote por hasta tres)",
+        "partyCells": 5
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48 \n49 \n50 \nState Supreme Court Justice/ \nJuez de la Corte Suprema \n9th Judicial District/Distrito Judicial #9 \n(Vote for up to three/Vote por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 1,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/7501BB26B19A44AB8499A0EBD6433272.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.102804+00:00",
+    "sha256": "2a067c2eb4625dda8aeee373899713d2b9144ec4ac14f9072ab57e6643dfbf88",
+    "sourceFile": "sources/2a067c2eb4625dda8aeee373899713d2b9144ec4ac14f9072ab57e6643dfbf88.source",
+    "printedScope": "Sheet No: 1\n48 Election Districts\nCounty of Westchester\n16th Congressional District\n36th Senatorial District\n89th Assembly District\n13th Legislative District\nCity of: Mount Vernon\nE.D.(s): 1 / 20, 23 / 25, 29 / 33, 36, 37, 41 / 43, 45, 48, 51 / 54, 56, 57, 61, \n64, 65, 67 / 69, 76",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n13th District/Distrito  #13\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51\nCity Court Judge/\nJuez de la Corte de la Ciudad\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 27,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/767DA98ADAF74743BE9E59A9BEE0EAA3.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.620227+00:00",
+    "sha256": "1e55281648ba8ac4626ec5fd9e7d58f86a48f94cad94cd68787ee3162a821fb1",
+    "sourceFile": "sources/1e55281648ba8ac4626ec5fd9e7d58f86a48f94cad94cd68787ee3162a821fb1.source",
+    "printedScope": "Sheet No: 27 \n34 Election Districts \nCounty of Westchester \n16th Congressional District \n37th Senatorial District \n90th Assembly District \n15th Legislative District \nCity of: Yonkers \nWard 2 \nE.D.(s): 13 \nWard 5 \nE.D.(s): 1, 2, 4 / 6, 8, 9, 11 / 16, 18, 19, 23, 24 \nWard 10 \nE.D.(s): 2 \nWard 11 \nE.D.(s): 1 / 5, 7, 8, 11, 12, 16 / 20 \nWard 12 \nE.D.(s): 13",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n15th District/Distrito #15 \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "51 \nCity Court Judge/ \nJuez de la Corte de la Ciudad \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 7,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/7AC1592594B54CF889A4E843D0337C5F.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.745764+00:00",
+    "sha256": "2facf37369445b365cb5c03170c5d8a5e76365b07dad891820d0a042f2fce0f8",
+    "sourceFile": "sources/2facf37369445b365cb5c03170c5d8a5e76365b07dad891820d0a042f2fce0f8.source",
+    "printedScope": "Sheet No: 7\n28 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n10th Legislative District\nCity of: New Rochelle\nE.D.(s): 4, 10, 11, 13, 15 / 17, 27, 30 / 42, 44, 46 / 48, 53, 67, 68",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n10th District/Distrito  #10\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 3,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/847449D460F9402F9AD2347C7BCD0EBD.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:34.023369+00:00",
+    "sha256": "319a6c975bc692bd352d58d3530f15a4051953694c9d3a76d75c632667f4aaff",
+    "sourceFile": "sources/319a6c975bc692bd352d58d3530f15a4051953694c9d3a76d75c632667f4aaff.source",
+    "printedScope": "Sheet No: 3\n7 Election Districts\nCounty of Westchester\n16th Congressional District\n34th Senatorial District\n88th Assembly District\n10th Legislative District\nCity of: New Rochelle\nE.D.(s): 7, 12, 50, 57, 61, 63, 72",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n10th District/Distrito  #10\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 58,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/8A1762D9E9084F57A0F32BC134FD2FC0.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:29.236736+00:00",
+    "sha256": "3a8c41360bceeb72bfbc7a9b77465d405d0fc77dab5776884082f9147ae8b2aa",
+    "sourceFile": "sources/3a8c41360bceeb72bfbc7a9b77465d405d0fc77dab5776884082f9147ae8b2aa.source",
+    "printedScope": "Sheet No: 58\n11 Election Districts\nCounty of Westchester\n17th Congressional District\n37th Senatorial District\n93rd Assembly District\n3rd Legislative District\nTown of: North Castle\nE.D.(s): 1 / 11",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n3rd District/Distrito  #3\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 47,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/92F83708E4BC4DD099A5231710AE6566.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.022452+00:00",
+    "sha256": "4a88834103edd1b8c874c4ea953a8024ff3de558ddfed71a19c4ed6da662146a",
+    "sourceFile": "sources/4a88834103edd1b8c874c4ea953a8024ff3de558ddfed71a19c4ed6da662146a.source",
+    "printedScope": "Sheet No: 47\n3 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n93rd Assembly District\n7th Legislative District\nTown of: Harrison\nE.D.(s): 7 / 9",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n7th District/Distrito  #7\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 34,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/96B1A8AC6D364FF8AA5F16CBDFDD4D8C.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.485384+00:00",
+    "sha256": "1d7fab0e2198746af6b59c4319143312b1910bf0e865c0f25488546394ed90b8",
+    "sourceFile": "sources/1d7fab0e2198746af6b59c4319143312b1910bf0e865c0f25488546394ed90b8.source",
+    "printedScope": "Sheet No: 34\n4 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n15th Legislative District\nTown of: Eastchester\nE.D.(s): 7, 15, 31, 35",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n15th District/Distrito #15 \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 42,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/9B72955E1B6C432C8A271B981CFFE173.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.190494+00:00",
+    "sha256": "75d7b3c3bb8126a8a935ac4481613d85b921417fd60a6f882292fdc95d78a63e",
+    "sourceFile": "sources/75d7b3c3bb8126a8a935ac4481613d85b921417fd60a6f882292fdc95d78a63e.source",
+    "printedScope": "Sheet No: 42\n6 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n92nd Assembly District\n12th Legislative District\nTown of: Greenburgh\nVillage of: Irvington\nE.D.(s): 8 / 11, 60, 79",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n12th District/Distrito  #12\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          53
+        ],
+        "header": "53 \nVillage Justice/ \nJuez de la Villa \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 15,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/A211E10AA3AB405DB43221E9C63FA511.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.170252+00:00",
+    "sha256": "9f5bc6fdbed91e4ee6ce605c18d9e9b00043c1c8f5fa5d236aecb43c2fd80c34",
+    "sourceFile": "sources/9f5bc6fdbed91e4ee6ce605c18d9e9b00043c1c8f5fa5d236aecb43c2fd80c34.source",
+    "printedScope": "Sheet No: 15\n13 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n93rd Assembly District\n5th Legislative District\nCity of: White Plains\nE.D.(s): 1, 8, 17 / 20, 22 / 24, 26, 27, 30, 37",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n5th District/Distrito  #5\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          37
+        ],
+        "header": "37\nCouncilmember  (3 Year Term)/\nMiembro del Consejo (Terminos  3 años)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          38
+        ],
+        "header": "38\nCouncilmember  (1 Year Term)/\nMiembro del Consejo (Término  1 año)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 32,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/A26544ABC3554BD782B46E50C34B666B.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.728102+00:00",
+    "sha256": "9f1a64b03049bb89bd09309387c6fc9bdf463bcdbe92d775c8de91239c03cf1f",
+    "sourceFile": "sources/9f1a64b03049bb89bd09309387c6fc9bdf463bcdbe92d775c8de91239c03cf1f.source",
+    "printedScope": "Sheet No: 32\n21 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n10th Legislative District\nTown of: Eastchester\nE.D.(s): 1 / 6, 8, 9, 23 / 30, 34, 36 / 39",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n10th District/Distrito #10 \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 21,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/A45DCC7EA38B4138969AC682493B8E91.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.144382+00:00",
+    "sha256": "44b54a96596d27a427f35f2ef9f10b02c837340de991e7f6a43e5dbfc71455b2",
+    "sourceFile": "sources/44b54a96596d27a427f35f2ef9f10b02c837340de991e7f6a43e5dbfc71455b2.source",
+    "printedScope": "Sheet No: 21 \n23 Election Districts \nCounty of Westchester \n16th Congressional District \n35th Senatorial District \n90th Assembly District \n15th Legislative District \nCity of: Yonkers \nWard 2 \nE.D.(s): 4 \nWard 3 \nE.D.(s): 20, 25 \nWard 5 \nE.D.(s): 3, 7, 10, 17, 20, 22 \nWard 10 \nE.D.(s): 1, 7, 9 / 12, 14 / 16, 20, 25 \nWard 11 \nE.D.(s): 6, 9, 14",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de  el Condado\n15\n15th  Dis\nDistric\nrict/Dis\nDistririto  #1\n#15 \n(Vote  for  one\none/Vote  po\npor  uno\nuno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\nState Supreme Court Justice/\nJuez de  la   Corte   Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          51
+        ],
+        "header": "50 \n51 \nCity Court Judge/ \nJuez de la Corte de la Ciudad \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 72,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/A6073993B99745359A6180E396856732.pdf",
+    "sourceCheckedAt": "2026-11-03T05:52:56.213971+00:00",
+    "sha256": "c6b346e25dd767182cbc7412f59c6709d4af8e28a1283bb5fb0f6015771853e8",
+    "sourceFile": "sources/c6b346e25dd767182cbc7412f59c6709d4af8e28a1283bb5fb0f6015771853e8.source",
+    "printedScope": "Sheet No: 72\n8 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n94th Assembly District\n1st Legislative District\nTown of: Yorktown\nE.D.(s): 5, 10, 14, 23, 27, 36, 40, 42",
+    "created": "D:20260921132239-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n1st District/Distrito  #1\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 53,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/ADF2197E566449EB983FAFBC8B52C03B.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.337390+00:00",
+    "sha256": "abd197400736159380e1c036c871f9833f8c065077625a91638e4fcd89a5703e",
+    "sourceFile": "sources/abd197400736159380e1c036c871f9833f8c065077625a91638e4fcd89a5703e.source",
+    "printedScope": "Sheet No: 53 \n27 Election Districts \nCounty of Westchester \n17th Congressional District\n35th Senatorial District \n92nd Assembly District\n3rd Legislative District\nTown of: Mount Pleasant \nE.D.(s): 9 / 12, 16, 18, 19, 22 / 30, 32, 34 / 42, 44",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7 \nCounty Legislator/ \nLegislador de el Condado \n3rd District/Distrito #3 \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40 \nCouncilmember/ \nMiembro del Consejo \n(Unexpired \nTerm/Término Vigente) \n(Vote for one/Vote por \nuno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          43
+        ],
+        "header": "43 \nSuperintendent of \nHighways/ \nSuperintendente De \nCarreteras \n(Vote for one/Vote por \nuno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48 \n49 \n50 \nState Supreme Court Justice/ \nJuez de la Corte Suprema \n9th Judicial District/Distrito Judicial #9 \n(Vote for up to three/Vote por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 37,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/AE10A307540A4F1C92A3157E900D2FBC.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.160981+00:00",
+    "sha256": "6c9475aaa9373caab650ff63f2460d9eef9328290be287326f8af936fc419706",
+    "sourceFile": "sources/6c9475aaa9373caab650ff63f2460d9eef9328290be287326f8af936fc419706.source",
+    "printedScope": "Sheet No: 37\n5 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n92nd Assembly District\n8th Legislative District\nTown of: Greenburgh\nVillage of: Tarrytown\nE.D.(s): 4, 7, 55, 74, 76",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n8th District/Distrito  #8\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46,
+          47
+        ],
+        "header": "45\n46\n47\nVillage Trustee/\nSíndico de Pueblo\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 14,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/B0B1790551F44E7089A808F852E91392.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.224406+00:00",
+    "sha256": "847e2e55c775b0cd6de6de868dfd1e21edc8dc911427d9e4b87669761458d633",
+    "sourceFile": "sources/847e2e55c775b0cd6de6de868dfd1e21edc8dc911427d9e4b87669761458d633.source",
+    "printedScope": "Sheet No: 14\n5 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n88th Assembly District\n8th Legislative District\nCity of: White Plains\nE.D.(s): 21, 38 / 41",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n8th District/Distrito  #8\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          37
+        ],
+        "header": "37\nCouncilmember  (3 Year Term)/\nMiembro del Consejo (Terminos  3 años)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          38
+        ],
+        "header": "38\nCouncilmember  (1 Year Term)/\nMiembro del Consejo (Término  1 año)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 52,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/B51C112E9CAE48309C9715766CC702CE.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.618509+00:00",
+    "sha256": "6d54b5321a35246cf85f280b808ccc79906fe6b405828bd131d931cf4c719556",
+    "sourceFile": "sources/6d54b5321a35246cf85f280b808ccc79906fe6b405828bd131d931cf4c719556.source",
+    "printedScope": "Sheet No: 52 PROP \n7 Election Districts \nCounty of Westchester \n17th Congressional District\n40th Senatorial District \n93rd Assembly District\n2nd Legislative District\nTown of: Mount Kisco \nVillage of: Mount Kisco\nE.D.(s): 1 / 7 \n\nProposal one, Village proposition one\nMOUNT KISCO VOLUNTEER AMBULANCE CORPS SERVICE AWARD PROGRAM AMENDMENT\nAt the next General Election to be held on the 3rd day of November, 2026\nShall the Board of Trustees of the Village/Town of Mount Kisco amend the current Service Award Program for the Mount \nKisco Volunteer Ambulance Corps to (i) increase the maximum allowable points for training from 15 to 25 points annually; \n(ii) \n \nincrease the maximum allowable points for drills, seminars, and meeting attendance from 10 to 20 points annually; and \n(iii) increase the maximum allowable points for Tour of Duty from 1/4th point for 6 hours to 1/6th of a point per hour to align \nwith New York State General Municipal Law Section 219-e effective January 1, 2027.\nPropuesta uno, Proposición de la aldea uno\nENMIENDA AL PROGRAMA DE PREMIOS AL SERVICIO DEL CUERPO VOLUNTARIO DE AMBULANCIAS DE \nMOUNT KISCO\nEn las próximas elecciones generales que se celebrarán el día 3 de noviembre de 2026\n¿Deberá la Junta de Síndicos de la Aldea/Ciudad de Mount Kisco modificar el actual Programa de Premios al Servicio \npara el Cuerpo de Ambulancias Voluntarias de Mount Kisco para (i) aumentar el máximo de puntos permitidos para \nla formación de 15 a 25 puntos anuales; (ii) aumentar el máximo de puntos permitidos para simulacros, seminarios y \nasistencia a reuniones de 10 a 20 puntos anuales; y (iii) aumentar los puntos máximos permitidos para el periodo de \nservicio de 1/4 de punto durante 6 horas a 1/6 de punto par hora para alinearse con la Sección 219-e de la Ley General \nMunicipal del Estado de Nueva York, vigente a partir del 1 de enero de 2027.\nYes/Sí No/No",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7 \nCounty Legislator/ \nLegislador de el Condado \n2nd District/Distrito #2 \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48 \n49 \n50 \nState Supreme Court Justice/ \nJuez de la Corte Suprema \n9th Judicial District/Distrito Judicial #9 \n(Vote for up to three/Vote por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          54,
+          55
+        ],
+        "header": "54 \n55 \nLibrary Trustee/ \nFiduciaro De Biblioteca \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 0
+      }
+    ]
+  },
+  {
+    "sheet": 74,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/B925C5E3AA84460599A9369D82468CDF.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.734826+00:00",
+    "sha256": "cb415860a551139d66e375a4adbf5ae86c2dfd7903e95d99a148d82c2de5a6a4",
+    "sourceFile": "sources/cb415860a551139d66e375a4adbf5ae86c2dfd7903e95d99a148d82c2de5a6a4.source",
+    "printedScope": "Sheet No: 74\n7 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n95th Assembly District\n1st Legislative District\nTown of: Yorktown\nE.D.(s): 1, 9, 13, 22, 28, 38, 41",
+    "created": "D:20260921132239-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 30,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/B975EC47BEC543D49110712AEC678225.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.740784+00:00",
+    "sha256": "d18ef2d01af0acb776fcf3851c91fe4a719d3e5aaf84dc23beb601ec7e0549e5",
+    "sourceFile": "sources/d18ef2d01af0acb776fcf3851c91fe4a719d3e5aaf84dc23beb601ec7e0549e5.source",
+    "printedScope": "Sheet No: 30 \n15 Election Districts \nCounty of Westchester \n17th Congressional District \n40th Senatorial District \n95th Assembly District \n9th Legislative District \nTown of: Cortlandt \nE.D.(s): 1 / 5, 16, 17, 19, 22, 23, 29, 30, 32 / 34",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n9th District/Distrito #9 \n(Vote for one/Vote por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote for uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 46,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/D18420C0FF6342C28BA5FA44DBDDF58F.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:29.456658+00:00",
+    "sha256": "317fbd7765b8d185bc578ec387831e44eaa193b35c0eca8bce1ba9d4151f98f4",
+    "sourceFile": "sources/317fbd7765b8d185bc578ec387831e44eaa193b35c0eca8bce1ba9d4151f98f4.source",
+    "printedScope": "Sheet No: 46\n11 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n93rd Assembly District\n6th Legislative District\nTown of: Harrison\nE.D.(s): 3 / 6, 10, 12, 13, 15 / 18",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n6th District/Distrito  #6\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 68,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/D21DAB46C45E40779D2C796C104D02E4.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:29.643180+00:00",
+    "sha256": "18e05a8ac2caf7c271fc67eca58b63ffccc8437af8193e397f23f5126e1fa078",
+    "sourceFile": "sources/18e05a8ac2caf7c271fc67eca58b63ffccc8437af8193e397f23f5126e1fa078.source",
+    "printedScope": "Sheet No: 68 \n6 Election Districts \nCounty of Westchester \n16th Congressional District \n37th Senatorial District \n91st Assembly District \n7th Legislative District \nTown of: Rye \nVillage of: Mamaroneck \nE.D.(s): 1 / 4, 24, 28",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n7th District/Distrito  #7\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46,
+          47
+        ],
+        "header": "45\n46\n47\nVillage Trustee/\nSíndico de Pueblo\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 6
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          53
+        ],
+        "header": "53 \nVillage Justice/ \nJuez de la Villa \n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      }
+    ]
+  },
+  {
+    "sheet": 40,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/DEF795B4B23D427880F2C36C5BF2936E.pdf",
+    "sourceCheckedAt": "2026-11-03T05:52:56.246431+00:00",
+    "sha256": "a3244eaffcaa1b198e9b358fb5820728255d06193fe1f660a96e73d608b076ba",
+    "sourceFile": "sources/a3244eaffcaa1b198e9b358fb5820728255d06193fe1f660a96e73d608b076ba.source",
+    "printedScope": "Sheet No: 40\n9 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n92nd Assembly District\n12th Legislative District\nTown of: Greenburgh\nVillage of: Dobbs Ferry\nE.D.(s): 12 / 17, 58, 65, 80",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n12th District/Distrito  #12\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46,
+          47
+        ],
+        "header": "45\n46\n47\nVillage Trustee/\nSíndico de Pueblo\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 38,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/E228ECC59B8049F68662A40217A7B207.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.860508+00:00",
+    "sha256": "11ebe3d67a8d2a131f47ec7be543c8b49f34882d4cd7985f1dbab6418388169a",
+    "sourceFile": "sources/11ebe3d67a8d2a131f47ec7be543c8b49f34882d4cd7985f1dbab6418388169a.source",
+    "printedScope": "Sheet No: 38\n17 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n92nd Assembly District\n12th Legislative District\nTown of: Greenburgh\nE.D.(s): 31, 32, 36 / 40, 43, 50, 51, 57, 62, 66, 70, 72, 73, 77",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n12th District/Distrito  #12\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 28,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/E2875DE27729442F9EA8F09FA6CA8425.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:30.339189+00:00",
+    "sha256": "249e0bcff90fa9fb2d3efc0c43217e65ad0c1e2d5651298c80c3655749ae94ca",
+    "sourceFile": "sources/249e0bcff90fa9fb2d3efc0c43217e65ad0c1e2d5651298c80c3655749ae94ca.source",
+    "printedScope": "Sheet No: 28 \n18 Election Districts \nCounty of Westchester \n17th Congressional District \n40th Senatorial District \n93rd Assembly District \n2nd Legislative District \nTown of: Bedford \nE.D.(s): 1 / 18",
+    "created": "D:20260921132236-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n2nd District/Distrito #2 \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 16,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/E9CF37A9056740D2A09C8516D58DE192.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:29.939002+00:00",
+    "sha256": "618491bbc643fd4bfc0ab5bf27c8a88d427c5fa49221fed0d1bc7bc099db98dd",
+    "sourceFile": "sources/618491bbc643fd4bfc0ab5bf27c8a88d427c5fa49221fed0d1bc7bc099db98dd.source",
+    "printedScope": "Sheet No: 16\n10 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n93rd Assembly District\n8th Legislative District\nCity of: White Plains\nE.D.(s): 16, 25, 28, 29, 31 / 34, 44, 46",
+    "created": "D:20260921132235-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n8th District/Distrito  #8\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          37
+        ],
+        "header": "37\nCouncilmember  (3 Year Term)/\nMiembro del Consejo (Terminos  3 años)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          38
+        ],
+        "header": "38\nCouncilmember  (1 Year Term)/\nMiembro del Consejo (Término  1 año)\n(Unexpired  Term/Término  Vigente)\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 65,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/EC8D01816CC84A30915B0CDD8EB8A3F7.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:34.137405+00:00",
+    "sha256": "32ae97fd456445f59c0d1d8657bf009505be8e5a44d34b3f06c0c0b08aed43ac",
+    "sourceFile": "sources/32ae97fd456445f59c0d1d8657bf009505be8e5a44d34b3f06c0c0b08aed43ac.source",
+    "printedScope": "Sheet No: 65\n5 Election Districts\nCounty of Westchester\n16th Congressional District\n34th Senatorial District\n88th Assembly District\n11th Legislative District\nTown of: Pelham\nVillage of: Pelham Manor\nE.D.(s): 6 / 10",
+    "created": "D:20260921132238-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n11th District/Distrito #11 \n(Vote for oneVote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45 \n46 \nVillage Trustee/ \nSíndico de Pueblo \n(Vote for up to two/Vote por hasta dos)",
+        "partyCells": 8
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 41,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/F00CA8CA0A1A452499D2990055048E14.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:33.449715+00:00",
+    "sha256": "90154d5cbdb797f3a4450e1d08ecddaf57e563e7779476083d6566d123705b52",
+    "sourceFile": "sources/90154d5cbdb797f3a4450e1d08ecddaf57e563e7779476083d6566d123705b52.source",
+    "printedScope": "Sheet No: 41 PROP\n8 Election Districts\nCounty of Westchester\n16th Congressional District\n35th Senatorial District\n92nd Assembly District\n12th Legislative District\nTown of: Greenburgh\nVillage of: Hastings-on-Hudson\nE.D.(s): 18 / 23, 52, 59 \n\nProposal one, Village proposition one\nTHE BOARD OF TRUSTEES OF THE VILLAGE OF HASTINGS-ON-HUDSON ADOPTED A RESOLUTION ON JUNE 16, 2026, AUTHORIZING, PURSUANT TO ARTICLE 11-A OF THE GENERAL MUNICIPAL LAW OF THE STATE OF NEW YORK, \nA PUBLIC REFERENDUM OF ELIGIBLE VOTERS OF THE VILLAGE OF HASTINGS-ON-HUDSON. THE REFERENDUM SEEKS APPROVAL OF THE AFOREMENTIONED RESOLUTION TO AMEND THE DEFINED BENEFIT SERVICE AWARD \nPROGRAM, WHICH WAS ESTABLISHED BY THE BOARD OF TRUSTEES EFFECTIVE JUNE 1, 1993. THE VILLAGE OF HASTINGS-ON-HUDSON FUNDS AND ADMINISTERS THE PROGRAM FOR ACTIVE VOLUNTEER FIREFIGHTERS OF \nTHE VILLAGE OF HASTINGS-ON-HUDSON. \nIF APPROVED, THE AMENDMENT WOULD BE EFFECTIVE JANUARY 1, 2027 AND, WOULD INCREASE THE YEARS OF SERVICE CREDIT THAT CAN BE EARNED BY A VOLUNTEER UNDER THE PROGRAM FROM TWENTY (20) TO \nFORTY (40) YEARS FOR YEARS OF SERVICE CREDIT EARNED AFTER 2026. \nTHE ANNUAL FUNDING COST OF THE CURRENT PROGRAM FOR 2026 WAS ABOUT $330,050 ($1,690.61 PER PARTICIPATING VOLUNTEER). THE CURRENT COST OF ADMINISTRATION IS ABOUT $7,940 PER YEAR. THE ANNUAL \nFUNDING COST OF THE AMENDED PROGRAM FOR CURRENT VOLUNTEERS IS ESTIMATED TO BE ABOUT $330,684 ($1,678.60 PER PARTICIPATING VOLUNTEER). THERE WILL BE NO INCREASE IN THE PROGRAM ADMINISTRATION \nCOSTS AS A RESULT OF THIS AMENDMENT. THE FAILURE OF THE AMENDMENT TO BE APPROVED BY THE VOTERS OF THE VILLAGE OF HASTINGS-ON-HUDSON WILL IN NO WAY AFFECT THE PROVISIONS OF THE SERVICE \nAWARD PROGRAM PRESENTLY IN EFFECT. \nTHEREFORE, SHALL THE STATED RESOLUTION TO AMEND THE VILLAGE OF HASTINGS-ON-HUDSON SERVICE AWARD PROGRAM BE APPROVED?\nPropuesta uno, Proposición del pueblo uno\nLA JUNTA DE FIDEICOMISARIOS DEL PUEBLO DE HASTINGS-ON-HUDSON ADOPTÓ UNA RESOLUCIÓN EL 16 DE JUNIO DEL 2026, AUTORIZANDO, DE CONFORMIDAD CON EL ARTÍCULO 11-A DE LA LEY MUNICIPAL GENERAL \nDEL ESTADO DE NUEVA YORK, UN REFERÉNDUM PÚBLICO DE LOS VOTANTES ELEGIBLES DEL PUEBLO DE HASTINGS-ON-HUDSON. EL REFERÉNDUM BUSCA LA APROBACIÓN DE LA RESOLUCIÓN ANTES MENCIONADA PARA \nENMENDAR EL PROGRAMA DE PRESTACIONES DEFINIDAS POR AÑOS DE SERVICIO, EL CUAL FUE ESTABLECIDO POR LA JUNTA DE FIDEICOMISARIOS EN VIGOR DESDE EL 1 DE JUNIO DE 1993. EL PUEBLO DE HASTINGS-ON-\nHUDSON FINANCIA Y ADMINISTRA EL PROGRAMA PARA LOS BOMBEROS VOLUNTARIOS ACTIVOS DEL PUEBLO DE HASTINGS-ON-HUDSON. \nSI SE APRUEBA, LA ENMIENDA ENTRARÁ EN VIGOR EL 1 DE ENERO DE 2027 Y AUMENTARÁ LOS AÑOS DE CRÉDITO DE SERVICIO QUE UN VOLUNTARIO PUEDE GANAR BAJO EL PROGRAMA DE VEINTE (20) A CUARENTA (40) \nAÑOS, PARA LOS AÑOS DE CRÉDITO DE SERVICIO GANADOS DESPUÉS DEL 2026. \nEL COSTO ANUAL DE FINANCIAMIENTO DEL PROGRAMA ACTUAL PARA 2026 FUE APROXIMADAMENTE $330,050 ($1,690.61 POR CADA VOLUNTARIO PARTICIPANTE). EL COSTO ACTUAL DE ADMINISTRACIÓN ES DE \nAPROXIMADAMENTE $7,940 POR AÑO. EL COSTO ANUAL DE FINANCIAMIENTO DEL PROGRAMA ENMENDADO PARA LOS VOLUNTARIOS ACTUALES SE ESTIMA EN APROXIMADAMENTE $330,684 ($1,678.60 POR CADA \nVOLUNTARIO PARTICIPANTE). NO HABRÁ AUMENTO EN LOS COSTOS DE ADMINISTRACIÓN DEL PROGRAMA COMO RESULTADO DE ESTA ENMIENDA. LA FALTA DE APROBACIÓN DE LA ENMIENDA POR PARTE DE LOS VOTANTES \nDEL PUEBLO DE HASTINGS-ON-HUDSON NO AFECTARÁ EN ABSOLUTO LAS DISPOSICIONES DEL PROGRAMA DE PREMIOS POR SERVICIO EN VIGOR ACTUALMENTE. \nPOR LO TANTO, ¿DEBE APROBARSE LA RESOLUCIÓN INDICADA PARA ENMENDAR EL PROGRAMA DE PREMIOS POR SERVICIO DEL PUEBLO DE HASTINGS-ON-HUDSON?\nYes/Sí No/No",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n12th District/Distrito  #12\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          41
+        ],
+        "header": "41 \nTown Clerk/ \nSecretario Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          45,
+          46
+        ],
+        "header": "45\n46\nVillage Trustee/\nSíndico de Pueblo\n(Vote for up to two/Vote  por hasta dos)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      },
+      {
+        "numbers": [
+          52
+        ],
+        "header": "52 \nTown Justice/ \nJuez Municipal \n(Vote for one/Vote por uno)",
+        "partyCells": 1
+      }
+    ]
+  },
+  {
+    "sheet": 48,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/F409D10BF730407EBEAE6906C08BB5AB.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.634226+00:00",
+    "sha256": "14f7627aedaa5a9a5f8cf662912088e4f41aafebccd54a83f1f222ecaaaa9488",
+    "sourceFile": "sources/14f7627aedaa5a9a5f8cf662912088e4f41aafebccd54a83f1f222ecaaaa9488.source",
+    "printedScope": "Sheet No: 48\n12 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n93rd Assembly District\n2nd Legislative District\nTown of: Lewisboro \nE.D.(s): 1 / 12",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n2nd District/Distrito  #2\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39 \nSupervisor/ \nSupervisor \n(Vote for one/Vote por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 60,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/F485ACDF86B44B0EA06D6FB81F38B43B.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.418857+00:00",
+    "sha256": "1b11dd91359e438f036f65e6ca9b51ce937b51ffa7fbe84afac21af8f7f5921b",
+    "sourceFile": "sources/1b11dd91359e438f036f65e6ca9b51ce937b51ffa7fbe84afac21af8f7f5921b.source",
+    "printedScope": "Sheet No: 60\n6 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n95th Assembly District\n4th Legislative District\n Superintendent of Highways\nTown of: Ossining\nE.D.(s): 14, 17, 20, 24, 25, 28",
+    "created": "D:20260921132234-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n4th District/Distrito  #4\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 2
+      },
+      {
+        "numbers": [
+          43
+        ],
+        "header": "43\nSuperintendent  of Highways/\nSuperintendente  De Carreteras\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 45,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/F5FABF46D3B4447F9956AB02EBC835AF.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.744805+00:00",
+    "sha256": "e3aede8c860bcb3290fdbd8cf344c6b13cb660045d01a3a7645f7bf7a546fe31",
+    "sourceFile": "sources/e3aede8c860bcb3290fdbd8cf344c6b13cb660045d01a3a7645f7bf7a546fe31.source",
+    "printedScope": "Sheet No: 45\n2 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n93rd Assembly District\n5th Legislative District\nTown of: Harrison\nE.D.(s): 2, 11",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n5th District/Distrito  #5\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 44,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/FB2930E3A28D46C4B5DF27F6541FD8B6.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:32.740568+00:00",
+    "sha256": "1533bee3d7f8a70205577463c1f7e043ef633ad1dca303f636e799e404084d08",
+    "sourceFile": "sources/1533bee3d7f8a70205577463c1f7e043ef633ad1dca303f636e799e404084d08.source",
+    "printedScope": "Sheet No: 44\n3 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n93rd Assembly District\n3rd Legislative District\nTown of: Harrison\nE.D.(s): 1, 14, 19",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n3rd District/Distrito  #3\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 49,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/FB7EA3321BAE47B38A5B633B835E9D8D.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.224548+00:00",
+    "sha256": "8e5299fe9d0c44078d20cdffd3f7810391304d02258eed6fc6ffd9cbeedf3a65",
+    "sourceFile": "sources/8e5299fe9d0c44078d20cdffd3f7810391304d02258eed6fc6ffd9cbeedf3a65.source",
+    "printedScope": "Sheet No: 49\n13 Election Districts\nCounty of Westchester\n16th Congressional District\n37th Senatorial District\n91st Assembly District\n7th Legislative District\nTown of: Mamaroneck\nE.D.(s): 11 / 16, 18 / 21, 24, 25, 28",
+    "created": "D:20260921132237-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n7th District/Distrito  #7\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          40
+        ],
+        "header": "40\nCouncilmember/\nMiembro del Consejo\n(Unexpired \nTerm/Término  Vigente)\n(Vote for one/Vote  por \nuno)",
+        "partyCells": 1
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  },
+  {
+    "sheet": 75,
+    "sourceUrl": "https://pollingplaces.westchestergov.com/PollingLocation/PollingDataExport/FC32FD9AF5034A0D99D3BDC35C78A9C0.pdf",
+    "sourceCheckedAt": "2026-11-03T05:46:31.598478+00:00",
+    "sha256": "bae3f30247ac46dd6903e52bd5ac0d7792f87779301012e1d026bd8e456f778e",
+    "sourceFile": "sources/bae3f30247ac46dd6903e52bd5ac0d7792f87779301012e1d026bd8e456f778e.source",
+    "printedScope": "Sheet No: 75\n7 Election Districts\nCounty of Westchester\n17th Congressional District\n40th Senatorial District\n95th Assembly District\n4th Legislative District\nTown of: Yorktown\nE.D.(s): 3, 8, 18, 25, 30, 32, 43",
+    "created": "D:20260921132239-04'00'",
+    "localOfficeColumns": [
+      {
+        "numbers": [
+          7
+        ],
+        "header": "7\nCounty Legislator/\nLegislador  de el Condado\n4th District/Distrito  #4\n(Vote for one/Vote  por uno)",
+        "partyCells": 3
+      },
+      {
+        "numbers": [
+          39
+        ],
+        "header": "39\nSupervisor/\nSupervisor\n(Vote for one/Vote  por uno)",
+        "partyCells": 4
+      },
+      {
+        "numbers": [
+          48,
+          49,
+          50
+        ],
+        "header": "48\n49\n50\nState Supreme Court Justice/\nJuez de la Corte Suprema\n9th Judicial  District/Distrito  Judicial  #9\n(Vote for up to three/Vote  por hasta tres)",
+        "partyCells": 9
+      }
+    ]
+  }
+]

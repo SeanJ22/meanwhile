@@ -1,0 +1,206 @@
+[
+  {
+    "contestId": "fl-2026-gainesville-vacancy-appointments",
+    "ocdId": "ocd-division/country:us/state:fl/place:gainesville",
+    "sourceUrl": "https://www.gainesvillefl.gov/files/assets/public/v/1/city-clerk/documents/business-impact-estimates/2026-165-business-impact-estimate.pdf",
+    "rawPdfFile": "sources/23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db.pdf",
+    "rawPdfSha256": "23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db",
+    "nativeTextFile": "sources/7845cc46397c422b1c65cf400bb198fe6192d3c0f0e2c2da1ccc1e28811f52ea.txt",
+    "boundedTextFile": "sources/ddb45a257245be2ec895bfbe23f8acf010dac243592433b693b45ace1a61bcdd.txt",
+    "textFilePerMeasure": "sources/bf15bf208b2c20d20e920128a2188746dc7d21def17462b3e0f85ae3f3ab74c8.txt",
+    "imageFile": "sources/0618d07b4f81e67d602720852b939b67dd96368de5d5a60c87db2fdf965b1fa3.png",
+    "sourcePage": 2,
+    "bbox": [
+      765,
+      73,
+      907,
+      421
+    ],
+    "supplementalSource": {
+      "url": "https://www.gainesvillefl.gov/files/assets/public/v/1/city-clerk/documents/business-impact-estimates/2026-165-business-impact-estimate.pdf",
+      "rawPdfFile": "sources/ed5ea3dc4095c026d53dfd480ba57ddfd149ca06c5b4d2589e04265c8c23265f.pdf",
+      "rawPdfSha256": "ed5ea3dc4095c026d53dfd480ba57ddfd149ca06c5b4d2589e04265c8c23265f",
+      "nativeTextFile": "sources/4b48516d6d0401d01916c94c86872e1e33a642a1ed33493110e683b50d66b268.txt",
+      "role": "Official city description of the same Ordinance2026-165 named in the current county ballot, confirming replacement of special elections."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the city charter be amended to provide that vacancies in the offices of mayor or city commission be filled by appointment by the remaining city commissioners until the next regular municipal election if the vacancy occurs with sufficient time before the candidate qualifying period for such election, and otherwise by appointment for the remainder of the unexpired term, as proposed by Ordinance No. 2026-165?",
+        "Ordinance No. 2026-165 would submit a ballot referendum to the electors of the City of Gainesville to amend the City Charter provision regarding the filling of vacancies in office for the Mayor and City Commission. The proposed amendment would eliminate the filling of vacancies of six months or more by special election and provide for vacancies in office to be filled through appointment by the remaining Commission members until the next practicable biennial regular election."
+      ],
+      "yesMeans": [
+        "Shall the city charter be amended to provide that vacancies in the offices of mayor or city commission be filled by appointment by the remaining city commissioners until the next regular municipal election if the vacancy occurs with sufficient time before the candidate qualifying period for such election, and otherwise by appointment for the remainder of the unexpired term, as proposed by Ordinance No. 2026-165?",
+        "Ordinance No. 2026-165 would submit a ballot referendum to the electors of the City of Gainesville to amend the City Charter provision regarding the filling of vacancies in office for the Mayor and City Commission. The proposed amendment would eliminate the filling of vacancies of six months or more by special election and provide for vacancies in office to be filled through appointment by the remaining Commission members until the next practicable biennial regular election."
+      ],
+      "noMeans": [
+        "Shall the city charter be amended to provide that vacancies in the offices of mayor or city commission be filled by appointment by the remaining city commissioners until the next regular municipal election if the vacancy occurs with sufficient time before the candidate qualifying period for such election, and otherwise by appointment for the remainder of the unexpired term, as proposed by Ordinance No. 2026-165?",
+        "Ordinance No. 2026-165 would submit a ballot referendum to the electors of the City of Gainesville to amend the City Charter provision regarding the filling of vacancies in office for the Mayor and City Commission. The proposed amendment would eliminate the filling of vacancies of six months or more by special election and provide for vacancies in office to be filled through appointment by the remaining Commission members until the next practicable biennial regular election."
+      ]
+    },
+    "choices": [
+      "Yes / Sí",
+      "No"
+    ],
+    "jurisdictionQuote": "If you live in the City of Gainesville, this race will also appear on your ballot.",
+    "extractionMethod": "Bounded native English question with corresponding Spanish text and choice marks retained in the source region; per-measure quote normalizes layout whitespace.",
+    "hashScope": "Exact held question plus newline plus official city statement",
+    "sourceIdentityMatch": "Current official sample expressly cites Ordinance2026-165; official city PDF identifies the same number and vacancy-change subject.",
+    "reviewNote": "The city memo’s four-fifths vote refers to City Commission adoption of the ordinance placing the amendment on the ballot; it is not represented as a voter-approval threshold. Memo’s cost/resource-efficiency arguments are excluded from reader prose."
+  },
+  {
+    "contestId": "fl-2026-archer-boundary-description",
+    "ocdId": "ocd-division/country:us/state:fl/place:archer",
+    "sourceUrl": "https://www.votealachua.gov/DocumentCenter/View/647/2026-General-Sample-Ballot",
+    "rawPdfFile": "sources/23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db.pdf",
+    "rawPdfSha256": "23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db",
+    "nativeTextFile": "sources/7845cc46397c422b1c65cf400bb198fe6192d3c0f0e2c2da1ccc1e28811f52ea.txt",
+    "boundedTextFile": "sources/07986d3fb1cb41417be34207334e5a524a56eb5f7834e45212f96449ca0a6b88.txt",
+    "textFilePerMeasure": "sources/7b766f8d988ff91f869b91e9de937d25daf6efed3c6f234c930a650057cdb7c7.txt",
+    "imageFile": "sources/9f263b7bbef949cbf46254d61fdcc82511cf5bc2dd641ffc32f5497f4678d6bc.png",
+    "sourcePage": 2,
+    "bbox": [
+      765,
+      424,
+      907,
+      691
+    ],
+    "supplementalSource": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Archer, Florida, be updated to describe the City’s corporate boundaries as they exist pursuant to the records maintained by the office of the City Clerk, provided that the City may change its boundaries in the manner described by law?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Archer, Florida, be updated to describe the City’s corporate boundaries as they exist pursuant to the records maintained by the office of the City Clerk, provided that the City may change its boundaries in the manner described by law?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Archer, Florida, be updated to describe the City’s corporate boundaries as they exist pursuant to the records maintained by the office of the City Clerk, provided that the City may change its boundaries in the manner described by law?"
+      ]
+    },
+    "choices": [
+      "Yes / Sí",
+      "No"
+    ],
+    "jurisdictionQuote": "If you live in the City of Archer, this race will also appear on your ballot.",
+    "extractionMethod": "Bounded native English question with corresponding Spanish text and choice marks retained in the source region; per-measure quote normalizes layout whitespace.",
+    "hashScope": "Original official county sample PDF bytes",
+    "sourceIdentityMatch": "Current official sample expressly names CityofArcher and the printed amendment number.",
+    "reviewNote": "All source-stated transition, appointment, meeting and boundary-law conditions retained; no consequences inferred beyond the official question."
+  },
+  {
+    "contestId": "fl-2026-archer-general-powers",
+    "ocdId": "ocd-division/country:us/state:fl/place:archer",
+    "sourceUrl": "https://www.votealachua.gov/DocumentCenter/View/647/2026-General-Sample-Ballot",
+    "rawPdfFile": "sources/23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db.pdf",
+    "rawPdfSha256": "23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db",
+    "nativeTextFile": "sources/7845cc46397c422b1c65cf400bb198fe6192d3c0f0e2c2da1ccc1e28811f52ea.txt",
+    "boundedTextFile": "sources/0a673d2cb64401311ee2173b6e01f910062b13194a004a33d72cfa379a1b5de3.txt",
+    "textFilePerMeasure": "sources/b93180e4c79e313277ed60f99527293eaa59108e4fd0fe72f3e1cfaa6ec44f58.txt",
+    "imageFile": "sources/356876d20ec6c6b9053593cdeeae42517582a34d32a9480fc29fdb6ba9ead221.png",
+    "sourcePage": 2,
+    "bbox": [
+      912,
+      73,
+      1054,
+      413
+    ],
+    "supplementalSource": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Archer, Florida, be updated to provide general governmental, corporate and proprietary powers possible for a city to have under the constitution and laws of the State of Florida, which shall be construed liberally in favor of the City, which shall specifically include the power to establish citizen committees, boards, and commissions, the members of which will serve at the pleasure of the City Commission?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Archer, Florida, be updated to provide general governmental, corporate and proprietary powers possible for a city to have under the constitution and laws of the State of Florida, which shall be construed liberally in favor of the City, which shall specifically include the power to establish citizen committees, boards, and commissions, the members of which will serve at the pleasure of the City Commission?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Archer, Florida, be updated to provide general governmental, corporate and proprietary powers possible for a city to have under the constitution and laws of the State of Florida, which shall be construed liberally in favor of the City, which shall specifically include the power to establish citizen committees, boards, and commissions, the members of which will serve at the pleasure of the City Commission?"
+      ]
+    },
+    "choices": [
+      "Yes / Sí",
+      "No"
+    ],
+    "jurisdictionQuote": "If you live in the City of Archer, this race will also appear on your ballot.",
+    "extractionMethod": "Bounded native English question with corresponding Spanish text and choice marks retained in the source region; per-measure quote normalizes layout whitespace.",
+    "hashScope": "Original official county sample PDF bytes",
+    "sourceIdentityMatch": "Current official sample expressly names CityofArcher and the printed amendment number.",
+    "reviewNote": "All source-stated transition, appointment, meeting and boundary-law conditions retained; no consequences inferred beyond the official question."
+  },
+  {
+    "contestId": "fl-2026-archer-november-election-schedule",
+    "ocdId": "ocd-division/country:us/state:fl/place:archer",
+    "sourceUrl": "https://www.votealachua.gov/DocumentCenter/View/647/2026-General-Sample-Ballot",
+    "rawPdfFile": "sources/23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db.pdf",
+    "rawPdfSha256": "23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db",
+    "nativeTextFile": "sources/7845cc46397c422b1c65cf400bb198fe6192d3c0f0e2c2da1ccc1e28811f52ea.txt",
+    "boundedTextFile": "sources/a7dfae1f1f3644eb9d8b88308cf3d0b8ce40f71ab196747a244944be207051dd.txt",
+    "textFilePerMeasure": "sources/ff1400ae3a2df38933da2aede5703405335ace770743856b923910838f3fe1e6.txt",
+    "imageFile": "sources/0db28c02697e502b7781454e0e138387e28ebecaf28fe684d8f3af5f324a43b7.png",
+    "sourcePage": 2,
+    "bbox": [
+      912,
+      416,
+      1054,
+      746
+    ],
+    "supplementalSource": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Archer, Florida, be amended to align regular elections for the City Commission with the November election cycle and, in order to accommodate such alignment, set the transition schedule for filling seats one through three for year 2028 and filling seats four and five for 2030 and allow the Commissioner’s respective four-year terms to be lengthened by eight (8) months instead of six (6) months?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Archer, Florida, be amended to align regular elections for the City Commission with the November election cycle and, in order to accommodate such alignment, set the transition schedule for filling seats one through three for year 2028 and filling seats four and five for 2030 and allow the Commissioner’s respective four-year terms to be lengthened by eight (8) months instead of six (6) months?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Archer, Florida, be amended to align regular elections for the City Commission with the November election cycle and, in order to accommodate such alignment, set the transition schedule for filling seats one through three for year 2028 and filling seats four and five for 2030 and allow the Commissioner’s respective four-year terms to be lengthened by eight (8) months instead of six (6) months?"
+      ]
+    },
+    "choices": [
+      "Yes / Sí",
+      "No"
+    ],
+    "jurisdictionQuote": "If you live in the City of Archer, this race will also appear on your ballot.",
+    "extractionMethod": "Bounded native English question with corresponding Spanish text and choice marks retained in the source region; per-measure quote normalizes layout whitespace.",
+    "hashScope": "Original official county sample PDF bytes",
+    "sourceIdentityMatch": "Current official sample expressly names CityofArcher and the printed amendment number.",
+    "reviewNote": "All source-stated transition, appointment, meeting and boundary-law conditions retained; no consequences inferred beyond the official question."
+  },
+  {
+    "contestId": "fl-2026-archer-commission-meetings",
+    "ocdId": "ocd-division/country:us/state:fl/place:archer",
+    "sourceUrl": "https://www.votealachua.gov/DocumentCenter/View/647/2026-General-Sample-Ballot",
+    "rawPdfFile": "sources/23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db.pdf",
+    "rawPdfSha256": "23dc90fdae66ac870c1903cdaf0064c6461ace704f66e2b756eb0310093e32db",
+    "nativeTextFile": "sources/7845cc46397c422b1c65cf400bb198fe6192d3c0f0e2c2da1ccc1e28811f52ea.txt",
+    "boundedTextFile": "sources/05675a93f67592bfa5ce7c7409e2fd472a4731fd4d9d485c8cc75734a42a4abd.txt",
+    "textFilePerMeasure": "sources/96dcb8ceb7e375e5c4a1348c83627d7cd8d7c9e2abe1e5a1a3958d47f9003bc9.txt",
+    "imageFile": "sources/7473b4a83e98e3990ac47611fe1c97d50df9c6b1b98620d7cbf1ef6f1ad7536a.png",
+    "sourcePage": 2,
+    "bbox": [
+      1060,
+      73,
+      1201,
+      389
+    ],
+    "supplementalSource": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter of the City of Archer, Florida, be amended to require the City Commission to meet two (2) times per month, one of which will be a Regular City Commission Meeting and the other of which will be a workshop and allow any City Commissioner to call the City Commission into regular or special session rather than two (2) or more City Commissioners?"
+      ],
+      "yesMeans": [
+        "Shall the Charter of the City of Archer, Florida, be amended to require the City Commission to meet two (2) times per month, one of which will be a Regular City Commission Meeting and the other of which will be a workshop and allow any City Commissioner to call the City Commission into regular or special session rather than two (2) or more City Commissioners?"
+      ],
+      "noMeans": [
+        "Shall the Charter of the City of Archer, Florida, be amended to require the City Commission to meet two (2) times per month, one of which will be a Regular City Commission Meeting and the other of which will be a workshop and allow any City Commissioner to call the City Commission into regular or special session rather than two (2) or more City Commissioners?"
+      ]
+    },
+    "choices": [
+      "Yes / Sí",
+      "No"
+    ],
+    "jurisdictionQuote": "If you live in the City of Archer, this race will also appear on your ballot.",
+    "extractionMethod": "Bounded native English question with corresponding Spanish text and choice marks retained in the source region; per-measure quote normalizes layout whitespace.",
+    "hashScope": "Original official county sample PDF bytes",
+    "sourceIdentityMatch": "Current official sample expressly names CityofArcher and the printed amendment number.",
+    "reviewNote": "All source-stated transition, appointment, meeting and boundary-law conditions retained; no consequences inferred beyond the official question."
+  }
+]

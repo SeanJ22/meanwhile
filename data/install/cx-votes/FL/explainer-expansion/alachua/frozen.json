@@ -1,0 +1,11 @@
+{
+  "preparedAt": "2026-11-03T05:39:13.446Z",
+  "status": "FROZEN_CHECKED_DATA_PACKET",
+  "files": {
+    "ballot-input/fl.json": "348dee8f8d4f45c4bcd126758c99b62af12f212e40daf478a9b6901b350e1f4d",
+    "source-support.json": "ce655e650c0e77dce39dbf277d97a643c2ea61d78713a759f138e8e1a6f018fa",
+    "sources.json": "c808557ef774140a2fd76f3e64555ad6fa614d8a7af223936abb5f4a7a765e56",
+    "install.json": "43b7641939c8ec7646665d13becbcb63a4237717936bf809d67dcfda091f272f",
+    "validation.json": "19a7266f439bb8b0cb59af0725a49c29e54137a9ba5dbef5a07bc460288f79a1"
+  }
+}

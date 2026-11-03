@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T05:39:13.445Z",
+  "preparedRecords": 5,
+  "originalSourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "boundedNativeSourceReading": "PASS; all five rendered question regions viewed and checked",
+  "officialAuthority": "PASS",
+  "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/alachua",
+  "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T05:37:36.643919+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-gainesville-vacancy-appointments",
+      "title": "Gainesville — Filling vacancies in City Commission offices",
+      "ocdId": "ocd-division/country:us/state:fl/place:gainesville"
+    },
+    {
+      "id": "fl-2026-archer-boundary-description",
+      "title": "Archer — Charter Amendment 1: Boundary description",
+      "ocdId": "ocd-division/country:us/state:fl/place:archer"
+    },
+    {
+      "id": "fl-2026-archer-general-powers",
+      "title": "Archer — Charter Amendment 2: General city powers",
+      "ocdId": "ocd-division/country:us/state:fl/place:archer"
+    },
+    {
+      "id": "fl-2026-archer-november-election-schedule",
+      "title": "Archer — Charter Amendment 3: November election schedule",
+      "ocdId": "ocd-division/country:us/state:fl/place:archer"
+    },
+    {
+      "id": "fl-2026-archer-commission-meetings",
+      "title": "Archer — Charter Amendment 4: Commission meetings",
+      "ocdId": "ocd-division/country:us/state:fl/place:archer"
+    }
+  ],
+  "operation": "Merge5new city-only local charter questions and neutral explanations through the existing ballot data path; prior candidate and measure facts remain.",
+  "coverageLimit": "Official67county local inventory continues; this is not a statewide local-measure completeness claim. The Gainesville question defines its election timing by the candidate qualifying period; no unprinted numeric deadline is invented.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T05:39:13.445Z",
+    "preparedRecords": 5,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all five rendered question regions viewed and checked",
+    "officialAuthority": "PASS",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/alachua",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "348dee8f8d4f45c4bcd126758c99b62af12f212e40daf478a9b6901b350e1f4d",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

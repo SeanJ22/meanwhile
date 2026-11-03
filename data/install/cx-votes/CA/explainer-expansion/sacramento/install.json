@@ -1,0 +1,71 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-sacramento-d",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    },
+    {
+      "id": "ca-2026-sacramento-e",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    },
+    {
+      "id": "ca-2026-sacramento-g",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    },
+    {
+      "id": "ca-2026-sacramento-i",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    },
+    {
+      "id": "ca-2026-sacramento-j",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    },
+    {
+      "id": "ca-2026-sacramento-k",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    },
+    {
+      "id": "ca-2026-sacramento-l",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    },
+    {
+      "id": "ca-2026-sacramento-m",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and other county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Sacramento",
+    "electionDate": "2026-11-03",
+    "officialDenominator": 9,
+    "heldMatches": 0,
+    "preparedAttached": 8,
+    "pending": [
+      {
+        "letter": "H",
+        "name": "Los Rios Community College District School Facilities Improvement District No.1",
+        "status": "FULL_OFFICIAL_TEXT_HELD_EXACT_ELECTORATE_OPEN",
+        "detail": "Full text expressly restricts electorate to the portions of Los Rios district in Sacramento and Yolo Counties. Do not substitute either full county or entire multicounty college district."
+      }
+    ],
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "PASS: source hashes, exact supporting quotations, existing ballot/MeasureRecord contracts, existing publication source authority and admission, preservation of all346 held contests and461 candidates, exact eight-record attachment through actual existing translation reader. See source-reader-check.json; no production writes, paid calls or application changes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

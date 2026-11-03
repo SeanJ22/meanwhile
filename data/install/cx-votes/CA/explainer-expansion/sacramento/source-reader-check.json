@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-11-03T06:34:31.911Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 8,
+  "checks": [
+    {
+      "contestId": "ca-2026-sacramento-d",
+      "status": "PASS",
+      "parts": 2
+    },
+    {
+      "contestId": "ca-2026-sacramento-e",
+      "status": "PASS",
+      "parts": 1
+    },
+    {
+      "contestId": "ca-2026-sacramento-g",
+      "status": "PASS",
+      "parts": 2
+    },
+    {
+      "contestId": "ca-2026-sacramento-i",
+      "status": "PASS",
+      "parts": 1
+    },
+    {
+      "contestId": "ca-2026-sacramento-j",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-sacramento-k",
+      "status": "PASS",
+      "parts": 1
+    },
+    {
+      "contestId": "ca-2026-sacramento-l",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-sacramento-m",
+      "status": "PASS",
+      "parts": 2
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

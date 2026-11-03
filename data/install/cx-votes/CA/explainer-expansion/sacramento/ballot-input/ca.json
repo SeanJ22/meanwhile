@@ -1,0 +1,465 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-sacramento-d",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district",
+          "title": "Natomas Unified School District — Measure D",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Natomas Schools Repair, Safety, Education Measure. To continue providing quality education/ career training; repair aging infrastructure/ electrical systems/ classrooms/ leaky roofs; improve school safety/ security/ access for students with disabilities/ safe play areas, by repairing, constructing, acquiring classrooms/ facilities, shall Natomas Unified School District's measure authorizing $300,000,000 in bonds at legal rates; levying $60 per $100,000 of assessed valuation; raising approximately $22,000,000 annually while bonds are outstanding; requiring oversight, disclosure, audits, no money for administrators' salaries, be adopted?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-sacramento-e",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district",
+          "title": "Center Joint Unified School District — Measure E",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "To upgrade local schools; improve school and student safety; replace leaky roofs and decaying pipes; replace failing heating and cooling systems; and update hands-on science and early job training classrooms and accommodate growing enrollment, shall Center Joint Unified School District’s measure authorizing $197 million in bonds, at legal rates, levying approximately $60 per $100,000 assessed value, (averaging $12,300,000 annually) while bonds are outstanding, with citizen oversight and audits, all funds staying local and none for administrator salaries, be adopted?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-sacramento-g",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:galt_joint_union_high_school_district",
+          "title": "Galt Joint Union High School District — Measure G",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Galt Joint Union High School District, Repair/Safety and Vocational Training Measure. To upgrade classrooms to maintain quality education/school safety by preparing students for skilled trades including welding/construction/plumbing; repairing leaky roofs; removing asbestos/mold; shall Galt Joint Union High School District’s measure be adopted, authorizing $43,000,000 in bonds at legal rates, levying $30 per $100,000 of assessed valuation, generating $3,100,000 annually, while bonds are outstanding, prohibiting funds for administrators salaries/pensions, requiring independent citizens’ oversight, audits, all funds locally controlled?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-sacramento-i",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:folsom",
+          "title": "City of Folsom — Measure I",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the measure amending the Adopted Charter of the City of Folsom to have the City Council appoint and direct the City Attorney and to make related operational changes, be adopted?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-sacramento-j",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:folsom",
+          "title": "City of Folsom — Measure J",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the measure amending the Adopted Charter of the City of Folsom to confirm the City Council may grant decision making authority to Boards and Commissions by ordinance, be adopted?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-sacramento-k",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:folsom",
+          "title": "City of Folsom — Measure K",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the measure increasing the campaign contribution limit from $150 to $500 per donor per election on campaigns for Folsom City Council be adopted?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-sacramento-l",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:galt",
+          "title": "City of Galt — Measure L",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the offices of Galt Treasurer and Galt City Clerk be appointive?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-sacramento-m",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:sacramento_city_unified_school_district",
+          "title": "Sacramento City Unified School District — Measure M",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "To address the decline in Federal funding for Special Education and to expand early intervention programs to every school, shall Sacramento City Unified School District adopt a $95 per year Special Education tax on each parcel of property until repealed or replaced by voters, raising $10 million annually, with exemptions for seniors, including Social Security recipients, and recipients of Supplemental Security and Social Security Disability and annual inflation adjustments, providing funds exclusively for Special Education and intervention programs, be adopted?"
+          },
+          "measureTextUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-sacramento-d-text",
+          "contestId": "ca-2026-sacramento-d",
+          "officialNumber": "Measure D",
+          "questionText": "Natomas Schools Repair, Safety, Education Measure. To continue providing quality education/ career training; repair aging infrastructure/ electrical systems/ classrooms/ leaky roofs; improve school safety/ security/ access for students with disabilities/ safe play areas, by repairing, constructing, acquiring classrooms/ facilities, shall Natomas Unified School District's measure authorizing $300,000,000 in bonds at legal rates; levying $60 per $100,000 of assessed valuation; raising approximately $22,000,000 annually while bonds are outstanding; requiring oversight, disclosure, audits, no money for administrators' salaries, be adopted?",
+          "officialStatement": "Prepared by County Counsel\nThe California Constitution and Education Code authorize school districts to issue bonds for specified purposes if approved by the voters within district boundaries. Measure D was placed on the ballot by the governing board of the Natomas Unified School District (“District”). If approved, Measure D would allow the District to incur bonded indebtedness up to a maximum amount of $300 million dollars. The proceeds from the issuance and sale of such general obligation bonds could only be used for the acquisition, construction, reconstruction, rehabilitation and/or replacement, including furnishing and equipping of school facilities. Measure D lists the specific school facilities projects that the District intends to finance by the proposed bond sales.\nNo funds derived from bond sales may be used for general school operating expenses, including administrator and teacher salaries or pensions, or for any purpose or project other than those expressly stated in the measure.\nTo ensure that funds are spent only as specified in the measure, Measure D requires: 1) the appointment of a citizen’s oversight committee; 2) completion of annual independent performance and financial audits; and 3) creation of an account into which proceeds of the bonds shall be deposited.\nIf Measure D is passed, the actual dates of sale and the amount of bonds sold would be governed by the District based on the need for construction funds and other factors. If Measure D is approved, the tax rates necessary for payment of principal and interest on any bonds sold will largely be dictated by the timing of the bond sales, the amount sold at a given sale, market interest rates at the time of each sale (although in no event greater than the maximum bond interest rate allowed by law), as well as actual assessed valuation of taxable property in the District over the term of repayment. The District’s Tax Rate Statement contains the best estimates of tax rates required to service the bond debt. The District estimates the average annual tax rate levy to fund this bond is $59.38 per $100,000 of assessed valuation. The final fiscal year in which the tax is anticipated to be collected will be 2053-54. The District estimates that the total amount repayable during the life of the bond, including principal and interest, is approximately $600 million dollars.\nPassage of Measure D requires approval by 55% of the voters voting thereon.\nA “YES” vote on Measure D means you wish to allow the District to issue bonds in an amount not to exceed $300 million dollars.\nA “NO” vote on Measure D means you do not wish to allow the District to issue the proposed bonds.\n“Approval of Measure D does not guarantee that the proposed project or projects in the Natomas Unified School District that are the subject of bonds under Measure D will be funded beyond the local revenues generated by Measure D. The school district’s proposal for the project or projects may assume the receipt of matching state funds, which could be subject to appropriation by the Legislature or approval of a statewide bond measure.”",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Natomas Schools Repair, Safety, Education Measure. To continue providing quality education/ career training; repair aging infrastructure/ electrical systems/ classrooms/ leaky roofs; improve school safety/ security/ access for students with disabilities/ safe play areas, by repairing, constructing, acquiring classrooms/ facilities, shall Natomas Unified School District's measure authorizing $300,000,000 in bonds at legal rates; levying $60 per $100,000 of assessed valuation; raising approximately $22,000,000 annually while bonds are outstanding; requiring oversight, disclosure, audits, no money for administrators' salaries, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-sacramento-e-text",
+          "contestId": "ca-2026-sacramento-e",
+          "officialNumber": "Measure E",
+          "questionText": "To upgrade local schools; improve school and student safety; replace leaky roofs and decaying pipes; replace failing heating and cooling systems; and update hands-on science and early job training classrooms and accommodate growing enrollment, shall Center Joint Unified School District’s measure authorizing $197 million in bonds, at legal rates, levying approximately $60 per $100,000 assessed value, (averaging $12,300,000 annually) while bonds are outstanding, with citizen oversight and audits, all funds staying local and none for administrator salaries, be adopted?",
+          "officialStatement": "Prepared by County Counsel\nThe California Constitution and Education Code authorize school districts to issue bonds for specified purposes if approved by the voters within district boundaries. Measure E was placed on the ballot by the governing board of the Center Joint Unified School District (“District”). If approved, Measure E would allow the District to incur bonded indebtedness up to a maximum amount of $197 million dollars. The proceeds from the issuance and sale of such general obligation bonds could only be used for the acquisition, construction, reconstruction, rehabilitation and/or replacement, including furnishing and equipping of District facilities. Measure E lists the specific school facilities projects that the District intends to finance by the proposed bond sales.\nNo funds derived from bond sales may be used for general school operating expenses, including administrator and teacher salaries or pensions, or for any purpose or project other than those expressly stated in the measure.\nTo ensure that funds are spent only as specified in the measure, Measure E requires: 1) the appointment of a citizen’s oversight committee; and 2) completion of annual independent performance and financial audits.\nIf Measure E is passed, the actual dates of sale and the amount of bonds sold would be governed by the District based on the need for construction funds and other factors. If Measure E is approved, the tax rates necessary for payment of principal and interest on any bonds sold will largely be dictated by the timing of the bond sales, the amount sold at a given sale, market interest rates at the time of each sale (although in no event greater than the maximum bond interest rate allowed by law), as well as actual assessed valuation of taxable property in the District over the term of repayment. The District’s Tax Rate Statement contains the best estimates of tax rates required to service the bond debt. The District estimates the average annual tax rate levy to fund this bond is $54.94 per $100,000 of assessed valuation. The final fiscal year in which the tax is anticipated to be collected will be 2068-69. The District estimates that the total amount repayable during the life of the bond, including principal and interest, is approximately $517 million dollars.\nPassage of Measure E requires approval by 55% of the voters voting thereon.\nA “YES” vote on Measure E means you wish to allow the District to issue bonds in an amount not to exceed $197 million dollars.\nA “NO” vote on Measure E means you do not wish to allow the District to issue the proposed bonds.\n“Approval of Measure E does not guarantee that the proposed project or projects in the Center Joint Unified School District that are the subject of bonds under Measure E will be funded beyond the local revenues generated by Measure E. The school district’s proposal for the project or projects may assume the receipt of matching state funds, which could be subject to appropriation by the Legislature or approval of a statewide bond measure.”",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "To upgrade local schools; improve school and student safety; replace leaky roofs and decaying pipes; replace failing heating and cooling systems; and update hands-on science and early job training classrooms and accommodate growing enrollment, shall Center Joint Unified School District’s measure authorizing $197 million in bonds, at legal rates, levying approximately $60 per $100,000 assessed value, (averaging $12,300,000 annually) while bonds are outstanding, with citizen oversight and audits, all funds staying local and none for administrator salaries, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-sacramento-g-text",
+          "contestId": "ca-2026-sacramento-g",
+          "officialNumber": "Measure G",
+          "questionText": "Galt Joint Union High School District, Repair/Safety and Vocational Training Measure. To upgrade classrooms to maintain quality education/school safety by preparing students for skilled trades including welding/construction/plumbing; repairing leaky roofs; removing asbestos/mold; shall Galt Joint Union High School District’s measure be adopted, authorizing $43,000,000 in bonds at legal rates, levying $30 per $100,000 of assessed valuation, generating $3,100,000 annually, while bonds are outstanding, prohibiting funds for administrators salaries/pensions, requiring independent citizens’ oversight, audits, all funds locally controlled?",
+          "officialStatement": "Prepared by County Counsel\nThe California Constitution and Education Code authorize school districts to issue bonds for specified purposes if approved by the voters within district boundaries. Measure G was placed on the ballot by the governing board of the Galt Joint Union High School District (“District”). If approved, Measure G would allow the District to incur bonded indebtedness up to a maximum amount of $43 million dollars. The proceeds from the issuance and sale of such general obligation bonds could only be used for the acquisition, construction, improvement, upgrading and/or equipping of high school facilities in the District. Measure G lists the specific school facilities projects that the District intends to finance by the proposed bond sales.\nNo funds derived from bond sales may be used for general school operating expenses, including administrator and teacher salaries or pensions, or for any purpose or project other than those expressly stated in the measure.\nTo ensure that funds are spent only as specified in the measure, Measure G requires: 1) the appointment of a citizen’s oversight committee; and 2) completion of annual independent performance and financial audits.\nIf Measure G is passed, the actual dates of sale and the amount of bonds sold would be governed by the District based on the need for construction funds and other factors. If Measure G is approved, the tax rates necessary for payment of principal and interest on any bonds sold will largely be dictated by the timing of the bond sales, the amount sold at a given sale, market interest rates at the time of each sale (although in no event greater than the maximum bond interest rate allowed by law), as well as actual assessed valuation of taxable property in the District over the term of repayment. The District’s Tax Rate Statement contains the best estimates of tax rates required to service the bond debt. The District estimates the average annual tax rate levy to fund this bond is $29.62 per $100,000 of assessed valuation. The final fiscal year in which the tax is anticipated to be collected will be 2055-56. The District estimates that the total amount repayable during the life of the bond, including principal and interest, is approximately $94 million dollars.\nPassage of Measure G requires approval by 55% of the voters voting thereon.\nA “YES” vote on Measure G means you wish to allow the District to issue bonds in an amount not to exceed $43 million dollars.\nA “NO” vote on Measure G means you do not wish to allow the District to issue the proposed bonds.\n“Approval of Measure G does not guarantee that the proposed project or projects in the Galt Joint Union High School District that are the subject of bonds under Measure G will be funded beyond the local revenues generated by Measure G. The school district’s proposal for the project or projects may assume the receipt of matching state funds, which could be subject to appropriation by the Legislature or approval of a statewide bond measure.”",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Galt Joint Union High School District, Repair/Safety and Vocational Training Measure. To upgrade classrooms to maintain quality education/school safety by preparing students for skilled trades including welding/construction/plumbing; repairing leaky roofs; removing asbestos/mold; shall Galt Joint Union High School District’s measure be adopted, authorizing $43,000,000 in bonds at legal rates, levying $30 per $100,000 of assessed valuation, generating $3,100,000 annually, while bonds are outstanding, prohibiting funds for administrators salaries/pensions, requiring independent citizens’ oversight, audits, all funds locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-sacramento-i-text",
+          "contestId": "ca-2026-sacramento-i",
+          "officialNumber": "Measure I",
+          "questionText": "Shall the measure amending the Adopted Charter of the City of Folsom to have the City Council appoint and direct the City Attorney and to make related operational changes, be adopted?",
+          "officialStatement": "Prepared by City Counsel\nCITY OF FOLSOM\nCity Clerk’s / Elections Official’s Impartial Analysis of Measure “I”\nCharter Amendment to Change the Procedure for Appointing and Removing the\nFolsom City Attorney and Making Related Procedural Changes\nThe Folsom City Charter requires the City to be legally represented by a City Attorney. The City Attorney is a City department head and his/her duties include: (i) legally advising the City Council, individual Councilmembers, the City Manager and department heads regarding the law relating to City affairs, (ii) representing the City in all legal proceedings, (iii) preparing all ordinances and other needed legal documents, (iv) reviewing and approving all City contracts as to legal form, and (iv) performing such other duties as may be prescribed by ordinance. The Charter also authorizes the City Attorney to retain outside special legal counsel to assist the City as needed.\nThe City Charter currently provides that the City Attorney is a department head who may be appointed and removed by the Folsom City Manager.\nOn July 14, 2026, the City Council placed Measure “I” on the November 3, 2026 General Municipal Election ballot. If passed by a majority of Folsom voters (50%+1), Measure “I” would amend the City Charter to provide that the City Council, and not the City Manager, shall have the power to appoint, suspend or remove the City Attorney.\nMeasure “I” requires the Council to appoint a City Attorney through an employment agreement, like other City department heads under the City Charter. Measure “I” expressly requires the City Attorney to be a member of the California State Bar and chosen solely on the basis of administrative qualifications. The City Attorney is not required to be a resident of the State or City and shall be paid a salary fixed by the Council commensurate with the responsibilities of the position.\nMeasure “I” provides that the City Attorney shall serve at the pleasure of the City Council and may be removed or suspended by the City Council as provided herein. The City Attorney has the right to a public hearing prior to being removed or suspended, which hearing shall be held and a Council decision made only after 10 days' published notice is provided. Measure “I” further prohibits the City Council from removing, suspending, requesting the resignation of, or reducing the duties, salary or benefits of the City Attorney during a period of 90 days immediately following the installation of any newly elected or newly appointed City Councilmember.\nA “yes” vote on Measure “I” will authorize a Charter amendment to give the City Council the authority to appoint, suspend or remove the City Attorney, subject to the procedural and timing rules above.\nA “no” vote on Measure “I” will not authorize a Charter amendment to give the City Council the authority to appoint, suspend or remove the City Attorney, subject to the procedural and timing rules above.\nThe above statement is an impartial analysis of Measure “I”. If you desire a copy of the Measure, please call the City’s elections official at (916) 461-6035 and a copy will be mailed at no cost to you.\ns/Christa Freemantle\nCity Clerk/Elections Official",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the measure amending the Adopted Charter of the City of Folsom to have the City Council appoint and direct the City Attorney and to make related operational changes, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-sacramento-j-text",
+          "contestId": "ca-2026-sacramento-j",
+          "officialNumber": "Measure J",
+          "questionText": "Shall the measure amending the Adopted Charter of the City of Folsom to confirm the City Council may grant decision making authority to Boards and Commissions by ordinance, be adopted?",
+          "officialStatement": "Prepared by City Counsel\nCITY OF FOLSOM\nCity Attorney’s Impartial Analysis of Measure J\nThe Folsom City Council appoints residents to serve on commissions to guide important decisions affecting the community. These bodies hold public meetings where specific community issues are reviewed in detail. The appointed commissioners receive reports from City staff, presentations from those seeking permits or other City approvals, and public comments from members of the community.\nThere are currently six City commissions, including the Arts and Culture Commission, the Historic District Commission, the Library Commission, the Parks and Recreation Commission, the Planning Commission, and the Utility Commission.\nThe City Charter gives the City Council authority to set the powers and duties of the Planning Commission, the Parks and Recreation Commission, and other boards and commissions created by the Council.\nSeparately, the City Charter says that boards and commissions “only shall be advisory to the Council”. Advisory bodies make recommendations and advise the City Council but cannot make binding decisions.\nOn July 14, 2026, the City Council voted to place Measure J on the November ballot. If approved by a majority of Folsom voters (50% + 1), Measure J would amend the City Charter to remove the requirement that boards and commissions “only shall be advisory to the Council” to confirm that the City Council may grant decision-making authority to these appointed bodies by ordinance.\nMeasure J would not require the City Council to grant decision-making authority to any board or commission. It would give the City Council discretion to grant individual boards or commissions decision-making authority. This authority could be broad or limited to specific circumstances, as determined by the Council. The City Council could also remove this authority to make a board or commission only advisory.\nMeasure J does not affect appeal rights. Any decision made by a City commission can be appealed to the City Council.\nThe commission most likely to be affected by Measure J is the Historic District Commission. This commission reviews development proposals in Folsom’s Historic District to help preserve and enhance its historic atmosphere and to ensure that new development is consistent with the historical character of the district. The City Council currently makes all binding decisions affecting development in the Historic District. If Measure J passes and the commission has decision-making authority, certain projects in the Historic District may proceed more quickly because separate City Council approval will not be required.\nA “yes” vote on Measure J will authorize a Charter amendment to allow the City Council to grant decision-making authority to City boards and commissions.\nA “no” vote on Measure J will not authorize a Charter amendment to allow the City Council to grant decision-making authority to City boards and commissions. These bodies would remain advisory to the Council.\nThe above statement is an impartial analysis of Measure J. If you desire a copy of the Measure, please call the City Clerk’s Office at (916) 461-6035 and a copy will be mailed at no cost to you.\ns/Sari Myers Dierking\nCity Attorney",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the measure amending the Adopted Charter of the City of Folsom to confirm the City Council may grant decision making authority to Boards and Commissions by ordinance, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-sacramento-k-text",
+          "contestId": "ca-2026-sacramento-k",
+          "officialNumber": "Measure K",
+          "questionText": "Shall the measure increasing the campaign contribution limit from $150 to $500 per donor per election on campaigns for Folsom City Council be adopted?",
+          "officialStatement": "Prepared by City Counsel\nCITY OF FOLSOM\nCity Attorney’s Impartial Analysis of Measure K\nCampaign contribution limits are rules set by governmental authorities to cap how much money donors can give to candidates running for office. In California, cities may set a limit on donations to candidates running for city council.\nIn 1994, Folsom voters passed an initiative measure establishing a $150 per person per election limit on donations to candidates for City Council. This rule has not been updated since 1994.\nOn July 14, 2026, the City Council voted to place Measure K on the November ballot. If passed by a majority of Folsom voters (50% + 1), Measure K would amend the Folsom Municipal Code to increase the campaign contribution limit applicable to candidates for Folsom City Council from $150 per person per election to $500 per person per election.\nMeasure K sets an upper limit for donations. Any person may donate less than $500 per election to any candidate running for Folsom City Council.\nMeasure K does not apply outside the City of Folsom, and it does not apply to any City election other than an election for Folsom City Council. For example, Measure K does not apply to ballot measures.\nA “yes” vote on Measure K will authorize an increase in the campaign contribution limit applicable to candidates for Folsom City Council from $150 to $500 per person per election.\nA “no” vote on Measure K will not authorize an increase in the campaign contribution limit applicable to candidates for Folsom City Council from $150 to $500 per person per election. The $150 per person per election campaign contribution limit will remain in place.\nThe above statement is an impartial analysis of Measure K. If you desire a copy of the Measure, please call the City Clerk’s Office at (916) 461-6035 and a copy will be mailed at no cost to you.\ns/Sari Myers Dierking\nCity Attorney",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the measure increasing the campaign contribution limit from $150 to $500 per donor per election on campaigns for Folsom City Council be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-sacramento-l-text",
+          "contestId": "ca-2026-sacramento-l",
+          "officialNumber": "Measure L",
+          "questionText": "Shall the offices of Galt Treasurer and Galt City Clerk be appointive?",
+          "officialStatement": "Prepared by City Counsel\nA city treasurer and city clerk may either be appointed or elected to their office. The City Treasurer and the City Clerk for the City of Galt are currently elected offices.\nAn elected city treasurer and an elected city clerk must reside and be registered to vote in the city where they hold office. No minimum training or experience qualifications apply to elected city treasurers and city clerks.\nAn appointed city treasurer and city clerk are not subject to state law residency requirements, and the City Council may set education and training requirements and review the City Treasurer and City Clerk’s performance annually.\nCalifornia Government Code section 36508 permits a city council to submit to the electors the question of whether an elective office, other than that of city council member, shall be made appointive. The Galt City Council directed that a measure be submitted to Galt voters pursuant to Government Code section 36508 concerning whether the offices of Galt City Treasurer and City Clerk shall be made appointive.\nA “yes” vote on this measure would approve of making the offices of Galt City Treasurer and City Clerk both appointive. If a majority of Galt voters approve this measure, the offices of Galt City Treasurer and Galt City Clerk would become appointive, starting after the 2028 general election. Thereafter, both the Galt City Treasurer and the Galt City Clerk would hold office at the pleasure of the City Council and be subject to the City’s terms of employment and other applicable personnel policies and procedures.\nA “no” vote on this measure would disapprove of making the offices of Galt City Treasurer and City Clerk appointive. If a majority of Galt voters reject the measure, the offices of Galt City Treasurer and Galt City Clerk will remain an elective office.\nThe above statement is an impartial analysis of Measure L. If you desire a copy of the measure, contact the Assistant City Clerk, Rose Rodacker, Administration Department at (209) 366-7130 x7 and a copy will be mailed at no cost to you.\ns/Frank Splendorio, Interim City Attorney\nCity of Galt\n“The above statement is an impartial analysis of Ordinance or Measure L. If you desire a copy of the ordinance or measure, please call the elections official’s office at 209-366-7130 and a copy will be mailed at no cost to you.”",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "Shall the offices of Galt Treasurer and Galt City Clerk be appointive?"
+          }
+        },
+        {
+          "id": "ca-2026-sacramento-m-text",
+          "contestId": "ca-2026-sacramento-m",
+          "officialNumber": "Measure M",
+          "questionText": "To address the decline in Federal funding for Special Education and to expand early intervention programs to every school, shall Sacramento City Unified School District adopt a $95 per year Special Education tax on each parcel of property until repealed or replaced by voters, raising $10 million annually, with exemptions for seniors, including Social Security recipients, and recipients of Supplemental Security and Social Security Disability and annual inflation adjustments, providing funds exclusively for Special Education and intervention programs, be adopted?",
+          "officialStatement": "Prepared by County Counsel\nIMPARTIAL ANALYSIS OF MEASURE M\nSacramento City Unified School District Parcel Tax\nPrepared by County Counsel\nMeasure M, if approved by the voters, would impose a special tax in the amount of $95 per year on each parcel of land within the boundaries of the Sacramento City Unified School District. The tax would be in effect beginning July 1, 2027, and will continue until amended or repealed by the voters. Beginning the second fiscal year after approval, the tax rate will be increased annually in proportion to the increase in the Consumer Price Index (CPI), however, the increase shall not exceed three percent in any fiscal year. Upon receipt of a satisfactory application, an exemption from the proposed tax will be granted on any parcel owned and occupied by persons who are 65 years of age or older, or persons receiving Supplemental Security Income for a disability regardless of age, or persons receiving Social Security Disability Insurance benefits, regardless of age, whose yearly income does not exceed 250 percent of the 2012 federal poverty guidelines issued by the United States Department of Health and Human Services.\nThe proceeds of the special tax are intended to be used for educational purposes, as set forth in the full text of the Measure printed in the Sample Ballot.\nThe special tax will be collected by the Sacramento County Tax Collector at the same time as, and along with, the ad valorem property tax, and will be subject to the same penalties and interest that apply to ad valorem property taxes if not paid when due.\nThe District is required by law to provide additional accountability measures for the proceeds. These measures include: (1) depositing the proceeds into a fund that is separate and apart from other District funds and shall be applied only as set forth in the Measure; and (2) providing an annual written report to the Board stating the amount of funds collected and expended, and the status of any projects or description of any programs funded from the tax proceeds.\nPassage of Measure M requires approval by two-thirds of the voters voting thereon.\nA “YES” vote on Measure M means you wish to enact the special tax.\nA “NO” vote on Measure M means you do not wish to enact the special tax.\nThe above statement is an impartial analysis of Measure M. If you desire a copy of the Measure, please call the Sacramento County Registrar of Voters at (916) 875-6276 and a copy will be mailed at no cost to you.",
+          "provenance": {
+            "sourceOrg": "Sacramento County Voter Registration and Elections",
+            "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+            "collectedAt": "2026-11-03T06:30:12.886160+00:00",
+            "verifiedAt": "2026-11-03T06:33:27.278689+00:00",
+            "quote": "To address the decline in Federal funding for Special Education and to expand early intervention programs to every school, shall Sacramento City Unified School District adopt a $95 per year Special Education tax on each parcel of property until repealed or replaced by voters, raising $10 million annually, with exemptions for seniors, including Social Security recipients, and recipients of Supplemental Security and Social Security Disability and annual inflation adjustments, providing funds exclusively for Special Education and intervention programs, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Allows Natomas Unified School District to borrow up to $300 million for listed school construction, repairs, safety, accessibility, classroom and career-training facilities, with property taxes paying the bonds and interest. The ballot estimates $22 million a year at $60 per $100,000 of assessed value. The tax statement estimates an average $59.38, a peak $60 starting in 2027–28, collection through 2053–54 and $599,856,974 total repayment; actual amounts and timing may vary. It requires 55% approval, independent citizen oversight and annual financial and performance audits. Funds cannot pay routine school operating costs, salaries or pensions.",
+          "yesMeans": "Authorize the $300 million in bonds and property taxes needed to repay them, with the listed project and oversight requirements.",
+          "noMeans": "Do not authorize these $300 million in bonds or their repayment taxes.",
+          "contestId": "ca-2026-sacramento-d",
+          "parts": [
+            {
+              "id": "ca-2026-sacramento-d#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Projects and financing",
+              "what": "Eligible work includes school and charter-school facilities, new schools and land for growth, replacement portable classrooms, transitional kindergarten and special-education spaces, career and STEM labs, arts, athletics, kitchens, safety and accessibility, hazardous-material removal, renewable energy, and building systems. Administrative and operational facilities and related project costs are also eligible. The district may change repair projects to replacement when more economical, pay eligible existing financing and undertake joint-use projects. Costs and available funding determine which projects proceed; state matching money is not guaranteed."
+            },
+            {
+              "id": "ca-2026-sacramento-d#terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bond terms",
+              "what": "Interest cannot exceed the legal maximum. Bonds may run up to the applicable legal term: currently 25 years under the Education Code or 40 years under the Government Code, with capital-appreciation bonds limited to 25 years. Repayment taxes last as long as needed for the authorized debt, including refunding bonds; the tax statement dates and rates are estimates."
+            }
+          ],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Allows Center Joint Unified School District to borrow up to $197 million for listed school repairs, new facilities for growing enrollment, safety, accessibility, science and career-training classrooms, with property taxes paying the bonds and interest. The ballot estimates $12.3 million a year at approximately $60 per $100,000 of assessed value. The tax statement estimates an average $54.94, a peak $60 in 2031–32, collection through 2068–69 and $516,728,015 total repayment; actual amounts and timing may vary. It requires 55% approval, independent citizen oversight and annual financial and performance audits. Funds cannot pay routine school operations, teacher or administrator salaries or pensions; eligible district staff work on bond projects may be reimbursed.",
+          "yesMeans": "Authorize the $197 million in bonds and property taxes needed to repay them, with the listed project and oversight requirements.",
+          "noMeans": "Do not authorize these $197 million in bonds or their repayment taxes.",
+          "contestId": "ca-2026-sacramento-e",
+          "parts": [
+            {
+              "id": "ca-2026-sacramento-e#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Projects and financing",
+              "what": "Eligible work includes repairing roofs, pipes, heating and cooling, replacing portables, building schools, labs and other facilities, safety, accessibility, technology, arts, athletics, libraries, kitchens, childcare and administrative spaces. Funds may buy or lease land and facilities, cover eligible project and financing costs, reimburse previous project spending and repay or refinance eligible leases. Joint-use projects and lawful public or nonprofit partnerships are allowed. The board sets priorities, and projects may change, be delayed or remain unfinished depending on costs and available funds; state matching money is not guaranteed."
+            }
+          ],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Allows Galt Joint Union High School District to borrow up to $43 million for listed school repairs, safety, accessibility and vocational-training facilities, with property taxes paying the bonds and interest. The ballot estimates $3.1 million a year at $30 per $100,000 of assessed value. The tax statement estimates an average $29.62, a peak $30 starting in 2029–30, collection through 2055–56 and $93,507,933 total repayment; actual amounts and timing may vary. It requires 55% approval, independent citizen oversight and annual financial and performance audits. Funds cannot pay routine operations, salaries or pensions; eligible project oversight and administration, including work by district personnel, may be paid.",
+          "yesMeans": "Authorize the $43 million in bonds and property taxes needed to repay them, with the listed project and oversight requirements.",
+          "noMeans": "Do not authorize these $43 million in bonds or their repayment taxes.",
+          "contestId": "ca-2026-sacramento-g",
+          "parts": [
+            {
+              "id": "ca-2026-sacramento-g#projects",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Projects and financing",
+              "what": "Eligible work includes classrooms, roofs and building systems, safe drinking water, hazardous-material removal, safety and security, accessibility, technology, energy efficiency, athletic facilities and replacement portables. School and district administrative facilities and related project costs are eligible. The board may replace rather than renovate facilities, acquire land and access rights, reimburse earlier eligible spending, pay eligible interim financing and undertake joint-use projects. The board sets priorities; costs and available funding determine which projects proceed, and state matching money is not guaranteed."
+            },
+            {
+              "id": "ca-2026-sacramento-g#terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bond terms",
+              "what": "Interest cannot exceed the legal maximum. Bonds may run up to the applicable legal term: currently 25 years under the Education Code or 40 years under the Government Code, with capital-appreciation bonds limited to 25 years. Repayment taxes last as long as needed for the authorized debt, including refunding bonds; the tax statement dates and rates are estimates."
+            }
+          ],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Changes Folsom’s charter so the City Council appoints, directs, suspends and removes the city attorney, replacing appointment by the city manager. The attorney would serve under an employment agreement for an indefinite term, at the council’s pleasure, with council-set pay. Appointment must be based solely on administrative qualifications and membership in the California State Bar; state or city residence is not required at appointment. Removal or suspension requires a public hearing and 10 days of published notice. For 90 days after any new council member takes office, the council cannot act to remove or suspend the attorney, request resignation, or reduce duties, pay or benefits. Majority approval makes the amendment effective 30 days after the council certifies the results.",
+          "yesMeans": "Approve the council appointment and supervision system, with the qualification, hearing and 90-day protections.",
+          "noMeans": "Keep the existing charter arrangement in which the city manager appoints the city attorney.",
+          "contestId": "ca-2026-sacramento-i",
+          "parts": [
+            {
+              "id": "ca-2026-sacramento-i#office",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Legal staff and special counsel",
+              "what": "The city attorney appoints authorized staff, who retain permanent status under the city merit system. The council may retain special counsel when the city attorney has an impermissible conflict, including discipline or dismissal of the city manager. The attorney continues the listed duties of legal advice, representation, drafting documents and reviewing contracts."
+            }
+          ],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Changes Folsom’s charter to let the City Council give boards and commissions decision-making authority by ordinance, removing the provision that they can only advise the council. The council could grant broad or limited authority and later withdraw it; the measure does not require any delegation. Commission decisions remain appealable to the council. Majority approval makes the amendment effective 30 days after the council certifies the results.",
+          "yesMeans": "Allow the council to grant decision-making powers to boards and commissions through ordinances.",
+          "noMeans": "Keep the charter provision making boards and commissions advisory to the council.",
+          "contestId": "ca-2026-sacramento-j",
+          "parts": [],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Raises Folsom’s limit on a person’s contributions to support or oppose a City Council candidate from $150 to $500 per election, counting contributions across committees supporting or opposing that candidate. The candidate’s own contributions are excepted. It applies to City Council campaigns, including money for prior campaign deficits, and does not set limits for ballot-measure campaigns. Other campaign-code rules remain in place. Majority approval makes the change effective 30 days after the council certifies the results.",
+          "yesMeans": "Increase the City Council campaign contribution limit to $500 per person per candidate per election.",
+          "noMeans": "Keep the $150 limit per person per candidate per election.",
+          "contestId": "ca-2026-sacramento-k",
+          "parts": [
+            {
+              "id": "ca-2026-sacramento-k#credit",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Other existing contribution rules",
+              "what": "The ordinance retains the prohibition on extending credit for more than 90 days or more than $1,000, while allowing candidates to borrow personally with full disclosure. If a violation is established, improperly received contributions must be paid to the city’s general fund."
+            }
+          ],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Makes Galt’s city treasurer and city clerk appointed offices after the 2028 general election. The City Council would appoint both officials, who would serve at its pleasure under city employment policies. Appointed officials would not face the state-law city residency requirement for elected treasurers and clerks, and the council could set education and training requirements and review performance annually. It requires majority approval.",
+          "yesMeans": "Have the council appoint both the city treasurer and city clerk after the 2028 general election.",
+          "noMeans": "Keep both offices elected by Galt voters.",
+          "contestId": "ca-2026-sacramento-l",
+          "parts": [],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Creates a Sacramento City Unified School District parcel tax of $95 a year starting July 1, 2027, estimated to raise $10 million annually for special education, early intervention and student support. Starting in the second fiscal year, the rate rises with the San Francisco Bay Area all-items Consumer Price Index, by at most 3% a year. The tax continues until voters amend or repeal it and requires two-thirds approval. Money can support teachers, therapists, specialists, support staff and specialized resources, but cannot pay administrator salaries, benefits or pensions. It requires a separate fund and an annual report to the school board.",
+          "yesMeans": "Approve the $95 annual parcel tax, inflation adjustments, restricted uses and eligible exemptions.",
+          "noMeans": "Do not establish this parcel tax.",
+          "contestId": "ca-2026-sacramento-m",
+          "parts": [
+            {
+              "id": "ca-2026-sacramento-m#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and application deadline",
+              "what": "Property already exempt from ordinary property tax is also exempt. An exemption may be granted for property used solely as an owner-occupied single-family principal residence if an owner is 65 by the preceding June 30, receives disability Supplemental Security Income at any age, or receives Social Security Disability Insurance at any age with annual income no more than 250% of the 2012 federal poverty guideline. Apply to the district by June 15 before the first tax year sought. An approved exemption continues while ownership, occupancy and eligibility continue, subject to verification."
+            },
+            {
+              "id": "ca-2026-sacramento-m#accountability",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Collection and funding protections",
+              "what": "The tax is collected with the regular property tax bill and carries the same late penalties, interest and property lien. By December 31 each year the superintendent or chief financial officer must report collections, spending and funded projects or programs to the board. If adopting this tax causes a reduction in state or federal funding, the tax must be reduced as needed to restore that funding. The district’s spending limit is adjusted by the amount collected when required by law."
+            }
+          ],
+          "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+          "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:33:27.278689+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+        "finalUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+        "httpStatus": 200,
+        "rawHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+        "retrievedAt": "2026-11-03T06:30:12.886160+00:00",
+        "publisher": "Sacramento County Voter Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November3,2026 complete county measure inventory with official questions, neutral analyses, legal text and tax statements where published. Original HTML bytes retained; exact bounded derivatives exclude voter arguments. Official question and neutral analysis establish Folsom J and K amendment direction where county HTML retains old/new wording."
+      }
+    ]
+  }
+}

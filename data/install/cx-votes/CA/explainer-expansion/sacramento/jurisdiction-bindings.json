@@ -1,0 +1,8 @@
+{
+  "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/school_district:galt_joint_union_high_school_district": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/place:folsom": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/place:galt": "data/derived/zip-divisions/95.json",
+  "ocd-division/country:us/state:ca/school_district:sacramento_city_unified_school_district": "data/derived/zip-divisions/95.json"
+}

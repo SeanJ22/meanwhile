@@ -1,0 +1,18 @@
+{
+  "state": "CA",
+  "county": "Sacramento",
+  "electionDate": "2026-11-03",
+  "officialDenominator": 9,
+  "heldMatches": 0,
+  "preparedAttached": 8,
+  "pending": [
+    {
+      "letter": "H",
+      "name": "Los Rios Community College District School Facilities Improvement District No.1",
+      "status": "FULL_OFFICIAL_TEXT_HELD_EXACT_ELECTORATE_OPEN",
+      "detail": "Full text expressly restricts electorate to the portions of Los Rios district in Sacramento and Yolo Counties. Do not substitute either full county or entire multicounty college district."
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "finalUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:30:12.886160+00:00",
+    "sha256": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "bytes": 257194,
+    "savedFile": "sources/38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a.html",
+    "sourceTextFile": "sources/38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a.txt",
+    "extractedTextSha256": "b8a8bf167b5bc9fedff52b09dc244c0f17c9873b1b8859f64394d96504cca468",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_HTML_TEXT_EXTRACTION",
+    "publisher": "Sacramento County Voter Registration and Elections",
+    "role": "official-complete-county-measure-inventory",
+    "note": "Original HTML includes submitted arguments and formatting; bounded support excludes voter arguments. County HTML for Folsom J still displays the advisory-only sentence, while its official neutral analysis expressly identifies removal. Folsom K HTML displays old $150 beside underlined $500; official question and neutral analysis explicitly identify replacement. Explanations use the unambiguous question and official neutral analysis for these amendment directions."
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-11-03T06:34:32.192Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "Eight attached measures only; Los Rios SFID1 remains open.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district",
+      "contests": [
+        "ca-2026-sacramento-d"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district",
+      "contests": [
+        "ca-2026-sacramento-e"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:galt_joint_union_high_school_district",
+      "contests": [
+        "ca-2026-sacramento-g"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:folsom",
+      "contests": [
+        "ca-2026-sacramento-i",
+        "ca-2026-sacramento-j",
+        "ca-2026-sacramento-k"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:galt",
+      "contests": [
+        "ca-2026-sacramento-l"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sacramento_city_unified_school_district",
+      "contests": [
+        "ca-2026-sacramento-m"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:sacramento",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:elk_grove",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_cordova",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:roseville",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

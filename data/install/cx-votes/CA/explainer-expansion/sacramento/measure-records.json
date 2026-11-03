@@ -1,0 +1,167 @@
+[
+  {
+    "whatItDoes": "Allows Natomas Unified School District to borrow up to $300 million for listed school construction, repairs, safety, accessibility, classroom and career-training facilities, with property taxes paying the bonds and interest. The ballot estimates $22 million a year at $60 per $100,000 of assessed value. The tax statement estimates an average $59.38, a peak $60 starting in 2027–28, collection through 2053–54 and $599,856,974 total repayment; actual amounts and timing may vary. It requires 55% approval, independent citizen oversight and annual financial and performance audits. Funds cannot pay routine school operating costs, salaries or pensions.",
+    "yesMeans": "Authorize the $300 million in bonds and property taxes needed to repay them, with the listed project and oversight requirements.",
+    "noMeans": "Do not authorize these $300 million in bonds or their repayment taxes.",
+    "contestId": "ca-2026-sacramento-d",
+    "parts": [
+      {
+        "id": "ca-2026-sacramento-d#projects",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Projects and financing",
+        "what": "Eligible work includes school and charter-school facilities, new schools and land for growth, replacement portable classrooms, transitional kindergarten and special-education spaces, career and STEM labs, arts, athletics, kitchens, safety and accessibility, hazardous-material removal, renewable energy, and building systems. Administrative and operational facilities and related project costs are also eligible. The district may change repair projects to replacement when more economical, pay eligible existing financing and undertake joint-use projects. Costs and available funding determine which projects proceed; state matching money is not guaranteed."
+      },
+      {
+        "id": "ca-2026-sacramento-d#terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond terms",
+        "what": "Interest cannot exceed the legal maximum. Bonds may run up to the applicable legal term: currently 25 years under the Education Code or 40 years under the Government Code, with capital-appreciation bonds limited to 25 years. Repayment taxes last as long as needed for the authorized debt, including refunding bonds; the tax statement dates and rates are estimates."
+      }
+    ],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Allows Center Joint Unified School District to borrow up to $197 million for listed school repairs, new facilities for growing enrollment, safety, accessibility, science and career-training classrooms, with property taxes paying the bonds and interest. The ballot estimates $12.3 million a year at approximately $60 per $100,000 of assessed value. The tax statement estimates an average $54.94, a peak $60 in 2031–32, collection through 2068–69 and $516,728,015 total repayment; actual amounts and timing may vary. It requires 55% approval, independent citizen oversight and annual financial and performance audits. Funds cannot pay routine school operations, teacher or administrator salaries or pensions; eligible district staff work on bond projects may be reimbursed.",
+    "yesMeans": "Authorize the $197 million in bonds and property taxes needed to repay them, with the listed project and oversight requirements.",
+    "noMeans": "Do not authorize these $197 million in bonds or their repayment taxes.",
+    "contestId": "ca-2026-sacramento-e",
+    "parts": [
+      {
+        "id": "ca-2026-sacramento-e#projects",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Projects and financing",
+        "what": "Eligible work includes repairing roofs, pipes, heating and cooling, replacing portables, building schools, labs and other facilities, safety, accessibility, technology, arts, athletics, libraries, kitchens, childcare and administrative spaces. Funds may buy or lease land and facilities, cover eligible project and financing costs, reimburse previous project spending and repay or refinance eligible leases. Joint-use projects and lawful public or nonprofit partnerships are allowed. The board sets priorities, and projects may change, be delayed or remain unfinished depending on costs and available funds; state matching money is not guaranteed."
+      }
+    ],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Allows Galt Joint Union High School District to borrow up to $43 million for listed school repairs, safety, accessibility and vocational-training facilities, with property taxes paying the bonds and interest. The ballot estimates $3.1 million a year at $30 per $100,000 of assessed value. The tax statement estimates an average $29.62, a peak $30 starting in 2029–30, collection through 2055–56 and $93,507,933 total repayment; actual amounts and timing may vary. It requires 55% approval, independent citizen oversight and annual financial and performance audits. Funds cannot pay routine operations, salaries or pensions; eligible project oversight and administration, including work by district personnel, may be paid.",
+    "yesMeans": "Authorize the $43 million in bonds and property taxes needed to repay them, with the listed project and oversight requirements.",
+    "noMeans": "Do not authorize these $43 million in bonds or their repayment taxes.",
+    "contestId": "ca-2026-sacramento-g",
+    "parts": [
+      {
+        "id": "ca-2026-sacramento-g#projects",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Projects and financing",
+        "what": "Eligible work includes classrooms, roofs and building systems, safe drinking water, hazardous-material removal, safety and security, accessibility, technology, energy efficiency, athletic facilities and replacement portables. School and district administrative facilities and related project costs are eligible. The board may replace rather than renovate facilities, acquire land and access rights, reimburse earlier eligible spending, pay eligible interim financing and undertake joint-use projects. The board sets priorities; costs and available funding determine which projects proceed, and state matching money is not guaranteed."
+      },
+      {
+        "id": "ca-2026-sacramento-g#terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond terms",
+        "what": "Interest cannot exceed the legal maximum. Bonds may run up to the applicable legal term: currently 25 years under the Education Code or 40 years under the Government Code, with capital-appreciation bonds limited to 25 years. Repayment taxes last as long as needed for the authorized debt, including refunding bonds; the tax statement dates and rates are estimates."
+      }
+    ],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Changes Folsom’s charter so the City Council appoints, directs, suspends and removes the city attorney, replacing appointment by the city manager. The attorney would serve under an employment agreement for an indefinite term, at the council’s pleasure, with council-set pay. Appointment must be based solely on administrative qualifications and membership in the California State Bar; state or city residence is not required at appointment. Removal or suspension requires a public hearing and 10 days of published notice. For 90 days after any new council member takes office, the council cannot act to remove or suspend the attorney, request resignation, or reduce duties, pay or benefits. Majority approval makes the amendment effective 30 days after the council certifies the results.",
+    "yesMeans": "Approve the council appointment and supervision system, with the qualification, hearing and 90-day protections.",
+    "noMeans": "Keep the existing charter arrangement in which the city manager appoints the city attorney.",
+    "contestId": "ca-2026-sacramento-i",
+    "parts": [
+      {
+        "id": "ca-2026-sacramento-i#office",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Legal staff and special counsel",
+        "what": "The city attorney appoints authorized staff, who retain permanent status under the city merit system. The council may retain special counsel when the city attorney has an impermissible conflict, including discipline or dismissal of the city manager. The attorney continues the listed duties of legal advice, representation, drafting documents and reviewing contracts."
+      }
+    ],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Changes Folsom’s charter to let the City Council give boards and commissions decision-making authority by ordinance, removing the provision that they can only advise the council. The council could grant broad or limited authority and later withdraw it; the measure does not require any delegation. Commission decisions remain appealable to the council. Majority approval makes the amendment effective 30 days after the council certifies the results.",
+    "yesMeans": "Allow the council to grant decision-making powers to boards and commissions through ordinances.",
+    "noMeans": "Keep the charter provision making boards and commissions advisory to the council.",
+    "contestId": "ca-2026-sacramento-j",
+    "parts": [],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Raises Folsom’s limit on a person’s contributions to support or oppose a City Council candidate from $150 to $500 per election, counting contributions across committees supporting or opposing that candidate. The candidate’s own contributions are excepted. It applies to City Council campaigns, including money for prior campaign deficits, and does not set limits for ballot-measure campaigns. Other campaign-code rules remain in place. Majority approval makes the change effective 30 days after the council certifies the results.",
+    "yesMeans": "Increase the City Council campaign contribution limit to $500 per person per candidate per election.",
+    "noMeans": "Keep the $150 limit per person per candidate per election.",
+    "contestId": "ca-2026-sacramento-k",
+    "parts": [
+      {
+        "id": "ca-2026-sacramento-k#credit",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Other existing contribution rules",
+        "what": "The ordinance retains the prohibition on extending credit for more than 90 days or more than $1,000, while allowing candidates to borrow personally with full disclosure. If a violation is established, improperly received contributions must be paid to the city’s general fund."
+      }
+    ],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Makes Galt’s city treasurer and city clerk appointed offices after the 2028 general election. The City Council would appoint both officials, who would serve at its pleasure under city employment policies. Appointed officials would not face the state-law city residency requirement for elected treasurers and clerks, and the council could set education and training requirements and review performance annually. It requires majority approval.",
+    "yesMeans": "Have the council appoint both the city treasurer and city clerk after the 2028 general election.",
+    "noMeans": "Keep both offices elected by Galt voters.",
+    "contestId": "ca-2026-sacramento-l",
+    "parts": [],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Creates a Sacramento City Unified School District parcel tax of $95 a year starting July 1, 2027, estimated to raise $10 million annually for special education, early intervention and student support. Starting in the second fiscal year, the rate rises with the San Francisco Bay Area all-items Consumer Price Index, by at most 3% a year. The tax continues until voters amend or repeal it and requires two-thirds approval. Money can support teachers, therapists, specialists, support staff and specialized resources, but cannot pay administrator salaries, benefits or pensions. It requires a separate fund and an annual report to the school board.",
+    "yesMeans": "Approve the $95 annual parcel tax, inflation adjustments, restricted uses and eligible exemptions.",
+    "noMeans": "Do not establish this parcel tax.",
+    "contestId": "ca-2026-sacramento-m",
+    "parts": [
+      {
+        "id": "ca-2026-sacramento-m#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and application deadline",
+        "what": "Property already exempt from ordinary property tax is also exempt. An exemption may be granted for property used solely as an owner-occupied single-family principal residence if an owner is 65 by the preceding June 30, receives disability Supplemental Security Income at any age, or receives Social Security Disability Insurance at any age with annual income no more than 250% of the 2012 federal poverty guideline. Apply to the district by June 15 before the first tax year sought. An approved exemption continues while ownership, occupancy and eligibility continue, subject to verification."
+      },
+      {
+        "id": "ca-2026-sacramento-m#accountability",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Collection and funding protections",
+        "what": "The tax is collected with the regular property tax bill and carries the same late penalties, interest and property lien. By December 31 each year the superintendent or chief financial officer must report collections, spending and funded projects or programs to the board. If adopting this tax causes a reduction in state or federal funding, the tax must be reduced as needed to restore that funding. The district’s spending limit is adjusted by the amount collected when required by law."
+      }
+    ],
+    "sourceUrl": "https://elections.saccounty.gov/us/en/election-information/current-measure-information.html",
+    "sourceHash": "38610d93d6575c242161407612df23d96ba1daa69b1ee6f8b44db2a179b0036a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:33:27.278689+00:00",
+    "citation": "measure-source"
+  }
+]

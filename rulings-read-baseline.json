@@ -2158,10 +2158,6 @@
       "table": "cp_route_tasks"
     },
     {
-      "file": "scripts/freshness-shadow.mts",
-      "table": "cp_runner_heartbeat"
-    },
-    {
       "file": "scripts/ingest.ts",
       "table": "cp_doors"
     },

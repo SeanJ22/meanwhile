@@ -1,0 +1,1001 @@
+{
+  "westernDefinition": {
+    "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.070",
+    "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+    "collectedAt": "2026-11-03T09:37:09.340438+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "The jurisdiction of the western district of the court of appeals shall be coextensive with all the counties in the state except those embraced in the jurisdiction of the eastern and the southern districts of the court of appeals."
+  },
+  "easternExclusion": {
+    "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+    "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+    "collectedAt": "2026-11-03T09:39:22.282006+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+  },
+  "southernExclusion": {
+    "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.060",
+    "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+    "collectedAt": "2026-11-03T09:39:22.282667+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "The jurisdiction of the southern district of the court of appeals shall be coextensive with the counties of Barry, Barton, Butler, Camden, Cedar, Carter, Christian, Dade, Dallas, Douglas, Greene, Howell, Hickory, Jasper, Laclede, Lawrence, McDonald, Newton, Ozark, Oregon, Polk, Pulaski, Phelps, Ripley, St. Clair, Shannon, Stone, Texas, Taney, Webster, Wright, Dent, Crawford, Maries, Reynolds, Iron, Wayne, Bollinger, Scott, Stoddard, Dunklin, Pemiscot, New Madrid and Mississippi."
+  },
+  "canonicalStateCountyUniverse": [
+    [
+      "ocd-division/country:us/state:mo/county:adair",
+      "county",
+      "29001",
+      "Adair County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:andrew",
+      "county",
+      "29003",
+      "Andrew County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:atchison",
+      "county",
+      "29005",
+      "Atchison County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:audrain",
+      "county",
+      "29007",
+      "Audrain County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:barry",
+      "county",
+      "29009",
+      "Barry County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:barton",
+      "county",
+      "29011",
+      "Barton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:bates",
+      "county",
+      "29013",
+      "Bates County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:benton",
+      "county",
+      "29015",
+      "Benton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:bollinger",
+      "county",
+      "29017",
+      "Bollinger County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:boone",
+      "county",
+      "29019",
+      "Boone County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:buchanan",
+      "county",
+      "29021",
+      "Buchanan County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:butler",
+      "county",
+      "29023",
+      "Butler County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:caldwell",
+      "county",
+      "29025",
+      "Caldwell County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:callaway",
+      "county",
+      "29027",
+      "Callaway County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:camden",
+      "county",
+      "29029",
+      "Camden County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cape_girardeau",
+      "county",
+      "29031",
+      "Cape Girardeau County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:carroll",
+      "county",
+      "29033",
+      "Carroll County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:carter",
+      "county",
+      "29035",
+      "Carter County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cass",
+      "county",
+      "29037",
+      "Cass County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cedar",
+      "county",
+      "29039",
+      "Cedar County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:chariton",
+      "county",
+      "29041",
+      "Chariton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:christian",
+      "county",
+      "29043",
+      "Christian County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:clark",
+      "county",
+      "29045",
+      "Clark County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:clay",
+      "county",
+      "29047",
+      "Clay County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:clinton",
+      "county",
+      "29049",
+      "Clinton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cole",
+      "county",
+      "29051",
+      "Cole County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cooper",
+      "county",
+      "29053",
+      "Cooper County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:crawford",
+      "county",
+      "29055",
+      "Crawford County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:dade",
+      "county",
+      "29057",
+      "Dade County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:dallas",
+      "county",
+      "29059",
+      "Dallas County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:daviess",
+      "county",
+      "29061",
+      "Daviess County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:dekalb",
+      "county",
+      "29063",
+      "DeKalb County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:dent",
+      "county",
+      "29065",
+      "Dent County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:douglas",
+      "county",
+      "29067",
+      "Douglas County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:dunklin",
+      "county",
+      "29069",
+      "Dunklin County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:franklin",
+      "county",
+      "29071",
+      "Franklin County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:gasconade",
+      "county",
+      "29073",
+      "Gasconade County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:gentry",
+      "county",
+      "29075",
+      "Gentry County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:greene",
+      "county",
+      "29077",
+      "Greene County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:grundy",
+      "county",
+      "29079",
+      "Grundy County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:harrison",
+      "county",
+      "29081",
+      "Harrison County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:henry",
+      "county",
+      "29083",
+      "Henry County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:hickory",
+      "county",
+      "29085",
+      "Hickory County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:holt",
+      "county",
+      "29087",
+      "Holt County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:howard",
+      "county",
+      "29089",
+      "Howard County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:howell",
+      "county",
+      "29091",
+      "Howell County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:iron",
+      "county",
+      "29093",
+      "Iron County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:jackson",
+      "county",
+      "29095",
+      "Jackson County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:jasper",
+      "county",
+      "29097",
+      "Jasper County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:jefferson",
+      "county",
+      "29099",
+      "Jefferson County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:johnson",
+      "county",
+      "29101",
+      "Johnson County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:knox",
+      "county",
+      "29103",
+      "Knox County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:laclede",
+      "county",
+      "29105",
+      "Laclede County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:lafayette",
+      "county",
+      "29107",
+      "Lafayette County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:lawrence",
+      "county",
+      "29109",
+      "Lawrence County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:lewis",
+      "county",
+      "29111",
+      "Lewis County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:lincoln",
+      "county",
+      "29113",
+      "Lincoln County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:linn",
+      "county",
+      "29115",
+      "Linn County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:livingston",
+      "county",
+      "29117",
+      "Livingston County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:macon",
+      "county",
+      "29121",
+      "Macon County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:madison",
+      "county",
+      "29123",
+      "Madison County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:maries",
+      "county",
+      "29125",
+      "Maries County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:marion",
+      "county",
+      "29127",
+      "Marion County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:mcdonald",
+      "county",
+      "29119",
+      "McDonald County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:mercer",
+      "county",
+      "29129",
+      "Mercer County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:miller",
+      "county",
+      "29131",
+      "Miller County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:mississippi",
+      "county",
+      "29133",
+      "Mississippi County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:moniteau",
+      "county",
+      "29135",
+      "Moniteau County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:monroe",
+      "county",
+      "29137",
+      "Monroe County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:montgomery",
+      "county",
+      "29139",
+      "Montgomery County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:morgan",
+      "county",
+      "29141",
+      "Morgan County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:new_madrid",
+      "county",
+      "29143",
+      "New Madrid County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:newton",
+      "county",
+      "29145",
+      "Newton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:nodaway",
+      "county",
+      "29147",
+      "Nodaway County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:oregon",
+      "county",
+      "29149",
+      "Oregon County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:osage",
+      "county",
+      "29151",
+      "Osage County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:ozark",
+      "county",
+      "29153",
+      "Ozark County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:pemiscot",
+      "county",
+      "29155",
+      "Pemiscot County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:perry",
+      "county",
+      "29157",
+      "Perry County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:pettis",
+      "county",
+      "29159",
+      "Pettis County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:phelps",
+      "county",
+      "29161",
+      "Phelps County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:pike",
+      "county",
+      "29163",
+      "Pike County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:platte",
+      "county",
+      "29165",
+      "Platte County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:polk",
+      "county",
+      "29167",
+      "Polk County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:pulaski",
+      "county",
+      "29169",
+      "Pulaski County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:putnam",
+      "county",
+      "29171",
+      "Putnam County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:ralls",
+      "county",
+      "29173",
+      "Ralls County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:randolph",
+      "county",
+      "29175",
+      "Randolph County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:ray",
+      "county",
+      "29177",
+      "Ray County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:reynolds",
+      "county",
+      "29179",
+      "Reynolds County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:ripley",
+      "county",
+      "29181",
+      "Ripley County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:saline",
+      "county",
+      "29195",
+      "Saline County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:schuyler",
+      "county",
+      "29197",
+      "Schuyler County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:scotland",
+      "county",
+      "29199",
+      "Scotland County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:scott",
+      "county",
+      "29201",
+      "Scott County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:shannon",
+      "county",
+      "29203",
+      "Shannon County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:shelby",
+      "county",
+      "29205",
+      "Shelby County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:st_charles",
+      "county",
+      "29183",
+      "St. Charles County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:st_clair",
+      "county",
+      "29185",
+      "St. Clair County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:st_francois",
+      "county",
+      "29187",
+      "St. Francois County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:st_louis_29189",
+      "county",
+      "29189",
+      "St. Louis County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:st_louis_29510",
+      "county",
+      "29510",
+      "St. Louis city"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:ste_genevieve",
+      "county",
+      "29186",
+      "Ste. Genevieve County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:stoddard",
+      "county",
+      "29207",
+      "Stoddard County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:stone",
+      "county",
+      "29209",
+      "Stone County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:sullivan",
+      "county",
+      "29211",
+      "Sullivan County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:taney",
+      "county",
+      "29213",
+      "Taney County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:texas",
+      "county",
+      "29215",
+      "Texas County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:vernon",
+      "county",
+      "29217",
+      "Vernon County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:warren",
+      "county",
+      "29219",
+      "Warren County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:washington",
+      "county",
+      "29221",
+      "Washington County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:wayne",
+      "county",
+      "29223",
+      "Wayne County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:webster",
+      "county",
+      "29225",
+      "Webster County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:worth",
+      "county",
+      "29227",
+      "Worth County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:wright",
+      "county",
+      "29229",
+      "Wright County"
+    ]
+  ],
+  "canonicalRegistrySha256": "e0366e707134483e1f74f536587c685df536277e662d181b19533e019ec4fceb",
+  "allStateCountyEquivalentDivisions": 115,
+  "easternCounties": 25,
+  "easternIndependentCities": 1,
+  "southernCounties": 44,
+  "westernCounties": 45,
+  "westernMembers": [
+    [
+      "ocd-division/country:us/state:mo/county:adair",
+      "county",
+      "29001",
+      "Adair County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:andrew",
+      "county",
+      "29003",
+      "Andrew County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:atchison",
+      "county",
+      "29005",
+      "Atchison County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:bates",
+      "county",
+      "29013",
+      "Bates County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:benton",
+      "county",
+      "29015",
+      "Benton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:boone",
+      "county",
+      "29019",
+      "Boone County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:buchanan",
+      "county",
+      "29021",
+      "Buchanan County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:caldwell",
+      "county",
+      "29025",
+      "Caldwell County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:callaway",
+      "county",
+      "29027",
+      "Callaway County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:carroll",
+      "county",
+      "29033",
+      "Carroll County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cass",
+      "county",
+      "29037",
+      "Cass County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:chariton",
+      "county",
+      "29041",
+      "Chariton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:clay",
+      "county",
+      "29047",
+      "Clay County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:clinton",
+      "county",
+      "29049",
+      "Clinton County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cole",
+      "county",
+      "29051",
+      "Cole County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:cooper",
+      "county",
+      "29053",
+      "Cooper County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:daviess",
+      "county",
+      "29061",
+      "Daviess County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:dekalb",
+      "county",
+      "29063",
+      "DeKalb County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:gentry",
+      "county",
+      "29075",
+      "Gentry County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:grundy",
+      "county",
+      "29079",
+      "Grundy County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:harrison",
+      "county",
+      "29081",
+      "Harrison County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:henry",
+      "county",
+      "29083",
+      "Henry County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:holt",
+      "county",
+      "29087",
+      "Holt County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:howard",
+      "county",
+      "29089",
+      "Howard County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:jackson",
+      "county",
+      "29095",
+      "Jackson County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:johnson",
+      "county",
+      "29101",
+      "Johnson County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:lafayette",
+      "county",
+      "29107",
+      "Lafayette County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:linn",
+      "county",
+      "29115",
+      "Linn County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:livingston",
+      "county",
+      "29117",
+      "Livingston County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:macon",
+      "county",
+      "29121",
+      "Macon County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:mercer",
+      "county",
+      "29129",
+      "Mercer County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:miller",
+      "county",
+      "29131",
+      "Miller County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:moniteau",
+      "county",
+      "29135",
+      "Moniteau County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:morgan",
+      "county",
+      "29141",
+      "Morgan County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:nodaway",
+      "county",
+      "29147",
+      "Nodaway County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:pettis",
+      "county",
+      "29159",
+      "Pettis County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:platte",
+      "county",
+      "29165",
+      "Platte County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:putnam",
+      "county",
+      "29171",
+      "Putnam County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:randolph",
+      "county",
+      "29175",
+      "Randolph County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:ray",
+      "county",
+      "29177",
+      "Ray County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:saline",
+      "county",
+      "29195",
+      "Saline County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:schuyler",
+      "county",
+      "29197",
+      "Schuyler County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:sullivan",
+      "county",
+      "29211",
+      "Sullivan County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:vernon",
+      "county",
+      "29217",
+      "Vernon County"
+    ],
+    [
+      "ocd-division/country:us/state:mo/county:worth",
+      "county",
+      "29227",
+      "Worth County"
+    ]
+  ],
+  "circuit16": {
+    "sourceUrl": "https://revisor.mo.gov/main/OneChapter.aspx?chapter=478",
+    "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+    "collectedAt": "2026-11-03T09:37:10.089560+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "JUDICIAL CIRCUIT NO. 16 Jackson County"
+  },
+  "venueLimit": "RSMo478.461 east/west portions concern case venue and court location. They are not used to narrow any judicial retention electorate. All9Circuit16judges appear in BOTH independent election-board samples."
+}

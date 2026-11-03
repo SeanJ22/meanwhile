@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-03T10:06:14.319Z",
+  "latestCxVotesRef": "331e9d448f05dc0fda538500fd134ff19797312a",
+  "stLouisThenBothLatestMoInputsThenJacksonMerge": "PASS",
+  "latestNestedStateInputsChecked": 2,
+  "allIncomingFieldsAdmittedExact": 20,
+  "allIncomingCandidateIdsAndCoresAdmittedExact": 27,
+  "allIncomingWholeCountyJudicialLinksAdmittedExact": 46,
+  "allPriorContestRecordsPreserved": 224,
+  "allPriorCandidateCoresPreserved": 399,
+  "allQuestionRowsPreserved": 9,
+  "allMeasureRecordAnalysisExplanationRowsPreserved": 6,
+  "priorStLouisFieldsPreserved": 25,
+  "priorStLouisCandidateCoresPreserved": 32,
+  "allPriorStLouisJudicialMembershipsPreserved": 27,
+  "heldStateSupremeRetentionExactPreserved": true,
+  "noProductionWrites": true
+}

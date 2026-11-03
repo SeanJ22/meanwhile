@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-03T10:13:37.803Z",
+  "state": "MO",
+  "sources": 25,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 93,
+  "newContests": 20,
+  "refreshedContests": 0,
+  "candidacies": 27,
+  "pdfNameWhitespaceNormalizations": 0,
+  "sourceNameCaseNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 195,
+  "unrelatedCandidateCoreFieldsPreserved": 367,
+  "unrelatedCandidateAliasEnrichments": 367,
+  "unmatchedReaderDivisionCount": 8,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:1",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:2",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:3",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:4",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:5",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:6",
+    "ocd-division/country:us/state:mo/court_of_appeals_district:western"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:1",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:2",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:3",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:4",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:5",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:6",
+    "ocd-division/country:us/state:mo/court_of_appeals_district:western"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

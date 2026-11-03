@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#FFFFFF"/>
+    <title>Who Are My County Legislators? - Jackson County MO</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content=" Each Jackson Countian lives in two County Legislative districts — an individual district and an at-large district. You can use this Legislative Map Application that the Jackson Geographic Information Systems division has developed to determine in which County Legislative..." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators" />
+    <meta property="og:title" content="Who Are My County Legislators?" />
+    <meta property="og:description" content=" Each Jackson Countian lives in two County Legislative districts — an individual district and an at-large district. You can use this Legislative Map Application that the Jackson Geographic Information Systems division has developed to determine in which County Legislative..." />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Who Are My County Legislators?" />
+    <meta property="twitter:description" content=" Each Jackson Countian lives in two County Legislative districts — an individual district and an at-large district. You can use this Legislative Map Application that the Jackson Geographic Information Systems division has developed to determine in which County Legislative..." />
+    <link rel="canonical" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators" />
+
+    <!-- Matomo Tag Manager --><script>  var _mtm = window._mtm = window._mtm || [];  _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});  (function() {    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];    g.async=true; g.src='https://matomo.granicus.com/js/container_TLSuKUre.js'; s.parentNode.insertBefore(g,s);  })();</script><!-- End Matomo Tag Manager -->
+
+    <link rel="apple-touch-icon" sizes="76x76" href="/files/ocfavicon/Public/apple-touch-icon.png?V=637593187511443314">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/ocfavicon/Public/favicon-32x32.png?V=637593187511443314">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/ocfavicon/Public/favicon-16x16.png?V=637593187511443314">
+<link rel="manifest" href="/files/ocfavicon/Public/site.webmanifest?V=637593187511443314">
+<link rel="shortcut icon" href="/files/ocfavicon/Public/favicon.ico?V=637593187511443314">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-config" content="/files/ocfavicon/Public/browserconfig.xml?V=637593187511443314">
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/jquery-1.12.4.min.js?seamlessts=639263246725334320" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyCDgSF9Arkip1j9_EpBB-ySjs2-7-Qf9nY",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/modernizr.custom.710f3bf.js?seamlessts=639263246725334320" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/'
+        };
+    </script>
+    <script src='/ocapi/152dff82-6eac-4b22-8d7f-7ba797753fb2/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/oc_head.js?applied=20260617094227"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20260617094227" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20260617094227" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".background-container","EnableFade":false,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20260617094227" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/bf32f3dc-1155-420d-ae68-2f3d7f7ad315/v/412/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20260617094227" defer="true"></script>
+    <!-- Heatmapping Code -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "sevslxywmy");
+</script>
+<!-- End Heatmapping Code -->
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodixiagdw2xjvrlq-f-709ae987e-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"1699436","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":166,"ak.ipv":4,"ak.proto":"h2","ak.rid":"837272fd","ak.r":45774,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":16830,"ak.gh":"23.64.12.60","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793698903","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==TnqIitg8lAm9llmmIFicfO87LnOsyj2z8q6KmnqwXsW0xS7/Nb7gFQesTGXPImfypeNrdqyOOlPYZiyTCTQqns5sRHnaPB+9oH6EfuWbD054ilICDRGfTwfYzIqhxX6efleGaaHtkojNbBckRQOKa1QyImcfiM9PCcq6uXyAKSGAQu7v/fx9u684ShbS7jv5a4GVzAj1gX2Iw3Ai0ErWjXAu9wJLtbtRr5VMLdoGtlx0QdolBYjVZY4qcXR8n/zihX2+F6w+9KOtlkUi2fwfgPS+mWrt/s1VobIbA3dC5sR6s7N/+42J1osaOHoyqmUsY+WP4F2ZLXd3UXpx2GBFDhgVehZcnaUfOKTU31pl5F9yf4HgnjD1ZpgGeGrzsed4GS4XK/2+KSY0FK7S9asEu4k3RHU1xwSUkxlD4T3/H4Q=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern  site-search-always-visble  content-type-oc-general content-template-oc-2-column group-template-oc-2-column-with-default-header page-name-who-are-my-county-legislators page-sequence-1 page-depth-3 page-section-3 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Government/County-Legislature/Who-Are-My-County-Legislators" id="mainForm">
+<div>
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['mainForm'];
+if (!theForm) {
+    theForm = document.mainForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZEwxevNHYVPiVa1Imd_CfwV7Ab8FE1aS0qMo2VVt5LKJo2QwSrlAqlF7-BPzzVxibA2&amp;t=639190653332169432" type="text/javascript"></script>
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-GB%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3ab25378d2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bOpenCities.CustomControls%3aen-GB%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl04$seamless_script_manager', 'mainForm', [], [], [], 90, '');
+//]]>
+</script>
+
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header><div class="print-header-outer-container print-element">
+<img src="/files/assets/public/templateimages/print-header.png" alt="Jackson County MO - Logo" />
+</div>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ar-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-zh-cn-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="en">Chinese (Simplified)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-fr-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-de-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="en">German<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-hi-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=hi" class="lang-item lang-hi" data-translate-to="hi" lang="en">Hindi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-it-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=it" class="lang-item lang-it" data-translate-to="it" lang="en">Italian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ja-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ja" class="lang-item lang-ja" data-translate-to="ja" lang="en">Japanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ko-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ko" class="lang-item lang-ko" data-translate-to="ko" lang="en">Korean<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-vi-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="en">Vietnamese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-so-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=so" class="lang-item lang-so" data-translate-to="so" lang="en">Somali<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-yo-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=yo" class="lang-item lang-yo" data-translate-to="yo" lang="en">Yoruba<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-su-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=su" class="lang-item lang-su" data-translate-to="su" lang="en">Sundanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-sw-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=sw" class="lang-item lang-sw" data-translate-to="sw" lang="en">Swahili<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ti-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ti" class="lang-item lang-ti" data-translate-to="ti" lang="en">Tigrinya<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-am-noscript"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=am" class="lang-item lang-am" data-translate-to="am" lang="en">Amharic<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ar" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-zh-cn" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="en">Chinese (Simplified)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-fr" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-de" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="en">German<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-hi" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=hi" class="lang-item lang-hi" data-translate-to="hi" lang="en">Hindi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-it" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=it" class="lang-item lang-it" data-translate-to="it" lang="en">Italian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ja" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ja" class="lang-item lang-ja" data-translate-to="ja" lang="en">Japanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ko" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ko" class="lang-item lang-ko" data-translate-to="ko" lang="en">Korean<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-vi" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="en">Vietnamese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-so" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=so" class="lang-item lang-so" data-translate-to="so" lang="en">Somali<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-yo" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=yo" class="lang-item lang-yo" data-translate-to="yo" lang="en">Yoruba<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-su" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=su" class="lang-item lang-su" data-translate-to="su" lang="en">Sundanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-sw" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=sw" class="lang-item lang-sw" data-translate-to="sw" lang="en">Swahili<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ti" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=ti" class="lang-item lang-ti" data-translate-to="ti" lang="en">Tigrinya<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-am" role="option" aria-selected="false" href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators?oc_lang=am" class="lang-item lang-am" data-translate-to="am" lang="en">Amharic<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container">
+    <div class="header-container header-layout-3  clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.jacksongov.org/Home" lang="en-US" aria-label="Jackson County MO - Home - Logo">
+				</a>
+			</div>
+      
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>
+		    <div class="header-website-settings">
+                <button id="btn-mob-nav" type="button" aria-expanded="false" aria-controls="nav">
+                    <i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span>
+                </button>
+        	</div>
+          <div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container  navigation-container-option-7" data-menu-type="horizontal" aria-label="primary">
+        <div class="grid">
+            <div class="col-xs-12">              
+                <ul class="sf-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.jacksongov.org/Services" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">SERVICES</span>
+</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-1">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-1">
+
+          
+            <li class=" "><a  href="https://www.jacksongov.org/Services/Handle-My-Taxes" class="nav-has-children"  target="">Handle My Taxes</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Services/Handle-My-Taxes/Pay-Taxes-Online"  target="_blank">Pay Taxes Online</a></li><li  class=" "><a href="https://www.jacksongov.org/Services/Handle-My-Taxes/Get-a-Tax-Receipt"  target="_blank">Get a Tax Receipt</a></li><li  class=" "><a href="https://www.jacksongov.org/Services/Handle-My-Taxes/Pay-in-Person"  target="_self">Pay in Person</a></li><li  class=" "><a href="https://www.jacksongov.org/Services/Handle-My-Taxes/Look-Up-Property-Value"  target="_blank">Look Up Property Value</a></li><li  class=" "><a href="https://www.jacksongov.org/Services/Handle-My-Taxes/Apply-for-Senior-Property-Tax-Credit"  target="_self">Apply for Senior Property Tax Credit</a></li><li  class=" "><a href="https://www.jacksongov.org/Services/Handle-My-Taxes/Research-a-Tax-Account"  target="_blank">Research a Tax Account</a></li><li  class=" "><a href="https://www.jacksongov.org/Services/Handle-My-Taxes/Taxing-Jurisdictions-Levy-Rates"  target="">Taxing Jurisdictions & Levy Rates</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Services/Search-County-Records" class=""  target="_self">Search County Records</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Find-County-Jobs" class=""  target="_self">Find County Jobs</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Bid-Opportunities" class=""  target="_self">Bid Opportunities</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Get-a-Certificate-of-Compliance" class=""  target="_self">Get a Certificate of Compliance</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Online-Forms" class=""  target="">Online Forms</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Solve-a-Problem" class=""  target="_self">Solve a Problem</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Permits" class=""  target="">Permits</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Notary-Public-Commissions" class=""  target="_self">Notary Public Commissions</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Register-to-Vote" class=""  target="">Register to Vote</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Running-for-Office" class=""  target="">Running for Office</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Real-Estate-Sales-Search" class=""  target="_self">Real Estate Sales Search</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Pay-a-Municipal-Court-Ticket" class=""  target="_self">Pay a Municipal Court ticket</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Parks-Rec-Reservations" class=""  target="_blank">Parks + Rec Reservations</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Medical-Examiner-Services" class=""  target="_self">Medical Examiner Services</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Inmate-Online-Search" class=""  target="_self">Inmate Online Search</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Parcel-Viewer" class=""  target="_blank">Parcel Viewer</a></li><li class=" "><a  href="https://www.jacksongov.org/Services/Veteran-Services" class=""  target="_blank">Veteran Services</a></li></ul></li>
+          
+            <li class="nav-section-quarters-1 nav-active-path  nav-item-seq-2">
+<a href="https://www.jacksongov.org/Government" class="nav-level-1 nav-has-children"  target="">GOVERNMENT</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-2">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-2">
+
+          
+            <li class=" "><a  href="https://www.jacksongov.org/Government/County-Code" class=""  target="">County Code</a></li><li class=" "><a  href="https://www.jacksongov.org/Government/Courts" class="nav-has-children"  target="">Courts</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Government/Courts/16th-Circuit-Court"  target="_blank">16th Circuit Court</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Courts/County-Municipal-Court"  target="">County Municipal Court  -  Division 301</a></li></ul></li><li class="nav-active-path "><a  href="https://www.jacksongov.org/Government/County-Legislature" class="nav-has-children"  target="">County Legislature</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3">
+          
+            <li  class="nav-active-path nav-active-page"><a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators"  target="">Who Are My County Legislators?</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Clerk-of-the-County-Legislature"  target="_self">Clerk of the County Legislature</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/County-Legislative-Auditor"  target="_self">County Legislative Auditor</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Legislative-Agendas-Journals"  target="_self">Legislative Agendas & Journals</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Legislative-Calendar"  target="">Legislative Calendar</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/10.30.2026-Activity-Calendar-1"  target="">Activity Calendar 10.30.2026</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Jalen-Anderson-1st-District-At-Large"  target="_self">Jalen Anderson - 1st District At-Large</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Donna-Peyton-2nd-District-At-Large"  target="_self">Donna Peyton - 2nd District At-Large</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Megan-L.-Smith-3rd-District-At-Large"  target="_self">Megan L. Smith - 3rd District At-Large</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Manuel-Abarca-IV-1st-District"  target="_self">Manuel Abarca IV - 1st District</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Venessa-Huskey-2nd-District"  target="_self">Venessa Huskey - 2nd District</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Charlie-Franklin-3rd-District"  target="_self">Charlie Franklin - 3rd District</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/DaRon-McGee-4th-District"  target="_self">DaRon McGee - 4th District</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Jeanie-Lauer-5th-District"  target="_self">Jeanie Lauer - 5th District</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Sean-E.-Smith-6th-District"  target="_self">Sean E. Smith - 6th District</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/1st-District-Press-Releases"  target="">1st District Press Releases</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/County-Legislature/Stadium-Documents"  target="">Stadium Documents</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Government/Departments" class="nav-has-children"  target="">Departments</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Assessment"  target="">Assessment</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Board-of-Equalization"  target="_self">Board of Equalization</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Clerk-of-the-County-Legislature"  target="">Clerk of the County Legislature</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Collection"  target="">Collection</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/COMBAT"  target="_blank">COMBAT</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Communications"  target="">Communications</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Compliance-Review-Office"  target="">Compliance Review Office</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Corrections"  target="">Corrections</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/County-Counselor"  target="">County Counselor</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Environmental-Health"  target="">Environmental Health</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Ethics-Human-Relations-Citizen-Complaints"  target="">Ethics, Human Relations & Citizen Complaints</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Finance-Purchasing"  target="">Finance & Purchasing</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Geographic-Information-Systems"  target="">Geographic Information Systems</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Health-Department"  target="_self">Health Department</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Human-Resources"  target="">Human Resources</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Legislative-Auditor"  target="">Legislative Auditor</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Medical-Examiner"  target="">Medical Examiner</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Municipal-Court"  target="_self">Municipal Court</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Parks-Rec"  target="_blank">Parks + Rec</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Prosecutors-Office"  target="_blank">Prosecutor's Office</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Public-Administrator"  target="">Public Administrator</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Public-Works"  target="">Public Works</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Recorder-of-Deeds"  target="">Recorder of Deeds</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Departments/Sheriffs-Office"  target="_blank">Sheriff's Office</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Government/Elected-Officials" class="nav-has-children"  target="">Elected Officials</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/County-Executive"  target="">Phil LeVota</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/2nd-District-At-Large-Legislator"  target="">Donna Peyton</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/6th-District-Legislator"  target="">Sean E. Smith</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/1st-District-At-Large-Legislator"  target="">Jalen Anderson</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/3rd-District-At-Large-Legislator"  target="">Megan L. Smith</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/1st-District-Legislator"  target="">Manuel Abarca IV</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/2nd-District-Legislator"  target="">Venessa Huskey</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/3rd-District-Legislator"  target="">Charlie Franklin</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/4th-District-Legislator"  target="">DaRon McGee</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/5th-District-Legislator"  target="">Jeanie Lauer</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/Jackson-County-Sheriff-Darryl-Forté"  target="">Darryl Forté - Jackson County Sheriff</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Elected-Officials/Jackson-County-Prosecutor"  target="">Melesa Johnson - Jackson County Prosecutor</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Government/Boards-Commissions" class="nav-has-children"  target="">Boards & Commissions</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Board-of-Equalization"  target="">Board of Equalization</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Childrens-Services-Fund-Board"  target="">Children's Services Fund Board</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/COMBAT-Commission"  target="">COMBAT Commission</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Community-Action-Agency-of-Greater-Kansas-City"  target="">Community Action Agency of Greater Kansas City</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Community-Advisory-Committee"  target="">Community Advisory Committee</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Committee-For-Reapportionment-of-the-County-Legislature"  target="">Committee For Reapportionment of the County Legislature</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Community-Mental-Health-Fund-Board"  target="">Community Mental Health Fund Board</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Developmental-Disability-Services-EITAS"  target="">Developmental Disability Services - EITAS</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Domestic-Violence-Shelters"  target="">Domestic Violence Shelters</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Ethics-Human-Relations-Citizen-Complaints-Commission"  target="">Ethics, Human Relations & Citizen Complaints Commission</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Freedom-Wall-Commission"  target="">Freedom Wall Commission</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Housing-Resources-Commission"  target="">Housing Resources Commission</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Jackson-County-Animal-Welfare-Committee"  target="">Jackson County Animal Welfare Committee</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Kansas-City-Area-Transportation-Authority"  target="">Kansas City Area Transportation Authority</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Land-Trust-of-Jackson-County"  target="">Land Trust of Jackson County</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Merit-System"  target="">Merit System</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Mid-Continent-Library"  target="">Mid-Continent Library</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Pension-Plan-Board-of-Trustees"  target="">Pension Plan Board of Trustees</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Plan-Commission"  target="">Plan Commission</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Sports-Complex-Authority"  target="">Sports Complex Authority</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Truman-Medical-Center"  target="">Truman Medical Center</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/Senior-Services-Fund-Board1"  target="">Senior Services Fund Board</a></li><li  class=" "><a href="https://www.jacksongov.org/Government/Boards-Commissions/LGBTQ-Commission"  target="">LGBTQ+ Commission</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-3">
+<a href="https://www.jacksongov.org/Residents" class="nav-level-1 nav-has-children"  target="">RESIDENTS</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-3">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-3">
+
+          
+            <li class=" "><a  href="https://www.jacksongov.org/Residents/Assistance-Programs" class="nav-has-children"  target="">Assistance Programs</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Residents/Assistance-Programs/Affordable-Connectivity-Program"  target="_blank">Affordable Connectivity Program</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Assistance-Programs/Senior-Services"  target="_blank">Senior Services</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Residents/Health-Services" class="nav-has-children"  target="">Health Services</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Residents/Health-Services/Jackson-County-Health-Department"  target="_blank">Jackson County Health Department</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Health-Services/COVID-19-Information"  target="">COVID-19 Information</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Health-Services/Prescription-Drug-Card"  target="">Prescription Drug Card</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Residents/Home-and-Family" class="nav-has-children"  target="">Home and Family</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Residents/Home-and-Family/Vital-Records"  target="">Vital Records</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Home-and-Family/Applying-for-a-Marriage-License"  target="_self">Applying for a Marriage License</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Home-and-Family/Handle-My-Taxes"  target="_self">Handle My Taxes</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Home-and-Family/Household-Hazardous-Waste-Disposal"  target="">Household Hazardous Waste Disposal</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Home-and-Family/Yard-Waste-Collection-Center"  target="">Yard Waste Collection Center</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Home-and-Family/Request-a-Refund-for-Missouri-Motor-Fuel-Tax-Increase"  target="_blank">Request a Refund for Missouri Motor Fuel Tax Increase</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Residents/Public-Safety" class="nav-has-children"  target="">Public Safety</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Residents/Public-Safety/Jackson-County-Detention-Center"  target="">Jackson County Detention Center</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/Public-Safety/Emergency-Preparedness"  target="">Emergency Preparedness</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Public-Safety/Animal-Control"  target="_self">Animal Control</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/Public-Safety/Prosecutors-Office"  target="_self">Prosecutor’s Office</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/Public-Safety/Sheriffs-Office"  target="_self">Sheriff's Office</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Residents/Solve-a-Problem" class="nav-has-children"  target="">Solve a Problem</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Animal-Control"  target="">Animal Control</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Food-Establishment-Complaints"  target="">Food Establishment Complaints</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Illegal-Dumping"  target="">Illegal Dumping</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Nuisance-Complaints"  target="">Nuisance Complaints</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Road-Maintenance-Request"  target="">Road Maintenance Request</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Report-Fraud"  target="">Report Fraud</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Ethics-Human-Relations-Citizen-Complaints"  target="_self">Ethics, Human Relations & Citizen Complaints</a></li><li  class=" "><a href="https://www.jacksongov.org/Residents/Solve-a-Problem/Open-Records-Requests"  target="_blank">Open Records Requests</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Residents/Arts" class=""  target="">Arts</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-4">
+<a href="https://www.jacksongov.org/Business" class="nav-level-1 nav-has-children"  target="">BUSINESS</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-4">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-4">
+
+          
+            <li class=" "><a  href="https://www.jacksongov.org/Business/Doing-Business-With-Jackson-County" class=""  target="_self">Doing Business With Jackson County</a></li><li class=" "><a  href="https://www.jacksongov.org/Business/Chambers-of-Commerce" class=""  target="">Chambers of Commerce</a></li><li class=" "><a  href="https://www.jacksongov.org/Business/Compliance-Review-Office" class=""  target="_self">Compliance Review Office</a></li><li class=" "><a  href="https://www.jacksongov.org/Business/Development-and-Construction" class="nav-has-children"  target="">Development and Construction</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Business/Development-and-Construction/Building-Code"  target="">Building Code</a></li><li  class=" "><a href="https://www.jacksongov.org/Business/Development-and-Construction/Construction-Permits"  target="">Construction Permits</a></li><li  class=" "><a href="https://www.jacksongov.org/Business/Development-and-Construction/Zoning-Subdivision-Applications"  target="">Zoning & Subdivision Applications</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Business/Licenses-Permits" class=""  target="_self">Licenses & Permits</a></li><li class=" "><a  href="https://www.jacksongov.org/Business/Real-Estate-Sales-Search" class=""  target="_self">Real Estate Sales Search</a></li><li class=" "><a  href="https://www.jacksongov.org/Business/File-Personal-Property-Declarations" class=""  target="_self">File Personal Property Declarations</a></li><li class=" "><a  href="https://www.jacksongov.org/Business/Tax-Search-Payments" class=""  target="_blank">Tax Search & Payments</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-5">
+<a href="https://www.jacksongov.org/Our-County" class="nav-level-1 nav-has-children"  target="">OUR COUNTY</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-5">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-5">
+
+          
+            <li class=" "><a  href="https://www.jacksongov.org/Our-County/About-Us" class="nav-has-children"  target="">About Us</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.jacksongov.org/Our-County/About-Us/Our-Government"  target="">Our Government</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/About-Us/Our-History"  target="">Our History</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/About-Us/Our-Charter"  target="">Our Charter</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/About-Us/Our-Schools"  target="">Our Schools</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/About-Us/County-Communities"  target="">County Communities</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/About-Us/Media-Releases"  target="">Media Releases</a></li><li  class=" "><a href="https://www.jacksongov.org/Our-County/About-Us/Celebrating-200-Years-of-Jackson-County"  target="">Celebrating 200 Years of Jackson County</a></li></ul></li><li class=" "><a  href="https://www.jacksongov.org/Our-County/Jackson-County-Events-Calendar" class=""  target="">Jackson County Events Calendar</a></li><li class=" "><a  href="https://www.jacksongov.org/Our-County/Staff-Directory" class=""  target="">Staff Directory</a></li></ul></li>
+          
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl08_btnSearch&#39;)">
+	<label for="ctl08_txtSearch" id="ctl08_lblSearch" class="sc-search-label">Search</label><input name="ctl08$txtSearch" type="text" id="ctl08_txtSearch" class="sc-search-text" placeholder="How may we help you?" /><input type="submit" name="ctl08$btnSearch" value="Search" id="ctl08_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+    </div>
+</div>
+
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.jacksongov.org/Home"  lang="en-US">HOME</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.jacksongov.org/Government" >GOVERNMENT</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.jacksongov.org/Government/County-Legislature" >
+		County Legislature
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >Who Are My County Legislators?</span>
+          </span>
+						            </nav>
+					            </div>
+                      
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+                                        <div class="grid">							
+								            <div class="col-lg-4">								
+									            <div id="sub-navigation-outter-container" role="navigation" aria-label="Section Navigation">
+									            &nbsp;
+									            <div id="sub-navigation-container">
+                                <p class="sub-nav-header" role="heading" aria-level="2" id="in-this-section" >
+	In This Section
+</p>
+<ul><li class='nav-level-1   '>
+	<a href="https://www.jacksongov.org/Government/County-Code"  target="">County Code</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.jacksongov.org/Government/Courts"  target="">Courts</a>
+	
+</li><li class='nav-level-1 nav-active-path  nav-has-children'>
+	<a href="https://www.jacksongov.org/Government/County-Legislature"  target="">County Legislature</a>
+	<ul><li class='nav-level-2 nav-active-path nav-active-page '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators"  target="">Who Are My County Legislators?</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Clerk-of-the-County-Legislature"  target="_self">Clerk of the County Legislature</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/County-Legislative-Auditor"  target="_self">County Legislative Auditor</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Legislative-Agendas-Journals"  target="_self">Legislative Agendas & Journals</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Legislative-Calendar"  target="">Legislative Calendar</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/10.30.2026-Activity-Calendar-1"  target="">Activity Calendar 10.30.2026</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Jalen-Anderson-1st-District-At-Large"  target="_self">Jalen Anderson - 1st District At-Large</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Donna-Peyton-2nd-District-At-Large"  target="_self">Donna Peyton - 2nd District At-Large</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Megan-L.-Smith-3rd-District-At-Large"  target="_self">Megan L. Smith - 3rd District At-Large</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Manuel-Abarca-IV-1st-District"  target="_self">Manuel Abarca IV - 1st District</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Venessa-Huskey-2nd-District"  target="_self">Venessa Huskey - 2nd District</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Charlie-Franklin-3rd-District"  target="_self">Charlie Franklin - 3rd District</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/DaRon-McGee-4th-District"  target="_self">DaRon McGee - 4th District</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Jeanie-Lauer-5th-District"  target="_self">Jeanie Lauer - 5th District</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Sean-E.-Smith-6th-District"  target="_self">Sean E. Smith - 6th District</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/1st-District-Press-Releases"  target="">1st District Press Releases</a>
+	
+</li><li class='nav-level-2   '>
+	<a href="https://www.jacksongov.org/Government/County-Legislature/Stadium-Documents"  target="">Stadium Documents</a>
+	
+</li></ul>
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.jacksongov.org/Government/Departments"  target="">Departments</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.jacksongov.org/Government/Elected-Officials"  target="">Elected Officials</a>
+	
+</li><li class='nav-level-1   nav-has-children'>
+	<a href="https://www.jacksongov.org/Government/Boards-Commissions"  target="">Boards & Commissions</a>
+	
+</li></ul>
+									            </div>
+									            </div>
+								            </div>
+								            <div class="col-xs-12 col-lg-8">
+							                <div id="main-content" class="main-container clearfix">
+							                  
+                                <!-- OC Layout Element Conent Template -->
+							                  <!--normalTemplateStart--><h1 class='oc-page-title '>Who Are My County Legislators?</h1>
+
+
+<p>Each Jackson Countian lives in&nbsp;<strong>two</strong>&nbsp;County Legislative districts&nbsp;&mdash; an individual district and an at-large district. You can use this&nbsp;<a href="http://jacksoncomo.maps.arcgis.com/apps/webappviewer/index.html?id=00aea7b613ee4421b4d37fa2d71c06c9" target="_blank" aria-label="Legislative Map Application Opens in new window" rel="noopener">Legislative Map Application</a>&nbsp;that the Jackson Geographic Information Systems division has developed to determine in which County Legislative districts you live.<br />
+<br />
+(The slideshow below provides instructions for using this application.)<br />
+<br />
+When voting for County Legislators, you vote for one from your individual district, as well as one from&nbsp;<strong>each</strong>&nbsp;of the at-large districts. That means every Jackson County citizen has two direct representatives on the nine-member County Legislature&nbsp;&mdash; the Legislators from their individual district and at-large district &mdash;&nbsp;but that they vote for four Legislators in total: their individual district and at-large district representatives, as well as the other two at-large Legislators.&nbsp;<br />
+<br />
+While all county voters will vote for the three at-large districts,&nbsp;to serve as the first, second or third at-large district County Legislator you must reside within the boundaries of that at-large district.</p>
+<p>&nbsp;</p>
+<table align="left">
+<tbody>
+<tr>
+<td>
+<div><img alt="3617.jpeg" src="/files/sharedassets/public/v/1/county-legislature/images/3617.jpeg" /></div>
+</td>
+</tr>
+<tr>
+<td>
+<div style="text-align: center;">Use the Jackson County<br />
+<strong><a href="http://jacksoncomo.maps.arcgis.com/apps/webappviewer/index.html?id=00aea7b613ee4421b4d37fa2d71c06c9" target="_self">Legislative Maps Application</a></strong><br />
+to find out who represents you<br />
+on the County Legislature</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table align="right">
+<tbody>
+<tr>
+<td style="text-align: right;">
+<div><img alt="3618.jpeg" src="/files/sharedassets/public/v/1/county-legislature/images/3618.jpeg" />&nbsp;</div>
+</td>
+</tr>
+<tr>
+<td>
+<div outer="">
+<div col="" col6="" data-widgetcontainerid="5a028074-a9c2-4f6c-bab9-fb59c92386e4">
+<div nest="" first="" last="">
+<div col="" col6="" first="" last="" data-widgetcontainerid="0372b1ff-f687-4f0d-827b-2f3c153cf3ce">
+<div editor="" pagestyles="" id="divEditor7e760f9c-397a-49d9-9ea5-e805a0f8b598" data-elementqueryclasses="{&quot;wide-narrow&quot;:&quot;min-width:25em&quot;}">
+<div style="text-align: center;">Who represents you in the&nbsp;<br />
+<strong><a href="http://www.senate.mo.gov/legislookup/default.aspx" target="_blank" aria-label="Missouri State Legislature Opens in new window" rel="noopener">Missouri State Legislature</a></strong>?</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div data-type="1" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>Step 1</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>Search by address and press enter or click on the magnifying glass icon.</p>
+<div><img alt="3688.jpeg" src="/files/sharedassets/public/v/1/county-legislature/images/3688.jpeg" /></div>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Step 2</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>After the "Search result" box pops up, you will need to click on the map in the area immediately outside this pop-up box.</p>
+<div><img alt="3689.jpeg" src="/files/sharedassets/public/v/1/county-legislature/images/3689.jpeg" /></div>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Step 3</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p>After you click&nbsp;on the map (Step 2), the "Search result" box will be replaced by a new pop-up that you will show in which Legislative districts you live and who are the Legislators for each of the dis</p>
+<div><img alt="3687.gif" src="/files/sharedassets/public/v/1/county-legislature/images/3687.gif" /></div>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+
+
+      
+<div class="side-box consultation-snapshot">
+		
+			<h2 class="side-box-title">
+				Related Links
+			</h2>
+		
+		
+		<div class="side-box-content">
+			<div class="side-box-section body-content">
+				<p><a href="https://jacksonco.legistar.com/DepartmentDetail.aspx?ID=24971&amp;GUID=08E8B88E-4D94-445D-90D4-DA1215CAF6DB&amp;Mode=MainBody" target="_self">Agendas/Journals</a></p>
+<p><a href="https://www.jacksongov.org/Government/Departments/Legislative-Auditor" target="_self">Legislative Auditor</a></p>
+<p><a href="https://www.jacksongov.org/Government/Departments/Clerk-of-the-County-Legislature" target="_self">Legislative Clerk</a></p>
+<p><a href="https://www.jacksongov.org/Government/County-Legislature/10.30.2026-Activity-Calendar-1" target="_self" title="Activity Calendar">Weekly Activity Calendar</a></p>
+<p><a title="Rules-of-the-Legislature-08.17.2021.pdf" href="/files/sharedassets/public/v/4/county-legislature/rules-of-the-legislature-07.17.2023.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Rules of the Legislature<span class="file-info">(PDF,&nbsp;274KB)</span></a></p>
+<p><a title="legislature1973prsnt.pdf" href="/files/sharedassets/public/v/4/departments/clerk-of-the-county/legislature1973prsnt.pdf" target="_self" class="document ext-pdf"><i aria-hidden="true"></i>Jackson County Legislature 1973-Present<span class="file-info">(PDF,&nbsp;160KB)</span></a></p>
+
+
+			</div>
+		</div>
+		
+	</div>
+
+<!--normalTemplateEnd-->
+                                
+                                
+                                
+							                </div>
+							                </div>
+							             </div>
+						            </div>
+						            </div>
+                        
+					                  </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-6 col-lg-3 logo-footer-widget" >
+	
+	<div><img alt="Jackson County Missouri" src="/files/assets/public/v/1/templateimages/jackson-county-logo.png" /></div>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3 contact-us-footer-widget" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	<p><strong>Jackson County Courthouse</strong></p>
+<p>415 E 12th Street&nbsp;<br />
+Kansas City, MO 64106</p>
+<p><a href="tel:8168813000">816-881-3000</a><br />
+MO Relay Operator: <a href="tel:711">711</a></p>
+<p>&nbsp;</p>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">County Websites</h3>
+			
+	
+	<ul class="footer-links with-icons ">  <li class="footer-link-">
+	<a href="http://www.makeyourdayhere.com/" target="_self"  >
+<i aria-hidden="true"></i>Parks + Rec
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.jacksoncountysheriff.org/Home" target="_self"  >
+<i aria-hidden="true"></i>Sheriff's Office
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="http://www.jacksoncountyprosecutor.com/" target="_self"  >
+<i aria-hidden="true"></i>Prosecutor's Office
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="http://www.jacksoncountycombat.com/" target="_self"  >
+<i aria-hidden="true"></i>COMBAT
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Share &amp; Connect</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/JacksonCountyMO" target="_blank"  >
+<i aria-hidden="true"></i>Facebook
+</a>
+</li>
+          <li class="footer-link-twitter">
+	<a href="https://twitter.com/JacksonCountyMO" target="_blank"  >
+<i aria-hidden="true"></i>Twitter
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/user/JacksonCountyMO?feature=mhee" target="_blank"  >
+<i aria-hidden="true"></i>YouTube
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/jacksoncountymo/" target="_blank"  >
+<i aria-hidden="true"></i>Instagram
+</a>
+</li>
+           </ul>
+	<p>&nbsp;</p>
+<p><a href="https://public.govdelivery.com/accounts/MOJACKSONCO/signup/38632" class="styled-button-calltoaction">Subscribe to our newsletter</a></p>
+
+
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.jacksongov.org/Our-Web-Policies" target="_self"  >Website Disclaimer</a>&nbsp;| <a href="https://www.jacksongov.org/Privacy-Policy" target="_self"  >Privacy Policy and Terms & Conditions</a>&nbsp;| <a href="https://www.jacksongov.org/Website-Accessibility" target="_self"  >Website Accessibility</a>&nbsp;| <a href="https://www.jacksongov.org/Site-Map" target="_self"  >Sitemap</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 Jackson County MO&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/b9015858-988c-48a4-9473-7c193df083e4/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    <script type="text/javascript">
+    window._monsido = window._monsido || {
+        token: "cBJDhgacCnpegGgMSyr5IQ",
+        statistics: {
+            enabled: true,
+            documentTracking: {
+                enabled: true,
+                documentCls: "monsido_download",
+                documentIgnoreCls: "monsido_ignore_download",
+                documentExt: ["pdf","doc","ppt","docx","pptx","PDF","DOC","PPT","DOCX","PPTX"],
+            },
+        },
+        heatmap: {
+            enabled: true,
+        },
+        pageAssistV2: {
+            enabled: true,
+            theme: "light",
+            mainColor: "#783CE2",
+            textColor: "#ffffff",
+            linkColor: "#783CE2",
+            buttonHoverColor: "#783CE2",
+            mainDarkColor: "#FFCF4B",
+            textDarkColor: "#ffffff",
+            linkColorDark: "#FFCF4B",
+            buttonHoverDarkColor: "#FFCF4B",
+            greeting: "Discover your personalization options",
+            direction: "leftbottom",
+            iconShape: "circle",
+            title: "Accessibility Options",
+            titleText: "Welcome to PageAssist™ toolbar! Adjust the options below to cater the website to your accessibility needs.",
+            iconPictureUrl: "logo",
+            logoPictureUrl: "",
+            logoPictureBase64: "",
+            languages: ["en-US", "es-MX"],
+            defaultLanguage: "en-US",
+            skipTo: false,
+        },
+    };
+</script>
+<script type="text/javascript" async src="https://app-script.monsido.com/v2/monsido-script.js"></script>
+
+<!-- GovDelivery Subscription Overlay -->
+<script src="https://content.govdelivery.com/overlay/js/15043.js"></script>
+<!-- End GovDelivery Overlay -->
+
+<!-- GXA Embed -->
+<script>
+    const moduleUrl = "https://gxa.granicus.com/chatbot/app/7afdd7ca-16e6-3a43-8717-14705961480e";
+    fetch(moduleUrl)
+        .then(async (response) => {
+            const contentType = response.headers.get("Content-Type");
+            if (contentType && contentType.includes("application/javascript")) {
+                // Dynamically import the module
+                await import(moduleUrl);
+            } else {
+                // Not a JS module, likely an error JSON
+                const errorData = await response.json();
+                console.error(`Failed to load script: ${errorData.error}`);
+            }
+        })
+        .catch((err) => {
+            console.error("Network or script error:", err);
+        });
+</script>
+<style>
+.MuiBox-root.css-mxvqy4 {
+	height: 0px !important;
+}
+
+[id^="gxa"] .MuiBox-root.css-0 .MuiBox-root.css-0>.MuiBox-root  {
+	right: 65px;
+	z-index: 96;
+}
+
+@media (max-width: 425px) {
+	[id^="gxa"] .MuiBox-root.css-0 .MuiBox-root.css-0>.MuiBox-root  {
+		right: unset;
+		bottom: 90px;
+	}
+}
+</style>
+<!-- End GXA Embed -->
+    <!-- GA4 -->
+<!-- Google tag (gtag.js) --> <script async src="https://www.googletagmanager.com/gtag/js?id=G-M1NHBJ669X"></script> <script>   window.dataLayer = window.dataLayer || [];   function gtag(){dataLayer.push(arguments);}   gtag('js', new Date());   gtag('config', 'G-M1NHBJ669X'); </script>
+<!-- End GA4 -->
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WNC778FB');</script>
+<!-- End Google Tag Manager -->
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

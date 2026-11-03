@@ -1,0 +1,45 @@
+{
+  "heldBaselineSha256": "2b614c0f34263c1bb427a1bb72ce2d76e0ace2a0bc71a171ecce917ff0f7d390",
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/mo.json",
+      "sha256": "2b614c0f34263c1bb427a1bb72ce2d76e0ace2a0bc71a171ecce917ff0f7d390"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MO/st-louis/ballot-input/mo.json",
+      "sha256": "0af8d33f6a0f4b536e6415f45272cade88151b1bae719b54ff59966bde2579a0"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MO-331e9d448/explainer-expansion__ballot-input__mo.json",
+      "sha256": "a32a00c1b292d83c52e69e82943dac662d8010991e6b906e482e605447206a12"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MO-331e9d448/ballot-input__mo.json",
+      "sha256": "9549351748044c0dff791f80fd5173b9a96c7809273cb5743b16c456a0d34514"
+    }
+  ],
+  "newLocalFieldIds": [
+    "cx-local-mo-jackson-2026-county-executive",
+    "cx-local-mo-jackson-2026-county-legislator-1st-district",
+    "cx-local-mo-jackson-2026-county-legislator-2nd-district",
+    "cx-local-mo-jackson-2026-county-legislator-3rd-district",
+    "cx-local-mo-jackson-2026-county-legislator-4th-district",
+    "cx-local-mo-jackson-2026-county-legislator-6th-district",
+    "cx-local-mo-jackson-2026-county-legislator-1st-district-at-large",
+    "cx-local-mo-jackson-2026-county-legislator-2nd-district-at-large",
+    "cx-local-mo-jackson-2026-county-legislator-3rd-district-at-large",
+    "cx-local-mo-jackson-2026-county-legislator-5th-district",
+    "cx-local-mo-2026-appeals-western-retention-lisa-white-hardwick",
+    "cx-local-mo-2026-circuit-16-division-2-retention-kenneth-r-garrett-iii",
+    "cx-local-mo-2026-circuit-16-division-4-retention-patrick-c-edwards",
+    "cx-local-mo-2026-circuit-16-division-14-retention-lauren-d-barrett",
+    "cx-local-mo-2026-circuit-16-division-17-retention-cory-l-atkins",
+    "cx-local-mo-2026-circuit-16-division-18-retention-kevin-d-harrell",
+    "cx-local-mo-2026-circuit-16-division-25-retention-abbie-rothermich",
+    "cx-local-mo-2026-circuit-16-division-26-retention-r-travis-willingham",
+    "cx-local-mo-2026-circuit-16-division-27-retention-kea-s-bird-riley",
+    "cx-local-mo-2026-circuit-16-division-31-retention-mary-frances-weir"
+  ],
+  "sharedRegionalRetentionId": "cx-local-mo-2026-appeals-western-retention-lisa-white-hardwick",
+  "rule": "All20local offices missing from held MO and every prepared MO/recursive latestCX-VOTES input. NewIDs only; Western/Circuit16 judicial IDs are county-independent. Exact held state SupremeCourt retention is confirmed only. Every unrelated state/local/court field, question and explainer remains unchanged."
+}

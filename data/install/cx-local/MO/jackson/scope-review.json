@@ -1,0 +1,32 @@
+{
+  "atLarge": {
+    "sourceUrl": "https://www.jacksongov.org/Government/County-Legislature/Who-Are-My-County-Legislators",
+    "sourceOrg": "Jackson County Legislature",
+    "collectedAt": "2026-11-03T09:41:42.335236+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "While all county voters will vote for the three at-large districts, to serve as the first, second or third at-large district County Legislator you must reside within the boundaries of that at-large district."
+  },
+  "charter": {
+    "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/our-county/2018-charter-updated-2023-single-pages.pdf",
+    "sourceOrg": "Jackson County Legislature",
+    "collectedAt": "2026-11-03T09:41:42.335716+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "One member shall reside in and be nominated and elected by the qualified voters in each district; and one member shall reside in each district at large and be nominated and elected by the qualified voters of the county at large."
+  },
+  "jcebJurisdiction": {
+    "sourceUrl": "https://jcebmo.org/election-information/jurisdiction/",
+    "sourceOrg": "Jackson County Board of Election Commissioners",
+    "collectedAt": "2026-11-03T09:37:09.337725+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "The Jackson County Election Board is the election authority for Jackson County, Missouri outside the corporate limits of Kansas City, Missouri."
+  },
+  "kcebJurisdiction": {
+    "sourceUrl": "https://www.kceb.org/",
+    "sourceOrg": "Kansas City Election Board",
+    "collectedAt": "2026-11-03T09:35:52.513900+00:00",
+    "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+    "quote": "Serving the Voters of Kansas City within Jackson County"
+  },
+  "mapScope": "Six complete individual districts from county2026-page-linked official map service. Atlarge residence maps never substitute for countywide voter scopes.",
+  "courtScope": "Exact Circuit16Jackson and full45countyWestern; no courthouse-location or election-board-jurisdiction fallback."
+}

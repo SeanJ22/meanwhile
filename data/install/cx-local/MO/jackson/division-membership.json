@@ -1,0 +1,149 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:1",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "PRECISE_COMPLETE_OFFICIAL_COUNTY_INDIVIDUAL_DISTRICT",
+    "provenance": {
+      "sourceUrl": "https://jcgis.jacksongov.org/arcgis/rest/services/ElectionAdministration/LegislativeDistricts/MapServer/1/query?where=1%3D1&outFields=OBJECTID_1%2CLONGNAME%2CSHORTNAME%2CDISTRICT%2CTOTAL&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Jackson County GIS",
+      "collectedAt": "2026-11-03T09:53:28.965256+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "{\"OBJECTID_1\":1,\"LONGNAME\":\"District 1\",\"SHORTNAME\":\"D1\",\"DISTRICT\":1,\"TOTAL\":118714}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:2",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "PRECISE_COMPLETE_OFFICIAL_COUNTY_INDIVIDUAL_DISTRICT",
+    "provenance": {
+      "sourceUrl": "https://jcgis.jacksongov.org/arcgis/rest/services/ElectionAdministration/LegislativeDistricts/MapServer/1/query?where=1%3D1&outFields=OBJECTID_1%2CLONGNAME%2CSHORTNAME%2CDISTRICT%2CTOTAL&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Jackson County GIS",
+      "collectedAt": "2026-11-03T09:53:28.965256+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "{\"OBJECTID_1\":2,\"LONGNAME\":\"District 2\",\"SHORTNAME\":\"D2\",\"DISTRICT\":2,\"TOTAL\":119006}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:3",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "PRECISE_COMPLETE_OFFICIAL_COUNTY_INDIVIDUAL_DISTRICT",
+    "provenance": {
+      "sourceUrl": "https://jcgis.jacksongov.org/arcgis/rest/services/ElectionAdministration/LegislativeDistricts/MapServer/1/query?where=1%3D1&outFields=OBJECTID_1%2CLONGNAME%2CSHORTNAME%2CDISTRICT%2CTOTAL&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Jackson County GIS",
+      "collectedAt": "2026-11-03T09:53:28.965256+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "{\"OBJECTID_1\":3,\"LONGNAME\":\"District 3\",\"SHORTNAME\":\"D3\",\"DISTRICT\":3,\"TOTAL\":119339}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:4",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "PRECISE_COMPLETE_OFFICIAL_COUNTY_INDIVIDUAL_DISTRICT",
+    "provenance": {
+      "sourceUrl": "https://jcgis.jacksongov.org/arcgis/rest/services/ElectionAdministration/LegislativeDistricts/MapServer/1/query?where=1%3D1&outFields=OBJECTID_1%2CLONGNAME%2CSHORTNAME%2CDISTRICT%2CTOTAL&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Jackson County GIS",
+      "collectedAt": "2026-11-03T09:53:28.965256+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "{\"OBJECTID_1\":4,\"LONGNAME\":\"District 4\",\"SHORTNAME\":\"D4\",\"DISTRICT\":4,\"TOTAL\":120325}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:5",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "PRECISE_COMPLETE_OFFICIAL_COUNTY_INDIVIDUAL_DISTRICT",
+    "provenance": {
+      "sourceUrl": "https://jcgis.jacksongov.org/arcgis/rest/services/ElectionAdministration/LegislativeDistricts/MapServer/1/query?where=1%3D1&outFields=OBJECTID_1%2CLONGNAME%2CSHORTNAME%2CDISTRICT%2CTOTAL&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Jackson County GIS",
+      "collectedAt": "2026-11-03T09:53:28.965256+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "{\"OBJECTID_1\":5,\"LONGNAME\":\"District 5\",\"SHORTNAME\":\"D5\",\"DISTRICT\":5,\"TOTAL\":119873}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:6",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "PRECISE_COMPLETE_OFFICIAL_COUNTY_INDIVIDUAL_DISTRICT",
+    "provenance": {
+      "sourceUrl": "https://jcgis.jacksongov.org/arcgis/rest/services/ElectionAdministration/LegislativeDistricts/MapServer/1/query?where=1%3D1&outFields=OBJECTID_1%2CLONGNAME%2CSHORTNAME%2CDISTRICT%2CTOTAL&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Jackson County GIS",
+      "collectedAt": "2026-11-03T09:53:28.965256+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "{\"OBJECTID_1\":6,\"LONGNAME\":\"District 6\",\"SHORTNAME\":\"D6\",\"DISTRICT\":6,\"TOTAL\":119947}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+    "registryPresent": true,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_WHOLE_COUNTY_CANONICAL",
+    "wholeCountyMembers": []
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_ONE_WHOLE_COUNTY_CIRCUIT",
+    "wholeCountyMembers": [
+      "ocd-division/country:us/state:mo/county:jackson"
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:mo/court_of_appeals_district:western",
+    "registryPresent": false,
+    "sourceBackedIdentity": true,
+    "geometryCoverage": "EXACT_45_WHOLE_COUNTY_APPEALS_DISTRICT",
+    "wholeCountyMembers": [
+      "ocd-division/country:us/state:mo/county:adair",
+      "ocd-division/country:us/state:mo/county:andrew",
+      "ocd-division/country:us/state:mo/county:atchison",
+      "ocd-division/country:us/state:mo/county:bates",
+      "ocd-division/country:us/state:mo/county:benton",
+      "ocd-division/country:us/state:mo/county:boone",
+      "ocd-division/country:us/state:mo/county:buchanan",
+      "ocd-division/country:us/state:mo/county:caldwell",
+      "ocd-division/country:us/state:mo/county:callaway",
+      "ocd-division/country:us/state:mo/county:carroll",
+      "ocd-division/country:us/state:mo/county:cass",
+      "ocd-division/country:us/state:mo/county:chariton",
+      "ocd-division/country:us/state:mo/county:clay",
+      "ocd-division/country:us/state:mo/county:clinton",
+      "ocd-division/country:us/state:mo/county:cole",
+      "ocd-division/country:us/state:mo/county:cooper",
+      "ocd-division/country:us/state:mo/county:daviess",
+      "ocd-division/country:us/state:mo/county:dekalb",
+      "ocd-division/country:us/state:mo/county:gentry",
+      "ocd-division/country:us/state:mo/county:grundy",
+      "ocd-division/country:us/state:mo/county:harrison",
+      "ocd-division/country:us/state:mo/county:henry",
+      "ocd-division/country:us/state:mo/county:holt",
+      "ocd-division/country:us/state:mo/county:howard",
+      "ocd-division/country:us/state:mo/county:jackson",
+      "ocd-division/country:us/state:mo/county:johnson",
+      "ocd-division/country:us/state:mo/county:lafayette",
+      "ocd-division/country:us/state:mo/county:linn",
+      "ocd-division/country:us/state:mo/county:livingston",
+      "ocd-division/country:us/state:mo/county:macon",
+      "ocd-division/country:us/state:mo/county:mercer",
+      "ocd-division/country:us/state:mo/county:miller",
+      "ocd-division/country:us/state:mo/county:moniteau",
+      "ocd-division/country:us/state:mo/county:morgan",
+      "ocd-division/country:us/state:mo/county:nodaway",
+      "ocd-division/country:us/state:mo/county:pettis",
+      "ocd-division/country:us/state:mo/county:platte",
+      "ocd-division/country:us/state:mo/county:putnam",
+      "ocd-division/country:us/state:mo/county:randolph",
+      "ocd-division/country:us/state:mo/county:ray",
+      "ocd-division/country:us/state:mo/county:saline",
+      "ocd-division/country:us/state:mo/county:schuyler",
+      "ocd-division/country:us/state:mo/county:sullivan",
+      "ocd-division/country:us/state:mo/county:vernon",
+      "ocd-division/country:us/state:mo/county:worth"
+    ]
+  }
+]

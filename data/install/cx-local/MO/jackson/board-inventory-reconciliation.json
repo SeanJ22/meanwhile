@@ -1,0 +1,842 @@
+{
+  "jcebOrdinaryFields": [
+    {
+      "title": "County Executive",
+      "candidates": [
+        {
+          "name": "ALAN ROHLFING",
+          "printedParty": "REP"
+        },
+        {
+          "name": "STACY LAKE",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [],
+      "quote": "COUNTY EXECUTIVE\n                   (Vote for ONE)\nALAN ROHLFING                    REP\nSTACY LAKE                     DEM\nWrite-In",
+      "page": 2,
+      "column": 0,
+      "clip": [
+        12,
+        702.6,
+        263,
+        773.6
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 1st District At-Large",
+      "candidates": [
+        {
+          "name": "LANCE POLLARD",
+          "printedParty": "REP"
+        },
+        {
+          "name": "CARLA FIELDS",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [],
+      "quote": "COUNTY LEGISLATOR\n              1ST DISTRICT AT-LARGE\n                   (Vote for ONE)\nLANCE POLLARD                    REP\nCARLA FIELDS                    DEM\nWrite-In",
+      "page": 2,
+      "column": 0,
+      "clip": [
+        12,
+        773.6,
+        263,
+        858.2
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 2nd District At-Large",
+      "candidates": [
+        {
+          "name": "GRESIA CABRERA",
+          "printedParty": "REP"
+        },
+        {
+          "name": "DONNA PEYTON",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [],
+      "quote": "2ND DISTRICT AT-LARGE\n                   (Vote for ONE)\nGRESIA CABRERA                   REP\nDONNA PEYTON                   DEM\nWrite-In",
+      "page": 2,
+      "column": 0,
+      "clip": [
+        12,
+        858.2,
+        263,
+        927.1
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 3rd District At-Large",
+      "candidates": [
+        {
+          "name": "SUSAN B. WILSON",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [
+        {
+          "name": "NO CANDIDATE FILED",
+          "printedParty": "REP"
+        }
+      ],
+      "quote": "3RD DISTRICT AT-LARGE\n                   (Vote for ONE)\nNO CANDIDATE FILED                REP\nSUSAN B. WILSON                  DEM\nWrite-In\n          COUNTY LEGISLATOR",
+      "page": 2,
+      "column": 0,
+      "clip": [
+        12,
+        927.1,
+        263,
+        1011.7
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 2nd District",
+      "candidates": [
+        {
+          "name": "VENESSA HUSKEY",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [
+        {
+          "name": "NO CANDIDATE FILED",
+          "printedParty": "REP"
+        }
+      ],
+      "quote": "2ND DISTRICT\n                   (Vote for ONE)\nNO CANDIDATE FILED                REP\nVENESSA HUSKEY                 DEM\nWrite-In",
+      "page": 2,
+      "column": 0,
+      "clip": [
+        12,
+        1011.7,
+        263,
+        1080.6
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 3rd District",
+      "candidates": [
+        {
+          "name": "SCOTT QUALLS",
+          "printedParty": "REP"
+        },
+        {
+          "name": "PHYLLIS HERNANDEZ",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [],
+      "quote": "3RD DISTRICT\n                   (Vote for ONE)\nSCOTT QUALLS                     REP\nPHYLLIS HERNANDEZ               DEM\nWrite-In",
+      "page": 2,
+      "column": 0,
+      "clip": [
+        12,
+        1080.6,
+        263,
+        1198
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 4th District",
+      "candidates": [
+        {
+          "name": "LON MCDONALD",
+          "printedParty": "REP"
+        },
+        {
+          "name": "BYRON TOWNSEND",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [],
+      "quote": "4TH DISTRICT\n                   (Vote for ONE)\nLON MCDONALD                    REP\nBYRON TOWNSEND                 DEM\nWrite-In",
+      "page": 2,
+      "column": 1,
+      "clip": [
+        271,
+        68.2,
+        522,
+        137.0
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 5th District",
+      "candidates": [
+        {
+          "name": "DALE CARTER",
+          "printedParty": "REP"
+        },
+        {
+          "name": "ANTOINE D. JENNINGS",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [],
+      "quote": "te\n                   5TH DISTRICT\n                   (Vote for ONE)\nDALE CARTER                      REP\nANTOINE D. JENNINGS               DEM\nWrite-In",
+      "page": 2,
+      "column": 1,
+      "clip": [
+        271,
+        137.0,
+        522,
+        205.9
+      ],
+      "sourceName": "jceb-sample"
+    },
+    {
+      "title": "County Legislator, 6th District",
+      "candidates": [
+        {
+          "name": "BILL HALEY",
+          "printedParty": "REP"
+        },
+        {
+          "name": "TONY LAWSON",
+          "printedParty": "DEM"
+        }
+      ],
+      "unfilledPartySlots": [],
+      "quote": "6TH DISTRICT\n                   (Vote for ONE)\nBILL HALEY                        REP\nTONY LAWSON                    DEM\nWrite-In\n       JACKSON COUNTY MISSOURI",
+      "page": 2,
+      "column": 1,
+      "clip": [
+        271,
+        205.9,
+        522,
+        285
+      ],
+      "sourceName": "jceb-sample"
+    }
+  ],
+  "combinedOrdinaryFields": [
+    {
+      "sourceName": "kceb-public-download",
+      "page": 3,
+      "column": 0,
+      "title": "County Executive",
+      "type": "CANDIDACY",
+      "district": null,
+      "atLarge": false,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Alan Rohlfing",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Stacy Lake",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Executive - Jackson County\n                         Alan Rohlfing        Rep\n                         Stacy Lake         Dem\n                       __________________\n                              Write-in",
+      "clip": [
+        30,
+        574.188037109375,
+        570,
+        684.5880615234375
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 3,
+      "column": 0,
+      "title": "County Legislator, 1st District",
+      "type": "CANDIDACY",
+      "district": 1,
+      "atLarge": false,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Kelly Thompson",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator – 1st District\n                              Kelly Thompson      Dem\n                       __________________\n                              Write-in",
+      "clip": [
+        30,
+        684.5880615234375,
+        570,
+        776.7
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 4,
+      "column": 0,
+      "title": "County Legislator, 2nd District",
+      "type": "CANDIDACY",
+      "district": 2,
+      "atLarge": false,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Venessa Huskey",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator – 2nd District\n                       Venessa Huskey     Dem\n                       __________________\n                              Write-in",
+      "clip": [
+        30,
+        39.46800155639649,
+        570,
+        142.90794677734374
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 4,
+      "column": 0,
+      "title": "County Legislator, 3rd District",
+      "type": "CANDIDACY",
+      "district": 3,
+      "atLarge": false,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Scott Qualls",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Phyllis Hernandez",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator – 3rd District\n                            Scott Qualls         Rep\n                               Phyllis Hernandez    Dem\n                       __________________\n                              Write-in",
+      "clip": [
+        30,
+        142.90794677734374,
+        570,
+        253.30784912109374
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 4,
+      "column": 0,
+      "title": "County Legislator, 4th District",
+      "type": "CANDIDACY",
+      "district": 4,
+      "atLarge": false,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Lon McDonald",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Byron Townsend",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator – 4th District\n                      Lon McDonald       Rep\n                        Byron Townsend     Dem\n                      __________________\n                             Write-in",
+      "clip": [
+        30,
+        253.30784912109374,
+        570,
+        359.147998046875
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 4,
+      "column": 0,
+      "title": "County Legislator, 6th District",
+      "type": "CANDIDACY",
+      "district": 6,
+      "atLarge": false,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Bill Haley",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Tony Lawson",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator –6th District\n\n                                       Bill Haley            Rep\n                       Tony Lawson       Dem\n                       __________________\n                              Write-in",
+      "clip": [
+        30,
+        359.147998046875,
+        570,
+        469.547900390625
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 4,
+      "column": 0,
+      "title": "County Legislator, 1st District At-Large",
+      "type": "CANDIDACY",
+      "district": 1,
+      "atLarge": true,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Lance Pollard",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Carla Fields",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator – 1st District At-Large\n                        Lance Pollard        Rep\n                           Carla Fields        Dem\n                       __________________\n                              Write-in",
+      "clip": [
+        30,
+        469.547900390625,
+        570,
+        574.188037109375
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 4,
+      "column": 0,
+      "title": "County Legislator, 2nd District At-Large",
+      "type": "CANDIDACY",
+      "district": 2,
+      "atLarge": true,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Gresia Cabrera",
+          "printedParty": "REP"
+        },
+        {
+          "name": "Donna Peyton",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator – 2nd District At-Large\n                          Gresia Cabrera       Rep\n                      Donna Peyton       Dem\n                       __________________\n                              Write-in",
+      "clip": [
+        30,
+        574.188037109375,
+        570,
+        670.7880126953125
+      ]
+    },
+    {
+      "sourceName": "kceb-public-download",
+      "page": 4,
+      "column": 0,
+      "title": "County Legislator, 3rd District At-Large",
+      "type": "CANDIDACY",
+      "district": 3,
+      "atLarge": true,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Susan B. Wilson",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "For County Legislator – 3rd District At-Large\n\n                       Susan B. Wilson      Dem\n                        __________________\n                               Write-in",
+      "clip": [
+        30,
+        670.7880126953125,
+        570,
+        776.7
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 2,
+      "column": 1,
+      "title": "County Legislator, 5th District",
+      "type": "CANDIDACY",
+      "district": 5,
+      "atLarge": false,
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "DALE CARTER",
+          "printedParty": "REP"
+        },
+        {
+          "name": "ANTOINE D. JENNINGS",
+          "printedParty": "DEM"
+        }
+      ],
+      "quote": "                   5TH DISTRICT\n                   (Vote for ONE)\nDALE CARTER                      REP\nANTOINE D. JENNINGS               DEM\nWrite-In",
+      "clip": [
+        271,
+        136.9,
+        522,
+        206.1
+      ]
+    }
+  ],
+  "bothBoardRetentionFields": [
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 1,
+      "category": "WESTERN",
+      "division": null,
+      "judge": "LISA WHITE HARDWICK",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge LISA WHITE HARDWICK of the Western District Court of Appeals be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 1,
+          "category": "WESTERN",
+          "division": null,
+          "judge": "LISA WHITE HARDWICK",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge LISA WHITE HARDWICK of the Western District Court of Appeals be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 5,
+          "column": 0,
+          "category": "WESTERN",
+          "division": null,
+          "judge": "LISA WHITE HARDWICK",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge LISA WHITE HARDWICK of the Western District Court of Appeals be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 1,
+      "category": "CIRCUIT_16",
+      "division": 2,
+      "judge": "KENNETH R. GARRETT, III",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge KENNETH R. GARRETT, III, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 1,
+          "category": "CIRCUIT_16",
+          "division": 2,
+          "judge": "KENNETH R. GARRETT, III",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge KENNETH R. GARRETT, III, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 5,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 2,
+          "judge": "KENNETH R. GARRETT, III",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge KENNETH R. GARRETT, III, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 1,
+      "category": "CIRCUIT_16",
+      "division": 4,
+      "judge": "PATRICK C. EDWARDS",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge PATRICK C. EDWARDS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 1,
+          "category": "CIRCUIT_16",
+          "division": 4,
+          "judge": "PATRICK C. EDWARDS",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge PATRICK C. EDWARDS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 5,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 4,
+          "judge": "PATRICK C. EDWARDS",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge PATRICK C. EDWARDS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 1,
+      "category": "CIRCUIT_16",
+      "division": 14,
+      "judge": "LAUREN D. BARRETT",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge LAUREN D. BARRETT, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 1,
+          "category": "CIRCUIT_16",
+          "division": 14,
+          "judge": "LAUREN D. BARRETT",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge LAUREN D. BARRETT, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 5,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 14,
+          "judge": "LAUREN D. BARRETT",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge LAUREN D. BARRETT, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 2,
+      "category": "CIRCUIT_16",
+      "division": 17,
+      "judge": "CORY L. ATKINS",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge CORY L. ATKINS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 2,
+          "category": "CIRCUIT_16",
+          "division": 17,
+          "judge": "CORY L. ATKINS",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge CORY L. ATKINS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 6,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 17,
+          "judge": "CORY L. ATKINS",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge CORY L. ATKINS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 2,
+      "category": "CIRCUIT_16",
+      "division": 18,
+      "judge": "KEVIN D. HARRELL",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge KEVIN D. HARRELL, Circuit Judge of the Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 2,
+          "category": "CIRCUIT_16",
+          "division": 18,
+          "judge": "KEVIN D. HARRELL",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge KEVIN D. HARRELL, Circuit Judge of the Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 6,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 18,
+          "judge": "KEVIN D. HARRELL",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge KEVIN D. HARRELL, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 2,
+      "category": "CIRCUIT_16",
+      "division": 25,
+      "judge": "ABBIE ROTHERMICH",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge ABBIE ROTHERMICH, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 2,
+          "category": "CIRCUIT_16",
+          "division": 25,
+          "judge": "ABBIE ROTHERMICH",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge ABBIE ROTHERMICH, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 6,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 25,
+          "judge": "ABBIE ROTHERMICH",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge ABBIE ROTHERMICH, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 2,
+      "category": "CIRCUIT_16",
+      "division": 26,
+      "judge": "R. TRAVIS WILLINGHAM",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge R. TRAVIS WILLINGHAM, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 2,
+          "category": "CIRCUIT_16",
+          "division": 26,
+          "judge": "R. TRAVIS WILLINGHAM",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge R. TRAVIS WILLINGHAM, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 6,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 26,
+          "judge": "R. TRAVIS WILLINGHAM",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge R. TRAVIS WILLINGHAM, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 2,
+      "category": "CIRCUIT_16",
+      "division": 27,
+      "judge": "KEA S. BIRD-RILEY",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge KEA S. BIRD-RILEY, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 2,
+          "category": "CIRCUIT_16",
+          "division": 27,
+          "judge": "KEA S. BIRD-RILEY",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge KEA S. BIRD-RILEY, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 6,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 27,
+          "judge": "KEA S. BIRD-RILEY",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge KEA S. BIRD-RILEY, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    },
+    {
+      "sourceName": "jceb-sample",
+      "page": 1,
+      "column": 2,
+      "category": "CIRCUIT_16",
+      "division": 31,
+      "judge": "MARY FRANCES WEIR",
+      "type": "RETENTION",
+      "voteFor": 1,
+      "quote": "Shall Judge MARY FRANCES WEIR, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO",
+      "allWitnesses": [
+        {
+          "sourceName": "jceb-sample",
+          "page": 1,
+          "column": 2,
+          "category": "CIRCUIT_16",
+          "division": 31,
+          "judge": "MARY FRANCES WEIR",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge MARY FRANCES WEIR, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        },
+        {
+          "sourceName": "kceb-public-download",
+          "page": 6,
+          "column": 0,
+          "category": "CIRCUIT_16",
+          "division": 31,
+          "judge": "MARY FRANCES WEIR",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "quote": "Shall Judge MARY FRANCES WEIR, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      ]
+    }
+  ],
+  "sharedFields": 18,
+  "uniqueDistrict1": "KCEB actual sample supplies district1 KellyThompson, absent JCEB outside-city sample.",
+  "uniqueDistrict5": "JCEB actual sample supplies district5 DaleCarter/AntoineDJennings, absent KCEB city sample.",
+  "ordinaryNamePartyMatchesAcrossSharedFields": true,
+  "unfilledNominationSlotsAreNotPeople": true,
+  "sourceCoverage": "Both election boards current published general samples. No city-only sample or outside-city sample is described as whole county by itself.",
+  "retentionNamesCircuitAndDivisionAcrossBothBoardsMatch": true,
+  "bothOriginalRetentionQuestionWordingsPreserved": true
+}

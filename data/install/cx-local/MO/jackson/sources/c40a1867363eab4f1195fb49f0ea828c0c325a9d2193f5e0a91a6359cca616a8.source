@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="pingback" href="https://jcebmo.org/xmlrpc.php">
+<title>Jackson County Missouri Election Board</title>
+<meta name='robots' content='max-image-preview:large' />
+<link rel="alternate" type="application/rss+xml" title="Jackson County Missouri Election Board &raquo; Feed" href="https://jcebmo.org/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Jackson County Missouri Election Board &raquo; Comments Feed" href="https://jcebmo.org/comments/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://jcebmo.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fjcebmo.org%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://jcebmo.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fjcebmo.org%2F&#038;format=xml" />
+		<!-- This site uses the Google Analytics by MonsterInsights plugin v11.3.0 - Using Analytics tracking - https://www.monsterinsights.com/ -->
+							<script src="//www.googletagmanager.com/gtag/js?id=G-41KKJG0F44"  data-cfasync="false" data-wpfc-render="false" type="text/javascript" async></script>
+			<script data-cfasync="false" data-wpfc-render="false" type="text/javascript">
+				var mi_version = '11.3.0';
+				var mi_track_user = true;
+				var mi_no_track_reason = '';
+								var MonsterInsightsDefaultLocations = {"page_location":"https:\/\/jcebmo.org\/"};
+								if ( typeof MonsterInsightsPrivacyGuardFilter === 'function' ) {
+					var MonsterInsightsLocations = (typeof MonsterInsightsExcludeQuery === 'object') ? MonsterInsightsPrivacyGuardFilter( MonsterInsightsExcludeQuery ) : MonsterInsightsPrivacyGuardFilter( MonsterInsightsDefaultLocations );
+				} else {
+					var MonsterInsightsLocations = (typeof MonsterInsightsExcludeQuery === 'object') ? MonsterInsightsExcludeQuery : MonsterInsightsDefaultLocations;
+				}
+
+								var disableStrs = [
+										'ga-disable-G-41KKJG0F44',
+									];
+
+				/* Function to detect opted out users */
+				function __gtagTrackerIsOptedOut() {
+					for (var index = 0; index < disableStrs.length; index++) {
+						if (document.cookie.indexOf(disableStrs[index] + '=true') > -1) {
+							return true;
+						}
+					}
+
+					return false;
+				}
+
+				/* Disable tracking if the opt-out cookie exists. */
+				if (__gtagTrackerIsOptedOut()) {
+					for (var index = 0; index < disableStrs.length; index++) {
+						window[disableStrs[index]] = true;
+					}
+				}
+
+				/* Opt-out function */
+				function __gtagTrackerOptout() {
+					for (var index = 0; index < disableStrs.length; index++) {
+						document.cookie = disableStrs[index] + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+						window[disableStrs[index]] = true;
+					}
+				}
+
+				if ('undefined' === typeof gaOptout) {
+					function gaOptout() {
+						__gtagTrackerOptout();
+					}
+				}
+								window.dataLayer = window.dataLayer || [];
+
+				window.MonsterInsightsDualTracker = {
+					helpers: {},
+					trackers: {},
+				};
+				if (mi_track_user) {
+					function __gtagDataLayer() {
+						dataLayer.push(arguments);
+					}
+
+					function __gtagTracker(type, name, parameters) {
+						if (!parameters) {
+							parameters = {};
+						}
+
+						if (parameters.send_to) {
+							__gtagDataLayer.apply(null, arguments);
+							return;
+						}
+
+						if (type === 'event') {
+														parameters.send_to = monsterinsights_frontend.v4_id;
+							var hookName = name;
+							if (typeof parameters['event_category'] !== 'undefined') {
+								hookName = parameters['event_category'] + ':' + name;
+							}
+
+							if (typeof MonsterInsightsDualTracker.trackers[hookName] !== 'undefined') {
+								MonsterInsightsDualTracker.trackers[hookName](parameters);
+							} else {
+								__gtagDataLayer('event', name, parameters);
+							}
+							
+						} else {
+							__gtagDataLayer.apply(null, arguments);
+						}
+					}
+
+					__gtagTracker('js', new Date());
+					__gtagTracker('set', {
+						'developer_id.dZGIzZG': true,
+											});
+					if ( MonsterInsightsLocations.page_location ) {
+						__gtagTracker('set', MonsterInsightsLocations);
+					}
+										__gtagTracker('config', 'G-41KKJG0F44', {"forceSSL":"true","link_attribution":"true"} );
+										window.gtag = __gtagTracker;										(function () {
+						/* https://developers.google.com/analytics/devguides/collection/analyticsjs/ */
+						/* ga and __gaTracker compatibility shim. */
+						var noopfn = function () {
+							return null;
+						};
+						var newtracker = function () {
+							return new Tracker();
+						};
+						var Tracker = function () {
+							return null;
+						};
+						var p = Tracker.prototype;
+						p.get = noopfn;
+						p.set = noopfn;
+						p.send = function () {
+							var args = Array.prototype.slice.call(arguments);
+							args.unshift('send');
+							__gaTracker.apply(null, args);
+						};
+						var __gaTracker = function () {
+							var len = arguments.length;
+							if (len === 0) {
+								return;
+							}
+							var f = arguments[len - 1];
+							if (typeof f !== 'object' || f === null || typeof f.hitCallback !== 'function') {
+								if ('send' === arguments[0]) {
+									var hitConverted, hitObject = false, action;
+									if ('event' === arguments[1]) {
+										if ('undefined' !== typeof arguments[3]) {
+											hitObject = {
+												'eventAction': arguments[3],
+												'eventCategory': arguments[2],
+												'eventLabel': arguments[4],
+												'value': arguments[5] ? arguments[5] : 1,
+											}
+										}
+									}
+									if ('pageview' === arguments[1]) {
+										if ('undefined' !== typeof arguments[2]) {
+											hitObject = {
+												'eventAction': 'page_view',
+												'page_path': arguments[2],
+											}
+										}
+									}
+									if (typeof arguments[2] === 'object') {
+										hitObject = arguments[2];
+									}
+									if (typeof arguments[5] === 'object') {
+										Object.assign(hitObject, arguments[5]);
+									}
+									if ('undefined' !== typeof arguments[1].hitType) {
+										hitObject = arguments[1];
+										if ('pageview' === hitObject.hitType) {
+											hitObject.eventAction = 'page_view';
+										}
+									}
+									if (hitObject) {
+										action = 'timing' === arguments[1].hitType ? 'timing_complete' : hitObject.eventAction;
+										hitConverted = mapArgs(hitObject);
+										__gtagTracker('event', action, hitConverted);
+									}
+								}
+								return;
+							}
+
+							function mapArgs(args) {
+								var arg, hit = {};
+								var gaMap = {
+									'eventCategory': 'event_category',
+									'eventAction': 'event_action',
+									'eventLabel': 'event_label',
+									'eventValue': 'event_value',
+									'nonInteraction': 'non_interaction',
+									'timingCategory': 'event_category',
+									'timingVar': 'name',
+									'timingValue': 'value',
+									'timingLabel': 'event_label',
+									'page': 'page_path',
+									'location': 'page_location',
+									'title': 'page_title',
+									'referrer' : 'page_referrer',
+								};
+								for (arg in args) {
+																		if (!(!args.hasOwnProperty(arg) || !gaMap.hasOwnProperty(arg))) {
+										hit[gaMap[arg]] = args[arg];
+									} else {
+										hit[arg] = args[arg];
+									}
+								}
+								return hit;
+							}
+
+							try {
+								f.hitCallback();
+							} catch (ex) {
+							}
+						};
+						__gaTracker.create = newtracker;
+						__gaTracker.getByName = newtracker;
+						__gaTracker.getAll = function () {
+							return [];
+						};
+						__gaTracker.remove = noopfn;
+						__gaTracker.loaded = true;
+						window['__gaTracker'] = __gaTracker;
+					})();
+									} else {
+										console.log("");
+					(function () {
+						function __gtagTracker() {
+							return null;
+						}
+
+						window['__gtagTracker'] = __gtagTracker;
+						window['gtag'] = __gtagTracker;
+					})();
+									}
+			</script>
+							<!-- / Google Analytics by MonsterInsights -->
+		<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='bsk-pdf-manager-pro-css-css' href='https://jcebmo.org/wp-content/plugins/bsk-pdf-manager/css/bsk-pdf-manager-pro.css?ver=1787618344' media='all' />
+<link rel='stylesheet' id='wpa-css-css' href='https://jcebmo.org/wp-content/plugins/honeypot/includes/css/wpa.css?ver=2.4.02' media='all' />
+<link rel='stylesheet' id='jceb-provisional-results-search-main-styles-css' href='https://jcebmo.org/wp-content/plugins/jceb-provisional-results-search-widget/css/main.css?ver=7.1.3' media='all' />
+<link rel='stylesheet' id='main-styles-css' href='https://jcebmo.org/wp-content/plugins/jceb-voter-id-lookup-widget/css/main.css?ver=7.1.3' media='all' />
+<link rel='stylesheet' id='sr7css-css' href='//jcebmo.org/wp-content/plugins/revslider/public/css/sr7.css?ver=6.7.54' media='all' />
+<link rel='stylesheet' id='wpa-style-css' href='https://jcebmo.org/wp-content/plugins/wp-accessibility/css/wpa-style.css?ver=2.4.1' media='all' />
+<style id="wpa-style-inline-css">
+
+.wpa-hide-ltr#skiplinks a, .wpa-hide-ltr#skiplinks a:hover, .wpa-hide-ltr#skiplinks a:visited {
+	
+}
+.wpa-hide-ltr#skiplinks a:active,  .wpa-hide-ltr#skiplinks a:focus {
+	background-color: #f1f1f1;
+	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+	color: #0073aa;
+	display: block;
+	font-weight: 600;
+	height: auto;
+	line-height: normal;
+	padding: 15px 23px 14px;
+	position: absolute;
+	left: 6px;
+	top: var(--admin-bar-top);
+	text-decoration: none;
+	text-transform: none;
+	width: auto;
+	z-index: 100000;
+}
+	:root { --admin-bar-top : 7px; }
+/*# sourceURL=wpa-style-inline-css */
+</style>
+<link rel='stylesheet' id='x-stack-css' href='https://jcebmo.org/wp-content/themes/x/framework/dist/css/site/stacks/renew.css?ver=10.9.6' media='all' />
+<link rel='stylesheet' id='x-child-css' href='https://jcebmo.org/wp-content/themes/x-child/style.css?ver=10.9.6' media='all' />
+<style id="cs-inline-css">
+@media (min-width:1200px){.x-hide-xl{display:none !important;}}@media (min-width:979px) and (max-width:1199px){.x-hide-lg{display:none !important;}}@media (min-width:767px) and (max-width:978px){.x-hide-md{display:none !important;}}@media (min-width:480px) and (max-width:766px){.x-hide-sm{display:none !important;}}@media (max-width:479px){.x-hide-xs{display:none !important;}}:root{--x-layout-site-width:90%;--x-layout-site-max-width:1200px;--x-h1-letter-spacing:-0.035em;--x-h2-letter-spacing:-0.035em;--x-h3-letter-spacing:-0.035em;--x-h4-letter-spacing:-0.035em;--x-h5-letter-spacing:-0.035em;--x-h6-letter-spacing:-0.035em;} a,h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover,h6 a:hover,.x-comment-time:hover,#reply-title small a,.comment-reply-link:hover,.x-comment-author a:hover,.x-recent-posts a:hover .h-recent-posts{color:#bb0000;}a:hover,#reply-title small a:hover{color:#1e73be;}.entry-title i,.entry-title svg{color:#dddddd;}a.x-img-thumbnail:hover,li.bypostauthor > article.comment{border-color:#bb0000;}.flex-direction-nav a,.flex-control-nav a:hover,.flex-control-nav a.flex-active,.x-dropcap,.x-skill-bar .bar,.x-pricing-column.featured h2,.h-comments-title small,.x-pagination a:hover,.woocommerce-pagination a:hover,.x-entry-share .x-share:hover,.entry-thumb,.widget_tag_cloud .tagcloud a:hover,.widget_product_tag_cloud .tagcloud a:hover,.x-highlight,.x-recent-posts .x-recent-posts-img:after,.x-portfolio-filters{background-color:#bb0000;}.x-portfolio-filters:hover{background-color:#1e73be;}.x-main{width:calc(72% - 3.20197%);}.x-sidebar{width:calc(100% - 3.20197% - 72%);}.h-landmark{font-weight:inherit;}.x-comment-author a{color:#333333;}.x-comment-author a,.comment-form-author label,.comment-form-email label,.comment-form-url label,.comment-form-rating label,.comment-form-comment label,.widget_calendar #wp-calendar caption,.widget_calendar #wp-calendar th,.x-accordion-heading .x-accordion-toggle,.x-nav-tabs > li > a:hover,.x-nav-tabs > .active > a,.x-nav-tabs > .active > a:hover{color:#0b2d5d;}.widget_calendar #wp-calendar th{border-bottom-color:#0b2d5d;}.x-pagination span.current,.woocommerce-pagination span[aria-current],.x-portfolio-filters-menu,.widget_tag_cloud .tagcloud a,.h-feature-headline span i,.widget_price_filter .ui-slider .ui-slider-handle{background-color:#0b2d5d;}@media (max-width:978.98px){}@media (max-width:978.98px){.x-content-sidebar-active .alignwide,.x-sidebar-content-active .alignwide{width:calc((1104 / 1080) * 100%);max-width:calc((1104 / 1080) * 100%);margin-left:calc((((1104 / 1080) * 100%) - 100%) / -2);}}@media (max-width:978.98px){.x-content-sidebar-active .alignfull,.x-sidebar-content-active .alignfull{width:calc((1200 / 1080) * 100%);max-width:calc((1200 / 1080) * 100%);margin-left:calc((((1200 / 1080) * 100%) - 100%) / -2);}}.x-full-width-active .alignwide{width:calc((1104 / 1080) * 100%);max-width:calc((1104 / 1080) * 100%);margin-left:calc((((1104 / 1080) * 100%) - 100%) / -2);}.x-full-width-active .alignfull{width:calc((1200 / 1080) * 100%);max-width:calc((1200 / 1080) * 100%);margin-left:calc((((1200 / 1080) * 100%) - 100%) / -2);}html{font-size:14px;}@media (min-width:479px){html{font-size:14px;}}@media (min-width:766px){html{font-size:14px;}}@media (min-width:978px){html{font-size:14px;}}@media (min-width:1199px){html{font-size:14px;}}body{font-style:normal;font-weight:inherit;color:#333333;background:#f3f3f3;}.w-b{font-weight:inherit !important;}h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6,.x-text-headline{font-family:inherit;font-style:normal;font-weight:inherit;}h1,.h1{letter-spacing:var(--x-h1-letter-spacing,-0.035em);}h2,.h2{letter-spacing:var(--x-h2-letter-spacing,-0.035em);}h3,.h3{letter-spacing:var(--x-h3-letter-spacing,-0.035em);}h4,.h4{letter-spacing:var(--x-h4-letter-spacing,-0.035em);}h5,.h5{letter-spacing:var(--x-h5-letter-spacing,-0.035em);}h6,.h6{letter-spacing:var(--x-h6-letter-spacing,-0.035em);}.w-h{font-weight:inherit !important;}.x-container.width{width:var(--x-layout-site-width,90%);}.x-container.max{max-width:var(--x-layout-site-max-width,1200px);}.x-bar-content.x-container.width{flex-basis:var(--x-layout-site-width,90%);}.site,.x-site{width:var(--x-layout-site-width,90%);max-width:var(--x-layout-site-max-width,1200px);}.x-main.full{float:none;clear:both;display:block;width:auto;}@media (max-width:978.98px){.x-main.full,.x-main.left,.x-main.right,.x-sidebar.left,.x-sidebar.right{float:none;display:block;width:auto !important;}}.entry-header,.entry-content{font-size:1rem;}body,input,button,select,textarea{font-family:inherit;}h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6,h1 a,h2 a,h3 a,h4 a,h5 a,h6 a,.h1 a,.h2 a,.h3 a,.h4 a,.h5 a,.h6 a,blockquote{color:#0b2d5d;}.cfc-h-tx{color:#0b2d5d !important;}.cfc-h-bd{border-color:#0b2d5d !important;}.cfc-h-bg{background-color:#0b2d5d !important;}.cfc-b-tx{color:#333333 !important;}.cfc-b-bd{border-color:#333333 !important;}.cfc-b-bg{background-color:#333333 !important;}.x-btn,.button,[type="submit"]{color:#ffffff;border-color:#0b2d5d;background-color:#0b2d5d;text-shadow:0 0.075em 0.075em rgba(0,0,0,0.5);padding:0.385em 0.923em 0.538em;font-size:13px;}.x-btn:hover,.button:hover,[type="submit"]:hover{color:#ffffff;border-color:#33445b;background-color:#33445b;text-shadow:0 0.075em 0.075em rgba(0,0,0,0.5);}.x-btn.x-btn-real,.x-btn.x-btn-real:hover{margin-bottom:0.25em;text-shadow:0 0.075em 0.075em rgba(0,0,0,0.65);}.x-btn.x-btn-real{box-shadow:0 0.25em 0 0 #a71000,0 4px 9px rgba(0,0,0,0.75);}.x-btn.x-btn-real:hover{box-shadow:0 0.25em 0 0 #a71000,0 4px 9px rgba(0,0,0,0.75);}.x-btn.x-btn-flat,.x-btn.x-btn-flat:hover{margin-bottom:0;text-shadow:0 0.075em 0.075em rgba(0,0,0,0.65);box-shadow:none;}.x-btn.x-btn-transparent,.x-btn.x-btn-transparent:hover{margin-bottom:0;border-width:3px;text-shadow:none;text-transform:uppercase;background-color:transparent;box-shadow:none;}.x-topbar .p-info,.x-topbar .p-info a,.x-topbar .x-social-global a{color:#ffffff;}.x-topbar .p-info a:hover{color:#959baf;}.x-topbar{background-color:#1f2c39;}.x-navbar .desktop .x-nav > li:before{padding-top:23px;}.x-navbar .desktop .x-nav > li > a,.x-navbar .desktop .sub-menu li > a,.x-navbar .mobile .x-nav li a{color:#ffffff;}.x-navbar .desktop .x-nav > li > a:hover,.x-navbar .desktop .x-nav > .x-active > a,.x-navbar .desktop .x-nav > .current-menu-item > a,.x-navbar .desktop .sub-menu li > a:hover,.x-navbar .desktop .sub-menu li.x-active > a,.x-navbar .desktop .sub-menu li.current-menu-item > a,.x-navbar .desktop .x-nav .x-megamenu > .sub-menu > li > a,.x-navbar .mobile .x-nav li > a:hover,.x-navbar .mobile .x-nav li.x-active > a,.x-navbar .mobile .x-nav li.current-menu-item > a{color:#ffffff;}.x-btn-navbar,.x-btn-navbar:hover{color:#ffffff;}.x-navbar .desktop .sub-menu li:before,.x-navbar .desktop .sub-menu li:after{background-color:#ffffff;}.x-navbar,.x-navbar .sub-menu{background-color:#0c3166 !important;}.x-btn-navbar,.x-btn-navbar.collapsed:hover{background-color:#7a7e82;}.x-btn-navbar.collapsed{background-color:#bb0000;}.x-navbar .desktop .x-nav > li > a:hover > span,.x-navbar .desktop .x-nav > li.x-active > a > span,.x-navbar .desktop .x-nav > li.current-menu-item > a > span{box-shadow:0 2px 0 0 #ffffff;}.x-navbar .desktop .x-nav > li > a{height:55px;padding-top:23px;}.x-navbar .desktop .x-nav > li ul{top:55px;}.x-colophon.bottom{background-color:#0c3166;}.x-colophon.bottom,.x-colophon.bottom a,.x-colophon.bottom .x-social-global a{color:#ffffff;}.x-navbar.x-navbar-fixed-top.x-container.max.width{width:90%%;max-width:1200pxpx;}.x-navbar-inner{min-height:55px;}.x-brand{margin-top:12px;font-family:inherit;font-size:42px;font-style:normal;font-weight:inherit;letter-spacing:-0.035em;color:#272727;}.x-brand:hover,.x-brand:focus{color:#272727;}.x-brand img{width:calc(px / 2);}.x-navbar .x-nav-wrap .x-nav > li > a{font-family:inherit;font-style:normal;font-weight:inherit;letter-spacing:0em;text-transform:uppercase;}.x-navbar .desktop .x-nav > li > a{font-size:14px;}.x-navbar .desktop .x-nav > li > a:not(.x-btn-navbar-woocommerce){padding-left:13px;padding-right:13px;}.x-navbar .desktop .x-nav > li > a > span{margin-right:-0em;}.x-btn-navbar{margin-top:-60px;}.x-btn-navbar,.x-btn-navbar.collapsed{font-size:24px;}@media (max-width:979px){.x-widgetbar{left:0;right:0;}}.x-colophon.bottom{background-color:#0c3166;}.x-colophon.bottom,.x-colophon.bottom a,.x-colophon.bottom .x-social-global a{color:#ffffff;}.bg .mejs-container,.x-video .mejs-container{position:unset !important;} @font-face{font-family:'FontAwesomePro';font-style:normal;font-weight:900;font-display:block;src:url('https://jcebmo.org/wp-content/plugins/cornerstone/assets/fonts/fa-solid-900.woff2?ver=7.3.1') format('woff2');}[data-x-fa-pro-icon]{font-family:"FontAwesomePro" !important;}[data-x-fa-pro-icon]:before{content:attr(data-x-fa-pro-icon);}[data-x-icon],[data-x-icon-o],[data-x-icon-l],[data-x-icon-s],[data-x-icon-b],[data-x-icon-sr],[data-x-icon-ss],[data-x-icon-sl],[data-x-icon-d],[data-x-fa-pro-icon],[class*="cs-fa-"]{display:inline-flex;font-style:normal;font-weight:400;text-decoration:inherit;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}[data-x-icon].left,[data-x-icon-o].left,[data-x-icon-l].left,[data-x-icon-s].left,[data-x-icon-b].left,[data-x-icon-sr].left,[data-x-icon-ss].left,[data-x-icon-sl].left,[data-x-fa-pro-icon].left,[class*="cs-fa-"].left{margin-right:0.5em;}[data-x-icon].right,[data-x-icon-o].right,[data-x-icon-l].right,[data-x-icon-s].right,[data-x-icon-b].right,[data-x-icon-sr].right,[data-x-icon-ss].right,[data-x-icon-sl].right,[data-x-fa-pro-icon].right,[class*="cs-fa-"].right{margin-left:0.5em;}[data-x-icon]:before,[data-x-icon-o]:before,[data-x-icon-l]:before,[data-x-icon-s]:before,[data-x-icon-b]:before,[data-x-icon-sr]:before,[data-x-icon-ss]:before,[data-x-icon-sl]:before,[data-x-fa-pro-icon]:before,[class*="cs-fa-"]:before{line-height:1;}@font-face{font-family:'FontAwesome';font-style:normal;font-weight:900;font-display:block;src:url('https://jcebmo.org/wp-content/plugins/cornerstone/assets/fonts/fa-solid-900.woff2?ver=7.3.1') format('woff2');}[data-x-icon],[data-x-icon-s],[data-x-icon][class*="cs-fa-"]{font-family:"FontAwesome" !important;font-weight:900;}[data-x-icon]:before,[data-x-icon][class*="cs-fa-"]:before{content:attr(data-x-icon);}[data-x-icon-s]:before{content:attr(data-x-icon-s);}@font-face{font-family:'FontAwesomeRegular';font-style:normal;font-weight:400;font-display:block;src:url('https://jcebmo.org/wp-content/plugins/cornerstone/assets/fonts/fa-regular-400.woff2?ver=7.3.1') format('woff2');}@font-face{font-family:'FontAwesomePro';font-style:normal;font-weight:400;font-display:block;src:url('https://jcebmo.org/wp-content/plugins/cornerstone/assets/fonts/fa-regular-400.woff2?ver=7.3.1') format('woff2');}[data-x-icon-o]{font-family:"FontAwesomeRegular" !important;}[data-x-icon-o]:before{content:attr(data-x-icon-o);}@font-face{font-family:'FontAwesomeLight';font-style:normal;font-weight:300;font-display:block;src:url('https://jcebmo.org/wp-content/plugins/cornerstone/assets/fonts/fa-light-300.woff2?ver=7.3.1') format('woff2');}@font-face{font-family:'FontAwesomePro';font-style:normal;font-weight:300;font-display:block;src:url('https://jcebmo.org/wp-content/plugins/cornerstone/assets/fonts/fa-light-300.woff2?ver=7.3.1') format('woff2');}[data-x-icon-l]{font-family:"FontAwesomeLight" !important;font-weight:300;}[data-x-icon-l]:before{content:attr(data-x-icon-l);}@font-face{font-family:'FontAwesomeBrands';font-style:normal;font-weight:normal;font-display:block;src:url('https://jcebmo.org/wp-content/plugins/cornerstone/assets/fonts/fa-brands-400.woff2?ver=7.3.1') format('woff2');}[data-x-icon-b]{font-family:"FontAwesomeBrands" !important;}[data-x-icon-b]:before{content:attr(data-x-icon-b);}.widget.widget_rss li .rsswidget:before{content:"\f35d";padding-right:0.4em;font-family:"FontAwesome";} .m2sh-0.x-row{z-index:auto;margin-top:0px;margin-right:auto;margin-bottom:0px;margin-left:auto;border-top-left-radius:8px;border-top-right-radius:8px;border-bottom-right-radius:8px;border-bottom-left-radius:8px;font-size:1em;background-color:#e6e6e6;}.m2sh-0 > .x-row-inner{flex-direction:row;justify-content:flex-start;align-items:stretch;align-content:stretch;}.m2sh-0 > .x-row-inner > *{margin-top:calc(1rem / 2);margin-bottom:calc(1rem / 2);margin-right:calc(1rem / 2);margin-left:calc(1rem / 2);}.m2sh-1.x-row{border-top-width:1px;border-right-width:1px;border-bottom-width:1px;border-left-width:1px;border-top-style:solid;border-right-style:solid;border-bottom-style:solid;border-left-style:solid;border-top-color:hsl(0,0%,65%);border-right-color:hsl(0,0%,65%);border-bottom-color:hsl(0,0%,65%);border-left-color:hsl(0,0%,65%);padding-top:20px;padding-right:20px;padding-bottom:20px;padding-left:20px;}.m2sh-1 > .x-row-inner{margin-top:calc((1rem / 2) * -1);margin-right:calc((1rem / 2) * -1);margin-bottom:calc((1rem / 2) * -1);margin-left:calc((1rem / 2) * -1);}.m2sh-1.x-row:hover,.m2sh-1.x-row[class*="active"],[data-x-effect-provider*="colors"]:hover .m2sh-1.x-row{border-top-color:undefined;border-right-color:undefined;border-bottom-color:undefined;border-left-color:undefined;}.m2sh-2.x-row{border-top-width:0;border-right-width:0;border-bottom-width:0;border-left-width:0;padding-top:1px;padding-right:1px;padding-bottom:1px;padding-left:1px;}.m2sh-2 > .x-row-inner{margin-top:calc(((1rem / 2) + 1px) * -1);margin-right:calc(((1rem / 2) + 1px) * -1);margin-bottom:calc(((1rem / 2) + 1px) * -1);margin-left:calc(((1rem / 2) + 1px) * -1);}.m2sh-3 > .x-row-inner > *{flex-grow:1;}.m2sh-4{--gap:1rem;}.m2sh-5 > .x-row-inner > *:nth-child(3n - 0) {flex-basis:calc(33.33% - clamp(0px,var(--gap),9999px));}.m2sh-5 > .x-row-inner > *:nth-child(3n - 1) {flex-basis:calc(33.33% - clamp(0px,var(--gap),9999px));}.m2sh-5 > .x-row-inner > *:nth-child(3n - 2) {flex-basis:calc(33.33% - clamp(0px,var(--gap),9999px));}.m2sh-6 > .x-row-inner > *:nth-child(1n - 0) {flex-basis:calc(100% - clamp(0px,var(--gap),9999px));}.m2sh-7 > .x-row-inner > *:nth-child(3n - 0) {flex-basis:calc(33.33% - clamp(0px,var(--gap),9999px));}.m2sh-7 > .x-row-inner > *:nth-child(3n - 1) {flex-basis:calc(33.33% - clamp(0px,var(--gap),9999px));}.m2sh-7 > .x-row-inner > *:nth-child(3n - 2) {flex-basis:calc(33.33% - clamp(0px,var(--gap),9999px));}.m2sh-8.x-col{display:flex;flex-direction:column;justify-content:flex-start;align-items:center;flex-wrap:wrap;align-content:center;z-index:1;padding-top:27px;padding-right:12px;padding-bottom:27px;padding-left:12px;font-size:1em;background-color:hsl(0,14%,96%);}.m2sh-9.x-col{border-top-width:0;border-right-width:0;border-bottom-width:0;border-left-width:0;}.m2sh-a.x-col{border-top-width:1px;border-right-width:1px;border-bottom-width:1px;border-left-width:1px;border-top-style:solid;border-right-style:solid;border-bottom-style:solid;border-left-style:solid;border-top-color:rgb(7,7,7);border-right-color:rgb(7,7,7);border-bottom-color:rgb(7,7,7);border-left-color:rgb(7,7,7);}.m2sh-b.x-image{font-size:1em;border-top-width:0;border-right-width:0;border-bottom-width:0;border-left-width:0;}.m2sh-b.x-image img{aspect-ratio:auto;}@media screen and (max-width:1199px){.m2sh-5 > .x-row-inner > *:nth-child(2n - 0) {flex-basis:calc(50% - clamp(0px,var(--gap),9999px));}.m2sh-5 > .x-row-inner > *:nth-child(2n - 1) {flex-basis:calc(50% - clamp(0px,var(--gap),9999px));}.m2sh-6 > .x-row-inner > *:nth-child(2n - 0) {flex-basis:calc(50% - clamp(0px,var(--gap),9999px));}.m2sh-6 > .x-row-inner > *:nth-child(2n - 1) {flex-basis:calc(50% - clamp(0px,var(--gap),9999px));}.m2sh-7 > .x-row-inner > *:nth-child(2n - 0) {flex-basis:calc(50% - clamp(0px,var(--gap),9999px));}.m2sh-7 > .x-row-inner > *:nth-child(2n - 1) {flex-basis:calc(50% - clamp(0px,var(--gap),9999px));}}@media screen and (max-width:766px){.m2sh-5 > .x-row-inner > *:nth-child(1n - 0) {flex-basis:calc(100% - clamp(0px,var(--gap),9999px));}.m2sh-6 > .x-row-inner > *:nth-child(1n - 0) {flex-basis:calc(100% - clamp(0px,var(--gap),9999px));}.m2sh-7 > .x-row-inner > *:nth-child(1n - 0) {flex-basis:calc(100% - clamp(0px,var(--gap),9999px));}}@media screen and (max-width:479px){.m2sh-5 > .x-row-inner > *:nth-child(1n - 0) {flex-basis:calc(100% - clamp(0px,var(--gap),9999px));}.m2sh-6 > .x-row-inner > *:nth-child(1n - 0) {flex-basis:calc(100% - clamp(0px,var(--gap),9999px));}.m2sh-7 > .x-row-inner > *:nth-child(1n - 0) {flex-basis:calc(100% - clamp(0px,var(--gap),9999px));}} @media (min-width:979px) and (max-width:1200px){.x-navbar .x-nav > li > a{font-size:12px;font-weight:normal;}}.x-brand,.x-brand img {max-width:100%;}a:focus,select:focus,input[type="file"]:focus,input[type="radio"]:focus,input[type="submit"]:focus,input[type="checkbox"]:focus{outline:none !important;}.site{-webkit-box-shadow:0 10px 10px 10px rgba(0,0,0,.2);box-shadow:0 10px 10px 10px rgba(0,0,0,.2);}.x-navbar .x-brand{margin-top:12px;margin-bottom:85px;}.x-navbar{background:url("https://www.jcebmo.org/wp-content/uploads/headerbg.jpg") no-repeat;}.x-navbar-inner{border-bottom:#555555 solid 2px;}.x-navbar .desktop .x-nav{margin:0px;float:left;}.x-navbar .desktop .x-nav li > a > span::after{content:"";}.desktop .sub-menu{background-clip:padding-box;display:none;font-size:1rem;list-style:outside none none;margin:0;float:left;min-width:250px;position:absolute;padding-top:10px;transform:translate3d(0px,0px,0px);z-index:1000;border-radius:0 0 4px 4px;}.desktop .sub-menu li > a{line-height:1.5;padding:.5em .5em;border-bottom:#0d3b79 1px solid;}.desktop .sub-menu li > a:hover{line-height:1.5;padding:.5em .5em;border-bottom:#0d3b79 1px solid;background:#0d3b79;}.x-container.offset{margin:1.75em auto;}.entry-content{margin-bottom:20px;}.x-header-landmark{padding:30px 0px 0px 0px;border-width:0px 0px;}.h-landmark,.entry-title.h-landmark{margin:0px;font-size:230%;letter-spacing:-0.045em;line-height:1;}h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{margin:.25em 0px .75em 0em;}p {margin:0px 0px 1.15em;}.x-colophon.top{background:url("/wp-content/uploads/footertopbg.jpg") repeat-y;border-top:#555555 solid 2px;border-bottom:#555555 solid 2px;}.x-colophon.bottom{background:#0C3166 url("/wp-content/uploads/footerbg.jpg") repeat-y;padding:40px 0px;font-size:12px;}.x-colophon.bottom .x-nav li a{color:#ffffff;}.x-column.x-1-3{padding:20px;border-radius:4px;min-height:350px;}.x-sidebar{margin-top:-0px;}.h-widget{margin:0px 0px 0.65em;color:#0b2d5d;font-size:140%;line-height:1.1;}hr{height:0px;margin:1.25em 0px;border-width:2px 0px 0px;border-style:solid none none;border-color:#c0c0c0;}.x-accordion-group{margin:0px 0px 4px;border:0px solid #E5E5E5;transition:border-color 0.3s ease 0s;}.x-accordion-heading .x-accordion-toggle:hover{background-color:#F1F1F1;}.x-accordion-heading .x-accordion-toggle {display:block;padding:10px 15px;font-size:110%;}.x-accordion-heading .x-accordion-toggle.collapsed{background-color:#F1F1F1;}.wsp-pages-title {display:none;}#jceb_voter_id_lookup_widget h2{color:#FFF;margin:0px 0px 12px;opacity:0.9;padding:15px;text-align:left;font-size:18px;}#jceb_voter_id_lookup_widget h2{background-color:#0b2d5d;}#jceb_provisional_results_search_widget h2{color:#FFF;margin:0px 0px 12px;opacity:0.9;padding:15px;text-align:left;font-size:18px;font-weight:normal;}#jceb_provisional_results_search_widget label{margin-right:12px;width:33%;display:inline;}#jceb_provisional_results_search_widget input{border-radius:2px;border:1px solid rgba(0,0,0,0.1);padding:4px;margin:4px 0px;box-shadow:none;opacity:0.85;background:#FFF none repeat scroll 0% 0%;transition:all 0.1s ease-out 0s;color:#555;width:55%;display:inline;}.x-countdown-label{margin-top:0.1em;font-family:inherit;font-size:1.25em;font-style:normal;font-weight:700 !important;line-height:1;text-align:center;color:#0b2d5d !important;}.x-countdown-digit {color:#0b2d5d !important;}.h3-style{font-size:1.5em;font-weight:bold;margin:1em 0;} 
+/*# sourceURL=cs-inline-css */
+</style>
+<script id="jquery-core-js" src="https://jcebmo.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://jcebmo.org/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script async data-wp-strategy="async" id="monsterinsights-frontend-script-js" src="https://jcebmo.org/wp-content/plugins/google-analytics-for-wordpress/assets/js/frontend-gtag.min.js?ver=11.3.0"></script>
+<script data-cfasync="false" data-wpfc-render="false" type="text/javascript" id='monsterinsights-frontend-script-js-extra'>/* <![CDATA[ */
+var monsterinsights_frontend = {"js_events_tracking":"true","download_extensions":"doc,pdf,ppt,zip,xls,docx,pptx,xlsx","inbound_paths":"[{\"path\":\"\\\/go\\\/\",\"label\":\"affiliate\"},{\"path\":\"\\\/recommend\\\/\",\"label\":\"affiliate\"}]","home_url":"https:\/\/jcebmo.org","hash_tracking":"false","v4_id":"G-41KKJG0F44"};/* ]]> */
+</script>
+<script id="bsk-pdf-manager-pro-js-extra">
+var bsk_pdf_pro = {"ajaxurl":"https://jcebmo.org/wp-admin/admin-ajax.php"};
+//# sourceURL=bsk-pdf-manager-pro-js-extra
+</script>
+<script id="bsk-pdf-manager-pro-js" src="https://jcebmo.org/wp-content/plugins/bsk-pdf-manager/js/bsk_pdf_manager_pro.js?ver=1787618344"></script>
+<script async data-wp-strategy="async" id="tp-tools-js" src="//jcebmo.org/wp-content/plugins/revslider/public/js/libs/tptools.js?ver=6.7.54"></script>
+<script async data-wp-strategy="async" id="sr7-js" src="//jcebmo.org/wp-content/plugins/revslider/public/js/sr7.js?ver=6.7.54"></script>
+<link rel="https://api.w.org/" href="https://jcebmo.org/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://jcebmo.org/wp-json/wp/v2/pages/3617" /><link rel="canonical" href="https://jcebmo.org/" />
+<link rel='shortlink' href='https://jcebmo.org/' />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<meta name="generator" content="Powered by Slider Revolution 6.7.54 - responsive, Mobile-Friendly Slider Plugin for WordPress with comfortable drag and drop interface." />
+<link rel="icon" href="https://jcebmo.org/wp-content/uploads/favicon152-100x100.png" sizes="32x32" />
+<link rel="icon" href="https://jcebmo.org/wp-content/uploads/favicon152.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://jcebmo.org/wp-content/uploads/favicon152.png" />
+<meta name="msapplication-TileImage" content="https://jcebmo.org/wp-content/uploads/favicon152.png" />
+<script>
+	window._tpt			??= {};
+	window.SR7			??= {};
+	_tpt.R				??= {};
+	_tpt.R.fonts		??= {};
+	_tpt.R.fonts.customFonts??= {};
+	SR7.devMode			=  false;
+	SR7.F 				??= {};
+	SR7.G				??= {};
+	SR7.LIB				??= {};
+	SR7.E				??= {};
+	SR7.E.gAddons		??= {};
+	SR7.E.php 			??= {};
+	SR7.E.nonce			= '853ccec534';
+	SR7.E.ajaxurl		= 'https://jcebmo.org/wp-admin/admin-ajax.php';
+	SR7.E.resturl		= 'https://jcebmo.org/wp-json/';
+	SR7.E.slug_path		= 'revslider/revslider.php';
+	SR7.E.slug			= 'revslider';
+	SR7.E.plugin_url	= 'https://jcebmo.org/wp-content/plugins/revslider/';
+	SR7.E.wp_plugin_url = 'https://jcebmo.org/wp-content/plugins/';
+	SR7.E.revision		= '6.7.54';
+	SR7.E.fontBaseUrl	= '';
+	SR7.G.breakPoints 	= [1240,1024,778,480];
+	SR7.G.fSUVW 		= false;
+	SR7.E.modules 		= ['module','page','slide','layer','draw','animate','srtools','canvas','defaults','carousel','navigation','media','modifiers','migration'];
+	SR7.E.libs 			= ['WEBGL'];
+	SR7.E.css 			= ['csslp','cssbtns','cssfilters','cssnav','cssmedia'];
+	SR7.E.resources		= {};
+	SR7.E.ytnc			= false;
+	SR7.JSON			??= {};
+/*! Slider Revolution 7.0 - Page Processor */
+!function(){"use strict";window.SR7??={},window._tpt??={},SR7.version="Slider Revolution 6.7.40",_tpt.getMobileZoom=()=>_tpt.is_mobile?document.documentElement.clientWidth/window.innerWidth:1,_tpt.getWinDim=function(t){_tpt.screenHeightWithUrlBar??=window.innerHeight;let e=SR7.F?.modal?.visible&&SR7.M[SR7.F.module.getIdByAlias(SR7.F.modal.requested)];_tpt.scrollBar=window.innerWidth!==document.documentElement.clientWidth||e&&window.innerWidth!==e.c.module.clientWidth,_tpt.winW=_tpt.getMobileZoom()*window.innerWidth-(_tpt.scrollBar||"prepare"==t?_tpt.scrollBarW??_tpt.mesureScrollBar():0),_tpt.winH=_tpt.getMobileZoom()*window.innerHeight,_tpt.winWAll=document.documentElement.clientWidth},_tpt.getResponsiveLevel=function(t,e){return SR7.G.fSUVW?_tpt.closestGE(t,window.innerWidth):_tpt.closestGE(t,_tpt.winWAll)},_tpt.mesureScrollBar=function(){let t=document.createElement("div");return t.className="RSscrollbar-measure",t.style.width="100px",t.style.height="100px",t.style.overflow="scroll",t.style.position="absolute",t.style.top="-9999px",document.body.appendChild(t),_tpt.scrollBarW=t.offsetWidth-t.clientWidth,document.body.removeChild(t),_tpt.scrollBarW},_tpt.loadCSS=async function(t,e,s){return s?_tpt.R.fonts.required[e].status=1:(_tpt.R[e]??={},_tpt.R[e].status=1),new Promise((i,n)=>{if(_tpt.isStylesheetLoaded(t))s?_tpt.R.fonts.required[e].status=2:_tpt.R[e].status=2,i();else{const o=document.createElement("link");o.rel="stylesheet";let l="text",r="css";o["type"]=l+"/"+r,o.href=t,o.onload=()=>{s?_tpt.R.fonts.required[e].status=2:_tpt.R[e].status=2,i()},o.onerror=()=>{s?_tpt.R.fonts.required[e].status=3:_tpt.R[e].status=3,n(new Error(`Failed to load CSS: ${t}`))},document.head.appendChild(o)}})},_tpt.addContainer=function(t){const{tag:e="div",id:s,class:i,datas:n,textContent:o,iHTML:l}=t,r=document.createElement(e);if(s&&""!==s&&(r.id=s),i&&""!==i&&(r.className=i),n)for(const[t,e]of Object.entries(n))"style"==t?r.style.cssText=e:r.setAttribute(`data-${t}`,e);return o&&(r.textContent=o),l&&(r.innerHTML=l),r},_tpt.collector=function(){return{fragment:new DocumentFragment,add(t){var e=_tpt.addContainer(t);return this.fragment.appendChild(e),e},append(t){t.appendChild(this.fragment)}}},_tpt.isStylesheetLoaded=function(t){let e=t.split("?")[0];return Array.from(document.querySelectorAll('link[rel="stylesheet"], link[rel="preload"]')).some(t=>t.href.split("?")[0]===e)},_tpt.preloader={requests:new Map,preloaderTemplates:new Map,show:function(t,e){if(!e||!t)return;const{type:s,color:i}=e;if(s<0||"off"==s)return;const n=`preloader_${s}`;let o=this.preloaderTemplates.get(n);o||(o=this.build(s,i),this.preloaderTemplates.set(n,o)),this.requests.has(t)||this.requests.set(t,{count:0});const l=this.requests.get(t);clearTimeout(l.timer),l.count++,1===l.count&&(l.timer=setTimeout(()=>{l.preloaderClone=o.cloneNode(!0),l.anim&&l.anim.kill(),void 0!==_tpt.gsap?l.anim=_tpt.gsap.fromTo(l.preloaderClone,1,{opacity:0},{opacity:1}):l.preloaderClone.classList.add("sr7-fade-in"),t.appendChild(l.preloaderClone)},150))},hide:function(t){if(!this.requests.has(t))return;const e=this.requests.get(t);e.count--,e.count<0&&(e.count=0),e.anim&&e.anim.kill(),0===e.count&&(clearTimeout(e.timer),e.preloaderClone&&(e.preloaderClone.classList.remove("sr7-fade-in"),e.anim=_tpt.gsap.to(e.preloaderClone,.3,{opacity:0,onComplete:function(){e.preloaderClone.remove()}})))},state:function(t){if(!this.requests.has(t))return!1;return this.requests.get(t).count>0},build:(t,e="#ffffff",s="")=>{if(t<0||"off"===t)return null;const i=parseInt(t);if(t="prlt"+i,isNaN(i))return null;if(_tpt.loadCSS(SR7.E.plugin_url+"public/css/preloaders/t"+i+".css","preloader_"+t),isNaN(i)||i<6){const n=`background-color:${e}`,o=1===i||2==i?n:"",l=3===i||4==i?n:"",r=_tpt.collector();["dot1","dot2","bounce1","bounce2","bounce3"].forEach(t=>r.add({tag:"div",class:t,datas:{style:l}}));const d=_tpt.addContainer({tag:"sr7-prl",class:`${t} ${s}`,datas:{style:o}});return r.append(d),d}{let n={};if(7===i){let t;e.startsWith("#")?(t=e.replace("#",""),t=`rgba(${parseInt(t.substring(0,2),16)}, ${parseInt(t.substring(2,4),16)}, ${parseInt(t.substring(4,6),16)}, `):e.startsWith("rgb")&&(t=e.slice(e.indexOf("(")+1,e.lastIndexOf(")")).split(",").map(t=>t.trim()),t=`rgba(${t[0]}, ${t[1]}, ${t[2]}, `),t&&(n.style=`border-top-color: ${t}0.65); border-bottom-color: ${t}0.15); border-left-color: ${t}0.65); border-right-color: ${t}0.15)`)}else 12===i&&(n.style=`background:${e}`);const o=[10,0,4,2,5,9,0,4,4,2][i-6],l=_tpt.collector(),r=l.add({tag:"div",class:"sr7-prl-inner",datas:n});Array.from({length:o}).forEach(()=>r.appendChild(l.add({tag:"span",datas:{style:`background:${e}`}})));const d=_tpt.addContainer({tag:"sr7-prl",class:`${t} ${s}`});return l.append(d),d}}},SR7.preLoader={show:(t,e)=>{"off"!==(SR7.M[t]?.settings?.pLoader?.type??"off")&&_tpt.preloader.show(e||SR7.M[t].c.module,SR7.M[t]?.settings?.pLoader??{color:"#fff",type:10})},hide:(t,e)=>{"off"!==(SR7.M[t]?.settings?.pLoader?.type??"off")&&_tpt.preloader.hide(e||SR7.M[t].c.module)},state:(t,e)=>_tpt.preloader.state(e||SR7.M[t].c.module)},_tpt.prepareModuleHeight=function(t){window.SR7.M??={},window.SR7.M[t.id]??={},"ignore"==t.googleFont&&(SR7.E.ignoreGoogleFont=!0);let e=window.SR7.M[t.id];if(null==_tpt.scrollBarW&&_tpt.mesureScrollBar(),e.c??={},e.states??={},e.settings??={},e.settings.size??={},t.fixed&&(e.settings.fixed=!0),e.c.module=document.querySelector("sr7-module#"+t.id),e.c.adjuster=e.c.module.getElementsByTagName("sr7-adjuster")[0],e.c.content=e.c.module.getElementsByTagName("sr7-content")[0],"carousel"==t.type&&(e.c.carousel=e.c.content.getElementsByTagName("sr7-carousel")[0]),null==e.c.module||null==e.c.module)return;t.plType&&t.plColor&&(e.settings.pLoader={type:t.plType,color:t.plColor}),void 0===t.plType||"off"===t.plType||SR7.preLoader.state(t.id)&&SR7.preLoader.state(t.id,e.c.module)||SR7.preLoader.show(t.id,e.c.module),_tpt.winW||_tpt.getWinDim("prepare"),_tpt.getWinDim();let s=""+e.c.module.dataset?.modal;"modal"==s||"true"==s||"undefined"!==s&&"false"!==s||(e.settings.size.fullWidth=t.size.fullWidth,e.LEV??=_tpt.getResponsiveLevel(window.SR7.G.breakPoints,t.id),t.vpt=_tpt.fillArray(t.vpt,5),e.settings.vPort=t.vpt[e.LEV],void 0!==t.el&&"720"==t.el[4]&&t.gh[4]!==t.el[4]&&"960"==t.el[3]&&t.gh[3]!==t.el[3]&&"768"==t.el[2]&&t.gh[2]!==t.el[2]&&delete t.el,e.settings.size.height=null==t.el||null==t.el[e.LEV]||0==t.el[e.LEV]||"auto"==t.el[e.LEV]?_tpt.fillArray(t.gh,5,-1):_tpt.fillArray(t.el,5,-1),e.settings.size.width=_tpt.fillArray(t.gw,5,-1),e.settings.size.minHeight=_tpt.fillArray(t.mh??[0],5,-1),e.cacheSize={fullWidth:e.settings.size?.fullWidth,fullHeight:e.settings.size?.fullHeight},void 0!==t.off&&(t.off?.t&&(e.settings.size.m??={})&&(e.settings.size.m.t=t.off.t),t.off?.b&&(e.settings.size.m??={})&&(e.settings.size.m.b=t.off.b),t.off?.l&&(e.settings.size.p??={})&&(e.settings.size.p.l=t.off.l),t.off?.r&&(e.settings.size.p??={})&&(e.settings.size.p.r=t.off.r),e.offsetPrepared=!0),_tpt.updatePMHeight(t.id,t,!0))},_tpt.updatePMHeight=(t,e,s)=>{let i=SR7.M[t];var n=i.settings.size.fullWidth?_tpt.winW:i.c.module.parentNode.offsetWidth;n=0===n||isNaN(n)?_tpt.winW:n;let o=i.settings.size.width[i.LEV]||i.settings.size.width[i.LEV++]||i.settings.size.width[i.LEV--]||n,l=i.settings.size.height[i.LEV]||i.settings.size.height[i.LEV++]||i.settings.size.height[i.LEV--]||0,r=i.settings.size.minHeight[i.LEV]||i.settings.size.minHeight[i.LEV++]||i.settings.size.minHeight[i.LEV--]||0;if(l="auto"==l?0:l,l=parseInt(l),"carousel"!==e.type&&(n-=parseInt(e.onw??0)||0),i.MP=!i.settings.size.fullWidth&&n<o||_tpt.winW<o?Math.min(1,n/o):1,e.size.fullScreen||e.size.fullHeight){let t=parseInt(e.fho)||0,s=(""+e.fho).indexOf("%")>-1;e.newh=_tpt.winH-(s?_tpt.winH*t/100:t)}else e.newh=i.MP*Math.max(l,r);if(e.newh+=(parseInt(e.onh??0)||0)+(parseInt(e.carousel?.pt)||0)+(parseInt(e.carousel?.pb)||0),void 0!==e.slideduration&&(e.newh=Math.max(e.newh,parseInt(e.slideduration)/3)),e.shdw&&_tpt.buildShadow(e.id,e),i.c.adjuster.style.height=e.newh+"px",i.c.module.style.height=e.newh+"px",i.c.content.style.height=e.newh+"px",i.states.heightPrepared=!0,i.dims??={},i.dims.moduleRect=i.c.module.getBoundingClientRect(),i.c.content.style.left="-"+i.dims.moduleRect.left+"px",!i.settings.size.fullWidth)return s&&requestAnimationFrame(()=>{n!==i.c.module.parentNode.offsetWidth&&_tpt.updatePMHeight(e.id,e)}),void _tpt.bgStyle(e.id,e,window.innerWidth==_tpt.winW,!0);_tpt.bgStyle(e.id,e,window.innerWidth==_tpt.winW,!0),requestAnimationFrame(function(){s&&requestAnimationFrame(()=>{n!==i.c.module.parentNode.offsetWidth&&_tpt.updatePMHeight(e.id,e)})}),i.earlyResizerFunction||(i.earlyResizerFunction=function(){requestAnimationFrame(function(){_tpt.getWinDim(),_tpt.moduleDefaults(e.id,e),_tpt.updateSlideBg(t,!0)})},window.addEventListener("resize",i.earlyResizerFunction))},_tpt.buildShadow=function(t,e){let s=SR7.M[t];null==s.c.shadow&&(s.c.shadow=document.createElement("sr7-module-shadow"),s.c.shadow.classList.add("sr7-shdw-"+e.shdw),s.c.content.appendChild(s.c.shadow))},_tpt.bgStyle=async(t,e,s,i,n)=>{const o=SR7.M[t];if((e=e??o.settings).fixed&&!o.c.module.classList.contains("sr7-top-fixed")&&(o.c.module.classList.add("sr7-top-fixed"),o.c.module.style.position="fixed",o.c.module.style.width="100%",o.c.module.style.top="0px",o.c.module.style.left="0px",o.c.module.style.pointerEvents="none",o.c.module.style.zIndex=5e3,o.c.content.style.pointerEvents="none"),null==o.c.bgcanvas){let t=document.createElement("sr7-module-bg"),l=!1;if("string"==typeof e?.bg?.color&&e?.bg?.color.includes("{"))if(_tpt.gradient&&_tpt.gsap)e.bg.color=_tpt.gradient.convert(e.bg.color);else try{let t=JSON.parse(e.bg.color);(t?.orig||t?.string)&&(e.bg.color=JSON.parse(e.bg.color))}catch(t){return}let r="string"==typeof e?.bg?.color?e?.bg?.color||"transparent":e?.bg?.color?.string??e?.bg?.color?.orig??e?.bg?.color?.color??"transparent";if(t.style["background"+(String(r).includes("grad")?"":"Color")]=r,("transparent"!==r||n)&&(l=!0),o.offsetPrepared&&(t.style.visibility="hidden"),e?.bg?.image?.src&&(t.style.backgroundImage=`url(${e?.bg?.image.src})`,t.style.backgroundSize=""==(e.bg.image?.size??"")?"cover":e.bg.image.size,t.style.backgroundPosition=e.bg.image.position,t.style.backgroundRepeat=""==e.bg.image.repeat||null==e.bg.image.repeat?"no-repeat":e.bg.image.repeat,l=!0),!l)return;o.c.bgcanvas=t,e.size.fullWidth?t.style.width=_tpt.winW-(s&&_tpt.winH<document.body.offsetHeight?_tpt.scrollBarW:0)+"px":i&&(t.style.width=o.c.module.offsetWidth+"px"),e.sbt?.use?o.c.content.appendChild(o.c.bgcanvas):o.c.module.appendChild(o.c.bgcanvas)}o.c.bgcanvas.style.height=void 0!==e.newh?e.newh+"px":("carousel"==e.type?o.dims.module.h:o.dims.content.h)+"px",o.c.bgcanvas.style.left=!s&&e.sbt?.use||o.c.bgcanvas.closest("SR7-CONTENT")?"0px":"-"+(o?.dims?.moduleRect?.left??0)+"px"},_tpt.updateSlideBg=function(t,e){const s=SR7.M[t];let i=s.settings;s?.c?.bgcanvas&&(i.size.fullWidth?s.c.bgcanvas.style.width=_tpt.winW-(e&&_tpt.winH<document.body.offsetHeight?_tpt.scrollBarW:0)+"px":preparing&&(s.c.bgcanvas.style.width=s.c.module.offsetWidth+"px"))},_tpt.moduleDefaults=(t,e)=>{let s=SR7.M[t];null!=s&&null!=s.c&&null!=s.c.module&&(s.dims??={},s.dims.moduleRect=s.c.module.getBoundingClientRect(),s.c.content.style.left="-"+s.dims.moduleRect.left+"px",s.c.content.style.width=_tpt.winW-_tpt.scrollBarW+"px","carousel"==e.type&&(s.c.module.style.overflow="visible"),_tpt.bgStyle(t,e,window.innerWidth==_tpt.winW))},_tpt.getOffset=t=>{var e=t.getBoundingClientRect(),s=window.pageXOffset||document.documentElement.scrollLeft,i=window.pageYOffset||document.documentElement.scrollTop;return{top:e.top+i,left:e.left+s}},_tpt.fillArray=function(t,e){let s,i;t=Array.isArray(t)?t:[t];let n=Array(e),o=t.length;for(i=0;i<t.length;i++)n[i+(e-o)]=t[i],null==s&&"#"!==t[i]&&(s=t[i]);for(let t=0;t<e;t++)void 0!==n[t]&&"#"!=n[t]||(n[t]=s),s=n[t];return n},_tpt.closestGE=function(t,e){let s=Number.MAX_VALUE,i=-1;for(let n=0;n<t.length;n++)t[n]-1>=e&&t[n]-1-e<s&&(s=t[n]-1-e,i=n);return++i}}();</script>
+</head>
+<body data-rsssl=1 class="home wp-singular page-template page-template-template-layout-full-width page-template-template-layout-full-width-php page page-id-3617 wp-theme-x wp-child-theme-x-child x-renew x-child-theme-active x-boxed-layout-active x-full-width-active x-post-meta-disabled x-navbar-static-active cornerstone-v7_9_6 x-v10_9_6">
+
+  <div class="x-skip-links"><a class="x-skip-link" href="#x-main">Skip to content</a></div>
+  
+  <div id="x-root" class="x-root">
+
+    
+    <div id="top" class="site">
+
+    <header class="masthead masthead-inline" role="banner">
+
+
+  <div class="x-navbar-wrap">
+    <div class="x-navbar">
+      <div class="x-navbar-inner">
+        <div class="x-container max width">
+          
+<a href="https://jcebmo.org/" class="x-brand img">
+  <img src="//jcebmo.org/wp-content/uploads/logo.png" alt="Jackson County Missouri Election Board"></a>
+          
+<a href="#" id="x-btn-navbar" class="x-btn-navbar collapsed" data-x-toggle="collapse-b" data-x-toggleable="x-nav-wrap-mobile" aria-expanded="false" aria-controls="x-nav-wrap-mobile" role="button">
+  <i class='x-framework-icon x-icon-bars' data-x-icon-s='&#xf0c9;' aria-hidden=true></i>  <span class="visually-hidden">Navigation</span>
+</a>
+
+<nav class="x-nav-wrap desktop" role="navigation">
+  <ul id="menu-main-menu" class="x-nav"><li id="menu-item-3641" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-3617 current_page_item menu-item-has-children menu-item-3641"><a href="https://jcebmo.org/" aria-current="page"><span>Home<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-88" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-88"><a href="https://jcebmo.org/who-we-are/"><span>Who We Are<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-89" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-89"><a href="https://jcebmo.org/contact-us/"><span>Contact Us<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li id="menu-item-538" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-538"><a><span>Election Information<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-95" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-95"><a href="https://jcebmo.org/election-information/election-results/"><span>Election Results<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-94" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-94"><a href="https://jcebmo.org/election-information/calendars/"><span>Calendars<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-91" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-91"><a href="https://jcebmo.org/election-information/on-the-ballot/"><span>On the Ballot<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-92" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-92"><a href="https://jcebmo.org/election-information/voting-locations/"><span>Voting Locations<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-93" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-93"><a href="https://jcebmo.org/election-information/jurisdiction/"><span>Jurisdiction<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-12027" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-12027"><a href="https://jcebmo.org/election-information/election-workers/"><span>Election Workers<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-1867" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1867"><a href="https://jcebmo.org/election-information/election-worker-training/"><span>Election Worker Training<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li id="menu-item-539" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-539"><a><span>Voter Information<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-98" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-98"><a href="https://jcebmo.org/voter-information/registration/"><span>Registration<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-99" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-99"><a href="https://jcebmo.org/voter-information/absentee-voting/"><span>Absentee Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-100" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-100"><a href="https://jcebmo.org/voter-information/military-overseas/"><span>Military &#038; Overseas Absentee Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-101" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-101"><a href="https://jcebmo.org/voter-information/id-requirements/"><span>ID Requirements<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li id="menu-item-540" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-540"><a><span>Candidates/Committees<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-104" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-104"><a href="https://jcebmo.org/candidatescommittees/overview/"><span>Overview<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-105" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-105"><a href="https://jcebmo.org/candidatescommittees/campaign-finance/"><span>Campaign Finance<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-611" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-611"><a href="https://jcebmo.org/election-information/calendars/"><span>Calendars<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-7266" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7266"><a href="https://jcebmo.org/maps/districts/"><span>Voting Districts<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li id="menu-item-541" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-541"><a><span>Forms<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-11446" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11446"><a href="https://jcebmo.org/voter-information/registration/"><span>Registration<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-111" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-111"><a href="https://jcebmo.org/forms/absentee-voting/"><span>Absentee Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-112" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-112"><a href="https://jcebmo.org/forms/election-worker-forms/"><span>Election Worker<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-10239" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10239"><a href="https://jcebmo.org/forms/public-records-request/"><span>Public Records Request<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-11154" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11154"><a href="https://jcebmo.org/forms/party-affiliation/"><span>Party Affiliation<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li id="menu-item-542" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-542"><a><span>Elected Officials<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-115" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-115"><a href="https://jcebmo.org/voting-links/county/"><span>County<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-116" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-116"><a href="https://jcebmo.org/voting-links/state/"><span>State<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-117" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-117"><a href="https://jcebmo.org/voting-links/federal/"><span>Federal<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-118" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-118"><a href="https://jcebmo.org/voting-links/political-parties/"><span>Political Parties<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-102" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-102"><a href="https://jcebmo.org/voting-links/elected-officials/"><span>Elected Officials<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li id="menu-item-543" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-543"><a><span>Maps<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-121" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-121"><a href="https://jcebmo.org/maps/where-we-are/"><span>Where We Are<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-122" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-122"><a href="https://jcebmo.org/maps/site-map/"><span>Site Map<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-123" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-123"><a href="https://jcebmo.org/maps/districts/"><span>Districts<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-11846" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11846"><a href="https://jcebmo.org/maps/precincts/"><span>Precincts<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-1058" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1058"><a href="https://jcebmo.org/maps/map-request/"><span>Map Request<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li id="menu-item-544" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-544"><a><span>FAQs<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-528" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-528"><a href="https://jcebmo.org/faqs/about-elections/"><span>Frequently Asked Questions About Elections<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-527" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-527"><a href="https://jcebmo.org/faqs/about-registration/"><span>Frequently Asked Questions About Registration<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-526" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-526"><a href="https://jcebmo.org/faqs/about-voting/"><span>Frequently Asked Questions About Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-525" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-525"><a href="https://jcebmo.org/faqs/about-election-work/"><span>Frequently Asked Questions About Election Work<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li id="menu-item-524" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-524"><a href="https://jcebmo.org/faqs/miscellaneous/"><span>Frequently Asked Questions Miscellaneous<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item x-menu-item x-menu-item-search"><a href="#" class="x-btn-navbar-search" aria-label="Navigation Search"><span><i class='x-framework-icon x-icon-search' data-x-icon-s='&#xf002;' aria-hidden=true></i><span class="x-hidden-desktop"> Search</span></span></a></li></ul></nav>
+
+<div id="x-nav-wrap-mobile" class="x-nav-wrap mobile x-collapsed" data-x-toggleable="x-nav-wrap-mobile" data-x-toggle-collapse="1" aria-hidden="true" aria-labelledby="x-btn-navbar">
+  <ul id="menu-main-menu-1" class="x-nav"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-3617 current_page_item menu-item-has-children menu-item-3641"><a href="https://jcebmo.org/" aria-current="page"><span>Home<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-88"><a href="https://jcebmo.org/who-we-are/"><span>Who We Are<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-89"><a href="https://jcebmo.org/contact-us/"><span>Contact Us<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-538"><a><span>Election Information<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-95"><a href="https://jcebmo.org/election-information/election-results/"><span>Election Results<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-94"><a href="https://jcebmo.org/election-information/calendars/"><span>Calendars<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-91"><a href="https://jcebmo.org/election-information/on-the-ballot/"><span>On the Ballot<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-92"><a href="https://jcebmo.org/election-information/voting-locations/"><span>Voting Locations<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-93"><a href="https://jcebmo.org/election-information/jurisdiction/"><span>Jurisdiction<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-12027"><a href="https://jcebmo.org/election-information/election-workers/"><span>Election Workers<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1867"><a href="https://jcebmo.org/election-information/election-worker-training/"><span>Election Worker Training<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-539"><a><span>Voter Information<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-98"><a href="https://jcebmo.org/voter-information/registration/"><span>Registration<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-99"><a href="https://jcebmo.org/voter-information/absentee-voting/"><span>Absentee Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-100"><a href="https://jcebmo.org/voter-information/military-overseas/"><span>Military &#038; Overseas Absentee Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-101"><a href="https://jcebmo.org/voter-information/id-requirements/"><span>ID Requirements<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-540"><a><span>Candidates/Committees<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-104"><a href="https://jcebmo.org/candidatescommittees/overview/"><span>Overview<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-105"><a href="https://jcebmo.org/candidatescommittees/campaign-finance/"><span>Campaign Finance<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-611"><a href="https://jcebmo.org/election-information/calendars/"><span>Calendars<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7266"><a href="https://jcebmo.org/maps/districts/"><span>Voting Districts<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-541"><a><span>Forms<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11446"><a href="https://jcebmo.org/voter-information/registration/"><span>Registration<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-111"><a href="https://jcebmo.org/forms/absentee-voting/"><span>Absentee Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-112"><a href="https://jcebmo.org/forms/election-worker-forms/"><span>Election Worker<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10239"><a href="https://jcebmo.org/forms/public-records-request/"><span>Public Records Request<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11154"><a href="https://jcebmo.org/forms/party-affiliation/"><span>Party Affiliation<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-542"><a><span>Elected Officials<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-115"><a href="https://jcebmo.org/voting-links/county/"><span>County<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-116"><a href="https://jcebmo.org/voting-links/state/"><span>State<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-117"><a href="https://jcebmo.org/voting-links/federal/"><span>Federal<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-118"><a href="https://jcebmo.org/voting-links/political-parties/"><span>Political Parties<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-102"><a href="https://jcebmo.org/voting-links/elected-officials/"><span>Elected Officials<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-543"><a><span>Maps<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-121"><a href="https://jcebmo.org/maps/where-we-are/"><span>Where We Are<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-122"><a href="https://jcebmo.org/maps/site-map/"><span>Site Map<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-123"><a href="https://jcebmo.org/maps/districts/"><span>Districts<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11846"><a href="https://jcebmo.org/maps/precincts/"><span>Precincts<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1058"><a href="https://jcebmo.org/maps/map-request/"><span>Map Request<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-544"><a><span>FAQs<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-528"><a href="https://jcebmo.org/faqs/about-elections/"><span>Frequently Asked Questions About Elections<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-527"><a href="https://jcebmo.org/faqs/about-registration/"><span>Frequently Asked Questions About Registration<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-526"><a href="https://jcebmo.org/faqs/about-voting/"><span>Frequently Asked Questions About Voting<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-525"><a href="https://jcebmo.org/faqs/about-election-work/"><span>Frequently Asked Questions About Election Work<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-524"><a href="https://jcebmo.org/faqs/miscellaneous/"><span>Frequently Asked Questions Miscellaneous<i class="x-icon x-framework-icon x-framework-icon-menu" aria-hidden="true" data-x-icon-s="&#xf103;"></i></span></a></li>
+</ul>
+</li>
+<li class="menu-item x-menu-item x-menu-item-search"><a href="#" class="x-btn-navbar-search" aria-label="Navigation Search"><span><i class='x-framework-icon x-icon-search' data-x-icon-s='&#xf002;' aria-hidden=true></i><span class="x-hidden-desktop"> Search</span></span></a></li></ul></div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+      <div class="x-slider-container below">
+
+        
+        
+        
+				<p class="rs-p-wp-fix"></p>
+				<sr7-module data-alias="main_slider" data-id="1" id="SR7_1_1" class="rs-ov-hidden" data-version="6.7.54">
+					<sr7-adjuster></sr7-adjuster>
+					<sr7-content>
+						<sr7-slide id="SR7_1_1-1" data-key="1">
+							<sr7-bg id="SR7_1_1-1-1" class="sr7-layer"><noscript><img src="https://jcebmo.org/wp-content/uploads/slide1.jpg" alt="" title="slide1"></noscript></sr7-bg>
+						</sr7-slide>
+						<sr7-slide id="SR7_1_1-2" data-key="2">
+							<sr7-bg id="SR7_1_1-2-1" class="sr7-layer"><noscript><img src="https://www.jcebmo.org/wp-content/uploads/slide2.jpg" alt="" title="Welcome to Jackson County Election Board Online"></noscript></sr7-bg>
+						</sr7-slide>
+						<sr7-slide id="SR7_1_1-3" data-key="3">
+							<sr7-bg id="SR7_1_1-3-1" class="sr7-layer"><noscript><img src="https://www.jcebmo.org/wp-content/uploads/slide3.jpg" alt="" title="Welcome to Jackson County Election Board Online"></noscript></sr7-bg>
+						</sr7-slide>
+						<sr7-slide id="SR7_1_1-4" data-key="4">
+							<sr7-bg id="SR7_1_1-4-1" class="sr7-layer"><noscript><img src="https://www.jcebmo.org/wp-content/uploads/slide4.jpg" alt="" title="Welcome to Jackson County Election Board Online"></noscript></sr7-bg>
+						</sr7-slide>
+						<sr7-slide id="SR7_1_1-5" data-key="5">
+						</sr7-slide>
+					</sr7-content>
+					<image_lists style="display:none">
+						<img data-src="//jcebmo.org/wp-content/uploads/slide1.jpg" data-libid="146" data-lib="medialibrary" title="slide1" width="0" height="0" data-dbsrc="Ly9qY2VibW8ub3JnL3dwLWNvbnRlbnQvdXBsb2Fkcy9zbGlkZTEuanBn"/>
+						<img data-src="//www.jcebmo.org/wp-content/uploads/slide2.jpg" width="0" height="0" data-dbsrc="Ly93d3cuamNlYm1vLm9yZy93cC1jb250ZW50L3VwbG9hZHMvc2xpZGUyLmpwZw=="/>
+						<img data-src="//www.jcebmo.org/wp-content/uploads/slide3.jpg" width="0" height="0" data-dbsrc="Ly93d3cuamNlYm1vLm9yZy93cC1jb250ZW50L3VwbG9hZHMvc2xpZGUzLmpwZw=="/>
+						<img data-src="//www.jcebmo.org/wp-content/uploads/slide4.jpg" width="0" height="0" data-dbsrc="Ly93d3cuamNlYm1vLm9yZy93cC1jb250ZW50L3VwbG9hZHMvc2xpZGU0LmpwZw=="/>
+					</image_lists>
+				</sr7-module>
+				<script>
+					window.SR7 ??={};SR7.PMH ??={}; SR7.PMH["SR7_1_1"] = {cn:100,state:false,fn: function() { if (window._tpt!==undefined && window._tpt.prepareModuleHeight !== undefined) {  _tpt.prepareModuleHeight({id:"SR7_1_1",el:[300,300,768,960,720],type:'standard',shdw:'1',gh:[300,300,256,195,120],gw:[1200,1200,1024,778,480],vpt:['-200px'],size:{fullWidth:false, fullHeight:false},mh:'0',onh:0,onw:0,bg:{color:'{"type":"solid","orig":"","string":"rgba(0, 0, 0, 1)"}'},plType:'4',plColor:'#FFFFFF'});   SR7.PMH["SR7_1_1"].state=true;} else if(SR7.PMH["SR7_1_1"].cn-->0)	setTimeout( SR7.PMH["SR7_1_1"].fn,19);}};SR7.PMH["SR7_1_1" ].fn();
+				</script>
+
+      </div>
+
+    
+  
+    <header class="x-header-landmark">
+      <div class="x-container max width">
+        <div class="x-landmark-breadcrumbs-wrap">
+          <div class="x-landmark">
+
+          
+            <h1 class="h-landmark entry-title"><span>Welcome to Jackson County Election Board Online</span></h1>
+
+          
+          </div>
+
+          
+          
+        </div>
+      </div>
+    </header>
+
+  
+  <div class="x-container max width offset">
+    <div id="x-main" class="x-main full" role="main" tabindex="-1">
+
+              
+<article id="post-3617" class="post-3617 page type-page status-publish hentry no-post-thumbnail">
+  <div class="entry-wrap">
+            
+
+
+<div class="entry-content content">
+
+
+  <div id="cs-content" class="cs-content"><div id="x-section-1" class="x-section" style="margin: 0px;padding: 0px; background-color: transparent;" ><div id="" class="x-container" style="margin: 0px auto;padding: 20px 0 0; background-color:transparent;" ><div  class="x-column x-sm x-1-1" style="padding: 0px;" ><div class="x-row e3617-e4 m2sh-0 m2sh-1 m2sh-4 m2sh-5"><div class="x-row-inner"><div class="x-col e3617-e5 m2sh-8 m2sh-9"><a  class="x-img x-img-link x-img-none" style="margin:0 auto; display:block;" href="https://jcebmo.org/election-information/on-the-ballot/"  target="_blank" rel="noopener noreferrer"   data-options="thumbnail: '14904:full'"><img decoding="async" src="https://jcebmo.org/wp-content/uploads/VoterLookup-Sep-22-2026-03_11_58-PM-e1790109611254.png" alt="On the Ballot"></a><div id="" class="x-text" style="padding-top: 2em;" ><p style="text-align: center;"><strong>EASTERN JACKSON COUNTY</strong> voters (all of Jackson County outside of the Kansas City city limits)  click the above image to look up your voter information.</p>
+<p style="text-align: center;">Residents of <strong>JACKSON COUNTY</strong> who live in <strong>KANSAS CITY </strong>city limits will need to contact the <strong>KANSAS CITY ELECTION BOARD </strong>at <strong><span style="color: #bb0000;"><a href="https://www.kceb.org/" target="_blank" rel="noopener" style="color: #bb0000;">https://www.kceb.org</a></span></strong></p>
+</div></div><div class="x-col e3617-e8 m2sh-8 m2sh-9"><a  class="x-img x-img-link x-img-none"  href="https://jcebmo.org/wp-content/uploads/Absentee-Notice.png"  target="_blank" rel="noopener noreferrer"   data-options="thumbnail: '14948:full'"><img decoding="async" src="https://jcebmo.org/wp-content/uploads/Absentee-Notice.png" alt="Voter Information Lookup"></a></div><div class="x-col e3617-e10 m2sh-8 m2sh-9"><a  class="x-img x-img-link x-img-none"  href="https://jcebmo.org/election-information/on-the-ballot/"  target="_blank" rel="noopener noreferrer"   data-options="thumbnail: '14903:full'"><img decoding="async" src="https://jcebmo.org/wp-content/uploads/Next-Election-Sep-22-2026-03_10_35-PM-e1790109635825.png" alt="Voter Information Lookup"></a><a  class="x-img x-img-link x-img-none"  href="https://jcebmo.org/wp-content/uploads/notice-2.pdf"  target="_blank" rel="noopener noreferrer"   data-options="thumbnail: '14896:full'"><img decoding="async" src="https://jcebmo.org/wp-content/uploads/Notice-Image-Sep-22-2026-03_07_08-PM-e1790107784531.png" alt="Voter Information Lookup"></a></div></div></div><div class="x-row e3617-e14 m2sh-0 m2sh-2 m2sh-3 m2sh-4 m2sh-6"><div class="x-row-inner"><div class="x-col e3617-e15 m2sh-8 m2sh-a"><div id="" class="x-text" style="" ><p class="h5" style="font-weight: bold; font-size: 1.5rem; text-align: left; ">PUBLIC NOTICE</p>
+</div></div></div></div><div class="x-row e3617-e17 m2sh-0 m2sh-1 m2sh-3 m2sh-4 m2sh-7"><div class="x-row-inner"><div class="x-col e3617-e18 m2sh-8 m2sh-9"><div id="" class="x-text cs-ta-left" style="" ><p style="font-size: 1.25em; font-weight: bold; color: #333333;"><span style="color: #a80000;">Absentee Voting in Person:</span></p>
+<p><span style="color: #a80000;"><strong><span style="text-decoration: underline;">Excuse Absentee voting</span> for the November 3, 2026 General Election begins six weeks before Election Day. September 22-November 2</strong></span></p>
+<p style="text-align: left;"><span style="color: #a80000;"><strong><u>Independence Absentee Office</u></strong></span><br />
+<span style="color: #a80000;"><strong>110 N. Liberty St.</strong></span><br />
+<span style="color: #a80000;"><strong>Independence, MO 64050</strong></span></p>
+<ul>
+<li><span style="color: #a80000;">Office hours are Monday – Friday 8:30 am to 5:00 pm (we do not close for lunch).</span></li>
+<li><span style="color: #a80000;">We will be open on two Saturday's, October 24, 2026 and October 31, 2026. The office hours are 8:30 am- 12:30 pm</span></li>
+<li><span style="color: #a80000;"><span style="font-size: 10.5pt; font-family: 'Times New Roman', serif;">For the first four weeks of absentee voting you must pick from one of the acceptable excuses.</span></span></li>
+<li><span style="color: #a80000;"><strong>Reasons you can vote absentee:<a href="https://jcebmo.org/voter-information/absentee-voting/" style="color: #a80000; text-decoration: underline;"><br />
+CLICK HERE</a></strong></span></li>
+</ul>
+<p style="color: #a80000;"><span style="color: #a80000;"><strong><span style="text-decoration: underline;">No Excuse In-Person Absentee Voting</span> begins the second Tuesday prior to an Election. </strong></span></p>
+<ul>
+<li><span style="color: #a80000;">There will be two locations to vote absentee starting October 20, 2026.</span></li>
+<li><span style="color: #a80000;">Open Monday through Friday from 8:30 a.m. to 5:00 p.m. We do not close for lunch.</span></li>
+<li><span style="color: #a80000;">Both locations will be open on two Saturday's, October 24, 2026 and October 31, 2026. The office hours are 8:30 am- 12:30 pm.</span></li>
+</ul>
+<p style="text-align: left;"><span style="color: #a80000;"><strong><u>Independence Absentee Office</u></strong></span></p>
+<p style="text-align: left;"><span style="color: #a80000;"><strong>110 N. Liberty St.</strong></span><br />
+<span style="color: #a80000;"><strong>Independence, MO 64050</strong></span></p>
+<p><span style="color: #a80000;"><strong><u>Woods Chapel Absentee Office</u></strong></span></p>
+<p><span style="color: #a80000;"><strong>500 NE Woods Chapel Rd.</strong></span><br />
+<span style="color: #a80000;"><strong>Lee’s Summit, MO 64064</strong></span></p>
+<p><strong><span style="color: #a80000;"><a href="https://jcebmo.org/voter-information/absentee-voting/" style="color: #a80000; text-decoration: underline;"><br />
+</a></span><br />
+</strong></p>
+</div><div id="" class="x-text cs-ta-left" style="" ><p style="text-align: center; font-size: 1.25em; font-weight: bold; color: #333333;">Residents of Kansas City go to<br />
+<a href="https://www.kceb.org/" target="_blank" rel="noopener" style="color: #a80000; text-decoration: underline;"><br />
+https://www.kceb.org<br />
+</a> for your voting information.</p>
+<p><strong>For more information, contact:</strong><br />
+<strong>JCEB Offices – 215 N. Liberty, Independence, MO 64050 | (816) 325-4600 | absentee@jcebmo.org</strong></p>
+<p><strong> </strong></p>
+</div></div><div class="x-col e3617-e21 m2sh-8 m2sh-9"><img decoding="async"  class="x-img x-img-none"  src="https://jcebmo.org/wp-content/uploads/Bard-Meeting-Notice-Sep-22-2026-03_13_01-PM-e1790109656533.png" alt="Board  Meeting Notice image"><div id="" class="x-text" style="" ><p><strong><span style="color: #000000;">         Board of Election Commissioners Meeting</span></strong></p>
+<p><span style="color: #a80000;"><strong>                      <span style="text-decoration: underline;">JCEB BOARD MEETING </span></strong></span></p>
+<p><strong>When:</strong>       Tuesday, October 20, 2026                                             @ 2:00 PM</p>
+<p><strong>Where:     </strong>JCEB OFFICE via ZOOM or in person                          215 N Liberty St.                                                              Independence, Mo. 64050</p>
+<p>The Jackson County Board of Election Commissioners will conduct a Regular Board meeting on October 20, 2026.</p>
+<p>     Other items include:</p>
+<ul>
+<li>610.021(1) Legal Actions</li>
+<li>610.021(2) Real Estate</li>
+<li>610.021(3) Employment</li>
+</ul>
+<p>The public may attend the meeting by contacting one of the Directors prior to the meeting to obtain the login information.</p>
+</div></div><div class="x-col e3617-e24 m2sh-8 m2sh-9"><div id="" class="x-text cs-ta-left" style="" ><p><strong><span style="color: #a80000;">                            <span style="text-decoration: underline;">PUBLIC NOTICE</span></span></strong></p>
+<p style="text-align: left;"><span style="color: #a80000;"><strong>                 </strong><strong><u>PUBLIC TEST (<em>Tabulation Equipment</em>)</u></strong></span></p>
+<p><strong><span style="color: #a80000;">             </span></strong><strong><span style="color: #a80000;"> </span>                                </strong></p>
+<p style="text-align: left;"><strong>Election:  </strong>November 3, 2026 General Election</p>
+<p><strong>When:</strong>      October 30, 2026 @ 9:00 AM</p>
+<p><strong>Where:    </strong>JCEB Office                                                                     215 N Liberty St.                                                             Independence, MO 64050</p>
+<p><strong>Why:      </strong>State Statute 115.233 RSMo</p>
+</div></div></div></div></div></div><div id="" class="x-container" style="margin: 0px auto;padding: 40px 0 0px; background-color:transparent;" ><div  class="x-column x-sm x-1-1" style="padding: 0px;" ><img decoding="async"  class="x-img x-img-none" style="padding-top:20px; margin:0 auto; display: block;" src="https://jcebmo.org/wp-content/uploads/jceb-wants-you.jpg" alt="JCEB  want  you  to be  a poll worket  earn  extra - image"><div id="" class="x-text" style="margin-top:2em;" ><p style="text-align: center; font-size: 1.55em; font-weight: bold; color: #0b2d5d; margin-bottom: 0.5em;">Now Recruiting Poll Workers for 2025</p>
+<p style="text-align: center;"><a href="https://jcebmo.org/election-information/election-workers/" style="text-decoration: underline;">CLICK HERE</a> to learn more about Election Worker duties, or call our office at <strong><span style="color: #bb0000;">816-325-4600</span> </strong>to inquire.</p>
+<p style="text-align: center;">For more Information view the Election Judge Instructional Presentation on the <a href="https://jcebmo.org/election-information/election-worker-training/" target="_blank" rel="noopener" style="text-decoration: underline;">Election Worker Training</a> page.</p>
+</div></div></div></div></div>
+  
+
+</div>
+
+
+  </div>
+</article>        
+      
+    </div>
+  </div>
+
+
+
+  
+
+  <footer class="x-colophon top">
+    <div class="x-container max width">
+
+      <div class="x-column x-md x-1-3"><div id="text-2" class="widget widget_text"><h4 class="h-widget">Board of Election Commissioners</h4>			<div class="textwidget"><p><i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;Michael K. Whitehead - Chairman<br />
+<i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;Henry R. Carner - Secretary<br />
+<i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;Colleen M. Scott - Member<br />
+<i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;Lyle K. Querry - Member</p>
+<hr>
+<div class="h-widget">Directors</div>
+<p><i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;<a href="mailto:tspencer@jcebmo.org">Tyler Spencer</a><br />
+<i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;<a href="mailto:szorich@jcebmo.org">Sara Zorich</a><br />
+<i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;Brad Constance - Attorney<br />
+<i  class="x-icon x-icon-user" data-x-icon-s="&#xf007;" aria-hidden="true"></i>&nbsp;&nbsp;Robert (Bob) Murphy - Attorney</p>
+</div>
+		</div></div><div class="x-column x-md x-1-3"><div id="text-3" class="widget widget_text"><h4 class="h-widget">Resources of Interest</h4>			<div class="textwidget"><p><i  class="x-icon x-icon-arrows" data-x-icon-s="&#xf047;" aria-hidden="true"></i>&nbsp;&nbsp;<strong>Moved? Changed Your Name?<br />
+</strong><a href="https://jcebmo.org/wp-content/uploads/Jackson-Printable-PC.pdf" target="_blank"> Submit our FORM</a> to update your voter registration record.</p>
+<p><i  class="x-icon x-icon-refresh" data-x-icon-s="&#xf021;" aria-hidden="true"></i>&nbsp;&nbsp;<strong>Lost & Found<br />
+Lose anything at the Poll?</strong> Driver's licenses, eyeglasses, clothing & more. Please call <strong>(816) 325-4600</strong> to check for your lost item.</p>
+<p><i  class="x-icon x-icon-calendar" data-x-icon-s="&#xf133;" aria-hidden="true"></i>&nbsp;&nbsp;<a href="/calendars/">Election Calendars</a></p>
+<p>NEW - <a href="https://jcebmo.org/election-information/election-worker-training/">Election Judge Manual</a></p>
+</div>
+		</div></div><div class="x-column x-md x-1-3 last"><div id="text-6" class="widget widget_text"><h4 class="h-widget">Voter Information Lookup</h4>			<div class="textwidget"><p>The <a href="/On-the-Ballot/">Voter Information Lookup</a> is available throughout our site in the right column of every secondary page on our site. Search your voter registration information and voting districts. </p>
+<p>When available, view ballot and poll place information.</p>
+<p>(Residents of Kansas City go to <a href="https://www.kceb.org" target="_blank"><br />
+https://www.kceb.org</a>)</p>
+</div>
+		</div></div>
+    </div>
+  </footer>
+
+
+  
+    <footer class="x-colophon bottom" role="contentinfo">
+      <div class="x-container max width">
+
+                  <div class="x-social-global"><a href="https://www.facebook.com/JacksonCountyElectionBoard/" class="facebook" title="Facebook" target="_blank" rel=""><i class='x-framework-icon x-icon-facebook-square' data-x-icon-b='&#xf082;' aria-hidden=true></i><span class="visually-hidden">Facebook</span></a><a href="https://twitter.com/jcebmo" class="x twitter" title="X" target="_blank" rel=""><i class='x-framework-icon x-icon-x-square' data-x-icon-b='&#xe61a;' aria-hidden=true></i><span class="visually-hidden">X</span></a><a href="https://www.youtube.com/channel/UCO0OJM_Yn75dSUtGs17WloA" class="youtube" title="YouTube" target="_blank" rel=""><i class='x-framework-icon x-icon-youtube-square' data-x-icon-b='&#xf431;' aria-hidden=true></i><span class="visually-hidden">YouTube</span></a></div>        
+                  
+<ul id="menu-footer-menu" class="x-nav"><li id="menu-item-3640" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-3617 current_page_item menu-item-3640"><a href="https://jcebmo.org/" aria-current="page">Home</a></li>
+<li id="menu-item-140" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-140"><a href="https://jcebmo.org/who-we-are/">Who We Are</a></li>
+<li id="menu-item-143" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-143"><a href="https://jcebmo.org/faqs/">FAQS</a></li>
+<li id="menu-item-141" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-141"><a href="https://jcebmo.org/contact-us/">Contact Us</a></li>
+<li id="menu-item-14183" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14183"><a href="https://jcebmo.org/accessibility-statement/">Accessibility Statement</a></li>
+</ul>        
+                  <div class="x-colophon-content">
+            <p style="color: #ffffff; letter-spacing: 2px; opacity: 0.7; filter: alpha(opacity=70);">Copyright © Board of Election Commissioners. All Rights Reserved.</p><p style="color: #ffffff; font-size: 120%; letter-spacing: 2px; opacity: 0.7; filter: alpha(opacity=70);">Jackson County Board of Election Commissioners  |  215 N. Liberty - 64050 | P. O. Box 296  |  Independence, MO 64051</p><p style="color: #ffffff; font-size: 120%; letter-spacing: 2px; opacity: 0.7; filter: alpha(opacity=70);">(816) 325-4600 Phone  |  (816) 325-4609 Fax</p><p style="color: #ffffff; font-size: 120%; letter-spacing: 2px; opacity: 0.7; filter: alpha(opacity=70);">All efforts are made to ensure the accuracy of the contained information.  Items are subject to change and verification.  The Commissioners, Directors and Staff of the Jackson County Board of Election Commissioners serve as the final authority.</p><p style="color: #ffffff; font-size: 120%; line-height: 3em; letter-spacing: 2px; text-transform: uppercase; opacity: 0.8; filter: alpha(opacity=50);">Powered By <a style="color: #ffffff;" href="http://newage-graphics.com" target="_blank" title="New Age Graphics, LLC">New Age Graphics</a></p>          </div>
+        
+      </div>
+    </footer>
+
+  
+
+    
+      <div class="x-searchform-overlay">
+        <div class="x-searchform-overlay-inner">
+          <div class="x-container max width">
+            <form method="get" id="searchform" class="form-search center-text" action="https://jcebmo.org/">
+              <label for="s" class="cfc-h-tx tt-upper">Type and Press &ldquo;enter&rdquo; to Search</label>
+              <input type="text" id="s" class="search-query cfc-h-tx center-text tt-upper" name="s">
+                           </form>
+          </div>
+        </div>
+      </div>
+
+      
+    </div> <!-- END .x-site -->
+
+    
+  </div> <!-- END .x-root -->
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/x-child/*","/wp-content/themes/x/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script>
+    var links = document.getElementsByTagName('a');
+    for (var i = 0; i < links.length; i++) {
+        links[i].target = '_blank';
+    }
+    jQuery('a').each(function makeOpenInNewTab(params) {
+        var link = jQuery(this).attr('href');
+        if(link && link.indexOf('.pdf')>=0) {
+            jQuery(this).attr('target', '_blank'); 
+        }
+    });
+</script>
+
+			<link href="//jcebmo.org/wp-content/plugins/revslider/public/css/fonts/revicons/css/revicons.css" rel="stylesheet" property="stylesheet" media="all" type="text/css" />
+
+<script>
+_tpt.R.fonts.customFonts['RevIcon'] = {"url":"\/\/jcebmo.org\/wp-content\/plugins\/revslider\/public\/css\/fonts\/revicons\/css\/revicons.css","icon":true,"family":"revicons"};
+</script>
+<script id="cs-js-extra">
+var csJsData = {"linkSelector":"#x-root a[href*=\"#\"]","bp":{"base":4,"ranges":[0,480,767,979,1200],"count":4}};
+//# sourceURL=cs-js-extra
+</script>
+<script id="cs-js" src="https://jcebmo.org/wp-content/plugins/cornerstone/assets/js/site/cs-classic.7.9.6.js?ver=7.9.6"></script>
+<script id="wp-hooks-js" src="https://jcebmo.org/wp-includes/js/dist/hooks.min.js?ver=f0f188028580e8dc1255"></script>
+<script id="wp-i18n-js" src="https://jcebmo.org/wp-includes/js/dist/i18n.min.js?ver=1dfe7db3940c23ea9216"></script>
+<script id="wp-i18n-js-after">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+</script>
+<script id="swv-js" src="https://jcebmo.org/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=6.1.7"></script>
+<script id="contact-form-7-js-before">
+var wpcf7 = {
+    "api": {
+        "root": "https:\/\/jcebmo.org\/wp-json\/",
+        "namespace": "contact-form-7\/v1"
+    },
+    "cached": 1
+};
+//# sourceURL=contact-form-7-js-before
+</script>
+<script id="contact-form-7-js" src="https://jcebmo.org/wp-content/plugins/contact-form-7/includes/js/index.js?ver=6.1.7"></script>
+<script id="wpascript-js" src="https://jcebmo.org/wp-content/plugins/honeypot/includes/js/wpa.js?ver=2.4.02"></script>
+<script id="wpascript-js-after">
+wpa_field_info = JSON.parse(atob("eyJ3cGFfZmllbGRfbmFtZSI6InlsZmVrdzUzMzEiLCJ3cGFfZmllbGRfdmFsdWUiOjU2OTczOSwid3BhX2FkZF90ZXN0Ijoibm8ifQ=="));
+//# sourceURL=wpascript-js-after
+</script>
+<script id="simple-share-buttons-adder-ssba-js" src="https://jcebmo.org/wp-content/plugins/simple-share-buttons-adder/js/ssba.js?ver=1787618353"></script>
+<script id="simple-share-buttons-adder-ssba-js-after">
+Main.boot( [] );
+//# sourceURL=simple-share-buttons-adder-ssba-js-after
+</script>
+<script id="x-site-js-extra">
+var xJsData = {"icons":{"down":"\u003Ci class='x-framework-icon x-icon-angle-double-down' data-x-icon-s='&#xf103;' aria-hidden=true\u003E\u003C/i\u003E","subindicator":"\u003Ci class=\"x-icon x-framework-icon x-icon-angle-double-down\" aria-hidden=\"true\" data-x-icon-s=\"&#xf103;\"\u003E\u003C/i\u003E","previous":"\u003Ci class='x-framework-icon x-icon-previous' data-x-icon-s='&#xf053;' aria-hidden=true\u003E\u003C/i\u003E","next":"\u003Ci class='x-framework-icon x-icon-next' data-x-icon-s='&#xf054;' aria-hidden=true\u003E\u003C/i\u003E","star":"\u003Ci class='x-framework-icon x-icon-star' data-x-icon-s='&#xf005;' aria-hidden=true\u003E\u003C/i\u003E"}};
+//# sourceURL=x-site-js-extra
+</script>
+<script id="x-site-js" src="https://jcebmo.org/wp-content/themes/x/framework/dist/js/site/x.js?ver=10.9.6"></script>
+<script async data-wp-strategy="async" fetchpriority="low" id="comment-reply-js" src="https://jcebmo.org/wp-includes/js/comment-reply.min.js?ver=7.1.3"></script>
+<script id="x-stack-js-extra">
+var xJsStackData = {"backstretch":[["//www.jcebmo.org/wp-content/uploads/background2.jpg"],{"fade":"750"}]};
+//# sourceURL=x-stack-js-extra
+</script>
+<script id="x-stack-js" src="https://jcebmo.org/wp-content/themes/x/framework/dist/js/site/stack.js?ver=10.9.6"></script>
+<script id="google-recaptcha-js" src="https://www.google.com/recaptcha/api.js?render=6LfhRkEsAAAAAKALFovj-Exfe8f-O1HiZF3dH__g&#038;ver=3.0"></script>
+<script id="wp-polyfill-js" src="https://jcebmo.org/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0"></script>
+<script id="wpcf7-recaptcha-js-before">
+var wpcf7_recaptcha = {
+    "sitekey": "6LfhRkEsAAAAAKALFovj-Exfe8f-O1HiZF3dH__g",
+    "actions": {
+        "homepage": "homepage",
+        "contactform": "contactform"
+    }
+};
+//# sourceURL=wpcf7-recaptcha-js-before
+</script>
+<script id="wpcf7-recaptcha-js" src="https://jcebmo.org/wp-content/plugins/contact-form-7/modules/recaptcha/index.js?ver=6.1.7"></script>
+<script id="wp-accessibility-js-extra">
+var wpa = {"skiplinks":{"enabled":true,"output":"\u003Cdiv class=\"wpa-hide-ltr\" id=\"skiplinks\" role=\"navigation\" aria-label=\"Skip links\"\u003E\u003Ca href=\"#cs-content\" class='no-scroll et_smooth_scroll_disabled'\u003ESkip to Content\u003C/a\u003E \u003Ca href=\"#menu-main-menu\" class='no-scroll et_smooth_scroll_disabled'\u003ESkip to navigation\u003C/a\u003E \u003C/div\u003E"},"target":"1","tabindex":"1","underline":{"enabled":false,"target":"a"},"videos":"","dir":"ltr","viewport":"1","lang":"en-US","titles":"1","labels":"1","wpalabels":{"s":"Search","author":"Name","email":"Email","url":"Website","comment":"Comment"},"alt":"","altSelector":".hentry img[alt]:not([alt=\"\"]), .comment-content img[alt]:not([alt=\"\"]), #content img[alt]:not([alt=\"\"]),.entry-content img[alt]:not([alt=\"\"])","current":"","errors":"","tracking":"","ajaxurl":"https://jcebmo.org/wp-admin/admin-ajax.php","security":"dc6ad74b3e","action":"wpa_stats_action","url":"https://jcebmo.org/","post_id":"3617","continue":"","pause":"Pause video","play":"Play video","restUrl":"https://jcebmo.org/wp-json/wp/v2/media","ldType":"","ldHome":"https://jcebmo.org","ldText":"\u003Cspan class=\"dashicons dashicons-media-text\" aria-hidden=\"true\"\u003E\u003C/span\u003E\u003Cspan class=\"screen-reader\"\u003ELong Description\u003C/span\u003E"};
+//# sourceURL=wp-accessibility-js-extra
+</script>
+<script data-wp-strategy="defer" defer id="wp-accessibility-js" src="https://jcebmo.org/wp-content/plugins/wp-accessibility/js/wp-accessibility.min.js?ver=2.4.1"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://jcebmo.org/wp-includes/js/wp-emoji-release.min.js?ver=7.1.3"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://jcebmo.org/wp-includes/js/wp-emoji-loader.min.js
+</script>
+<script>
+	SR7.JSON['SR7_1_1'] = {"settings":{"migrated":"sr6","title":"main_slider","alias":"main_slider","type":"standard","fonts":{"RevIcon":true},"lazyLoad":"smart","vPort":["-200px","-200px","-200px","-200px","-200px"],"size":{"fullWidth":false,"contentFH":true,"width":[1200,1200,1024,778,480],"height":[300,300,256,195,120],"cachedHeight":[300,300,768,960,720],"minHeight":["0","0","0","0","0"],"maxWidth":"","p":{"t":[0,0,0,0,0],"b":[0,0,0,0,0],"l":[0,0,0,0,0],"r":[0,0,0,0,0]},"m":{"t":[0,0,0,0,0],"b":[0,0,0,0,0],"l":[0,0,0,0,0],"r":[0,0,0,0,0]}},"default":{"len":"3000"},"carousel":{"type":"h","align":"center","maxV":3,"justify":false,"scale":false,"minS":50,"vScale":false,"oScale":false,"space":"0","rotation":false,"maxR":"0","varR":false,"opacity":true,"maxO":100,"varO":false,"spin":"off","spinA":0,"snap":true,"infinity":false,"skewX":0,"skewY":0,"ease":"power3.inOut","dur":800,"overshoot":false,"stretch":false,"showAllLayers":false,"jMWidth":false,"bR":"0","pNV":"50px","pT":"0","pB":"0"},"pLoader":{"color":"#FFFFFF","type":"4"},"slideshow":{"sOH":true,"shuffle":true,"initDelay":"0","firstSlide":"1"},"general":{"perspectiveType":"local","lazyLoad":"smart","slideshow":{"globalViewPort":true,"globalViewDist":"-200px"}},"shdw":"1","bg":{"color":{"type":"solid","orig":"","string":"rgba(0, 0, 0, 1)"}},"mod":{"d3d":27.5,"t":"mouse","om":null,"sm":null},"nav":{"m":{"use":false,"cd":1000},"s":{"use":true,"t":"1"},"p":{"w":"100","h":"50"},"bullets":{"set":true,"def":{"bullet-size":{"title":"Bullet-Size","type":"custom","data":"16"},"bullet-color":{"title":"Bullet-Color","type":"color","data":"#ffffff"},"border":{"title":"Border-Thickness","type":"custom","data":"2"},"bullet-hover":{"title":"Hover-Bullet","type":"color","data":"rgba(0,0,0,0.21)"}},"cst":{"bullet-size":"16","bullet-size-def":false,"bullet-color":"#ffffff","bullet-color-def":false,"border":"2","border-def":false,"bullet-hover":"rgba(0,0,0,0.21)","bullet-hover-def":false},"key":"hermes","t":3005,"css":".hermes.sr7-bullets {\n}\n\n.hermes .sr7-bullet {\n    overflow:hidden;\n    border-radius:50%;\n    width:##bullet-size##px;\n    height:##bullet-size##px;\n    background-color: rgba(0, 0, 0, 0);\n    box-shadow: inset 0 0 0 ##border##px ##bullet-color##;\n    -webkit-transition: background 0.3s ease;\n    transition: background 0.3s ease;\n    position:absolute;\n}\n\n.hermes .sr7-bullet.sr7-touchhover {\n\t  background-color: ##bullet-hover##;\n}\n.hermes .sr7-bullet:after {\n  content: ' ';\n  position: absolute;\n  bottom: 0;\n  height: 0;\n  left: 0;\n  width: 100%;\n  background-color: ##bullet-color##;\n  box-shadow: 0 0 1px ##bullet-color##;\n  -webkit-transition: height 0.3s ease;\n  transition: height 0.3s ease;\n}\n.hermes .sr7-bullet.selected:after {\n  height:100%;\n}\n","html":"","on":false,"d":["#a","horizontal","#a","#a","#a"],"ps":"default","s":1000,"dIn":["#a",1000,"#a","#a","#a"],"dOut":["#a",200,"#a","#a","1200"],"show":[true,true,true,true,true],"g":5,"a":"slider","anim":"fade","x":["#a","0","#a","#a","#a"],"y":["#a","20","#a","#a","#a"],"v":["#a","bottom","#a","#a","#a"],"h":["#a","center","#a","#a","#a"]}},"thumb":"https:\/\/jcebmo.org\/wp-content\/uploads\/slide1.jpg","aU":[],"imgs":[{"lib_id":146,"lib":"medialibrary","src":"https:\/\/jcebmo.org\/wp-content\/uploads\/slide1.jpg"},{"lib_id":"","lib":"","src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide2.jpg"},{"lib_id":"","lib":"","src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide3.jpg"},{"lib_id":"","lib":"","src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide4.jpg"}],"hasYT":false,"version":"7.1.1"},"slides":{"1":{"id":1,"slide":{"addOns":[],"id":1,"version":"7.0.0","title":"Slide","parentId":null,"language":"default","order":"1","thumb":{"src":"https:\/\/jcebmo.org\/wp-content\/uploads\/slide1-100x50.jpg","srcId":"","admin":"","adminId":"","dimension":"slider","default":{"image":{"src":"https:\/\/jcebmo.org\/wp-content\/uploads\/slide1.jpg","repeat":"","size":"cover","pos":{"x":"50%","y":"0%"}}}},"acc":{"label":"unset","hidden":"true","live":"auto","role":"presentation","roledep":"slide"},"description":"","attr":{"class":"","data":"","id":"","a":"","aO":"ml","t":"","tO":"","deepLink":"","attr":""},"publish":{"from":"","to":"","state":"published","sch":true},"slideshow":{"stop":false,"len":"default","hal":0,"hom":false,"hfn":false},"loop":{"u":false,"r":-1,"s":0,"e":99999}},"layers":{"1":{"rTo":"slide","id":1,"alias":"Slide BG Layer","subtype":"slidebg","size":{"cMode":"cover"},"pos":{"h":["center","center","center","center","center"],"v":["center","center","center","center","center"],"pos":"absolute"},"zIndex":0,"order":0,"display":["block","block","block","block","block"],"bg":{"image":{"ratio":4,"src":"https:\/\/jcebmo.org\/wp-content\/uploads\/slide1.jpg","lib":"medialibrary","lib_id":146,"lib_size":"","fromStream":false,"streamType":"gallery","pos":{"x":"50%","y":"0%"},"repeat":"","size":"cover","sizeVal":"100%","seo":false}},"tl":{"in":{"bg":{"ex":true,"all":[[],{"d":600,"sd":400,"e":"power2.inOut","dir":"default","t":0,"rnd":false,"temp":{"t":"*opacity* Fade In","p":"fade","m":"basic","g":"fade"},"addOns":[],"adpr":false,"in":{"o":0},"out":{"a":false},"v":"7.0","a":"BG Animation"}]}}},"type":"shape","version":"7.0.0"}}},"2":{"id":2,"slide":{"addOns":[],"id":2,"version":"7.0.0","title":"Slide","parentId":null,"language":"default","order":"2","thumb":{"src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide2.jpg","srcId":"","admin":"","adminId":"","dimension":"slider","default":{"image":{"src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide2.jpg","repeat":"","size":"cover","pos":{"x":"50%","y":"0%"}}}},"acc":{"label":"unset","hidden":"true","live":"auto","role":"presentation","roledep":"slide"},"description":"","attr":{"class":"","data":"","id":"","a":"","aO":"ml","t":"","tO":"","deepLink":"","attr":""},"publish":{"from":"","to":"","state":"published","sch":true},"slideshow":{"stop":false,"len":"default","hal":0,"hom":false,"hfn":false},"loop":{"u":false,"r":-1,"s":0,"e":99999}},"layers":[]},"3":{"id":3,"slide":{"addOns":[],"id":3,"version":"7.0.0","title":"Slide","parentId":null,"language":"default","order":"3","thumb":{"src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide3.jpg","srcId":"","admin":"","adminId":"","dimension":"slider","default":{"image":{"src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide3.jpg","repeat":"","size":"cover","pos":{"x":"50%","y":"0%"}}}},"acc":{"label":"unset","hidden":"true","live":"auto","role":"presentation","roledep":"slide"},"description":"","attr":{"class":"","data":"","id":"","a":"","aO":"ml","t":"","tO":"","deepLink":"","attr":""},"publish":{"from":"","to":"","state":"published","sch":true},"slideshow":{"stop":false,"len":"default","hal":0,"hom":false,"hfn":false},"loop":{"u":false,"r":-1,"s":0,"e":99999}},"layers":[]},"4":{"id":4,"slide":{"addOns":[],"id":4,"version":"7.0.0","title":"Slide","parentId":null,"language":"default","order":"4","thumb":{"src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide4.jpg","srcId":"","admin":"","adminId":"","dimension":"slider","default":{"image":{"src":"https:\/\/www.jcebmo.org\/wp-content\/uploads\/slide4.jpg","repeat":"","size":"cover","pos":{"x":"50%","y":"0%"}}}},"acc":{"label":"unset","hidden":"true","live":"auto","role":"presentation","roledep":"slide"},"description":"","attr":{"class":"","data":"","id":"","a":"","aO":"ml","t":"","tO":"","deepLink":"","attr":""},"publish":{"from":"","to":"","state":"published","sch":true},"slideshow":{"stop":false,"len":"default","hal":0,"hom":false,"hfn":false},"loop":{"u":false,"r":-1,"s":0,"e":99999}},"layers":[]},"5":{"id":"5","slide":{"addOns":[],"id":5,"version":"6.7.54","title":"","parentId":null,"language":"default","oflow":false,"global":true,"respVP":true,"pos":"front","fullHeight":true},"layers":[]}},"id":"1","addOns":[]};
+	if (SR7.F.init) SR7.F.init(); // DOUBLE CALL NOT A PROBLEM, MANAGED IN INIT
+	document.addEventListener('DOMContentLoaded', function() {if (SR7.F.init) SR7.F.init(); else SR7.shouldBeInited = true;});
+	window.addEventListener('load', function() {if (SR7.F.init) SR7.F.init(); else SR7.shouldBeInited = true; });
+	SR7.E.v6v7ids ??= {}
+	SR7.E.v6v7ids = JSON.parse('{\"n\":{\"1\":1,\"2\":2,\"3\":3,\"4\":4},\"s\":{\"1\":5}}');
+</script>
+<script id="cornerstone-custom-js" type="text/javascript">
+jQuery(document).ready(function($) {
+    // Fix for Voter ID Lookup Widget Month Dropdown
+    if ($('#jceb_voter_id_lookup_widget_birth_month').length) {
+        $('#jceb_voter_id_lookup_widget_birth_month').attr('aria-label', 'Birth Month');
+    }
+
+    // Fix for Voter ID Lookup Widget Day Dropdown
+    if ($('#jceb_voter_id_lookup_widget_birth_day').length) {
+        $('#jceb_voter_id_lookup_widget_birth_day').attr('aria-label', 'Birth Day');
+    }
+
+    // Fix for Voter ID Lookup Widget Year Dropdown
+    if ($('#jceb_voter_id_lookup_widget_birth_year').length) {
+        $('#jceb_voter_id_lookup_widget_birth_year').attr('aria-label', 'Birth Year');
+    }
+
+    // Fix for Provisional Results Search PIN Number Box
+    if ($('#jceb_provisional_results_search_widget_pin_number').length) {
+        $('#jceb_provisional_results_search_widget_pin_number').attr('aria-label', 'PIN Number');
+    }
+  
+  
+      $('.x-accordion').attr('role', 'tablist');
+  $('.widget h4.h-widget').each(function(){
+    var text = $(this).html();
+    $(this).replaceWith('<p class="h-widget h3-style">' + text + '</p>');
+});
+ // Add ARIA attributes to all menu items with submenus
+  $('.menu-item-has-children > a').attr({
+    'aria-haspopup': 'true',
+    'aria-expanded': 'false',
+    'href': '#' // make sure parent links are focusable
+  });
+
+  // Hide all submenus initially
+  $('.sub-menu').hide();
+
+  // Toggle submenu on click
+  $('.menu-item-has-children > a').click(function(e) {
+    e.preventDefault(); // prevent jumping
+
+    var $parent = $(this).parent();
+    var $submenu = $parent.children('.sub-menu');
+
+    // Toggle the submenu
+    if ($submenu.is(':visible')) {
+      $submenu.slideUp(200);
+      $(this).attr('aria-expanded', 'false');
+    } else {
+      $submenu.slideDown(200);
+      $(this).attr('aria-expanded', 'true');
+    }
+  });
+
+  // Keyboard navigation for parent links
+  $('.menu-item-has-children > a').keydown(function(e) {
+    var $submenu = $(this).siblings('.sub-menu');
+
+    switch(e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        $submenu.show();
+        $(this).attr('aria-expanded', 'true');
+        $submenu.find('a:first').focus();
+        break;
+
+      case "ArrowUp":
+        e.preventDefault();
+        $submenu.show();
+        $(this).attr('aria-expanded', 'true');
+        $submenu.find('a:last').focus();
+        break;
+
+      case "Escape":
+        e.preventDefault();
+        $submenu.slideUp(200);
+        $(this).attr('aria-expanded', 'false');
+        $(this).focus();
+        break;
+    }
+  });
+
+  // Close submenu when tabbing out
+  $('.sub-menu a').last().keydown(function(e) {
+    if(e.key === "Tab" && !e.shiftKey) {
+      $(this).closest('.sub-menu').slideUp(200);
+      $(this).closest('.menu-item-has-children').children('a').attr('aria-expanded', 'false');
+    }
+  });
+  
+if ($('#s').length) {
+    $('#s').attr('type', 'search');
+
+    if ($('label[for="s"]').length > 1) {
+        $('label[for="s"]:not(:first)').remove();
+    }
+}
+  setTimeout(function () {
+    $('textarea.g-recaptcha-response').attr({
+        'aria-label': 'reCAPTCHA verification',
+        'aria-hidden': 'true'
+    });
+}, 1000);
+   
+});
+</script>
+
+</body>
+</html>
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.boldgrid.com/w3-total-cache/?utm_source=w3tc&utm_medium=footer_comment&utm_campaign=free_plugin
+
+Page Caching using Disk: Enhanced 
+
+Served from: jcebmo.org @ 2026-11-03 02:21:19 by W3 Total Cache
+-->

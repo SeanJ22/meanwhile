@@ -1,0 +1,1752 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Revised Statutes of Missouri, Missouri laws " /><meta name="keywords" content="Missouri Laws, Official Missouri Laws, RSMo" /><meta property="og:image:secure_url" content="https://revisor.mo.gov/MOPics/LRWebIcon.jpg" /><title>
+	Missouri Revisor of Statutes - Revised Statutes of Missouri, RSMo Chapter 478
+</title>
+    <meta name="robots" content="noindex, follow" />
+<link rel="icon" type="image/png" href="https://revisor.mo.gov/MOPics/LRWebIcon.ico" /><link rel="icon" sizes="16x16" href="https://revisor.mo.gov/MOPics/favicon_package_v0.16/favicon.ico" /><link rel="apple-touch-icon" sizes="180x180" href="https://revisor.mo.gov/MOPics/favicon_package_v0.16/apple-touch-icon.png" /><link rel="icon" type="image/png" sizes="32x32" href="https://revisor.mo.gov/MOPics/favicon_package_v0.16/favicon-32x32.png" /><link rel="icon" type="image/png" sizes="16x16" href="https://revisor.mo.gov/MOPics/favicon_package_v0.16/favicon-16x16.png" />
+    <style type="text/css">
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .lr-body {
+            /*background-color:white;*/
+            /*background-color: #FdFdFd;*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgA.jpg");*/
+            /* for Polly C. */
+            background-image: url("https://revisor.mo.gov/MOPics/BkgB.jpg");
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgC.jpg");*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgD.jpg");*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgE.jpg");*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgF.jpg");*/
+            background-repeat: repeat;
+        }
+
+        .my-smaller-font {
+            font-size: smaller;
+            text-align: left;
+        }
+
+        /* Tooltip container */
+        .lr-tt {
+            position: relative;
+            display: inline-block;
+            border-bottom: 0px dotted black; /* If you want dots under the hoverable text */
+        }
+
+            /* Tooltip text */
+            .lr-tt .lr-tt-text {
+                visibility: hidden;
+                width: 120px;
+                /*width: 200px;*/
+                background-color: #1A237E;
+                color: #fff;
+                text-align: center;
+                vertical-align: middle;
+                padding: 3px;
+                margin-top: 4px;
+                border-radius: 8px;
+                /* Position the tooltip */
+                position: absolute;
+                z-index: 1;
+                top: 110%;
+                left: 80%;
+            }
+
+            /* Show the tooltip text when you mouse over the tooltip container */
+            .lr-tt:hover .lr-tt-text {
+                visibility: visible;
+                border: .1em solid yellow;
+                font-weight: 700;
+            }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        .auto-style1 {
+            height: 18px;
+        }
+
+        .auto-style2 {
+            width: 10%;
+            height: 18px;
+        }
+
+    </style>
+    
+<link rel="stylesheet" href="https://revisor.mo.gov/StyleStuff/lr-standard.css" /></head>
+<body class="lr-body">
+    <div id="TOP" class="lr-f-all" style="border: 0em solid transparent; border-collapse: collapse; background-color: transparent;">
+        <div class="lr-fl-s-all lr-fl-m-1-4 lr-fl-l-1-4" style="border: inherit; border-collapse: collapse; padding: 0em; text-align: center;">
+        </div>
+    </div>
+    <details id="dtls" style="margin: .6em 0em .2em .8em; cursor: pointer;">
+        <summary title="click to toggle" style="font-size: x-small; font-weight: 700;">&emsp;&#9776;&emsp;Revisor of Missouri</summary>
+        <div id="Div3" class="lr-f-all" style="margin: 0em; vertical-align: bottom;">
+            <div class="lr-fl-s-all lr-fl-m-1-4 lr-fl-l-1-4" style="margin: 0em 0em .2em 0em; padding: 0em; text-align: left; vertical-align: bottom;">
+                <a href="/main/Home.aspx" title="revisor home">
+                    <img style="height: auto; max-width: 102%; margin: 0em; background-color: transparent; border: 0em solid transparent; vertical-align: bottom;" src="https://revisor.mo.gov/MOPics/RevisorHeaderLogo2.png" alt="Revisor Home" />
+                </a>
+            </div>
+            <div class="lr-fl-s-all lr-fl-m-3-4 lr-fl-l-3-4" style="text-align: left; border: 1px solid #eaf0fa; margin: 0em 0em .2em 0em; padding: 0em; box-shadow: 3px 3px 5px darkgray;">
+                <table style="margin: 0em; padding: 0em; width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 33%;"></td>
+                        <td style="width: 33%;"></td>
+                        <td style="width: 33%;"></td>
+                        <td style="width: 1%;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 0px 0px 6px;">
+                            <a class="lr-font-emph" target="constit" href="/main/Home.aspx?constit=y" style="text-decoration: none;">Constitution</a>
+                        </td>
+                        <td style="padding: 0px 0px 0px 6px;">
+                            <a href="/main/JCLR.aspx" id="a3" class="lr-font-emph" style="text-decoration: none;">Committee</a>
+                        </td>
+                        <td style="padding: 0px 0px 0px 6px;">
+                            <a class="lr-font-emph" href="/main/Info.aspx" style="text-decoration: none;">Publications</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 0px 0px 6px;">&nbsp;</td>
+                        <td style="padding: 0px 0px 0px 6px;"></td>
+                        <td style="padding: 0px 0px 0px 6px;"></td>
+                        <td style="padding: 0px 0px 0px 6px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 0px 0px 6px;">
+                            <a href="#opnothr" id="a4" class="lr-font-emph" style="text-decoration: none;">Other Links</a>
+                        </td>
+                        <td style="padding: 0px 0px 0px 6px;">
+                            <a href="/main/Help.aspx" id="a6" class="lr-font-emph" style="text-decoration: none;">Help / FAQ</a>
+                        </td>
+                        <td style="padding: 0px 0px 0px 6px;">
+                            <a href="/main/Info.aspx" id="a5" class="lr-font-emph" style="text-decoration: none;">Appendices and Tables</a>
+                        </td>
+                        <td style="padding: 0px 0px 0px 6px;">
+                            <a href="#BOTTOM">
+                                <img src="https://revisor.mo.gov/MOPics/pagebot.jpg" alt="Revisor Home" style="height: auto;" />
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </details>
+    <div class="lr-f-all" style="background-color: #eaf3fb; margin: 0em;">
+        <form method="post" action="./OneChapter.aspx?chapter=478" id="search">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="+14JsSfq1jLIMGEbhN45+lW4+B6VVFtRIZCDcfncZl/5WHINb9EGqQi1ADlAbiSQMf4K9UIUKvtKNwW8XmNEljrtA43eqnafKfeJlBjdqV9QhszIAgAesf9j7eE2nUPHpo0t2aIQyAVwaccgt+yf5hxQJfLhef4XXBJWD93rL0NnM16WPifRshF04iukhJXkSHh/VCkYzC10/Z6qZKUrMHvjCpToTVC58Hv015pKjU54qDCN/PWREgGWLzff98wJSmoajjiJiz/cNGFA3/27p5Xu8PFIq9cR1GrqBIbeEB6YzyVNJ4rG2fUMOW+154ohPku9NYsMjTSQTQ8H+hBu2g==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="EC274AF4" />
+</div>
+            <span style="padding: 0em; margin: 0em .6em 0em .8em;">
+                <a id="homeHyperLink" title="Home" href="Home.aspx" style="display:inline-block;border-style:None;"><img title="Home" src="https://revisor.mo.gov/MOPics/home.png" alt="" style="height:1.2em;" /></a>
+            </span>
+            <select name="ctl00$srchKind" id="srchKind" title="Words or Section" style="width:5em;">
+	<option selected="selected" value="Words">Words</option>
+	<option value="Section">Section</option>
+
+</select>
+            <span>&thinsp;</span>
+            <input name="ctl00$tbPhrase1" type="text" id="tbPhrase1" placeholder="1st search term or section number" style="width:24%;" />
+            <span>&thinsp;</span>
+            <select name="ctl00$ddSrch" id="ddSrch" title="relationship to first term" style="width:60px;">
+	<option value="none">None</option>
+	<option value="or">Or</option>
+	<option selected="selected" value="and">And</option>
+	<option value="not">Not</option>
+	<option value="near">Near</option>
+
+</select>
+            <span>&thinsp;</span>
+            <input name="ctl00$tbPhrase2" type="text" id="tbPhrase2" placeholder="2nd search term" style="width:24%;" />
+            <span class="lr-tt" style="padding-left: 10px;">
+                <input type="image" name="ctl00$btnSearch" id="btnSearch" src="https://revisor.mo.gov/MOPics/Search.png" alt="Search" align="absmiddle" />
+                <span class="lr-tt-text">Do search</span>
+            </span>
+            <span class="lr-tt" style="padding-left: 10px;">
+                <input type="image" name="ctl00$btnHelp" id="btnHelp" src="https://revisor.mo.gov/MOPics/HelpIconSM.png" alt="Help" align="absmiddle" />
+                <span class="lr-tt-text">Help</span>
+            </span>
+            <span>&thinsp;</span>
+            <span class="lr-tt" style="padding-left: 10px;">
+                <span id="lblChap">CH</span>
+                <span class="lr-tt-text">This chapter only</span>
+            </span>
+            <select name="ctl00$ddChapOnly" id="ddChapOnly" title="limit search to this chapter" style="width:40px;">
+	<option value="none">n</option>
+	<option value="or">y</option>
+
+</select>
+            
+            <input type="hidden" name="ctl00$varPBdata" id="varPBdata" />
+        </form>
+    </div>
+    
+    
+
+    
+    
+    <div class="lr-f-all">
+        <div class="lr-fl-s-all lr-fl-m-all lr-fl-l-all" style="margin: 0em;">
+            
+
+        </div>
+        <div class="lr-fl-s-all lr-fl-m-7-10 lr-fl-l-4-5">
+            
+    <a id="MainContentLeft_viewit" title="This could take awhile. Only click once please." class="lr-font-emph" href="/main/OneChapter.aspx?chapter=478&amp;idx=v" style="text-decoration: none; font-size: small; padding-left: 1.2%;">View entire chapter</a>
+<div class="lr-font-norm" style="padding:0em 0em .5em 0em;font-weight:700; ">
+  <p style="font:small;font-weight:700;margin:.5em 0em .5em 0em;"> Title XXXII  COURTS</p> Chapter 478 Circuit Courts <a href="/main/OneChapter.aspx?chapter=478&amp;lhn=y" title="full headnotes" style="margin:0em 2em 0em .6em">✹</a><a title="show repealers / transfers" style="font-size:larger;" class="lr-font-emph" href="/main/OneChapter.aspx?chapter=478&amp;rt=y" target="_blank">⚿</a></div><table style="width:100%;border-collapse:collapse;">
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">TREATMENT COURT DIVISIONS</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.001&amp;bid=57411&amp;hl=" style="text-decoration:none;">478.001  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Treatment court divisions, definitions, establishment, purpose — referrals ...<span style="font-size:x-small;color:inherit;"> (8/28/2025)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.003&amp;bid=60330&amp;hl=" style="text-decoration:none;">478.003  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Administration — commissioners, appointment, powers, duties — orders of ...<span style="font-weight: 900;font-size:small;color:white;background-color:steelblue;"> (8/28/2026)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.004&amp;bid=36177&amp;hl=" style="text-decoration:none;">478.004  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Meetings prior to treatment court sessions — criminal cases, defendant ...<span style="font-size:x-small;color:inherit;"> (12/18/2018)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.005&amp;bid=36178&amp;hl=" style="text-decoration:none;">478.005  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Conditions and criteria for referral — statements by participant not to be ...<span style="font-size:x-small;color:inherit;"> (12/18/2018)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.007&amp;bid=36179&amp;hl=" style="text-decoration:none;">478.007  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Alternative disposition of cases, court may be established — private ...<span style="font-size:x-small;color:inherit;"> (12/18/2018)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.009&amp;bid=36180&amp;hl=" style="text-decoration:none;">478.009  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Treatment courts coordinating commission established, members, meetings — ...<span style="font-size:x-small;color:inherit;"> (12/18/2018)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDGES AND JURISDICTION</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.010&amp;bid=26607&amp;hl=" style="text-decoration:none;">478.010  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Election of circuit judges. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.011&amp;bid=33193&amp;hl=" style="text-decoration:none;">478.011  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Number of judicial circuits<span style="font-size:x-small;color:inherit;"> (2/18/2016)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.012&amp;bid=26608&amp;hl=" style="text-decoration:none;">478.012  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit court defined. <span style="font-size:x-small;color:inherit;"> (8/28/1997)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.013&amp;bid=26609&amp;hl=" style="text-decoration:none;">478.013  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Salaries of circuit judges — practice of or doing law business prohibited.<span style="font-size:x-small;color:inherit;"> (8/28/1990)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.014&amp;bid=26610&amp;hl=" style="text-decoration:none;">478.014  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Judge of the circuit court, defined. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.017&amp;bid=26611&amp;hl=" style="text-decoration:none;">478.017  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Travel allowance for circuit judges. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.018&amp;bid=26612&amp;hl=" style="text-decoration:none;">478.018  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Associate judges, circuit court, compensation. <span style="font-size:x-small;color:inherit;"> (8/28/1990)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.019&amp;bid=26613&amp;hl=" style="text-decoration:none;">478.019  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Judge of probate division, ex officio circuit or associate circuit judge, ...<span style="font-size:x-small;color:inherit;"> (8/28/1984)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.020&amp;bid=26614&amp;hl=" style="text-decoration:none;">478.020  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Expenses of judge when serving outside regular circuit. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.023&amp;bid=26615&amp;hl=" style="text-decoration:none;">478.023  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Salary and expenses, how paid. <span style="font-size:x-small;color:inherit;"> (8/28/1980)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.035&amp;bid=26616&amp;hl=" style="text-decoration:none;">478.035  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit courts — counties and City of St. Louis to provide quarters.<span style="font-size:x-small;color:inherit;"> (2/3/1995)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.038&amp;bid=26617&amp;hl=" style="text-decoration:none;">478.038  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit number nine, election to maintain quarters for circuit court, form ...<span style="font-size:x-small;color:inherit;"> (2/3/1995)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.063&amp;bid=26618&amp;hl=" style="text-decoration:none;">478.063  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Juvenile divisions designated. <span style="font-size:x-small;color:inherit;"> (8/28/1993)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.070&amp;bid=26619&amp;hl=" style="text-decoration:none;">478.070  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Jurisdiction of circuit courts. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.072&amp;bid=26620&amp;hl=" style="text-decoration:none;">478.072  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Preserving record, case assigned to associate circuit judge, how, approval ...<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">DIVISION OF STATE INTO CIRCUITS</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.073&amp;bid=26621&amp;hl=" style="text-decoration:none;">478.073  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit realignment plan authorized — judicial conference duties — ...<span style="font-size:x-small;color:inherit;"> (8/28/2013)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.191&amp;bid=33196&amp;hl=" style="text-decoration:none;">478.191  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Authority for establishment of circuits, repealed, effective when. <span style="font-size:x-small;color:inherit;"> (2/18/2016)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">TERMS OF COURT</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.205&amp;bid=26713&amp;hl=" style="text-decoration:none;">478.205  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit court, continual session — when term required, time commencing.<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.206&amp;bid=26714&amp;hl=" style="text-decoration:none;">478.206  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Writs and other processes returned to first term, when, effect. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.220&amp;bid=26715&amp;hl=" style="text-decoration:none;">478.220  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit and associate circuit judges, jurisdiction, restrictions. <span style="font-size:x-small;color:inherit;"> (8/28/1989)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.230&amp;bid=26716&amp;hl=" style="text-decoration:none;">478.230  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Municipal judges, jurisdiction — cases subject to transfer.<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.240&amp;bid=26717&amp;hl=" style="text-decoration:none;">478.240  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Presiding judge, term, selection procedures — chief justice of supreme ...<span style="font-size:x-small;color:inherit;"> (8/28/2014)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.245&amp;bid=26718&amp;hl=" style="text-decoration:none;">478.245  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit courts may adopt local court rules — procedure — restrictions — ...<span style="font-size:x-small;color:inherit;"> (8/28/1989)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.248&amp;bid=26719&amp;hl=" style="text-decoration:none;">478.248  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Availability of a judge for bail purposes, when, local court rules to ensure. <span style="font-size:x-small;color:inherit;"> (8/28/1982)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.250&amp;bid=26720&amp;hl=" style="text-decoration:none;">478.250  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Procedure for filing cases, docketing, assignment, hearing. <span style="font-size:x-small;color:inherit;"> (8/28/1989)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.255&amp;bid=26721&amp;hl=" style="text-decoration:none;">478.255  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Disqualification of judge, reassignment procedure — applicability to ...<span style="font-size:x-small;color:inherit;"> (8/28/2005)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.260&amp;bid=26722&amp;hl=" style="text-decoration:none;">478.260  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Probate division of circuit court established, jurisdiction. <span style="font-size:x-small;color:inherit;"> (8/28/1989)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.265&amp;bid=26723&amp;hl=" style="text-decoration:none;">478.265  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Commissioner of the probate division of circuit court, appointment, ...<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.266&amp;bid=26724&amp;hl=" style="text-decoration:none;">478.266  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Probate division, commissioner authorized, certain counties, compensation, ...<span style="font-size:x-small;color:inherit;"> (8/28/2004)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.267&amp;bid=26725&amp;hl=" style="text-decoration:none;">478.267  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Probate division of circuit court, commissioner authorized, compensation, ...<span style="font-size:x-small;color:inherit;"> (8/28/1991)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.268&amp;bid=26726&amp;hl=" style="text-decoration:none;">478.268  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Probate division commissioner authorized, thirty-first judicial circuit, ...<span style="font-size:x-small;color:inherit;"> (8/28/1999)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.270&amp;bid=26727&amp;hl=" style="text-decoration:none;">478.270  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Judge or clerk not to prepare wills or settlements — letters revoked, when.<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.320&amp;bid=26728&amp;hl=" style="text-decoration:none;">478.320  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Associate circuit judges, authorized number — population determination — ...<span style="font-size:x-small;color:inherit;"> (7/8/2014)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">ADDITIONAL CIRCUIT JUDGES</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.330&amp;bid=57412&amp;hl=" style="text-decoration:none;">478.330  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Additional circuit judges authorized, when.<span style="font-size:x-small;color:inherit;"> (8/28/2025)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 5  Buchanan and Andrew Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.370&amp;bid=26735&amp;hl=" style="text-decoration:none;">478.370  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Divisions of Circuit No. 5, number — when judges elected.<span style="font-size:x-small;color:inherit;"> (1/1/1982)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 6 Platte County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.376&amp;bid=57413&amp;hl=" style="text-decoration:none;">478.376  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 6, number of judges.<span style="font-size:x-small;color:inherit;"> (8/28/2025)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 7  Clay County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.385&amp;bid=26737&amp;hl=" style="text-decoration:none;">478.385  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 7, number of judges. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 22  St. Louis City</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.387&amp;bid=26738&amp;hl=" style="text-decoration:none;">478.387  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 22, number of judges. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.400&amp;bid=26739&amp;hl=" style="text-decoration:none;">478.400  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">General term — business, how distributed and expedited.<span style="font-size:x-small;color:inherit;"> (8/28/1939)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.422&amp;bid=26741&amp;hl=" style="text-decoration:none;">478.422  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Friend of court in child support matters, appointment, compensation (St. ...<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.428&amp;bid=26742&amp;hl=" style="text-decoration:none;">478.428  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Presiding judge and circuit clerk St. Louis City to meet with mayor and ...<span style="font-size:x-small;color:inherit;"> (8/28/1995)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.434&amp;bid=26745&amp;hl=" style="text-decoration:none;">478.434  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Fines, penalties and forfeitures, to be paid into city treasury, reports. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.435&amp;bid=26746&amp;hl=" style="text-decoration:none;">478.435  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Register to furnish names of collectors to court. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 21  St. Louis County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.437&amp;bid=26747&amp;hl=" style="text-decoration:none;">478.437  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 21, number of judges. <span style="font-size:x-small;color:inherit;"> (7/8/2014)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.450&amp;bid=26748&amp;hl=" style="text-decoration:none;">478.450  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">To make rules for numbering, assignment and transfer of cases. <span style="font-size:x-small;color:inherit;"> (1/1/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 16  Jackson County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.461&amp;bid=26749&amp;hl=" style="text-decoration:none;">478.461  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Division into eastern and western portions — jurisdiction — venue — actions ...<span style="font-size:x-small;color:inherit;"> (1/2/1986)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.462&amp;bid=26750&amp;hl=" style="text-decoration:none;">478.462  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 16, filing in improper division of circuit, venue — transfer of ...<span style="font-size:x-small;color:inherit;"> (8/28/1988)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.463&amp;bid=34648&amp;hl=" style="text-decoration:none;">478.463  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 16, number of judges, divisions — where divisions to sit.<span style="font-size:x-small;color:inherit;"> (8/28/2017)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.464&amp;bid=26752&amp;hl=" style="text-decoration:none;">478.464  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Associate circuit divisions numbered — divisions to sit, where — (Jackson ...<span style="font-size:x-small;color:inherit;"> (7/8/2014)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.465&amp;bid=26753&amp;hl=" style="text-decoration:none;">478.465  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Transfer of cases by local court rule, circuit court and probate division ...<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.466&amp;bid=36181&amp;hl=" style="text-decoration:none;">478.466  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Treatment court commissioner, appointment, qualifications, compensation, ...<span style="font-size:x-small;color:inherit;"> (12/18/2018)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.467&amp;bid=26755&amp;hl=" style="text-decoration:none;">478.467  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Court may make rules for distribution of cases. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.469&amp;bid=26756&amp;hl=" style="text-decoration:none;">478.469  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Appeals from municipal judges, where heard. <span style="font-size:x-small;color:inherit;"> (8/28/1984)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.473&amp;bid=26757&amp;hl=" style="text-decoration:none;">478.473  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Letters where granted (Jackson County). <span style="font-size:x-small;color:inherit;"> (8/28/1983)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.475&amp;bid=26758&amp;hl=" style="text-decoration:none;">478.475  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Sales of real estate at courthouse door. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.483&amp;bid=26759&amp;hl=" style="text-decoration:none;">478.483  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Jurisdiction as to mechanic's liens. <span style="font-size:x-small;color:inherit;"> (8/28/1949)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 31  Greene County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.513&amp;bid=26760&amp;hl=" style="text-decoration:none;">478.513  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 31, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (7/8/2014)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 29  Jasper County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.527&amp;bid=26761&amp;hl=" style="text-decoration:none;">478.527  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 29, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.528&amp;bid=26762&amp;hl=" style="text-decoration:none;">478.528  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Family court commissioner position. <span style="font-size:x-small;color:inherit;"> (8/28/2005)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.530&amp;bid=26763&amp;hl=" style="text-decoration:none;">478.530  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Court may make rules for distribution, transfer of cases. <span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 23  Jefferson County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.550&amp;bid=36182&amp;hl=" style="text-decoration:none;">478.550  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 23, number of judges, divisions — when judges elected — family ...<span style="font-size:x-small;color:inherit;"> (12/18/2018)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 17  Cass and Johnson Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.570&amp;bid=26766&amp;hl=" style="text-decoration:none;">478.570  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 17, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (8/28/2005)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 46  Taney County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.577&amp;bid=33197&amp;hl=" style="text-decoration:none;">478.577  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 46, number of judges — election, when.<span style="font-size:x-small;color:inherit;"> (2/18/2016)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 11  St. Charles County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.600&amp;bid=51052&amp;hl=" style="text-decoration:none;">478.600  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 11, number of judges, divisions — when judges elected — ...<span style="font-size:x-small;color:inherit;"> (8/28/2022)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 13  Boone and Callaway Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.610&amp;bid=57414&amp;hl=" style="text-decoration:none;">478.610  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 13, number of judges, divisions — when judges elected — ...<span style="font-size:x-small;color:inherit;"> (8/28/2025)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.620&amp;bid=26769&amp;hl=" style="text-decoration:none;">478.620  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Records of former Sturgeon court of common pleas, transfer and keeping of. <span style="font-size:x-small;color:inherit;"> (8/28/1969)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 19  Cole County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.625&amp;bid=57415&amp;hl=" style="text-decoration:none;">478.625  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 19, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (8/28/2025)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 20  Franklin, Gasconade and Osage Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.630&amp;bid=26771&amp;hl=" style="text-decoration:none;">478.630  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 20, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 24  Madison, St. Francois, Ste. Genevieve and Washington Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.690&amp;bid=57416&amp;hl=" style="text-decoration:none;">478.690  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 24, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (8/28/2025)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 25  Maries, Phelps, Pulaski and Texas Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.700&amp;bid=60331&amp;hl=" style="text-decoration:none;">478.700  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 25, number of judges, divisions — when judges elected.<span style="font-weight: 900;font-size:small;color:white;background-color:steelblue;"> (8/28/2026)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 26  Camden, Laclede, Miller, Moniteau and Morgan Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.705&amp;bid=33709&amp;hl=" style="text-decoration:none;">478.705  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 26, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (8/28/2016)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 32  Bollinger, Perry and Cape Girardeau Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.710&amp;bid=57417&amp;hl=" style="text-decoration:none;">478.710  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 32, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (8/28/2025)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.711&amp;bid=26776&amp;hl=" style="text-decoration:none;">478.711  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit court, where may be held — probate division, where offices may be ...<span style="font-size:x-small;color:inherit;"> (8/28/2011)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 42  Crawford, Dent, Iron, Reynolds and Wayne Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.715&amp;bid=26777&amp;hl=" style="text-decoration:none;">478.715  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 42, number of judges, divisions — when judges elected.<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.716&amp;bid=36184&amp;hl=" style="text-decoration:none;">478.716  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Treatment court commissioner position. <span style="font-size:x-small;color:inherit;"> (12/18/2018)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 10  Circuit Court of Marion, Monroe, and Ralls Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.720&amp;bid=26779&amp;hl=" style="text-decoration:none;">478.720  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Districts of Marion County circuit court — where court held — jurisdiction ...<span style="font-size:x-small;color:inherit;"> (1/2/1979)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 44  Douglas, Ozark and Wright Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.730&amp;bid=26781&amp;hl=" style="text-decoration:none;">478.730  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 44, judge appointed, elected when. <span style="font-size:x-small;color:inherit;"> (1/1/1982)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 38 Christian County</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.740&amp;bid=26782&amp;hl=" style="text-decoration:none;">478.740  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 38, number of judges — number of divisions — election dates.<span style="font-size:x-small;color:inherit;"> (7/8/2014)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">JUDICIAL CIRCUIT NO. 43  Caldwell, Clinton, Daviess, DeKalb and Livingston Counties</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.750&amp;bid=26783&amp;hl=" style="text-decoration:none;">478.750  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Circuit No. 43, number of judges — divisions — election.<span style="font-size:x-small;color:inherit;"> (1/1/1982)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:80%;text-align:center;font-weight:700; padding:.1em .15em .3em 0em;">GENERAL PROVISIONS APPLICABLE TO ALL CIRCUITS</td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+  <tr style="width:100%;">
+    <td style="min-width:8em;width:10%;text-align: right; padding:.1em .15em .3em 0em;">
+      <a class="lr-font-emph" href="/main/PageSelect.aspx?section=478.1000&amp;bid=26784&amp;hl=" style="text-decoration:none;">478.1000  </a>
+    </td>
+    <td style="width:80%; padding:.1em .15em .3em 0em;">Criminal nonsupport courts authorized — referral of cases — allocation of ...<span style="font-size:x-small;color:inherit;"> (8/28/2009)</span></td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;padding-bottom:.4em;">
+      <a href="">
+        <img src="" alt="" style="height:auto;margin:0em 0em 0em .2em;" />
+      </a>
+    </td>
+    <td style="min-width:1.5em;width:5%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+</table><table style="width:100%;border-collapse:collapse;">
+  <tr>
+    <th colspan="2" class="lr-font-norm" style="font-weight:700; text-align:left;"> - Cross References</th>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Another circuit or criminal judge may sit, when, 545.690</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Change of venue in circuit court generally, Chap. 508</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Change of venue in multiple judge circuits, 508.110</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">County board of visitors, circuit judge to appoint, 221.320</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">County municipal courts, first class counties, 66.010</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Court reporter, appointment of, 485.040</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Crime victims' compensation, 595.045</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Deaf persons, auxiliary services and aids, 476.750 to 476.766</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Dissolution of marriage cases, certain courts may establish educational sessions program for parties and children when custody or support involved, 452.600 to 452.610</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Dual jurisdiction of court in disposition of offender transferred from juvenile court, 211.073</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Expense of circuit courts, estimates of, to be submitted to county budget officer, 50.640</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Failure to retire at seventy, judge to waive all retirement benefits and salary, 476.683</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Family courts, Chap. 487</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Grievance review committee of circuit courts, 211.351</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Interpreters' fees, 476.806</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Marriage license issued minor without parents' consent on order of court, 451.090</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Regulation of conflicts of interest, financial disclosure, and lobbying, 105.450 to 105.498</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Retired senior judges, compensation, expenses, credit on retirement credits, exception, 476.682</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Retirement of judges, Const. Art. V § 24, S. Ct. Rule 12</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Sheriffs to attend court, when, 57.090</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Superintending control over inferior tribunals, original remedial writs, Const. Art. V § 4</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;">Transfer of judges by supreme court, Const. Art. V § 6</td>
+  </tr>
+  <tr>
+    <td style="width:10%; padding:.1em .15em .3em 0em;"></td>
+    <td style="width:90%; padding:.1em .15em .3em 0em;"></td>
+  </tr>
+</table>
+        </div>
+        <div class="lr-fl-s-all lr-fl-m-3-10 lr-fl-l-1-5">
+            
+            <div id="mcr" class="lr-fl-s-all lr-fl-m-all lr-fl-l-all" style="text-align: center; border-color: #b3e6ff; border-width: 1px; background-color: #eaf3fb;">
+                
+<div>
+  <span>
+    <p style="padding:2px;margin:4px;;">Official Website for the Revised Statutes of Missouri</p>
+  </span>
+  <span></span>
+  <p style="margin:0px;">3 Nov 2026   03:37</p>
+</div>
+            </div>
+            
+            <div id="mcrb"></div>
+        </div>
+    </div>
+    
+    
+    <div id="BOTTOM" class="lr-f-all">
+        <div class="lr-fl-s-all lr-fl-m-all lr-fl-l-all" style="text-align: left; vertical-align: middle;">
+            <table style="width: 100%; border-collapse: collapse;">
+                
+                <tr style="visibility: collapse;">
+                    <td style="width: 10%;"></td>
+                    <td style="width: 40%;"></td>
+                    <td style="width: 40%;"></td>
+                    <td style="width: 10%;"></td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr style="margin-top: 0px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="lr-font-norm" style="border: 0em solid; border-color: gainsboro; text-align: left; padding: 2px;" colspan="2">Click here for the <a class="lr-font-emph" href="/main/Info.aspx#reorg" style="">Reorganization Act of 1974 - or - Concurrent Resolutions Having Force & Effect of Law</a></span></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="lr-font-norm" style="border: 0em solid; border-color: gainsboro; text-align: left; padding: 2px;" colspan="2">In accordance with Section <a class="lr-font-emph" href="https://revisor.mo.gov/main/OneSection.aspx?section=3.090" style="">3.090</a>, the language of statutory sections enacted during a legislative session are updated and available on this website <span title="plus time to process">on the effective date of such enacted statutory section.</span></td>
+                    <td style="border: 0em solid; border-color: gainsboro; text-align: right; padding: 2px;">
+                        <a href="#TOP">
+                            <img src="https://revisor.mo.gov/MOPics/pagetop.jpg" alt="Revisor Home" style="height: auto;" />&nbsp; &nbsp;&nbsp;</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+            </table>
+            <details>
+                <summary id="opnothr" style="font-weight: 700; text-align: left; margin-left: 18px; font-size: larger; color: darkblue;">Other Information</summary>
+                <table style="width: 100%; border-collapse: collapse;">
+                    
+                    <tr style="visibility: collapse;">
+                        <td style="width: 20%;"></td>
+                        <td style="width: 20%;"></td>
+                        <td style="width: 20%;"></td>
+                        <td style="width: 20%;"></td>
+                        <td style="width: 20%;"></td>
+                    </tr>
+                    
+                    <tr style="line-height: 24px;">
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/recent.aspx" style="text-decoration: none;">&emsp;Recent Sections</a></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/editorial.aspx" title="sections with editorial changes" style="text-decoration: none;">Editorials</a></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/MayBeCite.aspx" title="popular names" style="text-decoration: none;">May Be Cited As</a></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/tandf.aspx" title="sections with tables or forms" style="text-decoration: none;">Tables &amp; Forms</a></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/MultiEnact.aspx" title="sections multiply enacted" style="text-decoration: none;">Multiple Enact</a></td>
+                    </tr>
+                    <tr style="line-height: 24px;">
+                        <td style="width: 20%;">&emsp;</td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/rx.aspx" title="sections repealed and transferred" style="text-decoration: none;">Repeal &amp; Transfer</a></td>
+                        <td style="width: 20%;"></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/secdef.aspx" target="_blank" title="sections with definitions, opens in new tab" style="text-decoration: none;">Definitions</a></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/info.aspx?doc=enders" title="Section ending report, downloaded" style="text-decoration: none;">End Report</a></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <hr style="border-top: 1px dotted green;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%;"></td>
+                        <td style="width: 20%;"></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/Help.aspx#change" title="changes to this site" style="text-decoration: none;">Site changes</a></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/PicGallery.aspx" title="all pics" style="text-decoration: none;">Pictures</a></td>
+                        <td style="width: 20%;"><a class="lr-font-emph" href="/main/About.aspx#contact" title="contact the Revisor's office" style="text-decoration: none;">Contact</a></td>
+                    </tr>
+                </table>
+            </details>
+            <div class="lr-f-all">
+                <hr />
+            </div>
+            <details>
+                <summary style="font-weight: 700; text-align: left; margin-left: 18px; font-size: larger; color: darkblue;">Other Links</summary>
+                <table style="width: 100%;">
+                    <tr style="line-height: 24px;">
+                        <td style="width: 6%;"></td>
+                        <td style="width: 22%;"><a target="lrcomm" class="lr-font-emph" href="http://lr.mo.gov">Legislative Research</a></td>
+                        <td style="width: 22%;"><a target="overs" class="lr-font-emph" href="http://legislativeoversight.mo.gov">Oversight</a></td>
+                        <td style="width: 22%;"><a target="molis" class="lr-font-emph" title="Oversight's Fiscal Note Public Portal" href="https://molispublicportal.legislativeoversight.mo.gov/Others">MOLIS</a></td>
+                        <td style="width: 22%;"></td>
+                        <td style="width: 6%;"></td>
+                    </tr>
+                    <tr style="line-height: 24px;">
+                        <td style="width: 6%;"></td>
+                        <td style="width: 22%;"><a target="lib" class="lr-font-emph" href="https://www.senate.mo.gov/LegislativeLibrary/index.html">Library</a></td>
+                        <td style="width: 22%;"></td>
+                        <td style="width: 22%;"></td>
+                        <td style="width: 22%;"><a title="MO.GOV only" target="cntcs" class="lr-font-emph" href="https://intranet.state.mo.us/state-website-contacts/">MO WebMasters</a></td>
+                        <td style="width: 6%;"></td>
+                    </tr>
+                </table>
+            </details>
+        </div>
+        <div id="olrlinks" class="lr-f-all">
+            <hr />
+        </div>
+        <div class="lr-f-all">
+            <div class="lr-fl-s-1-8 lr-fl-m-1-8 lr-fl-l-1-8"></div>
+            <figure class="lr-fl-s-1-4 lr-fl-m-1-4 lr-fl-l-1-4" style="text-align: left; vertical-align: middle;">
+                <a href="https://www.senate.mo.gov/" target="senate">
+                    <img src="https://revisor.mo.gov/MOPics/senate.png" alt="Senate" />
+                </a>
+                <figcaption class="lr-font-emph" style="font-size: small;">Missouri Senate</figcaption>
+            </figure>
+            <figure class="lr-fl-s-1-4 lr-fl-m-1-4 lr-fl-l-1-4" style="text-align: center; vertical-align: middle;">
+                <a href="https://www.mo.gov/" target="mogov">
+                    <img src="https://revisor.mo.gov/MOPics/seal_of_mo.png" alt="State of Missouri" />
+                </a>
+                <figcaption class="lr-font-emph" style="font-size: small;">MO.gov</figcaption>
+            </figure>
+            <figure class="lr-fl-s-1-4 lr-fl-m-1-4 lr-fl-l-1-4" style="text-align: right; vertical-align: middle;">
+                <a href="https://house.mo.gov/" target="house">
+                    <img src="https://revisor.mo.gov/MOPics/house.png" alt="House" />
+                </a>
+                <figcaption class="lr-font-emph" style="font-size: small;">Missouri House</figcaption>
+            </figure>
+            <div class="lr-fl-s-1-8 lr-fl-m-1-8 lr-fl-l-1-8"></div>
+        </div>
+        <div class="lr-fl-s-all lr-fl-m-all lr-fl-l-all" style="text-align: left; vertical-align: middle;">
+            
+            <table style="width: 100%; border-collapse: collapse;">
+                
+                <tr>
+                    <td style="width: 20%;"></td>
+                    <td style="width: 20%;"></td>
+                    <td style="width: 20%;"></td>
+                    <td style="width: 20%;"></td>
+                </tr>
+                
+            </table>
+        </div>
+    </div>
+    
+    <div id="Div1" class="lr-f-all">
+        
+
+        
+        
+        
+    </div>
+    <div id="links" class="lr-fl-s-all lr-fl-m-all lr-fl-l-all" style="border: .1em solid Gainsboro;">
+        <table style="width: 100%; border-collapse: collapse;">
+            
+            <tr style="visibility: collapse;">
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+                <td class="auto-style2"></td>
+            </tr>
+            <tr>
+                <td class="lr-font-norm" colspan="3"><span style="font-size: smaller; font-weight: 700; color: SlateGray; padding-left: 1em;">Errors / suggestions - WebMaster@LR.mo.gov</span></td>
+                <td colspan="4" style="text-align: center; vertical-align: middle;">
+                    <figure>
+                        <a href="https://www.sos.mo.gov/kids/history" target="flag">
+                            <img style="max-width: 100px;" class="imgH" src="https://revisor.mo.gov/MOPics/oliver_flag_sm.jpg" alt="Marie Elizabeth Oliver" />
+                        </a>
+                        <figcaption style="font-size: small; font-weight: 700;">History and Fun Facts</figcaption>
+                    </figure>
+                </td>
+                <td class="lr-font-norm" colspan="3" style="text-align: right;"><span style="font-size: smaller; color: SlateGray; padding-right: 1em;">&copy;Missouri Legislature, all rights reserved.</span></td>
+            </tr>
+            <tr>
+                <td style="text-align: left; width: 10%;">
+                    <div id="homeicon" style="margin-left: 1.5em;">
+                        <a title="Revisor Home" href="/main/Home.aspx">
+                            <img style="max-width: 1.4em;" src="https://revisor.mo.gov/MOPics/home.png" alt="home" />
+                        </a>
+                    </div>
+                </td>
+                <td style="width: 10%;"></td>
+                <td style="text-align: center; width: 10%;">
+                    
+                    
+                </td>
+                <td style="text-align: center; width: 10%;">
+                    
+                    
+                </td>
+                <td style="width: 10%;"></td>
+                <td style="width: 10%;"></td>
+                <td style="width: 10%; text-align: center;">
+                    <a style="" title="google search in revisor" href="https://www.google.com/search?q=site:revisor.mo.gov+YourSearchTermHere" target="_blank">
+                        <img style="height: auto; max-width: 1em;" src="https://revisor.mo.gov/MOPics/GoogleSmallLogo.png" alt="google" />
+                    </a>
+                </td>
+                <td style="width: 10%; text-align: center;">
+                    <a style="" title="bing search in revisor" href="https://www.bing.com/search?q=site:revisor.mo.gov+YourSearchTermHere" target="_blank">
+                        <img style="height: auto; max-width: 1em;" src="https://revisor.mo.gov/MOPics/bing_logo.png" alt="bing" />
+                    </a>
+                </td>
+                <td style="width: 10%;"></td>
+                <td style="width: 10%;"></td>
+            </tr>
+        </table>
+    </div>
+    
+<div class="lr-fl-s-all lr-fl-m-all lr-fl-l-all"></div>
+</body>
+</html>

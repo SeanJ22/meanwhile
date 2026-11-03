@@ -1,0 +1,225 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MO",
+  "county": "Jackson",
+  "countyFips": "29095",
+  "populationRank": 97,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MO",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge20new local fields/27names only:10CANDIDACY/17names and10RETENTION/10judges. Exact6individual county districts;3atlarge seats vote countywide.46precise whole-county court memberships. Preserve every held/state/federal/legislative/shared court record and all latest questions, measureRecords, analyses and explanations. StateSupremePaulWilson confirmed only, no refresh. No production publication.",
+  "subjects": [
+    {
+      "id": "cx-local-mo-jackson-2026-county-executive",
+      "title": "County Executive",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-1st-district",
+      "title": "County Legislator, 1st District",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-2nd-district",
+      "title": "County Legislator, 2nd District",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-3rd-district",
+      "title": "County Legislator, 3rd District",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-4th-district",
+      "title": "County Legislator, 4th District",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-6th-district",
+      "title": "County Legislator, 6th District",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:6",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-1st-district-at-large",
+      "title": "County Legislator, 1st District At-Large",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-2nd-district-at-large",
+      "title": "County Legislator, 2nd District At-Large",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-3rd-district-at-large",
+      "title": "County Legislator, 3rd District At-Large",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2"
+    },
+    {
+      "id": "cx-local-mo-jackson-2026-county-legislator-5th-district",
+      "title": "County Legislator, 5th District",
+      "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-appeals-western-retention-lisa-white-hardwick",
+      "title": "Missouri Court of Appeals, Western District \u2014 Retention of LISA WHITE HARDWICK",
+      "ocdId": "ocd-division/country:us/state:mo/court_of_appeals_district:western",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-2-retention-kenneth-r-garrett-iii",
+      "title": "Circuit Judge, 16th Judicial Circuit, Division 2 \u2014 Retention of KENNETH R. GARRETT, III",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-4-retention-patrick-c-edwards",
+      "title": "Circuit Judge, 16th Judicial Circuit, Division 4 \u2014 Retention of PATRICK C. EDWARDS",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-14-retention-lauren-d-barrett",
+      "title": "Circuit Judge, 16th Judicial Circuit, Division 14 \u2014 Retention of LAUREN D. BARRETT",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-17-retention-cory-l-atkins",
+      "title": "Circuit Judge, 16th Judicial Circuit, Division 17 \u2014 Retention of CORY L. ATKINS",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-18-retention-kevin-d-harrell",
+      "title": "Circuit Judge, 16th Judicial Circuit, Division 18 \u2014 Retention of KEVIN D. HARRELL",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-25-retention-abbie-rothermich",
+      "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 25 \u2014 Retention of ABBIE ROTHERMICH",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-26-retention-r-travis-willingham",
+      "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 26 \u2014 Retention of R. TRAVIS WILLINGHAM",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-27-retention-kea-s-bird-riley",
+      "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 27 \u2014 Retention of KEA S. BIRD-RILEY",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    },
+    {
+      "id": "cx-local-mo-2026-circuit-16-division-31-retention-mary-frances-weir",
+      "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 31 \u2014 Retention of MARY FRANCES WEIR",
+      "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+    }
+  ],
+  "coverage": {
+    "preparedContests": 20,
+    "ordinaryCandidateFields": 10,
+    "ordinaryPreprintedNames": 17,
+    "retentionFields": 10,
+    "retentionJudgeNames": 10,
+    "totalPreparedNames": 27,
+    "newContests": 20,
+    "newCandidateIds": 27,
+    "actualSamplePdfs": 2,
+    "actualPhysicalSamplePages": 10,
+    "jcebPublishedSamplePages": 2,
+    "kcebPublishedSamplePages": 8,
+    "jcebLocalFields": 19,
+    "jcebLocalNames": 26,
+    "kcebLocalFields": 19,
+    "kcebLocalNames": 25,
+    "sharedLocalFields": 18,
+    "uniqueBoardSpecificDistrictFields": 2,
+    "exactIndividualDistrictGeometryFeatures": 6,
+    "wholeCountyMemberships": 46,
+    "westernWholeCountyMembers": 45,
+    "circuit16WholeCountyMembers": 1,
+    "preciseElectorates": 9,
+    "missingReaderDistrictIds": 8,
+    "sourceCaptures": 25,
+    "heldStateSupremeRetentionConfirmedUnchanged": 1,
+    "unfilledPartyNominationSlots": 3,
+    "ordinaryMunicipalSchoolSpecialCandidateFieldsPrinted": 0,
+    "newMeasures": 0,
+    "absencesCreated": 0
+  },
+  "summary": "Both election boards native current actual samples:20local fields/27named people, exact shared18-field parity and unique district1/district5 reconciliation. Complete county board-jurisdiction union; no city-only/outside-city sample called whole county. Six official individual district polygons and46whole-county judicial links. Write-in/cancellation and independent/style census limits explicit.",
+  "missingReaderDistrictIds": [
+    "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:1",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:2",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:3",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:4",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:5",
+    "ocd-division/country:us/state:mo/county:jackson/council_district:6",
+    "ocd-division/country:us/state:mo/court_of_appeals_district:western"
+  ],
+  "nextOwner": "River: latestMO/StLouis merge, exact district/geometry integration and judicial memberships, declared write-in/cancellation status review. Preserve every unrelated question/analysis/explanation.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 25 captured sources and 93 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

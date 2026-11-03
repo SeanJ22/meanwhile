@@ -1,0 +1,26 @@
+[
+  {
+    "heldContestId": "mo-sos-2026-supreme-court-retention-paul-c-wilson",
+    "operation": "SOURCE_CONFIRMATION_ONLY;UNCHANGED_HELD_ID_CORE_AND_EVIDENCE",
+    "board": "JCEB",
+    "provenance": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge PAUL C. WILSON of the Missouri Supreme Court be retained in office? YES NO"
+    }
+  },
+  {
+    "heldContestId": "mo-sos-2026-supreme-court-retention-paul-c-wilson",
+    "operation": "SOURCE_CONFIRMATION_ONLY;UNCHANGED_HELD_ID_CORE_AND_EVIDENCE",
+    "board": "KCEB",
+    "provenance": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge PAUL C. WILSON of the Missouri Supreme Court be retained in office? YES NO"
+    }
+  }
+]

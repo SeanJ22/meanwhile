@@ -1,0 +1,800 @@
+[
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-executive",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+    "title": "County Executive",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Alan Rohlfing",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Stacy Lake",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Executive - Jackson County\n                         Alan Rohlfing        Rep\n                         Stacy Lake         Dem\n                       __________________\n                              Write-in"
+    },
+    "sourcePage": 3,
+    "sourceClip": [
+      30,
+      574.188037109375,
+      570,
+      684.5880615234375
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-1st-district",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:1",
+    "title": "County Legislator, 1st District",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Kelly Thompson",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator – 1st District\n                              Kelly Thompson      Dem\n                       __________________\n                              Write-in"
+    },
+    "sourcePage": 3,
+    "sourceClip": [
+      30,
+      684.5880615234375,
+      570,
+      776.7
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-2nd-district",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:2",
+    "title": "County Legislator, 2nd District",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Venessa Huskey",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator – 2nd District\n                       Venessa Huskey     Dem\n                       __________________\n                              Write-in"
+    },
+    "sourcePage": 4,
+    "sourceClip": [
+      30,
+      39.46800155639649,
+      570,
+      142.90794677734374
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-3rd-district",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:3",
+    "title": "County Legislator, 3rd District",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Scott Qualls",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Phyllis Hernandez",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator – 3rd District\n                            Scott Qualls         Rep\n                               Phyllis Hernandez    Dem\n                       __________________\n                              Write-in"
+    },
+    "sourcePage": 4,
+    "sourceClip": [
+      30,
+      142.90794677734374,
+      570,
+      253.30784912109374
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-4th-district",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:4",
+    "title": "County Legislator, 4th District",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Lon McDonald",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Byron Townsend",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator – 4th District\n                      Lon McDonald       Rep\n                        Byron Townsend     Dem\n                      __________________\n                             Write-in"
+    },
+    "sourcePage": 4,
+    "sourceClip": [
+      30,
+      253.30784912109374,
+      570,
+      359.147998046875
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-6th-district",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:6",
+    "title": "County Legislator, 6th District",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Bill Haley",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Tony Lawson",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator –6th District\n\n                                       Bill Haley            Rep\n                       Tony Lawson       Dem\n                       __________________\n                              Write-in"
+    },
+    "sourcePage": 4,
+    "sourceClip": [
+      30,
+      359.147998046875,
+      570,
+      469.547900390625
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-1st-district-at-large",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+    "title": "County Legislator, 1st District At-Large",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Lance Pollard",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Carla Fields",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator – 1st District At-Large\n                        Lance Pollard        Rep\n                           Carla Fields        Dem\n                       __________________\n                              Write-in"
+    },
+    "sourcePage": 4,
+    "sourceClip": [
+      30,
+      469.547900390625,
+      570,
+      574.188037109375
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-2nd-district-at-large",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+    "title": "County Legislator, 2nd District At-Large",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Gresia Cabrera",
+        "printedParty": "REP"
+      },
+      {
+        "name": "Donna Peyton",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator – 2nd District At-Large\n                          Gresia Cabrera       Rep\n                      Donna Peyton       Dem\n                       __________________\n                              Write-in"
+    },
+    "sourcePage": 4,
+    "sourceClip": [
+      30,
+      574.188037109375,
+      570,
+      670.7880126953125
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-3rd-district-at-large",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+    "title": "County Legislator, 3rd District At-Large",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "Susan B. Wilson",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "For County Legislator – 3rd District At-Large\n\n                       Susan B. Wilson      Dem\n                        __________________\n                               Write-in"
+    },
+    "sourcePage": 4,
+    "sourceClip": [
+      30,
+      670.7880126953125,
+      570,
+      776.7
+    ],
+    "sourceBoard": "KCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+      "sourceOrg": "Kansas City Election Board",
+      "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "VOTE FOR ONE"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-jackson-2026-county-legislator-5th-district",
+    "ocdId": "ocd-division/country:us/state:mo/county:jackson/council_district:5",
+    "title": "County Legislator, 5th District",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "printedCandidates": [
+      {
+        "name": "DALE CARTER",
+        "printedParty": "REP"
+      },
+      {
+        "name": "ANTOINE D. JENNINGS",
+        "printedParty": "DEM"
+      }
+    ],
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "                   5TH DISTRICT\n                   (Vote for ONE)\nDALE CARTER                      REP\nANTOINE D. JENNINGS               DEM\nWrite-In"
+    },
+    "sourcePage": 2,
+    "sourceClip": [
+      271,
+      136.9,
+      522,
+      206.1
+    ],
+    "sourceBoard": "JCEB",
+    "instructionAuthority": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "                   5TH DISTRICT\n                   (Vote for ONE)\nDALE CARTER                      REP\nANTOINE D. JENNINGS               DEM\nWrite-In"
+    }
+  },
+  {
+    "contestId": "cx-local-mo-2026-appeals-western-retention-lisa-white-hardwick",
+    "ocdId": "ocd-division/country:us/state:mo/court_of_appeals_district:western",
+    "title": "Missouri Court of Appeals, Western District — Retention of LISA WHITE HARDWICK",
+    "type": "RETENTION",
+    "judge": "LISA WHITE HARDWICK",
+    "judicialDivision": null,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge LISA WHITE HARDWICK of the Western District Court of Appeals be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 1,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge LISA WHITE HARDWICK of the Western District Court of Appeals be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 5,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge LISA WHITE HARDWICK of the Western District Court of Appeals be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-2-retention-kenneth-r-garrett-iii",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Circuit Judge, 16th Judicial Circuit, Division 2 — Retention of KENNETH R. GARRETT, III",
+    "type": "RETENTION",
+    "judge": "KENNETH R. GARRETT, III",
+    "judicialDivision": 2,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge KENNETH R. GARRETT, III, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 1,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge KENNETH R. GARRETT, III, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 5,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge KENNETH R. GARRETT, III, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-4-retention-patrick-c-edwards",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Circuit Judge, 16th Judicial Circuit, Division 4 — Retention of PATRICK C. EDWARDS",
+    "type": "RETENTION",
+    "judge": "PATRICK C. EDWARDS",
+    "judicialDivision": 4,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge PATRICK C. EDWARDS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 1,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge PATRICK C. EDWARDS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 5,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge PATRICK C. EDWARDS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-14-retention-lauren-d-barrett",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Circuit Judge, 16th Judicial Circuit, Division 14 — Retention of LAUREN D. BARRETT",
+    "type": "RETENTION",
+    "judge": "LAUREN D. BARRETT",
+    "judicialDivision": 14,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge LAUREN D. BARRETT, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 1,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge LAUREN D. BARRETT, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 5,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge LAUREN D. BARRETT, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-17-retention-cory-l-atkins",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Circuit Judge, 16th Judicial Circuit, Division 17 — Retention of CORY L. ATKINS",
+    "type": "RETENTION",
+    "judge": "CORY L. ATKINS",
+    "judicialDivision": 17,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge CORY L. ATKINS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 2,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge CORY L. ATKINS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 6,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge CORY L. ATKINS, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-18-retention-kevin-d-harrell",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Circuit Judge, 16th Judicial Circuit, Division 18 — Retention of KEVIN D. HARRELL",
+    "type": "RETENTION",
+    "judge": "KEVIN D. HARRELL",
+    "judicialDivision": 18,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge KEVIN D. HARRELL, Circuit Judge of the Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 2,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge KEVIN D. HARRELL, Circuit Judge of the Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 6,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge KEVIN D. HARRELL, Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-25-retention-abbie-rothermich",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 25 — Retention of ABBIE ROTHERMICH",
+    "type": "RETENTION",
+    "judge": "ABBIE ROTHERMICH",
+    "judicialDivision": 25,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge ABBIE ROTHERMICH, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 2,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge ABBIE ROTHERMICH, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 6,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge ABBIE ROTHERMICH, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-26-retention-r-travis-willingham",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 26 — Retention of R. TRAVIS WILLINGHAM",
+    "type": "RETENTION",
+    "judge": "R. TRAVIS WILLINGHAM",
+    "judicialDivision": 26,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge R. TRAVIS WILLINGHAM, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 2,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge R. TRAVIS WILLINGHAM, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 6,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge R. TRAVIS WILLINGHAM, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-27-retention-kea-s-bird-riley",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 27 — Retention of KEA S. BIRD-RILEY",
+    "type": "RETENTION",
+    "judge": "KEA S. BIRD-RILEY",
+    "judicialDivision": 27,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge KEA S. BIRD-RILEY, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 2,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge KEA S. BIRD-RILEY, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 6,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge KEA S. BIRD-RILEY, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  },
+  {
+    "contestId": "cx-local-mo-2026-circuit-16-division-31-retention-mary-frances-weir",
+    "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:16",
+    "title": "Associate Circuit Judge, 16th Judicial Circuit, Division 31 — Retention of MARY FRANCES WEIR",
+    "type": "RETENTION",
+    "judge": "MARY FRANCES WEIR",
+    "judicialDivision": 31,
+    "voteFor": 1,
+    "completeField": {
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceOrg": "Jackson County Board of Election Commissioners",
+      "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+      "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+      "quote": "Shall Judge MARY FRANCES WEIR, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+    },
+    "allBoardWitnesses": [
+      {
+        "board": "JCEB",
+        "sourcePage": 1,
+        "sourceColumn": 2,
+        "provenance": {
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceOrg": "Jackson County Board of Election Commissioners",
+          "collectedAt": "2026-11-03T09:37:09.336818+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge MARY FRANCES WEIR, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      },
+      {
+        "board": "KCEB",
+        "sourcePage": 6,
+        "sourceColumn": 0,
+        "provenance": {
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=1K9yPQmPpIB1g9qoErahvNjTGhrBRi9A2",
+          "sourceOrg": "Kansas City Election Board",
+          "collectedAt": "2026-11-03T09:39:22.281083+00:00",
+          "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+          "quote": "Shall Judge MARY FRANCES WEIR, Associate Circuit Judge of Judicial Circuit No. 16, be retained in office? YES NO"
+        }
+      }
+    ]
+  }
+]

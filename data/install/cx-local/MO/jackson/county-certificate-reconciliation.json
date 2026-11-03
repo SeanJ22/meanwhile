@@ -1,0 +1,246 @@
+{
+  "records": [
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-executive",
+      "office": "County Executive",
+      "name": "Alan Rohlfing",
+      "printedParty": "REP",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Alan Rohlfing"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-executive",
+      "office": "County Executive",
+      "name": "Stacy Lake",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Stacy Lake"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-1st-district",
+      "office": "County Legislator, 1st District",
+      "name": "Kelly Thompson",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Kelly Thompson"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-2nd-district",
+      "office": "County Legislator, 2nd District",
+      "name": "Venessa Huskey",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Venessa Huskey"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-3rd-district",
+      "office": "County Legislator, 3rd District",
+      "name": "Scott Qualls",
+      "printedParty": "REP",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Scott Qualls"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-3rd-district",
+      "office": "County Legislator, 3rd District",
+      "name": "Phyllis Hernandez",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Phyllis Hernandez"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-4th-district",
+      "office": "County Legislator, 4th District",
+      "name": "Lon McDonald",
+      "printedParty": "REP",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Lon McDonald"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-4th-district",
+      "office": "County Legislator, 4th District",
+      "name": "Byron Townsend",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Byron Townsend"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-6th-district",
+      "office": "County Legislator, 6th District",
+      "name": "Bill Haley",
+      "printedParty": "REP",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Bill Haley"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-6th-district",
+      "office": "County Legislator, 6th District",
+      "name": "Tony Lawson",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Tony Lawson"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-1st-district-at-large",
+      "office": "County Legislator, 1st District At-Large",
+      "name": "Lance Pollard",
+      "printedParty": "REP",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Lance Pollard"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-1st-district-at-large",
+      "office": "County Legislator, 1st District At-Large",
+      "name": "Carla Fields",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Carla Fields"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-2nd-district-at-large",
+      "office": "County Legislator, 2nd District At-Large",
+      "name": "Gresia Cabrera",
+      "printedParty": "REP",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Gresia Cabrera"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-2nd-district-at-large",
+      "office": "County Legislator, 2nd District At-Large",
+      "name": "Donna Peyton",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Donna Peyton"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-3rd-district-at-large",
+      "office": "County Legislator, 3rd District At-Large",
+      "name": "Susan B. Wilson",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Susan B. Wilson"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-5th-district",
+      "office": "County Legislator, 5th District",
+      "name": "DALE CARTER",
+      "printedParty": "REP",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Dale Carter"
+      }
+    },
+    {
+      "contestId": "cx-local-mo-jackson-2026-county-legislator-5th-district",
+      "office": "County Legislator, 5th District",
+      "name": "ANTOINE D. JENNINGS",
+      "printedParty": "DEM",
+      "role": "CERTIFIED_PRIMARY_PARTY_NOMINEE_CORROBORATION;ACTUAL_SAMPLE_GOVERNS",
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "Antoine D. Jennings"
+      }
+    }
+  ],
+  "certifiedPartyNomineeNames": 17,
+  "unfilledRepublicanSlots": 3,
+  "sourceRole": "CERTIFIED_NOMINEE_LIST_NOT_ACTUAL_SAMPLE",
+  "addressesOmittedFromParsedRecordsAndQuotes": true
+}

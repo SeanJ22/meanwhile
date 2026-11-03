@@ -1,0 +1,47 @@
+{
+  "unfilledPartyNominations": [
+    {
+      "office": "County Legislator, 3rd District At-Large",
+      "party": "Republican",
+      "status": "NO_CANDIDATE_FILED",
+      "ordinaryCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "3rd District At-Large County Legislator (R) No Candidate Filed"
+      }
+    },
+    {
+      "office": "County Legislator, 1st District",
+      "party": "Republican",
+      "status": "NO_CANDIDATE_FILED",
+      "ordinaryCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "1st District County Legislator (R) No Candidate Filed"
+      }
+    },
+    {
+      "office": "County Legislator, 2nd District",
+      "party": "Republican",
+      "status": "NO_CANDIDATE_FILED",
+      "ordinaryCandidacyCreated": false,
+      "provenance": {
+        "sourceUrl": "https://www.jacksongov.org/files/sharedassets/public/v/1/departments/clerk-of-the-county/2026-election/legal-2026-general-election.pdf",
+        "sourceOrg": "Jackson County Clerk of the Legislature",
+        "collectedAt": "2026-11-03T09:44:34.432403+00:00",
+        "verifiedAt": "2026-11-03T10:01:59.951870+00:00",
+        "quote": "2nd District County Legislator (R) No Candidate Filed"
+      }
+    }
+  ],
+  "qualifiedNamedWriteIns": [],
+  "namedWriteInQualificationInventoryComplete": false,
+  "cancellationDeclarationInventoryComplete": false,
+  "limit": "No generic Write-In/NoCandidateFiled/YES/NO token becomes a person. County clerk certification is primary-party nominees from August21; it does not establish a complete later write-in inventory. Generic KCEB write-in page supplies no declared names. No zero-write-in claim."
+}

@@ -1,0 +1,286 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IN",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "in-cx-2026-dlgf-2-operating",
+      "title": "Zionsville Community Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:zionsville_community_schools",
+      "sourceUrl": "https://www.in.gov/dA/75534dae34/26-001-Zionsville-Community-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-3-operating",
+      "title": "Metropolitan School District of Shakamak — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:shakamak_schools_metropolitan_school_district",
+      "sourceUrl": "https://www.in.gov/dA/77bc7493a0/26-024-Metropolitan-School-District-of-Shakamak-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-4-operating",
+      "title": "Barr-Reeve Community Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:barr_reeve_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/bad64478d9/26-016-Barr-Reeve-Community-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-5-operating",
+      "title": "Southeast Dubois County School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:southeast_dubois_county_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/8339ad0856/26-008-Southeast-Dubois-County-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-6-safety",
+      "title": "Wa-Nee Community School Corporation — School safety tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:wa_nee_community_schools",
+      "sourceUrl": "https://www.in.gov/dA/845ceb15b9/26-026-Wa-Nee-Community-Schools-Safety-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-7-operating",
+      "title": "Mississinewa Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:mississinewa_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/6ee480b1d6/26-022-Mississinewa-Community-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-8-operating",
+      "title": "Oak Hill United School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:oak_hill_united_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/8afa64d296/26-009-Oak-Hill-United-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-9-operating",
+      "title": "Carmel Clay Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:carmel_clay_schools",
+      "sourceUrl": "https://www.in.gov/dA/4a67e97bca/26-030-Carmel-Clay-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-10-operating",
+      "title": "Hamilton Southeastern Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:hamilton_southeastern_schools",
+      "sourceUrl": "https://www.in.gov/dA/bf9fdd6b58/26-032-A-Hamilton-Southeastern-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-11-operating",
+      "title": "Noblesville Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:noblesville_schools",
+      "sourceUrl": "https://www.in.gov/dA/3cca8236f5/26-015-Noblesville-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-12-operating",
+      "title": "Sheridan Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:sheridan_community_schools",
+      "sourceUrl": "https://www.in.gov/dA/c2c0bcdc58/26-003-Sheridan-Community-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-13-operating",
+      "title": "Westfield Washington Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:westfield_washington_schools",
+      "sourceUrl": "https://www.in.gov/dA/a3f2fc18e6/26-007-Westfield-Washington-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-14-operating",
+      "title": "Clark-Pleasant School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:clark_pleasant_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/2edf588139/26-010-Clark-Pleasant-Community-Schools-Operating-Extension-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-15-operating",
+      "title": "Franklin Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:franklin_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/52abfc54bd/26-037-Franklin-Community-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-16-operating",
+      "title": "Crown Point Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:crown_point_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/b1af2d2a48/26-034-Crown-Point-Community-School-Corporation-Operating.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-17-operating",
+      "title": "River Forest Community School — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:river_forest_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/6866d532d3/26-038-River-Forest-Community-School-Corporation-Operating-Extension-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-18-operating",
+      "title": "School City of Whiting — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:whiting_school_city",
+      "sourceUrl": "https://www.in.gov/dA/194bde031e/26-012-School-City-of-Whiting-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-19-construction",
+      "title": "School City of Whiting — School facilities financing",
+      "ocdId": "ocd-division/country:us/state:in/school_district:whiting_school_city",
+      "sourceUrl": "https://www.in.gov/dA/5fb96cfff7/26-014-School-City-of-Whiting-Controlled-Project.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-20-operating",
+      "title": "Tri-Creek School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:tri_creek_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/abccfb8086/26-028-Tri-Creek-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-21-operating",
+      "title": "Michigan City Area Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:michigan_city_area_schools",
+      "sourceUrl": "https://www.in.gov/dA/fde4de94bc/26-035-Michigan-City-Area-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-22-operating",
+      "title": "Anderson Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:anderson_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/c94f88913d/26-005-Anderson-Community-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-23-operating",
+      "title": "Elwood Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:elwood_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/6359e4ccd2/26-033-Elwood-Community-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-24-operating",
+      "title": "School City of Beech Grove — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:beech_grove_city_schools",
+      "sourceUrl": "https://www.in.gov/dA/6505ac0ca8/26-002-School-City-of-Beech-Grove-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-26-operating",
+      "title": "Metropolitan School District of Decatur Township — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:decatur_township_metropolitan_school_district",
+      "sourceUrl": "https://www.in.gov/dA/efb0723c40/26-039-Metropolitan-School-District-of-Decatur-Township-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-27-operating",
+      "title": "Metropolitan School District of Washington Township — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:washington_township_metropolitan_school_district",
+      "sourceUrl": "https://www.in.gov/dA/1e6d1b89fc/26-031-MSD-Washington-Township-Operating-Extension-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-28-operating",
+      "title": "Metropolitan School District of Wayne Township — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:wayne_township_metropolitan_school_district",
+      "sourceUrl": "https://www.in.gov/dA/93850f4b9b/26-025-Metropolitan-School-District-of-Wayne-Township-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-31-operating",
+      "title": "Smith-Green Community Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:smith_green_community_schools",
+      "sourceUrl": "https://www.in.gov/dA/6511dc5d01/26-042-Smith-Green-Community-Schools-Operating.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-32-operating",
+      "title": "Pike County School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:pike_county_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/f49f6c631e/26-004-Pike-County-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-33-operating",
+      "title": "Porter Township School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:porter_township_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/4fed494d73/26-023-Porter-Township-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-34-operating",
+      "title": "Union Township School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:union_township_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/09038efdab/26-020-Union-Township-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-35-operating",
+      "title": "Culver Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:culver_community_schools_corporation",
+      "sourceUrl": "https://www.in.gov/dA/eca44f19d6/26-041-Culver-CSC-Operating.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-36-operating",
+      "title": "Shelbyville Central Schools — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:shelbyville_central_schools",
+      "sourceUrl": "https://www.in.gov/dA/8e5e2b3406/26-019-Shelbyville-Central-Schools-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-37-operating",
+      "title": "Oregon-Davis School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:oregon_davis_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/ccce7ff050/26-027-Oregon-Davis-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-38-operating",
+      "title": "West Lafayette School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:west_lafayette_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/25d66765eb/26-006-West-Lafayette-Community-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-39-operating",
+      "title": "Tipton Community School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:tipton_community_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/e813491828/26-036-Tipton-Community-School-Corporation-Operating-Determination.pdf?language_id=1"
+    },
+    {
+      "id": "in-cx-2026-dlgf-41-operating",
+      "title": "Frontier School Corporation — School operating tax",
+      "ocdId": "ocd-division/country:us/state:in/school_district:frontier_school_corporation",
+      "sourceUrl": "https://www.in.gov/dA/dbae3aee61/26-017-Frontier-School-Corporation-Operating-Determination.pdf?language_id=1"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 36,
+    "newPlainLanguageExplanations": 36,
+    "localCompleteness": "36of39active school questions in current DLGF November2026table;3school identity proofs and2other local table questions remain open. One explicitly withdrawn referendum excluded. Not allIndiana local categories."
+  },
+  "validation": {
+    "state": "IN",
+    "newMeasures": 36,
+    "newExplanations": 36,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "currentNovemberInventoryAndWithdrawalCheck": "PASS",
+    "finalApprovedLanguageNotPreliminaryTemplates": "PASS",
+    "schoolInventoryScope": {
+      "allTableRows": 42,
+      "explicitlyWithdrawn": 1,
+      "activeSchoolQuestions": 39,
+      "preparedSchoolQuestions": 36,
+      "remainingSchoolIdentityProofs": [
+        {
+          "sourceIndex": 0,
+          "name": "Bartholomew Consolidated School Corporation",
+          "reason": "Existing division needs explicit official alias/territory proof; no name-only geography guess."
+        },
+        {
+          "sourceIndex": 25,
+          "name": "Indianapolis Public Education Corporation",
+          "reason": "Existing division needs explicit official alias/territory proof; no name-only geography guess."
+        },
+        {
+          "sourceIndex": 40,
+          "name": "Tri-Central Community Schools",
+          "reason": "Existing division needs explicit official alias/territory proof; no name-only geography guess."
+        }
+      ],
+      "otherLocalTableQuestions": [
+        "City of Lebanon controlled project",
+        "Town of Ellettsville / Richland Township reorganization"
+      ],
+      "allIndianaLocalCompleteness": "NOT_ASSERTED: DLGF table is a referendum-category inventory, not all possible local questions."
+    }
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

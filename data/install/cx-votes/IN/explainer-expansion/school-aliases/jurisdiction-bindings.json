@@ -1,0 +1,34 @@
+[
+  {
+    "contestId": "in-cx-2026-dlgf-0-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:bartholomew_county_school_corporation",
+      "unsd",
+      "1800360",
+      "Bartholomew County School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Bartholomew Consolidated School Corporation",
+    "sourceCounties": "Bartholomew County",
+    "matchingRule": "Official NCES districtID is the same7digit unified-school-district LEA/GEOID already in registry; current official district name resolves legacy Census label without widening geographic scope.",
+    "identitySourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1800360",
+    "identitySourceFile": "school-identity-support.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-40-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:tipton_county_northern_community_school_corporation",
+      "unsd",
+      "1808040",
+      "Tipton County Northern Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Tri-Central Community Schools",
+    "sourceCounties": "Tipton County",
+    "matchingRule": "Official NCES districtID is the same7digit unified-school-district LEA/GEOID already in registry; current official district name resolves legacy Census label without widening geographic scope.",
+    "identitySourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1808040",
+    "identitySourceFile": "school-identity-support.json"
+  }
+]

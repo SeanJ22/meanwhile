@@ -1,0 +1,61 @@
+[
+  {
+    "contestId": "in-cx-2026-dlgf-0-operating",
+    "sourceUrl": "https://www.in.gov/dA/f4c05288d5/26-013-Bartholomew-Consolidated-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "4bf86656d44bc9fe24012db3a261817e9d63c85e831278834c4afcfcf5969924",
+    "sourceFile": "sources/4bf86656d44bc9fe24012db3a261817e9d63c85e831278834c4afcfcf5969924.source",
+    "sourceTextFile": "sources/a14e64cb9b26ba4631c48c66645e6a1f1ccd30af56c67ea86a6a187a995d54fd.txt",
+    "excerpt": "Shall Bartholomew Consolidated School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining competitive compensation for teachers\nand staff and maintaining student safety by imposing a property tax rate that does\nnot exceed $0.156 and results in a maximum annual amount that does not exceed\n$10,100,000. If this operating referendum public question is NOT approved by\nthe voters, for a median residence of $250,000, the property’s annual tax bill\nwould decrease by $190 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.156.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Bartholomew Consolidated School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining competitive compensation for teachers\nand staff and maintaining student safety by imposing a property tax rate that does\nnot exceed $0.156 and results in a maximum annual amount that does not exceed\n$10,100,000. If this operating referendum public question is NOT approved by\nthe voters, for a median residence of $250,000, the property’s annual tax bill\nwould decrease by $190 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.156.",
+        "20 with a property tax rate of $0.156.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.156 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Bartholomew Consolidated School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining competitive compensation for teachers\nand staff and maintaining student safety by imposing a property tax rate that does\nnot exceed $0.156 and results in a maximum annual amount that does not exceed\n$10,100,000. If this operating referendum public question is NOT approved by\nthe voters, for a median residence of $250,000, the property’s annual tax bill\nwould decrease by $190 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.156."
+      ],
+      "noMeans": [
+        "Shall Bartholomew Consolidated School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining competitive compensation for teachers\nand staff and maintaining student safety by imposing a property tax rate that does\nnot exceed $0.156 and results in a maximum annual amount that does not exceed\n$10,100,000. If this operating referendum public question is NOT approved by\nthe voters, for a median residence of $250,000, the property’s annual tax bill\nwould decrease by $190 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.156."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 0,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-40-operating",
+    "sourceUrl": "https://www.in.gov/dA/546a4b0f39/26-011-Tri-Central-Community-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "aa5529934124ea01e82236c4e0f012e682f9a9881ca3af4b10954a3785da4e81",
+    "sourceFile": "sources/aa5529934124ea01e82236c4e0f012e682f9a9881ca3af4b10954a3785da4e81.source",
+    "sourceTextFile": "sources/14add50f56c3401ef44dc9e95b4743727a39ce9b5a85fde09f67b737948db906.txt",
+    "excerpt": "Shall Tri-Central Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including recruiting and retaining\nteachers and staff, supporting essential safety initiatives, and maintaining class\nsizes, academic programs and opportunities to meet the learning needs of all\nstudents in response to reductions in property tax revenue by imposing a property\ntax rate that does not exceed $0.24 and results in a maximum annual amount that\ndoes not exceed $1,100,000. If this operating referendum public question is\napproved by the voters, for a median residence of $150,000, the property's annual\nproperty tax bill would increase by $143 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Tri-Central Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including recruiting and retaining\nteachers and staff, supporting essential safety initiatives, and maintaining class\nsizes, academic programs and opportunities to meet the learning needs of all\nstudents in response to reductions in property tax revenue by imposing a property\ntax rate that does not exceed $0.24 and results in a maximum annual amount that\ndoes not exceed $1,100,000. If this operating referendum public question is\napproved by the voters, for a median residence of $150,000, the property's annual\nproperty tax bill would increase by $143 per year.",
+        "x bill would increase by $143 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.24 per $100 assessed valuation. Page 2 of 3 9. On June 1"
+      ],
+      "yesMeans": [
+        "Shall Tri-Central Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including recruiting and retaining\nteachers and staff, supporting essential safety initiatives, and maintaining class\nsizes, academic programs and opportunities to meet the learning needs of all\nstudents in response to reductions in property tax revenue by imposing a property\ntax rate that does not exceed $0.24 and results in a maximum annual amount that\ndoes not exceed $1,100,000. If this operating referendum public question is\napproved by the voters, for a median residence of $150,000, the property's annual\nproperty tax bill would increase by $143 per year."
+      ],
+      "noMeans": [
+        "Shall Tri-Central Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including recruiting and retaining\nteachers and staff, supporting essential safety initiatives, and maintaining class\nsizes, academic programs and opportunities to meet the learning needs of all\nstudents in response to reductions in property tax revenue by imposing a property\ntax rate that does not exceed $0.24 and results in a maximum annual amount that\ndoes not exceed $1,100,000. If this operating referendum public question is\napproved by the voters, for a median residence of $150,000, the property's annual\nproperty tax bill would increase by $143 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 40,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "ncesDistrictId": "1800360",
+    "officialName": "Bartholomew Con School Corp",
+    "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1800360",
+    "httpStatus": 200,
+    "rawHash": "a8469f56f3b1a8c76dc386de4a11c27966f2b5bd295c1707a038b73d6b86d54d",
+    "sourceFile": "sources/a8469f56f3b1a8c76dc386de4a11c27966f2b5bd295c1707a038b73d6b86d54d.nces.html",
+    "sourceTextFile": "sources/c68ddf15e34f81e0857ccd88b52b0198adddda23ca65cd00b89f41b11622f7e5.nces.txt",
+    "excerpt": "District Name: Bartholomew Con School Corp (Schools in this District) NCES District ID: 1800360 State District ID: IN-0365",
+    "sourceSchoolYear": "2024-2025",
+    "identityRule": "Official NCES districtID is the same7digit unified-school-district LEA/GEOID already in registry; current official district name resolves legacy Census label without widening geographic scope.",
+    "sourceCounty": "Bartholomew",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:bartholomew_county_school_corporation",
+      "unsd",
+      "1800360",
+      "Bartholomew County School Corporation"
+    ]
+  },
+  {
+    "ncesDistrictId": "1808040",
+    "officialName": "Tri-Central Community Schools",
+    "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1808040",
+    "httpStatus": 200,
+    "rawHash": "beb1fabe774fa741eab65229699a9fa95b33ab38d45113a594c3642855aff0bb",
+    "sourceFile": "sources/beb1fabe774fa741eab65229699a9fa95b33ab38d45113a594c3642855aff0bb.nces.html",
+    "sourceTextFile": "sources/12bfff983c76485b9f86a5e8b7e012efccbb18db0904f56f72cb16099e938dbf.nces.txt",
+    "excerpt": "District Name: Tri-Central Community Schools (Schools in this District) NCES District ID: 1808040 State District ID: IN-7935",
+    "sourceSchoolYear": "2024-2025",
+    "identityRule": "Official NCES districtID is the same7digit unified-school-district LEA/GEOID already in registry; current official district name resolves legacy Census label without widening geographic scope.",
+    "sourceCounty": "Tipton",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:tipton_county_northern_community_school_corporation",
+      "unsd",
+      "1808040",
+      "Tipton County Northern Community School Corporation"
+    ]
+  }
+]

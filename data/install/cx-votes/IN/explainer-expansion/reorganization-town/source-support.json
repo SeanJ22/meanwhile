@@ -1,0 +1,30 @@
+[
+  {
+    "contestId": "in-cx-2026-ellettsville-richland-reorganization-town-electorate",
+    "sourceUrl": "https://www.in.gov/dA/0b96473b63/26-043-Town-of-Ellettsville-Reorganization.pdf?language_id=1",
+    "rawHash": "3292069f0cd4a639723aed445b5ed17400b51b6a4e5e0137f5c838ca4d808481",
+    "sourceFile": "sources/3292069f0cd4a639723aed445b5ed17400b51b6a4e5e0137f5c838ca4d808481.source",
+    "sourceTextFile": "sources/c5c30e36d26676217f9b31889f963207d44e596c3b2bdf75f9a6f50df4a5d03b.txt",
+    "excerpt": "Richland Township of Monroe County, Indiana and the Town of Ellettsville of\nMonroe County, Indiana have each adopted a Plan of Reorganization that provides for\nthe consolidation of Richland Township into the Town of Ellettsville as a single\ngovernmental unit that will be governed and administered as a town with a seven (7)\nmember elected Town Council. Shall Richland Township and the Town of Ellettsville\nreorganize as a single political subdivision?",
+    "fields": {
+      "whatItDoes": [
+        "Richland Township of Monroe County, Indiana and the Town of Ellettsville of\nMonroe County, Indiana have each adopted a Plan of Reorganization that provides for\nthe consolidation of Richland Township into the Town of Ellettsville as a single\ngovernmental unit that will be governed and administered as a town with a seven (7)\nmember elected Town Council. Shall Richland Township and the Town of Ellettsville\nreorganize as a single political subdivision?"
+      ],
+      "yesMeans": [
+        "Richland Township of Monroe County, Indiana and the Town of Ellettsville of\nMonroe County, Indiana have each adopted a Plan of Reorganization that provides for\nthe consolidation of Richland Township into the Town of Ellettsville as a single\ngovernmental unit that will be governed and administered as a town with a seven (7)\nmember elected Town Council. Shall Richland Township and the Town of Ellettsville\nreorganize as a single political subdivision?"
+      ],
+      "noMeans": [
+        "Richland Township of Monroe County, Indiana and the Town of Ellettsville of\nMonroe County, Indiana have each adopted a Plan of Reorganization that provides for\nthe consolidation of Richland Township into the Town of Ellettsville as a single\ngovernmental unit that will be governed and administered as a town with a seven (7)\nmember elected Town Council. Shall Richland Township and the Town of Ellettsville\nreorganize as a single political subdivision?"
+      ]
+    },
+    "semanticConditions": [
+      "Exact union of wholeTownofEllettsville and wholeRichlandTownship, represented by existingdistrictMemberships. Source-defined electionalias, not Census ID.",
+      "Both source-qualified wholememberdivisions resolve to one alias and onequestion; no duplicateoverlapping contests and no countywide widening.",
+      "The question approves a proposedreorganization; no claim that an individualYESvotealone satisfiesallotherstatutory prerequisites.",
+      "No inferredtaxrate, servicechange, immediateeffective date or councilseattransition rules."
+    ],
+    "electorateEvidence": "1. The Town of Ellettsville and Richland Township, Monroe County, propose to reorganize.\n\n2. Under Indiana law, voters in the political subdivisions proposing to reorganize will vote in a\n   referendum to approve or deny the proposed reorganization.",
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

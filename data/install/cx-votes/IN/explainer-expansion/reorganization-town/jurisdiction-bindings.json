@@ -1,0 +1,28 @@
+[
+  {
+    "contestId": "in-cx-2026-ellettsville-richland-reorganization-town-electorate",
+    "sourceDefinedElectorate": {
+      "ocdId": "ocd-division/country:us/state:in/electoral_district:2026_ellettsville_richland_reorganization",
+      "kind": "SOURCE_DEFINED_ELECTION_ELECTORATE",
+      "sourceUrl": "https://www.in.gov/dA/0b96473b63/26-043-Town-of-Ellettsville-Reorganization.pdf?language_id=1",
+      "sourceCensusId": null
+    },
+    "memberRegistryDivisions": [
+      [
+        "ocd-division/country:us/state:in/county:monroe/place:richland_township",
+        "cousub",
+        "1810564152",
+        "Richland township"
+      ],
+      [
+        "ocd-division/country:us/state:in/place:ellettsville",
+        "place",
+        "1820800",
+        "Ellettsville town"
+      ]
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "matchingRule": "Official source names bothwhole politicalsubdivisions and theirvoters. ExistingdistrictMemberships joins exactTownandTownshiptoonecontest; no inventedCensusID or countywide boundary."
+  }
+]

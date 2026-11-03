@@ -1,0 +1,30 @@
+[
+  {
+    "contestId": "in-cx-2026-dlgf-25-operating",
+    "sourceUrl": "https://www.in.gov/dA/daea9cd76b/26-029-Indianapolis-Public-Education-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "344e1a55cf06a3a97eff180f233fe27017f4fc4c4065b0ceec879f8605725823",
+    "sourceFile": "sources/344e1a55cf06a3a97eff180f233fe27017f4fc4c4065b0ceec879f8605725823.source",
+    "sourceTextFile": "sources/6aff9cbc799e39496d89a7b52bef727ffff9667112c2bba5f86ca7e58e9264c7.txt",
+    "excerpt": "Shall the Indianapolis Public Education Corporation increase property taxes paid\nto the Indianapolis Public Schools (“IPS”) and participating charter schools for no\nmore than four (4) years for the purpose of funding teacher and staff retention,\nprofessional development, and advancing academic programs and opportunities\nby imposing a property tax rate that does not exceed $0.372 per $100 of assessed\nvalue and results in a maximum annual amount that does not exceed $95,000,000?\nIf this operating referendum public question is approved by the voters, for a\nmedian residence of $150,000, the property's annual property tax bill would\nincrease by $221 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Indianapolis Public Education Corporation increase property taxes paid\nto the Indianapolis Public Schools (“IPS”) and participating charter schools for no\nmore than four (4) years for the purpose of funding teacher and staff retention,\nprofessional development, and advancing academic programs and opportunities\nby imposing a property tax rate that does not exceed $0.372 per $100 of assessed\nvalue and results in a maximum annual amount that does not exceed $95,000,000?\nIf this operating referendum public question is approved by the voters, for a\nmedian residence of $150,000, the property's annual property tax bill would\nincrease by $221 per year."
+      ],
+      "yesMeans": [
+        "Shall the Indianapolis Public Education Corporation increase property taxes paid\nto the Indianapolis Public Schools (“IPS”) and participating charter schools for no\nmore than four (4) years for the purpose of funding teacher and staff retention,\nprofessional development, and advancing academic programs and opportunities\nby imposing a property tax rate that does not exceed $0.372 per $100 of assessed\nvalue and results in a maximum annual amount that does not exceed $95,000,000?\nIf this operating referendum public question is approved by the voters, for a\nmedian residence of $150,000, the property's annual property tax bill would\nincrease by $221 per year."
+      ],
+      "noMeans": [
+        "Shall the Indianapolis Public Education Corporation increase property taxes paid\nto the Indianapolis Public Schools (“IPS”) and participating charter schools for no\nmore than four (4) years for the purpose of funding teacher and staff retention,\nprofessional development, and advancing academic programs and opportunities\nby imposing a property tax rate that does not exceed $0.372 per $100 of assessed\nvalue and results in a maximum annual amount that does not exceed $95,000,000?\nIf this operating referendum public question is approved by the voters, for a\nmedian residence of $150,000, the property's annual property tax bill would\nincrease by $221 per year."
+      ]
+    },
+    "semanticConditions": [
+      "BenefitsIPSandparticipatingcharterschools, notIPS alone.",
+      "No more than4years, not8.",
+      "Capperassessedvalue and separateannuallevycap; conditionalmedianresidenceexample notuniformbill.",
+      "Finalapprovedquestion only. Preliminaryresolutionpurposewording notsubstituted."
+    ],
+    "identityEvidenceFile": "electorate-identity-support.json",
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

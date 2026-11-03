@@ -1,0 +1,1058 @@
+[
+  {
+    "contestId": "in-cx-2026-dlgf-2-operating",
+    "sourceUrl": "https://www.in.gov/dA/75534dae34/26-001-Zionsville-Community-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "9841b25f43fcc26563858231447045c1f03666793d1741d893b0cb90c0f4759b",
+    "sourceFile": "sources/9841b25f43fcc26563858231447045c1f03666793d1741d893b0cb90c0f4759b.source",
+    "sourceTextFile": "sources/6cb29b7de8ed7f2ac13c250b614b7e7b15128249e7dce5ab67cb8052fa0ba140.txt",
+    "excerpt": "Shall Zionsville Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nsustaining academic and educationally related programs and managing class sizes\nwhich reflect community standards by imposing a property tax rate that does not\nexceed 0.4128 and results in a maximum annual amount that does not exceed\n$21,463,325. If this operating referendum public question is approved by the voters,\nfor a median residence of $600,000.00, the property's annual property tax bill would\nincrease by $1,368.00 per year. The most recent property tax referendum proposed\nby the school corporation was held in 2019 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Zionsville Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nsustaining academic and educationally related programs and managing class sizes\nwhich reflect community standards by imposing a property tax rate that does not\nexceed 0.4128 and results in a maximum annual amount that does not exceed\n$21,463,325. If this operating referendum public question is approved by the voters,\nfor a median residence of $600,000.00, the property's annual property tax bill would\nincrease by $1,368.00 per year. The most recent property tax referendum proposed\nby the school corporation was held in 2019 and passed.",
+        "poration was held in 2019 and passed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.4128 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Zionsville Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nsustaining academic and educationally related programs and managing class sizes\nwhich reflect community standards by imposing a property tax rate that does not\nexceed 0.4128 and results in a maximum annual amount that does not exceed\n$21,463,325. If this operating referendum public question is approved by the voters,\nfor a median residence of $600,000.00, the property's annual property tax bill would\nincrease by $1,368.00 per year. The most recent property tax referendum proposed\nby the school corporation was held in 2019 and passed."
+      ],
+      "noMeans": [
+        "Shall Zionsville Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nsustaining academic and educationally related programs and managing class sizes\nwhich reflect community standards by imposing a property tax rate that does not\nexceed 0.4128 and results in a maximum annual amount that does not exceed\n$21,463,325. If this operating referendum public question is approved by the voters,\nfor a median residence of $600,000.00, the property's annual property tax bill would\nincrease by $1,368.00 per year. The most recent property tax referendum proposed\nby the school corporation was held in 2019 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 10th\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 2,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-3-operating",
+    "sourceUrl": "https://www.in.gov/dA/77bc7493a0/26-024-Metropolitan-School-District-of-Shakamak-Operating-Determination.pdf?language_id=1",
+    "rawHash": "a9a4c142ef92457478a4c58f8ef3bb04c22cd46287b93d38ab6eb088f285c739",
+    "sourceFile": "sources/a9a4c142ef92457478a4c58f8ef3bb04c22cd46287b93d38ab6eb088f285c739.source",
+    "sourceTextFile": "sources/51f49286998440618862768849dfeaec06f224c210da9750d80e0f34b3e05149.txt",
+    "excerpt": "Shall the Metropolitan School District of Shakamak increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding and maintaining daily educational operations, including recruiting and\nretaining teachers and staff, supporting essential safety initiatives, maintaining\nclass sizes, and funding academic programs and opportunities to meet the learning\nneeds of all students, in response to reductions in property tax revenue, by\nimposing a property tax rate that does not exceed $0.25 and results in a maximum\nannual amount that does not exceed $499,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $100,000, the\nproperty's annual property tax bill would increase by $81 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Metropolitan School District of Shakamak increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding and maintaining daily educational operations, including recruiting and\nretaining teachers and staff, supporting essential safety initiatives, maintaining\nclass sizes, and funding academic programs and opportunities to meet the learning\nneeds of all students, in response to reductions in property tax revenue, by\nimposing a property tax rate that does not exceed $0.25 and results in a maximum\nannual amount that does not exceed $499,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $100,000, the\nproperty's annual property tax bill would increase by $81 per year.",
+        "ax bill would increase by $81 per year.\" 9. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.25 per $100 assessed valuation. Page 2 of 3 10. On June "
+      ],
+      "yesMeans": [
+        "Shall the Metropolitan School District of Shakamak increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding and maintaining daily educational operations, including recruiting and\nretaining teachers and staff, supporting essential safety initiatives, maintaining\nclass sizes, and funding academic programs and opportunities to meet the learning\nneeds of all students, in response to reductions in property tax revenue, by\nimposing a property tax rate that does not exceed $0.25 and results in a maximum\nannual amount that does not exceed $499,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $100,000, the\nproperty's annual property tax bill would increase by $81 per year."
+      ],
+      "noMeans": [
+        "Shall the Metropolitan School District of Shakamak increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding and maintaining daily educational operations, including recruiting and\nretaining teachers and staff, supporting essential safety initiatives, maintaining\nclass sizes, and funding academic programs and opportunities to meet the learning\nneeds of all students, in response to reductions in property tax revenue, by\nimposing a property tax rate that does not exceed $0.25 and results in a maximum\nannual amount that does not exceed $499,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $100,000, the\nproperty's annual property tax bill would increase by $81 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 29th\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 3,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-4-operating",
+    "sourceUrl": "https://www.in.gov/dA/bad64478d9/26-016-Barr-Reeve-Community-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "edeac9f52c41f2adb99699473e3a59341818520ed5d5ebbf962555397684ca37",
+    "sourceFile": "sources/edeac9f52c41f2adb99699473e3a59341818520ed5d5ebbf962555397684ca37.source",
+    "sourceTextFile": "sources/5043b0debbd49abe01a08d98422759e5109b12aec8e943b04f5d034dcf178d29.txt",
+    "excerpt": "Shall Barr-Reeve Community Schools, Inc. increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nmaintaining small class sizes, athletics and extra-curricular programs, elementary\nmusic and physical education programs and school safety and mental health\nresources in response to decreases in property tax revenue by imposing a property\ntax rate that does not exceed $0.40 and results in a maximum annual amount that\ndoes not exceed $2,200,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000, the property's annual\nproperty tax bill would increase by $454 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Barr-Reeve Community Schools, Inc. increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nmaintaining small class sizes, athletics and extra-curricular programs, elementary\nmusic and physical education programs and school safety and mental health\nresources in response to decreases in property tax revenue by imposing a property\ntax rate that does not exceed $0.40 and results in a maximum annual amount that\ndoes not exceed $2,200,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000, the property's annual\nproperty tax bill would increase by $454 per year.",
+        "x bill would increase by $454 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.40 per $100 assessed valuation. 9. On June 17, 2026, the"
+      ],
+      "yesMeans": [
+        "Shall Barr-Reeve Community Schools, Inc. increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nmaintaining small class sizes, athletics and extra-curricular programs, elementary\nmusic and physical education programs and school safety and mental health\nresources in response to decreases in property tax revenue by imposing a property\ntax rate that does not exceed $0.40 and results in a maximum annual amount that\ndoes not exceed $2,200,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000, the property's annual\nproperty tax bill would increase by $454 per year."
+      ],
+      "noMeans": [
+        "Shall Barr-Reeve Community Schools, Inc. increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nmaintaining small class sizes, athletics and extra-curricular programs, elementary\nmusic and physical education programs and school safety and mental health\nresources in response to decreases in property tax revenue by imposing a property\ntax rate that does not exceed $0.40 and results in a maximum annual amount that\ndoes not exceed $2,200,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000, the property's annual\nproperty tax bill would increase by $454 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 4,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-5-operating",
+    "sourceUrl": "https://www.in.gov/dA/8339ad0856/26-008-Southeast-Dubois-County-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "ac1a8669cc5e5c48bd8ba7c8b3fb8f9be6bb172132129d5c560f7bbb544403f8",
+    "sourceFile": "sources/ac1a8669cc5e5c48bd8ba7c8b3fb8f9be6bb172132129d5c560f7bbb544403f8.source",
+    "sourceTextFile": "sources/93f364cd755c73b67b9e56e0621091b24d1a78228847c5bf276d7b74593a5f21.txt",
+    "excerpt": "Shall Southeast Dubois County School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding and maintaining academic and educationally-related programs and\nopportunities to meet the learning needs of all students, student health and safety\ninitiatives, maintaining class sizes and recruiting and retaining teachers and staff in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.19 and results in a maximum annual amount that does not\nexceed $1,242,788. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $200,000, the property's annual tax bill\nwould decrease by $164 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.19.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Southeast Dubois County School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding and maintaining academic and educationally-related programs and\nopportunities to meet the learning needs of all students, student health and safety\ninitiatives, maintaining class sizes and recruiting and retaining teachers and staff in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.19 and results in a maximum annual amount that does not\nexceed $1,242,788. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $200,000, the property's annual tax bill\nwould decrease by $164 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.19.",
+        "ion passed in 2020 with a property tax rate of $0.19.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is $0.19 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Southeast Dubois County School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding and maintaining academic and educationally-related programs and\nopportunities to meet the learning needs of all students, student health and safety\ninitiatives, maintaining class sizes and recruiting and retaining teachers and staff in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.19 and results in a maximum annual amount that does not\nexceed $1,242,788. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $200,000, the property's annual tax bill\nwould decrease by $164 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.19."
+      ],
+      "noMeans": [
+        "Shall Southeast Dubois County School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding and maintaining academic and educationally-related programs and\nopportunities to meet the learning needs of all students, student health and safety\ninitiatives, maintaining class sizes and recruiting and retaining teachers and staff in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.19 and results in a maximum annual amount that does not\nexceed $1,242,788. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $200,000, the property's annual tax bill\nwould decrease by $164 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.19."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10.1 and approves the language as\nproposed.\n\n           5th day of June, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 5,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-6-safety",
+    "sourceUrl": "https://www.in.gov/dA/845ceb15b9/26-026-Wa-Nee-Community-Schools-Safety-Determination.pdf?language_id=1",
+    "rawHash": "347784b0dfac51b8bd678fdbe86a21400b4465f3c180a4390523689aa2aadfb0",
+    "sourceFile": "sources/347784b0dfac51b8bd678fdbe86a21400b4465f3c180a4390523689aa2aadfb0.source",
+    "sourceTextFile": "sources/60aa1714027fd0e0ebe9aaa937d3cb401ea6d2cf210fcffbbaeb26f5ba51d082.txt",
+    "excerpt": "Shall the Wa-Nee Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding improvements for the safety, security, and well-being of Wa-Nee students\nby imposing a property tax rate that does not exceed $0.10 and results in a\nmaximum annual amount that does not exceed $1,750,000. If this school safety\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property’s annual property tax bill would increase by $114 per\nyear.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Wa-Nee Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding improvements for the safety, security, and well-being of Wa-Nee students\nby imposing a property tax rate that does not exceed $0.10 and results in a\nmaximum annual amount that does not exceed $1,750,000. If this school safety\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property’s annual property tax bill would increase by $114 per\nyear.",
+        "Wa-Nee Community School Corporation (“Corporation”) proposes to place a referendum under IC 20-46-9-9 on the ballot for the purpose of establishing a school safety referendum tax levy with a tax rate not to exceed $0.10 per one hundred dollars ($100) of assessed value."
+      ],
+      "yesMeans": [
+        "Shall the Wa-Nee Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding improvements for the safety, security, and well-being of Wa-Nee students\nby imposing a property tax rate that does not exceed $0.10 and results in a\nmaximum annual amount that does not exceed $1,750,000. If this school safety\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property’s annual property tax bill would increase by $114 per\nyear."
+      ],
+      "noMeans": [
+        "Shall the Wa-Nee Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nfunding improvements for the safety, security, and well-being of Wa-Nee students\nby imposing a property tax rate that does not exceed $0.10 and results in a\nmaximum annual amount that does not exceed $1,750,000. If this school safety\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property’s annual property tax bill would increase by $114 per\nyear."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-9-9 and approves the language as proposed.\n\n            8th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 6,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Final approved cap is$0.10 after counsel reduced preliminary$0.1017; preliminary rate is not used."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-7-operating",
+    "sourceUrl": "https://www.in.gov/dA/6ee480b1d6/26-022-Mississinewa-Community-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "85db6d9e493d99687fd778d98e9889a3084730f94a0805b205a4a6f4eb9887d8",
+    "sourceFile": "sources/85db6d9e493d99687fd778d98e9889a3084730f94a0805b205a4a6f4eb9887d8.source",
+    "sourceTextFile": "sources/2f3f214dec943141084cf6057ba947b7a7f5665089cc0007935111c09b57ed9c.txt",
+    "excerpt": "Shall the Mississinewa Community School Corporation increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding the Putting Our Kids First Initiative, funding investments in student\ntransportation, school security upgrades, and the competitive compensation\nneeded to recruit and retain teachers and staff, by imposing a property tax rate that\ndoes not exceed $0.4950 per $100 of assessed value and results in a maximum\nannual amount that does not exceed $2,000,000? If this operating referendum\npublic question is approved by the voters, for a median residence of $150,000, the\nproperty’s annual property tax bill would increase by $294 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Mississinewa Community School Corporation increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding the Putting Our Kids First Initiative, funding investments in student\ntransportation, school security upgrades, and the competitive compensation\nneeded to recruit and retain teachers and staff, by imposing a property tax rate that\ndoes not exceed $0.4950 per $100 of assessed value and results in a maximum\nannual amount that does not exceed $2,000,000? If this operating referendum\npublic question is approved by the voters, for a median residence of $150,000, the\nproperty’s annual property tax bill would increase by $294 per year.",
+        "rades, and the competitive compensation needed to recruit and retain teachers and staff, by imposing a property tax rate that does not exceed $0.4950 per $100 of assessed value and results in a maximum a"
+      ],
+      "yesMeans": [
+        "Shall the Mississinewa Community School Corporation increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding the Putting Our Kids First Initiative, funding investments in student\ntransportation, school security upgrades, and the competitive compensation\nneeded to recruit and retain teachers and staff, by imposing a property tax rate that\ndoes not exceed $0.4950 per $100 of assessed value and results in a maximum\nannual amount that does not exceed $2,000,000? If this operating referendum\npublic question is approved by the voters, for a median residence of $150,000, the\nproperty’s annual property tax bill would increase by $294 per year."
+      ],
+      "noMeans": [
+        "Shall the Mississinewa Community School Corporation increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding the Putting Our Kids First Initiative, funding investments in student\ntransportation, school security upgrades, and the competitive compensation\nneeded to recruit and retain teachers and staff, by imposing a property tax rate that\ndoes not exceed $0.4950 per $100 of assessed value and results in a maximum\nannual amount that does not exceed $2,000,000? If this operating referendum\npublic question is approved by the voters, for a median residence of $150,000, the\nproperty’s annual property tax bill would increase by $294 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n           2nd day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 7,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-8-operating",
+    "sourceUrl": "https://www.in.gov/dA/8afa64d296/26-009-Oak-Hill-United-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "2fcb4a8888f470921fb9832847afc4f00b63567f8c30cbd8ae08d0131f053f2d",
+    "sourceFile": "sources/2fcb4a8888f470921fb9832847afc4f00b63567f8c30cbd8ae08d0131f053f2d.source",
+    "sourceTextFile": "sources/d2d7056d8ad94aae866d211947864d01d345300fa756f360d794f484b93125d8.txt",
+    "excerpt": "Shall Oak Hill United School Corporation increase property taxes paid to the\nSchool Corporation for no more than eight (8) years for the purpose of funding\nand sustaining educational and operational stability in response to reductions in\nproperty tax revenue, including maintaining essential health and safety initiatives\nincluding the employment and retention of school resource officers and nurses,\nsupporting, attracting and retaining teachers and staff, maintaining class sizes and\nstudent transportation, and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.3332 and results in a maximum annual amount that does not exceed\n$1,627,112? If this operating referendum public question is approved by the\nvoters, for a median residence of $150,000, the property's annual property tax bill\nwould increase by $198 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Oak Hill United School Corporation increase property taxes paid to the\nSchool Corporation for no more than eight (8) years for the purpose of funding\nand sustaining educational and operational stability in response to reductions in\nproperty tax revenue, including maintaining essential health and safety initiatives\nincluding the employment and retention of school resource officers and nurses,\nsupporting, attracting and retaining teachers and staff, maintaining class sizes and\nstudent transportation, and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.3332 and results in a maximum annual amount that does not exceed\n$1,627,112? If this operating referendum public question is approved by the\nvoters, for a median residence of $150,000, the property's annual property tax bill\nwould increase by $198 per year.",
+        "bill would increase by $198 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.3332 per $100 assessed valuation. 9. On June 30, 2026, the"
+      ],
+      "yesMeans": [
+        "Shall Oak Hill United School Corporation increase property taxes paid to the\nSchool Corporation for no more than eight (8) years for the purpose of funding\nand sustaining educational and operational stability in response to reductions in\nproperty tax revenue, including maintaining essential health and safety initiatives\nincluding the employment and retention of school resource officers and nurses,\nsupporting, attracting and retaining teachers and staff, maintaining class sizes and\nstudent transportation, and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.3332 and results in a maximum annual amount that does not exceed\n$1,627,112? If this operating referendum public question is approved by the\nvoters, for a median residence of $150,000, the property's annual property tax bill\nwould increase by $198 per year."
+      ],
+      "noMeans": [
+        "Shall Oak Hill United School Corporation increase property taxes paid to the\nSchool Corporation for no more than eight (8) years for the purpose of funding\nand sustaining educational and operational stability in response to reductions in\nproperty tax revenue, including maintaining essential health and safety initiatives\nincluding the employment and retention of school resource officers and nurses,\nsupporting, attracting and retaining teachers and staff, maintaining class sizes and\nstudent transportation, and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.3332 and results in a maximum annual amount that does not exceed\n$1,627,112? If this operating referendum public question is approved by the\nvoters, for a median residence of $150,000, the property's annual property tax bill\nwould increase by $198 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           30th day of June, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 8,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-9-operating",
+    "sourceUrl": "https://www.in.gov/dA/4a67e97bca/26-030-Carmel-Clay-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "936e17c83544b01a04e619219cff5acef1cfcd7a50af4d509ead73e08ec1ef30",
+    "sourceFile": "sources/936e17c83544b01a04e619219cff5acef1cfcd7a50af4d509ead73e08ec1ef30.source",
+    "sourceTextFile": "sources/1e494f4e5842872ad760aa1afb1f7d56dec920b596641b64c0a4f806391470ee.txt",
+    "excerpt": "Shall Carmel Clay Schools increase property taxes paid to the School Corporation\nfor no more than eight (8) years for the purpose of funding and sustaining\neducational and operational stability in response to reductions in property tax\nrevenue by repealing and replacing its existing referendums, including supporting\nstudent safety, health, and well-being, including the employment and retention of\nschool resource officers; supporting and retaining teachers and staff; and funding\nacademic and support programs to meet the educational needs of all students, by\nimposing a property tax rate that does not exceed $0.4274 and results in a maximum\nannual amount that does not exceed $61,981,519? If this operating referendum\npublic question is approved by the voters, for a median residence of $500,000, the\nproperty's annual property tax bill would increase by $1,062 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Carmel Clay Schools increase property taxes paid to the School Corporation\nfor no more than eight (8) years for the purpose of funding and sustaining\neducational and operational stability in response to reductions in property tax\nrevenue by repealing and replacing its existing referendums, including supporting\nstudent safety, health, and well-being, including the employment and retention of\nschool resource officers; supporting and retaining teachers and staff; and funding\nacademic and support programs to meet the educational needs of all students, by\nimposing a property tax rate that does not exceed $0.4274 and results in a maximum\nannual amount that does not exceed $61,981,519? If this operating referendum\npublic question is approved by the voters, for a median residence of $500,000, the\nproperty's annual property tax bill would increase by $1,062 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed.",
+        "poration was held in 2023 and passed.” 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.4274 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Carmel Clay Schools increase property taxes paid to the School Corporation\nfor no more than eight (8) years for the purpose of funding and sustaining\neducational and operational stability in response to reductions in property tax\nrevenue by repealing and replacing its existing referendums, including supporting\nstudent safety, health, and well-being, including the employment and retention of\nschool resource officers; supporting and retaining teachers and staff; and funding\nacademic and support programs to meet the educational needs of all students, by\nimposing a property tax rate that does not exceed $0.4274 and results in a maximum\nannual amount that does not exceed $61,981,519? If this operating referendum\npublic question is approved by the voters, for a median residence of $500,000, the\nproperty's annual property tax bill would increase by $1,062 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed."
+      ],
+      "noMeans": [
+        "Shall Carmel Clay Schools increase property taxes paid to the School Corporation\nfor no more than eight (8) years for the purpose of funding and sustaining\neducational and operational stability in response to reductions in property tax\nrevenue by repealing and replacing its existing referendums, including supporting\nstudent safety, health, and well-being, including the employment and retention of\nschool resource officers; supporting and retaining teachers and staff; and funding\nacademic and support programs to meet the educational needs of all students, by\nimposing a property tax rate that does not exceed $0.4274 and results in a maximum\nannual amount that does not exceed $61,981,519? If this operating referendum\npublic question is approved by the voters, for a median residence of $500,000, the\nproperty's annual property tax bill would increase by $1,062 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           7th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 9,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Existing levy repeal/replacement is preserved; not represented as an extra levy stacked on the existing one."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-10-operating",
+    "sourceUrl": "https://www.in.gov/dA/bf9fdd6b58/26-032-A-Hamilton-Southeastern-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "d5a1807faa9c959d64f50bbbb075d7725f90423d5298c09b1d0f5661c4bf5d13",
+    "sourceFile": "sources/d5a1807faa9c959d64f50bbbb075d7725f90423d5298c09b1d0f5661c4bf5d13.source",
+    "sourceTextFile": "sources/cb330ff896585cfb3ea625d7b935ce04f774cc479b3d9db63b847601d63dae4a.txt",
+    "excerpt": "Shall the Hamilton Southeastern Schools increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding the\nHSE Referendum Program by (1) repealing the existing referendum fund tax levy\nextended in 2023, and (2) replacing the existing referendum fund tax levy with a\nnew referendum fund tax levy which will provide funding for (a) the salary and\nbenefits of approximately 275 staff members, (b) the behavioral health contract\nthat supports therapists in our school buildings with essential mental health\nsupport during the school day, (c) the shared salaries and benefits of school\nresource officers, (d) the salary and benefits of the Director of School Safety, (e)\nthe salaries and benefits of traffic control and after school event security, and (f)\nthe purchase of safety and security supplies and equipment by imposing a\nproperty tax rate that does not exceed $0.3600 and results in a maximum annual\namount that does not exceed $47,500,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $400,000, the\nproperty's annual property tax bill would increase by $700 per year. The most\nPage 2 of 3\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Hamilton Southeastern Schools increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding the\nHSE Referendum Program by (1) repealing the existing referendum fund tax levy\nextended in 2023, and (2) replacing the existing referendum fund tax levy with a\nnew referendum fund tax levy which will provide funding for (a) the salary and\nbenefits of approximately 275 staff members, (b) the behavioral health contract\nthat supports therapists in our school buildings with essential mental health\nsupport during the school day, (c) the shared salaries and benefits of school\nresource officers, (d) the salary and benefits of the Director of School Safety, (e)\nthe salaries and benefits of traffic control and after school event security, and (f)\nthe purchase of safety and security supplies and equipment by imposing a\nproperty tax rate that does not exceed $0.3600 and results in a maximum annual\namount that does not exceed $47,500,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $400,000, the\nproperty's annual property tax bill would increase by $700 per year. The most\nPage 2 of 3\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed.",
+        "orporation was held in 2023 and passed.\" 9. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.36 per $100 assessed valuation. 10. The Corporation prev"
+      ],
+      "yesMeans": [
+        "Shall the Hamilton Southeastern Schools increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding the\nHSE Referendum Program by (1) repealing the existing referendum fund tax levy\nextended in 2023, and (2) replacing the existing referendum fund tax levy with a\nnew referendum fund tax levy which will provide funding for (a) the salary and\nbenefits of approximately 275 staff members, (b) the behavioral health contract\nthat supports therapists in our school buildings with essential mental health\nsupport during the school day, (c) the shared salaries and benefits of school\nresource officers, (d) the salary and benefits of the Director of School Safety, (e)\nthe salaries and benefits of traffic control and after school event security, and (f)\nthe purchase of safety and security supplies and equipment by imposing a\nproperty tax rate that does not exceed $0.3600 and results in a maximum annual\namount that does not exceed $47,500,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $400,000, the\nproperty's annual property tax bill would increase by $700 per year. The most\nPage 2 of 3\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed."
+      ],
+      "noMeans": [
+        "Shall the Hamilton Southeastern Schools increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding the\nHSE Referendum Program by (1) repealing the existing referendum fund tax levy\nextended in 2023, and (2) replacing the existing referendum fund tax levy with a\nnew referendum fund tax levy which will provide funding for (a) the salary and\nbenefits of approximately 275 staff members, (b) the behavioral health contract\nthat supports therapists in our school buildings with essential mental health\nsupport during the school day, (c) the shared salaries and benefits of school\nresource officers, (d) the salary and benefits of the Director of School Safety, (e)\nthe salaries and benefits of traffic control and after school event security, and (f)\nthe purchase of safety and security supplies and equipment by imposing a\nproperty tax rate that does not exceed $0.3600 and results in a maximum annual\namount that does not exceed $47,500,000. If this operating referendum public\nquestion is approved by the voters, for a median residence of $400,000, the\nproperty's annual property tax bill would increase by $700 per year. The most\nPage 2 of 3\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 23rd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n_________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 10,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Existing levy repeal/replacement is preserved; not represented as an extra levy stacked on the existing one."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-11-operating",
+    "sourceUrl": "https://www.in.gov/dA/3cca8236f5/26-015-Noblesville-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "7bc5bb5c9392fd41cb2e16497832df92352c7bbabef70d272bb39db2766f1b67",
+    "sourceFile": "sources/7bc5bb5c9392fd41cb2e16497832df92352c7bbabef70d272bb39db2766f1b67.source",
+    "sourceTextFile": "sources/84bff96782e446ea19b4a11bc43db03bc82c47f6017ca7befe24a557f05eddd1.txt",
+    "excerpt": "Shall Noblesville Schools increase property taxes paid to the school corporation\nfor no more than eight (8) years for the purpose of funding safety and security\nmeasures in all buildings and maintaining and enhancing academic and\neducationally-related programs in response to reductions in property tax revenue\nby imposing a property tax rate that does not exceed $0.57 and results in a\nmaximum annual amount that does not exceed $43,842,578. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$350,000, the property's annual property tax bill would increase by $955 per\nyear.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Noblesville Schools increase property taxes paid to the school corporation\nfor no more than eight (8) years for the purpose of funding safety and security\nmeasures in all buildings and maintaining and enhancing academic and\neducationally-related programs in response to reductions in property tax revenue\nby imposing a property tax rate that does not exceed $0.57 and results in a\nmaximum annual amount that does not exceed $43,842,578. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$350,000, the property's annual property tax bill would increase by $955 per\nyear.",
+        "x bill would increase by $955 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.57 per $100 assessed valuation. 9. On June 10, 2026, the"
+      ],
+      "yesMeans": [
+        "Shall Noblesville Schools increase property taxes paid to the school corporation\nfor no more than eight (8) years for the purpose of funding safety and security\nmeasures in all buildings and maintaining and enhancing academic and\neducationally-related programs in response to reductions in property tax revenue\nby imposing a property tax rate that does not exceed $0.57 and results in a\nmaximum annual amount that does not exceed $43,842,578. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$350,000, the property's annual property tax bill would increase by $955 per\nyear."
+      ],
+      "noMeans": [
+        "Shall Noblesville Schools increase property taxes paid to the school corporation\nfor no more than eight (8) years for the purpose of funding safety and security\nmeasures in all buildings and maintaining and enhancing academic and\neducationally-related programs in response to reductions in property tax revenue\nby imposing a property tax rate that does not exceed $0.57 and results in a\nmaximum annual amount that does not exceed $43,842,578. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$350,000, the property's annual property tax bill would increase by $955 per\nyear."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 11,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-12-operating",
+    "sourceUrl": "https://www.in.gov/dA/c2c0bcdc58/26-003-Sheridan-Community-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "79dfa6a13f5dc4efe8a2de27abcd6fcdc348c0c8a22e733bc37d740b9f86321d",
+    "sourceFile": "sources/79dfa6a13f5dc4efe8a2de27abcd6fcdc348c0c8a22e733bc37d740b9f86321d.source",
+    "sourceTextFile": "sources/2dd7b572f1abf024062e07dee1287ab56ca9eeb000aefcf2734c26e3829d49f1.txt",
+    "excerpt": "Shall Sheridan Community School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, including the retention and attraction of teachers and staff,\nacademic related programs and operational expenses by imposing a property tax\nrate that does not exceed $0.40 and results in a maximum annual amount that does\nnot exceed $2,900,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $250,000, the property's annual property tax\nbill would increase by $454 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in 2023 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Sheridan Community School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, including the retention and attraction of teachers and staff,\nacademic related programs and operational expenses by imposing a property tax\nrate that does not exceed $0.40 and results in a maximum annual amount that does\nnot exceed $2,900,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $250,000, the property's annual property tax\nbill would increase by $454 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in 2023 and passed.",
+        "orporation was held in 2023 and passed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.40 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Sheridan Community School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, including the retention and attraction of teachers and staff,\nacademic related programs and operational expenses by imposing a property tax\nrate that does not exceed $0.40 and results in a maximum annual amount that does\nnot exceed $2,900,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $250,000, the property's annual property tax\nbill would increase by $454 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in 2023 and passed."
+      ],
+      "noMeans": [
+        "Shall Sheridan Community School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, including the retention and attraction of teachers and staff,\nacademic related programs and operational expenses by imposing a property tax\nrate that does not exceed $0.40 and results in a maximum annual amount that does\nnot exceed $2,900,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $250,000, the property's annual property tax\nbill would increase by $454 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in 2023 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 10th\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 12,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-13-operating",
+    "sourceUrl": "https://www.in.gov/dA/a3f2fc18e6/26-007-Westfield-Washington-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "23b6a3a5f99fec3f834f64e9d822758341005391ffe87c1a92f8a1e4d2614978",
+    "sourceFile": "sources/23b6a3a5f99fec3f834f64e9d822758341005391ffe87c1a92f8a1e4d2614978.source",
+    "sourceTextFile": "sources/83a82b42e3f4e7f5ac21ed2975b08b3c3bcddef7b041cb5f5c037ab5af06b55e.txt",
+    "excerpt": "Shall Westfield Washington Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding educational\nand operational expenses due to reductions in property tax revenue through the\nExcellent Schools → Excellent Community initiative including student safety by\nthe addition of School Resource Officers in each school; maintaining small class\nsizes; advancing student health and well-being by adding school counselors, social\nworkers, and mental health supports; advancing academic and essential programs\nto meet the educational needs of all students; and supporting and retaining teachers\nand staff by imposing a property tax rate that does not exceed $0.3941 and results\nin a maximum annual amount that does not exceed $38,000,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$450,000 the property's annual property tax bill would increase by $873 per\nyear. The most recent operating referendum public question proposed by the school\ncorporation was held in 2022 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Westfield Washington Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding educational\nand operational expenses due to reductions in property tax revenue through the\nExcellent Schools → Excellent Community initiative including student safety by\nthe addition of School Resource Officers in each school; maintaining small class\nsizes; advancing student health and well-being by adding school counselors, social\nworkers, and mental health supports; advancing academic and essential programs\nto meet the educational needs of all students; and supporting and retaining teachers\nand staff by imposing a property tax rate that does not exceed $0.3941 and results\nin a maximum annual amount that does not exceed $38,000,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$450,000 the property's annual property tax bill would increase by $873 per\nyear. The most recent operating referendum public question proposed by the school\ncorporation was held in 2022 and passed.",
+        "poration was held in 2022 and passed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.3941 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Westfield Washington Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding educational\nand operational expenses due to reductions in property tax revenue through the\nExcellent Schools → Excellent Community initiative including student safety by\nthe addition of School Resource Officers in each school; maintaining small class\nsizes; advancing student health and well-being by adding school counselors, social\nworkers, and mental health supports; advancing academic and essential programs\nto meet the educational needs of all students; and supporting and retaining teachers\nand staff by imposing a property tax rate that does not exceed $0.3941 and results\nin a maximum annual amount that does not exceed $38,000,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$450,000 the property's annual property tax bill would increase by $873 per\nyear. The most recent operating referendum public question proposed by the school\ncorporation was held in 2022 and passed."
+      ],
+      "noMeans": [
+        "Shall Westfield Washington Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding educational\nand operational expenses due to reductions in property tax revenue through the\nExcellent Schools → Excellent Community initiative including student safety by\nthe addition of School Resource Officers in each school; maintaining small class\nsizes; advancing student health and well-being by adding school counselors, social\nworkers, and mental health supports; advancing academic and essential programs\nto meet the educational needs of all students; and supporting and retaining teachers\nand staff by imposing a property tax rate that does not exceed $0.3941 and results\nin a maximum annual amount that does not exceed $38,000,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$450,000 the property's annual property tax bill would increase by $873 per\nyear. The most recent operating referendum public question proposed by the school\ncorporation was held in 2022 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this _12_ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 13,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-14-operating",
+    "sourceUrl": "https://www.in.gov/dA/2edf588139/26-010-Clark-Pleasant-Community-Schools-Operating-Extension-Determination.pdf?language_id=1",
+    "rawHash": "5957afd29735696c1ac4b8c318f26170668a5603634983c4157fb0956883d400",
+    "sourceFile": "sources/5957afd29735696c1ac4b8c318f26170668a5603634983c4157fb0956883d400.source",
+    "sourceTextFile": "sources/8f72e83c66e74df8e6e8322c6eecef4614cce8c073cee59e4a91bf16e52a2a16.txt",
+    "excerpt": "Shall Clark-Pleasant Community School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining school safety initiatives, including the\nClark-Pleasant police department, student support services and programming in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.09 and results in a maximum annual amount that does not\nexceed $4,400,000. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $300,000, the property's annual property\ntax bill would decrease by $127 per year. If this operating referendum public\nquestion is approved by the voters, it would be a renewal of the most recent\noperating referendum public question passed in 2018 with a property tax rate of\n$0.10.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Clark-Pleasant Community School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining school safety initiatives, including the\nClark-Pleasant police department, student support services and programming in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.09 and results in a maximum annual amount that does not\nexceed $4,400,000. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $300,000, the property's annual property\ntax bill would decrease by $127 per year. If this operating referendum public\nquestion is approved by the voters, it would be a renewal of the most recent\noperating referendum public question passed in 2018 with a property tax rate of\n$0.10.",
+        "2018 with a property tax rate of $0.10.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.09 per $100 assessed valuation. Page 2 of 3 9. The Corpo"
+      ],
+      "yesMeans": [
+        "Shall Clark-Pleasant Community School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining school safety initiatives, including the\nClark-Pleasant police department, student support services and programming in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.09 and results in a maximum annual amount that does not\nexceed $4,400,000. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $300,000, the property's annual property\ntax bill would decrease by $127 per year. If this operating referendum public\nquestion is approved by the voters, it would be a renewal of the most recent\noperating referendum public question passed in 2018 with a property tax rate of\n$0.10."
+      ],
+      "noMeans": [
+        "Shall Clark-Pleasant Community School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining school safety initiatives, including the\nClark-Pleasant police department, student support services and programming in\nresponse to reductions in property tax revenue by imposing a property tax rate that\ndoes not exceed $0.09 and results in a maximum annual amount that does not\nexceed $4,400,000. If this operating referendum public question is NOT approved\nby the voters, for a median residence of $300,000, the property's annual property\ntax bill would decrease by $127 per year. If this operating referendum public\nquestion is approved by the voters, it would be a renewal of the most recent\noperating referendum public question passed in 2018 with a property tax rate of\n$0.10."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10.1 and approves the language as\nproposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 14,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-15-operating",
+    "sourceUrl": "https://www.in.gov/dA/52abfc54bd/26-037-Franklin-Community-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "345c0b922488edfb495ba9d8a448ad9677cd1eda55a36eb582ea72a6554e5af7",
+    "sourceFile": "sources/345c0b922488edfb495ba9d8a448ad9677cd1eda55a36eb582ea72a6554e5af7.source",
+    "sourceTextFile": "sources/704be4b423c840dbc56733b48af82c2aec208c238a5be2039061a7a83fee6517.txt",
+    "excerpt": "Shall Franklin Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including supporting and retaining teachers and staff,\nessential student health and safety initiatives, managing class sizes, academic\nprograms, and opportunities to meet the learning needs of all students, by imposing\na property tax rate that does not exceed $0.2900 and results in a maximum annual\namount that does not exceed $9,000,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty’s annual property tax bill would increase by $329 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in May 2019 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Franklin Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including supporting and retaining teachers and staff,\nessential student health and safety initiatives, managing class sizes, academic\nprograms, and opportunities to meet the learning needs of all students, by imposing\na property tax rate that does not exceed $0.2900 and results in a maximum annual\namount that does not exceed $9,000,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty’s annual property tax bill would increase by $329 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in May 2019 and passed.",
+        "ration was held in May 2019 and passed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.29 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Franklin Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including supporting and retaining teachers and staff,\nessential student health and safety initiatives, managing class sizes, academic\nprograms, and opportunities to meet the learning needs of all students, by imposing\na property tax rate that does not exceed $0.2900 and results in a maximum annual\namount that does not exceed $9,000,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty’s annual property tax bill would increase by $329 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in May 2019 and passed."
+      ],
+      "noMeans": [
+        "Shall Franklin Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including supporting and retaining teachers and staff,\nessential student health and safety initiatives, managing class sizes, academic\nprograms, and opportunities to meet the learning needs of all students, by imposing\na property tax rate that does not exceed $0.2900 and results in a maximum annual\namount that does not exceed $9,000,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty’s annual property tax bill would increase by $329 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in May 2019 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           7th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 15,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-16-operating",
+    "sourceUrl": "https://www.in.gov/dA/b1af2d2a48/26-034-Crown-Point-Community-School-Corporation-Operating.pdf?language_id=1",
+    "rawHash": "df8c5265c86978e0a22ec64b9a7785e52c734973e7dd8d05144f0e9be4d6d752",
+    "sourceFile": "sources/df8c5265c86978e0a22ec64b9a7785e52c734973e7dd8d05144f0e9be4d6d752.source",
+    "sourceTextFile": "sources/7923e6a8642bfb095b4d91d5d3b4462069b3c28bad74b94fbc3947efbd3c1048.txt",
+    "excerpt": "Shall Crown Point Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, supporting essential health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes, student\ntransportation, and funding academic and support programs to meet the educational\nneeds of all students, by imposing a property tax rate that does not exceed $0.3870\nand results in a maximum annual amount that does not exceed $19,750,000? If this\noperating referendum public question is approved by the voters, for a median\nresidence of $350,000 the property's annual property tax bill would increase by\n$648 per year. The most recent operating referendum public question proposed by\nthe school corporation was held in 2025 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Crown Point Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, supporting essential health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes, student\ntransportation, and funding academic and support programs to meet the educational\nneeds of all students, by imposing a property tax rate that does not exceed $0.3870\nand results in a maximum annual amount that does not exceed $19,750,000? If this\noperating referendum public question is approved by the voters, for a median\nresidence of $350,000 the property's annual property tax bill would increase by\n$648 per year. The most recent operating referendum public question proposed by\nthe school corporation was held in 2025 and passed.",
+        "poration was held in 2025 and passed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.3870 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Crown Point Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, supporting essential health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes, student\ntransportation, and funding academic and support programs to meet the educational\nneeds of all students, by imposing a property tax rate that does not exceed $0.3870\nand results in a maximum annual amount that does not exceed $19,750,000? If this\noperating referendum public question is approved by the voters, for a median\nresidence of $350,000 the property's annual property tax bill would increase by\n$648 per year. The most recent operating referendum public question proposed by\nthe school corporation was held in 2025 and passed."
+      ],
+      "noMeans": [
+        "Shall Crown Point Community Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, supporting essential health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes, student\ntransportation, and funding academic and support programs to meet the educational\nneeds of all students, by imposing a property tax rate that does not exceed $0.3870\nand results in a maximum annual amount that does not exceed $19,750,000? If this\noperating referendum public question is approved by the voters, for a median\nresidence of $350,000 the property's annual property tax bill would increase by\n$648 per year. The most recent operating referendum public question proposed by\nthe school corporation was held in 2025 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           30th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 16,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-17-operating",
+    "sourceUrl": "https://www.in.gov/dA/6866d532d3/26-038-River-Forest-Community-School-Corporation-Operating-Extension-Determination.pdf?language_id=1",
+    "rawHash": "a5ae2b3b6a4085ef59e9790b29e521d99689928ba89a7bc10ba69203a6c993df",
+    "sourceFile": "sources/a5ae2b3b6a4085ef59e9790b29e521d99689928ba89a7bc10ba69203a6c993df.source",
+    "sourceTextFile": "sources/78a519c7da2ec897340b6a56992d9d5fd8e1461e4e39899127a9b5af2fa1010b.txt",
+    "excerpt": "Shall the River Forest Community School Corporation continue to increase\nproperty taxes paid to the School Corporation for no more than eight (8) years for\nthe purpose of sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining student transportation,\nsupporting and retaining teachers and staff, and supporting essential health and\nsafety initiatives, including the retention of school resource officers by imposing a\nproperty tax rate that does not exceed $0.9912 and results in a maximum annual\namount that does not exceed $3,000,000. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $150,000, the\nproperty's annual tax bill would decrease by $589 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2019 with a property\ntax rate of $1.19.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the River Forest Community School Corporation continue to increase\nproperty taxes paid to the School Corporation for no more than eight (8) years for\nthe purpose of sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining student transportation,\nsupporting and retaining teachers and staff, and supporting essential health and\nsafety initiatives, including the retention of school resource officers by imposing a\nproperty tax rate that does not exceed $0.9912 and results in a maximum annual\namount that does not exceed $3,000,000. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $150,000, the\nproperty's annual tax bill would decrease by $589 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2019 with a property\ntax rate of $1.19.",
+        "n passed in 2019 with a property tax rate of $1.19.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is $0.9912 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall the River Forest Community School Corporation continue to increase\nproperty taxes paid to the School Corporation for no more than eight (8) years for\nthe purpose of sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining student transportation,\nsupporting and retaining teachers and staff, and supporting essential health and\nsafety initiatives, including the retention of school resource officers by imposing a\nproperty tax rate that does not exceed $0.9912 and results in a maximum annual\namount that does not exceed $3,000,000. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $150,000, the\nproperty's annual tax bill would decrease by $589 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2019 with a property\ntax rate of $1.19."
+      ],
+      "noMeans": [
+        "Shall the River Forest Community School Corporation continue to increase\nproperty taxes paid to the School Corporation for no more than eight (8) years for\nthe purpose of sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining student transportation,\nsupporting and retaining teachers and staff, and supporting essential health and\nsafety initiatives, including the retention of school resource officers by imposing a\nproperty tax rate that does not exceed $0.9912 and results in a maximum annual\namount that does not exceed $3,000,000. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $150,000, the\nproperty's annual tax bill would decrease by $589 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2019 with a property\ntax rate of $1.19."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10.1 and approves the language as\nproposed.\n\n            7th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 17,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-18-operating",
+    "sourceUrl": "https://www.in.gov/dA/194bde031e/26-012-School-City-of-Whiting-Operating-Determination.pdf?language_id=1",
+    "rawHash": "362a937192247e1e3bc6eb63697954b149ba21947815288be000fb9824cc85f0",
+    "sourceFile": "sources/362a937192247e1e3bc6eb63697954b149ba21947815288be000fb9824cc85f0.source",
+    "sourceTextFile": "sources/e4767124fc53bee5e209e964ca1a1e68258e476cfa895c903abcb40ee95f37b3.txt",
+    "excerpt": "Shall School City of Whiting increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety services, including\nretaining and employing school resource officers, attracting and retaining teachers\nand staff, maintaining class sizes, and funding academic and student support\nprograms to meet the educational needs of all students, by imposing a property tax\nrate that does not exceed $0.3372 and results in a maximum annual amount that\ndoes not exceed $2,500,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000 the property's annual\nproperty tax bill would increase by $383 per year. The most recent operating\nreferendum public question proposed by the school corporation was held in 2023\nand failed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall School City of Whiting increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety services, including\nretaining and employing school resource officers, attracting and retaining teachers\nand staff, maintaining class sizes, and funding academic and student support\nprograms to meet the educational needs of all students, by imposing a property tax\nrate that does not exceed $0.3372 and results in a maximum annual amount that\ndoes not exceed $2,500,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000 the property's annual\nproperty tax bill would increase by $383 per year. The most recent operating\nreferendum public question proposed by the school corporation was held in 2023\nand failed.",
+        "poration was held in 2023 and failed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.3372 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall School City of Whiting increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety services, including\nretaining and employing school resource officers, attracting and retaining teachers\nand staff, maintaining class sizes, and funding academic and student support\nprograms to meet the educational needs of all students, by imposing a property tax\nrate that does not exceed $0.3372 and results in a maximum annual amount that\ndoes not exceed $2,500,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000 the property's annual\nproperty tax bill would increase by $383 per year. The most recent operating\nreferendum public question proposed by the school corporation was held in 2023\nand failed."
+      ],
+      "noMeans": [
+        "Shall School City of Whiting increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety services, including\nretaining and employing school resource officers, attracting and retaining teachers\nand staff, maintaining class sizes, and funding academic and student support\nprograms to meet the educational needs of all students, by imposing a property tax\nrate that does not exceed $0.3372 and results in a maximum annual amount that\ndoes not exceed $2,500,000? If this operating referendum public question is\napproved by the voters, for a median residence of $250,000 the property's annual\nproperty tax bill would increase by $383 per year. The most recent operating\nreferendum public question proposed by the school corporation was held in 2023\nand failed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n            5th day of June, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 18,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-19-construction",
+    "sourceUrl": "https://www.in.gov/dA/5fb96cfff7/26-014-School-City-of-Whiting-Controlled-Project.pdf?language_id=1",
+    "rawHash": "e1e795abaa4382961a103ad081adcd808dbaa2c2841c39a09642dc9b267fa5b6",
+    "sourceFile": "sources/e1e795abaa4382961a103ad081adcd808dbaa2c2841c39a09642dc9b267fa5b6.source",
+    "sourceTextFile": "sources/c6ceab55533d3acca072b6cfa5a5bfd25968d1ddb49df175232abf3016fd42b5.txt",
+    "excerpt": "Shall School City of Whiting increase property taxes paid to the School Corporation\nfor no more than twenty-three years for the purpose of funding the School City of\nWhiting 2026 Student Facilities, Safety, and Transportation Improvement Project\nwhich includes health, safety, and security upgrades to all school facilities; renovation\nand improvements and the potential construction of additions to student learning\nenvironments at all school buildings; upgrades to school buildings to support\ntechnology-ready classrooms; and construction of and improvements to athletic and\nsupport facilities and performing arts and music facilities, including a band room,\ntogether with the purchase of equipment, technology and buses, and student safety\nimprovements for which the principal debt amount for the project will cost no more\nthan $39,305,000 and the financing cost including interest and fees will cost no more\nthan an additional $28,810,000 and is estimated to increase the property taxes paid to\nthe School Corporation by imposing a property tax rate that results in a maximum\nannual amount that does not exceed $3,500,000. If this capital referendum public\nquestion is approved by the voters, for a median residence of $250,000, the property's\nannual property tax bill would increase by $530 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall School City of Whiting increase property taxes paid to the School Corporation\nfor no more than twenty-three years for the purpose of funding the School City of\nWhiting 2026 Student Facilities, Safety, and Transportation Improvement Project\nwhich includes health, safety, and security upgrades to all school facilities; renovation\nand improvements and the potential construction of additions to student learning\nenvironments at all school buildings; upgrades to school buildings to support\ntechnology-ready classrooms; and construction of and improvements to athletic and\nsupport facilities and performing arts and music facilities, including a band room,\ntogether with the purchase of equipment, technology and buses, and student safety\nimprovements for which the principal debt amount for the project will cost no more\nthan $39,305,000 and the financing cost including interest and fees will cost no more\nthan an additional $28,810,000 and is estimated to increase the property taxes paid to\nthe School Corporation by imposing a property tax rate that results in a maximum\nannual amount that does not exceed $3,500,000. If this capital referendum public\nquestion is approved by the voters, for a median residence of $250,000, the property's\nannual property tax bill would increase by $530 per year."
+      ],
+      "yesMeans": [
+        "Shall School City of Whiting increase property taxes paid to the School Corporation\nfor no more than twenty-three years for the purpose of funding the School City of\nWhiting 2026 Student Facilities, Safety, and Transportation Improvement Project\nwhich includes health, safety, and security upgrades to all school facilities; renovation\nand improvements and the potential construction of additions to student learning\nenvironments at all school buildings; upgrades to school buildings to support\ntechnology-ready classrooms; and construction of and improvements to athletic and\nsupport facilities and performing arts and music facilities, including a band room,\ntogether with the purchase of equipment, technology and buses, and student safety\nimprovements for which the principal debt amount for the project will cost no more\nthan $39,305,000 and the financing cost including interest and fees will cost no more\nthan an additional $28,810,000 and is estimated to increase the property taxes paid to\nthe School Corporation by imposing a property tax rate that results in a maximum\nannual amount that does not exceed $3,500,000. If this capital referendum public\nquestion is approved by the voters, for a median residence of $250,000, the property's\nannual property tax bill would increase by $530 per year."
+      ],
+      "noMeans": [
+        "Shall School City of Whiting increase property taxes paid to the School Corporation\nfor no more than twenty-three years for the purpose of funding the School City of\nWhiting 2026 Student Facilities, Safety, and Transportation Improvement Project\nwhich includes health, safety, and security upgrades to all school facilities; renovation\nand improvements and the potential construction of additions to student learning\nenvironments at all school buildings; upgrades to school buildings to support\ntechnology-ready classrooms; and construction of and improvements to athletic and\nsupport facilities and performing arts and music facilities, including a band room,\ntogether with the purchase of equipment, technology and buses, and student safety\nimprovements for which the principal debt amount for the project will cost no more\nthan $39,305,000 and the financing cost including interest and fees will cost no more\nthan an additional $28,810,000 and is estimated to increase the property taxes paid to\nthe School Corporation by imposing a property tax rate that results in a maximum\nannual amount that does not exceed $3,500,000. If this capital referendum public\nquestion is approved by the voters, for a median residence of $250,000, the property's\nannual property tax bill would increase by $530 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 6-1.1-20-3.6(c) and approves the language as proposed.\n\nDated this 29th day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                                Page 3 of 3\n\f",
+    "officialInventoryRow": 19,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question authorizes23years of taxes; preliminary narrative mentions a maximum30-year project-financing term. The two are not conflated."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-20-operating",
+    "sourceUrl": "https://www.in.gov/dA/abccfb8086/26-028-Tri-Creek-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "c73e00298b0dccb9f9fabe534a615b2d9ca1cd1ef59ddd6c8bee20670e2f1019",
+    "sourceFile": "sources/c73e00298b0dccb9f9fabe534a615b2d9ca1cd1ef59ddd6c8bee20670e2f1019.source",
+    "sourceTextFile": "sources/e2f168fe99d2b3ef30b1b4ab76491f8e8bce0066a9d2d9f5bc580e7f600e4896.txt",
+    "excerpt": "Shall Tri-Creek School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of replacing lost\nproperty tax revenue, funding bus transportation, student programs, and school\nsafety by imposing a property tax rate that does not exceed seventeen and thirty-\neight hundredths cents ($0.1738) and results in a maximum annual amount that\ndoes not exceed three million dollars ($3,000,000)? If this operating referendum\npublic question is approved by the voters, for a median residence of $300,000, the\nproperty’s annual property tax bill would increase by $245 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and failed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Tri-Creek School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of replacing lost\nproperty tax revenue, funding bus transportation, student programs, and school\nsafety by imposing a property tax rate that does not exceed seventeen and thirty-\neight hundredths cents ($0.1738) and results in a maximum annual amount that\ndoes not exceed three million dollars ($3,000,000)? If this operating referendum\npublic question is approved by the voters, for a median residence of $300,000, the\nproperty’s annual property tax bill would increase by $245 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and failed.",
+        "poration was held in 2023 and failed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.1738 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Tri-Creek School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of replacing lost\nproperty tax revenue, funding bus transportation, student programs, and school\nsafety by imposing a property tax rate that does not exceed seventeen and thirty-\neight hundredths cents ($0.1738) and results in a maximum annual amount that\ndoes not exceed three million dollars ($3,000,000)? If this operating referendum\npublic question is approved by the voters, for a median residence of $300,000, the\nproperty’s annual property tax bill would increase by $245 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and failed."
+      ],
+      "noMeans": [
+        "Shall Tri-Creek School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of replacing lost\nproperty tax revenue, funding bus transportation, student programs, and school\nsafety by imposing a property tax rate that does not exceed seventeen and thirty-\neight hundredths cents ($0.1738) and results in a maximum annual amount that\ndoes not exceed three million dollars ($3,000,000)? If this operating referendum\npublic question is approved by the voters, for a median residence of $300,000, the\nproperty’s annual property tax bill would increase by $245 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and failed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 20,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-21-operating",
+    "sourceUrl": "https://www.in.gov/dA/fde4de94bc/26-035-Michigan-City-Area-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "25bdf4c6bf0694424be2be11e51486d4700b81b16eeb816493d063aee495c5e4",
+    "sourceFile": "sources/25bdf4c6bf0694424be2be11e51486d4700b81b16eeb816493d063aee495c5e4.source",
+    "sourceTextFile": "sources/0513f85874d8734749b812e1956283d3a50e88c69b07a64c449468cdee15b7c4.txt",
+    "excerpt": "Shall the Michigan City Area Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding the\nMaximize Community and Students (MCAS) initiative which will sustain\neducational and operational funding stability in response to reductions in property\ntax revenue by recruiting and retaining educators and staff, supporting essential\nstudent health and safety initiatives, and maintaining class sizes, academic\nprograms, and opportunities to meet educational needs by imposing a property tax\nrate that does not exceed $0.2998 and results in a maximum annual amount that\ndoes not exceed $10,000,000. If this operating referendum public question is\napproved by the voters, for a median residence of $200,000, the property's annual\nproperty tax bill would increase by $260 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Michigan City Area Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding the\nMaximize Community and Students (MCAS) initiative which will sustain\neducational and operational funding stability in response to reductions in property\ntax revenue by recruiting and retaining educators and staff, supporting essential\nstudent health and safety initiatives, and maintaining class sizes, academic\nprograms, and opportunities to meet educational needs by imposing a property tax\nrate that does not exceed $0.2998 and results in a maximum annual amount that\ndoes not exceed $10,000,000. If this operating referendum public question is\napproved by the voters, for a median residence of $200,000, the property's annual\nproperty tax bill would increase by $260 per year.",
+        "bill would increase by $260 per year.\" 9. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.2998 per $100 assessed valuation. Page 2 of 3 10. On July "
+      ],
+      "yesMeans": [
+        "Shall the Michigan City Area Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding the\nMaximize Community and Students (MCAS) initiative which will sustain\neducational and operational funding stability in response to reductions in property\ntax revenue by recruiting and retaining educators and staff, supporting essential\nstudent health and safety initiatives, and maintaining class sizes, academic\nprograms, and opportunities to meet educational needs by imposing a property tax\nrate that does not exceed $0.2998 and results in a maximum annual amount that\ndoes not exceed $10,000,000. If this operating referendum public question is\napproved by the voters, for a median residence of $200,000, the property's annual\nproperty tax bill would increase by $260 per year."
+      ],
+      "noMeans": [
+        "Shall the Michigan City Area Schools increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding the\nMaximize Community and Students (MCAS) initiative which will sustain\neducational and operational funding stability in response to reductions in property\ntax revenue by recruiting and retaining educators and staff, supporting essential\nstudent health and safety initiatives, and maintaining class sizes, academic\nprograms, and opportunities to meet educational needs by imposing a property tax\nrate that does not exceed $0.2998 and results in a maximum annual amount that\ndoes not exceed $10,000,000. If this operating referendum public question is\napproved by the voters, for a median residence of $200,000, the property's annual\nproperty tax bill would increase by $260 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           6th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 21,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-22-operating",
+    "sourceUrl": "https://www.in.gov/dA/c94f88913d/26-005-Anderson-Community-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "477dcc3aa64bd8df8416e2f8041771c5084a188bdf720889c980af0fcf7a2a7d",
+    "sourceFile": "sources/477dcc3aa64bd8df8416e2f8041771c5084a188bdf720889c980af0fcf7a2a7d.source",
+    "sourceTextFile": "sources/268669a9518b475a53bd0bdd2247b9f34cf60efdd869b7761485fce42d294611.txt",
+    "excerpt": "Shall Anderson Community School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding daily operational needs and academic and support programs by imposing\na property tax rate that does not exceed $0.1077 and results in a maximum annual\namount that does not exceed $2,903,078. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $100,000, the\nproperty's annual tax bill would decrease by $54.00 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2018 with a property\ntax rate of $0.1077.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Anderson Community School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding daily operational needs and academic and support programs by imposing\na property tax rate that does not exceed $0.1077 and results in a maximum annual\namount that does not exceed $2,903,078. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $100,000, the\nproperty's annual tax bill would decrease by $54.00 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2018 with a property\ntax rate of $0.1077.",
+        "passed in 2018 with a property tax rate of $0.1077.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is $0.1077 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Anderson Community School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding daily operational needs and academic and support programs by imposing\na property tax rate that does not exceed $0.1077 and results in a maximum annual\namount that does not exceed $2,903,078. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $100,000, the\nproperty's annual tax bill would decrease by $54.00 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2018 with a property\ntax rate of $0.1077."
+      ],
+      "noMeans": [
+        "Shall Anderson Community School Corporation continue to increase property\ntaxes paid to the school corporation for no more than eight (8) years for the purpose\nof funding daily operational needs and academic and support programs by imposing\na property tax rate that does not exceed $0.1077 and results in a maximum annual\namount that does not exceed $2,903,078. If this operating referendum public\nquestion is NOT approved by the voters, for a median residence of $100,000, the\nproperty's annual tax bill would decrease by $54.00 per year. If this operating\nreferendum public question is approved by the voters, it would be a renewal of the\nmost recent operating referendum public question passed in 2018 with a property\ntax rate of $0.1077."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10.1 and approves the language as\nproposed.\n\nDated this 12th\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 22,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-23-operating",
+    "sourceUrl": "https://www.in.gov/dA/6359e4ccd2/26-033-Elwood-Community-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "fa81094299749ab4f732a78412e11bb30725052c781170cd0dbf6192ba16830a",
+    "sourceFile": "sources/fa81094299749ab4f732a78412e11bb30725052c781170cd0dbf6192ba16830a.source",
+    "sourceTextFile": "sources/8c24ff882a79249d14828c3f3c63976d7758172404cbc17aa54b8b032fa1145f.txt",
+    "excerpt": "Shall the Elwood Community School Corporation, Madison County, Indiana,\nincrease property taxes paid to the school corporation for no more than eight (8)\nyears immediately following the holding of the referendum for the purpose of\nfunding teacher and staff retention and recruitment efforts to maintain current\nclass sizes, student transportation, student and staff technology programs, and\nschool safety and security programs and projects by imposing a property tax rate\nthat does not exceed $0.4900 per $100 of net assessed value and results in a\nmaximum annual amount that does not exceed $2,500,000. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$100,000, the property’s annual property tax bill would increase by $245 per\nyear.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Elwood Community School Corporation, Madison County, Indiana,\nincrease property taxes paid to the school corporation for no more than eight (8)\nyears immediately following the holding of the referendum for the purpose of\nfunding teacher and staff retention and recruitment efforts to maintain current\nclass sizes, student transportation, student and staff technology programs, and\nschool safety and security programs and projects by imposing a property tax rate\nthat does not exceed $0.4900 per $100 of net assessed value and results in a\nmaximum annual amount that does not exceed $2,500,000. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$100,000, the property’s annual property tax bill would increase by $245 per\nyear.",
+        "dent and staff technology programs, and school safety and security programs and projects by imposing a property tax rate that does not exceed $0.4900 per $100 of net assessed value and results in a maxim"
+      ],
+      "yesMeans": [
+        "Shall the Elwood Community School Corporation, Madison County, Indiana,\nincrease property taxes paid to the school corporation for no more than eight (8)\nyears immediately following the holding of the referendum for the purpose of\nfunding teacher and staff retention and recruitment efforts to maintain current\nclass sizes, student transportation, student and staff technology programs, and\nschool safety and security programs and projects by imposing a property tax rate\nthat does not exceed $0.4900 per $100 of net assessed value and results in a\nmaximum annual amount that does not exceed $2,500,000. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$100,000, the property’s annual property tax bill would increase by $245 per\nyear."
+      ],
+      "noMeans": [
+        "Shall the Elwood Community School Corporation, Madison County, Indiana,\nincrease property taxes paid to the school corporation for no more than eight (8)\nyears immediately following the holding of the referendum for the purpose of\nfunding teacher and staff retention and recruitment efforts to maintain current\nclass sizes, student transportation, student and staff technology programs, and\nschool safety and security programs and projects by imposing a property tax rate\nthat does not exceed $0.4900 per $100 of net assessed value and results in a\nmaximum annual amount that does not exceed $2,500,000. If this operating\nreferendum public question is approved by the voters, for a median residence of\n$100,000, the property’s annual property tax bill would increase by $245 per\nyear."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           2nd day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 23,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-24-operating",
+    "sourceUrl": "https://www.in.gov/dA/6505ac0ca8/26-002-School-City-of-Beech-Grove-Operating-Determination.pdf?language_id=1",
+    "rawHash": "4c55ecae0c3a8ed80eff8d41b1789729586ffbd754baf0bd6f99ac1d2f38ac6f",
+    "sourceFile": "sources/4c55ecae0c3a8ed80eff8d41b1789729586ffbd754baf0bd6f99ac1d2f38ac6f.source",
+    "sourceTextFile": "sources/b297f9ed8836586cf3d70907494dfca68d16822eddd79a427e258e1aa32cb191.txt",
+    "excerpt": "Shall the School City of Beech Grove increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding the Beech\nGrove City Schools: Believe in our Future initiative, by continuing existing\nessential student services, including school bus transportation, school facilities\nmaintenance, and student safety and security services, including School Resource\nOfficers, by imposing a property tax rate that does not exceed fifty-seven cents\n($0.57) and results in a maximum annual amount that does not exceed\n$4,400,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $493 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the School City of Beech Grove increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding the Beech\nGrove City Schools: Believe in our Future initiative, by continuing existing\nessential student services, including school bus transportation, school facilities\nmaintenance, and student safety and security services, including School Resource\nOfficers, by imposing a property tax rate that does not exceed fifty-seven cents\n($0.57) and results in a maximum annual amount that does not exceed\n$4,400,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $493 per year.",
+        "x bill would increase by $493 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.57 per $100 assessed valuation. 9. On June 30, 2026, the"
+      ],
+      "yesMeans": [
+        "Shall the School City of Beech Grove increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding the Beech\nGrove City Schools: Believe in our Future initiative, by continuing existing\nessential student services, including school bus transportation, school facilities\nmaintenance, and student safety and security services, including School Resource\nOfficers, by imposing a property tax rate that does not exceed fifty-seven cents\n($0.57) and results in a maximum annual amount that does not exceed\n$4,400,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $493 per year."
+      ],
+      "noMeans": [
+        "Shall the School City of Beech Grove increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding the Beech\nGrove City Schools: Believe in our Future initiative, by continuing existing\nessential student services, including school bus transportation, school facilities\nmaintenance, and student safety and security services, including School Resource\nOfficers, by imposing a property tax rate that does not exceed fifty-seven cents\n($0.57) and results in a maximum annual amount that does not exceed\n$4,400,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $493 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           2nd day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 24,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-26-operating",
+    "sourceUrl": "https://www.in.gov/dA/efb0723c40/26-039-Metropolitan-School-District-of-Decatur-Township-Operating-Determination.pdf?language_id=1",
+    "rawHash": "1adb30935ec52366e0aadca5b38842127984116347e7ba0ef3010777edf2c675",
+    "sourceFile": "sources/1adb30935ec52366e0aadca5b38842127984116347e7ba0ef3010777edf2c675.source",
+    "sourceTextFile": "sources/c00ed5a74dd9691b5c9fa06d3dc4e9ec379e3acf992e8f876f919c504bd517ae.txt",
+    "excerpt": "Shall the Metropolitan School District of Decatur Township increase property\ntaxes paid to the school corporation for no more than eight (8) years for the\npurpose of funding the #Decatur Community and School Improvement Program\nby (1) repealing the existing referendum fund tax levy approved by the voters in\n2019, and (2) replacing the existing referendum fund tax levy with a new\nreferendum fund tax levy which will provide funding for student transportation,\nutility expenses, school safety and security programs, building maintenance and\nsupport services by imposing a property tax rate that does not exceed $0.2690 and\nresults in a maximum annual amount that does not exceed $9,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $250,000, the property’s annual property tax bill would increase by\n$306 per year. The most recent operating referendum public question proposed\nby the school corporation was held in 2019 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Metropolitan School District of Decatur Township increase property\ntaxes paid to the school corporation for no more than eight (8) years for the\npurpose of funding the #Decatur Community and School Improvement Program\nby (1) repealing the existing referendum fund tax levy approved by the voters in\n2019, and (2) replacing the existing referendum fund tax levy with a new\nreferendum fund tax levy which will provide funding for student transportation,\nutility expenses, school safety and security programs, building maintenance and\nsupport services by imposing a property tax rate that does not exceed $0.2690 and\nresults in a maximum annual amount that does not exceed $9,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $250,000, the property’s annual property tax bill would increase by\n$306 per year. The most recent operating referendum public question proposed\nby the school corporation was held in 2019 and passed.",
+        "poration was held in 2019 and passed.” 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.2690 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall the Metropolitan School District of Decatur Township increase property\ntaxes paid to the school corporation for no more than eight (8) years for the\npurpose of funding the #Decatur Community and School Improvement Program\nby (1) repealing the existing referendum fund tax levy approved by the voters in\n2019, and (2) replacing the existing referendum fund tax levy with a new\nreferendum fund tax levy which will provide funding for student transportation,\nutility expenses, school safety and security programs, building maintenance and\nsupport services by imposing a property tax rate that does not exceed $0.2690 and\nresults in a maximum annual amount that does not exceed $9,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $250,000, the property’s annual property tax bill would increase by\n$306 per year. The most recent operating referendum public question proposed\nby the school corporation was held in 2019 and passed."
+      ],
+      "noMeans": [
+        "Shall the Metropolitan School District of Decatur Township increase property\ntaxes paid to the school corporation for no more than eight (8) years for the\npurpose of funding the #Decatur Community and School Improvement Program\nby (1) repealing the existing referendum fund tax levy approved by the voters in\n2019, and (2) replacing the existing referendum fund tax levy with a new\nreferendum fund tax levy which will provide funding for student transportation,\nutility expenses, school safety and security programs, building maintenance and\nsupport services by imposing a property tax rate that does not exceed $0.2690 and\nresults in a maximum annual amount that does not exceed $9,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $250,000, the property’s annual property tax bill would increase by\n$306 per year. The most recent operating referendum public question proposed\nby the school corporation was held in 2019 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           7th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 26,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Existing levy repeal/replacement is preserved; not represented as an extra levy stacked on the existing one."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-27-operating",
+    "sourceUrl": "https://www.in.gov/dA/1e6d1b89fc/26-031-MSD-Washington-Township-Operating-Extension-Determination.pdf?language_id=1",
+    "rawHash": "ba57d322bbfac6f3cc348107b4d15f4ada24f4d689e90c06cacac3f0323bf930",
+    "sourceFile": "sources/ba57d322bbfac6f3cc348107b4d15f4ada24f4d689e90c06cacac3f0323bf930.source",
+    "sourceTextFile": "sources/2aa176de9ca4d7f3a5b302a7e0f4a67adb2756ecebd71fa6b39d214be3128136.txt",
+    "excerpt": "Shall M.S.D. of Washington Township continue to increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nrepealing the existing referendum fund tax rate and replacing the existing\nreferendum fund tax rate with a new rate that will provide funding for retaining\nteachers and staffing for improved student safety, increased student support\nservices, as well as expanded academic programming in alignment with the new\ndiploma requirements by imposing a property tax rate that does not exceed $0.25\nand results in a maximum annual amount that does not exceed $24,000,000? If\nthis operating referendum public question is NOT approved by the voters, for a\nmedian residence of $300,000, the property's annual property tax bill would\ndecrease by $351 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.25.",
+    "fields": {
+      "whatItDoes": [
+        "Shall M.S.D. of Washington Township continue to increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nrepealing the existing referendum fund tax rate and replacing the existing\nreferendum fund tax rate with a new rate that will provide funding for retaining\nteachers and staffing for improved student safety, increased student support\nservices, as well as expanded academic programming in alignment with the new\ndiploma requirements by imposing a property tax rate that does not exceed $0.25\nand results in a maximum annual amount that does not exceed $24,000,000? If\nthis operating referendum public question is NOT approved by the voters, for a\nmedian residence of $300,000, the property's annual property tax bill would\ndecrease by $351 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.25.",
+        "estion passed in 2020 with a property tax rate of $0.25.\" 8. The resolution represents that the referendum tax rate proposed by the District is $0.25 per $100 assessed valuation. Page 2 of 3 9. The Distr"
+      ],
+      "yesMeans": [
+        "Shall M.S.D. of Washington Township continue to increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nrepealing the existing referendum fund tax rate and replacing the existing\nreferendum fund tax rate with a new rate that will provide funding for retaining\nteachers and staffing for improved student safety, increased student support\nservices, as well as expanded academic programming in alignment with the new\ndiploma requirements by imposing a property tax rate that does not exceed $0.25\nand results in a maximum annual amount that does not exceed $24,000,000? If\nthis operating referendum public question is NOT approved by the voters, for a\nmedian residence of $300,000, the property's annual property tax bill would\ndecrease by $351 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.25."
+      ],
+      "noMeans": [
+        "Shall M.S.D. of Washington Township continue to increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of\nrepealing the existing referendum fund tax rate and replacing the existing\nreferendum fund tax rate with a new rate that will provide funding for retaining\nteachers and staffing for improved student safety, increased student support\nservices, as well as expanded academic programming in alignment with the new\ndiploma requirements by imposing a property tax rate that does not exceed $0.25\nand results in a maximum annual amount that does not exceed $24,000,000? If\nthis operating referendum public question is NOT approved by the voters, for a\nmedian residence of $300,000, the property's annual property tax bill would\ndecrease by $351 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.25."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10.1 and approves the language as\nproposed.\n\nDated this 23rd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 27,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question.",
+      "Existing levy repeal/replacement is preserved; not represented as an extra levy stacked on the existing one."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-28-operating",
+    "sourceUrl": "https://www.in.gov/dA/93850f4b9b/26-025-Metropolitan-School-District-of-Wayne-Township-Operating-Determination.pdf?language_id=1",
+    "rawHash": "3c9bf5e346fc86fe6bc806eac6a9de92682105f5d48a6bfaea29109981150633",
+    "sourceFile": "sources/3c9bf5e346fc86fe6bc806eac6a9de92682105f5d48a6bfaea29109981150633.source",
+    "sourceTextFile": "sources/5b211a69eb6b53ebe4d9338939edae3b18aa1e418b88be9f49e62d786ef69d04.txt",
+    "excerpt": "Shall the Metropolitan School District of Wayne Township increase property\ntaxes paid to the school district for no more than eight (8) years for the purpose of\nfunding the Wayne Forward Initiative to sustain educational and operational\nstability in response to reductions in property tax revenue, including recruiting\nand retaining classroom teachers, funding student safety and school security, and\nmaintaining daily educational operations by imposing a property tax rate that does\nnot exceed $0.70 and results in a maximum annual amount that does not exceed\n$41,019,552. If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $605 per year. The most recent operating referendum public\nquestion proposed by the school district was held in 2019 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Metropolitan School District of Wayne Township increase property\ntaxes paid to the school district for no more than eight (8) years for the purpose of\nfunding the Wayne Forward Initiative to sustain educational and operational\nstability in response to reductions in property tax revenue, including recruiting\nand retaining classroom teachers, funding student safety and school security, and\nmaintaining daily educational operations by imposing a property tax rate that does\nnot exceed $0.70 and results in a maximum annual amount that does not exceed\n$41,019,552. If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $605 per year. The most recent operating referendum public\nquestion proposed by the school district was held in 2019 and passed.",
+        "l district was held in 2019 and passed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.70 per $100 assessed valuation. 9. On June 23, 2026, the"
+      ],
+      "yesMeans": [
+        "Shall the Metropolitan School District of Wayne Township increase property\ntaxes paid to the school district for no more than eight (8) years for the purpose of\nfunding the Wayne Forward Initiative to sustain educational and operational\nstability in response to reductions in property tax revenue, including recruiting\nand retaining classroom teachers, funding student safety and school security, and\nmaintaining daily educational operations by imposing a property tax rate that does\nnot exceed $0.70 and results in a maximum annual amount that does not exceed\n$41,019,552. If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $605 per year. The most recent operating referendum public\nquestion proposed by the school district was held in 2019 and passed."
+      ],
+      "noMeans": [
+        "Shall the Metropolitan School District of Wayne Township increase property\ntaxes paid to the school district for no more than eight (8) years for the purpose of\nfunding the Wayne Forward Initiative to sustain educational and operational\nstability in response to reductions in property tax revenue, including recruiting\nand retaining classroom teachers, funding student safety and school security, and\nmaintaining daily educational operations by imposing a property tax rate that does\nnot exceed $0.70 and results in a maximum annual amount that does not exceed\n$41,019,552. If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property's annual property tax bill\nwould increase by $605 per year. The most recent operating referendum public\nquestion proposed by the school district was held in 2019 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 29th\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 28,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-31-operating",
+    "sourceUrl": "https://www.in.gov/dA/6511dc5d01/26-042-Smith-Green-Community-Schools-Operating.pdf?language_id=1",
+    "rawHash": "5dbab8ccda76ab6fc958e56ae94e99e28a4a7af5afc042bea245afdf917c03d6",
+    "sourceFile": "sources/5dbab8ccda76ab6fc958e56ae94e99e28a4a7af5afc042bea245afdf917c03d6.source",
+    "sourceTextFile": "sources/1193588c6d824a0ac9924b33e03a41cbe753271b99a6641e129788fc70e807d8.txt",
+    "excerpt": "Shall Smith-Green Community Schools continue to increase property taxes paid\nto the School Corporation for no more than eight (8) years for the purpose of\nfunding and sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes and\ntransportation services, and funding academic and support programs to meet the\neducational needs of all students, while changing the current maximum operating\nreferendum tax rate of $0.6280, by imposing a property tax rate that does not\nexceed $0.4988 and results in a maximum annual amount that does not exceed\n$2,176,300? If this operating referendum public question is NOT approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould decrease by $431 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of $0.6280.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Smith-Green Community Schools continue to increase property taxes paid\nto the School Corporation for no more than eight (8) years for the purpose of\nfunding and sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes and\ntransportation services, and funding academic and support programs to meet the\neducational needs of all students, while changing the current maximum operating\nreferendum tax rate of $0.6280, by imposing a property tax rate that does not\nexceed $0.4988 and results in a maximum annual amount that does not exceed\n$2,176,300? If this operating referendum public question is NOT approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould decrease by $431 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of $0.6280.",
+        " with a property tax rate of $0.6280.” 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.4988 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Smith-Green Community Schools continue to increase property taxes paid\nto the School Corporation for no more than eight (8) years for the purpose of\nfunding and sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes and\ntransportation services, and funding academic and support programs to meet the\neducational needs of all students, while changing the current maximum operating\nreferendum tax rate of $0.6280, by imposing a property tax rate that does not\nexceed $0.4988 and results in a maximum annual amount that does not exceed\n$2,176,300? If this operating referendum public question is NOT approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould decrease by $431 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of $0.6280."
+      ],
+      "noMeans": [
+        "Shall Smith-Green Community Schools continue to increase property taxes paid\nto the School Corporation for no more than eight (8) years for the purpose of\nfunding and sustaining educational and operational funding stability in response\nto reductions in property tax revenue, maintaining health and safety initiatives,\nsupporting and retaining teachers and staff, maintaining class sizes and\ntransportation services, and funding academic and support programs to meet the\neducational needs of all students, while changing the current maximum operating\nreferendum tax rate of $0.6280, by imposing a property tax rate that does not\nexceed $0.4988 and results in a maximum annual amount that does not exceed\n$2,176,300? If this operating referendum public question is NOT approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould decrease by $431 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of $0.6280."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 23rd day of July, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 31,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-32-operating",
+    "sourceUrl": "https://www.in.gov/dA/f49f6c631e/26-004-Pike-County-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "bb3881e6c22ca93378d3762b99bdd3e7c2124c1d14009981704c9ee13aac711a",
+    "sourceFile": "sources/bb3881e6c22ca93378d3762b99bdd3e7c2124c1d14009981704c9ee13aac711a.source",
+    "sourceTextFile": "sources/73a399364bf25497105d45f3f8deec022c09b5627380a2308a6ed7eda067fee0.txt",
+    "excerpt": "Shall Pike County School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including maintaining operations at\nexisting school buildings, retaining teachers and staff, supporting essential safety\ninitiatives, and providing academic and CTE programs and opportunities to meet\nthe learning needs of all students in response to reductions in property tax revenue,\nby imposing a property tax rate that does not exceed $0.25 and results in a\nmaximum annual amount that does not exceed $2,200,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$150,000, the property's annual property tax bill would increase by $149 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Pike County School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including maintaining operations at\nexisting school buildings, retaining teachers and staff, supporting essential safety\ninitiatives, and providing academic and CTE programs and opportunities to meet\nthe learning needs of all students in response to reductions in property tax revenue,\nby imposing a property tax rate that does not exceed $0.25 and results in a\nmaximum annual amount that does not exceed $2,200,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$150,000, the property's annual property tax bill would increase by $149 per year.",
+        "x bill would increase by $149 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.25 per $100 assessed valuation. Page 2 of 3 9. On June 1"
+      ],
+      "yesMeans": [
+        "Shall Pike County School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including maintaining operations at\nexisting school buildings, retaining teachers and staff, supporting essential safety\ninitiatives, and providing academic and CTE programs and opportunities to meet\nthe learning needs of all students in response to reductions in property tax revenue,\nby imposing a property tax rate that does not exceed $0.25 and results in a\nmaximum annual amount that does not exceed $2,200,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$150,000, the property's annual property tax bill would increase by $149 per year."
+      ],
+      "noMeans": [
+        "Shall Pike County School Corporation increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including maintaining operations at\nexisting school buildings, retaining teachers and staff, supporting essential safety\ninitiatives, and providing academic and CTE programs and opportunities to meet\nthe learning needs of all students in response to reductions in property tax revenue,\nby imposing a property tax rate that does not exceed $0.25 and results in a\nmaximum annual amount that does not exceed $2,200,000? If this operating\nreferendum public question is approved by the voters, for a median residence of\n$150,000, the property's annual property tax bill would increase by $149 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n            18th day of June, 2026.\nDated this _____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 32,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-33-operating",
+    "sourceUrl": "https://www.in.gov/dA/4fed494d73/26-023-Porter-Township-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "817ed8b905648390e4b014be743ebb3c4cf11aba43348e92c7b5fd069a774dc7",
+    "sourceFile": "sources/817ed8b905648390e4b014be743ebb3c4cf11aba43348e92c7b5fd069a774dc7.source",
+    "sourceTextFile": "sources/ca6e2a36de9de44c655adbe018111ca8061cc3038ea4af5ed70b50cb2ff9cd1f.txt",
+    "excerpt": "Shall Porter Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining essential health and safety\ninitiatives, including the employment and retention of school resource officers,\nsupporting and retaining teachers and staff, managing class sizes, maintaining\nessential student transportation and funding academic and support programs to\nmeet the educational needs of all students, by imposing a property tax rate that\ndoes not exceed $0.3576 and results in a maximum annual amount that does not\nexceed $3,500,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $350,000, the property’s annual property tax\nbill would increase by $599 per year",
+    "fields": {
+      "whatItDoes": [
+        "Shall Porter Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining essential health and safety\ninitiatives, including the employment and retention of school resource officers,\nsupporting and retaining teachers and staff, managing class sizes, maintaining\nessential student transportation and funding academic and support programs to\nmeet the educational needs of all students, by imposing a property tax rate that\ndoes not exceed $0.3576 and results in a maximum annual amount that does not\nexceed $3,500,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $350,000, the property’s annual property tax\nbill would increase by $599 per year",
+        " bill would increase by $599 per year\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.3576 per $100 assessed valuation. Page 2 of 3 9. On June 2"
+      ],
+      "yesMeans": [
+        "Shall Porter Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining essential health and safety\ninitiatives, including the employment and retention of school resource officers,\nsupporting and retaining teachers and staff, managing class sizes, maintaining\nessential student transportation and funding academic and support programs to\nmeet the educational needs of all students, by imposing a property tax rate that\ndoes not exceed $0.3576 and results in a maximum annual amount that does not\nexceed $3,500,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $350,000, the property’s annual property tax\nbill would increase by $599 per year"
+      ],
+      "noMeans": [
+        "Shall Porter Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining essential health and safety\ninitiatives, including the employment and retention of school resource officers,\nsupporting and retaining teachers and staff, managing class sizes, maintaining\nessential student transportation and funding academic and support programs to\nmeet the educational needs of all students, by imposing a property tax rate that\ndoes not exceed $0.3576 and results in a maximum annual amount that does not\nexceed $3,500,000. If this operating referendum public question is approved by\nthe voters, for a median residence of $350,000, the property’s annual property tax\nbill would increase by $599 per year"
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n           26th day of June, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 33,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-34-operating",
+    "sourceUrl": "https://www.in.gov/dA/09038efdab/26-020-Union-Township-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "8c153063c5782b675a8fb9a05b8dfd325970eb9f71ac3732b7eea7ce96a13e4e",
+    "sourceFile": "sources/8c153063c5782b675a8fb9a05b8dfd325970eb9f71ac3732b7eea7ce96a13e4e.source",
+    "sourceTextFile": "sources/6490e88cad2f1015114209238e30466228d31b6625c34ad97ef2e2de5c6c0b18.txt",
+    "excerpt": "Shall Union Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\ncontinuing educational and operational stability in response to reductions in\nproperty tax revenue, including attracting and retaining teachers and staff,\nmaintaining class sizes, maintaining academic and educationally related\nprograms, and maintaining essential safety and security standards for the children\nof Union Township by imposing a property tax rate that does not exceed $0.35\nand results in a maximum annual amount that does not exceed $3,374,291. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $400,000, the property's annual property tax bill would increase by\n$681 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Union Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\ncontinuing educational and operational stability in response to reductions in\nproperty tax revenue, including attracting and retaining teachers and staff,\nmaintaining class sizes, maintaining academic and educationally related\nprograms, and maintaining essential safety and security standards for the children\nof Union Township by imposing a property tax rate that does not exceed $0.35\nand results in a maximum annual amount that does not exceed $3,374,291. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $400,000, the property's annual property tax bill would increase by\n$681 per year.",
+        "x bill would increase by $681 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.35 per $100 assessed valuation. Page 2 of 3 9. On June 2"
+      ],
+      "yesMeans": [
+        "Shall Union Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\ncontinuing educational and operational stability in response to reductions in\nproperty tax revenue, including attracting and retaining teachers and staff,\nmaintaining class sizes, maintaining academic and educationally related\nprograms, and maintaining essential safety and security standards for the children\nof Union Township by imposing a property tax rate that does not exceed $0.35\nand results in a maximum annual amount that does not exceed $3,374,291. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $400,000, the property's annual property tax bill would increase by\n$681 per year."
+      ],
+      "noMeans": [
+        "Shall Union Township School Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\ncontinuing educational and operational stability in response to reductions in\nproperty tax revenue, including attracting and retaining teachers and staff,\nmaintaining class sizes, maintaining academic and educationally related\nprograms, and maintaining essential safety and security standards for the children\nof Union Township by imposing a property tax rate that does not exceed $0.35\nand results in a maximum annual amount that does not exceed $3,374,291. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $400,000, the property's annual property tax bill would increase by\n$681 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 24th\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 34,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-35-operating",
+    "sourceUrl": "https://www.in.gov/dA/eca44f19d6/26-041-Culver-CSC-Operating.pdf?language_id=1",
+    "rawHash": "412f348f0001ad697928fa515e834805dae9f2cc1d69d01233684e23180fdd06",
+    "sourceFile": "sources/412f348f0001ad697928fa515e834805dae9f2cc1d69d01233684e23180fdd06.source",
+    "sourceTextFile": "sources/3c11b17b2d22f61d90f7bd083f8cd646b04c2dc0261bd4f2ef950f5ff0ecf10a.txt",
+    "excerpt": "Shall Culver Community Schools Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining student safety, health, and well-\nbeing initiatives; attracting, retaining, and supporting teachers and staff;\nmaintaining class sizes; and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.24 and results in a maximum annual amount that does not exceed\n$2,899,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould increase by $208 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in November 2018 and\npassed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Culver Community Schools Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining student safety, health, and well-\nbeing initiatives; attracting, retaining, and supporting teachers and staff;\nmaintaining class sizes; and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.24 and results in a maximum annual amount that does not exceed\n$2,899,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould increase by $208 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in November 2018 and\npassed.",
+        "was held in November 2018 and passed.” 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.2400 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall Culver Community Schools Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining student safety, health, and well-\nbeing initiatives; attracting, retaining, and supporting teachers and staff;\nmaintaining class sizes; and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.24 and results in a maximum annual amount that does not exceed\n$2,899,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould increase by $208 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in November 2018 and\npassed."
+      ],
+      "noMeans": [
+        "Shall Culver Community Schools Corporation increase property taxes paid to the\nschool corporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational funding stability in response to reductions\nin property tax revenue, including maintaining student safety, health, and well-\nbeing initiatives; attracting, retaining, and supporting teachers and staff;\nmaintaining class sizes; and funding academic and support programs to meet the\neducational needs of all students, by imposing a property tax rate that does not\nexceed $0.24 and results in a maximum annual amount that does not exceed\n$2,899,000? If this operating referendum public question is approved by the\nvoters, for a median residence of $200,000, the property’s annual property tax bill\nwould increase by $208 per year. The most recent operating referendum public\nquestion proposed by the school corporation was held in November 2018 and\npassed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 23rd day of July, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 35,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-36-operating",
+    "sourceUrl": "https://www.in.gov/dA/8e5e2b3406/26-019-Shelbyville-Central-Schools-Operating-Determination.pdf?language_id=1",
+    "rawHash": "e5d0dbdab9e29131e52ae57ae44c43915fdfacce38c559adc26dffd513164c21",
+    "sourceFile": "sources/e5d0dbdab9e29131e52ae57ae44c43915fdfacce38c559adc26dffd513164c21.source",
+    "sourceTextFile": "sources/e856e5978a0d4f18fc176bde26d4bfb3a2760efaac719143f4836e6023274b14.txt",
+    "excerpt": "Shall Shelbyville Central Schools increase property taxes paid to the school\ncorporation for no more than 8 years for the purpose of funding and maintaining\ncurrent educational and operational programs in response to reductions in\nproperty tax revenue, including student transportation, maintaining class sizes,\nschool safety, and recruiting and retaining staff, by imposing a property tax rate\nthat does not exceed $0.22 and results in a maximum annual amount that does not\nexceed $3,606,064. If this operating referendum public question is approved by\nthe voters, for a median residence of $200,000, this property's annual property tax\nbill would increase by $191 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Shelbyville Central Schools increase property taxes paid to the school\ncorporation for no more than 8 years for the purpose of funding and maintaining\ncurrent educational and operational programs in response to reductions in\nproperty tax revenue, including student transportation, maintaining class sizes,\nschool safety, and recruiting and retaining staff, by imposing a property tax rate\nthat does not exceed $0.22 and results in a maximum annual amount that does not\nexceed $3,606,064. If this operating referendum public question is approved by\nthe voters, for a median residence of $200,000, this property's annual property tax\nbill would increase by $191 per year.",
+        "x bill would increase by $191 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.22 per $100 assessed valuation. 9. On June 16, 2026, the"
+      ],
+      "yesMeans": [
+        "Shall Shelbyville Central Schools increase property taxes paid to the school\ncorporation for no more than 8 years for the purpose of funding and maintaining\ncurrent educational and operational programs in response to reductions in\nproperty tax revenue, including student transportation, maintaining class sizes,\nschool safety, and recruiting and retaining staff, by imposing a property tax rate\nthat does not exceed $0.22 and results in a maximum annual amount that does not\nexceed $3,606,064. If this operating referendum public question is approved by\nthe voters, for a median residence of $200,000, this property's annual property tax\nbill would increase by $191 per year."
+      ],
+      "noMeans": [
+        "Shall Shelbyville Central Schools increase property taxes paid to the school\ncorporation for no more than 8 years for the purpose of funding and maintaining\ncurrent educational and operational programs in response to reductions in\nproperty tax revenue, including student transportation, maintaining class sizes,\nschool safety, and recruiting and retaining staff, by imposing a property tax rate\nthat does not exceed $0.22 and results in a maximum annual amount that does not\nexceed $3,606,064. If this operating referendum public question is approved by\nthe voters, for a median residence of $200,000, this property's annual property tax\nbill would increase by $191 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 36,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-37-operating",
+    "sourceUrl": "https://www.in.gov/dA/ccce7ff050/26-027-Oregon-Davis-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "b67ebc4355d42d295162c82a1f0cc6388950b6b8cf73422c02ca2305a88a47b2",
+    "sourceFile": "sources/b67ebc4355d42d295162c82a1f0cc6388950b6b8cf73422c02ca2305a88a47b2.source",
+    "sourceTextFile": "sources/abbec2cfeb08a069eb0282c50f5dc7f88957cb65dce3d0bd7e36d155bd6ffd20.txt",
+    "excerpt": "Shall the Oregon-Davis School Corporation continue to increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding current educational and operational expenses by imposing a property tax\nrate that does not exceed nineteen cents ($0.19) and results in a maximum annual\namount that does not exceed $800,000? If this operating referendum is NOT\napproved by the voters, for a median residence of $150,000, the property's annual\ntax bill would decrease by $173 per year. If this operating referendum public\nquestion is approved by the voters, it would be renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of twenty-nine\ncents ($0.29).",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Oregon-Davis School Corporation continue to increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding current educational and operational expenses by imposing a property tax\nrate that does not exceed nineteen cents ($0.19) and results in a maximum annual\namount that does not exceed $800,000? If this operating referendum is NOT\napproved by the voters, for a median residence of $150,000, the property's annual\ntax bill would decrease by $173 per year. If this operating referendum public\nquestion is approved by the voters, it would be renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of twenty-nine\ncents ($0.29).",
+        "th a property tax rate of twenty-nine cents ($0.29). \" 8. The resolution represents that the referendum tax rate proposed by the Corporation is $0.19 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall the Oregon-Davis School Corporation continue to increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding current educational and operational expenses by imposing a property tax\nrate that does not exceed nineteen cents ($0.19) and results in a maximum annual\namount that does not exceed $800,000? If this operating referendum is NOT\napproved by the voters, for a median residence of $150,000, the property's annual\ntax bill would decrease by $173 per year. If this operating referendum public\nquestion is approved by the voters, it would be renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of twenty-nine\ncents ($0.29)."
+      ],
+      "noMeans": [
+        "Shall the Oregon-Davis School Corporation continue to increase property taxes\npaid to the school corporation for no more than eight (8) years for the purpose of\nfunding current educational and operational expenses by imposing a property tax\nrate that does not exceed nineteen cents ($0.19) and results in a maximum annual\namount that does not exceed $800,000? If this operating referendum is NOT\napproved by the voters, for a median residence of $150,000, the property's annual\ntax bill would decrease by $173 per year. If this operating referendum public\nquestion is approved by the voters, it would be renewal of the most recent operating\nreferendum public question passed in 2018 with a property tax rate of twenty-nine\ncents ($0.29)."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10.1 and approves the language as\nproposed.\n\nDated this 22nd\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 37,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps.",
+      "Approved question gives tax DECREASE on a NO vote. Generic later certification prose saying increase is not substituted for the actual approved renewal question."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-38-operating",
+    "sourceUrl": "https://www.in.gov/dA/25d66765eb/26-006-West-Lafayette-Community-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "10d8f023e4ff3c2dd560d7e5cae6af7b3420172ca1f736eabc5b5f63905a2108",
+    "sourceFile": "sources/10d8f023e4ff3c2dd560d7e5cae6af7b3420172ca1f736eabc5b5f63905a2108.source",
+    "sourceTextFile": "sources/98f7efb07bae7e08ec8a16801c137abeedc99d0b32d9d336cf5f67a9325eddca.txt",
+    "excerpt": "Shall West Lafayette Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of funding\nacademic programming and operating expenditures and sustaining educational and\noperational stability in response to reductions in property tax revenue by imposing\na property tax rate that does not exceed $0.5706 and results in a maximum annual\namount that does not exceed $16,100,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $350,000, the\nproperty's annual property tax bill would increase by $956 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed.",
+    "fields": {
+      "whatItDoes": [
+        "Shall West Lafayette Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of funding\nacademic programming and operating expenditures and sustaining educational and\noperational stability in response to reductions in property tax revenue by imposing\na property tax rate that does not exceed $0.5706 and results in a maximum annual\namount that does not exceed $16,100,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $350,000, the\nproperty's annual property tax bill would increase by $956 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed.",
+        "poration was held in 2023 and passed.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.5706 per $100 assessed valuation. 9. The Corporation previ"
+      ],
+      "yesMeans": [
+        "Shall West Lafayette Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of funding\nacademic programming and operating expenditures and sustaining educational and\noperational stability in response to reductions in property tax revenue by imposing\na property tax rate that does not exceed $0.5706 and results in a maximum annual\namount that does not exceed $16,100,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $350,000, the\nproperty's annual property tax bill would increase by $956 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed."
+      ],
+      "noMeans": [
+        "Shall West Lafayette Community School Corporation increase property taxes paid\nto the school corporation for no more than eight (8) years for the purpose of funding\nacademic programming and operating expenditures and sustaining educational and\noperational stability in response to reductions in property tax revenue by imposing\na property tax rate that does not exceed $0.5706 and results in a maximum annual\namount that does not exceed $16,100,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $350,000, the\nproperty's annual property tax bill would increase by $956 per year. The most\nrecent operating referendum public question proposed by the school corporation\nwas held in 2023 and passed."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\nDated this 12th\n           ____ day of June, 2026.\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 38,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-39-operating",
+    "sourceUrl": "https://www.in.gov/dA/e813491828/26-036-Tipton-Community-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "402d6aeedbeaa6374a2d256d4305fea5e51151c0a180f9614ab0fde20ce1b287",
+    "sourceFile": "sources/402d6aeedbeaa6374a2d256d4305fea5e51151c0a180f9614ab0fde20ce1b287.source",
+    "sourceTextFile": "sources/be507c2b9c7383a5fe88efb585c8bb72760c6b811fbd053baae9633b7e20f907.txt",
+    "excerpt": "Shall the Tipton Community School Corporation increase property taxes paid to\nthe school corporation for no more than eight (8) years for the purpose of\nproviding funding to maintain academic programs, class sizes, and student\nsupport, health, and safety services, attract and retain teachers and support staff,\nmaintain student transportation services, and sustain educational and operational\nfunding stability by imposing a property tax rate that does not exceed $0.25 and\nresults in a maximum annual amount that does not exceed $2,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $200,000, the property's annual property tax bill would increase by\n$216 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Tipton Community School Corporation increase property taxes paid to\nthe school corporation for no more than eight (8) years for the purpose of\nproviding funding to maintain academic programs, class sizes, and student\nsupport, health, and safety services, attract and retain teachers and support staff,\nmaintain student transportation services, and sustain educational and operational\nfunding stability by imposing a property tax rate that does not exceed $0.25 and\nresults in a maximum annual amount that does not exceed $2,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $200,000, the property's annual property tax bill would increase by\n$216 per year.",
+        " bill would increase by $216 per year. \" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.25 per $100 assessed valuation. 9. On July 1, 2026, the "
+      ],
+      "yesMeans": [
+        "Shall the Tipton Community School Corporation increase property taxes paid to\nthe school corporation for no more than eight (8) years for the purpose of\nproviding funding to maintain academic programs, class sizes, and student\nsupport, health, and safety services, attract and retain teachers and support staff,\nmaintain student transportation services, and sustain educational and operational\nfunding stability by imposing a property tax rate that does not exceed $0.25 and\nresults in a maximum annual amount that does not exceed $2,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $200,000, the property's annual property tax bill would increase by\n$216 per year."
+      ],
+      "noMeans": [
+        "Shall the Tipton Community School Corporation increase property taxes paid to\nthe school corporation for no more than eight (8) years for the purpose of\nproviding funding to maintain academic programs, class sizes, and student\nsupport, health, and safety services, attract and retain teachers and support staff,\nmaintain student transportation services, and sustain educational and operational\nfunding stability by imposing a property tax rate that does not exceed $0.25 and\nresults in a maximum annual amount that does not exceed $2,000,000. If this\noperating referendum public question is approved by the voters, for a median\nresidence of $200,000, the property's annual property tax bill would increase by\n$216 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           6th day of July, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                           Page 3 of 3\n\f",
+    "officialInventoryRow": 39,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-41-operating",
+    "sourceUrl": "https://www.in.gov/dA/dbae3aee61/26-017-Frontier-School-Corporation-Operating-Determination.pdf?language_id=1",
+    "rawHash": "fc74ec9f7bf4bb0388f238e7b195344bb9b453b1ec857ab750775b37788d2d84",
+    "sourceFile": "sources/fc74ec9f7bf4bb0388f238e7b195344bb9b453b1ec857ab750775b37788d2d84.source",
+    "sourceTextFile": "sources/6424e9aaf312a9a06e0fb76cfeb8827f0f51084ce663166e24e2605d6911e048.txt",
+    "excerpt": "Shall Frontier School Corporation increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety initiatives, attracting\nand retaining teachers and staff, managing class sizes, and funding academic and\nsupport programs to meet the educational needs of all students, by imposing a\nproperty tax rate that does not exceed $0.25 and results in a maximum annual\namount that does not exceed $1,750,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty's annual property tax bill would increase by $284 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Frontier School Corporation increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety initiatives, attracting\nand retaining teachers and staff, managing class sizes, and funding academic and\nsupport programs to meet the educational needs of all students, by imposing a\nproperty tax rate that does not exceed $0.25 and results in a maximum annual\namount that does not exceed $1,750,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty's annual property tax bill would increase by $284 per year.",
+        "x bill would increase by $284 per year.\" 8. The resolution represents that the referendum tax rate proposed by the Corporation is not to exceed $0.25 per $100 assessed valuation. 9. On June 25, 2026, the"
+      ],
+      "yesMeans": [
+        "Shall Frontier School Corporation increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety initiatives, attracting\nand retaining teachers and staff, managing class sizes, and funding academic and\nsupport programs to meet the educational needs of all students, by imposing a\nproperty tax rate that does not exceed $0.25 and results in a maximum annual\namount that does not exceed $1,750,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty's annual property tax bill would increase by $284 per year."
+      ],
+      "noMeans": [
+        "Shall Frontier School Corporation increase property taxes paid to the School\nCorporation for no more than eight (8) years for the purpose of funding and\nsustaining educational and operational stability in response to reductions in\nproperty tax revenue, supporting essential health and safety initiatives, attracting\nand retaining teachers and staff, managing class sizes, and funding academic and\nsupport programs to meet the educational needs of all students, by imposing a\nproperty tax rate that does not exceed $0.25 and results in a maximum annual\namount that does not exceed $1,750,000? If this operating referendum public\nquestion is approved by the voters, for a median residence of $250,000, the\nproperty's annual property tax bill would increase by $284 per year."
+      ]
+    },
+    "approvalEvidence": "WHEREFORE, based on the above findings and applicable law, the Department finds that the\nproposed language is in compliance with IC 20-46-1-10 and approves the language as proposed.\n\n           26th day of June, 2026.\nDated this ____\n\nSTATE OF INDIANA\nDEPARTMENT OF LOCAL GOVERNMENT FINANCE\n\n\n\n______________________________________\nJason Cockerill, Commissioner\nDepartment of Local Government Finance\n\n\n\n\n                                            Page 3 of 3\n\f",
+    "officialInventoryRow": 41,
+    "semanticConditions": [
+      "Final approved question used rather than preliminary statutory blank template or resolution.",
+      "Dollar household illustration is conditional on the stated median residence; not a universal household bill.",
+      "Rates are per assessed value, not market value; maximum rate and maximum annual levy are separate caps."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

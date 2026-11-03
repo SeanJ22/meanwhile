@@ -1,0 +1,35 @@
+[
+  {
+    "contestId": "in-cx-2026-lebanon-police-headquarters",
+    "sourceUrl": "https://www.in.gov/dA/77bb430cb6/26-040-City-of-Lebanon-Controlled-Project.pdf?language_id=1",
+    "rawHash": "03fb3c63d9c9496e1529553303a79bf8122cb5ce0505ca838c33371327c8335d",
+    "sourceFile": "sources/03fb3c63d9c9496e1529553303a79bf8122cb5ce0505ca838c33371327c8335d.source",
+    "sourceTextFile": "sources/23b14d111e52bac23c365a4e14463a6d70ef580ee889f5da7dc68bffbdf2e8ab.txt",
+    "excerpt": "Shall the City of Lebanon, Indiana increase property taxes paid to the City for no\nmore than 20 years for the purpose of funding all or any portion of the cost of the\ndesign, construction and equipping of a new police headquarters in the City,\ntogether with the acquisition of related real property, as required, and any related\nimprovements thereto, for which the principal debt amount for the project will cost\nno more than $52,165,000 and the financing cost including interest and fees will\ncost no more than an additional $35,918,413 and is estimated to increase the\nproperty taxes paid to the City by imposing a property tax rate that results in a\nmaximum annual amount that does not exceed $4,454,550. If this capital\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property's annual property tax bill would increase by $216 per year.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Lebanon, Indiana increase property taxes paid to the City for no\nmore than 20 years for the purpose of funding all or any portion of the cost of the\ndesign, construction and equipping of a new police headquarters in the City,\ntogether with the acquisition of related real property, as required, and any related\nimprovements thereto, for which the principal debt amount for the project will cost\nno more than $52,165,000 and the financing cost including interest and fees will\ncost no more than an additional $35,918,413 and is estimated to increase the\nproperty taxes paid to the City by imposing a property tax rate that results in a\nmaximum annual amount that does not exceed $4,454,550. If this capital\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property's annual property tax bill would increase by $216 per year."
+      ],
+      "yesMeans": [
+        "Shall the City of Lebanon, Indiana increase property taxes paid to the City for no\nmore than 20 years for the purpose of funding all or any portion of the cost of the\ndesign, construction and equipping of a new police headquarters in the City,\ntogether with the acquisition of related real property, as required, and any related\nimprovements thereto, for which the principal debt amount for the project will cost\nno more than $52,165,000 and the financing cost including interest and fees will\ncost no more than an additional $35,918,413 and is estimated to increase the\nproperty taxes paid to the City by imposing a property tax rate that results in a\nmaximum annual amount that does not exceed $4,454,550. If this capital\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property's annual property tax bill would increase by $216 per year."
+      ],
+      "noMeans": [
+        "Shall the City of Lebanon, Indiana increase property taxes paid to the City for no\nmore than 20 years for the purpose of funding all or any portion of the cost of the\ndesign, construction and equipping of a new police headquarters in the City,\ntogether with the acquisition of related real property, as required, and any related\nimprovements thereto, for which the principal debt amount for the project will cost\nno more than $52,165,000 and the financing cost including interest and fees will\ncost no more than an additional $35,918,413 and is estimated to increase the\nproperty taxes paid to the City by imposing a property tax rate that results in a\nmaximum annual amount that does not exceed $4,454,550. If this capital\nreferendum public question is approved by the voters, for a median residence of\n$250,000, the property's annual property tax bill would increase by $216 per year."
+      ]
+    },
+    "physicalPage": 2,
+    "extraction": {
+      "method": "Scanned nativepage2 rendered via pdftoppm -r150 and manually transcribed after visual review, using rawOCR only as an aid.",
+      "renderFile": "lebanon-question-page.png",
+      "rawOcrFile": "lebanon-question.raw-ocr.txt",
+      "sourceRawDigitalTextFile": "lebanon-native-digital-text.txt"
+    },
+    "semanticConditions": [
+      "Up to20years of property-tax increase; no automaticprojectstartyear inferred.",
+      "Principal and additionalfinancing caps distinguished; annualtaxlevycap separate.",
+      "Conditionalmedianresidence illustration not universal household bill."
+    ],
+    "inventorySupportFile": "november-inventory-support.json",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

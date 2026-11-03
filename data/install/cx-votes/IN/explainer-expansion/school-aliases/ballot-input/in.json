@@ -1,0 +1,276 @@
+{
+  "ballots": {
+    "IN:in-2026-11-03": {
+      "election": {
+        "id": "in-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IN"
+      },
+      "contests": [
+        {
+          "id": "in-cx-2026-dlgf-0-operating",
+          "electionId": "in-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:in/school_district:bartholomew_county_school_corporation",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Bartholomew Consolidated School Corporation — School operating tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.in.gov/dA/f4c05288d5/26-013-Bartholomew-Consolidated-School-Corporation-Operating-Determination.pdf?language_id=1",
+          "provenance": {
+            "sourceUrl": "https://www.in.gov/dA/f4c05288d5/26-013-Bartholomew-Consolidated-School-Corporation-Operating-Determination.pdf?language_id=1",
+            "sourceOrg": "Indiana Department of Local Government Finance",
+            "collectedAt": "2026-11-03T04:58:36.505072+00:00",
+            "verifiedAt": "2026-11-03T05:07:51.552229+00:00",
+            "quote": "Shall Bartholomew Consolidated School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining competitive compensation for teachers\nand staff and maintaining student safety by imposing a property tax rate that does\nnot exceed $0.156 and results in a maximum annual amount that does not exceed\n$10,100,000. If this operating referendum public question is NOT approved by\nthe voters, for a median residence of $250,000, the property’s annual tax bill\nwould decrease by $190 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.156."
+          }
+        },
+        {
+          "id": "in-cx-2026-dlgf-40-operating",
+          "electionId": "in-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:in/school_district:tipton_county_northern_community_school_corporation",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Tri-Central Community Schools — School operating tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.in.gov/dA/546a4b0f39/26-011-Tri-Central-Community-Schools-Operating-Determination.pdf?language_id=1",
+          "provenance": {
+            "sourceUrl": "https://www.in.gov/dA/546a4b0f39/26-011-Tri-Central-Community-Schools-Operating-Determination.pdf?language_id=1",
+            "sourceOrg": "Indiana Department of Local Government Finance",
+            "collectedAt": "2026-11-03T04:58:38.412979+00:00",
+            "verifiedAt": "2026-11-03T05:07:51.552229+00:00",
+            "quote": "Shall Tri-Central Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including recruiting and retaining\nteachers and staff, supporting essential safety initiatives, and maintaining class\nsizes, academic programs and opportunities to meet the learning needs of all\nstudents in response to reductions in property tax revenue by imposing a property\ntax rate that does not exceed $0.24 and results in a maximum annual amount that\ndoes not exceed $1,100,000. If this operating referendum public question is\napproved by the voters, for a median residence of $150,000, the property's annual\nproperty tax bill would increase by $143 per year."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "in-cx-2026-dlgf-0-operating:measure",
+          "contestId": "in-cx-2026-dlgf-0-operating",
+          "questionText": "Shall Bartholomew Consolidated School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining competitive compensation for teachers\nand staff and maintaining student safety by imposing a property tax rate that does\nnot exceed $0.156 and results in a maximum annual amount that does not exceed\n$10,100,000. If this operating referendum public question is NOT approved by\nthe voters, for a median residence of $250,000, the property’s annual tax bill\nwould decrease by $190 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.156.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.in.gov/dA/f4c05288d5/26-013-Bartholomew-Consolidated-School-Corporation-Operating-Determination.pdf?language_id=1",
+            "sourceOrg": "Indiana Department of Local Government Finance",
+            "collectedAt": "2026-11-03T04:58:36.505072+00:00",
+            "verifiedAt": "2026-11-03T05:07:51.552229+00:00",
+            "quote": "Shall Bartholomew Consolidated School Corporation continue to increase\nproperty taxes paid to the school corporation for no more than eight (8) years for\nthe purpose of funding and maintaining competitive compensation for teachers\nand staff and maintaining student safety by imposing a property tax rate that does\nnot exceed $0.156 and results in a maximum annual amount that does not exceed\n$10,100,000. If this operating referendum public question is NOT approved by\nthe voters, for a median residence of $250,000, the property’s annual tax bill\nwould decrease by $190 per year. If this operating referendum public question is\napproved by the voters, it would be a renewal of the most recent operating\nreferendum public question passed in 2020 with a property tax rate of $0.156."
+          }
+        },
+        {
+          "id": "in-cx-2026-dlgf-40-operating:measure",
+          "contestId": "in-cx-2026-dlgf-40-operating",
+          "questionText": "Shall Tri-Central Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including recruiting and retaining\nteachers and staff, supporting essential safety initiatives, and maintaining class\nsizes, academic programs and opportunities to meet the learning needs of all\nstudents in response to reductions in property tax revenue by imposing a property\ntax rate that does not exceed $0.24 and results in a maximum annual amount that\ndoes not exceed $1,100,000. If this operating referendum public question is\napproved by the voters, for a median residence of $150,000, the property's annual\nproperty tax bill would increase by $143 per year.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.in.gov/dA/546a4b0f39/26-011-Tri-Central-Community-Schools-Operating-Determination.pdf?language_id=1",
+            "sourceOrg": "Indiana Department of Local Government Finance",
+            "collectedAt": "2026-11-03T04:58:38.412979+00:00",
+            "verifiedAt": "2026-11-03T05:07:51.552229+00:00",
+            "quote": "Shall Tri-Central Community Schools increase property taxes paid to the school\ncorporation for no more than eight (8) years for the purpose of funding and\nmaintaining daily educational operations, including recruiting and retaining\nteachers and staff, supporting essential safety initiatives, and maintaining class\nsizes, academic programs and opportunities to meet the learning needs of all\nstudents in response to reductions in property tax revenue by imposing a property\ntax rate that does not exceed $0.24 and results in a maximum annual amount that\ndoes not exceed $1,100,000. If this operating referendum public question is\napproved by the voters, for a median residence of $150,000, the property's annual\nproperty tax bill would increase by $143 per year."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "in-cx-2026-dlgf-0-operating",
+          "whatItDoes": "Renews a school operating property-tax levy for no more than eight years for teacher and staff compensation and student safety. The rate is capped at $0.156 per $100 of assessed value, with an annual levy cap of $10,100,000. The official illustration estimates a $190 annual decrease if voters reject it for a $250,000,median residence.",
+          "yesMeans": "Approve the proposed renewal.",
+          "noMeans": "Do not approve the renewal; the official question estimates the stated median-residence tax decrease.",
+          "parts": [],
+          "sourceUrl": "https://www.in.gov/dA/f4c05288d5/26-013-Bartholomew-Consolidated-School-Corporation-Operating-Determination.pdf?language_id=1",
+          "sourceHash": "e8caaa932ab1f4a9aac9b722a65b87532a0e85d1bf430c77d6d515631a0c880f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:07:51.552229+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "in-cx-2026-dlgf-40-operating",
+          "whatItDoes": "Authorizes a school operating property-tax levy for no more than eight years for daily school operations, teachers and staff, safety, class sizes and academic programs. The rate is capped at $0.24 per $100 of assessed value, with an annual levy cap of $1,100,000. The official illustration estimates a $143 annual increase if voters approve it for a $150,000,median residence.",
+          "yesMeans": "Approve the proposed levy and its stated caps.",
+          "noMeans": "Do not approve this proposed levy through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.in.gov/dA/546a4b0f39/26-011-Tri-Central-Community-Schools-Operating-Determination.pdf?language_id=1",
+          "sourceHash": "02c124da8cb1bfac7a5b45d39be82f7fb0d168f34dd586e1664784429ea82f2e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:07:51.552229+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:07:51.552229+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
+        "finalUrl": "https://www.in.gov/sos/elections/files/Candidate_List_Abbreviated_20260922_011251PM.xlsx",
+        "httpStatus": 200,
+        "rawHash": "7ad57ba6ee23303736b75f90e2d39bab4b55d7bee99f30d545fc75ef6839afa8",
+        "retrievedAt": "2026-10-14T16:12:24.415652Z",
+        "publisher": "Indiana Election Division, Office of the Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "candidates.xlsx; ALL COUNTIES 2026 GENERAL ELECTION full office and district lists; all 137 requested candidacy contests and 271 listed name/party rows matched saved records by script.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/dA/fdebb4ee35/Dispatch.Aug-2026.FINAL.pdf?language_id=1",
+        "finalUrl": "https://www.in.gov/dA/fdebb4ee35/Dispatch.Aug-2026.FINAL.pdf?language_id=1",
+        "httpStatus": 200,
+        "rawHash": "8084d7202a1643d6d2ff55de48d6a65b20f9c291ef00f5931b3fb445c2072a90",
+        "retrievedAt": "2026-10-14T05:06:03.774362Z",
+        "publisher": "Indiana Election Division, Office of the Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "august.pdf; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+        "finalUrl": "https://www.in.gov/dA/d13ecb1f55/2026-Indiana-Election-Legislation-Summary.FINAL.pdf?language_id=1",
+        "httpStatus": 200,
+        "rawHash": "babf8cd2a50941415b3cb2fbf26c67a008efb9498273a1bc8927b70665eaea52",
+        "retrievedAt": "2026-10-14T05:08:08.414229Z",
+        "publisher": "Indiana Election Division, Office of the Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "legislation-2026.pdf; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL",
+        "finalUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL",
+        "httpStatus": 200,
+        "rawHash": "40846fab8dd5043573845745e8d9b0e72c5e0163ee012ca01092b20c80aa7eea",
+        "retrievedAt": "2026-10-14T05:07:27.452102Z",
+        "publisher": "Hamilton County Elections Office",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "sample-ballot.pdf; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/courts/retention/",
+        "finalUrl": "https://www.in.gov/courts/retention/",
+        "httpStatus": 200,
+        "rawHash": "93912fe9458df85c1067695a452e21d6389c1a09283099f68e0b06368364a887",
+        "retrievedAt": "2026-10-14T05:06:59.237729Z",
+        "publisher": "Indiana Office of Judicial Administration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "courts-retention.html; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/courts/appeals/districts/",
+        "finalUrl": "https://www.in.gov/courts/appeals/districts/",
+        "httpStatus": 200,
+        "rawHash": "2a082d4645401694bac09ff1592830131c826d76d386f8d85019dfcedadd266a",
+        "retrievedAt": "2026-10-14T07:32:24.663890Z",
+        "publisher": "Indiana Office of Judicial Administration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Judges representing the 4th and 5th districts stand for retention statewide. Judges named from these districts stand for retention only in their districts. Applied to the judicial district titles printed on the official November ballot.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/courts/tax/about/",
+        "finalUrl": "https://www.in.gov/courts/tax/about/",
+        "httpStatus": 200,
+        "rawHash": "2c6855200b9edb33e109451263a5d2e19566da25332ad651d5786781b59d97fc",
+        "retrievedAt": "2026-10-14T07:33:14.444673Z",
+        "publisher": "Indiana Office of Judicial Administration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Tax Court description establishes its jurisdiction over initial appeals arising under Indiana tax laws; corroborates the statewide court named on the general ballot.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/dA/51ae0a2155/2025-tax-court-annual-report.pdf?language_id=1",
+        "finalUrl": "https://www.in.gov/dA/51ae0a2155/2025-tax-court-annual-report.pdf?language_id=1",
+        "httpStatus": 200,
+        "rawHash": "45434966eb4287210c46b8fd0b2180368d949576eee72ce520368f9dbafc90bc",
+        "retrievedAt": "2026-10-14T07:38:12.188559Z",
+        "publisher": "Indiana Office of Judicial Administration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official annual report identifies one Tax Court judge and its retention-election rule. The current 2026 court retention page and county ballot establish the retained candidate name.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.indianasenaterepublicans.com/keeping-dangerous-criminal-suspects-off-the-streets",
+        "finalUrl": "https://www.indianasenaterepublicans.com/keeping-dangerous-criminal-suspects-off-the-streets",
+        "httpStatus": 200,
+        "rawHash": "73382e74bbfabd0c3d57e1001092a2315ff5604f6878181b23eb8dd8410d26ac",
+        "retrievedAt": "2026-10-14T05:23:54.711300Z",
+        "publisher": "Indiana Senate Republican Caucus",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "senate-bail.html; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://iga.in.gov/legislative/2026/resolutions/senate/joint/1/details",
+        "finalUrl": "https://iga.in.gov/legislative/2026/resolutions/senate/joint/1/details",
+        "httpStatus": 200,
+        "rawHash": "61d9d1265c828684df265d5139ee43f21d5325cb19aa861c7da7816dd28ac732",
+        "retrievedAt": "2026-10-14T05:24:37.717165Z",
+        "publisher": "Indiana General Assembly",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "sjr1-details.html; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.indianahouserepublicans.com/news/press-releases/rep.-aylesworth-authors-resolution-to-address-indiana-s-judicial-shortage-in-rural-areas/",
+        "finalUrl": "https://www.indianahouserepublicans.com/news/press-releases/rep.-aylesworth-authors-resolution-to-address-indiana-s-judicial-shortage-in-rural-areas/",
+        "httpStatus": 200,
+        "rawHash": "4b3bb85089cc241bb7552c7a7712a09809d21a675e3e1e9a273b4b3b2335eba0",
+        "retrievedAt": "2026-10-14T05:28:39.087418Z",
+        "publisher": "Indiana House Republican Caucus",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "house-hjr1-article.html; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://iga.in.gov/legislative/2025/resolutions/house/joint/1/details",
+        "finalUrl": "https://iga.in.gov/legislative/2025/resolutions/house/joint/1/details",
+        "httpStatus": 200,
+        "rawHash": "61d9d1265c828684df265d5139ee43f21d5325cb19aa861c7da7816dd28ac732",
+        "retrievedAt": "2026-10-14T05:29:20.963850Z",
+        "publisher": "Indiana General Assembly",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "hjr1-details.html; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/sos/elections/files/Fall%202026%20Clerks%20Meetings.FINAL.pptx",
+        "finalUrl": "https://www.in.gov/sos/elections/files/Fall%202026%20Clerks%20Meetings.FINAL.pptx",
+        "httpStatus": 200,
+        "rawHash": "e318c57c27f00f00e269558010ac10725bd711620428d1d823e9d2e147186630",
+        "retrievedAt": "2026-10-14T05:04:47.714242Z",
+        "publisher": "Indiana Election Division, Office of the Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "fall-clerks.pptx; exact downloaded bytes converted by convert-in.py",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.in.gov/dA/f4c05288d5/26-013-Bartholomew-Consolidated-School-Corporation-Operating-Determination.pdf?language_id=1",
+        "finalUrl": "https://www.in.gov/dA/f4c05288d5/26-013-Bartholomew-Consolidated-School-Corporation-Operating-Determination.pdf?language_id=1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:58:36.505072+00:00",
+        "rawHash": "4bf86656d44bc9fe24012db3a261817e9d63c85e831278834c4afcfcf5969924",
+        "publisher": "Indiana Department of Local Government Finance",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native final approved school referendum language linked from current official November2026referenda table. Exact full approved question, rate/cap/base/term/conditionalhouseholdillustration reviewed. Preliminary templates and withdrawn Eminence excluded. Three district identity questions remain separate."
+      },
+      {
+        "requestedUrl": "https://www.in.gov/dA/546a4b0f39/26-011-Tri-Central-Community-Schools-Operating-Determination.pdf?language_id=1",
+        "finalUrl": "https://www.in.gov/dA/546a4b0f39/26-011-Tri-Central-Community-Schools-Operating-Determination.pdf?language_id=1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:58:38.412979+00:00",
+        "rawHash": "aa5529934124ea01e82236c4e0f012e682f9a9881ca3af4b10954a3785da4e81",
+        "publisher": "Indiana Department of Local Government Finance",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native final approved school referendum language linked from current official November2026referenda table. Exact full approved question, rate/cap/base/term/conditionalhouseholdillustration reviewed. Preliminary templates and withdrawn Eminence excluded. Three district identity questions remain separate."
+      }
+    ]
+  }
+}

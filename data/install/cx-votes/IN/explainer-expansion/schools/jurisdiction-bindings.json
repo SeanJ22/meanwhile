@@ -1,0 +1,506 @@
+[
+  {
+    "contestId": "in-cx-2026-dlgf-2-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:zionsville_community_schools",
+      "unsd",
+      "1802830",
+      "Zionsville Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Zionsville Community Schools",
+    "sourceCounties": "Boone County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-3-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:shakamak_schools_metropolitan_school_district",
+      "unsd",
+      "1810110",
+      "Shakamak Schools Metropolitan School District"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Metropolitan School District of Shakamak",
+    "sourceCounties": "Clay & Greene Counties",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-4-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:barr_reeve_community_school_corporation",
+      "unsd",
+      "1800330",
+      "Barr-Reeve Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Barr-Reeve Community Schools",
+    "sourceCounties": "Daviess County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-5-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:southeast_dubois_county_school_corporation",
+      "unsd",
+      "1810640",
+      "Southeast Dubois County School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Southeast Dubois County School Corporation",
+    "sourceCounties": "Dubois County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-6-safety",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:wa_nee_community_schools",
+      "unsd",
+      "1812240",
+      "Wa-Nee Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Wa-Nee Community School Corporation",
+    "sourceCounties": "Elkhart & Kosciusko Counties",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-7-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:mississinewa_community_school_corporation",
+      "unsd",
+      "1806870",
+      "Mississinewa Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Mississinewa Community School Corporation",
+    "sourceCounties": "Grant County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-8-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:oak_hill_united_school_corporation",
+      "unsd",
+      "1808340",
+      "Oak Hill United School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Oak Hill United School Corporation",
+    "sourceCounties": "Grant & Miami Counties",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-9-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:carmel_clay_schools",
+      "unsd",
+      "1801200",
+      "Carmel Clay Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Carmel Clay Schools",
+    "sourceCounties": "Hamilton County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-10-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:hamilton_southeastern_schools",
+      "unsd",
+      "1810650",
+      "Hamilton Southeastern Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Hamilton Southeastern Schools",
+    "sourceCounties": "Hamilton County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-11-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:noblesville_schools",
+      "unsd",
+      "1807650",
+      "Noblesville Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Noblesville Schools",
+    "sourceCounties": "Hamilton County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-12-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:sheridan_community_schools",
+      "unsd",
+      "1806480",
+      "Sheridan Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Sheridan Community School Corporation",
+    "sourceCounties": "Hamilton & Boone Counties",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-13-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:westfield_washington_schools",
+      "unsd",
+      "1813080",
+      "Westfield-Washington Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Westfield Washington Schools",
+    "sourceCounties": "Hamilton County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-14-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:clark_pleasant_community_school_corporation",
+      "unsd",
+      "1801890",
+      "Clark-Pleasant Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Clark-Pleasant School Corporation",
+    "sourceCounties": "Johnson County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-15-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:franklin_community_school_corporation",
+      "unsd",
+      "1803690",
+      "Franklin Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Franklin Community School Corporation",
+    "sourceCounties": "Johnson County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-16-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:crown_point_community_school_corporation",
+      "unsd",
+      "1802490",
+      "Crown Point Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Crown Point Community School Corporation",
+    "sourceCounties": "Lake County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-17-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:river_forest_community_school_corporation",
+      "unsd",
+      "1804620",
+      "River Forest Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "River Forest Community School",
+    "sourceCounties": "Lake County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-18-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:whiting_school_city",
+      "unsd",
+      "1813200",
+      "Whiting School City"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "School City of Whiting",
+    "sourceCounties": "Lake County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-19-construction",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:whiting_school_city",
+      "unsd",
+      "1813200",
+      "Whiting School City"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "School City of Whiting",
+    "sourceCounties": "Lake County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-20-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:tri_creek_school_corporation",
+      "unsd",
+      "1811460",
+      "Tri-Creek School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Tri-Creek School Corporation",
+    "sourceCounties": "Lake County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-21-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:michigan_city_area_schools",
+      "unsd",
+      "1806570",
+      "Michigan City Area Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Michigan City Area Schools",
+    "sourceCounties": "LaPorte & Porter Counties",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-22-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:anderson_community_school_corporation",
+      "unsd",
+      "1800150",
+      "Anderson Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Anderson Community School Corporation",
+    "sourceCounties": "Madison County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-23-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:elwood_community_school_corporation",
+      "unsd",
+      "1803300",
+      "Elwood Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Elwood Community School Corporation",
+    "sourceCounties": "Madison County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-24-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:beech_grove_city_schools",
+      "unsd",
+      "1800450",
+      "Beech Grove City Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "School City of Beech Grove",
+    "sourceCounties": "Marion County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-26-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:decatur_township_metropolitan_school_district",
+      "unsd",
+      "1802640",
+      "Decatur Township Metropolitan School District"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Metropolitan School District of Decatur Township",
+    "sourceCounties": "Marion County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-27-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:washington_township_metropolitan_school_district",
+      "unsd",
+      "1812720",
+      "Washington Township Metropolitan School District"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Metropolitan School District of Washington Township",
+    "sourceCounties": "Marion County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-28-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:wayne_township_metropolitan_school_district",
+      "unsd",
+      "1812810",
+      "Wayne Township Metropolitan School District"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Metropolitan School District of Wayne Township",
+    "sourceCounties": "Marion County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-31-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:smith_green_community_schools",
+      "unsd",
+      "1810230",
+      "Smith-Green Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Smith-Green Community Schools",
+    "sourceCounties": "Noble & Whitley Counties",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-32-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:pike_county_school_corporation",
+      "unsd",
+      "1808900",
+      "Pike County School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Pike County School Corporation",
+    "sourceCounties": "Pike County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-33-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:porter_township_school_corporation",
+      "unsd",
+      "1809180",
+      "Porter Township School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Porter Township School Corporation",
+    "sourceCounties": "Porter County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-34-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:union_township_school_corporation",
+      "unsd",
+      "1811700",
+      "Union Township School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Union Township School Corporation",
+    "sourceCounties": "Porter County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-35-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:culver_community_schools_corporation",
+      "unsd",
+      "1802520",
+      "Culver Community Schools Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Culver Community School Corporation",
+    "sourceCounties": "Pulaski, Fulton, Starke, & Marshall Counties",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-36-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:shelbyville_central_schools",
+      "unsd",
+      "1810140",
+      "Shelbyville Central Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Shelbyville Central Schools",
+    "sourceCounties": "Shelby County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-37-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:oregon_davis_school_corporation",
+      "unsd",
+      "1808460",
+      "Oregon-Davis School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Oregon-Davis School Corporation",
+    "sourceCounties": "Starke County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-38-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:west_lafayette_community_school_corporation",
+      "unsd",
+      "1812870",
+      "West Lafayette Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "West Lafayette School Corporation",
+    "sourceCounties": "Tippecanoe County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-39-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:tipton_community_school_corporation",
+      "unsd",
+      "1811400",
+      "Tipton Community School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Tipton Community School Corporation",
+    "sourceCounties": "Tipton County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  },
+  {
+    "contestId": "in-cx-2026-dlgf-41-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:frontier_school_corporation",
+      "unsd",
+      "1803810",
+      "Frontier School Corporation"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "sourceName": "Frontier School Corporation",
+    "sourceCounties": "White County",
+    "matchingRule": "Unique school-district identity after removal of generic school/corporation/word-order terms; substantive geographic name unchanged. Ambiguous Bartholomew/TriCentral and new IPEC entity left out pending explicit proof."
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "contestId": "in-cx-2026-dlgf-25-operating",
+  "source": {
+    "requestedUrl": "https://www.in.gov/dA/fa0a970ec8/26-029-Indianapolis-Public-Education-Corporation-Operating-Documentation.pdf?language_id=1",
+    "finalUrl": "https://www.in.gov/dA/fa0a970ec8/26-029-Indianapolis-Public-Education-Corporation-Operating-Documentation.pdf?language_id=1",
+    "httpStatus": 200,
+    "rawHash": "b466654d5814908b186b051e397967a49a49e6ccd2b5b4b925e269090215ff42",
+    "retrievedAt": "2026-11-03T05:02:35.788641+00:00",
+    "publisher": "Indiana DLGF native publication of IPEC Board resolution",
+    "sourceClass": "ELECTION_AUTHORITY",
+    "reviewedEvidence": "Complete native7page resolution file retained. Only printedresolutionpages1/2were visually reviewed for electorate identity; fullsourceOCR not claimed. Resolution13-2026adoptedJune22 expressly places registeredvoters in IPS geographicboundaries in referendum electorate. Preliminary ballot wording in thisresolution is not used for Measure/question: finalapprovedDLGFquestion is separateprimarysource."
+  },
+  "sourceFile": "sources/b466654d5814908b186b051e397967a49a49e6ccd2b5b4b925e269090215ff42.resolution.pdf",
+  "sourceTextFile": "sources/3b6971dc2ef517c86cb979b1facc865b15a1286eb3c3149f06e84a23eb67c8d5.verified-electorate.txt",
+  "physicalPagesVisuallyReviewed": [
+    1,
+    2
+  ],
+  "operativeElectorateQuote": "Section 3. There shall be placed on a ballot to be considered in a referendum of the\nregistered voters residing in the geographical boundaries of IPS to be held in 2026, subject to the\ncertifications from the Auditor of Marion County, Indiana:",
+  "sourceResolution": "IPECResolution13-2026adoptedJune22,2026",
+  "scope": "ExplicitwholeIPSgeographicalelectorate. Fullnativefile retained; geometryquote only, preliminaryquestionnotused.",
+  "rendering": "pdftoppm -png -r130; physicalpage2viewed directly; OCRonlyasan aid.",
+  "visualSourceImages": [
+    {
+      "physicalPage": 1,
+      "file": "sources/0b87c870baf449de77445bb95c8c34d302c6bcd4d010b0878270a6237c41029d.page-1.png",
+      "rawOcrFile": "sources/ef5ec48638e53cc6712d7e1440e601528d3d9b33ce0280660d56a28c6a6948df.page-1.uncorrected-ocr.txt"
+    },
+    {
+      "physicalPage": 2,
+      "file": "sources/ec0fb70dbfb88467b8fdb1a24ebe21c8092e9f056156f37f2091e222039ffae5.page-2.png",
+      "rawOcrFile": "sources/06bcc6d10aac185c2edb798515bc82dd8395bdbf4739c0a1db828545af9627c5.page-2.uncorrected-ocr.txt"
+    }
+  ]
+}

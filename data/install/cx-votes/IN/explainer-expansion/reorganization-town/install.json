@@ -1,0 +1,106 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IN",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "in-cx-2026-ellettsville-richland-reorganization-town-electorate",
+      "title": "Ellettsville — Reorganization with Richland Township",
+      "ocdId": "ocd-division/country:us/state:in/electoral_district:2026_ellettsville_richland_reorganization",
+      "sourceUrl": "https://www.in.gov/dA/0b96473b63/26-043-Town-of-Ellettsville-Reorganization.pdf?language_id=1"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "localCompleteness": "Both fullsource-qualified memberdivisions represented by one source-defined electionalias and existingdistrictMemberships; exactunion covered without countywide widening. No all-INlocal completeness claim."
+  },
+  "validation": {
+    "state": "IN",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "exactWholeMemberUnionAndPrimarySourceQuotes": "PASS",
+    "realBallotForDivisionsAndMeasureAttachment": [
+      {
+        "name": "town",
+        "divisions": [
+          "ocd-division/country:us/state:in/place:ellettsville"
+        ],
+        "contestCount": 1,
+        "explanationAttached": true,
+        "status": "PASS"
+      },
+      {
+        "name": "township",
+        "divisions": [
+          "ocd-division/country:us/state:in/county:monroe/place:richland_township"
+        ],
+        "contestCount": 1,
+        "explanationAttached": true,
+        "status": "PASS"
+      },
+      {
+        "name": "both",
+        "divisions": [
+          "ocd-division/country:us/state:in/place:ellettsville",
+          "ocd-division/country:us/state:in/county:monroe/place:richland_township"
+        ],
+        "contestCount": 1,
+        "explanationAttached": true,
+        "status": "PASS"
+      },
+      {
+        "name": "countyOnly",
+        "divisions": [
+          "ocd-division/country:us/state:in/county:monroe"
+        ],
+        "contestCount": 0,
+        "explanationAttached": false,
+        "status": "PASS"
+      },
+      {
+        "name": "stateOnly",
+        "divisions": [
+          "ocd-division/country:us/state:in"
+        ],
+        "contestCount": 0,
+        "explanationAttached": false,
+        "status": "PASS"
+      },
+      {
+        "name": "otherTownship",
+        "divisions": [
+          "ocd-division/country:us/state:in/county:monroe/place:bloomington_township"
+        ],
+        "contestCount": 0,
+        "explanationAttached": false,
+        "status": "PASS"
+      }
+    ],
+    "selectedReaderPrefilter": "CodeinspectionPASS: existingrecursiveSQLresolvesdistrictMemberships beforefilteringcontests. No productionDBquery performed.",
+    "electorateKind": "SOURCE_DEFINED_ELECTION_ELECTORATE: not Census ID; no mapgeometry/appcode changes."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

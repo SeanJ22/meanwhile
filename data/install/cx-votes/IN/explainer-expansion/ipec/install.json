@@ -1,0 +1,49 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IN",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "in-cx-2026-dlgf-25-operating",
+      "title": "Indianapolis Public Education Corporation — School operating levy",
+      "ocdId": "ocd-division/country:us/state:in/school_district:indianapolis_public_schools",
+      "sourceUrl": "https://www.in.gov/dA/daea9cd76b/26-029-Indianapolis-Public-Education-Corporation-Operating-Determination.pdf?language_id=1"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "localCompleteness": "Final1of39active school questions from currentDLGF November2026table; all39prepared with source-backed electorate, plus2otheractiveDLGFquestions. Otherlocalcategoriesremainunreconciled."
+  },
+  "validation": {
+    "state": "IN",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "nativeResolutionWholeIPSElectorateAndVisualReview": "PASS",
+    "preliminaryQuestionNotUsed": "PASS",
+    "all39ActiveDLGFSchoolQuestions": "PREPARED_ACROSS_PACKETS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

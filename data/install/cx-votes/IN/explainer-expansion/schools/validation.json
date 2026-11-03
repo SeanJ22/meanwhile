@@ -1,0 +1,46 @@
+{
+  "state": "IN",
+  "newMeasures": 36,
+  "newExplanations": 36,
+  "measureRecordIssue": "PASS",
+  "sourceBytesAndExactQuestions": "PASS",
+  "officialSourceAuthority": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "readerAttachmentWithExistingTranslations": "PASS",
+  "actualJurisdictionSelection": "PASS",
+  "statewideWidening": "NONE",
+  "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+  "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+  "currentNovemberInventoryAndWithdrawalCheck": "PASS",
+  "finalApprovedLanguageNotPreliminaryTemplates": "PASS",
+  "schoolInventoryScope": {
+    "allTableRows": 42,
+    "explicitlyWithdrawn": 1,
+    "activeSchoolQuestions": 39,
+    "preparedSchoolQuestions": 36,
+    "remainingSchoolIdentityProofs": [
+      {
+        "sourceIndex": 0,
+        "name": "Bartholomew Consolidated School Corporation",
+        "reason": "Existing division needs explicit official alias/territory proof; no name-only geography guess."
+      },
+      {
+        "sourceIndex": 25,
+        "name": "Indianapolis Public Education Corporation",
+        "reason": "Existing division needs explicit official alias/territory proof; no name-only geography guess."
+      },
+      {
+        "sourceIndex": 40,
+        "name": "Tri-Central Community Schools",
+        "reason": "Existing division needs explicit official alias/territory proof; no name-only geography guess."
+      }
+    ],
+    "otherLocalTableQuestions": [
+      "City of Lebanon controlled project",
+      "Town of Ellettsville / Richland Township reorganization"
+    ],
+    "allIndianaLocalCompleteness": "NOT_ASSERTED: DLGF table is a referendum-category inventory, not all possible local questions."
+  }
+}

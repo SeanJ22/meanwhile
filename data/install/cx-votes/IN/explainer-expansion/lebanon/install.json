@@ -1,0 +1,49 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IN",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IN",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "in-cx-2026-lebanon-police-headquarters",
+      "title": "Lebanon — Police headquarters financing",
+      "ocdId": "ocd-division/country:us/state:in/place:lebanon",
+      "sourceUrl": "https://www.in.gov/dA/77bb430cb6/26-040-City-of-Lebanon-Controlled-Project.pdf?language_id=1"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "localCompleteness": "One exact CityofLebanon controlled-project question in currentDLGF November2026table. School/reorganization questions separate; no all-INlocal completeness claim."
+  },
+  "validation": {
+    "state": "IN",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "nativeScannedQuestionVisualReview": "PASS",
+    "digitalFinalApprovalRetained": "PASS",
+    "currentNovemberInventoryExactDocumentLink": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

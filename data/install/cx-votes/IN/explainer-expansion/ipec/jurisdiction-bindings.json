@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "in-cx-2026-dlgf-25-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/school_district:indianapolis_public_schools",
+      "unsd",
+      "1804770",
+      "Indianapolis Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "matchingRule": "OfficialresolutionSection3expresslydefines qualifiedvoters as registeredvoters residinginIPSgeographicalboundaries. UsesexistingIPSschooldistrictLEA1804770; doesnotassertIPECandIPSsamelegalentity orwholeIndianapoliscity/county scope."
+  }
+]

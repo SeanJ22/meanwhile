@@ -1,0 +1,76 @@
+{
+  "state": "IN",
+  "newMeasures": 1,
+  "newExplanations": 1,
+  "measureRecordIssue": "PASS",
+  "sourceBytesAndExactQuestions": "PASS",
+  "officialSourceAuthority": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "readerAttachmentWithExistingTranslations": "PASS",
+  "actualJurisdictionSelection": "PASS",
+  "statewideWidening": "NONE",
+  "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+  "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+  "exactWholeMemberUnionAndPrimarySourceQuotes": "PASS",
+  "realBallotForDivisionsAndMeasureAttachment": [
+    {
+      "name": "town",
+      "divisions": [
+        "ocd-division/country:us/state:in/place:ellettsville"
+      ],
+      "contestCount": 1,
+      "explanationAttached": true,
+      "status": "PASS"
+    },
+    {
+      "name": "township",
+      "divisions": [
+        "ocd-division/country:us/state:in/county:monroe/place:richland_township"
+      ],
+      "contestCount": 1,
+      "explanationAttached": true,
+      "status": "PASS"
+    },
+    {
+      "name": "both",
+      "divisions": [
+        "ocd-division/country:us/state:in/place:ellettsville",
+        "ocd-division/country:us/state:in/county:monroe/place:richland_township"
+      ],
+      "contestCount": 1,
+      "explanationAttached": true,
+      "status": "PASS"
+    },
+    {
+      "name": "countyOnly",
+      "divisions": [
+        "ocd-division/country:us/state:in/county:monroe"
+      ],
+      "contestCount": 0,
+      "explanationAttached": false,
+      "status": "PASS"
+    },
+    {
+      "name": "stateOnly",
+      "divisions": [
+        "ocd-division/country:us/state:in"
+      ],
+      "contestCount": 0,
+      "explanationAttached": false,
+      "status": "PASS"
+    },
+    {
+      "name": "otherTownship",
+      "divisions": [
+        "ocd-division/country:us/state:in/county:monroe/place:bloomington_township"
+      ],
+      "contestCount": 0,
+      "explanationAttached": false,
+      "status": "PASS"
+    }
+  ],
+  "selectedReaderPrefilter": "CodeinspectionPASS: existingrecursiveSQLresolvesdistrictMemberships beforefilteringcontests. No productionDBquery performed.",
+  "electorateKind": "SOURCE_DEFINED_ELECTION_ELECTORATE: not Census ID; no mapgeometry/appcode changes."
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "in-cx-2026-lebanon-police-headquarters",
+    "registryDivision": [
+      "ocd-division/country:us/state:in/place:lebanon",
+      "place",
+      "1842624",
+      "Lebanon city"
+    ],
+    "registryPath": "repository:data/derived/registration/in.json",
+    "registryFileSha256": "4901cc60706291770f34b570a196e977c8e20ebcf6998c740394c2befd50da1c",
+    "matchingRule": "Exact City of Lebanon, BooneCounty, not anotherLebanon or countywide scope."
+  }
+]

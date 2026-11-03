@@ -1,0 +1,15 @@
+{
+  "kind": "CX_VOTES_SOURCE_REVIEW",
+  "step": "CX-VOTES",
+  "state": "DE",
+  "status": "SOURCE_REVIEW_NO_READER_CHANGE",
+  "install": false,
+  "sourceReview": "inventory-review.json",
+  "coverage": {
+    "officialGeneralElectionStylesChecked": 530,
+    "measureQuestionsFound": 0,
+    "additionalSeparateLocalUniverse": "not established"
+  },
+  "operation": "No ballot rows or translations to install. Retain this official-source review with the explainer handoff. No code release.",
+  "nextOwner": "This lane continues any newly discovered separate local-measure source; River can review the bounded general-election finding."
+}

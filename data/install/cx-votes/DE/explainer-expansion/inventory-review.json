@@ -1,0 +1,227 @@
+{
+  "state": "DE",
+  "checkedAt": "2026-11-03T06:06:05.190708+00:00",
+  "scope": "Every530published style in Delaware Department of Elections current November3,2026 general-election sample-ballot directory. This does not establish a universe of separately administered local elections outside that directory.",
+  "officialDirectory": {
+    "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/index.html",
+    "httpStatus": 200,
+    "sha256": "0e2a927d070d9239a5a18d2b8fbd8f1432c4eea25f5c4f500a722aecebcbf360",
+    "bytes": 105542,
+    "file": "sources/0e2a927d070d9239a5a18d2b8fbd8f1432c4eea25f5c4f500a722aecebcbf360.html",
+    "retrievedAt": "2026-11-03T06:04:55.270510+00:00",
+    "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+  },
+  "styleCount": 530,
+  "countyStyles": {
+    "New Castle": 313,
+    "Sussex": 119,
+    "Kent": 98
+  },
+  "completePublishedDescriptionsRead": 530,
+  "correctElectionDateDescriptions": 530,
+  "measureQuestionsInDescriptions": 0,
+  "descriptionHeadingConflicts": [
+    {
+      "requestedPrecinct": "05-10",
+      "observations": [
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/05-10.html",
+          "httpStatus": 200,
+          "sha256": "9121341399a8e5ab1a45c7ad4c0b85a2646388b02a59e1501138c57502fb84c7",
+          "file": "sources/9121341399a8e5ab1a45c7ad4c0b85a2646388b02a59e1501138c57502fb84c7.html",
+          "bytes": 42166,
+          "retrievedAt": "2026-11-03T06:03:55.731304+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        },
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/05-10.png",
+          "httpStatus": 200,
+          "sha256": "8bce6fd8485131e0207d2d05f984fcc8a2fe333a9cab6c5790421f1e611dd320",
+          "file": "sources/8bce6fd8485131e0207d2d05f984fcc8a2fe333a9cab6c5790421f1e611dd320.png",
+          "bytes": 118908,
+          "retrievedAt": "2026-11-03T06:03:55.946683+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        }
+      ],
+      "accessibleDescriptionHeading": "05-09",
+      "visualImageHeading": "05-10",
+      "visualImageDate": "November 3, 2026",
+      "visualMeasures": 0,
+      "resolution": "The native linked PNG has the requested precinct and no measure question. The HTML screen-description heading is a copy error; no ballot-data correction is installed by this packet."
+    },
+    {
+      "requestedPrecinct": "29-12",
+      "observations": [
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/29-12.html",
+          "httpStatus": 200,
+          "sha256": "8b07e26bfe14b0f94d9627495253b7a3ca0e49dac5e18e0cb5cb075d08309a22",
+          "file": "sources/8b07e26bfe14b0f94d9627495253b7a3ca0e49dac5e18e0cb5cb075d08309a22.html",
+          "bytes": 42344,
+          "retrievedAt": "2026-11-03T06:03:55.966519+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        },
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/29-12.png",
+          "httpStatus": 200,
+          "sha256": "2afb0bfb7a8a4c59aabd204f14dcbd8d0a66619e2762fa7cec976a8bf2229403",
+          "file": "sources/2afb0bfb7a8a4c59aabd204f14dcbd8d0a66619e2762fa7cec976a8bf2229403.png",
+          "bytes": 127217,
+          "retrievedAt": "2026-11-03T06:03:56.163122+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        }
+      ],
+      "accessibleDescriptionHeading": "29-11",
+      "visualImageHeading": "29-12",
+      "visualImageDate": "November 3, 2026",
+      "visualMeasures": 0,
+      "resolution": "The native linked PNG has the requested precinct and no measure question. The HTML screen-description heading is a copy error; no ballot-data correction is installed by this packet."
+    },
+    {
+      "requestedPrecinct": "31-16",
+      "observations": [
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/31-16.html",
+          "httpStatus": 200,
+          "sha256": "8663ee9d4e88014c08723d2d2e1c5f1874fd56d3a323d2c369cc786d35eeb665",
+          "file": "sources/8663ee9d4e88014c08723d2d2e1c5f1874fd56d3a323d2c369cc786d35eeb665.html",
+          "bytes": 38441,
+          "retrievedAt": "2026-11-03T06:03:55.812398+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        },
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/31-16.png",
+          "httpStatus": 200,
+          "sha256": "d3d8e6413b3cd6e85a2263f558ca222960051f5e0d44af337270ac79d1cae1ab",
+          "file": "sources/d3d8e6413b3cd6e85a2263f558ca222960051f5e0d44af337270ac79d1cae1ab.png",
+          "bytes": 65460,
+          "retrievedAt": "2026-11-03T06:03:56.027829+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        }
+      ],
+      "accessibleDescriptionHeading": "31-10",
+      "visualImageHeading": "31-16",
+      "visualImageDate": "November 3, 2026",
+      "visualMeasures": 0,
+      "resolution": "The native linked PNG has the requested precinct and no measure question. The HTML screen-description heading is a copy error; no ballot-data correction is installed by this packet."
+    },
+    {
+      "requestedPrecinct": "35-05",
+      "observations": [
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/35-05.html",
+          "httpStatus": 200,
+          "sha256": "3f26183ffe1d4e0e48c1eb4685ccfe18f8861ea8a33e63bede90fcbb2d1d5dd5",
+          "file": "sources/3f26183ffe1d4e0e48c1eb4685ccfe18f8861ea8a33e63bede90fcbb2d1d5dd5.html",
+          "bytes": 42171,
+          "retrievedAt": "2026-11-03T06:03:55.794477+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        },
+        {
+          "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/35-05.png",
+          "httpStatus": 200,
+          "sha256": "72c4a39d51a144fa960a357b2b8b917d67bfe33187e224e391daf560c5fc775c",
+          "file": "sources/72c4a39d51a144fa960a357b2b8b917d67bfe33187e224e391daf560c5fc775c.png",
+          "bytes": 119643,
+          "retrievedAt": "2026-11-03T06:03:55.984779+00:00",
+          "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+        }
+      ],
+      "accessibleDescriptionHeading": "35-03",
+      "visualImageHeading": "35-05",
+      "visualImageDate": "November 3, 2026",
+      "visualMeasures": 0,
+      "resolution": "The native linked PNG has the requested precinct and no measure question. The HTML screen-description heading is a copy error; no ballot-data correction is installed by this packet."
+    }
+  ],
+  "allFourConflictingStylesVisuallyRead": true,
+  "measureQuestionsInThoseNativeBallotImages": 0,
+  "preparedReaderChanges": 0,
+  "nativeSourceCaptures": [
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/05-10.html",
+      "httpStatus": 200,
+      "sha256": "9121341399a8e5ab1a45c7ad4c0b85a2646388b02a59e1501138c57502fb84c7",
+      "file": "sources/9121341399a8e5ab1a45c7ad4c0b85a2646388b02a59e1501138c57502fb84c7.html",
+      "bytes": 42166,
+      "retrievedAt": "2026-11-03T06:03:55.731304+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    },
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/05-10.png",
+      "httpStatus": 200,
+      "sha256": "8bce6fd8485131e0207d2d05f984fcc8a2fe333a9cab6c5790421f1e611dd320",
+      "file": "sources/8bce6fd8485131e0207d2d05f984fcc8a2fe333a9cab6c5790421f1e611dd320.png",
+      "bytes": 118908,
+      "retrievedAt": "2026-11-03T06:03:55.946683+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    },
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/29-12.html",
+      "httpStatus": 200,
+      "sha256": "8b07e26bfe14b0f94d9627495253b7a3ca0e49dac5e18e0cb5cb075d08309a22",
+      "file": "sources/8b07e26bfe14b0f94d9627495253b7a3ca0e49dac5e18e0cb5cb075d08309a22.html",
+      "bytes": 42344,
+      "retrievedAt": "2026-11-03T06:03:55.966519+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    },
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/29-12.png",
+      "httpStatus": 200,
+      "sha256": "2afb0bfb7a8a4c59aabd204f14dcbd8d0a66619e2762fa7cec976a8bf2229403",
+      "file": "sources/2afb0bfb7a8a4c59aabd204f14dcbd8d0a66619e2762fa7cec976a8bf2229403.png",
+      "bytes": 127217,
+      "retrievedAt": "2026-11-03T06:03:56.163122+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    },
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/31-16.html",
+      "httpStatus": 200,
+      "sha256": "8663ee9d4e88014c08723d2d2e1c5f1874fd56d3a323d2c369cc786d35eeb665",
+      "file": "sources/8663ee9d4e88014c08723d2d2e1c5f1874fd56d3a323d2c369cc786d35eeb665.html",
+      "bytes": 38441,
+      "retrievedAt": "2026-11-03T06:03:55.812398+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    },
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/31-16.png",
+      "httpStatus": 200,
+      "sha256": "d3d8e6413b3cd6e85a2263f558ca222960051f5e0d44af337270ac79d1cae1ab",
+      "file": "sources/d3d8e6413b3cd6e85a2263f558ca222960051f5e0d44af337270ac79d1cae1ab.png",
+      "bytes": 65460,
+      "retrievedAt": "2026-11-03T06:03:56.027829+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    },
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/35-05.html",
+      "httpStatus": 200,
+      "sha256": "3f26183ffe1d4e0e48c1eb4685ccfe18f8861ea8a33e63bede90fcbb2d1d5dd5",
+      "file": "sources/3f26183ffe1d4e0e48c1eb4685ccfe18f8861ea8a33e63bede90fcbb2d1d5dd5.html",
+      "bytes": 42171,
+      "retrievedAt": "2026-11-03T06:03:55.794477+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    },
+    {
+      "url": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/35-05.png",
+      "httpStatus": 200,
+      "sha256": "72c4a39d51a144fa960a357b2b8b917d67bfe33187e224e391daf560c5fc775c",
+      "file": "sources/72c4a39d51a144fa960a357b2b8b917d67bfe33187e224e391daf560c5fc775c.png",
+      "bytes": 119643,
+      "retrievedAt": "2026-11-03T06:03:55.984779+00:00",
+      "representation": "ORIGINAL_PUBLISHER_RESPONSE_BYTES"
+    }
+  ],
+  "textArchive": {
+    "file": "sources/44efd23a9d59f72667b33a7afef4343869dfeaf6c2efb92e1c3a033f60f7b2af.captured-source-text.json.gz",
+    "representation": "CAPTURED_SOURCE_TEXT — complete official page text observed through the independent public web reader, including line labels and observation metadata. Not original HTML response bytes.",
+    "decodedSha256": "44efd23a9d59f72667b33a7afef4343869dfeaf6c2efb92e1c3a033f60f7b2af",
+    "decodedBytes": 3181479,
+    "storedSha256": "23a94d4b846a92aaa1c838285c78701f91962eb0d05d350a1a0a27538e31a8b3",
+    "storedBytes": 50984,
+    "storedEncoding": "gzip"
+  },
+  "standingWork": "Any separate local referendum not represented by this current official general-election directory remains acquisition work; no statewide certified-zero assertion beyond the checked source is made.",
+  "methodLesson": "DefaultPythonUserAgent returned Cloudflare1010/403 for native public pages; an honest MeanwhileUSA source-review UserAgent plus Accept:text/html retrieved native200 without cookies, credentials, challenge handling or a browser. Independent webreader captured all530descriptions; native directory links independently reconcile all530IDs.",
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

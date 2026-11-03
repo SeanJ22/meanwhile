@@ -1,0 +1,70 @@
+[
+  {
+    "contestId": "ma-2026-leicester-campus-debt-exclusion",
+    "ocdId": "ocd-division/country:us/state:ma/county:worcester/place:leicester_town",
+    "sourceUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+    "sourceFiles": [
+      "sources/82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea.png",
+      "sources/270cd6ccb8837a4a8063b400d391561aeedf8232160d0a19ec063675bc61d7c6.txt"
+    ],
+    "textFilePerMeasure": "sources/302da93042077310675b9338bf8ead241afae1a5b39587688d84bdd5b6ff1b7c.txt",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Leicester be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to fund the costs of upgrades, modernization and repairs, and further, to create and furnish additional space to allow for the inclusion and/or expansion of vocational education programs to the properties known as the Campus Center Building (964 Main Street), the Borger Building (9 Washburn Square), Swan Library (13 Washburn Square), the Animal Health Center (955 Main Street), and associated grounds, all properties determined as the Leicester High School Campus, including the payment of all other costs incidental and related thereto?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Leicester be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to fund the costs of upgrades, modernization and repairs, and further, to create and furnish additional space to allow for the inclusion and/or expansion of vocational education programs to the properties known as the Campus Center Building (964 Main Street), the Borger Building (9 Washburn Square), Swan Library (13 Washburn Square), the Animal Health Center (955 Main Street), and associated grounds, all properties determined as the Leicester High School Campus, including the payment of all other costs incidental and related thereto?"
+      ],
+      "noMeans": [
+        "Shall the Town of Leicester be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to fund the costs of upgrades, modernization and repairs, and further, to create and furnish additional space to allow for the inclusion and/or expansion of vocational education programs to the properties known as the Campus Center Building (964 Main Street), the Borger Building (9 Washburn Square), Swan Library (13 Washburn Square), the Animal Health Center (955 Main Street), and associated grounds, all properties determined as the Leicester High School Campus, including the payment of all other costs incidental and related thereto?"
+      ]
+    },
+    "hashScope": "Original native official image bytes",
+    "materialConditions": "Named4campus properties, grounds, upgrades/repairs and new/expanded vocational-program space; tax exclusion limited to project bond payments.",
+    "extractionMethod": "VISUALLY_VERIFIED_OCR_TRANSCRIPTION",
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67"
+    }
+  },
+  {
+    "contestId": "ma-2026-haverhill-onsite-marijuana-consumption",
+    "ocdId": "ocd-division/country:us/state:ma/county:essex/place:haverhill_city",
+    "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+    "sourceFiles": [
+      "sources/cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc.pdf",
+      "sources/31cc6984782930a3354600059f04fddfbf2e10c659a57bb7447ce560a369fd3d.txt",
+      "sources/350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5.pdf",
+      "sources/558affec55a6311de420f0127c40ffd5977ab3f67c1367ab6a0dd7721ef92d16.txt",
+      "sources/e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06.pdf",
+      "sources/fc1d8cec55e591b6740c79c0dcd03bff7976886a595063436a50fc36b7558417.txt",
+      "sources/2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3.pdf",
+      "sources/4a1f731abcdd687c2b03324bae03f6957c9aa605fc5276efa2e7b776ef2d3354.txt"
+    ],
+    "textFilePerMeasure": "sources/26bd66e14c82ad291b27a7eee144166e7f32b7b20e8901d6bce1afa33999e4b9.txt",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Haverhill allow the sale of marijuana and marijuana products, as those terms are defined in section 1 of chapter 94G of the General Laws, for consumption on the premises where sold, a summary of which appears below?",
+        "Section 3(b)(2) of Chapter 94G of the General Laws of Massachusetts establishes a process for petitioning a city to allow on-site consumption of marijuana within the limits of the City. Upon certification of the petition, the City must place the question on the ballot for the next regularly occurring municipal or state election in the form prescribed by the statute. The above question, if voted in the affirmative, would allow consumption of marijuana and marijuana products on the premises where sold, subject to the reasonable limitations established by the City."
+      ],
+      "yesMeans": [
+        "Shall the City of Haverhill allow the sale of marijuana and marijuana products, as those terms are defined in section 1 of chapter 94G of the General Laws, for consumption on the premises where sold, a summary of which appears below?",
+        "Section 3(b)(2) of Chapter 94G of the General Laws of Massachusetts establishes a process for petitioning a city to allow on-site consumption of marijuana within the limits of the City. Upon certification of the petition, the City must place the question on the ballot for the next regularly occurring municipal or state election in the form prescribed by the statute. The above question, if voted in the affirmative, would allow consumption of marijuana and marijuana products on the premises where sold, subject to the reasonable limitations established by the City."
+      ],
+      "noMeans": [
+        "Shall the City of Haverhill allow the sale of marijuana and marijuana products, as those terms are defined in section 1 of chapter 94G of the General Laws, for consumption on the premises where sold, a summary of which appears below?",
+        "Section 3(b)(2) of Chapter 94G of the General Laws of Massachusetts establishes a process for petitioning a city to allow on-site consumption of marijuana within the limits of the City. Upon certification of the petition, the City must place the question on the ballot for the next regularly occurring municipal or state election in the form prescribed by the statute. The above question, if voted in the affirmative, would allow consumption of marijuana and marijuana products on the premises where sold, subject to the reasonable limitations established by the City."
+      ]
+    },
+    "hashScope": "Original native official PDF bytes",
+    "materialConditions": "Sale and consumption on the same premises; statutory marijuana/product definitions; reasonable city limits. No claim about general public consumption or outcomes of other ballot questions.",
+    "extractionMethod": "Native PDF text; identical across all4current official ballot styles.",
+    "officialLinkingPage": {
+      "url": "https://www.haverhillma.gov/government/elections/sample-ballots/",
+      "file": "sources/6e2432d7651cbe9136eee962b38eb77713cf7ff25ed47ba01730441fe3ee5170.html",
+      "sha256": "6e2432d7651cbe9136eee962b38eb77713cf7ff25ed47ba01730441fe3ee5170",
+      "originalSourceSha256": "6e2432d7651cbe9136eee962b38eb77713cf7ff25ed47ba01730441fe3ee5170"
+    }
+  }
+]

@@ -1,0 +1,133 @@
+[
+  {
+    "contestId": "ma-2026-barnstable-county-charter-study",
+    "ocdId": "ocd-division/country:us/state:ma/county:barnstable",
+    "sourceUrl": "https://www.capecod.gov/2026/10/06/election-2026-what-cape-cod-voters-should-know-about-question-a/",
+    "sourceFiles": [
+      "sources/5b54358c1f5784469a1e47c3ab72cfa0a6ea01fb25703e619415adf17b083e4b.pdf",
+      "sources/8b36ed1542e7f00cec576dbcef8a5b98f7fdb671584e389cfce68a8247216b2d.txt",
+      "sources/7b525da7ecf32bb8301eda15901d2051dce572433f9c1ec661914dc5f485353b.html",
+      "sources/f2eb4a9aaaac829570c0b4bd8f401e135bafd76f2fae013648bb1fffdb1a35d6.txt"
+    ],
+    "textFilePerMeasure": "sources/fb68ebd72e2836634c5073a9a529c01909ee51b1cfa87a863a355f73c67e28ed.txt",
+    "fields": {
+      "whatItDoes": [
+        "Shall a charter study commission be created to study the WRITE-IN SPACE ONLY present governmental structure of Barnstable County to consider and make findings concerning the form of government and make recommendations thereon?",
+        "Question A will appear on ballots in all 15 Barnstable County towns in the November 2026 election.",
+        "If Question A passes countywide, a 19-member Charter Study Commission would be created. It would include 15 elected representatives — one from each Barnstable County town — plus three County Commissioners or their designees and the Speaker of the Assembly of Delegates or her designee.",
+        "Candidates elected as Charter Study Commissioners will take office only if Question A passes countywide.",
+        "The 15 elected town representatives would have population-weighted votes, meaning their voting strength on the Commission would be based on the population of the town they represent."
+      ],
+      "yesMeans": [
+        "Shall a charter study commission be created to study the WRITE-IN SPACE ONLY present governmental structure of Barnstable County to consider and make findings concerning the form of government and make recommendations thereon?",
+        "Question A will appear on ballots in all 15 Barnstable County towns in the November 2026 election.",
+        "If Question A passes countywide, a 19-member Charter Study Commission would be created. It would include 15 elected representatives — one from each Barnstable County town — plus three County Commissioners or their designees and the Speaker of the Assembly of Delegates or her designee.",
+        "Candidates elected as Charter Study Commissioners will take office only if Question A passes countywide.",
+        "The 15 elected town representatives would have population-weighted votes, meaning their voting strength on the Commission would be based on the population of the town they represent."
+      ],
+      "noMeans": [
+        "Shall a charter study commission be created to study the WRITE-IN SPACE ONLY present governmental structure of Barnstable County to consider and make findings concerning the form of government and make recommendations thereon?",
+        "Question A will appear on ballots in all 15 Barnstable County towns in the November 2026 election.",
+        "If Question A passes countywide, a 19-member Charter Study Commission would be created. It would include 15 elected representatives — one from each Barnstable County town — plus three County Commissioners or their designees and the Speaker of the Assembly of Delegates or her designee.",
+        "Candidates elected as Charter Study Commissioners will take office only if Question A passes countywide.",
+        "The 15 elected town representatives would have population-weighted votes, meaning their voting strength on the Commission would be based on the population of the town they represent."
+      ]
+    },
+    "hashScope": "Exact held question plus newline plus officialStatement",
+    "materialConditions": "County commission membership, weighting and conditional office-taking retained.",
+    "officialNumberNote": "Official source prints the question label.",
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67"
+    }
+  },
+  {
+    "contestId": "ma-2026-falmouth-library-debt-exclusion",
+    "ocdId": "ocd-division/country:us/state:ma/county:barnstable/place:falmouth_town",
+    "sourceUrl": "https://www.falmouthma.gov/DocumentCenter/View/22022/State-Election-Precinct-126",
+    "sourceFiles": [
+      "sources/5b54358c1f5784469a1e47c3ab72cfa0a6ea01fb25703e619415adf17b083e4b.pdf",
+      "sources/8b36ed1542e7f00cec576dbcef8a5b98f7fdb671584e389cfce68a8247216b2d.txt",
+      "sources/3d75f8564a510546c21a9bbed45c384b6559075eec665298456a003dec69d274.pdf",
+      "sources/3eade213301d43c136b98bc3d65719bb274acf557098f3a610145450619b7efb.txt"
+    ],
+    "textFilePerMeasure": "sources/d4eaaebe1fdc7f9efd9b4128e417dce00d315a1cc9b95ec438cfbfae6f14bd8e.txt",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Falmouth be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to pay costs of the demolition of the existing East Falmouth Library and pay costs of design and construction of a new library at the existing site located at 310 East Falmouth Highway including, without limitation, landscaping, paving, utility and other site improvements, storage and moving expenses, furnishings and equipment and all other costs incidental or related thereto?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Falmouth be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to pay costs of the demolition of the existing East Falmouth Library and pay costs of design and construction of a new library at the existing site located at 310 East Falmouth Highway including, without limitation, landscaping, paving, utility and other site improvements, storage and moving expenses, furnishings and equipment and all other costs incidental or related thereto?"
+      ],
+      "noMeans": [
+        "Shall the Town of Falmouth be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to pay costs of the demolition of the existing East Falmouth Library and pay costs of design and construction of a new library at the existing site located at 310 East Falmouth Highway including, without limitation, landscaping, paving, utility and other site improvements, storage and moving expenses, furnishings and equipment and all other costs incidental or related thereto?"
+      ]
+    },
+    "hashScope": "Original native official sample PDF bytes",
+    "materialConditions": "Only amounts required to pay bonds for the specified project. No project budget, reimbursement estimate or household tax estimate imported.",
+    "officialNumberNote": "Official source prints the question label.",
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67"
+    }
+  },
+  {
+    "contestId": "ma-2026-needham-pollard-debt-exclusion",
+    "ocdId": "ocd-division/country:us/state:ma/county:norfolk/place:needham_town",
+    "sourceUrl": "https://www.needhamma.gov/5834/Pollard-Middle-School-Debt-Exclusion-Vot",
+    "sourceFiles": [
+      "sources/7355f5c033ad002a35a07ad886da2aac0af6396f54fd4f19d8d97bfbad7e6b43.html",
+      "sources/bd9ac3f763115cfa93ea80a7c6db1376fb5c060586f023004316f473c2129ca4.txt"
+    ],
+    "textFilePerMeasure": "sources/2ba06d0b46cd700d0fa9e86e1936ec2fbc8087b8ec2ef8aeca231b99d8c654fc.txt",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Needham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to provide architectural design, engineering, construction, demolition, and site work, including incidental costs, for a new Pollard Middle School on Harris Avenue?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Needham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to provide architectural design, engineering, construction, demolition, and site work, including incidental costs, for a new Pollard Middle School on Harris Avenue?"
+      ],
+      "noMeans": [
+        "Shall the Town of Needham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to provide architectural design, engineering, construction, demolition, and site work, including incidental costs, for a new Pollard Middle School on Harris Avenue?"
+      ]
+    },
+    "hashScope": "Exact held question plus newline plus officialStatement",
+    "materialConditions": "Only amounts required to pay bonds for the specified project. No project budget, reimbursement estimate or household tax estimate imported.",
+    "officialNumberNote": "Question number omitted because this exact official town page prints the question without a number.",
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67"
+    }
+  },
+  {
+    "contestId": "ma-2026-swansea-school-debt-exclusion",
+    "ocdId": "ocd-division/country:us/state:ma/county:bristol/place:swansea_town",
+    "sourceUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/292/0/3",
+    "sourceFiles": [
+      "sources/2b492deed417b444ae4cf8f3667c4706a8db717106b05daf3f63d0ffc2543988.txt"
+    ],
+    "textFilePerMeasure": "sources/e3614624ffc375fe5e3f3e5f59dc932a7e39f2b983e08bb6c1dbcbf856f6170c.txt",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Swansea be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to construct a new school building, on the site of the Joseph Case High School at 70 School Street, of approximately 114,707 square feet and associated sitework designed to serve an enrollment of 510 students in grades 6 through 8?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Swansea be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to construct a new school building, on the site of the Joseph Case High School at 70 School Street, of approximately 114,707 square feet and associated sitework designed to serve an enrollment of 510 students in grades 6 through 8?"
+      ],
+      "noMeans": [
+        "Shall the Town of Swansea be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to construct a new school building, on the site of the Joseph Case High School at 70 School Street, of approximately 114,707 square feet and associated sitework designed to serve an enrollment of 510 students in grades 6 through 8?"
+      ]
+    },
+    "hashScope": "Exact held question plus newline plus officialStatement",
+    "materialConditions": "Only amounts required to pay bonds for the specified project. No project budget, reimbursement estimate or household tax estimate imported.",
+    "officialNumberNote": "Official source prints the question label.",
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67"
+    }
+  }
+]

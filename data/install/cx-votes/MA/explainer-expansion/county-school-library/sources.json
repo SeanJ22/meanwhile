@@ -1,0 +1,121 @@
+{
+  "preparedAt": "2026-11-03T04:54:11.926712+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/5b54358c1f5784469a1e47c3ab72cfa0a6ea01fb25703e619415adf17b083e4b.pdf",
+      "sha256": "5b54358c1f5784469a1e47c3ab72cfa0a6ea01fb25703e619415adf17b083e4b",
+      "bytes": 2000855,
+      "kind": "ORIGINAL_OFFICIAL_BALLOT_PDF",
+      "sourceUrl": "https://www.falmouthma.gov/DocumentCenter/View/22022/State-Election-Precinct-126",
+      "retrievedAt": "2026-11-03T04:49:45.340128+00:00"
+    },
+    {
+      "file": "sources/8b36ed1542e7f00cec576dbcef8a5b98f7fdb671584e389cfce68a8247216b2d.txt",
+      "sha256": "8b36ed1542e7f00cec576dbcef8a5b98f7fdb671584e389cfce68a8247216b2d",
+      "bytes": 44748,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.falmouthma.gov/DocumentCenter/View/22022/State-Election-Precinct-126",
+      "derivedFrom": "sources/5b54358c1f5784469a1e47c3ab72cfa0a6ea01fb25703e619415adf17b083e4b.pdf"
+    },
+    {
+      "file": "sources/3d75f8564a510546c21a9bbed45c384b6559075eec665298456a003dec69d274.pdf",
+      "sha256": "3d75f8564a510546c21a9bbed45c384b6559075eec665298456a003dec69d274",
+      "bytes": 2001185,
+      "kind": "ORIGINAL_OFFICIAL_BALLOT_PDF",
+      "sourceUrl": "https://www.falmouthma.gov/DocumentCenter/View/22023/State-Election-Precincts-345789",
+      "retrievedAt": "2026-11-03T04:49:45.340824+00:00"
+    },
+    {
+      "file": "sources/3eade213301d43c136b98bc3d65719bb274acf557098f3a610145450619b7efb.txt",
+      "sha256": "3eade213301d43c136b98bc3d65719bb274acf557098f3a610145450619b7efb",
+      "bytes": 44889,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.falmouthma.gov/DocumentCenter/View/22023/State-Election-Precincts-345789",
+      "derivedFrom": "sources/3d75f8564a510546c21a9bbed45c384b6559075eec665298456a003dec69d274.pdf"
+    },
+    {
+      "file": "sources/7355f5c033ad002a35a07ad886da2aac0af6396f54fd4f19d8d97bfbad7e6b43.html",
+      "sha256": "7355f5c033ad002a35a07ad886da2aac0af6396f54fd4f19d8d97bfbad7e6b43",
+      "bytes": 101337,
+      "kind": "SANITIZED_OFFICIAL_SOURCE_HTML",
+      "sourceUrl": "https://www.needhamma.gov/5834/Pollard-Middle-School-Debt-Exclusion-Vot",
+      "retrievedAt": "2026-11-03T04:49:09.705518+00:00",
+      "originalSourceSha256": "4dc34737a4b3400fde0fc52b29acecb14a8211075338c2474d41c2aeb2977c2f",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "credentialRedactions": 1
+    },
+    {
+      "file": "sources/bd9ac3f763115cfa93ea80a7c6db1376fb5c060586f023004316f473c2129ca4.txt",
+      "sha256": "bd9ac3f763115cfa93ea80a7c6db1376fb5c060586f023004316f473c2129ca4",
+      "bytes": 4340,
+      "kind": "DERIVED_OFFICIAL_PAGE_TEXT",
+      "sourceUrl": "https://www.needhamma.gov/5834/Pollard-Middle-School-Debt-Exclusion-Vot",
+      "derivedFrom": "sources/7355f5c033ad002a35a07ad886da2aac0af6396f54fd4f19d8d97bfbad7e6b43.html"
+    },
+    {
+      "file": "sources/7b525da7ecf32bb8301eda15901d2051dce572433f9c1ec661914dc5f485353b.html",
+      "sha256": "7b525da7ecf32bb8301eda15901d2051dce572433f9c1ec661914dc5f485353b",
+      "bytes": 149269,
+      "kind": "ORIGINAL_OFFICIAL_SOURCE_HTML",
+      "sourceUrl": "https://www.capecod.gov/2026/10/06/election-2026-what-cape-cod-voters-should-know-about-question-a/",
+      "retrievedAt": "2026-11-03T04:49:45.341294+00:00",
+      "originalSourceSha256": "7b525da7ecf32bb8301eda15901d2051dce572433f9c1ec661914dc5f485353b",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "credentialRedactions": 0
+    },
+    {
+      "file": "sources/f2eb4a9aaaac829570c0b4bd8f401e135bafd76f2fae013648bb1fffdb1a35d6.txt",
+      "sha256": "f2eb4a9aaaac829570c0b4bd8f401e135bafd76f2fae013648bb1fffdb1a35d6",
+      "bytes": 5175,
+      "kind": "DERIVED_OFFICIAL_PAGE_TEXT",
+      "sourceUrl": "https://www.capecod.gov/2026/10/06/election-2026-what-cape-cod-voters-should-know-about-question-a/",
+      "derivedFrom": "sources/7b525da7ecf32bb8301eda15901d2051dce572433f9c1ec661914dc5f485353b.html"
+    },
+    {
+      "file": "sources/2b492deed417b444ae4cf8f3667c4706a8db717106b05daf3f63d0ffc2543988.txt",
+      "sha256": "2b492deed417b444ae4cf8f3667c4706a8db717106b05daf3f63d0ffc2543988",
+      "bytes": 21525,
+      "kind": "CAPTURED_SOURCE_TEXT",
+      "sourceUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/292/0/3",
+      "retrievedAt": "2026-11-03T04:54:11.926712+00:00",
+      "acquisition": "Complete overlapping web-reader source lines0–306; captured text bytes, not native HTTP response bytes. Native route independently returnedHTTP200 challenge instead of useful source text."
+    },
+    {
+      "file": "sources/fb68ebd72e2836634c5073a9a529c01909ee51b1cfa87a863a355f73c67e28ed.txt",
+      "sha256": "fb68ebd72e2836634c5073a9a529c01909ee51b1cfa87a863a355f73c67e28ed",
+      "bytes": 908,
+      "kind": "RELEVANT_MEASURE_TEXT",
+      "sourceUrl": "https://www.capecod.gov/2026/10/06/election-2026-what-cape-cod-voters-should-know-about-question-a/"
+    },
+    {
+      "file": "sources/d4eaaebe1fdc7f9efd9b4128e417dce00d315a1cc9b95ec438cfbfae6f14bd8e.txt",
+      "sha256": "d4eaaebe1fdc7f9efd9b4128e417dce00d315a1cc9b95ec438cfbfae6f14bd8e",
+      "bytes": 550,
+      "kind": "RELEVANT_MEASURE_TEXT",
+      "sourceUrl": "https://www.falmouthma.gov/DocumentCenter/View/22022/State-Election-Precinct-126"
+    },
+    {
+      "file": "sources/2ba06d0b46cd700d0fa9e86e1936ec2fbc8087b8ec2ef8aeca231b99d8c654fc.txt",
+      "sha256": "2ba06d0b46cd700d0fa9e86e1936ec2fbc8087b8ec2ef8aeca231b99d8c654fc",
+      "bytes": 334,
+      "kind": "RELEVANT_MEASURE_TEXT",
+      "sourceUrl": "https://www.needhamma.gov/5834/Pollard-Middle-School-Debt-Exclusion-Vot"
+    },
+    {
+      "file": "sources/e3614624ffc375fe5e3f3e5f59dc932a7e39f2b983e08bb6c1dbcbf856f6170c.txt",
+      "sha256": "e3614624ffc375fe5e3f3e5f59dc932a7e39f2b983e08bb6c1dbcbf856f6170c",
+      "bytes": 401,
+      "kind": "RELEVANT_MEASURE_TEXT",
+      "sourceUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/292/0/3"
+    },
+    {
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "bytes": 344032,
+      "kind": "ORIGINAL_OFFICIAL_LINKING_PAGE",
+      "sourceUrl": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "retrievedAt": "2026-11-03T04:00:43.101231+00:00"
+    }
+  ]
+}

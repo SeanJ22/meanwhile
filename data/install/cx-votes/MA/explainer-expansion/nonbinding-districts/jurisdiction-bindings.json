@@ -1,0 +1,156 @@
+[
+  {
+    "contestId": "ma-2026-13th_middlesex-stipends-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:13th_middlesex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-13th_middlesex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:13th_middlesex"
+    },
+    "officialDistrictListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-14th_middlesex-stipends-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:14th_middlesex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-14th_middlesex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:14th_middlesex"
+    },
+    "officialDistrictListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-15th_middlesex-stipends-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-15th_middlesex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex"
+    },
+    "officialDistrictListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-25th_middlesex-stipends-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:25th_middlesex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-25th_middlesex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:25th_middlesex"
+    },
+    "officialDistrictListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-29th_middlesex-stipends-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:29th_middlesex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-29th_middlesex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:29th_middlesex"
+    },
+    "officialDistrictListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-32nd_middlesex-stipends-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:32nd_middlesex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-32nd_middlesex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:32nd_middlesex"
+    },
+    "officialDistrictListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:barnstable_dukes_and_nantucket",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-barnstable_dukes_and_nantucket",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:barnstable_dukes_and_nantucket"
+    },
+    "officialDistrictListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-1st_hampden-single-payer-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:1st_hampden",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-1st_hampden",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_hampden"
+    },
+    "officialDistrictListQuote": "First Hampden Representative District\nFifteenth Middlesex Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-15th_middlesex-single-payer-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-15th_middlesex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex"
+    },
+    "officialDistrictListQuote": "First Hampden Representative District\nFifteenth Middlesex Representative District",
+    "sourcePage": 7,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-1st_essex-carbon-fee-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:1st_essex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-1st_essex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_essex"
+    },
+    "officialDistrictListQuote": "First Essex Representative District\nEighth Essex Representative District",
+    "sourcePage": 8,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-8th_essex-carbon-fee-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:8th_essex",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-8th_essex",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:8th_essex"
+    },
+    "officialDistrictListQuote": "First Essex Representative District\nEighth Essex Representative District",
+    "sourcePage": 8,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-1st_bristol-norfolk-county-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:1st_bristol",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-1st_bristol",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_bristol"
+    },
+    "officialDistrictListQuote": "First Bristol Representative District\nFifth Norfolk Representative District",
+    "sourcePage": 8,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-5th_norfolk-norfolk-county-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:5th_norfolk",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-5th_norfolk",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:5th_norfolk"
+    },
+    "officialDistrictListQuote": "First Bristol Representative District\nFifth Norfolk Representative District",
+    "sourcePage": 8,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  },
+  {
+    "contestId": "ma-2026-6th_worcester-social-housing-question",
+    "ocdId": "ocd-division/country:us/state:ma/sldl:6th_worcester",
+    "existingPublishedDivisionEvidence": {
+      "heldContestId": "ma-2026-11-03:sldl-6th_worcester",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:6th_worcester"
+    },
+    "officialDistrictListQuote": "Sixth Worcester Representative District",
+    "sourcePage": 8,
+    "note": "Named election-district ID preserved from the held published ballot; this is not claimed to be a raw Census numeric district code."
+  }
+]

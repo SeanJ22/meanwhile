@@ -1,0 +1,54 @@
+{
+  "status": "DATA_ONLY_PREPARED",
+  "preparedAt": "2026-11-03T04:10:49.746Z",
+  "pathBase": "This explainer-expansion directory",
+  "files": [
+    {
+      "file": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+      "sha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+      "bytes": 363090,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/49f88f93b64c6c72ba3b28b4ac70d21c055063eac75842d0e22546a4ed77fb30.txt",
+      "sha256": "49f88f93b64c6c72ba3b28b4ac70d21c055063eac75842d0e22546a4ed77fb30",
+      "bytes": 307,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/0e804ddd28c85b5be6b20a8c3f4e75e84906c943cfc8bf6d6c7bcf9a57a7ab4c.txt",
+      "sha256": "0e804ddd28c85b5be6b20a8c3f4e75e84906c943cfc8bf6d6c7bcf9a57a7ab4c",
+      "bytes": 2556,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/0ee36eac827fa5dcbfe033683df6486f60006c13cefdf3701bc54956e7e011c7.txt",
+      "sha256": "0ee36eac827fa5dcbfe033683df6486f60006c13cefdf3701bc54956e7e011c7",
+      "bytes": 384,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/43cf8d4b633bcb01391f8dea214356d16f480c9c97ce8e1cf42a666dbc4c5fc9.source",
+      "sha256": "43cf8d4b633bcb01391f8dea214356d16f480c9c97ce8e1cf42a666dbc4c5fc9",
+      "bytes": 79778,
+      "representation": "SANITIZED_LINKING_PAGE",
+      "role": "OFFICIAL_SOURCE_BYTES",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "aaf478b89a17fb00c3eeae5a78b6b97b32e3ef5d4911c0b80ef845bcc627f5b4"
+    },
+    {
+      "file": "sources/956fdcdfffc610d3be898bb7aa19cebef4708ffed1e5835cb03f02174c92c83e.txt",
+      "sha256": "956fdcdfffc610d3be898bb7aa19cebef4708ffed1e5835cb03f02174c92c83e",
+      "bytes": 970,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    }
+  ]
+}

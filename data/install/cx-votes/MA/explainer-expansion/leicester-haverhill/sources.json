@@ -1,0 +1,121 @@
+{
+  "preparedAt": "2026-11-03T05:00:40.721355+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea.png",
+      "sha256": "82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea",
+      "bytes": 612526,
+      "kind": "ORIGINAL_OFFICIAL_BALLOT_IMAGE",
+      "sourceUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+      "retrievedAt": "2026-11-03T04:57:54.618614+00:00",
+      "httpStatus": 200
+    },
+    {
+      "file": "sources/270cd6ccb8837a4a8063b400d391561aeedf8232160d0a19ec063675bc61d7c6.txt",
+      "sha256": "270cd6ccb8837a4a8063b400d391561aeedf8232160d0a19ec063675bc61d7c6",
+      "bytes": 7341,
+      "kind": "OCR_OF_ORIGINAL_OFFICIAL_BALLOT_IMAGE",
+      "sourceUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+      "derivedFrom": "sources/82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea.png",
+      "method": "Tesseract psm3 at source-image resolution; full image visually read and exact question checked."
+    },
+    {
+      "file": "sources/cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc.pdf",
+      "sha256": "cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc",
+      "bytes": 747484,
+      "kind": "ORIGINAL_OFFICIAL_BALLOT_PDF",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+      "retrievedAt": "2026-11-03T04:59:10.566129+00:00"
+    },
+    {
+      "file": "sources/31cc6984782930a3354600059f04fddfbf2e10c659a57bb7447ce560a369fd3d.txt",
+      "sha256": "31cc6984782930a3354600059f04fddfbf2e10c659a57bb7447ce560a369fd3d",
+      "bytes": 41753,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+      "derivedFrom": "sources/cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc.pdf"
+    },
+    {
+      "file": "sources/350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5.pdf",
+      "sha256": "350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5",
+      "bytes": 1306225,
+      "kind": "ORIGINAL_OFFICIAL_BALLOT_PDF",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/tgyfthea/samplehaverhill_eng_209_icp.pdf",
+      "retrievedAt": "2026-11-03T04:59:10.566754+00:00"
+    },
+    {
+      "file": "sources/558affec55a6311de420f0127c40ffd5977ab3f67c1367ab6a0dd7721ef92d16.txt",
+      "sha256": "558affec55a6311de420f0127c40ffd5977ab3f67c1367ab6a0dd7721ef92d16",
+      "bytes": 42278,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/tgyfthea/samplehaverhill_eng_209_icp.pdf",
+      "derivedFrom": "sources/350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5.pdf"
+    },
+    {
+      "file": "sources/e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06.pdf",
+      "sha256": "e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06",
+      "bytes": 1305915,
+      "kind": "ORIGINAL_OFFICIAL_BALLOT_PDF",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/hlpnfdhl/samplehaverhill_eng_239_icp.pdf",
+      "retrievedAt": "2026-11-03T04:59:10.567270+00:00"
+    },
+    {
+      "file": "sources/fc1d8cec55e591b6740c79c0dcd03bff7976886a595063436a50fc36b7558417.txt",
+      "sha256": "fc1d8cec55e591b6740c79c0dcd03bff7976886a595063436a50fc36b7558417",
+      "bytes": 43021,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/hlpnfdhl/samplehaverhill_eng_239_icp.pdf",
+      "derivedFrom": "sources/e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06.pdf"
+    },
+    {
+      "file": "sources/2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3.pdf",
+      "sha256": "2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3",
+      "bytes": 1305776,
+      "kind": "ORIGINAL_OFFICIAL_BALLOT_PDF",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/fn1mrn45/samplehaverhill_eng_240_icp.pdf",
+      "retrievedAt": "2026-11-03T04:59:10.567840+00:00"
+    },
+    {
+      "file": "sources/4a1f731abcdd687c2b03324bae03f6957c9aa605fc5276efa2e7b776ef2d3354.txt",
+      "sha256": "4a1f731abcdd687c2b03324bae03f6957c9aa605fc5276efa2e7b776ef2d3354",
+      "bytes": 41659,
+      "kind": "PDF_TEXT_EXTRACTION",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/fn1mrn45/samplehaverhill_eng_240_icp.pdf",
+      "derivedFrom": "sources/2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3.pdf"
+    },
+    {
+      "file": "sources/302da93042077310675b9338bf8ead241afae1a5b39587688d84bdd5b6ff1b7c.txt",
+      "sha256": "302da93042077310675b9338bf8ead241afae1a5b39587688d84bdd5b6ff1b7c",
+      "bytes": 711,
+      "kind": "RELEVANT_MEASURE_TEXT",
+      "sourceUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097"
+    },
+    {
+      "file": "sources/26bd66e14c82ad291b27a7eee144166e7f32b7b20e8901d6bce1afa33999e4b9.txt",
+      "sha256": "26bd66e14c82ad291b27a7eee144166e7f32b7b20e8901d6bce1afa33999e4b9",
+      "bytes": 804,
+      "kind": "RELEVANT_MEASURE_TEXT",
+      "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf"
+    },
+    {
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "bytes": 344032,
+      "kind": "ORIGINAL_OFFICIAL_LINKING_PAGE",
+      "sourceUrl": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "retrievedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    {
+      "file": "sources/6e2432d7651cbe9136eee962b38eb77713cf7ff25ed47ba01730441fe3ee5170.html",
+      "sha256": "6e2432d7651cbe9136eee962b38eb77713cf7ff25ed47ba01730441fe3ee5170",
+      "bytes": 50733,
+      "kind": "ORIGINAL_OFFICIAL_LINKING_PAGE",
+      "sourceUrl": "https://www.haverhillma.gov/government/elections/sample-ballots/",
+      "retrievedAt": "2026-11-03T04:58:24.770825+00:00",
+      "originalSourceSha256": "6e2432d7651cbe9136eee962b38eb77713cf7ff25ed47ba01730441fe3ee5170",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "credentialRedactions": 0
+    }
+  ]
+}

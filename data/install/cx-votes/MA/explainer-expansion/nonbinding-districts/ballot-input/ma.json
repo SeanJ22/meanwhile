@@ -1,0 +1,791 @@
+{
+  "ballots": {
+    "MA:ma-2026-11-03": {
+      "election": {
+        "id": "ma-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 State Election",
+        "state": "MA"
+      },
+      "contests": [
+        {
+          "id": "ma-2026-13th_middlesex-stipends-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:13th_middlesex",
+          "divisionVintage": "2026",
+          "title": "Thirteenth Middlesex District — Nonbinding stipends question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-14th_middlesex-stipends-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:14th_middlesex",
+          "divisionVintage": "2026",
+          "title": "Fourteenth Middlesex District — Nonbinding stipends question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-15th_middlesex-stipends-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex",
+          "divisionVintage": "2026",
+          "title": "Fifteenth Middlesex District — Nonbinding stipends question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-25th_middlesex-stipends-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:25th_middlesex",
+          "divisionVintage": "2026",
+          "title": "Twenty-Fifth Middlesex District — Nonbinding stipends question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-29th_middlesex-stipends-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:29th_middlesex",
+          "divisionVintage": "2026",
+          "title": "Twenty-Ninth Middlesex District — Nonbinding stipends question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-32nd_middlesex-stipends-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:32nd_middlesex",
+          "divisionVintage": "2026",
+          "title": "Thirty-Second Middlesex District — Nonbinding stipends question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:barnstable_dukes_and_nantucket",
+          "divisionVintage": "2026",
+          "title": "Barnstable, Dukes & Nantucket District — Nonbinding stipends question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-1st_hampden-single-payer-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:1st_hampden",
+          "divisionVintage": "2026",
+          "title": "First Hampden District — Nonbinding single payer question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+          }
+        },
+        {
+          "id": "ma-2026-15th_middlesex-single-payer-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex",
+          "divisionVintage": "2026",
+          "title": "Fifteenth Middlesex District — Nonbinding single payer question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+          }
+        },
+        {
+          "id": "ma-2026-1st_essex-carbon-fee-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:1st_essex",
+          "divisionVintage": "2026",
+          "title": "First Essex District — Nonbinding carbon fee question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+          }
+        },
+        {
+          "id": "ma-2026-8th_essex-carbon-fee-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:8th_essex",
+          "divisionVintage": "2026",
+          "title": "Eighth Essex District — Nonbinding carbon fee question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+          }
+        },
+        {
+          "id": "ma-2026-1st_bristol-norfolk-county-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:1st_bristol",
+          "divisionVintage": "2026",
+          "title": "First Bristol District — Nonbinding norfolk county question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+          }
+        },
+        {
+          "id": "ma-2026-5th_norfolk-norfolk-county-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:5th_norfolk",
+          "divisionVintage": "2026",
+          "title": "Fifth Norfolk District — Nonbinding norfolk county question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+          }
+        },
+        {
+          "id": "ma-2026-6th_worcester-social-housing-question",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/sldl:6th_worcester",
+          "divisionVintage": "2026",
+          "title": "Sixth Worcester District — Nonbinding social housing question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a statewide social housing authority, funded with a tax on vacant properties and wealth and inheritances over $5 million, that eliminates the role of landlords and guarantees all Massachusetts residents a universal right to publicly-owned housing, providing different union-built options for different needs, capping costs at 10% of one’s monthly household income, and placing this housing under tenants’ democratic management?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ma-2026-13th_middlesex-stipends-question:measure",
+          "contestId": "ma-2026-13th_middlesex-stipends-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-14th_middlesex-stipends-question:measure",
+          "contestId": "ma-2026-14th_middlesex-stipends-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-15th_middlesex-stipends-question:measure",
+          "contestId": "ma-2026-15th_middlesex-stipends-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-25th_middlesex-stipends-question:measure",
+          "contestId": "ma-2026-25th_middlesex-stipends-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-29th_middlesex-stipends-question:measure",
+          "contestId": "ma-2026-29th_middlesex-stipends-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-32nd_middlesex-stipends-question:measure",
+          "contestId": "ma-2026-32nd_middlesex-stipends-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-barnstable_dukes_and_nantucket-stipends-question:measure",
+          "contestId": "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+          }
+        },
+        {
+          "id": "ma-2026-1st_hampden-single-payer-question:measure",
+          "contestId": "ma-2026-1st_hampden-single-payer-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+          }
+        },
+        {
+          "id": "ma-2026-15th_middlesex-single-payer-question:measure",
+          "contestId": "ma-2026-15th_middlesex-single-payer-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+          }
+        },
+        {
+          "id": "ma-2026-1st_essex-carbon-fee-question:measure",
+          "contestId": "ma-2026-1st_essex-carbon-fee-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+          }
+        },
+        {
+          "id": "ma-2026-8th_essex-carbon-fee-question:measure",
+          "contestId": "ma-2026-8th_essex-carbon-fee-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+          }
+        },
+        {
+          "id": "ma-2026-1st_bristol-norfolk-county-question:measure",
+          "contestId": "ma-2026-1st_bristol-norfolk-county-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+          }
+        },
+        {
+          "id": "ma-2026-5th_norfolk-norfolk-county-question:measure",
+          "contestId": "ma-2026-5th_norfolk-norfolk-county-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+          }
+        },
+        {
+          "id": "ma-2026-6th_worcester-social-housing-question:measure",
+          "contestId": "ma-2026-6th_worcester-social-housing-question",
+          "questionText": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a statewide social housing authority, funded with a tax on vacant properties and wealth and inheritances over $5 million, that eliminates the role of landlords and guarantees all Massachusetts residents a universal right to publicly-owned housing, providing different union-built options for different needs, capping costs at 10% of one’s monthly household income, and placing this housing under tenants’ democratic management?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+            "sourceOrg": "Town of Holland official state-election warrant appendix",
+            "collectedAt": "2026-11-03T04:05:38.001824+00:00",
+            "verifiedAt": "2026-11-03T04:17:43.245Z",
+            "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+            "quote": "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a statewide social housing authority, funded with a tax on vacant properties and wealth and inheritances over $5 million, that eliminates the role of landlords and guarantees all Massachusetts residents a universal right to publicly-owned housing, providing different union-built options for different needs, capping costs at 10% of one’s monthly household income, and placing this housing under tenants’ democratic management?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ma-2026-13th_middlesex-stipends-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation or rules reducing the House Speaker’s and Senate President’s control over legislators’ stipends, or extra pay. It also asks that stipends go only to legislators doing significant extra work that is transparent and accountable to the public. The vote would not itself change the law or pay rules.",
+          "yesMeans": "Express support for this nonbinding instruction about legislative stipends.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-14th_middlesex-stipends-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation or rules reducing the House Speaker’s and Senate President’s control over legislators’ stipends, or extra pay. It also asks that stipends go only to legislators doing significant extra work that is transparent and accountable to the public. The vote would not itself change the law or pay rules.",
+          "yesMeans": "Express support for this nonbinding instruction about legislative stipends.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-15th_middlesex-stipends-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation or rules reducing the House Speaker’s and Senate President’s control over legislators’ stipends, or extra pay. It also asks that stipends go only to legislators doing significant extra work that is transparent and accountable to the public. The vote would not itself change the law or pay rules.",
+          "yesMeans": "Express support for this nonbinding instruction about legislative stipends.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-25th_middlesex-stipends-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation or rules reducing the House Speaker’s and Senate President’s control over legislators’ stipends, or extra pay. It also asks that stipends go only to legislators doing significant extra work that is transparent and accountable to the public. The vote would not itself change the law or pay rules.",
+          "yesMeans": "Express support for this nonbinding instruction about legislative stipends.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-29th_middlesex-stipends-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation or rules reducing the House Speaker’s and Senate President’s control over legislators’ stipends, or extra pay. It also asks that stipends go only to legislators doing significant extra work that is transparent and accountable to the public. The vote would not itself change the law or pay rules.",
+          "yesMeans": "Express support for this nonbinding instruction about legislative stipends.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-32nd_middlesex-stipends-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation or rules reducing the House Speaker’s and Senate President’s control over legislators’ stipends, or extra pay. It also asks that stipends go only to legislators doing significant extra work that is transparent and accountable to the public. The vote would not itself change the law or pay rules.",
+          "yesMeans": "Express support for this nonbinding instruction about legislative stipends.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation or rules reducing the House Speaker’s and Senate President’s control over legislators’ stipends, or extra pay. It also asks that stipends go only to legislators doing significant extra work that is transparent and accountable to the public. The vote would not itself change the law or pay rules.",
+          "yesMeans": "Express support for this nonbinding instruction about legislative stipends.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-1st_hampden-single-payer-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation creating a single-payer health-care system for all Massachusetts residents. The proposed system would provide comprehensive coverage and a choice of doctors, other health professionals, facilities and services. It would replace the role of insurance companies with a publicly administered insurance trust fund. The vote would not itself establish that system.",
+          "yesMeans": "Express support for this nonbinding instruction to support single-payer health-care legislation.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-15th_middlesex-single-payer-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation creating a single-payer health-care system for all Massachusetts residents. The proposed system would provide comprehensive coverage and a choice of doctors, other health professionals, facilities and services. It would replace the role of insurance companies with a publicly administered insurance trust fund. The vote would not itself establish that system.",
+          "yesMeans": "Express support for this nonbinding instruction to support single-payer health-care legislation.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-1st_essex-carbon-fee-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to introduce and support legislation placing a fee on the carbon content of fossil fuels and returning the revenue directly to residents in monthly payments. The question describes the fee as compensation for environmental pollution. The vote would not itself impose a fee or create payments.",
+          "yesMeans": "Express support for this nonbinding instruction about a carbon fee and monthly payments to residents.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-8th_essex-carbon-fee-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to introduce and support legislation placing a fee on the carbon content of fossil fuels and returning the revenue directly to residents in monthly payments. The question describes the fee as compensation for environmental pollution. The vote would not itself impose a fee or create payments.",
+          "yesMeans": "Express support for this nonbinding instruction about a carbon fee and monthly payments to residents.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-1st_bristol-norfolk-county-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to file and support legislation abolishing Norfolk County government. The vote would not itself abolish the county government.",
+          "yesMeans": "Express support for this nonbinding instruction to support legislation abolishing Norfolk County government.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-5th_norfolk-norfolk-county-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to file and support legislation abolishing Norfolk County government. The vote would not itself abolish the county government.",
+          "yesMeans": "Express support for this nonbinding instruction to support legislation abolishing Norfolk County government.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-6th_worcester-social-housing-question",
+          "whatItDoes": "Asks voters to express a nonbinding instruction to their state representative to support legislation creating a statewide social housing authority. The proposal calls for funding through taxes on vacant properties and wealth and inheritances over $5 million, eliminating the role of landlords, and a universal right to publicly owned housing for Massachusetts residents. It calls for union-built housing options for different needs, costs capped at 10% of monthly household income, and democratic management by tenants. The vote would not itself create the authority, taxes or housing rights.",
+          "yesMeans": "Express support for this nonbinding instruction about the proposed social housing system.",
+          "noMeans": "Express opposition to this proposed nonbinding instruction.",
+          "parts": [],
+          "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+          "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:17:42.410417+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:17:43.245Z",
+    "reviewedBy": "CX-VOTES independent source reading; no provider calls",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "httpStatus": 200,
+        "rawHash": "89795cba091710273ce19a6043651447bb9b2ab74e0871c864a4340a5aa95c77",
+        "retrievedAt": "2026-10-14T05:08:47.184Z",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "reviewedEvidence": "Official full November 3, 2026 State Election candidate list, covering each listed contest’s whole territory."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-ballot-questions.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-ballot-questions.htm",
+        "httpStatus": 200,
+        "rawHash": "277e93ea2f69090ebed7b775d4ce6487c649ca9aea9711236e339107ac04b91e",
+        "retrievedAt": "2026-10-14T05:12:38.592Z",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "reviewedEvidence": "Official November 3, 2026 State Election page identifies nine binding statewide questions and prints their ballot wording."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+        "httpStatus": 200,
+        "rawHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+        "retrievedAt": "2026-10-14T05:04:16.732Z",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "reviewedEvidence": "Official 2026 Information for Voters booklet contains the full texts of all nine statewide ballot questions."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+        "httpStatus": 200,
+        "rawHash": "40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97",
+        "reviewedEvidence": "Saved rendered official candidate page obtained through the web reader after the direct HTTP route returned Incapsula. Hash describes the saved rendered text. Replayed all 223 federal, statewide, legislative and Councillor office/district groups and 304 candidate names. The 8 missing Councillor districts and all 11 printed candidates are added. Addresses stay in source evidence only."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:52.138272+00:00",
+        "httpStatus": 200,
+        "rawHash": "b6b40c45584f90cdf85251b3ee9a317f6ad2d371fa11db0b1d06658c595135be",
+        "reviewedEvidence": "Saved rendered official page; hash describes the saved rendered text. Code reads all 348 whole municipalities and 28 whole wards into their Council districts. Boston, Cambridge and Braintree whole-city memberships, and all partial wards/precincts, are excluded. Census2025 municipal names provide the county-subdivision aliases."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:52.138272+00:00",
+        "httpStatus": 200,
+        "rawHash": "e17827e458d146d0487ba0a0de21c64f434b375636301fd6104e2a01606324ae",
+        "reviewedEvidence": "Official Massachusetts county-subdivision Gazetteer supplies county FIPS and full municipal names for Council membership aliases. County names are replayed from the Massachusetts rows of the official2020 national county-code list retained beside the Gazetteer."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:52.138272+00:00",
+        "httpStatus": 200,
+        "rawHash": "9f6e5f6eb6ac2f5e9a36d5fd01dec77991bddc75118f748a069441a4782970d6",
+        "reviewedEvidence": "Code selects only STATEFP25 rows to map the Massachusetts county FIPS in the official Gazetteer to county names. Raw national response bytes are retained."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:03:24.358Z",
+        "httpStatus": 200,
+        "rawHash": "38a62040a5056b8ce79f57b6870b263ca4b2a1b93e1c63903d4c0861faefb103",
+        "reviewedEvidence": "Saved rendered official candidate page obtained through the web reader after the direct HTTP route returned Incapsula. Hash describes this saved rendered reader window, which contains the full Councillor section. All 8 Councillor districts and all 11 printed candidate names and party labels replayed against this capture. Addresses stay in source evidence only."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:05:16.976Z",
+        "httpStatus": 200,
+        "rawHash": "6eeb2cd43d4547267b3d65f4cff7c9609a58debd571e3c03a6fe35ca458f6271",
+        "reviewedEvidence": "Saved rendered official page; hash describes the saved rendered text. Code reads all 348 whole municipalities and 28 whole wards into their Council districts. Boston, Cambridge and Braintree whole-city memberships, and all partial wards/precincts, are excluded. Census2025 municipal names provide the county-subdivision aliases."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:05:34.859789+00:00",
+        "httpStatus": 200,
+        "rawHash": "e17827e458d146d0487ba0a0de21c64f434b375636301fd6104e2a01606324ae",
+        "reviewedEvidence": "Official Massachusetts county-subdivision Gazetteer supplies county FIPS and full municipal names for Council membership aliases. County names are replayed from the Massachusetts rows of the official2020 national county-code list retained beside the Gazetteer."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:05:34.846723+00:00",
+        "httpStatus": 200,
+        "rawHash": "9f6e5f6eb6ac2f5e9a36d5fd01dec77991bddc75118f748a069441a4782970d6",
+        "reviewedEvidence": "Code selects only STATEFP25 rows to map the Massachusetts county FIPS in the official Gazetteer to county names. Raw national response bytes are retained."
+      },
+      {
+        "requestedUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+        "finalUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+        "publisher": "Town of Holland official state-election warrant appendix",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+        "retrievedAt": "2026-11-03T04:05:38.001824+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      }
+    ]
+  }
+}

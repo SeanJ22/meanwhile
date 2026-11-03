@@ -1,0 +1,690 @@
+[
+  {
+    "id": "ma-2026-13th_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:13th_middlesex",
+      "name": "Thirteenth Middlesex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+    "excerptSha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-14th_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:14th_middlesex",
+      "name": "Fourteenth Middlesex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+    "excerptSha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-15th_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex",
+      "name": "Fifteenth Middlesex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+    "excerptSha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-25th_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:25th_middlesex",
+      "name": "Twenty-Fifth Middlesex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+    "excerptSha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-29th_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:29th_middlesex",
+      "name": "Twenty-Ninth Middlesex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+    "excerptSha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-32nd_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:32nd_middlesex",
+      "name": "Thirty-Second Middlesex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+    "excerptSha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:barnstable_dukes_and_nantucket",
+      "name": "Barnstable, Dukes & Nantucket District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+    "excerptSha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends (extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "Thirteenth Middlesex Representative District\nFourteenth Middlesex Representative District\nFifteenth Middlesex Representative District\nTwentieth Middlesex Representative District\nTwenty-Fifth Middlesex Representative District\nTwenty-Ninth Middlesex Representative District\nThirty-Second Middlesex Representative District\nBarnstable, Dukes, and Nantucket Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-1st_hampden-single-payer-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_hampden",
+      "name": "First Hampden District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/e702e5b89c8351e84a725563a21819a0d27887a193e1f12fe8f63799edff0765.txt",
+    "excerptSha256": "e702e5b89c8351e84a725563a21819a0d27887a193e1f12fe8f63799edff0765",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "First Hampden Representative District\nFifteenth Middlesex Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "First Hampden Representative District\nFifteenth Middlesex Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-15th_middlesex-single-payer-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex",
+      "name": "Fifteenth Middlesex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/e702e5b89c8351e84a725563a21819a0d27887a193e1f12fe8f63799edff0765.txt",
+    "excerptSha256": "e702e5b89c8351e84a725563a21819a0d27887a193e1f12fe8f63799edff0765",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a single-payer system of universal health care that would provide all Massachusetts residents with comprehensive health care coverage including the freedom to choose doctors and other health care professionals, facilities, and services, and that would eliminate the role of insurance companies in health care by creating a publicly administered insurance trust fund?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "First Hampden Representative District\nFifteenth Middlesex Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "First Hampden Representative District\nFifteenth Middlesex Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-1st_essex-carbon-fee-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_essex",
+      "name": "First Essex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/572f532972afffbf5a11906b4da608b3ae013fe822ac7d54f9363b7c2398e4be.txt",
+    "excerptSha256": "572f532972afffbf5a11906b4da608b3ae013fe822ac7d54f9363b7c2398e4be",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "First Essex Representative District\nEighth Essex Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "First Essex Representative District\nEighth Essex Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true,
+    "districtListSourcePage": 8
+  },
+  {
+    "id": "ma-2026-8th_essex-carbon-fee-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:8th_essex",
+      "name": "Eighth Essex District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/572f532972afffbf5a11906b4da608b3ae013fe822ac7d54f9363b7c2398e4be.txt",
+    "excerptSha256": "572f532972afffbf5a11906b4da608b3ae013fe822ac7d54f9363b7c2398e4be",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to introduce and vote for legislation that places a fee on the carbon content of fossil fuels to compensate for their environmental pollution, and returns the proceeds directly to residents as monthly payments?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "First Essex Representative District\nEighth Essex Representative District"
+    },
+    "sourcePage": 7,
+    "imageFile": "source-extraction/holland-warrant-page-7.png",
+    "jurisdictionListQuote": "First Essex Representative District\nEighth Essex Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true,
+    "districtListSourcePage": 8
+  },
+  {
+    "id": "ma-2026-1st_bristol-norfolk-county-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_bristol",
+      "name": "First Bristol District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/cf61bc6be188373cad3c1d85226211638d2e2866d4f3cc2fcc071d58bf7ce289.txt",
+    "excerptSha256": "cf61bc6be188373cad3c1d85226211638d2e2866d4f3cc2fcc071d58bf7ce289",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "First Bristol Representative District\nFifth Norfolk Representative District"
+    },
+    "sourcePage": 8,
+    "imageFile": "source-extraction/holland-warrant-page-8.png",
+    "jurisdictionListQuote": "First Bristol Representative District\nFifth Norfolk Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-5th_norfolk-norfolk-county-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:5th_norfolk",
+      "name": "Fifth Norfolk District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/cf61bc6be188373cad3c1d85226211638d2e2866d4f3cc2fcc071d58bf7ce289.txt",
+    "excerptSha256": "cf61bc6be188373cad3c1d85226211638d2e2866d4f3cc2fcc071d58bf7ce289",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to file and support legislation abolishing Norfolk County government?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "First Bristol Representative District\nFifth Norfolk Representative District"
+    },
+    "sourcePage": 8,
+    "imageFile": "source-extraction/holland-warrant-page-8.png",
+    "jurisdictionListQuote": "First Bristol Representative District\nFifth Norfolk Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  },
+  {
+    "id": "ma-2026-6th_worcester-social-housing-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:6th_worcester",
+      "name": "Sixth Worcester District"
+    },
+    "sourceUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+    "sourceFile": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+    "sourceHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceFileSha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/b07990f0efddd78b6e20e1d2cc9ce8a324e88351a86da2a2a611c1e5132e1a40.txt",
+    "excerptSha256": "b07990f0efddd78b6e20e1d2cc9ce8a324e88351a86da2a2a611c1e5132e1a40",
+    "sourceCheckedAt": "2026-11-03T04:05:38.001824+00:00",
+    "fields": {
+      "whatItDoes": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a statewide social housing authority, funded with a tax on vacant properties and wealth and inheritances over $5 million, that eliminates the role of landlords and guarantees all Massachusetts residents a universal right to publicly-owned housing, providing different union-built options for different needs, capping costs at 10% of one’s monthly household income, and placing this housing under tenants’ democratic management?"
+      ],
+      "yesMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a statewide social housing authority, funded with a tax on vacant properties and wealth and inheritances over $5 million, that eliminates the role of landlords and guarantees all Massachusetts residents a universal right to publicly-owned housing, providing different union-built options for different needs, capping costs at 10% of one’s monthly household income, and placing this housing under tenants’ democratic management?"
+      ],
+      "noMeans": [
+        "THIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote for legislation to create a statewide social housing authority, funded with a tax on vacant properties and wealth and inheritances over $5 million, that eliminates the role of landlords and guarantees all Massachusetts residents a universal right to publicly-owned housing, providing different union-built options for different needs, capping costs at 10% of one’s monthly household income, and placing this housing under tenants’ democratic management?"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.mass.gov/lists/massachusetts-city-and-town-websites",
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "sourceCheckedAt": "2026-11-03T04:00:43.101231+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Nonbinding nature, exact proposed legislative actions and stated funding/benefit conditions preserved. English question and named district list visually checked against the scanned official warrant appendix.",
+      "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+      "districtListQuote": "Sixth Worcester Representative District"
+    },
+    "sourcePage": 8,
+    "imageFile": "source-extraction/holland-warrant-page-8.png",
+    "jurisdictionListQuote": "Sixth Worcester Representative District",
+    "extractionMethod": "VISUALLY_VERIFIED_TRANSCRIPTION",
+    "positiveScopeEvidenceOnly": true
+  }
+]

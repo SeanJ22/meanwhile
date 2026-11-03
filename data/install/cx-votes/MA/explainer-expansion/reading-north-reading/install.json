@@ -1,0 +1,61 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "MA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T04:10:49.746Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "ma-reading-2026-question-10",
+      "title": "Reading — Question 10: Operating tax override",
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex/place:reading_town"
+    },
+    {
+      "id": "ma-reading-2026-question-11",
+      "title": "Reading — Question 11: Community Preservation Act",
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex/place:reading_town"
+    },
+    {
+      "id": "ma-2026-20th_middlesex-stipends-question",
+      "title": "Twentieth Middlesex House District — Nonbinding legislative stipend question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:20th_middlesex"
+    },
+    {
+      "id": "ma-2026-30th_middlesex-stipends-question",
+      "title": "Thirtieth Middlesex House District — Nonbinding legislative stipend question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:30th_middlesex"
+    },
+    {
+      "id": "ma-north-reading-2026-question-10",
+      "title": "North Reading — Question 10: Modular-classroom debt exclusion",
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town"
+    }
+  ],
+  "replacementExplainers": [],
+  "pendingScope": [],
+  "operation": "Merge ballot-input through the existing ballot publication path. These are new local questions with exact town or published House-district scope. North Reading uses HELD_TEXT for the exact question plus official statement; its captured HTML is archived as a labeled sanitized representation with native hash kept separate. No candidate or polling rows change.",
+  "validation": {
+    "originalSourceHashes": "PASS",
+    "officialAuthorityLinks": "PASS",
+    "relevantSourceQuotes": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "priorCandidaciesAndUnrelatedContestsMeasures": "UNCHANGED",
+    "actualWithMeasureTranslationsReplay": "PASS",
+    "jurisdictionBindings": "PASS"
+  },
+  "coverageLimit": "This packet closes the specific newly found local official-source gaps. It does not certify every local question in the state or live delivery. Live checks and broader local-index recovery remain with root/River.",
+  "note": "ReadingQuestion12 is nonbinding and appears separately for its20thand30thMiddlesexHouseballotstyles.",
+  "nextOwner": "River: merge this measure-only data through existing publication, then check the exact measures, explainers and official sources live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceHashesAndCredentialScan": "PASS",
+    "productionWrites": 0
+  }
+}

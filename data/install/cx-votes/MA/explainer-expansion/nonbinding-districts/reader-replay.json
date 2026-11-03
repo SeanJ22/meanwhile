@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-11-03T04:17:43.245Z",
+  "source": "Fresh saved translation snapshot from explainers-only/live-audit/MA.json",
+  "result": "PASS",
+  "subjects": [
+    "ma-2026-13th_middlesex-stipends-question",
+    "ma-2026-14th_middlesex-stipends-question",
+    "ma-2026-15th_middlesex-stipends-question",
+    "ma-2026-25th_middlesex-stipends-question",
+    "ma-2026-29th_middlesex-stipends-question",
+    "ma-2026-32nd_middlesex-stipends-question",
+    "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+    "ma-2026-1st_hampden-single-payer-question",
+    "ma-2026-15th_middlesex-single-payer-question",
+    "ma-2026-1st_essex-carbon-fee-question",
+    "ma-2026-8th_essex-carbon-fee-question",
+    "ma-2026-1st_bristol-norfolk-county-question",
+    "ma-2026-5th_norfolk-norfolk-county-question",
+    "ma-2026-6th_worcester-social-housing-question"
+  ],
+  "newSourceHashKinds": [
+    {
+      "id": "ma-2026-13th_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-14th_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-15th_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-25th_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-29th_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-32nd_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-1st_hampden-single-payer-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-15th_middlesex-single-payer-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-1st_essex-carbon-fee-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-8th_essex-carbon-fee-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-1st_bristol-norfolk-county-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-5th_norfolk-norfolk-county-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-6th_worcester-social-housing-question",
+      "kind": "CAPTURE_BYTES"
+    }
+  ],
+  "productionWrites": 0
+}

@@ -1,0 +1,13 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_SOURCE_REVIEW",
+  "state": "MA",
+  "status": "SOURCE_REVIEW_NO_ADDITIONS",
+  "preparedAt": "2026-11-03T03:55:52.200Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "statewideDenominator": 9,
+  "heldStatewideMeasures": 9,
+  "inventory": "inventory-review.json",
+  "operation": "Evidence only; root owns prepared Massachusetts records and attachment replay. This directory contains no ballot publication input."
+}

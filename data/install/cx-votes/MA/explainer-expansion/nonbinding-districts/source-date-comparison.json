@@ -1,0 +1,13 @@
+{
+  "readingSample": {
+    "creationDate": "2026-09-15T15:28:27-04:00",
+    "modifiedDate": "2026-09-15T15:29:30-04:00",
+    "fact": "PrintedReading30thMiddlesexstyleaffirmativelyincludesnonbindingstipendquestion."
+  },
+  "hollandWarrant": {
+    "scanCreationDate": "2026-10-22T09:57:11-05:00",
+    "fact": "Appendixpositivelylists8stipenddistrictsbutdoesnotname30thMiddlesex. It contains no appendix certification/revisiondate or explicit correction to Readingballot."
+  },
+  "interpretation": "A later scan timestamp is not a later certification date. An omission from this appendix does not negate affirmative official sample-ballot evidence. Both sources are retained; no measure is withdrawn from Reading\u2019s30thstyle on absence alone.",
+  "appendixCompletenessLimit": "Five question topics and15positive district-question pairs are listed. This is not treated as proof that no other nonbinding questions or districts exist."
+}

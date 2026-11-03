@@ -1,0 +1,53 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "MA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T05:00:40.721355+00:00",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "ma-2026-leicester-campus-debt-exclusion",
+      "title": "Leicester — Question 10: High School campus debt exclusion",
+      "ocdId": "ocd-division/country:us/state:ma/county:worcester/place:leicester_town"
+    },
+    {
+      "id": "ma-2026-haverhill-onsite-marijuana-consumption",
+      "title": "Haverhill — Question 10: Marijuana consumption where sold",
+      "ocdId": "ocd-division/country:us/state:ma/county:essex/place:haverhill_city"
+    }
+  ],
+  "operation": "Merge2new town/city questions and neutral explanations through the existing ballot data path. Prior candidates and measures remain.",
+  "coverageLimit": "Local inventory continues; this packet is not a statewide completeness claim.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: merge this measure-only data through existing publication, then check the exact measures, explainers and official sources live.",
+  "validation": {
+    "checkedAt": "2026-11-03T05:01:15.471Z",
+    "preparedRecords": 2,
+    "cachedBaselineContests": 255,
+    "cachedBaselineCandidacies": 304,
+    "sourceFileHashes": "PASS",
+    "sourceSupportQuotes": "PASS",
+    "officialAuthority": "PASS",
+    "sourceIdentityHashes": "PASS",
+    "credentialSanitizer": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "priorCandidatesContestsAndMeasures": "UNCHANGED",
+    "actualWithMeasureTranslationsReplay": "PASS; cached full ballot and fresh measure-only snapshot",
+    "jurisdictionBindings": "PASS; exact county/town IDs and no statewide widening",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "a4c5598623c09b4b9277e0be0164e866985538fd4564c362f99d19055fc643b6",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceHashesAndCredentialScan": "PASS",
+    "productionWrites": 0
+  }
+}

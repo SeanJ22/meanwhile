@@ -1,0 +1,74 @@
+{
+  "status": "DATA_ONLY_PREPARED",
+  "preparedAt": "2026-11-03T04:17:43.245Z",
+  "pathBase": "This explainer-expansion directory",
+  "files": [
+    {
+      "file": "sources/f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67.html",
+      "sha256": "f53546fc1fa4437ae1b4812ea24f08ce7c64b3c4fccc2c529ec485034ba9fa67",
+      "bytes": 344032,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_GOVERNMENT_LINKING_PAGE"
+    },
+    {
+      "file": "sources/5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136.source",
+      "sha256": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+      "bytes": 6465229,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a.txt",
+      "sha256": "adb35b4709a8716e48f91964f37140b2b08653e1532bfb558eaaa3b7054d3c2a",
+      "bytes": 742,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/e702e5b89c8351e84a725563a21819a0d27887a193e1f12fe8f63799edff0765.txt",
+      "sha256": "e702e5b89c8351e84a725563a21819a0d27887a193e1f12fe8f63799edff0765",
+      "bytes": 570,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/572f532972afffbf5a11906b4da608b3ae013fe822ac7d54f9363b7c2398e4be.txt",
+      "sha256": "572f532972afffbf5a11906b4da608b3ae013fe822ac7d54f9363b7c2398e4be",
+      "bytes": 371,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/cf61bc6be188373cad3c1d85226211638d2e2866d4f3cc2fcc071d58bf7ce289.txt",
+      "sha256": "cf61bc6be188373cad3c1d85226211638d2e2866d4f3cc2fcc071d58bf7ce289",
+      "bytes": 233,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/b07990f0efddd78b6e20e1d2cc9ce8a324e88351a86da2a2a611c1e5132e1a40.txt",
+      "sha256": "b07990f0efddd78b6e20e1d2cc9ce8a324e88351a86da2a2a611c1e5132e1a40",
+      "bytes": 593,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "source-extraction/holland-warrant-page-7.png",
+      "sha256": "cc28a87fc423556bd17af4e8517e91199f1f8bc9b319c36fbefebfc20de2fbec",
+      "bytes": 306611,
+      "representation": "RENDERED_OFFICIAL_SOURCE_PAGE",
+      "sourcePage": 7,
+      "renderTool": "PyMuPDF 1.26.6",
+      "renderScale": 1.15
+    },
+    {
+      "file": "source-extraction/holland-warrant-page-8.png",
+      "sha256": "f71a7e15ec4dcbafdf1d33e15629cbcaeaaf5455bdbb1725fbe03e9d0db80d94",
+      "bytes": 314048,
+      "representation": "RENDERED_OFFICIAL_SOURCE_PAGE",
+      "sourcePage": 8,
+      "renderTool": "PyMuPDF 1.26.6",
+      "renderScale": 1.15
+    }
+  ]
+}

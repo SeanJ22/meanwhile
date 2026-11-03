@@ -1,0 +1,58 @@
+{
+  "state": "MA",
+  "reviewedAt": "2026-11-03T03:55:52.200Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "sourceInventory": {
+    "officialStatewideMeasureNumbers": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "statewideDenominator": 9,
+    "heldStatewideMeasures": 9,
+    "heldLocalMeasures": 0,
+    "newLocalMeasuresFound": 0,
+    "readyNewLocalMeasures": 0,
+    "pendingExactScope": 0,
+    "denominatorBasis": "Fresh official Boston Election Department2026stateelectionquestions page enumeratesQuestions1–9; official department links it as statewide ballotquestions forNov3. DirectSecretaryofCommonwealth route returned an Incapsula212-byte response and is not usable question evidence.",
+    "stems": [
+      "ma-boston"
+    ],
+    "localIndices": {
+      "Boston": {
+        "officialStateElectionIndexRetrieved": true,
+        "noAdditionalLocalQuestionFoundOnIndex": true
+      },
+      "Worcester": {
+        "requestedCalendarRedirectedToUnauthorized": true
+      }
+    },
+    "namedConditionReview": {
+      "Questions1To7": "Existing/prepared summaries match fresh official city publication. PreserveQ1policy/constituent exemptions;Q2CPCSfundingrequest;Q3jointGov/LtGov,top2and3%party threshold;Q4residency/oath,provisionaldeadlines,noElectionDaypartychange,Jan2028;Q5income-surtax revenueandJuly2027;Q6appropriation,50%then100%,MBTA/school exclusions,board/recipientconditions,July2027;Q7lot5000sqft,50ftfrontage,publicsewer/water,reasonablelocalrules."
+    },
+    "placeholderReview": "No generic placeholders found in sixexisting savedrecords. Root owns attachment/replay of prepared missing records.",
+    "openLocalIndices": "Officialstatewide list is covered; statewide local-question completeness is not established by Boston and blockedWorcester index."
+  },
+  "sourceCaptures": [
+    {
+      "url": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "finalUrl": "https://www.boston.gov/news/2026-state-election-ballot-questions",
+      "sourceCheckedAt": "2026-11-03T03:41:21.567018+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/57782b71e6b4f0493e1046bb4c22102206d3f26d6921a51d563b59e82d6754f0.source",
+      "sha256": "57782b71e6b4f0493e1046bb4c22102206d3f26d6921a51d563b59e82d6754f0",
+      "originalSourceSha256": "57782b71e6b4f0493e1046bb4c22102206d3f26d6921a51d563b59e82d6754f0",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    }
+  ],
+  "foundSubjects": [],
+  "limits": "This is a denominator review of the named statewide list and the explicitly listed local indices, not a claim that every local measure in this state was found. No data was published; root/River own checks/install/live verification."
+}

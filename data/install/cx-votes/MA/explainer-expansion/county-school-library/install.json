@@ -1,0 +1,63 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "MA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T04:54:11.926712+00:00",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "ma-2026-barnstable-county-charter-study",
+      "title": "Barnstable County — Question A: Charter study commission",
+      "ocdId": "ocd-division/country:us/state:ma/county:barnstable"
+    },
+    {
+      "id": "ma-2026-falmouth-library-debt-exclusion",
+      "title": "Falmouth — Question 10: East Falmouth Library debt exclusion",
+      "ocdId": "ocd-division/country:us/state:ma/county:barnstable/place:falmouth_town"
+    },
+    {
+      "id": "ma-2026-needham-pollard-debt-exclusion",
+      "title": "Needham — Pollard Middle School debt exclusion",
+      "ocdId": "ocd-division/country:us/state:ma/county:norfolk/place:needham_town"
+    },
+    {
+      "id": "ma-2026-swansea-school-debt-exclusion",
+      "title": "Swansea — Question 10: New school debt exclusion",
+      "ocdId": "ocd-division/country:us/state:ma/county:bristol/place:swansea_town"
+    }
+  ],
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "operation": "Merge4new county/town questions and neutral explanations through the existing ballot data path. Prior candidates and measures remain.",
+  "coverageLimit": "Additional local inventory continues; Leicester and Haverhill leads await actual official questions. This4measure packet is not a statewide local completeness claim.",
+  "nextOwner": "River: merge this measure-only data through existing publication, then check the exact measures, explainers and official sources live.",
+  "validation": {
+    "checkedAt": "2026-11-03T04:55:57.169Z",
+    "preparedRecords": 4,
+    "cachedBaselineContests": 251,
+    "cachedBaselineCandidacies": 304,
+    "sourceFileHashes": "PASS",
+    "sourceSupportQuotes": "PASS",
+    "officialAuthority": "PASS",
+    "sourceIdentityHashes": "PASS",
+    "credentialSanitizer": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "priorCandidatesContestsAndMeasures": "UNCHANGED",
+    "actualWithMeasureTranslationsReplay": "PASS; cached full ballot and fresh measure-only snapshot",
+    "jurisdictionBindings": "PASS; exact county/town IDs and no statewide widening",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "1eba3e56c7418dad3fee7eda7f0910104238d12995c97eac78e5ace3a7c66daf",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceHashesAndCredentialScan": "PASS",
+    "productionWrites": 0
+  }
+}

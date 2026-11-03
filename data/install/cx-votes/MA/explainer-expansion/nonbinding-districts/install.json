@@ -1,0 +1,105 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "MA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T04:17:43.245Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "ma-2026-13th_middlesex-stipends-question",
+      "title": "Thirteenth Middlesex District — Nonbinding stipends question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:13th_middlesex"
+    },
+    {
+      "id": "ma-2026-14th_middlesex-stipends-question",
+      "title": "Fourteenth Middlesex District — Nonbinding stipends question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:14th_middlesex"
+    },
+    {
+      "id": "ma-2026-15th_middlesex-stipends-question",
+      "title": "Fifteenth Middlesex District — Nonbinding stipends question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex"
+    },
+    {
+      "id": "ma-2026-25th_middlesex-stipends-question",
+      "title": "Twenty-Fifth Middlesex District — Nonbinding stipends question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:25th_middlesex"
+    },
+    {
+      "id": "ma-2026-29th_middlesex-stipends-question",
+      "title": "Twenty-Ninth Middlesex District — Nonbinding stipends question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:29th_middlesex"
+    },
+    {
+      "id": "ma-2026-32nd_middlesex-stipends-question",
+      "title": "Thirty-Second Middlesex District — Nonbinding stipends question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:32nd_middlesex"
+    },
+    {
+      "id": "ma-2026-barnstable_dukes_and_nantucket-stipends-question",
+      "title": "Barnstable, Dukes & Nantucket District — Nonbinding stipends question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:barnstable_dukes_and_nantucket"
+    },
+    {
+      "id": "ma-2026-1st_hampden-single-payer-question",
+      "title": "First Hampden District — Nonbinding single payer question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_hampden"
+    },
+    {
+      "id": "ma-2026-15th_middlesex-single-payer-question",
+      "title": "Fifteenth Middlesex District — Nonbinding single payer question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:15th_middlesex"
+    },
+    {
+      "id": "ma-2026-1st_essex-carbon-fee-question",
+      "title": "First Essex District — Nonbinding carbon fee question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_essex"
+    },
+    {
+      "id": "ma-2026-8th_essex-carbon-fee-question",
+      "title": "Eighth Essex District — Nonbinding carbon fee question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:8th_essex"
+    },
+    {
+      "id": "ma-2026-1st_bristol-norfolk-county-question",
+      "title": "First Bristol District — Nonbinding norfolk county question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:1st_bristol"
+    },
+    {
+      "id": "ma-2026-5th_norfolk-norfolk-county-question",
+      "title": "Fifth Norfolk District — Nonbinding norfolk county question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:5th_norfolk"
+    },
+    {
+      "id": "ma-2026-6th_worcester-social-housing-question",
+      "title": "Sixth Worcester District — Nonbinding social housing question",
+      "ocdId": "ocd-division/country:us/state:ma/sldl:6th_worcester"
+    }
+  ],
+  "replacementExplainers": [],
+  "pendingScope": [],
+  "operation": "Merge ballot-input through the existing ballot publication path. These14new nonbinding district questions use exact existing published House-district IDs and positive named-scope evidence from the official warrant appendix. A vote expresses an instruction; it does not enact the requested legislation. No candidate or polling rows change.",
+  "validation": {
+    "originalSourceHashes": "PASS",
+    "officialAuthorityLinks": "PASS",
+    "relevantSourceQuotes": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "priorCandidaciesAndUnrelatedContestsMeasures": "UNCHANGED",
+    "actualWithMeasureTranslationsReplay": "PASS",
+    "jurisdictionBindings": "PASS"
+  },
+  "coverageLimit": "The appendix provides positive source evidence for these district-question pairs. It is not treated as a complete statewide certification list or as a correction to other official sample ballots. Local-town inventory work continues.",
+  "nextOwner": "River: merge this measure-only data through existing publication, then check the exact measures, explainers and official sources live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceHashesAndCredentialScan": "PASS",
+    "productionWrites": 0
+  }
+}

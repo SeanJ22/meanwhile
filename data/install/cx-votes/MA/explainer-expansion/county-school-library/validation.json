@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-03T04:55:57.169Z",
+  "preparedRecords": 4,
+  "cachedBaselineContests": 251,
+  "cachedBaselineCandidacies": 304,
+  "sourceFileHashes": "PASS",
+  "sourceSupportQuotes": "PASS",
+  "officialAuthority": "PASS",
+  "sourceIdentityHashes": "PASS",
+  "credentialSanitizer": "PASS",
+  "BallotContestMerge": "PASS",
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorCandidatesContestsAndMeasures": "UNCHANGED",
+  "actualWithMeasureTranslationsReplay": "PASS; cached full ballot and fresh measure-only snapshot",
+  "jurisdictionBindings": "PASS; exact county/town IDs and no statewide widening",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

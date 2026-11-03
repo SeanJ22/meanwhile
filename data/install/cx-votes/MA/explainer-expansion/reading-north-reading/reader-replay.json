@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-03T04:10:49.746Z",
+  "source": "Fresh saved translation snapshot from explainers-only/live-audit/MA.json",
+  "result": "PASS",
+  "subjects": [
+    "ma-reading-2026-question-10",
+    "ma-reading-2026-question-11",
+    "ma-2026-20th_middlesex-stipends-question",
+    "ma-2026-30th_middlesex-stipends-question",
+    "ma-north-reading-2026-question-10"
+  ],
+  "newSourceHashKinds": [
+    {
+      "id": "ma-reading-2026-question-10",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-reading-2026-question-11",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-20th_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-2026-30th_middlesex-stipends-question",
+      "kind": "CAPTURE_BYTES"
+    },
+    {
+      "id": "ma-north-reading-2026-question-10",
+      "kind": "HELD_TEXT"
+    }
+  ],
+  "productionWrites": 0
+}

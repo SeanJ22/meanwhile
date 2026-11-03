@@ -1,0 +1,341 @@
+{
+  "ballots": {
+    "MA:ma-2026-11-03": {
+      "election": {
+        "id": "ma-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 State Election",
+        "state": "MA"
+      },
+      "contests": [
+        {
+          "id": "ma-2026-leicester-campus-debt-exclusion",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:worcester/place:leicester_town",
+          "divisionVintage": "2026",
+          "title": "Leicester — Question 10: High School campus debt exclusion",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+          "provenance": {
+            "sourceUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+            "sourceOrg": "Town of Leicester, Town Clerk",
+            "collectedAt": "2026-11-03T04:57:54.618614+00:00",
+            "verifiedAt": "2026-11-03T05:00:40.721355+00:00",
+            "rawHash": "82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea",
+            "quote": "Shall the Town of Leicester be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to fund the costs of upgrades, modernization and repairs, and further, to create and furnish additional space to allow for the inclusion and/or expansion of vocational education programs to the properties known as the Campus Center Building (964 Main Street), the Borger Building (9 Washburn Square), Swan Library (13 Washburn Square), the Animal Health Center (955 Main Street), and associated grounds, all properties determined as the Leicester High School Campus, including the payment of all other costs incidental and related thereto?"
+          }
+        },
+        {
+          "id": "ma-2026-haverhill-onsite-marijuana-consumption",
+          "electionId": "ma-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ma/county:essex/place:haverhill_city",
+          "divisionVintage": "2026",
+          "title": "Haverhill — Question 10: Marijuana consumption where sold",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+          "provenance": {
+            "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+            "sourceOrg": "City of Haverhill, Elections Department",
+            "collectedAt": "2026-11-03T04:59:10.566129+00:00",
+            "verifiedAt": "2026-11-03T05:00:40.721355+00:00",
+            "rawHash": "cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc",
+            "quote": "Shall the City of Haverhill allow the sale of marijuana and marijuana products, as those terms are defined in section 1 of chapter 94G of the General Laws, for consumption on the premises where sold, a summary of which appears below?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ma-2026-leicester-campus-debt-exclusion:measure",
+          "contestId": "ma-2026-leicester-campus-debt-exclusion",
+          "questionText": "Shall the Town of Leicester be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to fund the costs of upgrades, modernization and repairs, and further, to create and furnish additional space to allow for the inclusion and/or expansion of vocational education programs to the properties known as the Campus Center Building (964 Main Street), the Borger Building (9 Washburn Square), Swan Library (13 Washburn Square), the Animal Health Center (955 Main Street), and associated grounds, all properties determined as the Leicester High School Campus, including the payment of all other costs incidental and related thereto?",
+          "officialNumber": "Question 10",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+            "sourceOrg": "Town of Leicester, Town Clerk",
+            "collectedAt": "2026-11-03T04:57:54.618614+00:00",
+            "verifiedAt": "2026-11-03T05:00:40.721355+00:00",
+            "rawHash": "82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea",
+            "quote": "Shall the Town of Leicester be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bonds issued in order to fund the costs of upgrades, modernization and repairs, and further, to create and furnish additional space to allow for the inclusion and/or expansion of vocational education programs to the properties known as the Campus Center Building (964 Main Street), the Borger Building (9 Washburn Square), Swan Library (13 Washburn Square), the Animal Health Center (955 Main Street), and associated grounds, all properties determined as the Leicester High School Campus, including the payment of all other costs incidental and related thereto?"
+          }
+        },
+        {
+          "id": "ma-2026-haverhill-onsite-marijuana-consumption:measure",
+          "contestId": "ma-2026-haverhill-onsite-marijuana-consumption",
+          "questionText": "Shall the City of Haverhill allow the sale of marijuana and marijuana products, as those terms are defined in section 1 of chapter 94G of the General Laws, for consumption on the premises where sold, a summary of which appears below?",
+          "officialNumber": "Question 10",
+          "officialStatement": "Section 3(b)(2) of Chapter 94G of the General Laws of Massachusetts establishes a process for petitioning a city to allow on-site consumption of marijuana within the limits of the City. Upon certification of the petition, the City must place the question on the ballot for the next regularly occurring municipal or state election in the form prescribed by the statute. The above question, if voted in the affirmative, would allow consumption of marijuana and marijuana products on the premises where sold, subject to the reasonable limitations established by the City.",
+          "provenance": {
+            "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+            "sourceOrg": "City of Haverhill, Elections Department",
+            "collectedAt": "2026-11-03T04:59:10.566129+00:00",
+            "verifiedAt": "2026-11-03T05:00:40.721355+00:00",
+            "rawHash": "cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc",
+            "quote": "Shall the City of Haverhill allow the sale of marijuana and marijuana products, as those terms are defined in section 1 of chapter 94G of the General Laws, for consumption on the premises where sold, a summary of which appears below?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ma-2026-leicester-campus-debt-exclusion",
+          "whatItDoes": "Allows Leicester to collect property taxes above Proposition 2½’s normal limits for the amounts needed to pay bonds for upgrades, modernization and repairs, and to create and furnish space for new or expanded vocational education programs at the Leicester High School campus. The covered properties are the Campus Center Building at 964 Main Street, Borger Building at 9 Washburn Square, Swan Library at 13 Washburn Square, Animal Health Center at 955 Main Street, and their grounds, including related costs. The exclusion applies to the bond payments for this work.",
+          "yesMeans": "Approve the property-tax debt exclusion for these campus and vocational-space bond payments.",
+          "noMeans": "Reject the proposed debt exclusion for these project bond payments.",
+          "parts": [],
+          "sourceUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+          "sourceHash": "82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:00:40.721355+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ma-2026-haverhill-onsite-marijuana-consumption",
+          "whatItDoes": "Allows the sale of marijuana and marijuana products, as defined in Massachusetts law, for consumption on the premises where they are sold in Haverhill. The official summary says this permission would be subject to reasonable limits established by the city.",
+          "yesMeans": "Allow marijuana and marijuana products to be sold for consumption on the same premises, subject to reasonable city limits.",
+          "noMeans": "Reject this proposed local permission for consumption on the premises where the products are sold.",
+          "parts": [],
+          "sourceUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+          "sourceHash": "cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:00:40.721355+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:00:40.721355+00:00",
+    "reviewedBy": "CX-VOTES direct official-source reading; no provider calls",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "httpStatus": 200,
+        "rawHash": "89795cba091710273ce19a6043651447bb9b2ab74e0871c864a4340a5aa95c77",
+        "retrievedAt": "2026-10-14T05:08:47.184Z",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "reviewedEvidence": "Official full November 3, 2026 State Election candidate list, covering each listed contest’s whole territory."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-ballot-questions.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-ballot-questions.htm",
+        "httpStatus": 200,
+        "rawHash": "277e93ea2f69090ebed7b775d4ce6487c649ca9aea9711236e339107ac04b91e",
+        "retrievedAt": "2026-10-14T05:12:38.592Z",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "reviewedEvidence": "Official November 3, 2026 State Election page identifies nine binding statewide questions and prints their ballot wording."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/download/information-for-voters/archive/IFV_2026%20English.pdf",
+        "httpStatus": 200,
+        "rawHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
+        "retrievedAt": "2026-10-14T05:04:16.732Z",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "reviewedEvidence": "Official 2026 Information for Voters booklet contains the full texts of all nine statewide ballot questions."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+        "httpStatus": 200,
+        "rawHash": "40e4d692889cd725eec45424cad55de57d9d6b4cec83e67ee3b7299bd5dfaa97",
+        "reviewedEvidence": "Saved rendered official candidate page obtained through the web reader after the direct HTTP route returned Incapsula. Hash describes the saved rendered text. Replayed all 223 federal, statewide, legislative and Councillor office/district groups and 304 candidate names. The 8 missing Councillor districts and all 11 printed candidates are added. Addresses stay in source evidence only."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:52.138272+00:00",
+        "httpStatus": 200,
+        "rawHash": "b6b40c45584f90cdf85251b3ee9a317f6ad2d371fa11db0b1d06658c595135be",
+        "reviewedEvidence": "Saved rendered official page; hash describes the saved rendered text. Code reads all 348 whole municipalities and 28 whole wards into their Council districts. Boston, Cambridge and Braintree whole-city memberships, and all partial wards/precincts, are excluded. Census2025 municipal names provide the county-subdivision aliases."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:52.138272+00:00",
+        "httpStatus": 200,
+        "rawHash": "e17827e458d146d0487ba0a0de21c64f434b375636301fd6104e2a01606324ae",
+        "reviewedEvidence": "Official Massachusetts county-subdivision Gazetteer supplies county FIPS and full municipal names for Council membership aliases. County names are replayed from the Massachusetts rows of the official2020 national county-code list retained beside the Gazetteer."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:52.138272+00:00",
+        "httpStatus": 200,
+        "rawHash": "9f6e5f6eb6ac2f5e9a36d5fd01dec77991bddc75118f748a069441a4782970d6",
+        "reviewedEvidence": "Code selects only STATEFP25 rows to map the Massachusetts county FIPS in the official Gazetteer to county names. Raw national response bytes are retained."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:03:24.358Z",
+        "httpStatus": 200,
+        "rawHash": "38a62040a5056b8ce79f57b6870b263ca4b2a1b93e1c63903d4c0861faefb103",
+        "reviewedEvidence": "Saved rendered official candidate page obtained through the web reader after the direct HTTP route returned Incapsula. Hash describes this saved rendered reader window, which contains the full Councillor section. All 8 Councillor districts and all 11 printed candidate names and party labels replayed against this capture. Addresses stay in source evidence only."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "finalUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+        "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:05:16.976Z",
+        "httpStatus": 200,
+        "rawHash": "6eeb2cd43d4547267b3d65f4cff7c9609a58debd571e3c03a6fe35ca458f6271",
+        "reviewedEvidence": "Saved rendered official page; hash describes the saved rendered text. Code reads all 348 whole municipalities and 28 whole wards into their Council districts. Boston, Cambridge and Braintree whole-city memberships, and all partial wards/precincts, are excluded. Census2025 municipal names provide the county-subdivision aliases."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:05:34.859789+00:00",
+        "httpStatus": 200,
+        "rawHash": "e17827e458d146d0487ba0a0de21c64f434b375636301fd6104e2a01606324ae",
+        "reviewedEvidence": "Official Massachusetts county-subdivision Gazetteer supplies county FIPS and full municipal names for Council membership aliases. County names are replayed from the Massachusetts rows of the official2020 national county-code list retained beside the Gazetteer."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:05:34.846723+00:00",
+        "httpStatus": 200,
+        "rawHash": "9f6e5f6eb6ac2f5e9a36d5fd01dec77991bddc75118f748a069441a4782970d6",
+        "reviewedEvidence": "Code selects only STATEFP25 rows to map the Massachusetts county FIPS in the official Gazetteer to county names. Raw national response bytes are retained."
+      },
+      {
+        "requestedUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+        "finalUrl": "https://www.town.holland.ma.us/sites/g/files/vyhlif3266/f/news/warrant_state_election_nov_3_2026.pdf",
+        "publisher": "Town of Holland official state-election warrant appendix",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "5931c9bc037d984f703fe4fca04a9a83f4ce8b215ef2b31dc6edc4fa5948c136",
+        "retrievedAt": "2026-11-03T04:05:38.001824+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.falmouthma.gov/DocumentCenter/View/22022/State-Election-Precinct-126",
+        "finalUrl": "https://www.falmouthma.gov/DocumentCenter/View/22022/State-Election-Precinct-126",
+        "publisher": "Town of Falmouth, Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:49:45.340128+00:00",
+        "httpStatus": 200,
+        "rawHash": "5b54358c1f5784469a1e47c3ab72cfa0a6ea01fb25703e619415adf17b083e4b",
+        "reviewedEvidence": "Original official November3,2026 sample ballot. Both current precinct styles retained; QuestionA precedes statewide questions and Question10 appears on both town styles."
+      },
+      {
+        "requestedUrl": "https://www.falmouthma.gov/DocumentCenter/View/22023/State-Election-Precincts-345789",
+        "finalUrl": "https://www.falmouthma.gov/DocumentCenter/View/22023/State-Election-Precincts-345789",
+        "publisher": "Town of Falmouth, Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:49:45.340824+00:00",
+        "httpStatus": 200,
+        "rawHash": "3d75f8564a510546c21a9bbed45c384b6559075eec665298456a003dec69d274",
+        "reviewedEvidence": "Original official November3,2026 sample ballot. Both current precinct styles retained; QuestionA precedes statewide questions and Question10 appears on both town styles."
+      },
+      {
+        "requestedUrl": "https://www.needhamma.gov/5834/Pollard-Middle-School-Debt-Exclusion-Vot",
+        "finalUrl": "https://www.needhamma.gov/5834/Pollard-Middle-School-Debt-Exclusion-Vot",
+        "publisher": "Town of Needham",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:49:09.705518+00:00",
+        "httpStatus": 200,
+        "rawHash": "4dc34737a4b3400fde0fc52b29acecb14a8211075338c2474d41c2aeb2977c2f",
+        "reviewedEvidence": "Native official HTML read; packaged HTML sanitized with original source-byte hash retained separately. Native page text retained; no source-text hash is claimed as native PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.capecod.gov/2026/10/06/election-2026-what-cape-cod-voters-should-know-about-question-a/",
+        "finalUrl": "https://www.capecod.gov/2026/10/06/election-2026-what-cape-cod-voters-should-know-about-question-a/",
+        "publisher": "Barnstable County",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:49:45.341294+00:00",
+        "httpStatus": 200,
+        "rawHash": "7b525da7ecf32bb8301eda15901d2051dce572433f9c1ec661914dc5f485353b",
+        "reviewedEvidence": "Native official HTML read; packaged HTML sanitized with original source-byte hash retained separately. Native page text retained; no source-text hash is claimed as native PDF bytes."
+      },
+      {
+        "requestedUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/292/0/3",
+        "finalUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/ShowBallot/ViewMyBallot/BallotOut/ST/292/0/3",
+        "publisher": "Massachusetts Secretary of the Commonwealth",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:54:11.926712+00:00",
+        "httpStatus": 200,
+        "rawHash": "2b492deed417b444ae4cf8f3667c4706a8db717106b05daf3f63d0ffc2543988",
+        "reviewedEvidence": "Complete307line official web-reader captured source text, not native HTTP bytes. Exact November3,2026 Swansea local Question10. Source label cautions additional local offices may appear; no absence claim or candidate data is imported."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/bzwaaveo/samplehaverhill_eng_208_icp-002.pdf",
+        "publisher": "City of Haverhill, Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:59:10.566129+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc6c628e9399c944df982de7374a5cacdeb0338849a68774e36d26e773dfbebc",
+        "reviewedEvidence": "Original official November3,2026 sample PDF. All4published ballot styles retain the same citywide local Question10 and official summary; delegated CDN linked from the current Haverhill.gov sample index."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/tgyfthea/samplehaverhill_eng_209_icp.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/tgyfthea/samplehaverhill_eng_209_icp.pdf",
+        "publisher": "City of Haverhill, Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:59:10.566754+00:00",
+        "httpStatus": 200,
+        "rawHash": "350a7cd3ceba15892d9f23b875b9ae2246a67c2e6c9b68b8cb55c97bfde34dd5",
+        "reviewedEvidence": "Original official November3,2026 sample PDF. All4published ballot styles retain the same citywide local Question10 and official summary; delegated CDN linked from the current Haverhill.gov sample index."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/hlpnfdhl/samplehaverhill_eng_239_icp.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/hlpnfdhl/samplehaverhill_eng_239_icp.pdf",
+        "publisher": "City of Haverhill, Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:59:10.567270+00:00",
+        "httpStatus": 200,
+        "rawHash": "e4d42fada51983f85049dea728d36de1ff70efa9ce12589e0c5e1fcfdd7cdf06",
+        "reviewedEvidence": "Original official November3,2026 sample PDF. All4published ballot styles retain the same citywide local Question10 and official summary; delegated CDN linked from the current Haverhill.gov sample index."
+      },
+      {
+        "requestedUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/fn1mrn45/samplehaverhill_eng_240_icp.pdf",
+        "finalUrl": "https://media-001-us.cdn.govstack.com/haverhillma-003-us/media/fn1mrn45/samplehaverhill_eng_240_icp.pdf",
+        "publisher": "City of Haverhill, Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:59:10.567840+00:00",
+        "httpStatus": 200,
+        "rawHash": "2fd994b90e64930b57f8829a2885e10b8e2de3eba80c47a2455ead4d72f171c3",
+        "reviewedEvidence": "Original official November3,2026 sample PDF. All4published ballot styles retain the same citywide local Question10 and official summary; delegated CDN linked from the current Haverhill.gov sample index."
+      },
+      {
+        "requestedUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+        "finalUrl": "https://www.leicesterma.org/ImageRepository/Document?documentID=5097",
+        "publisher": "Town of Leicester, Town Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T04:57:54.618614+00:00",
+        "httpStatus": 200,
+        "rawHash": "82ade5cb0a8f9ac8214272f6ddd0b0d1dcc33c30500283de0316424ca1b5b2ea",
+        "reviewedEvidence": "Original official ballot image linked from current November3,2026 town election page as page3for allprecincts. Full image visually read, exact Question10 transcription checked against source, including all4named campus properties and vocational-space condition."
+      }
+    ]
+  }
+}

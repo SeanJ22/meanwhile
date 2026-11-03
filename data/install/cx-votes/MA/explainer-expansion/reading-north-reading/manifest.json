@@ -1,0 +1,13 @@
+{
+  "status": "FROZEN_READY_FOR_ROOT",
+  "preparedAt": "2026-11-03T04:11:40.451738+00:00",
+  "newMeasureContests": 5,
+  "files": {
+    "ballot-input/ma.json": "5636db0817df4d0576e3dc583022a551d982c6e2546ac25b518b1b9c56262f48",
+    "source-support.json": "fdd63be7e9e7e0724eb29716ede9b81f8cf5598ab3197b45e5afd58a88329297",
+    "sources.json": "c50df5637ceb2bebd8551a567ee11ef0d029caa3d777aa7e691f502779cf081e",
+    "reader-replay.json": "1ad5bdee55328f1e78be0d914a4e73b684529084840a1516c02785dd84a6fde2",
+    "jurisdiction-bindings.json": "922ea094d93d94571516412fd4553c70c2cd5d7749889c502306ff08f2a8fb7b",
+    "install.json": "70879945f8a09920f5e858b179830fd690c236512eceef6142efcc7827440e42"
+  }
+}

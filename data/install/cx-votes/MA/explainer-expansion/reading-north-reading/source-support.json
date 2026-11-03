@@ -1,0 +1,177 @@
+[
+  {
+    "id": "ma-reading-2026-question-10",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex/place:reading_town",
+      "name": "Reading"
+    },
+    "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+    "sourceFile": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+    "sourceHash": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceFileSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/49f88f93b64c6c72ba3b28b4ac70d21c055063eac75842d0e22546a4ed77fb30.txt",
+    "excerptSha256": "49f88f93b64c6c72ba3b28b4ac70d21c055063eac75842d0e22546a4ed77fb30",
+    "sourceCheckedAt": "2026-11-03T04:05:41.552849+00:00",
+    "fields": {
+      "whatItDoes": [
+        "QUESTION 10\nShall the Town of Reading be allowed to assess an additional $6,500,000 in real estate and personal property taxes for the purposes of funding the general operation of Public Schools,\nPolice, Fire, Public Works, Library, and General Government for the fiscal year beginning July 1, 2027?\nYES\nNO"
+      ],
+      "yesMeans": [
+        "QUESTION 10\nShall the Town of Reading be allowed to assess an additional $6,500,000 in real estate and personal property taxes for the purposes of funding the general operation of Public Schools,\nPolice, Fire, Public Works, Library, and General Government for the fiscal year beginning July 1, 2027?\nYES\nNO"
+      ],
+      "noMeans": [
+        "QUESTION 10\nShall the Town of Reading be allowed to assess an additional $6,500,000 in real estate and personal property taxes for the purposes of funding the general operation of Public Schools,\nPolice, Fire, Public Works, Library, and General Government for the fiscal year beginning July 1, 2027?\nYES\nNO"
+      ]
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Read complete relevant official question and official neutral summary; no arguments or predicted impacts imported"
+    }
+  },
+  {
+    "id": "ma-reading-2026-question-11",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex/place:reading_town",
+      "name": "Reading"
+    },
+    "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+    "sourceFile": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+    "sourceHash": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceFileSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/0e804ddd28c85b5be6b20a8c3f4e75e84906c943cfc8bf6d6c7bcf9a57a7ab4c.txt",
+    "excerptSha256": "0e804ddd28c85b5be6b20a8c3f4e75e84906c943cfc8bf6d6c7bcf9a57a7ab4c",
+    "sourceCheckedAt": "2026-11-03T04:05:41.552849+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Sample\nQUESTION 11\nShall this Town of Reading accept sections 3 to 7, inclusive of chapter 44B of the General Laws, as approved by its legislative body, a summary of which appears below?\nSUMMARY\nSections 3 to 7 of Chapter 44B of the General Laws of Massachusetts, also known as the Community Preservation Act, establish a dedicated funding source to enable cities and\ntowns to (1) acquire, create and preserve open space, which includes land for park and recreational uses and the protection of public drinking water well fields, aquifers and recharge\nareas, wetlands, farm land, forests, marshes, beaches, scenic areas, wildlife preserves and other conversation areas, (2) rehabilitate and restore land for recreational use, (3) acquire,\npreserve, rehabilitate and restore historic buildings and resources, (4) acquire, create, preserve and support affordable housing and (5) rehabilitate and restore open space and affordable\nhousing that was acquired or created with community preservation funds. If these sections are accepted, the funding sources for these community preservation purposes in the Town\nof Reading under Section 3(b) of Chapter 44B will be (1) a surcharge of 1% on the annual property tax assessed on real property and (2) annual distributions made by the state from\na trust fund created by the Act. The surcharge will be assessed starting in fiscal year 2028, which begins on July 1, 2027.\nThe following will be exempt from the annual surcharge: (1) property owned and occupied as a domicile of a person who qualifies for low income housing, or low or moderate\nincome senior housing, as defined in the Act; (2) real property defined as commercial or industrial for property tax classification purposes under G.L. c. 59, § 2A in years a higher tax\nrate is adopted for those properties; and (3) the real estate tax assessed on $100,000 of the value of each parcel of residential real property as defined for property tax classification\npurposes. A taxpayer receiving a regular property tax abatement or exemption will also receive a pro rata reduction in the surcharge.\nA Community Preservation Committee will be established by bylaw to study community preservation resources, possibilities and needs and to make annual recommendations\nto Town Meeting on spending the funds. At least 10% of the revenues for each fiscal year will be spent or reserved for later spending on each of the Act’s community preservation\npurposes: (1) open space including land for recreational uses, (2) historic resources and (3) affordable housing.\nYES\nNO"
+      ],
+      "yesMeans": [
+        "Sample\nQUESTION 11\nShall this Town of Reading accept sections 3 to 7, inclusive of chapter 44B of the General Laws, as approved by its legislative body, a summary of which appears below?\nSUMMARY\nSections 3 to 7 of Chapter 44B of the General Laws of Massachusetts, also known as the Community Preservation Act, establish a dedicated funding source to enable cities and\ntowns to (1) acquire, create and preserve open space, which includes land for park and recreational uses and the protection of public drinking water well fields, aquifers and recharge\nareas, wetlands, farm land, forests, marshes, beaches, scenic areas, wildlife preserves and other conversation areas, (2) rehabilitate and restore land for recreational use, (3) acquire,\npreserve, rehabilitate and restore historic buildings and resources, (4) acquire, create, preserve and support affordable housing and (5) rehabilitate and restore open space and affordable\nhousing that was acquired or created with community preservation funds. If these sections are accepted, the funding sources for these community preservation purposes in the Town\nof Reading under Section 3(b) of Chapter 44B will be (1) a surcharge of 1% on the annual property tax assessed on real property and (2) annual distributions made by the state from\na trust fund created by the Act. The surcharge will be assessed starting in fiscal year 2028, which begins on July 1, 2027.\nThe following will be exempt from the annual surcharge: (1) property owned and occupied as a domicile of a person who qualifies for low income housing, or low or moderate\nincome senior housing, as defined in the Act; (2) real property defined as commercial or industrial for property tax classification purposes under G.L. c. 59, § 2A in years a higher tax\nrate is adopted for those properties; and (3) the real estate tax assessed on $100,000 of the value of each parcel of residential real property as defined for property tax classification\npurposes. A taxpayer receiving a regular property tax abatement or exemption will also receive a pro rata reduction in the surcharge.\nA Community Preservation Committee will be established by bylaw to study community preservation resources, possibilities and needs and to make annual recommendations\nto Town Meeting on spending the funds. At least 10% of the revenues for each fiscal year will be spent or reserved for later spending on each of the Act’s community preservation\npurposes: (1) open space including land for recreational uses, (2) historic resources and (3) affordable housing.\nYES\nNO"
+      ],
+      "noMeans": [
+        "Sample\nQUESTION 11\nShall this Town of Reading accept sections 3 to 7, inclusive of chapter 44B of the General Laws, as approved by its legislative body, a summary of which appears below?\nSUMMARY\nSections 3 to 7 of Chapter 44B of the General Laws of Massachusetts, also known as the Community Preservation Act, establish a dedicated funding source to enable cities and\ntowns to (1) acquire, create and preserve open space, which includes land for park and recreational uses and the protection of public drinking water well fields, aquifers and recharge\nareas, wetlands, farm land, forests, marshes, beaches, scenic areas, wildlife preserves and other conversation areas, (2) rehabilitate and restore land for recreational use, (3) acquire,\npreserve, rehabilitate and restore historic buildings and resources, (4) acquire, create, preserve and support affordable housing and (5) rehabilitate and restore open space and affordable\nhousing that was acquired or created with community preservation funds. If these sections are accepted, the funding sources for these community preservation purposes in the Town\nof Reading under Section 3(b) of Chapter 44B will be (1) a surcharge of 1% on the annual property tax assessed on real property and (2) annual distributions made by the state from\na trust fund created by the Act. The surcharge will be assessed starting in fiscal year 2028, which begins on July 1, 2027.\nThe following will be exempt from the annual surcharge: (1) property owned and occupied as a domicile of a person who qualifies for low income housing, or low or moderate\nincome senior housing, as defined in the Act; (2) real property defined as commercial or industrial for property tax classification purposes under G.L. c. 59, § 2A in years a higher tax\nrate is adopted for those properties; and (3) the real estate tax assessed on $100,000 of the value of each parcel of residential real property as defined for property tax classification\npurposes. A taxpayer receiving a regular property tax abatement or exemption will also receive a pro rata reduction in the surcharge.\nA Community Preservation Committee will be established by bylaw to study community preservation resources, possibilities and needs and to make annual recommendations\nto Town Meeting on spending the funds. At least 10% of the revenues for each fiscal year will be spent or reserved for later spending on each of the Act’s community preservation\npurposes: (1) open space including land for recreational uses, (2) historic resources and (3) affordable housing.\nYES\nNO"
+      ]
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Read complete relevant official question and official neutral summary; no arguments or predicted impacts imported"
+    }
+  },
+  {
+    "id": "ma-2026-20th_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:20th_middlesex",
+      "name": "Twentieth Middlesex House District"
+    },
+    "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+    "sourceFile": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+    "sourceHash": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceFileSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/0ee36eac827fa5dcbfe033683df6486f60006c13cefdf3701bc54956e7e011c7.txt",
+    "excerptSha256": "0ee36eac827fa5dcbfe033683df6486f60006c13cefdf3701bc54956e7e011c7",
+    "sourceCheckedAt": "2026-11-03T04:05:41.552849+00:00",
+    "fields": {
+      "whatItDoes": [
+        "QUESTION 12\nTHIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends\n(extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?\nYES\nNO"
+      ],
+      "yesMeans": [
+        "QUESTION 12\nTHIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends\n(extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?\nYES\nNO"
+      ],
+      "noMeans": [
+        "QUESTION 12\nTHIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends\n(extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?\nYES\nNO"
+      ]
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Read complete relevant official question and official neutral summary; no arguments or predicted impacts imported"
+    }
+  },
+  {
+    "id": "ma-2026-30th_middlesex-stipends-question",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/sldl:30th_middlesex",
+      "name": "Thirtieth Middlesex House District"
+    },
+    "sourceUrl": "https://www.readingma.gov/DocumentCenter/View/24805/2026-11-03-State-Election-Sample-Ballot",
+    "sourceFile": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+    "sourceHash": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "originalSourceSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceFileSha256": "6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c",
+    "sourceRepresentation": "ORIGINAL_CAPTURE_BYTES",
+    "excerptFile": "sources/0ee36eac827fa5dcbfe033683df6486f60006c13cefdf3701bc54956e7e011c7.txt",
+    "excerptSha256": "0ee36eac827fa5dcbfe033683df6486f60006c13cefdf3701bc54956e7e011c7",
+    "sourceCheckedAt": "2026-11-03T04:05:41.552849+00:00",
+    "fields": {
+      "whatItDoes": [
+        "QUESTION 12\nTHIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends\n(extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?\nYES\nNO"
+      ],
+      "yesMeans": [
+        "QUESTION 12\nTHIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends\n(extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?\nYES\nNO"
+      ],
+      "noMeans": [
+        "QUESTION 12\nTHIS QUESTION IS NOT BINDING\nShall the Representative from this District be instructed to vote in favor of legislation or rules to reduce the House Speaker’s and Senate President’s control over state legislators’ stipends\n(extra pay) and to provide stipends only to legislators who do significant extra work that is transparent and accountable to the public?\nYES\nNO"
+      ]
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Read complete relevant official question and official neutral summary; no arguments or predicted impacts imported"
+    }
+  },
+  {
+    "id": "ma-north-reading-2026-question-10",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town",
+      "name": "North Reading"
+    },
+    "sourceUrl": "https://www.northreadingma.gov/CivicAlerts.aspx?AID=148",
+    "sourceFile": "sources/43cf8d4b633bcb01391f8dea214356d16f480c9c97ce8e1cf42a666dbc4c5fc9.source",
+    "sourceHash": "c862f5d7ae42ad929f03e2e059c8e0d458473792012704ce99dc5b810d44f879",
+    "sourceHashKind": "HELD_TEXT",
+    "originalSourceSha256": "aaf478b89a17fb00c3eeae5a78b6b97b32e3ef5d4911c0b80ef845bcc627f5b4",
+    "sourceFileSha256": "43cf8d4b633bcb01391f8dea214356d16f480c9c97ce8e1cf42a666dbc4c5fc9",
+    "sourceRepresentation": "SANITIZED_LINKING_PAGE",
+    "excerptFile": "sources/956fdcdfffc610d3be898bb7aa19cebef4708ffed1e5835cb03f02174c92c83e.txt",
+    "excerptSha256": "956fdcdfffc610d3be898bb7aa19cebef4708ffed1e5835cb03f02174c92c83e",
+    "sourceCheckedAt": "2026-11-03T04:02:19.255954+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of North Reading be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to remove and replace the modular classrooms at the J. Turner Hood and E. Ethel Little Schools?\nAt October 2026 Town Meeting, North Reading voters appropriated $3,500,000.00 to remove and replace modular classrooms at Hood and Little Schools, to be bonded contingent on approval of Proposition 2 1/2 Debt Exclusion.\nProposition 2 ½ is a state law that caps the overall property tax “levy limit” on existing property to 2 ½ percent increases per year, plus tax revenue from new growth that adds to the town’s tax base. Question 10 proposes to temporarily increase property taxes above the amounts otherwise allowed under Proposition 2 ½. The increase is for the amount of the annual debt service payments for the approved project, and it lasts only for the life of the related borrowing."
+      ],
+      "yesMeans": [
+        "Shall the Town of North Reading be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to remove and replace the modular classrooms at the J. Turner Hood and E. Ethel Little Schools?\nAt October 2026 Town Meeting, North Reading voters appropriated $3,500,000.00 to remove and replace modular classrooms at Hood and Little Schools, to be bonded contingent on approval of Proposition 2 1/2 Debt Exclusion.\nProposition 2 ½ is a state law that caps the overall property tax “levy limit” on existing property to 2 ½ percent increases per year, plus tax revenue from new growth that adds to the town’s tax base. Question 10 proposes to temporarily increase property taxes above the amounts otherwise allowed under Proposition 2 ½. The increase is for the amount of the annual debt service payments for the approved project, and it lasts only for the life of the related borrowing."
+      ],
+      "noMeans": [
+        "Shall the Town of North Reading be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to remove and replace the modular classrooms at the J. Turner Hood and E. Ethel Little Schools?\nAt October 2026 Town Meeting, North Reading voters appropriated $3,500,000.00 to remove and replace modular classrooms at Hood and Little Schools, to be bonded contingent on approval of Proposition 2 1/2 Debt Exclusion.\nProposition 2 ½ is a state law that caps the overall property tax “levy limit” on existing property to 2 ½ percent increases per year, plus tax revenue from new growth that adds to the town’s tax base. Question 10 proposes to temporarily increase property taxes above the amounts otherwise allowed under Proposition 2 ½. The increase is for the amount of the annual debt service payments for the approved project, and it lasts only for the life of the related borrowing."
+      ]
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "providerCalls": 0,
+      "materialConditions": "Read complete relevant official question and official neutral summary; no arguments or predicted impacts imported"
+    }
+  }
+]

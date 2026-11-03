@@ -1,0 +1,60 @@
+[
+  {
+    "name": "TOWN OF READING",
+    "governmentBinding": [
+      "128145",
+      "ma:city:town-of-reading",
+      "TOWN OF READING",
+      "TOWNSHIP",
+      222,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "registeredDivision": [
+      "ocd-division/country:us/state:ma/county:middlesex/place:reading_town",
+      "cousub",
+      "2501756130",
+      "Reading town"
+    ],
+    "source": "data/derived/registration/ma.json",
+    "sourceSha256": "6195a88fc4b78db055f691479223c9255988550484afd9a66a91387bc2411a16"
+  },
+  {
+    "name": "TOWN OF NORTH READING",
+    "governmentBinding": [
+      "208269",
+      "ma:city:town-of-north-reading",
+      "TOWN OF NORTH READING",
+      "TOWNSHIP",
+      220,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "registeredDivision": [
+      "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town",
+      "cousub",
+      "2501748955",
+      "North Reading town"
+    ],
+    "source": "data/derived/registration/ma.json",
+    "sourceSha256": "6195a88fc4b78db055f691479223c9255988550484afd9a66a91387bc2411a16"
+  },
+  {
+    "contestId": "ma-2026-20th_middlesex-stipends-question",
+    "publishedElectionDivision": "ocd-division/country:us/state:ma/sldl:20th_middlesex",
+    "basis": "Exact existing division from the held Massachusetts ballot; official sample style identifies the matching House district on its first page and the nonbinding district question on its final page.",
+    "sourceFile": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+    "ballotStyleFirstPage": 1,
+    "questionPage": 4,
+    "notClaimedAsRawCensusCode": true
+  },
+  {
+    "contestId": "ma-2026-30th_middlesex-stipends-question",
+    "publishedElectionDivision": "ocd-division/country:us/state:ma/sldl:30th_middlesex",
+    "basis": "Exact existing division from the held Massachusetts ballot; official sample style identifies the matching House district on its first page and the nonbinding district question on its final page.",
+    "sourceFile": "sources/6eca929b6f19ab8aca3959f1317bd34fe7d609319c9a231919472e6f7ff29b5c.source",
+    "ballotStyleFirstPage": 5,
+    "questionPage": 8,
+    "notClaimedAsRawCensusCode": true
+  }
+]

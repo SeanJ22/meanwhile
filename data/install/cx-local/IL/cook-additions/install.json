@@ -1,0 +1,1103 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "IL",
+  "county": "Cook County",
+  "countyFips": "17031",
+  "populationRank": 2,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-1",
+      "title": "County Commissioner, 1st District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-2",
+      "title": "County Commissioner, 2nd District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-3",
+      "title": "County Commissioner, 3rd District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-4",
+      "title": "County Commissioner, 4th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-5",
+      "title": "County Commissioner, 5th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-7",
+      "title": "County Commissioner, 7th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:7",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-8",
+      "title": "County Commissioner, 8th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:8",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-10",
+      "title": "County Commissioner, 10th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:10",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-11",
+      "title": "County Commissioner, 11th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:11",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-12",
+      "title": "County Commissioner, 12th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:12",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-13",
+      "title": "County Commissioner, 13th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:13",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-16",
+      "title": "County Commissioner, 16th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:16",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-1-balanoff",
+      "title": "Judge, 1st Subcircuit (Vacancy of Balanoff)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-1-walker",
+      "title": "Judge, 1st Subcircuit (Vacancy of Walker)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-3-murphy",
+      "title": "Judge, 3rd Subcircuit (Vacancy of Murphy)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-3-sherlock",
+      "title": "Judge, 3rd Subcircuit (Vacancy of Sherlock)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-5-ross",
+      "title": "Judge, 5th Subcircuit (Vacancy of Ross)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:5",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-8-gamrath",
+      "title": "Judge, 8th Subcircuit (Vacancy of Gamrath)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:8",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-8-mikva",
+      "title": "Judge, 8th Subcircuit (Vacancy of Mikva)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:8",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-11-mclean-meyerson",
+      "title": "Judge, 11th Subcircuit (Vacancy of McLean Meyerson)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:11",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-11-roberts",
+      "title": "Judge, 11th Subcircuit (Vacancy of Roberts)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:11",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-16-baird",
+      "title": "Judge, 16th Subcircuit (Converted from Associate Judgeship of Baird)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:16",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-16-mendoza",
+      "title": "Judge, 16th Subcircuit (Converted from Associate Judgeship of Mendoza)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:16",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-17-brooks",
+      "title": "Judge, 17th Subcircuit (Converted from Associate Judgeship of Brooks)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:17",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-17-carroll",
+      "title": "Judge, 17th Subcircuit (Converted from Associate Judgeship of Carroll)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:17",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-19-fairman",
+      "title": "Judge, 19th Subcircuit (Converted from Associate Judgeship of Fairman)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:19",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-19-kane",
+      "title": "Judge, 19th Subcircuit (Converted from Associate Judgeship of Kane)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:19",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-20-haracz",
+      "title": "Judge, 20th Subcircuit (Converted from Associate Judgeship of Haracz)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:20",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-20-miller",
+      "title": "Judge, 20th Subcircuit (Converted from Associate Judgeship of Miller)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:20",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-president",
+      "title": "President of the Chicago Board of Education",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-1a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 1A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1a",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-1b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 1B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1b",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-2a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 2A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2a",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-2b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 2B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2b",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-3a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 3A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3a",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-3b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 3B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3b",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-4a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 4A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4a",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-4b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 4B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4b",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-5a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 5A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5a",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-5b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 5B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5b",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-6a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 6A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6a",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-6b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 6B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6b",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-7a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 7A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7a",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-7b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 7B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7b",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-8a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 8A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8a",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-8b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 8B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8b",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-9a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 9A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9a",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-9b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 9B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9b",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-10a",
+      "title": "Member of the Chicago Board of Education, Subdistrict 10A",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10a",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-chicago-board-education-10b",
+      "title": "Member of the Chicago Board of Education, Subdistrict 10B",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10b",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-265",
+      "title": "Judicial Retention \u2014 Gerardo Tristan, Jr. \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-267",
+      "title": "Judicial Retention \u2014 Lynn Weaver Boyle \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-269",
+      "title": "Judicial Retention \u2014 Daniel Edward Maloney \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-271",
+      "title": "Judicial Retention \u2014 Thomas M. Cushing \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-273",
+      "title": "Judicial Retention \u2014 John G. Mulroe \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-275",
+      "title": "Judicial Retention \u2014 Tyria B. Walton \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-277",
+      "title": "Judicial Retention \u2014 Erin Haggerty Antonietti \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-279",
+      "title": "Judicial Retention \u2014 Teresa Molina-Gonzalez \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-281",
+      "title": "Judicial Retention \u2014 Patricia Maria Fallon \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-283",
+      "title": "Judicial Retention \u2014 Sheree D. Henry \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-285",
+      "title": "Judicial Retention \u2014 Celestia L. Mays \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-287",
+      "title": "Judicial Retention \u2014 Levander Smith, Jr. \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-289",
+      "title": "Judicial Retention \u2014 Julie Bess Aimen \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-291",
+      "title": "Judicial Retention \u2014 Laura Ayala-Gonzalez \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-293",
+      "title": "Judicial Retention \u2014 Krista D. Butler \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-295",
+      "title": "Judicial Retention \u2014 Marie Aileen Dempsey \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-297",
+      "title": "Judicial Retention \u2014 Jamie Guerra Dickler \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-299",
+      "title": "Judicial Retention \u2014 Jonathan Clark Green \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-301",
+      "title": "Judicial Retention \u2014 Mary Catherine Marubio \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-303",
+      "title": "Judicial Retention \u2014 Regina A. Mescall \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-305",
+      "title": "Judicial Retention \u2014 Lorraine Mary Murphy \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-307",
+      "title": "Judicial Retention \u2014 Eileen Marie O'Connor \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-309",
+      "title": "Judicial Retention \u2014 Jill Rose Quinn \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-311",
+      "title": "Judicial Retention \u2014 Pamela Reaves-Harris \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-313",
+      "title": "Judicial Retention \u2014 Tiesha L. Smith \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-315",
+      "title": "Judicial Retention \u2014 Chris Stacey \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-317",
+      "title": "Judicial Retention \u2014 Perla Tirado \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-319",
+      "title": "Judicial Retention \u2014 Elizabeth Anne Walsh \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-321",
+      "title": "Judicial Retention \u2014 Maura McMahon Zeller \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "sourcePublicationLabel": "Unofficial",
+      "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST",
+      "sampleVerified": false
+    }
+  ],
+  "basePacket": "data/install/cx-local/IL/cook",
+  "sourceKind": "OFFICIAL_AUTHORITY_CANDIDATE_LIST_SUPPLEMENT",
+  "sourcePublicationLabel": "Unofficial",
+  "sourceStatusAsOf": "2026-10-27T16:10:15",
+  "statusTimezone": "Not stated in document",
+  "operation": "Prepared data only:merge these missing official-list fields alongside the base Cook specimen packet. Base Cook identities and sample evidence stay unchanged. No production calls.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "savedOfficialListBytesAndExactFields": "PASS",
+    "baseCookSpecimenContestsReplaced": 0,
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "genericBallotProblems": "PASS",
+    "sourceHashesAndQuotes": "PASS: 2 captured sources and 184 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "counts": {
+    "contests": 79,
+    "candidacies": 105,
+    "byCategory": {
+      "countyCommissioner": {
+        "contests": 12,
+        "candidates": 17
+      },
+      "judicialSubcircuit": {
+        "contests": 17,
+        "candidates": 17
+      },
+      "school": {
+        "contests": 21,
+        "candidates": 42
+      },
+      "retention": {
+        "contests": 29,
+        "candidates": 29
+      }
+    }
+  },
+  "coverage": {
+    "actualSampleBallotVerifiedContests": 0,
+    "countyComplete": false,
+    "completeBallotParity": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "knownOfficialListFieldsCompletePerOffice": true,
+    "sourceLimit": "Official authority publishes this list as Unofficial and covers districts touchingChicago only.",
+    "sampleAcquisition": "Standing work:actualChicago school/subdistrict/county sample PDFs or official newspaper facsimiles; publiclookupCAPTCHA unresolved.",
+    "remaining": [
+      "Actual sample confirmation for every listed supplemental field.",
+      "Remaining suburban Cook races and all-style census,including commissionerDistrict6 outsideChicago.",
+      "Chicago ward/precinct-specific ballot questions; no broad-city measure fallback.",
+      "Exact school subdistrict,commissioner andjudicial-subcircuit geography for reader applicability.",
+      "Named declared write-ins beyond generic Write-in N/A placeholders."
+    ]
+  },
+  "unmatchedDivisions": [
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:1",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:10",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:11",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:12",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:13",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:16",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:2",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:3",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:4",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:5",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:7",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:8",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:1",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:11",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:16",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:17",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:19",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:20",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:3",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:5",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:8",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9a",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9b",
+      "nextAction": "River:register exact source district andofficial boundary applicability; do not widen toChicago orCookCounty."
+    }
+  ],
+  "nextOwner": "River:merge as labeled official-list supplement when authorized,connect exact district applicability,andcontinue actual-sample acquisition. No production publication performed."
+}

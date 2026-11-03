@@ -1,0 +1,158 @@
+{
+  "kind": "CX_LOCAL_ACQUISITION_EVIDENCE",
+  "step": "CX-LOCAL",
+  "state": "IL",
+  "county": "Cook",
+  "countyFips": "17031",
+  "populationRank": 2,
+  "status": "NO_ADDITIONS_READY_SOURCE_ACCESS_RESEARCH_PRESERVED",
+  "installableContests": 0,
+  "basePacket": "data/install/cx-local/IL/cook",
+  "basePacketUnmodified": true,
+  "findings": [
+    "Chicago official October2 announcement confirms precinct-specific 2026 sample ballots are available only through its voter lookup route. Public address-only lookup is present but its form explicitly requires reCAPTCHA v2; no form submission or registered-voter identity used.",
+    "Public Daily Herald publisher DOM embeds original specimen-image URLs in base64 JSON CDN descriptors. Two additional original S3 specimen images were acquired successfully; observed local offices overlap the immutable base packet. Retention ballot number247 is also absent from these inspected specimens; no invented missing judge.",
+    "Oak Lawn official municipal election page links county voter lookup and has no current general sample PDF.",
+    "Riverside-Brookfield Landmark Oct21 print edition is publicly linked via Issuu. Native Issuu endpoints returned an access error; reader capture contained cookie-consent material and no specimen office blocks.",
+    "NoticeRegistry reproductions remain discovery leads only, not candidate qualification evidence. Its download requires an account/paid plan and was not used.",
+    "No candidate-list substitution and no new ordinary candidacies. Chicago school president/20 subdistricts and omitted suburban commissioner/judicial blocks remain sample-source gaps."
+  ],
+  "sourceReceipts": [
+    {
+      "url": "https://chicagoelections.gov/voter-info/address-lookup",
+      "finalUrl": "https://chicagoelections.gov/voter-info/address-lookup",
+      "status": 403,
+      "checkedAt": "2026-11-03T04:13:01.548293+00:00",
+      "sha256": "283ff49f874d0c0f1f9a39ca2e45646bd7ba81a3fef42c3f4c31a752949f7525",
+      "key": "address-native",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/address-native.source",
+      "bytes": 4554
+    },
+    {
+      "url": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:13:03.312596+00:00",
+      "sha256": "2ba5ad9c3c3930519ffdce6c8f4dc1a5cb6b9aac85df6a5f4868cfb17f68d6de",
+      "key": "address-reader",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/address-reader.source",
+      "bytes": 10591
+    },
+    {
+      "url": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:13:19.892446+00:00",
+      "sha256": "a07d991092a2c11436e63bd472d0cb02ce16c3602eec237912e15c13ad557d17",
+      "key": "address-dom",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/address-dom.source",
+      "bytes": 401149
+    },
+    {
+      "url": "https://r.jina.ai/https://chicagoelections.gov/news/vote-mail-and-online-specimen-ballots-now-available-november-3-general-election",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/news/vote-mail-and-online-specimen-ballots-now-available-november-3-general-election",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:18:38.315074+00:00",
+      "sha256": "e1004e2f14b9dad8f5bfee8972c1007d73d205029e84ae508452a025ab26574a",
+      "key": "chicago-online-reader",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/chicago-online-reader.source",
+      "bytes": 2530
+    },
+    {
+      "url": "https://www.oaklawn-il.gov/government/village_clerk/election_information.php",
+      "finalUrl": "https://www.oaklawn-il.gov/government/village_clerk/election_information.php",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:18:37.974983+00:00",
+      "sha256": "524038dfa1f41774940e265585eb23d98ad3641995aea738f3e009cf567ee62d",
+      "key": "oak-lawn-election",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/oak-lawn-election.source",
+      "bytes": 82449
+    },
+    {
+      "url": "https://r.jina.ai/https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C288XvF8E153F",
+      "finalUrl": "https://r.jina.ai/https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C288XvF8E153F",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:14:47.787346+00:00",
+      "sha256": "210a91a688449715d2ff0fa821a596fe35f7ec531f2948c184150a8f2e2d1ad6",
+      "key": "elk-grove-dom",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/elk-grove-dom.source",
+      "bytes": 335666
+    },
+    {
+      "url": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C288XvF8E153F/img/f71c7c19fc999bc716c826e5fda76dcf.jpg",
+      "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C288XvF8E153F/img/f71c7c19fc999bc716c826e5fda76dcf.jpg",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:20:34.677425+00:00",
+      "sha256": "da7ed85ab14232c3a4c1b0ccdd7e3f822239831635467e9a4516d840f25bd791",
+      "key": "elk-original",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/elk-original.source",
+      "bytes": 3411263
+    },
+    {
+      "url": "https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28J2YsE85BC1",
+      "captureUrl": "https://r.jina.ai/https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28J2YsE85BC1",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:20:03.639990+00:00",
+      "sha256": "fc48188ec6c25859b2d9af2a8f4d2c798c14e19003ce2d6b6a51060bc00ed5b5",
+      "key": "notice-j2-dom",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/notice-j2-dom.source",
+      "bytes": 334593
+    },
+    {
+      "url": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28J2YsE85BC1/img/a2cfedbb49561d29eed4078a4f4a8114.jpg",
+      "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28J2YsE85BC1/img/a2cfedbb49561d29eed4078a4f4a8114.jpg",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:20:35.595831+00:00",
+      "sha256": "8bf48030d1fb8321bd11befe233d570fd65938f25035918d14bd1f870045fa5a",
+      "key": "j2-original",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/j2-original.source",
+      "bytes": 3413794
+    },
+    {
+      "url": "https://www.rblandmark.com/2026/10/21/print-edition-october-21-2026/",
+      "finalUrl": "https://www.rblandmark.com/2026/10/21/print-edition-october-21-2026/",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:20:13.160950+00:00",
+      "sha256": "40e4bfea89e42c981cfbed39f756274db82ce0e9e48f9ff86d86cea3fe57a76b",
+      "key": "rblandmark-edition",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/rblandmark-edition.source",
+      "bytes": 190081
+    },
+    {
+      "url": "https://e.issuu.com/embed.html?d=landmark_102126&pageLayout=singlePage&u=wednesdayjournal",
+      "finalUrl": "https://e.issuu.com/embed.html?d=landmark_102126&pageLayout=singlePage&u=wednesdayjournal",
+      "status": 403,
+      "checkedAt": "2026-11-03T04:20:34.137913+00:00",
+      "sha256": "9882cea81cd0d6edbd3a6a3c9bceafe2a507b631ebfb1fed3518a4cc0961ded8",
+      "key": "landmark-embed",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/landmark-embed.source",
+      "bytes": 43
+    },
+    {
+      "url": "https://r.jina.ai/https://issuu.com/wednesdayjournal/docs/landmark_102126",
+      "finalUrl": "https://r.jina.ai/https://issuu.com/wednesdayjournal/docs/landmark_102126",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:21:05.275087+00:00",
+      "sha256": "72e66fc8762066ac63d6642a01143ec81d20b75f09f3bbe2984ad647240b8873",
+      "key": "landmark-reader",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/landmark-reader.source",
+      "bytes": 84018
+    },
+    {
+      "url": "https://www.southwestmessengerpress.com/archives/",
+      "finalUrl": "https://www.southwestmessengerpress.com/archives/",
+      "status": 200,
+      "checkedAt": "2026-11-03T04:21:01.888883+00:00",
+      "sha256": "35ba19f5ca8cb9c6020c90933fb1007a44589cf08dee004a6d938ff2d62ce79b",
+      "key": "messenger-archives",
+      "sourceFile": "/workspace/cx-local-work/cook-additions/messenger-archives.source",
+      "bytes": 200516
+    }
+  ],
+  "nextActions": [
+    "Use native original Daily Herald S3 extraction method for additional public township editions. Current two additions cover already-held offices.",
+    "Find an official public Chicago sample or municipal mirror covering school president and exact20 school subdistricts; preserve all complete printed candidate blocks.",
+    "Southern suburban originals likely Southwest Messenger Press Oct22 editions, and western suburban specimens likely GCM Oct21 print editions. Public archive leads preserved in scratch."
+  ],
+  "productionWrites": "NONE"
+}

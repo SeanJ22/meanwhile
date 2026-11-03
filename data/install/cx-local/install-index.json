@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:35:50.295453+00:00",
+  "preparedAt": "2026-11-03T04:43:33.016710+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -51,6 +51,35 @@
           "Canceled and appointed-in-lieu elections are saved separately; do not invent printed contests for them.",
           "20 state/regional judicial retentions already held; retain existing data, actual sample confirmation separate.",
           "Register/connect every unmatched division below and verify reader applicability; no whole-city/whole-county district memberships inferred."
+        ]
+      }
+    },
+    {
+      "state": "IL",
+      "county": "Cook County",
+      "populationRank": 2,
+      "manifest": "IL/cook-additions/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 79,
+      "measureContests": 0,
+      "candidacies": 105,
+      "newContests": 79,
+      "refreshedContests": 0,
+      "sourceInputSha256": "84b1dea936d1107bebf6adfa85005950b487fa7957e9ee06d0a2b8c4c4bdbdd7",
+      "coverage": {
+        "actualSampleBallotVerifiedContests": 0,
+        "countyComplete": false,
+        "completeBallotParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "knownOfficialListFieldsCompletePerOffice": true,
+        "sourceLimit": "Official authority publishes this list as Unofficial and covers districts touchingChicago only.",
+        "sampleAcquisition": "Standing work:actualChicago school/subdistrict/county sample PDFs or official newspaper facsimiles; publiclookupCAPTCHA unresolved.",
+        "remaining": [
+          "Actual sample confirmation for every listed supplemental field.",
+          "Remaining suburban Cook races and all-style census,including commissionerDistrict6 outsideChicago.",
+          "Chicago ward/precinct-specific ballot questions; no broad-city measure fallback.",
+          "Exact school subdistrict,commissioner andjudicial-subcircuit geography for reader applicability.",
+          "Named declared write-ins beyond generic Write-in N/A placeholders."
         ]
       }
     },
@@ -427,14 +456,14 @@
   ],
   "totals": {
     "countiesPrepared": 17,
-    "packetsPrepared": 17,
-    "candidateAndRetentionContests": 1384,
+    "packetsPrepared": 18,
+    "candidateAndRetentionContests": 1463,
     "measureContests": 71,
-    "candidacyEntries": 3066,
-    "newContestEntriesAgainstCheckedInBaseline": 1118,
-    "distinctPreparedContestIds": 1446,
-    "distinctPreparedCandidateIds": 3045,
-    "distinctNewContestsAgainstCheckedInBaseline": 1112
+    "candidacyEntries": 3171,
+    "newContestEntriesAgainstCheckedInBaseline": 1197,
+    "distinctPreparedContestIds": 1525,
+    "distinctPreparedCandidateIds": 3150,
+    "distinctNewContestsAgainstCheckedInBaseline": 1191
   },
   "remainingWork": [
     {

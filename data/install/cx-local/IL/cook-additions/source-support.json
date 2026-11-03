@@ -1,0 +1,37 @@
+[
+  {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+    "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:05.511897+00:00",
+    "sha256": "5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5",
+    "sourceFile": "sources/5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5.source",
+    "excerptFile": "sources/bee4b602602227227f0bef38e2d0e12593f27bfd992025c351dbed6f24b31682.txt",
+    "excerptSha256": "bee4b602602227227f0bef38e2d0e12593f27bfd992025c351dbed6f24b31682",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Government-authored October27,2026 Candidate Filings in Ballot Order for November3,2026. The PDF explicitly calls itself an Unofficial candidate list and says it covers only districts including all/part of Chicago. Used as an official-list supplement, not a sample ballot. Every imported numbered Candidate row and separate judicial Yes/No retention block is preserved. Generic Write-in N/A entries are not people.",
+    "officialLinkingPage": {
+      "url": "https://chicagoelections.gov/getting-ballot/candidates",
+      "sourceFile": "sources/ff78ee36ac55c297b34a99b9b2fb7168546123e2bec797bfaf10ea4cd16d8a55.source",
+      "sha256": "ff78ee36ac55c297b34a99b9b2fb7168546123e2bec797bfaf10ea4cd16d8a55",
+      "captureUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+      "sourceCheckedAt": "2026-11-03T03:42:43.884476+00:00"
+    }
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+    "sourceCheckedAt": "2026-11-03T03:42:43.884476+00:00",
+    "sha256": "ff78ee36ac55c297b34a99b9b2fb7168546123e2bec797bfaf10ea4cd16d8a55",
+    "sourceFile": "sources/ff78ee36ac55c297b34a99b9b2fb7168546123e2bec797bfaf10ea4cd16d8a55.source",
+    "excerptFile": "sources/ff78ee36ac55c297b34a99b9b2fb7168546123e2bec797bfaf10ea4cd16d8a55.txt",
+    "excerptSha256": "ff78ee36ac55c297b34a99b9b2fb7168546123e2bec797bfaf10ea4cd16d8a55",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Deterministic public-reader capture of Chicago Board official .gov Candidates page. Under2026GeneralElection it directly links the exact October27PDF, separately from2027Municipal candidate lists. This establishes official publishing authority for the government-cloud PDF. Reader capture status is200; no native-government transport status is asserted.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerHttpStatus": 200,
+      "reportedUrlSource": "https://chicagoelections.gov/getting-ballot/candidates"
+    }
+  }
+]

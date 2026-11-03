@@ -1,0 +1,3340 @@
+{
+  "ballots": {
+    "IL:il-2026-11-03": {
+      "election": {
+        "id": "il-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IL"
+      },
+      "contests": [
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-1",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:1",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 1st District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 1st District\n Vote for One\n   (72)    Tara Stamps (Democratic)                            Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-2",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:2",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 2nd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 2nd District\n Vote for One\n   (72)    Michael Scott, Jr. (Democratic)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-3",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:3",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 3rd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 3rd District\n Vote for One\n   (72)    Bill Lowry (Democratic)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-4",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:4",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 4th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 4th District\n Vote for One\n   (72)    Stanley S. Moore (Democratic)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-5",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:5",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 5th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 5th District\n Vote for One\n   (71)    Richard Nolan (Republican)                          Candidate\n\n   (72)    Kisha E. McCaskill (Democratic)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-7",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:7",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 7th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 7th District\n Vote for One\n   (72)    Alma E. Anaya (Democratic)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-8",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:8",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 8th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 8th District\n Vote for One\n   (71)    Ramona Bonilla-Anaiel (Republican)                  Candidate\n\n   (72)    Jessica Vasquez (Democratic)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-10",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:10",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 10th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 10th District\n  Vote for One\n    (72)    Drake Warren (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-11",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:11",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 11th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 11th District\n  Vote for One\n    (71)    Charles Spizzirri (Republican)                           Candidate\n\n    (72)    John P. Daley (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-12",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:12",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 12th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 12th District\n  Vote for One\n    (71)    Xiaoli \"Alice\" Hu (Republican)                           Candidate\n\n    (72)    Elizabeth Granato (Democratic)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-13",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:13",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 13th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 13th District\n  Vote for One\n    (71)    Aasi Siddique (Republican)                               Candidate\n\n    (72)    Josina Morita (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-16",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:16",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 16th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "County Commissioner, 16th District\n  Vote for One\n    (72)    Miranda E. Hernandez (Democratic)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-1-balanoff",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:1",
+          "divisionVintage": "2026",
+          "title": "Judge, 1st Subcircuit (Vacancy of Balanoff)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 1st Subcircuit (Vacancy of Balanoff)\n  Vote for One\n   (112)    Radiance Ward (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-1-walker",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:1",
+          "divisionVintage": "2026",
+          "title": "Judge, 1st Subcircuit (Vacancy of Walker)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 1st Subcircuit (Vacancy of Walker)\n  Vote for One\n   (114)    Ashley Greer Shambley (Democratic)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-3-murphy",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:3",
+          "divisionVintage": "2026",
+          "title": "Judge, 3rd Subcircuit (Vacancy of Murphy)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 3rd Subcircuit (Vacancy of Murphy)\n  Vote for One\n   (112)    John Carroll (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-3-sherlock",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:3",
+          "divisionVintage": "2026",
+          "title": "Judge, 3rd Subcircuit (Vacancy of Sherlock)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 3rd Subcircuit (Vacancy of Sherlock)\n  Vote for One\n   (114)    Rachel Marrello (Democratic)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-5-ross",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:5",
+          "divisionVintage": "2026",
+          "title": "Judge, 5th Subcircuit (Vacancy of Ross)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 5th Subcircuit (Vacancy of Ross)\n  Vote for One\n   (112)    Stephanie S. Kelly (Democratic)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-8-gamrath",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:8",
+          "divisionVintage": "2026",
+          "title": "Judge, 8th Subcircuit (Vacancy of Gamrath)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 8th Subcircuit (Vacancy of Gamrath)\n  Vote for One\n   (112)    Kathleen Cunniff Ori (Democratic)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-8-mikva",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:8",
+          "divisionVintage": "2026",
+          "title": "Judge, 8th Subcircuit (Vacancy of Mikva)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 8th Subcircuit (Vacancy of Mikva)\n  Vote for One\n   (114)    Lester Finkle (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-11-mclean-meyerson",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:11",
+          "divisionVintage": "2026",
+          "title": "Judge, 11th Subcircuit (Vacancy of McLean Meyerson)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 11th Subcircuit (Vacancy of McLean Meyerson)\n  Vote for One\n   (112)    Jarrett Knox (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-11-roberts",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:11",
+          "divisionVintage": "2026",
+          "title": "Judge, 11th Subcircuit (Vacancy of Roberts)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 11th Subcircuit (Vacancy of Roberts)\n Vote for One\n   (114)   Kim Przekota (Democratic)                                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-16-baird",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:16",
+          "divisionVintage": "2026",
+          "title": "Judge, 16th Subcircuit (Converted from Associate Judgeship of Baird)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 16th Subcircuit (Converted from Associate Judgeship of Baird)\n Vote for One\n   (112)   Julian Sanchez Crozier (Democratic)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-16-mendoza",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:16",
+          "divisionVintage": "2026",
+          "title": "Judge, 16th Subcircuit (Converted from Associate Judgeship of Mendoza)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 16th Subcircuit (Converted from Associate Judgeship of Mendoza)\n Vote for One\n   (114)   Jessica Karina Velez (Democratic)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-17-brooks",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:17",
+          "divisionVintage": "2026",
+          "title": "Judge, 17th Subcircuit (Converted from Associate Judgeship of Brooks)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 17th Subcircuit (Converted from Associate Judgeship of Brooks)\n Vote for One\n   (112)   Natalia Moore (Democratic)                                    Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-17-carroll",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:17",
+          "divisionVintage": "2026",
+          "title": "Judge, 17th Subcircuit (Converted from Associate Judgeship of Carroll)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 17th Subcircuit (Converted from Associate Judgeship of Carroll)\n Vote for One\n   (114)   Bianca B. Brown (Democratic)                                  Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-19-fairman",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:19",
+          "divisionVintage": "2026",
+          "title": "Judge, 19th Subcircuit (Converted from Associate Judgeship of Fairman)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 19th Subcircuit (Converted from Associate Judgeship of Fairman)\n Vote for One\n   (112)   Sara McGann (Democratic)                                      Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-19-kane",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:19",
+          "divisionVintage": "2026",
+          "title": "Judge, 19th Subcircuit (Converted from Associate Judgeship of Kane)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 19th Subcircuit (Converted from Associate Judgeship of Kane)\n Vote for One\n   (114)   Monica Somerville (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-20-haracz",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:20",
+          "divisionVintage": "2026",
+          "title": "Judge, 20th Subcircuit (Converted from Associate Judgeship of Haracz)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 20th Subcircuit (Converted from Associate Judgeship of Haracz)\n Vote for One\n   (112)   Michael J. Zink (Democratic)                                  Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-20-miller",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:20",
+          "divisionVintage": "2026",
+          "title": "Judge, 20th Subcircuit (Converted from Associate Judgeship of Miller)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, 20th Subcircuit (Converted from Associate Judgeship of Miller)\n Vote for One\n   (114)   Jon Stromsta (Democratic)                                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-president",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299",
+          "divisionVintage": "2026",
+          "title": "President of the Chicago Board of Education",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "President of the Chicago Board of Education\n Vote for One\n   (121)   Victor P. Henderson (Nonpartisan)                             Candidate\n\n   (122)   Jessica Biggs (Nonpartisan)                                   Candidate\n\n   (123)   Sendhil Revuluri (Nonpartisan)                                Candidate\n\n   (124)   Hilario Dominguez (Nonpartisan)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-1a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 1A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 1A\n Vote for One\n   (131)   Ed Bannon (Nonpartisan)                              Candidate\n\n   (132)   Margie B. Luczak (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-1b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 1B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 1B\n Vote for One\n   (131)   Claudia Peralta (Nonpartisan)                        Candidate\n\n   (132)   Michelle N. Pierre (Nonpartisan)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-2a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 2A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 2A\n Vote for One\n   (131)   Ebony DeBerry (Nonpartisan)                          Candidate\n\n   (132)   Hector Morales (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-2b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 2B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 2B\n Vote for One\n   (131)   Deborah \"Debby\" Pope (Nonpartisan)                   Candidate\n\n   (132)   Kyna Lenhof (Nonpartisan)                            Candidate\n\n   (133)   Daniel Basco (Nonpartisan)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-3a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 3A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 3A\n Vote for One\n   (131)   Norma Rios Sierra (Nonpartisan)                      Candidate\n\n   (132)   Peter Gonzales (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-3b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 3B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 3B\n Vote for One\n   (131)   Jason Dónes (Nonpartisan)                            Candidate\n\n   (132)   Carlos A. Rivas Jr. (Nonpartisan)                    Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-4a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 4A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 4A\n Vote for One\n   (131)   Ellen Sherratt (Nonpartisan)                         Candidate\n\n   (132)   Karen Zaccor (Nonpartisan)                           Candidate\n\n   (133)   Angel Alvarez (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-4b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 4B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 4B\n Vote for One\n   (131)   Ellen Rosenfeld (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-5a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 5A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 5A\n Vote for One\n   (131)   LaPamela Williams (Nonpartisan)                        Candidate\n\n   (132)   Aaron \"Jitu\" Brown (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-5b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 5B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 5B\n Vote for One\n   (131)   Michilla \"Kyla\" Blaise (Nonpartisan)                   Candidate\n\n   (132)   Anthony Hargrove (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-6a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 6A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 6A\n Vote for One\n   (131)   Anusha Thotakura (Nonpartisan)                         Candidate\n\n   (132)   Isaiah White (Nonpartisan)                             Candidate\n\n   (133)   Brenda Lee Anderson (Nonpartisan)                      Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-6b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 6B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 6B\n Vote for One\n   (131)   Michael L. Neal (Nonpartisan)                          Candidate\n\n   (132)   Brittany B. Kimble (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-7a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 7A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 7A\n Vote for One\n   (131)   Emma Lozano (Nonpartisan)                              Candidate\n\n   (132)   Jesus Ayala Jr. (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-7b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 7B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 7B\n Vote for One\n   (131)   Yesenia Lopez (Nonpartisan)                            Candidate\n\n   (132)   Erika E. Diaz-Chavez (Nonpartisan)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-8a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 8A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 8A\n Vote for One\n   (131)   Angel Gutierrez (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-8b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 8B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 8B\n Vote for One\n   (131)   Juan Ignacio Gonzalez (Nonpartisan)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-9a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 9A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 9A\n Vote for One\n   (131)   Brittany R. Bailey Preston (Nonpartisan)                   Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-9b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 9B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 9B\n Vote for One\n   (131)   Therese Boyle (Nonpartisan)                                Candidate\n\n   (132)   Katherine S. Dunneback (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-10a",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10a",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 10A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 10A\n Vote for One\n   (131)   Che \"Rhymefest\" Smith (Nonpartisan)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-10b",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10b",
+          "divisionVintage": "2026",
+          "title": "Member of the Chicago Board of Education, Subdistrict 10B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Member of the Chicago Board of Education, Subdistrict 10B\n Vote for One\n   (131)   Connie Anderson (Nonpartisan)                              Candidate\n\n   (132)   Patrick C. Watson (Nonpartisan)                            Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-265",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Gerardo Tristan, Jr. — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Gerardo Tristan, Jr.\n\n                                   (265)     Yes\n\n                                   (266)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-267",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Lynn Weaver Boyle — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Lynn Weaver Boyle\n\n                                   (267)     Yes\n\n                                   (268)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-269",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Daniel Edward Maloney — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Daniel Edward Maloney\n\n                                   (269)     Yes\n\n                                   (270)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-271",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Thomas M. Cushing — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Thomas M. Cushing\n\n                                   (271)     Yes\n\n                                   (272)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-273",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — John G. Mulroe — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   John G. Mulroe\n\n                                   (273)     Yes\n\n                                   (274)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-275",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Tyria B. Walton — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Tyria B. Walton\n\n                                   (275)     Yes\n\n                                   (276)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-277",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Erin Haggerty Antonietti — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Erin Haggerty Antonietti\n\n                                   (277)     Yes\n\n                                   (278)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-279",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Teresa Molina-Gonzalez — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Teresa Molina-Gonzalez\n\n                                   (279)     Yes\n\n                                   (280)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-281",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Patricia Maria Fallon — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Patricia Maria Fallon\n\n                                   (281)     Yes\n\n                                   (282)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-283",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Sheree D. Henry — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Sheree D. Henry\n\n                                   (283)     Yes\n\n                                   (284)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-285",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Celestia L. Mays — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Celestia L. Mays\n\n                                   (285)     Yes\n\n                                   (286)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-287",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Levander Smith, Jr. — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Levander Smith, Jr.\n\n                                   (287)     Yes\n\n                                   (288)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-289",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Julie Bess Aimen — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Julie Bess Aimen\n\n                                   (289)     Yes\n\n                                   (290)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-291",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Laura Ayala-Gonzalez — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Laura Ayala-Gonzalez\n\n                                   (291)     Yes\n\n                                   (292)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-293",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Krista D. Butler — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Krista D. Butler\n\n                                   (293)     Yes\n\n                                   (294)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-295",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Marie Aileen Dempsey — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Marie Aileen Dempsey\n\n                                   (295)     Yes\n\n                                   (296)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-297",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Jamie Guerra Dickler — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Jamie Guerra Dickler\n\n                                   (297)     Yes\n\n                                   (298)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-299",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Jonathan Clark Green — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Jonathan Clark Green\n\n                                   (299)     Yes\n\n                                   (300)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-301",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Mary Catherine Marubio — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Mary Catherine Marubio\n\n                                   (301)     Yes\n\n                                   (302)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-303",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Regina A. Mescall — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Regina A. Mescall\n\n                                   (303)     Yes\n\n                                   (304)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-305",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Lorraine Mary Murphy — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Lorraine Mary Murphy\n\n                                   (305)     Yes\n\n                                   (306)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-307",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Eileen Marie O'Connor — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Eileen Marie O'Connor\n\n                                   (307)     Yes\n\n                                   (308)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-309",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Jill Rose Quinn — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Jill Rose Quinn\n\n                                   (309)     Yes\n\n                                   (310)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-311",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Pamela Reaves-Harris — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Pamela Reaves-Harris\n\n                                   (311)     Yes\n\n                                   (312)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-313",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Tiesha L. Smith — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Tiesha L. Smith\n\n                                   (313)     Yes\n\n                                   (314)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-315",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Chris Stacey — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Chris Stacey\n\n                                   (315)    Yes\n\n                                   (316)    No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-317",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Perla Tirado — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Perla Tirado\n\n                                   (317)    Yes\n\n                                   (318)    No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-319",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Elizabeth Anne Walsh — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Elizabeth Anne Walsh\n\n                                   (319)    Yes\n\n                                   (320)    No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-321",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Maura McMahon Zeller — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No judicial retention decision.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Maura McMahon Zeller\n\n                                   (321)    Yes\n\n                                   (322)    No"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-1:tara-stamps",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-1",
+          "givenName": "",
+          "familyName": "Tara Stamps",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Tara Stamps (Democratic)                            Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-2:michael-scott-jr",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-2",
+          "givenName": "",
+          "familyName": "Michael Scott, Jr.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Michael Scott, Jr. (Democratic)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-3:bill-lowry",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-3",
+          "givenName": "",
+          "familyName": "Bill Lowry",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Bill Lowry (Democratic)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-4:stanley-s-moore",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-4",
+          "givenName": "",
+          "familyName": "Stanley S. Moore",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Stanley S. Moore (Democratic)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-5:richard-nolan",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-5",
+          "givenName": "",
+          "familyName": "Richard Nolan",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(71)    Richard Nolan (Republican)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-5:kisha-e-mccaskill",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-5",
+          "givenName": "",
+          "familyName": "Kisha E. McCaskill",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Kisha E. McCaskill (Democratic)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-7:alma-e-anaya",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-7",
+          "givenName": "",
+          "familyName": "Alma E. Anaya",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Alma E. Anaya (Democratic)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-8:ramona-bonilla-anaiel",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-8",
+          "givenName": "",
+          "familyName": "Ramona Bonilla-Anaiel",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(71)    Ramona Bonilla-Anaiel (Republican)                  Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-8:jessica-vasquez",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-8",
+          "givenName": "",
+          "familyName": "Jessica Vasquez",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Jessica Vasquez (Democratic)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-10:drake-warren",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-10",
+          "givenName": "",
+          "familyName": "Drake Warren",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Drake Warren (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-11:charles-spizzirri",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-11",
+          "givenName": "",
+          "familyName": "Charles Spizzirri",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(71)    Charles Spizzirri (Republican)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-11:john-p-daley",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-11",
+          "givenName": "",
+          "familyName": "John P. Daley",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    John P. Daley (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-12:xiaoli-alice-hu",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-12",
+          "givenName": "",
+          "familyName": "Xiaoli \"Alice\" Hu",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(71)    Xiaoli \"Alice\" Hu (Republican)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-12:elizabeth-granato",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-12",
+          "givenName": "",
+          "familyName": "Elizabeth Granato",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Elizabeth Granato (Democratic)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-13:aasi-siddique",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-13",
+          "givenName": "",
+          "familyName": "Aasi Siddique",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(71)    Aasi Siddique (Republican)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-13:josina-morita",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-13",
+          "givenName": "",
+          "familyName": "Josina Morita",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Josina Morita (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-16:miranda-e-hernandez",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-16",
+          "givenName": "",
+          "familyName": "Miranda E. Hernandez",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(72)    Miranda E. Hernandez (Democratic)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-1-balanoff:radiance-ward",
+          "contestId": "il-cx-local-2026-cook-subcircuit-1-balanoff",
+          "givenName": "",
+          "familyName": "Radiance Ward",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)    Radiance Ward (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-1-walker:ashley-greer-shambley",
+          "contestId": "il-cx-local-2026-cook-subcircuit-1-walker",
+          "givenName": "",
+          "familyName": "Ashley Greer Shambley",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)    Ashley Greer Shambley (Democratic)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-3-murphy:john-carroll",
+          "contestId": "il-cx-local-2026-cook-subcircuit-3-murphy",
+          "givenName": "",
+          "familyName": "John Carroll",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)    John Carroll (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-3-sherlock:rachel-marrello",
+          "contestId": "il-cx-local-2026-cook-subcircuit-3-sherlock",
+          "givenName": "",
+          "familyName": "Rachel Marrello",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)    Rachel Marrello (Democratic)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-5-ross:stephanie-s-kelly",
+          "contestId": "il-cx-local-2026-cook-subcircuit-5-ross",
+          "givenName": "",
+          "familyName": "Stephanie S. Kelly",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)    Stephanie S. Kelly (Democratic)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-8-gamrath:kathleen-cunniff-ori",
+          "contestId": "il-cx-local-2026-cook-subcircuit-8-gamrath",
+          "givenName": "",
+          "familyName": "Kathleen Cunniff Ori",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)    Kathleen Cunniff Ori (Democratic)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-8-mikva:lester-finkle",
+          "contestId": "il-cx-local-2026-cook-subcircuit-8-mikva",
+          "givenName": "",
+          "familyName": "Lester Finkle",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)    Lester Finkle (Democratic)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-11-mclean-meyerson:jarrett-knox",
+          "contestId": "il-cx-local-2026-cook-subcircuit-11-mclean-meyerson",
+          "givenName": "",
+          "familyName": "Jarrett Knox",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)    Jarrett Knox (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-11-roberts:kim-przekota",
+          "contestId": "il-cx-local-2026-cook-subcircuit-11-roberts",
+          "givenName": "",
+          "familyName": "Kim Przekota",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)   Kim Przekota (Democratic)                                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-16-baird:julian-sanchez-crozier",
+          "contestId": "il-cx-local-2026-cook-subcircuit-16-baird",
+          "givenName": "",
+          "familyName": "Julian Sanchez Crozier",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)   Julian Sanchez Crozier (Democratic)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-16-mendoza:jessica-karina-velez",
+          "contestId": "il-cx-local-2026-cook-subcircuit-16-mendoza",
+          "givenName": "",
+          "familyName": "Jessica Karina Velez",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)   Jessica Karina Velez (Democratic)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-17-brooks:natalia-moore",
+          "contestId": "il-cx-local-2026-cook-subcircuit-17-brooks",
+          "givenName": "",
+          "familyName": "Natalia Moore",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)   Natalia Moore (Democratic)                                    Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-17-carroll:bianca-b-brown",
+          "contestId": "il-cx-local-2026-cook-subcircuit-17-carroll",
+          "givenName": "",
+          "familyName": "Bianca B. Brown",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)   Bianca B. Brown (Democratic)                                  Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-19-fairman:sara-mcgann",
+          "contestId": "il-cx-local-2026-cook-subcircuit-19-fairman",
+          "givenName": "",
+          "familyName": "Sara McGann",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)   Sara McGann (Democratic)                                      Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-19-kane:monica-somerville",
+          "contestId": "il-cx-local-2026-cook-subcircuit-19-kane",
+          "givenName": "",
+          "familyName": "Monica Somerville",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)   Monica Somerville (Democratic)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-20-haracz:michael-j-zink",
+          "contestId": "il-cx-local-2026-cook-subcircuit-20-haracz",
+          "givenName": "",
+          "familyName": "Michael J. Zink",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(112)   Michael J. Zink (Democratic)                                  Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-20-miller:jon-stromsta",
+          "contestId": "il-cx-local-2026-cook-subcircuit-20-miller",
+          "givenName": "",
+          "familyName": "Jon Stromsta",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(114)   Jon Stromsta (Democratic)                                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-president:victor-p-henderson",
+          "contestId": "il-cx-local-2026-chicago-board-education-president",
+          "givenName": "",
+          "familyName": "Victor P. Henderson",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(121)   Victor P. Henderson (Nonpartisan)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-president:jessica-biggs",
+          "contestId": "il-cx-local-2026-chicago-board-education-president",
+          "givenName": "",
+          "familyName": "Jessica Biggs",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(122)   Jessica Biggs (Nonpartisan)                                   Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-president:sendhil-revuluri",
+          "contestId": "il-cx-local-2026-chicago-board-education-president",
+          "givenName": "",
+          "familyName": "Sendhil Revuluri",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(123)   Sendhil Revuluri (Nonpartisan)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-president:hilario-dominguez",
+          "contestId": "il-cx-local-2026-chicago-board-education-president",
+          "givenName": "",
+          "familyName": "Hilario Dominguez",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(124)   Hilario Dominguez (Nonpartisan)                               Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-1a:ed-bannon",
+          "contestId": "il-cx-local-2026-chicago-board-education-1a",
+          "givenName": "",
+          "familyName": "Ed Bannon",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Ed Bannon (Nonpartisan)                              Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-1a:margie-b-luczak",
+          "contestId": "il-cx-local-2026-chicago-board-education-1a",
+          "givenName": "",
+          "familyName": "Margie B. Luczak",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Margie B. Luczak (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-1b:claudia-peralta",
+          "contestId": "il-cx-local-2026-chicago-board-education-1b",
+          "givenName": "",
+          "familyName": "Claudia Peralta",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Claudia Peralta (Nonpartisan)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-1b:michelle-n-pierre",
+          "contestId": "il-cx-local-2026-chicago-board-education-1b",
+          "givenName": "",
+          "familyName": "Michelle N. Pierre",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Michelle N. Pierre (Nonpartisan)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-2a:ebony-deberry",
+          "contestId": "il-cx-local-2026-chicago-board-education-2a",
+          "givenName": "",
+          "familyName": "Ebony DeBerry",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Ebony DeBerry (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-2a:hector-morales",
+          "contestId": "il-cx-local-2026-chicago-board-education-2a",
+          "givenName": "",
+          "familyName": "Hector Morales",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Hector Morales (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-2b:deborah-debby-pope",
+          "contestId": "il-cx-local-2026-chicago-board-education-2b",
+          "givenName": "",
+          "familyName": "Deborah \"Debby\" Pope",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Deborah \"Debby\" Pope (Nonpartisan)                   Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-2b:kyna-lenhof",
+          "contestId": "il-cx-local-2026-chicago-board-education-2b",
+          "givenName": "",
+          "familyName": "Kyna Lenhof",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Kyna Lenhof (Nonpartisan)                            Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-2b:daniel-basco",
+          "contestId": "il-cx-local-2026-chicago-board-education-2b",
+          "givenName": "",
+          "familyName": "Daniel Basco",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(133)   Daniel Basco (Nonpartisan)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-3a:norma-rios-sierra",
+          "contestId": "il-cx-local-2026-chicago-board-education-3a",
+          "givenName": "",
+          "familyName": "Norma Rios Sierra",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Norma Rios Sierra (Nonpartisan)                      Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-3a:peter-gonzales",
+          "contestId": "il-cx-local-2026-chicago-board-education-3a",
+          "givenName": "",
+          "familyName": "Peter Gonzales",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Peter Gonzales (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-3b:jason-d-nes",
+          "contestId": "il-cx-local-2026-chicago-board-education-3b",
+          "givenName": "",
+          "familyName": "Jason Dónes",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Jason Dónes (Nonpartisan)                            Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-3b:carlos-a-rivas-jr",
+          "contestId": "il-cx-local-2026-chicago-board-education-3b",
+          "givenName": "",
+          "familyName": "Carlos A. Rivas Jr.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Carlos A. Rivas Jr. (Nonpartisan)                    Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-4a:ellen-sherratt",
+          "contestId": "il-cx-local-2026-chicago-board-education-4a",
+          "givenName": "",
+          "familyName": "Ellen Sherratt",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Ellen Sherratt (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-4a:karen-zaccor",
+          "contestId": "il-cx-local-2026-chicago-board-education-4a",
+          "givenName": "",
+          "familyName": "Karen Zaccor",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Karen Zaccor (Nonpartisan)                           Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-4a:angel-alvarez",
+          "contestId": "il-cx-local-2026-chicago-board-education-4a",
+          "givenName": "",
+          "familyName": "Angel Alvarez",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(133)   Angel Alvarez (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-4b:ellen-rosenfeld",
+          "contestId": "il-cx-local-2026-chicago-board-education-4b",
+          "givenName": "",
+          "familyName": "Ellen Rosenfeld",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Ellen Rosenfeld (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-5a:lapamela-williams",
+          "contestId": "il-cx-local-2026-chicago-board-education-5a",
+          "givenName": "",
+          "familyName": "LaPamela Williams",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   LaPamela Williams (Nonpartisan)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-5a:aaron-jitu-brown",
+          "contestId": "il-cx-local-2026-chicago-board-education-5a",
+          "givenName": "",
+          "familyName": "Aaron \"Jitu\" Brown",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Aaron \"Jitu\" Brown (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-5b:michilla-kyla-blaise",
+          "contestId": "il-cx-local-2026-chicago-board-education-5b",
+          "givenName": "",
+          "familyName": "Michilla \"Kyla\" Blaise",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Michilla \"Kyla\" Blaise (Nonpartisan)                   Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-5b:anthony-hargrove",
+          "contestId": "il-cx-local-2026-chicago-board-education-5b",
+          "givenName": "",
+          "familyName": "Anthony Hargrove",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Anthony Hargrove (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-6a:anusha-thotakura",
+          "contestId": "il-cx-local-2026-chicago-board-education-6a",
+          "givenName": "",
+          "familyName": "Anusha Thotakura",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Anusha Thotakura (Nonpartisan)                         Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-6a:isaiah-white",
+          "contestId": "il-cx-local-2026-chicago-board-education-6a",
+          "givenName": "",
+          "familyName": "Isaiah White",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Isaiah White (Nonpartisan)                             Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-6a:brenda-lee-anderson",
+          "contestId": "il-cx-local-2026-chicago-board-education-6a",
+          "givenName": "",
+          "familyName": "Brenda Lee Anderson",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(133)   Brenda Lee Anderson (Nonpartisan)                      Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-6b:michael-l-neal",
+          "contestId": "il-cx-local-2026-chicago-board-education-6b",
+          "givenName": "",
+          "familyName": "Michael L. Neal",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Michael L. Neal (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-6b:brittany-b-kimble",
+          "contestId": "il-cx-local-2026-chicago-board-education-6b",
+          "givenName": "",
+          "familyName": "Brittany B. Kimble",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Brittany B. Kimble (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-7a:emma-lozano",
+          "contestId": "il-cx-local-2026-chicago-board-education-7a",
+          "givenName": "",
+          "familyName": "Emma Lozano",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Emma Lozano (Nonpartisan)                              Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-7a:jesus-ayala-jr",
+          "contestId": "il-cx-local-2026-chicago-board-education-7a",
+          "givenName": "",
+          "familyName": "Jesus Ayala Jr.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Jesus Ayala Jr. (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-7b:yesenia-lopez",
+          "contestId": "il-cx-local-2026-chicago-board-education-7b",
+          "givenName": "",
+          "familyName": "Yesenia Lopez",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Yesenia Lopez (Nonpartisan)                            Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-7b:erika-e-diaz-chavez",
+          "contestId": "il-cx-local-2026-chicago-board-education-7b",
+          "givenName": "",
+          "familyName": "Erika E. Diaz-Chavez",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Erika E. Diaz-Chavez (Nonpartisan)                     Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-8a:angel-gutierrez",
+          "contestId": "il-cx-local-2026-chicago-board-education-8a",
+          "givenName": "",
+          "familyName": "Angel Gutierrez",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Angel Gutierrez (Nonpartisan)                          Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-8b:juan-ignacio-gonzalez",
+          "contestId": "il-cx-local-2026-chicago-board-education-8b",
+          "givenName": "",
+          "familyName": "Juan Ignacio Gonzalez",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Juan Ignacio Gonzalez (Nonpartisan)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-9a:brittany-r-bailey-preston",
+          "contestId": "il-cx-local-2026-chicago-board-education-9a",
+          "givenName": "",
+          "familyName": "Brittany R. Bailey Preston",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Brittany R. Bailey Preston (Nonpartisan)                   Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-9b:therese-boyle",
+          "contestId": "il-cx-local-2026-chicago-board-education-9b",
+          "givenName": "",
+          "familyName": "Therese Boyle",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Therese Boyle (Nonpartisan)                                Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-9b:katherine-s-dunneback",
+          "contestId": "il-cx-local-2026-chicago-board-education-9b",
+          "givenName": "",
+          "familyName": "Katherine S. Dunneback",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Katherine S. Dunneback (Nonpartisan)                       Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-10a:che-rhymefest-smith",
+          "contestId": "il-cx-local-2026-chicago-board-education-10a",
+          "givenName": "",
+          "familyName": "Che \"Rhymefest\" Smith",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Che \"Rhymefest\" Smith (Nonpartisan)                        Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-10b:connie-anderson",
+          "contestId": "il-cx-local-2026-chicago-board-education-10b",
+          "givenName": "",
+          "familyName": "Connie Anderson",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(131)   Connie Anderson (Nonpartisan)                              Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-chicago-board-education-10b:patrick-c-watson",
+          "contestId": "il-cx-local-2026-chicago-board-education-10b",
+          "givenName": "",
+          "familyName": "Patrick C. Watson",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "(132)   Patrick C. Watson (Nonpartisan)                            Candidate"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-265:gerardo-tristan-jr",
+          "contestId": "il-cx-local-2026-cook-retention-265",
+          "givenName": "",
+          "familyName": "Gerardo Tristan, Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Gerardo Tristan, Jr.\n\n                                   (265)     Yes\n\n                                   (266)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-267:lynn-weaver-boyle",
+          "contestId": "il-cx-local-2026-cook-retention-267",
+          "givenName": "",
+          "familyName": "Lynn Weaver Boyle",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Lynn Weaver Boyle\n\n                                   (267)     Yes\n\n                                   (268)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-269:daniel-edward-maloney",
+          "contestId": "il-cx-local-2026-cook-retention-269",
+          "givenName": "",
+          "familyName": "Daniel Edward Maloney",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Daniel Edward Maloney\n\n                                   (269)     Yes\n\n                                   (270)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-271:thomas-m-cushing",
+          "contestId": "il-cx-local-2026-cook-retention-271",
+          "givenName": "",
+          "familyName": "Thomas M. Cushing",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Thomas M. Cushing\n\n                                   (271)     Yes\n\n                                   (272)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-273:john-g-mulroe",
+          "contestId": "il-cx-local-2026-cook-retention-273",
+          "givenName": "",
+          "familyName": "John G. Mulroe",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   John G. Mulroe\n\n                                   (273)     Yes\n\n                                   (274)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-275:tyria-b-walton",
+          "contestId": "il-cx-local-2026-cook-retention-275",
+          "givenName": "",
+          "familyName": "Tyria B. Walton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Tyria B. Walton\n\n                                   (275)     Yes\n\n                                   (276)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-277:erin-haggerty-antonietti",
+          "contestId": "il-cx-local-2026-cook-retention-277",
+          "givenName": "",
+          "familyName": "Erin Haggerty Antonietti",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Erin Haggerty Antonietti\n\n                                   (277)     Yes\n\n                                   (278)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-279:teresa-molina-gonzalez",
+          "contestId": "il-cx-local-2026-cook-retention-279",
+          "givenName": "",
+          "familyName": "Teresa Molina-Gonzalez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Teresa Molina-Gonzalez\n\n                                   (279)     Yes\n\n                                   (280)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-281:patricia-maria-fallon",
+          "contestId": "il-cx-local-2026-cook-retention-281",
+          "givenName": "",
+          "familyName": "Patricia Maria Fallon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Patricia Maria Fallon\n\n                                   (281)     Yes\n\n                                   (282)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-283:sheree-d-henry",
+          "contestId": "il-cx-local-2026-cook-retention-283",
+          "givenName": "",
+          "familyName": "Sheree D. Henry",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Sheree D. Henry\n\n                                   (283)     Yes\n\n                                   (284)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-285:celestia-l-mays",
+          "contestId": "il-cx-local-2026-cook-retention-285",
+          "givenName": "",
+          "familyName": "Celestia L. Mays",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Celestia L. Mays\n\n                                   (285)     Yes\n\n                                   (286)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-287:levander-smith-jr",
+          "contestId": "il-cx-local-2026-cook-retention-287",
+          "givenName": "",
+          "familyName": "Levander Smith, Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Levander Smith, Jr.\n\n                                   (287)     Yes\n\n                                   (288)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-289:julie-bess-aimen",
+          "contestId": "il-cx-local-2026-cook-retention-289",
+          "givenName": "",
+          "familyName": "Julie Bess Aimen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Julie Bess Aimen\n\n                                   (289)     Yes\n\n                                   (290)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-291:laura-ayala-gonzalez",
+          "contestId": "il-cx-local-2026-cook-retention-291",
+          "givenName": "",
+          "familyName": "Laura Ayala-Gonzalez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Laura Ayala-Gonzalez\n\n                                   (291)     Yes\n\n                                   (292)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-293:krista-d-butler",
+          "contestId": "il-cx-local-2026-cook-retention-293",
+          "givenName": "",
+          "familyName": "Krista D. Butler",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Krista D. Butler\n\n                                   (293)     Yes\n\n                                   (294)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-295:marie-aileen-dempsey",
+          "contestId": "il-cx-local-2026-cook-retention-295",
+          "givenName": "",
+          "familyName": "Marie Aileen Dempsey",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Marie Aileen Dempsey\n\n                                   (295)     Yes\n\n                                   (296)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-297:jamie-guerra-dickler",
+          "contestId": "il-cx-local-2026-cook-retention-297",
+          "givenName": "",
+          "familyName": "Jamie Guerra Dickler",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Jamie Guerra Dickler\n\n                                   (297)     Yes\n\n                                   (298)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-299:jonathan-clark-green",
+          "contestId": "il-cx-local-2026-cook-retention-299",
+          "givenName": "",
+          "familyName": "Jonathan Clark Green",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Jonathan Clark Green\n\n                                   (299)     Yes\n\n                                   (300)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-301:mary-catherine-marubio",
+          "contestId": "il-cx-local-2026-cook-retention-301",
+          "givenName": "",
+          "familyName": "Mary Catherine Marubio",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Mary Catherine Marubio\n\n                                   (301)     Yes\n\n                                   (302)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-303:regina-a-mescall",
+          "contestId": "il-cx-local-2026-cook-retention-303",
+          "givenName": "",
+          "familyName": "Regina A. Mescall",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Regina A. Mescall\n\n                                   (303)     Yes\n\n                                   (304)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-305:lorraine-mary-murphy",
+          "contestId": "il-cx-local-2026-cook-retention-305",
+          "givenName": "",
+          "familyName": "Lorraine Mary Murphy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Lorraine Mary Murphy\n\n                                   (305)     Yes\n\n                                   (306)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-307:eileen-marie-o-connor",
+          "contestId": "il-cx-local-2026-cook-retention-307",
+          "givenName": "",
+          "familyName": "Eileen Marie O'Connor",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Eileen Marie O'Connor\n\n                                   (307)     Yes\n\n                                   (308)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-309:jill-rose-quinn",
+          "contestId": "il-cx-local-2026-cook-retention-309",
+          "givenName": "",
+          "familyName": "Jill Rose Quinn",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Jill Rose Quinn\n\n                                   (309)     Yes\n\n                                   (310)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-311:pamela-reaves-harris",
+          "contestId": "il-cx-local-2026-cook-retention-311",
+          "givenName": "",
+          "familyName": "Pamela Reaves-Harris",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Pamela Reaves-Harris\n\n                                   (311)     Yes\n\n                                   (312)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-313:tiesha-l-smith",
+          "contestId": "il-cx-local-2026-cook-retention-313",
+          "givenName": "",
+          "familyName": "Tiesha L. Smith",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Tiesha L. Smith\n\n                                   (313)     Yes\n\n                                   (314)     No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-315:chris-stacey",
+          "contestId": "il-cx-local-2026-cook-retention-315",
+          "givenName": "",
+          "familyName": "Chris Stacey",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Chris Stacey\n\n                                   (315)    Yes\n\n                                   (316)    No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-317:perla-tirado",
+          "contestId": "il-cx-local-2026-cook-retention-317",
+          "givenName": "",
+          "familyName": "Perla Tirado",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Perla Tirado\n\n                                   (317)    Yes\n\n                                   (318)    No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-319:elizabeth-anne-walsh",
+          "contestId": "il-cx-local-2026-cook-retention-319",
+          "givenName": "",
+          "familyName": "Elizabeth Anne Walsh",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Elizabeth Anne Walsh\n\n                                   (319)    Yes\n\n                                   (320)    No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-321:maura-mcmahon-zeller",
+          "contestId": "il-cx-local-2026-cook-retention-321",
+          "givenName": "",
+          "familyName": "Maura McMahon Zeller",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+            "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+            "collectedAt": "2026-11-03T03:43:05.511897+00:00",
+            "verifiedAt": "2026-11-03T03:43:05.511897+00:00",
+            "quote": "Judge, Circuit Court (Retention)\n\n                                   Maura McMahon Zeller\n\n                                   (321)    Yes\n\n                                   (322)    No"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [],
+      "coverageNotes": [
+        "OFFICIAL-LIST SUPPLEMENT:Chicago Board of Election Commissioners October27,2026 document labels itself an Unofficial candidate list. These exact candidate/retention fields are verified to that list, not to actual sample ballots. Sample acquisition remains open.",
+        "Adds the Chicago school-board president and20school subdistricts,12additional Cook commissioner districts,17additional judicial-subcircuit vacancy fields,and29additional individual circuit-retention fields. The existing Cook specimen-backed offices and IDs remain unchanged.",
+        "The document covers only districts including all/part ofChicago. It does not establish full Cook/suburban style parity. Chicago sample lookup still requires CAPTCHA; municipal/newspaper actual-sample routes remain standing acquisition work.",
+        "Blank Write-in N/A entries are not named candidates. Judicialretention numbers skip247in this source; no person or question is invented. Chicago precinct-level questions/measures and all omitted suburban offices remain separate acquisition work."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:43:05.511897+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+        "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+        "publisher": "Chicago Board of Election Commissioners",
+        "httpStatus": 200,
+        "rawHash": "5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5",
+        "retrievedAt": "2026-11-03T03:43:05.511897+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Government-authored October27,2026 Candidate Filings in Ballot Order for November3,2026. The PDF explicitly calls itself an Unofficial candidate list and says it covers only districts including all/part of Chicago. Used as an official-list supplement, not a sample ballot. Every imported numbered Candidate row and separate judicial Yes/No retention block is preserved. Generic Write-in N/A entries are not people."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+        "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+        "publisher": "Chicago Board of Election Commissioners",
+        "httpStatus": 200,
+        "rawHash": "ff78ee36ac55c297b34a99b9b2fb7168546123e2bec797bfaf10ea4cd16d8a55",
+        "retrievedAt": "2026-11-03T03:42:43.884476+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Deterministic public-reader capture of Chicago Board official .gov Candidates page. Under2026GeneralElection it directly links the exact October27PDF, separately from2027Municipal candidate lists. This establishes official publishing authority for the government-cloud PDF. Reader capture status is200; no native-government transport status is asserted."
+      }
+    ]
+  }
+}

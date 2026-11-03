@@ -1,0 +1,332 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-hayden-school-district-re1-2026-ballot-4a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:hayden_school_district_re_1",
+          "divisionVintage": "2026",
+          "title": "Hayden School District No. RE-1 Ballot Issue 4A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE HAYDEN SCHOOL DISTRICT RE-1 TAXES BE INCREASED BY THE AMOUNT OF $525,861 IN BUDGET YEAR 2026-2027, AND AN AMOUNT TO BE DETERMINED ANNUALLY THEREAFTER BY IMPOSING A PROPERTY TAX LEVY EITHER AT A RATE SUFFICIENT TO PRODUCE THE AMOUNT SPECIFIED ABOVE, OR AT A RATE OF 3.0 MILLS, WHICHEVER WILL PRODUCE THE HIGHEST TAX REVENUES IN THE GIVEN TAX COLLECTION YEAR, FOR EDUCATIONAL PURPOSES TO BE APPROVED BY THE BOARD OF EDUCATION WHICH SHALL INCLUDE, BUT NOT BE LIMITED TO FUNDING COSTS NECESSARY FOR MAINTAINING SMALL CLASS SIZES, ATTRACTING AND RETAINING HIGHLY QUALIFIED TEACHERS AND STAFF, AND TO PROVIDE ADEQUATE MAINTENANCE, UPGRADES, AND RENOVATION OF FACILITIES AND EQUIPMENT, BY COLLECTING, DEPOSITING INTO THE GENERAL FUND, RETAINING AND EXPENDING ALL REVENUES DERIVED FROM SUCH TAX, WHICH SHALL BE INDEPENDENT OF ANY OTHER TAX LEVY WHETHER OR NOT APPROVED BY THE VOTERS, AND ANY EARNINGS FROM THE INVESTMENT THEREOF, AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+            "collectedAt": "2026-11-03T07:06:09.954519+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-hayden-school-district-re1-2026-ballot-4b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:hayden_school_district_re_1",
+          "divisionVintage": "2026",
+          "title": "Hayden School District No. RE-1 Ballot Issue 4B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE PROPERTY WITHIN THE BOUNDARIES OF HAYDEN SCHOOL DISTRICT RE-1 BE INCLUDED WITHIN THE BOUNDARIES OF THE COLORADO MOUNTAIN COLLEGE DISTRICT, AND SHALL TAXABLE PROPERTY WITHIN HAYDEN SCHOOL DISTRICT RE-1 BE SUBJECT TO THE MILL LEVY IMPOSED BY THE COLORADO MOUNTAIN COLLEGE DISTRICT (CURRENTLY 3.82 MILLS, SUBJECT TO CHANGE BASED ON COLORADO MOUNTAIN COLLEGE DISTRICT FUTURE YEARLY CERTIFICATIONS) ON THE SAME BASIS AS OTHER PROPERTY LOCATED WITHIN THE COLORADO MOUNTAIN COLLEGE DISTRICT, AND IN SO DOING EXPAND THE AVAILABILITY OF LOW COST COLLEGE DEGREES AND CERTIFICATES; CONTINUING EDUCATION AND LIFELONG LEARNING; TUITION FREE CONCURRENT ENROLLMENT FOR HIGH SCHOOL STUDENTS; AND SKILLED TRADES AND INDUSTRY-SPECIFIC TRAINING, ON BEHALF OF THE RESIDENTS OF HAYDEN SCHOOL DISTRICT RE-1?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+            "collectedAt": "2026-11-03T07:06:09.954519+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-west-routt-fire-protection-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:west_routt_fire_protection_district",
+          "divisionVintage": "2026",
+          "title": "West Routt Fire Protection District Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL WEST ROUTT FIRE PROTECTION DISTRICT TAXES BE INCREASED $448,950.00 (FIRST FULL FISCAL YEAR DOLLAR INCREASE) BEGINNING IN LEVY YEAR 2027 (FOR COLLECTION IN CALENDAR YEAR 2028), AND BY SUCH ADDITIONAL AMOUNTS AS ARE COLLECTED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF NOT TO EXCEED 3.0 MILLS WITH THE REVENUE FROM THE INCREASE TO BE USED FOR THE PURPOSE OF MAINTAINING AND IMPROVING THE DISTRICT'S LEVELS OF SERVICE, INCLUDING: • SUPPORTING ITS EMERGENCY MEDICAL AND TRANSPORTATION SERVICES AND ITS FIREFIGHTING SERVICES; • HIRING AND RETAINING PERSONNEL, INCLUDING EMERGENCY MEDICAL SERVICE PROVIDERS, FIREFIGHTERS AND OTHER EMERGENCY SERVICE PROFESSIONS, AND • PROVIDING NECESSARY EQUIPMENT FOR EMTS AND FIREFIGHTERS, AND PAYING THE COSTS OF OPERATIONS AND ADMINISTRATION OF THE DISTRICT, AND SHALL THE WEST ROUTT FIRE PROTECTION DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+            "collectedAt": "2026-11-03T07:06:09.976156+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-oak-creek-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:oak_creek",
+          "divisionVintage": "2026",
+          "title": "Town of Oak Creek Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF OAK CREEK TAXES BE INCREASED $400,000 ANNUALLY, COMMENCING JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A SALES TAX RATE INCREASE OF 2.00% (WHICH REPRESENTS A TWO CENT INCREASE ON EACH DOLLAR) TO BE SPENT AS A VOTER-APPROVED REVENUE CHANGE WITH 100% OF THE REVENUES FROM THE SALES TAX RATE INCREASE TO BE DEPOSITED INTO THE GENERAL FUND AND EXPENDED SOLELY FOR THE CONSTRUCTION AND REHABILITATION OF CAPITAL IMPROVEMENTS; AND SHALL ALL TAX REVENUES DEPOSITED IN SAID FUND AND ALL EARNINGS THEREON (REGARDLESS OF AMOUNT) CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE REVENUE AND SPENDING LIMITS OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508",
+            "collectedAt": "2026-11-03T07:06:10.793528+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-creek-metropolitan-water-and-sanitation-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:morrison_creek_metropolitan_water_and_sanitation_district",
+          "divisionVintage": "2026",
+          "title": "Morrison Creek Metropolitan Water and Sanitation District Ballot Issue 6B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE MORRISON CREEK METROPOLITAN WATER AND SANITATION DISTRICT (THE \"DISTRICT\") WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, AS SUCH PROPERTY TAX LIMIT IS SET FORTH IN SECTION 29-1-1702, C.R.S., PROVIDED HOWEVER THAT THE ADJUSTED PROPERTY TAX MILL LEVY OF THE DISTRICT FOR EACH FISCAL YEAR OF 2027 THROUGH 2031 SHALL BE EQUAL TO THE ADJUSTED PROPERTY TAX MILL LEVY IMPOSED BY THE DISTRICT IN 2026 (THE FOREGOING WAIVER BEING PROVIDED FOR AND PERMITTED BY SECTION 29-1-1704, C.R.S.), AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL PROPERTY TAX MILL LEVY REVENUES IMPOSED, GENERATED, COLLECTED OR RECEIVED BY THE DISTRICT DURING 2026 AND EACH FISCAL YEAR THEREAFTER, SUCH AMOUNTS AND REVENUES TO CONSTITUTE A VOTER APPROVED REVENUE CHANGE, AND SHALL THE DISTRICT BE AUTHORIZED TO INCREASE THE TOTAL NUMBER OF MILLS LEVIED BY THE DISTRICT IN EACH FUTURE PROPERTY TAX YEAR TO A MAXIMUM OF 20 MILLS AS PERMITTED BY SECTION 29-1-1705(2)(a), C.R.S., AND SHALL THE PROPERTY TAX MILL LEVY REVENUES AS MAY BE IMPOSED, GENERATED, COLLECTED, RETAINED AND SPENT BY THE DISTRICT IN ALL FUTURE PROPERTY TAX YEARS BE WITHOUT REGARD TO ANY SPENDING, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION, AND WITHOUT REGARD TO ANY LIMITS IMPOSED ON INCREASES IN PROPERTY TAXATION OR REVENUES BY SECTION 29-1-301, C.R.S., AND BY SECTION 29-1-1702, C.R.S., IN ANY SUBSEQUENT PROPERTY TAX YEAR, AND WITHOUT REGARD TO ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S PROPERTY TAX REVENUES OR EXPENDITURES OR NUMBER OF MILLS LEVIED AS CURRENTLY EXISTS OR AS MAY BE AMENDED OR ADDED IN THE FUTURE?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510",
+            "collectedAt": "2026-11-03T07:06:11.240859+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-hayden-school-district-re1-2026-ballot-4a#question",
+          "contestId": "co-hayden-school-district-re1-2026-ballot-4a",
+          "officialNumber": "4A",
+          "questionText": "SHALL THE HAYDEN SCHOOL DISTRICT RE-1 TAXES BE INCREASED BY THE AMOUNT OF $525,861 IN BUDGET YEAR 2026-2027, AND AN AMOUNT TO BE DETERMINED ANNUALLY THEREAFTER BY IMPOSING A PROPERTY TAX LEVY EITHER AT A RATE SUFFICIENT TO PRODUCE THE AMOUNT SPECIFIED ABOVE, OR AT A RATE OF 3.0 MILLS, WHICHEVER WILL PRODUCE THE HIGHEST TAX REVENUES IN THE GIVEN TAX COLLECTION YEAR, FOR EDUCATIONAL PURPOSES TO BE APPROVED BY THE BOARD OF EDUCATION WHICH SHALL INCLUDE, BUT NOT BE LIMITED TO FUNDING COSTS NECESSARY FOR MAINTAINING SMALL CLASS SIZES, ATTRACTING AND RETAINING HIGHLY QUALIFIED TEACHERS AND STAFF, AND TO PROVIDE ADEQUATE MAINTENANCE, UPGRADES, AND RENOVATION OF FACILITIES AND EQUIPMENT, BY COLLECTING, DEPOSITING INTO THE GENERAL FUND, RETAINING AND EXPENDING ALL REVENUES DERIVED FROM SUCH TAX, WHICH SHALL BE INDEPENDENT OF ANY OTHER TAX LEVY WHETHER OR NOT APPROVED BY THE VOTERS, AND ANY EARNINGS FROM THE INVESTMENT THEREOF, AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE HAYDEN SCHOOL DISTRICT RE-1 TAXES BE INCREASED BY THE AMOUNT OF $525,861 IN BUDGET YEAR 2026-2027, AND AN AMOUNT TO BE DETERMINED ANNUALLY THEREAFTER BY IMPOSING A PROPERTY TAX LEVY EITHER AT A RATE SUFFICIENT TO PRODUCE THE AMOUNT SPECIFIED ABOVE, OR AT A RATE OF 3.0 MILLS, WHICHEVER WILL PRODUCE THE HIGHEST TAX REVENUES IN THE GIVEN TAX COLLECTION YEAR, FOR EDUCATIONAL PURPOSES TO BE APPROVED BY THE BOARD OF EDUCATION WHICH SHALL INCLUDE, BUT NOT BE LIMITED TO FUNDING COSTS NECESSARY FOR MAINTAINING SMALL CLASS SIZES, ATTRACTING AND RETAINING HIGHLY QUALIFIED TEACHERS AND STAFF, AND TO PROVIDE ADEQUATE MAINTENANCE, UPGRADES, AND RENOVATION OF FACILITIES AND EQUIPMENT, BY COLLECTING, DEPOSITING INTO THE GENERAL FUND, RETAINING AND EXPENDING ALL REVENUES DERIVED FROM SUCH TAX, WHICH SHALL BE INDEPENDENT OF ANY OTHER TAX LEVY WHETHER OR NOT APPROVED BY THE VOTERS, AND ANY EARNINGS FROM THE INVESTMENT THEREOF, AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+            "collectedAt": "2026-11-03T07:06:09.954519+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-hayden-school-district-re1-2026-ballot-4b#question",
+          "contestId": "co-hayden-school-district-re1-2026-ballot-4b",
+          "officialNumber": "4B",
+          "questionText": "SHALL THE PROPERTY WITHIN THE BOUNDARIES OF HAYDEN SCHOOL DISTRICT RE-1 BE INCLUDED WITHIN THE BOUNDARIES OF THE COLORADO MOUNTAIN COLLEGE DISTRICT, AND SHALL TAXABLE PROPERTY WITHIN HAYDEN SCHOOL DISTRICT RE-1 BE SUBJECT TO THE MILL LEVY IMPOSED BY THE COLORADO MOUNTAIN COLLEGE DISTRICT (CURRENTLY 3.82 MILLS, SUBJECT TO CHANGE BASED ON COLORADO MOUNTAIN COLLEGE DISTRICT FUTURE YEARLY CERTIFICATIONS) ON THE SAME BASIS AS OTHER PROPERTY LOCATED WITHIN THE COLORADO MOUNTAIN COLLEGE DISTRICT, AND IN SO DOING EXPAND THE AVAILABILITY OF LOW COST COLLEGE DEGREES AND CERTIFICATES; CONTINUING EDUCATION AND LIFELONG LEARNING; TUITION FREE CONCURRENT ENROLLMENT FOR HIGH SCHOOL STUDENTS; AND SKILLED TRADES AND INDUSTRY-SPECIFIC TRAINING, ON BEHALF OF THE RESIDENTS OF HAYDEN SCHOOL DISTRICT RE-1?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE PROPERTY WITHIN THE BOUNDARIES OF HAYDEN SCHOOL DISTRICT RE-1 BE INCLUDED WITHIN THE BOUNDARIES OF THE COLORADO MOUNTAIN COLLEGE DISTRICT, AND SHALL TAXABLE PROPERTY WITHIN HAYDEN SCHOOL DISTRICT RE-1 BE SUBJECT TO THE MILL LEVY IMPOSED BY THE COLORADO MOUNTAIN COLLEGE DISTRICT (CURRENTLY 3.82 MILLS, SUBJECT TO CHANGE BASED ON COLORADO MOUNTAIN COLLEGE DISTRICT FUTURE YEARLY CERTIFICATIONS) ON THE SAME BASIS AS OTHER PROPERTY LOCATED WITHIN THE COLORADO MOUNTAIN COLLEGE DISTRICT, AND IN SO DOING EXPAND THE AVAILABILITY OF LOW COST COLLEGE DEGREES AND CERTIFICATES; CONTINUING EDUCATION AND LIFELONG LEARNING; TUITION FREE CONCURRENT ENROLLMENT FOR HIGH SCHOOL STUDENTS; AND SKILLED TRADES AND INDUSTRY-SPECIFIC TRAINING, ON BEHALF OF THE RESIDENTS OF HAYDEN SCHOOL DISTRICT RE-1?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+            "collectedAt": "2026-11-03T07:06:09.954519+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-west-routt-fire-protection-district-2026-ballot-6a#question",
+          "contestId": "co-west-routt-fire-protection-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL WEST ROUTT FIRE PROTECTION DISTRICT TAXES BE INCREASED $448,950.00 (FIRST FULL FISCAL YEAR DOLLAR INCREASE) BEGINNING IN LEVY YEAR 2027 (FOR COLLECTION IN CALENDAR YEAR 2028), AND BY SUCH ADDITIONAL AMOUNTS AS ARE COLLECTED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF NOT TO EXCEED 3.0 MILLS WITH THE REVENUE FROM THE INCREASE TO BE USED FOR THE PURPOSE OF MAINTAINING AND IMPROVING THE DISTRICT'S LEVELS OF SERVICE, INCLUDING: • SUPPORTING ITS EMERGENCY MEDICAL AND TRANSPORTATION SERVICES AND ITS FIREFIGHTING SERVICES; • HIRING AND RETAINING PERSONNEL, INCLUDING EMERGENCY MEDICAL SERVICE PROVIDERS, FIREFIGHTERS AND OTHER EMERGENCY SERVICE PROFESSIONS, AND • PROVIDING NECESSARY EQUIPMENT FOR EMTS AND FIREFIGHTERS, AND PAYING THE COSTS OF OPERATIONS AND ADMINISTRATION OF THE DISTRICT, AND SHALL THE WEST ROUTT FIRE PROTECTION DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL WEST ROUTT FIRE PROTECTION DISTRICT TAXES BE INCREASED $448,950.00 (FIRST FULL FISCAL YEAR DOLLAR INCREASE) BEGINNING IN LEVY YEAR 2027 (FOR COLLECTION IN CALENDAR YEAR 2028), AND BY SUCH ADDITIONAL AMOUNTS AS ARE COLLECTED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF AN ADDITIONAL MILL LEVY OF NOT TO EXCEED 3.0 MILLS WITH THE REVENUE FROM THE INCREASE TO BE USED FOR THE PURPOSE OF MAINTAINING AND IMPROVING THE DISTRICT'S LEVELS OF SERVICE, INCLUDING: • SUPPORTING ITS EMERGENCY MEDICAL AND TRANSPORTATION SERVICES AND ITS FIREFIGHTING SERVICES; • HIRING AND RETAINING PERSONNEL, INCLUDING EMERGENCY MEDICAL SERVICE PROVIDERS, FIREFIGHTERS AND OTHER EMERGENCY SERVICE PROFESSIONS, AND • PROVIDING NECESSARY EQUIPMENT FOR EMTS AND FIREFIGHTERS, AND PAYING THE COSTS OF OPERATIONS AND ADMINISTRATION OF THE DISTRICT, AND SHALL THE WEST ROUTT FIRE PROTECTION DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+            "collectedAt": "2026-11-03T07:06:09.976156+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-oak-creek-2026-ballot-2a#question",
+          "contestId": "co-oak-creek-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL THE TOWN OF OAK CREEK TAXES BE INCREASED $400,000 ANNUALLY, COMMENCING JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A SALES TAX RATE INCREASE OF 2.00% (WHICH REPRESENTS A TWO CENT INCREASE ON EACH DOLLAR) TO BE SPENT AS A VOTER-APPROVED REVENUE CHANGE WITH 100% OF THE REVENUES FROM THE SALES TAX RATE INCREASE TO BE DEPOSITED INTO THE GENERAL FUND AND EXPENDED SOLELY FOR THE CONSTRUCTION AND REHABILITATION OF CAPITAL IMPROVEMENTS; AND SHALL ALL TAX REVENUES DEPOSITED IN SAID FUND AND ALL EARNINGS THEREON (REGARDLESS OF AMOUNT) CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE REVENUE AND SPENDING LIMITS OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF OAK CREEK TAXES BE INCREASED $400,000 ANNUALLY, COMMENCING JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, FROM A SALES TAX RATE INCREASE OF 2.00% (WHICH REPRESENTS A TWO CENT INCREASE ON EACH DOLLAR) TO BE SPENT AS A VOTER-APPROVED REVENUE CHANGE WITH 100% OF THE REVENUES FROM THE SALES TAX RATE INCREASE TO BE DEPOSITED INTO THE GENERAL FUND AND EXPENDED SOLELY FOR THE CONSTRUCTION AND REHABILITATION OF CAPITAL IMPROVEMENTS; AND SHALL ALL TAX REVENUES DEPOSITED IN SAID FUND AND ALL EARNINGS THEREON (REGARDLESS OF AMOUNT) CONSTITUTE A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE REVENUE AND SPENDING LIMITS OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508",
+            "collectedAt": "2026-11-03T07:06:10.793528+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        },
+        {
+          "id": "co-morrison-creek-metropolitan-water-and-sanitation-district-2026-ballot-6b#question",
+          "contestId": "co-morrison-creek-metropolitan-water-and-sanitation-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "SHALL THE MORRISON CREEK METROPOLITAN WATER AND SANITATION DISTRICT (THE \"DISTRICT\") WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, AS SUCH PROPERTY TAX LIMIT IS SET FORTH IN SECTION 29-1-1702, C.R.S., PROVIDED HOWEVER THAT THE ADJUSTED PROPERTY TAX MILL LEVY OF THE DISTRICT FOR EACH FISCAL YEAR OF 2027 THROUGH 2031 SHALL BE EQUAL TO THE ADJUSTED PROPERTY TAX MILL LEVY IMPOSED BY THE DISTRICT IN 2026 (THE FOREGOING WAIVER BEING PROVIDED FOR AND PERMITTED BY SECTION 29-1-1704, C.R.S.), AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL PROPERTY TAX MILL LEVY REVENUES IMPOSED, GENERATED, COLLECTED OR RECEIVED BY THE DISTRICT DURING 2026 AND EACH FISCAL YEAR THEREAFTER, SUCH AMOUNTS AND REVENUES TO CONSTITUTE A VOTER APPROVED REVENUE CHANGE, AND SHALL THE DISTRICT BE AUTHORIZED TO INCREASE THE TOTAL NUMBER OF MILLS LEVIED BY THE DISTRICT IN EACH FUTURE PROPERTY TAX YEAR TO A MAXIMUM OF 20 MILLS AS PERMITTED BY SECTION 29-1-1705(2)(a), C.R.S., AND SHALL THE PROPERTY TAX MILL LEVY REVENUES AS MAY BE IMPOSED, GENERATED, COLLECTED, RETAINED AND SPENT BY THE DISTRICT IN ALL FUTURE PROPERTY TAX YEARS BE WITHOUT REGARD TO ANY SPENDING, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION, AND WITHOUT REGARD TO ANY LIMITS IMPOSED ON INCREASES IN PROPERTY TAXATION OR REVENUES BY SECTION 29-1-301, C.R.S., AND BY SECTION 29-1-1702, C.R.S., IN ANY SUBSEQUENT PROPERTY TAX YEAR, AND WITHOUT REGARD TO ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S PROPERTY TAX REVENUES OR EXPENDITURES OR NUMBER OF MILLS LEVIED AS CURRENTLY EXISTS OR AS MAY BE AMENDED OR ADDED IN THE FUTURE?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE MORRISON CREEK METROPOLITAN WATER AND SANITATION DISTRICT (THE \"DISTRICT\") WAIVE THE 5.25% PROPERTY TAX LIMIT FOR ALL FUTURE PROPERTY TAX YEARS, AS SUCH PROPERTY TAX LIMIT IS SET FORTH IN SECTION 29-1-1702, C.R.S., PROVIDED HOWEVER THAT THE ADJUSTED PROPERTY TAX MILL LEVY OF THE DISTRICT FOR EACH FISCAL YEAR OF 2027 THROUGH 2031 SHALL BE EQUAL TO THE ADJUSTED PROPERTY TAX MILL LEVY IMPOSED BY THE DISTRICT IN 2026 (THE FOREGOING WAIVER BEING PROVIDED FOR AND PERMITTED BY SECTION 29-1-1704, C.R.S.), AND SHALL THE DISTRICT BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND THE FULL AMOUNT OF ALL PROPERTY TAX MILL LEVY REVENUES IMPOSED, GENERATED, COLLECTED OR RECEIVED BY THE DISTRICT DURING 2026 AND EACH FISCAL YEAR THEREAFTER, SUCH AMOUNTS AND REVENUES TO CONSTITUTE A VOTER APPROVED REVENUE CHANGE, AND SHALL THE DISTRICT BE AUTHORIZED TO INCREASE THE TOTAL NUMBER OF MILLS LEVIED BY THE DISTRICT IN EACH FUTURE PROPERTY TAX YEAR TO A MAXIMUM OF 20 MILLS AS PERMITTED BY SECTION 29-1-1705(2)(a), C.R.S., AND SHALL THE PROPERTY TAX MILL LEVY REVENUES AS MAY BE IMPOSED, GENERATED, COLLECTED, RETAINED AND SPENT BY THE DISTRICT IN ALL FUTURE PROPERTY TAX YEARS BE WITHOUT REGARD TO ANY SPENDING, REVENUE RAISING, OR OTHER LIMITATION CONTAINED IN ARTICLE X, SECTION 20, OF THE COLORADO CONSTITUTION, AND WITHOUT REGARD TO ANY LIMITS IMPOSED ON INCREASES IN PROPERTY TAXATION OR REVENUES BY SECTION 29-1-301, C.R.S., AND BY SECTION 29-1-1702, C.R.S., IN ANY SUBSEQUENT PROPERTY TAX YEAR, AND WITHOUT REGARD TO ANY OTHER LAW WHICH PURPORTS TO LIMIT THE DISTRICT'S PROPERTY TAX REVENUES OR EXPENDITURES OR NUMBER OF MILLS LEVIED AS CURRENTLY EXISTS OR AS MAY BE AMENDED OR ADDED IN THE FUTURE?",
+            "sourceOrg": "Routt County Clerk and Recorder",
+            "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510",
+            "collectedAt": "2026-11-03T07:06:11.240859+00:00",
+            "verifiedAt": "2026-11-03T07:21:06.777570+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-hayden-school-district-re1-2026-ballot-4a",
+          "whatItDoes": "Authorize $525,861 in additional school property taxes for budget year 2026–2027, with later amounts determined each year. The district would use whichever produces more revenue: a levy sufficient to raise $525,861 or a 3-mill levy. Money would go to its general fund for school-board-approved educational purposes, including smaller classes, recruiting and keeping teachers and staff, and maintaining, upgrading and renovating facilities and equipment. This levy would be independent of other levies. Its revenue and investment earnings could be retained and spent outside the stated constitutional and other legal limits.",
+          "yesMeans": "Approve the school property-tax levy using the greater-yield formula and its revenue-limit exception.",
+          "noMeans": "Do not approve this additional levy or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+          "sourceHash": "bb3ca740cc732d7a2c1f4bcaa85830be5e7ecc3780484cf2a9f57f0dc34d76b1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-hayden-school-district-re1-2026-ballot-4b",
+          "whatItDoes": "Include all property within Hayden School District RE-1 in the Colorado Mountain College District. Taxable property there would then pay the college district’s property-tax levy on the same basis as other property in that district. The question states the college levy is currently 3.82 mills and may change with future annual certifications. Inclusion would expand access to lower-cost college degrees and certificates, continuing education and lifelong learning, tuition-free concurrent enrollment for high school students, and skilled-trades and industry-specific training.",
+          "yesMeans": "Include the Hayden school district’s territory in the college district and apply its property-tax levy there.",
+          "noMeans": "Do not approve this inclusion or application of the college district levy through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+          "sourceHash": "bb3ca740cc732d7a2c1f4bcaa85830be5e7ecc3780484cf2a9f57f0dc34d76b1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-west-routt-fire-protection-district-2026-ballot-6a",
+          "whatItDoes": "Add up to 3 mills to the fire district’s property-tax levy, beginning with levy year 2027 for collection in 2028. The question authorizes $448,950 in the first full fiscal year and whatever additional amounts the levy collects later, with no stated end date. Money would maintain and improve fire, emergency medical and emergency transport services; hire and retain staff; provide equipment for emergency medical technicians and firefighters; and pay district operating and administrative costs. Revenue from this new levy could be retained and spent under the proposed constitutional revenue-limit exception.",
+          "yesMeans": "Approve the additional fire-district property-tax levy and its revenue-limit exception.",
+          "noMeans": "Do not approve this additional levy or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+          "sourceHash": "bcb29d061c1dc0aa5f2fb05b024a1d33fdd7391ff69744ecdbd52c7b7ce5c9d6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-oak-creek-2026-ballot-2a",
+          "whatItDoes": "Add 2 percentage points to Oak Creek’s sales-tax rate beginning January 1, 2027, authorizing $400,000 annually and whatever additional amounts it raises later. All revenue from the increase would go to the general fund and could be used only to build and rehabilitate capital improvements. The question also permits tax revenue deposited in that fund and its earnings to be retained and spent outside the stated constitutional revenue and spending limits.",
+          "yesMeans": "Approve the sales-tax increase for capital improvements and the proposed revenue-limit exception.",
+          "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508",
+          "sourceHash": "91750234164ed2c21e10449910797494a180b423dddbe7619e4aebe874c73b43",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-morrison-creek-metropolitan-water-and-sanitation-district-2026-ballot-6b",
+          "whatItDoes": "Waive the district’s 5.25% property-tax growth limit for all future tax years, with the condition that its adjusted property-tax rate for 2027 through 2031 must equal its adjusted 2026 rate. The question also authorizes a maximum district levy of 20 mills in future tax years, subject to that five-year fixed-rate condition. It would let the district retain and spend all property-tax levy revenue from 2026 onward outside the stated constitutional and statutory limits and other current or future laws restricting this revenue, spending or number of mills levied.",
+          "yesMeans": "Approve the property-tax growth-limit waiver, five-year adjusted-rate condition, maximum 20-mill authority and broader property-tax revenue-limit exceptions.",
+          "noMeans": "Do not approve these proposed tax and revenue-limit changes through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510",
+          "sourceHash": "0ef62b35a04b6ae8010782bcce3654a887ca6f37ef073f24824380fa859e7304",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:21:06.777570+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20504",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20504/Style-5RE1-YVRTA?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:09.959350+00:00",
+        "httpStatus": 200,
+        "rawHash": "ddf5597c7b5ae6c99b6225763b7b889d32e4b6686769a40cb2a156004716fe02",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505/Style-6-WRF-YVRTA?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:09.976156+00:00",
+        "httpStatus": 200,
+        "rawHash": "bcb29d061c1dc0aa5f2fb05b024a1d33fdd7391ff69744ecdbd52c7b7ce5c9d6",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506/Style-7RE1-WRF-YVRTA?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:09.954519+00:00",
+        "httpStatus": 200,
+        "rawHash": "bb3ca740cc732d7a2c1f4bcaa85830be5e7ecc3780484cf2a9f57f0dc34d76b1",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20507",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20507/Style-8-TOH-RE1-WRF-YVRTA?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:09.953266+00:00",
+        "httpStatus": 200,
+        "rawHash": "88ea38c2143a1f240b7793455662330661c6773ca5cfb9c41cb6c6f1ebb88221",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508/Stytle-3-TOC-YVRTA?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:10.793528+00:00",
+        "httpStatus": 200,
+        "rawHash": "91750234164ed2c21e10449910797494a180b423dddbe7619e4aebe874c73b43",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20509",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20509/Style-1-YVRTA-ONLY?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:11.083606+00:00",
+        "httpStatus": 200,
+        "rawHash": "a7eb5b77c639d42e80662f6328984985872ec16775be66e8d07ba4bf767e932f",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510/Style-2-MC-YVRTA?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:11.240859+00:00",
+        "httpStatus": 200,
+        "rawHash": "0ef62b35a04b6ae8010782bcce3654a887ca6f37ef073f24824380fa859e7304",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      },
+      {
+        "requestedUrl": "https://www.co.routt.co.us/DocumentCenter/View/20511",
+        "finalUrl": "https://www.co.routt.co.us/DocumentCenter/View/20511/Style-4RE50J-YVRTA?bidId=",
+        "publisher": "Routt County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:11.643536+00:00",
+        "httpStatus": 200,
+        "rawHash": "118017a1b8f5339c48ec9a6d4d250766c49376372303cfc0c034a96bfbd06bd1",
+        "reviewedEvidence": "Complete original current November3,2026 official county sample PDFs, all eight styles. Five full new questions have exact existing school, town and special-district scopes. One RTA tax question remains pending exact authority territory. The existing Eagle school question is cross-referenced without duplication. Visible originals control imperfect OCR; advocacy excluded."
+      }
+    ]
+  }
+}

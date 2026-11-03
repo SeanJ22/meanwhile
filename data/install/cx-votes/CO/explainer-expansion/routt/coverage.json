@@ -1,0 +1,21 @@
+{
+  "county": "Routt",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 5,
+  "newPendingExactTerritoryCount": 1,
+  "officialCompositeLocalMeasureCount": 7,
+  "currentBallotStylesChecked": 8,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-eagle-county-school-district-re50j-2026-ballot-5b",
+      "packet": "../garfield/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "Eight current county styles contain seven distinct local questions. Five are new attached records here; YampaValleyRTA7A is source-ready pending exact authority scope, and EagleSchoolRE50J5B is already prepared in Garfield.",
+    "Scanned original PDFs have OCR layers with interleaved columns and duplicate text. All original styles are retained; bounded new questions were transcribed from visible originals and checked independently.",
+    "Yampa Valley RTA question imposes a tax; it does not itself ask to form the authority. No entire-county scope is inferred from county publication."
+  ],
+  "limits": "Current official eight-style Routt sample union only; not statewide local completeness."
+}

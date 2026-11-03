@@ -1,0 +1,38 @@
+{
+  "state": "CO",
+  "county": "routt",
+  "preparedAttachedMeasures": 5,
+  "pendingExactTerritory": 1,
+  "officialLocalSourceDenominator": 7,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 18,
+  "exactExistingRegisteredAttachments": 5,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:hayden_school_district_re_1",
+      "completeExplainers": 2
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:west_routt_fire_protection_district",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:oak_creek",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:morrison_creek_metropolitan_water_and_sanitation_district",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 28,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

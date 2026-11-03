@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "co-hayden-school-district-re1-2026-ballot-4a",
+    "officialTitle": "Hayden School District No. RE-1 Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:hayden_school_district_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:hayden_school_district_re_1",
+      "unsd",
+      "0804590",
+      "Hayden School District RE-1"
+    ],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-hayden-school-district-re1-2026-ballot-4b",
+    "officialTitle": "Hayden School District No. RE-1 Ballot Issue 4B",
+    "officialNumber": "4B",
+    "ocdId": "ocd-division/country:us/state:co/school_district:hayden_school_district_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:hayden_school_district_re_1",
+      "unsd",
+      "0804590",
+      "Hayden School District RE-1"
+    ],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-west-routt-fire-protection-district-2026-ballot-6a",
+    "officialTitle": "West Routt Fire Protection District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:west_routt_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:west_routt_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#54026",
+      "West Routt Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-oak-creek-2026-ballot-2a",
+    "officialTitle": "Town of Oak Creek Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:oak_creek",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:oak_creek",
+      "place",
+      "0855155",
+      "Oak Creek town"
+    ],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-morrison-creek-metropolitan-water-and-sanitation-district-2026-ballot-6b",
+    "officialTitle": "Morrison Creek Metropolitan Water and Sanitation District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:morrison_creek_metropolitan_water_and_sanitation_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:morrison_creek_metropolitan_water_and_sanitation_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#54006",
+      "Morrison Creek Metropolitan Water And Sanitation District",
+      "other"
+    ],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

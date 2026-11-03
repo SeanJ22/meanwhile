@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-hayden-school-district-re1-2026-ballot-4a",
+      "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506"
+    },
+    {
+      "id": "co-hayden-school-district-re1-2026-ballot-4b",
+      "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506"
+    },
+    {
+      "id": "co-west-routt-fire-protection-district-2026-ballot-6a",
+      "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505"
+    },
+    {
+      "id": "co-oak-creek-2026-ballot-2a",
+      "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508"
+    },
+    {
+      "id": "co-morrison-creek-metropolitan-water-and-sanitation-district-2026-ballot-6b",
+      "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510"
+    }
+  ],
+  "operation": "Merge only these 5 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

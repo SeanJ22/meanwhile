@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-yampa-valley-regional-transportation-authority-2026-ballot-7a",
+    "title": "Yampa Valley Regional Transportation Authority Ballot Issue 7A",
+    "officialNumber": "7A",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_AUTHORITY_DIVISION",
+    "scopeNote": "Yampa Valley Regional Transportation Authority territory only. No exact existing authority division found in local registration. Need official legal extent/boundary and exact government match; do not substitute Routt County, Moffat County or the named service communities.",
+    "questionText": "SHALL YAMPA VALLEY REGIONAL TRANSPORTATION AUTHORITY (RTA) TAXES BE INCREASED BY $7,875,197.00 ANNUALLY, BEGINNING IN THE FIRST FULL FISCAL YEAR, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY IMPOSING, BEGINNING JANUARY 1, 2027, A SALES TAX AT A RATE OF ONE-HALF OF ONE PERCENT, EQUIVALENT TO FIFTY CENTS ON EACH ONE HUNDRED DOLLARS OF TAXABLE PURCHASES, UPON EVERY TRANSACTION OR OTHER INCIDENT WITH RESPECT TO WHICH A SALES TAX IS LEVIED BY THE STATE, SUBJECT TO THE SAME EXEMPTIONS THAT APPLY TO THE STATE SALES TAX, FOR THE FOLLOWING PURPOSES: • ENHANCING PUBLIC SAFETY ON HIGHWAY 40, DECREASING THE RISK OF ACCIDENTS, AND PROVIDING SAFER ALTERNATIVES FOR RESIDENTS AND WORKERS TRAVELING BETWEEN COMMUNITIES • IMPROVING TRANSPORTATION OPTIONS FOR LOCAL WORKERS, RESIDENTS, SENIORS, AND VISITORS ACROSS THE YAMPA VALLEY • PARTICIPATING IN REGIONAL PLANNING FOR FUTURE COMMUTER RAIL SERVICE BETWEEN CRAIG, HAYDEN, STEAMBOAT SPRINGS, OAK CREEK, AND YAMPA • PROVIDING AFFORDABLE REGIONAL TRANSPORTATION OPTIONS TO AREAS THAT ARE NOT CURRENTLY SERVED BY TRANSIT AND SHALL THE YAMPA VALLEY REGIONAL TRANSPORTATION AUTHORITY (RTA) BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH TAX AS A VOTER-APPROVED REVENUE CHANGE ABOVE THE ANNUAL LIMITS OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+    "measureRecord": {
+      "contestId": "co-yampa-valley-regional-transportation-authority-2026-ballot-7a",
+      "whatItDoes": "Create a 0.5% authority sales tax, or 50 cents per $100 of taxable purchases, beginning January 1, 2027. The question authorizes $7,875,197 in the first full fiscal year and whatever additional amounts it raises later. It would apply to state-taxed transactions with the same exemptions as state sales tax. Uses would include Highway 40 safety and travel alternatives, transportation for residents, workers, older adults and visitors, planning for future commuter rail between Craig, Hayden, Steamboat Springs, Oak Creek and Yampa, and affordable transit options for currently unserved areas. Revenue from the tax could be retained and spent above the stated constitutional annual limits.",
+      "yesMeans": "Approve the authority sales tax for the stated regional transportation purposes and the proposed revenue-limit exception.",
+      "noMeans": "Do not approve this additional authority sales tax or its proposed revenue-limit exception.",
+      "parts": [],
+      "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+      "sourceHash": "bcb29d061c1dc0aa5f2fb05b024a1d33fdd7391ff69744ecdbd52c7b7ce5c9d6",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T07:21:10.957409+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

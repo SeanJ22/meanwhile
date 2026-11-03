@@ -1,0 +1,62 @@
+[
+  {
+    "contestId": "co-hayden-school-district-re1-2026-ballot-4a",
+    "whatItDoes": "Authorize $525,861 in additional school property taxes for budget year 2026–2027, with later amounts determined each year. The district would use whichever produces more revenue: a levy sufficient to raise $525,861 or a 3-mill levy. Money would go to its general fund for school-board-approved educational purposes, including smaller classes, recruiting and keeping teachers and staff, and maintaining, upgrading and renovating facilities and equipment. This levy would be independent of other levies. Its revenue and investment earnings could be retained and spent outside the stated constitutional and other legal limits.",
+    "yesMeans": "Approve the school property-tax levy using the greater-yield formula and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional levy or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+    "sourceHash": "bb3ca740cc732d7a2c1f4bcaa85830be5e7ecc3780484cf2a9f57f0dc34d76b1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-hayden-school-district-re1-2026-ballot-4b",
+    "whatItDoes": "Include all property within Hayden School District RE-1 in the Colorado Mountain College District. Taxable property there would then pay the college district’s property-tax levy on the same basis as other property in that district. The question states the college levy is currently 3.82 mills and may change with future annual certifications. Inclusion would expand access to lower-cost college degrees and certificates, continuing education and lifelong learning, tuition-free concurrent enrollment for high school students, and skilled-trades and industry-specific training.",
+    "yesMeans": "Include the Hayden school district’s territory in the college district and apply its property-tax levy there.",
+    "noMeans": "Do not approve this inclusion or application of the college district levy through this question.",
+    "parts": [],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20506",
+    "sourceHash": "bb3ca740cc732d7a2c1f4bcaa85830be5e7ecc3780484cf2a9f57f0dc34d76b1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-west-routt-fire-protection-district-2026-ballot-6a",
+    "whatItDoes": "Add up to 3 mills to the fire district’s property-tax levy, beginning with levy year 2027 for collection in 2028. The question authorizes $448,950 in the first full fiscal year and whatever additional amounts the levy collects later, with no stated end date. Money would maintain and improve fire, emergency medical and emergency transport services; hire and retain staff; provide equipment for emergency medical technicians and firefighters; and pay district operating and administrative costs. Revenue from this new levy could be retained and spent under the proposed constitutional revenue-limit exception.",
+    "yesMeans": "Approve the additional fire-district property-tax levy and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional levy or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20505",
+    "sourceHash": "bcb29d061c1dc0aa5f2fb05b024a1d33fdd7391ff69744ecdbd52c7b7ce5c9d6",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-oak-creek-2026-ballot-2a",
+    "whatItDoes": "Add 2 percentage points to Oak Creek’s sales-tax rate beginning January 1, 2027, authorizing $400,000 annually and whatever additional amounts it raises later. All revenue from the increase would go to the general fund and could be used only to build and rehabilitate capital improvements. The question also permits tax revenue deposited in that fund and its earnings to be retained and spent outside the stated constitutional revenue and spending limits.",
+    "yesMeans": "Approve the sales-tax increase for capital improvements and the proposed revenue-limit exception.",
+    "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20508",
+    "sourceHash": "91750234164ed2c21e10449910797494a180b423dddbe7619e4aebe874c73b43",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-morrison-creek-metropolitan-water-and-sanitation-district-2026-ballot-6b",
+    "whatItDoes": "Waive the district’s 5.25% property-tax growth limit for all future tax years, with the condition that its adjusted property-tax rate for 2027 through 2031 must equal its adjusted 2026 rate. The question also authorizes a maximum district levy of 20 mills in future tax years, subject to that five-year fixed-rate condition. It would let the district retain and spend all property-tax levy revenue from 2026 onward outside the stated constitutional and statutory limits and other current or future laws restricting this revenue, spending or number of mills levied.",
+    "yesMeans": "Approve the property-tax growth-limit waiver, five-year adjusted-rate condition, maximum 20-mill authority and broader property-tax revenue-limit exceptions.",
+    "noMeans": "Do not approve these proposed tax and revenue-limit changes through this measure.",
+    "parts": [],
+    "sourceUrl": "https://www.co.routt.co.us/DocumentCenter/View/20510",
+    "sourceHash": "0ef62b35a04b6ae8010782bcce3654a887ca6f37ef073f24824380fa859e7304",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:21:06.777570+00:00",
+    "citation": "measure-source"
+  }
+]

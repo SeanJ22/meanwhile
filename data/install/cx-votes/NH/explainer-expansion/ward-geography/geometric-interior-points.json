@@ -1,0 +1,170 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:1",
+    "point": [
+      -72.34174128486345,
+      43.37524696852127
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:2",
+    "point": [
+      -72.37589158871145,
+      43.362598369135696
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:3",
+    "point": [
+      -72.3347937208886,
+      43.39277562959194
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:dover/ward:4",
+    "point": [
+      -70.87132684053557,
+      43.15495507587414
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:1",
+    "point": [
+      -71.68750159048366,
+      43.44782393605857
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:2",
+    "point": [
+      -71.64856602599286,
+      43.44875074583728
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:3",
+    "point": [
+      -71.63572620382567,
+      43.44523570585804
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:1",
+    "point": [
+      -71.49367885999715,
+      43.58331006468019
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:2",
+    "point": [
+      -71.46687753584267,
+      43.54552024238419
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:3",
+    "point": [
+      -71.48860992144009,
+      43.53898660652309
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:4",
+    "point": [
+      -71.46832767333811,
+      43.51574760681157
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:5",
+    "point": [
+      -71.45607030031638,
+      43.51727514889369
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:6",
+    "point": [
+      -71.45423402869906,
+      43.582750359680304
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:portsmouth/ward:1",
+    "point": [
+      -70.7733830333174,
+      43.08561617211778
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:portsmouth/ward:5",
+    "point": [
+      -70.7493021622747,
+      43.064890155538436
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:rochester/ward:5",
+    "point": [
+      -71.02202459721468,
+      43.323588200246064
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:1",
+    "point": [
+      -70.8899798935046,
+      43.27285519765435
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:2",
+    "point": [
+      -70.89457130709467,
+      43.255458854810485
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:3",
+    "point": [
+      -70.88887804578916,
+      43.241187538297915
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:4",
+    "point": [
+      -70.8733439943411,
+      43.239650789609804
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:5",
+    "point": [
+      -70.85162187752763,
+      43.249664473880784
+    ],
+    "pointBasis": "Deterministic geometric interior point, not a residential address or voter record."
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "geometryPublisher": "University of New Hampshire NH GRANIT",
+  "publisherSite": "https://granit.unh.edu/",
+  "nativePublicGeometryHost": "nhgeodata.unh.edu",
+  "authorityBasis": "Direct primary geographic publisher. NHDOT identifies NH GRANIT as NH’s Statewide GIS Clearinghouse. The primary publisher’s native public site also states New Hampshire’s Statewide GIS Clearinghouse. This university host is not a .gov domain; the PDF text is evidence of authority, not HTML-link proof.",
+  "governmentEvidence": {
+    "url": "https://www.dot.nh.gov/sites/g/files/ehbemt811/files/inline-documents/final-env-1-manual-3-project-environmental-process.pdf",
+    "fullTextCapture": "sources/0fa19c9b067c4cfd015243d26867a4db079e89c005b66d9c589cc6bf3dca7bb8.source",
+    "exactQuote": "NH GRANIT (NH’s Statewide GIS Clearinghouse) (https://granit.unh.edu/)",
+    "page": 13,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "sha256": "0fa19c9b067c4cfd015243d26867a4db079e89c005b66d9c589cc6bf3dca7bb8"
+  },
+  "sourceElectionAssociation": "Exact ward names in the current November 3, 2026 SOS ballots match the published ward labels. The currently published layer explicitly describes 2022 ward geography; its source XML was created May 5, 2024.",
+  "limitation": "This packet does not establish that every separate town, city or school ballot beyond the SOS master has been inventoried."
+}

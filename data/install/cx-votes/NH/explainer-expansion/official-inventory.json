@@ -1,0 +1,2543 @@
+{
+  "state": "NH",
+  "officialMasterSelectorEntries": 320,
+  "capturedCurrentAccessibleBallots": 320,
+  "officialStatewideQuestions": 1,
+  "officialLocalHb1300Questions": 297,
+  "separatelyHeldConcordSchoolPropertySale": 1,
+  "knownDistinctMeasureRecords": 299,
+  "previousHeldMeasureRecords": 28,
+  "newInstallableExplainers": 271,
+  "sourceReadyUnconnectedWardExplainers": 0,
+  "sourceQuestionTypesInMaster": [
+    "CACR13register-of-probate amendment",
+    "HB1300school-district tax/central-office spending limits"
+  ],
+  "rows": [
+    {
+      "sourceNodeId": "48716",
+      "locality": "ALLENSTOWN",
+      "contestId": "nh-2026-allenstown-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:allenstown_town",
+      "schoolDistrictsAsPrinted": "ALLENSTOWN SCHOOL DISTRICT (SAU #53)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48721",
+      "locality": "ALSTEAD",
+      "contestId": "nh-2026-alstead-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:alstead_town",
+      "schoolDistrictsAsPrinted": "FALL MOUNTAIN REGIONAL SCHOOL DISTRICT (SAU #60)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48726",
+      "locality": "ALTON",
+      "contestId": "nh-2026-alton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:alton_town",
+      "schoolDistrictsAsPrinted": "ALTON SCHOOL DISTRICT (SAU #72)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48731",
+      "locality": "AMHERST",
+      "contestId": "nh-2026-amherst-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:amherst_town",
+      "schoolDistrictsAsPrinted": "AMHERST SCHOOL DISTRICT (SAU #39) AND SOUHEGAN COOPERATIVE SCHOOL DISTRICT (SAU #39)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48736",
+      "locality": "ANDOVER",
+      "contestId": "nh-2026-andover-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:andover_town",
+      "schoolDistrictsAsPrinted": "ANDOVER SCHOOL DISTRICT (SAU #46)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48741",
+      "locality": "ANTRIM",
+      "contestId": "nh-2026-antrim-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:antrim_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48746",
+      "locality": "ASHLAND",
+      "contestId": "nh-2026-ashland-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:ashland_town",
+      "schoolDistrictsAsPrinted": "ASHLAND SCHOOL DISTRICT (SAU #2) AND PEMI-BAKER REGIONAL SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48751",
+      "locality": "AT.& GIL. AC. GT.",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "48756",
+      "locality": "ATKINSON",
+      "contestId": "nh-2026-atkinson-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:atkinson_town",
+      "schoolDistrictsAsPrinted": "TIMBERLANE REGIONAL SCHOOL DISTRICT (SAU #106)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48761",
+      "locality": "AUBURN",
+      "contestId": "nh-2026-auburn-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:auburn_town",
+      "schoolDistrictsAsPrinted": "AUBURN SCHOOL DISTRICT (SAU #15)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48766",
+      "locality": "BARNSTEAD",
+      "contestId": "nh-2026-barnstead-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:barnstead_town",
+      "schoolDistrictsAsPrinted": "BARNSTEAD SCHOOL DISTRICT (SAU #86)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48771",
+      "locality": "BARRINGTON",
+      "contestId": "nh-2026-barrington-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:barrington_town",
+      "schoolDistrictsAsPrinted": "BARRINGTON SCHOOL DISTRICT (SAU #74)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48776",
+      "locality": "BARTLETT",
+      "contestId": "nh-2026-bartlett-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:bartlett_town",
+      "schoolDistrictsAsPrinted": "BARTLETT SCHOOL DISTRICT (SAU #9)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48781",
+      "locality": "BATH",
+      "contestId": "nh-2026-bath-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:bath_town",
+      "schoolDistrictsAsPrinted": "BATH SCHOOL DISTRICT (SAU #23)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48786",
+      "locality": "BEAN'S GRANT",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "48791",
+      "locality": "BEAN'S PURCHASE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "48796",
+      "locality": "BEDFORD",
+      "contestId": "nh-2026-bedford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:bedford_town",
+      "schoolDistrictsAsPrinted": "BEDFORD SCHOOL DISTRICT (SAU #25)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48801",
+      "locality": "BELMONT",
+      "contestId": "nh-2026-belmont-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:belmont_town",
+      "schoolDistrictsAsPrinted": "SHAKER REGIONAL SCHOOL DISTRICT (SAU #80)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48806",
+      "locality": "BENNINGTON",
+      "contestId": "nh-2026-bennington-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:bennington_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48811",
+      "locality": "BENTON",
+      "contestId": "nh-2026-benton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:benton_town",
+      "schoolDistrictsAsPrinted": "BENTON SCHOOL DISTRICT (SAU #23)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48816",
+      "locality": "BERLIN",
+      "contestId": "nh-2026-berlin-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:berlin_city",
+      "schoolDistrictsAsPrinted": "BERLIN SCHOOL DISTRICT (SAU #3)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48821",
+      "locality": "BETHLEHEM",
+      "contestId": "nh-2026-bethlehem-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:bethlehem_town",
+      "schoolDistrictsAsPrinted": "BETHLEHEM SCHOOL DISTRICT (SAU #35) AND PROFILE SCHOOL DISTRICT (SAU #35)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48826",
+      "locality": "BOSCAWEN",
+      "contestId": "nh-2026-boscawen-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:boscawen_town",
+      "schoolDistrictsAsPrinted": "MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48831",
+      "locality": "BOW",
+      "contestId": "nh-2026-bow-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:bow_town",
+      "schoolDistrictsAsPrinted": "BOW SCHOOL DISTRICT (SAU #67)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48836",
+      "locality": "BRADFORD",
+      "contestId": "nh-2026-bradford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
+      "schoolDistrictsAsPrinted": "KEARSARGE REGIONAL SCHOOL DISTRICT (SAU #65)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48841",
+      "locality": "BRENTWOOD",
+      "contestId": "nh-2026-brentwood-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:brentwood_town",
+      "schoolDistrictsAsPrinted": "BRENTWOOD SCHOOL DISTRICT (SAU #16) AND EXETER REGION COOPERATIVE SCHOOL DISTRICT (SAU #16)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48846",
+      "locality": "BRIDGEWATER",
+      "contestId": "nh-2026-bridgewater-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:bridgewater_town",
+      "schoolDistrictsAsPrinted": "PASQUANEY SCHOOL DISTRICT (SAU #108)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48851",
+      "locality": "BRISTOL",
+      "contestId": "nh-2026-bristol-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:bristol_town",
+      "schoolDistrictsAsPrinted": "NEWFOUND AREA SCHOOL DISTRICT (SAU #4)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48856",
+      "locality": "BROOKFIELD",
+      "contestId": "nh-2026-brookfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:brookfield_town",
+      "schoolDistrictsAsPrinted": "GOVERNOR WENTWORTH REGIONAL SCHOOL DISTRICT (SAU #49)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48861",
+      "locality": "BROOKLINE",
+      "contestId": "nh-2026-brookline-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:brookline_town",
+      "schoolDistrictsAsPrinted": "BROOKLINE SCHOOL DISTRICT (SAU #41) AND HOLLIS-BROOKLINE COOPERATIVE SCHOOL DISTRICT (SAU #41)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48866",
+      "locality": "CAMBRIDGE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "48871",
+      "locality": "CAMPTON",
+      "contestId": "nh-2026-campton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:campton_town",
+      "schoolDistrictsAsPrinted": "CAMPTON SCHOOL DISTRICT (SAU #48) AND PEMI-BAKER REGIONAL SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48876",
+      "locality": "CANAAN",
+      "contestId": "nh-2026-canaan-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:canaan_town",
+      "schoolDistrictsAsPrinted": "MASCOMA VALLEY REGIONAL SCHOOL DISTRICT (SAU #62)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48881",
+      "locality": "CANDIA",
+      "contestId": "nh-2026-candia-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:candia_town",
+      "schoolDistrictsAsPrinted": "CANDIA SCHOOL DISTRICT (SAU #15)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48886",
+      "locality": "CANTERBURY",
+      "contestId": "nh-2026-canterbury-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:canterbury_town",
+      "schoolDistrictsAsPrinted": "SHAKER REGIONAL SCHOOL DISTRICT (SAU #80)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48891",
+      "locality": "CARROLL",
+      "contestId": "nh-2026-carroll-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:carroll_town",
+      "schoolDistrictsAsPrinted": "WHITE MOUNTAINS REGIONAL SCHOOL DISTRICT (SAU #36)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48896",
+      "locality": "CENTER HARBOR",
+      "contestId": "nh-2026-center-harbor-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:center_harbor_town",
+      "schoolDistrictsAsPrinted": "INTER-LAKES COOPERATIVE SCHOOL DISTRICT (SAU #2)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48901",
+      "locality": "CHANDLERS PURCHASE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "48906",
+      "locality": "CHARLESTOWN",
+      "contestId": "nh-2026-charlestown-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:charlestown_town",
+      "schoolDistrictsAsPrinted": "FALL MOUNTAIN REGIONAL SCHOOL DISTRICT (SAU #60)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48911",
+      "locality": "CHATHAM",
+      "contestId": "nh-2026-chatham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:chatham_town",
+      "schoolDistrictsAsPrinted": "CHATHAM SCHOOL DISTRICT (SAU #9)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48916",
+      "locality": "CHESTER",
+      "contestId": "nh-2026-chester-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:chester_town",
+      "schoolDistrictsAsPrinted": "CHESTER SCHOOL DISTRICT (SAU #82)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48921",
+      "locality": "CHESTERFIELD",
+      "contestId": "nh-2026-chesterfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:chesterfield_town",
+      "schoolDistrictsAsPrinted": "CHESTERFIELD SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48926",
+      "locality": "CHICHESTER",
+      "contestId": "nh-2026-chichester-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:chichester_town",
+      "schoolDistrictsAsPrinted": "CHICHESTER SCHOOL DISTRICT (SAU #53)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48931",
+      "locality": "CLAREMONT WARD 1",
+      "contestId": "nh-2026-claremont-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:claremont/ward:1",
+      "schoolDistrictsAsPrinted": "CLAREMONT SCHOOL DISTRICT (SAU #6)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "48936",
+      "locality": "CLAREMONT WARD 2",
+      "contestId": "nh-2026-claremont-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:claremont/ward:2",
+      "schoolDistrictsAsPrinted": "CLAREMONT SCHOOL DISTRICT (SAU #6)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "48941",
+      "locality": "CLAREMONT WARD 3",
+      "contestId": "nh-2026-claremont-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:claremont/ward:3",
+      "schoolDistrictsAsPrinted": "CLAREMONT SCHOOL DISTRICT (SAU #6)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "48946",
+      "locality": "CLARKSVILLE",
+      "contestId": "nh-2026-clarksville-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:clarksville_town",
+      "schoolDistrictsAsPrinted": "CLARKSVILLE SCHOOL DISTRICT (SAU #7)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48951",
+      "locality": "COLEBROOK",
+      "contestId": "nh-2026-colebrook-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:colebrook_town",
+      "schoolDistrictsAsPrinted": "COLEBROOK SCHOOL DISTRICT (SAU #7)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48956",
+      "locality": "COLUMBIA",
+      "contestId": "nh-2026-columbia-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:columbia_town",
+      "schoolDistrictsAsPrinted": "COLUMBIA SCHOOL DISTRICT (SAU #7)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48961",
+      "locality": "CONCORD WARD 1",
+      "contestId": "nh-2026-concord-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:1",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48966",
+      "locality": "CONCORD WARD 2",
+      "contestId": "nh-2026-concord-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:2",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8) AND MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48971",
+      "locality": "CONCORD WARD 3",
+      "contestId": "nh-2026-concord-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:3",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48976",
+      "locality": "CONCORD WARD 4",
+      "contestId": "nh-2026-concord-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:4",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48981",
+      "locality": "CONCORD WARD 5",
+      "contestId": "nh-2026-concord-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:5",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48986",
+      "locality": "CONCORD WARD 6",
+      "contestId": "nh-2026-concord-ward-6-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:6",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48991",
+      "locality": "CONCORD WARD 7",
+      "contestId": "nh-2026-concord-ward-7-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:7",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "48996",
+      "locality": "CONCORD WARD 8",
+      "contestId": "nh-2026-concord-ward-8-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:8",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49001",
+      "locality": "CONCORD WARD 9",
+      "contestId": "nh-2026-concord-ward-9-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:9",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49006",
+      "locality": "CONCORD WARD 10",
+      "contestId": "nh-2026-concord-ward-10-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:concord/ward:10",
+      "schoolDistrictsAsPrinted": "CONCORD SCHOOL DISTRICT (SAU #8)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49011",
+      "locality": "CONWAY",
+      "contestId": "nh-2026-conway-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:conway_town",
+      "schoolDistrictsAsPrinted": "CONWAY SCHOOL DISTRICT (SAU #9)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49016",
+      "locality": "CORNISH",
+      "contestId": "nh-2026-cornish-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:cornish_town",
+      "schoolDistrictsAsPrinted": "CORNISH SCHOOL DISTRICT (SAU #100)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49021",
+      "locality": "CRAWFORD'S PURCHASE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49026",
+      "locality": "CROYDON",
+      "contestId": "nh-2026-croydon-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town",
+      "schoolDistrictsAsPrinted": "CROYDON SCHOOL DISTRICT (SAU #99)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49031",
+      "locality": "CUTT'S GRANT",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49036",
+      "locality": "DALTON",
+      "contestId": "nh-2026-dalton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:dalton_town",
+      "schoolDistrictsAsPrinted": "WHITE MOUNTAINS REGIONAL SCHOOL DISTRICT (SAU #36)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49041",
+      "locality": "DANBURY",
+      "contestId": "nh-2026-danbury-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:danbury_town",
+      "schoolDistrictsAsPrinted": "NEWFOUND AREA SCHOOL DISTRICT (SAU #4)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49046",
+      "locality": "DANVILLE",
+      "contestId": "nh-2026-danville-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:danville_town",
+      "schoolDistrictsAsPrinted": "TIMBERLANE REGIONAL SCHOOL DISTRICT (SAU #106)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49051",
+      "locality": "DEERFIELD",
+      "contestId": "nh-2026-deerfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:deerfield_town",
+      "schoolDistrictsAsPrinted": "DEERFIELD SCHOOL DISTRICT (SAU #53)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49056",
+      "locality": "DEERING",
+      "contestId": "nh-2026-deering-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:deering_town",
+      "schoolDistrictsAsPrinted": "HILLSBORO-DEERING COOPERATIVE SCHOOL DISTRICT (SAU #34)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49061",
+      "locality": "DERRY",
+      "contestId": "nh-2026-derry-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:derry_town",
+      "schoolDistrictsAsPrinted": "DERRY COOPERATIVE SCHOOL DISTRICT (SAU #10)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49066",
+      "locality": "DIX'S GRANT",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49071",
+      "locality": "DIXVILLE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49076",
+      "locality": "DORCHESTER",
+      "contestId": "nh-2026-dorchester-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:dorchester_town",
+      "schoolDistrictsAsPrinted": "MASCOMA VALLEY REGIONAL SCHOOL DISTRICT (SAU #62)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49081",
+      "locality": "DOVER WARD 1",
+      "contestId": "nh-2026-dover-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:dover/ward:1",
+      "schoolDistrictsAsPrinted": "DOVER SCHOOL DISTRICT (SAU #11)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49086",
+      "locality": "DOVER WARD 2",
+      "contestId": "nh-2026-dover-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:dover/ward:2",
+      "schoolDistrictsAsPrinted": "DOVER SCHOOL DISTRICT (SAU #11)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49091",
+      "locality": "DOVER WARD 3",
+      "contestId": "nh-2026-dover-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:dover/ward:3",
+      "schoolDistrictsAsPrinted": "DOVER SCHOOL DISTRICT (SAU #11)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49096",
+      "locality": "DOVER WARD 4",
+      "contestId": "nh-2026-dover-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:dover/ward:4",
+      "schoolDistrictsAsPrinted": "DOVER SCHOOL DISTRICT (SAU #11)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49101",
+      "locality": "DOVER WARD 5",
+      "contestId": "nh-2026-dover-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:dover/ward:5",
+      "schoolDistrictsAsPrinted": "DOVER SCHOOL DISTRICT (SAU #11)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49106",
+      "locality": "DOVER WARD 6",
+      "contestId": "nh-2026-dover-ward-6-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:dover/ward:6",
+      "schoolDistrictsAsPrinted": "DOVER SCHOOL DISTRICT (SAU #11)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49111",
+      "locality": "DUBLIN",
+      "contestId": "nh-2026-dublin-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:dublin_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49116",
+      "locality": "DUMMER",
+      "contestId": "nh-2026-dummer-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:dummer_town",
+      "schoolDistrictsAsPrinted": "DUMMER SCHOOL DISTRICT (SAU #20)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49121",
+      "locality": "DUNBARTON",
+      "contestId": "nh-2026-dunbarton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:dunbarton_town",
+      "schoolDistrictsAsPrinted": "DUNBARTON SCHOOL DISTRICT (SAU #67)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49126",
+      "locality": "DURHAM",
+      "contestId": "nh-2026-durham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:durham_town",
+      "schoolDistrictsAsPrinted": "OYSTER RIVER COOP SCHOOL DISTRICT (SAU #5)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49131",
+      "locality": "EAST KINGSTON",
+      "contestId": "nh-2026-east-kingston-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:east_kingston_town",
+      "schoolDistrictsAsPrinted": "EAST KINGSTON SCHOOL DISTRICT (SAU #16) AND EXETER REGION COOPERATIVE SCHOOL DISTRICT (SAU #16)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49136",
+      "locality": "EASTON",
+      "contestId": "nh-2026-easton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:easton_town",
+      "schoolDistrictsAsPrinted": "LAFAYETTE REGIONAL SCHOOL DISTRICT (SAU #35) AND PROFILE SCHOOL DISTRICT (SAU #35)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49141",
+      "locality": "EATON",
+      "contestId": "nh-2026-eaton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:eaton_town",
+      "schoolDistrictsAsPrinted": "EATON SCHOOL DISTRICT (SAU #9)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49146",
+      "locality": "EFFINGHAM",
+      "contestId": "nh-2026-effingham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:effingham_town",
+      "schoolDistrictsAsPrinted": "GOVERNOR WENTWORTH REGIONAL SCHOOL DISTRICT (SAU #49)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49151",
+      "locality": "ELLSWORTH",
+      "contestId": "nh-2026-ellsworth-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:ellsworth_town",
+      "schoolDistrictsAsPrinted": "ELLSWORTH SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49156",
+      "locality": "ENFIELD",
+      "contestId": "nh-2026-enfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:enfield_town",
+      "schoolDistrictsAsPrinted": "MASCOMA VALLEY REGIONAL SCHOOL DISTRICT (SAU #62)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49161",
+      "locality": "EPPING",
+      "contestId": "nh-2026-epping-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:epping_town",
+      "schoolDistrictsAsPrinted": "EPPING SCHOOL DISTRICT (SAU #14)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49166",
+      "locality": "EPSOM",
+      "contestId": "nh-2026-epsom-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:epsom_town",
+      "schoolDistrictsAsPrinted": "EPSOM SCHOOL DISTRICT (SAU #53)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49171",
+      "locality": "ERROL",
+      "contestId": "nh-2026-errol-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:errol_town",
+      "schoolDistrictsAsPrinted": "ERROL SCHOOL DISTRICT (SAU #20)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49176",
+      "locality": "ERVING'S LOCATION",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49181",
+      "locality": "EXETER",
+      "contestId": "nh-2026-exeter-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:exeter_town",
+      "schoolDistrictsAsPrinted": "EXETER REGION COOPERATIVE SCHOOL DISTRICT (SAU #16) AND EXETER SCHOOL DISTRICT (SAU #16)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49186",
+      "locality": "FARMINGTON",
+      "contestId": "nh-2026-farmington-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:farmington_town",
+      "schoolDistrictsAsPrinted": "FARMINGTON SCHOOL DISTRICT (SAU #61)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49191",
+      "locality": "FITZWILLIAM",
+      "contestId": "nh-2026-fitzwilliam-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:fitzwilliam_town",
+      "schoolDistrictsAsPrinted": "MONADNOCK REGIONAL SCHOOL DISTRICT (SAU #93)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49196",
+      "locality": "FRANCESTOWN",
+      "contestId": "nh-2026-francestown-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:francestown_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49201",
+      "locality": "FRANCONIA",
+      "contestId": "nh-2026-franconia-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:franconia_town",
+      "schoolDistrictsAsPrinted": "LAFAYETTE REGIONAL SCHOOL DISTRICT (SAU #35) AND PROFILE SCHOOL DISTRICT (SAU #35)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49206",
+      "locality": "FRANKLIN WARD 1",
+      "contestId": "nh-2026-franklin-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:franklin/ward:1",
+      "schoolDistrictsAsPrinted": "FRANKLIN SCHOOL DISTRICT (SAU #18)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49211",
+      "locality": "FRANKLIN WARD 2",
+      "contestId": "nh-2026-franklin-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:franklin/ward:2",
+      "schoolDistrictsAsPrinted": "FRANKLIN SCHOOL DISTRICT (SAU #18)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49216",
+      "locality": "FRANKLIN WARD 3",
+      "contestId": "nh-2026-franklin-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:franklin/ward:3",
+      "schoolDistrictsAsPrinted": "FRANKLIN SCHOOL DISTRICT (SAU #18)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49221",
+      "locality": "FREEDOM",
+      "contestId": "nh-2026-freedom-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:freedom_town",
+      "schoolDistrictsAsPrinted": "FREEDOM SCHOOL DISTRICT (SAU #13)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49226",
+      "locality": "FREMONT",
+      "contestId": "nh-2026-fremont-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:fremont_town",
+      "schoolDistrictsAsPrinted": "FREMONT SCHOOL DISTRICT (SAU #83)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49231",
+      "locality": "GILFORD",
+      "contestId": "nh-2026-gilford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:gilford_town",
+      "schoolDistrictsAsPrinted": "GILFORD SCHOOL DISTRICT (SAU #73)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49236",
+      "locality": "GILMANTON",
+      "contestId": "nh-2026-gilmanton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:gilmanton_town",
+      "schoolDistrictsAsPrinted": "GILMANTON SCHOOL DISTRICT (SAU #79)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49241",
+      "locality": "GILSUM",
+      "contestId": "nh-2026-gilsum-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:gilsum_town",
+      "schoolDistrictsAsPrinted": "MONADNOCK REGIONAL SCHOOL DISTRICT (SAU #93)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49246",
+      "locality": "GOFFSTOWN",
+      "contestId": "nh-2026-goffstown-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:goffstown_town",
+      "schoolDistrictsAsPrinted": "GOFFSTOWN SCHOOL DISTRICT (SAU #19)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49251",
+      "locality": "GORHAM",
+      "contestId": "nh-2026-gorham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:gorham_town",
+      "schoolDistrictsAsPrinted": "GORHAM RANDOLPH SHELBURNE COOPERATIVE SCHOOL DISTRICT (SAU #20)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49256",
+      "locality": "GOSHEN",
+      "contestId": "nh-2026-goshen-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:goshen_town",
+      "schoolDistrictsAsPrinted": "GOSHEN SCHOOL DISTRICT (SAU #102)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49261",
+      "locality": "GRAFTON",
+      "contestId": "nh-2026-grafton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:grafton_town",
+      "schoolDistrictsAsPrinted": "MASCOMA VALLEY REGIONAL SCHOOL DISTRICT (SAU #62)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49266",
+      "locality": "GRANTHAM",
+      "contestId": "nh-2026-grantham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
+      "schoolDistrictsAsPrinted": "GRANTHAM SCHOOL DISTRICT (SAU #75)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49271",
+      "locality": "GREENFIELD",
+      "contestId": "nh-2026-greenfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:greenfield_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49276",
+      "locality": "GREENLAND",
+      "contestId": "nh-2026-greenland-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:greenland_town",
+      "schoolDistrictsAsPrinted": "GREENLAND SCHOOL DISTRICT (SAU #50)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49281",
+      "locality": "GREEN'S GRANT",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49286",
+      "locality": "GREENVILLE",
+      "contestId": "nh-2026-greenville-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:greenville_town",
+      "schoolDistrictsAsPrinted": "MASCENIC REGIONAL SCHOOL DISTRICT (SAU #87)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49291",
+      "locality": "GROTON",
+      "contestId": "nh-2026-groton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:groton_town",
+      "schoolDistrictsAsPrinted": "PASQUANEY SCHOOL DISTRICT (SAU #108)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49296",
+      "locality": "HADLEY'S PURCHASE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49301",
+      "locality": "HALE'S LOCATION",
+      "contestId": "nh-2026-hale-s-location-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:hale_s_location",
+      "schoolDistrictsAsPrinted": "HALE'S LOCATION (CARROLL COUNTY) SCHOOL DISTRICT (SAU #97)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49306",
+      "locality": "HAMPSTEAD",
+      "contestId": "nh-2026-hampstead-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:hampstead_town",
+      "schoolDistrictsAsPrinted": "HAMPSTEAD SCHOOL DISTRICT (SAU #55)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49311",
+      "locality": "HAMPTON FALLS",
+      "contestId": "nh-2026-hampton-falls-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:hampton_falls_town",
+      "schoolDistrictsAsPrinted": "HAMPTON FALLS SCHOOL DISTRICT (SAU #21) AND WINNACUNNET COOPERATIVE SCHOOL DISTRICT (SAU #21)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49316",
+      "locality": "HAMPTON",
+      "contestId": "nh-2026-hampton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:hampton_town",
+      "schoolDistrictsAsPrinted": "HAMPTON SCHOOL DISTRICT (SAU #90) AND WINNACUNNET COOPERATIVE SCHOOL DISTRICT (SAU #21)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49321",
+      "locality": "HANCOCK",
+      "contestId": "nh-2026-hancock-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:hancock_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49326",
+      "locality": "HANOVER",
+      "contestId": "nh-2026-hanover-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:hanover_town",
+      "schoolDistrictsAsPrinted": "DRESDEN SCHOOL DISTRICT (SAU #70) AND HANOVER SCHOOL DISTRICT (SAU #70)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49331",
+      "locality": "HARRISVILLE",
+      "contestId": "nh-2026-harrisville-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:harrisville_town",
+      "schoolDistrictsAsPrinted": "HARRISVILLE SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49336",
+      "locality": "HART'S LOCATION",
+      "contestId": "nh-2026-hart-s-location-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:hart_s_location_town",
+      "schoolDistrictsAsPrinted": "HART'S LOCATION SCHOOL DISTRICT (SAU #9)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49341",
+      "locality": "HAVERHILL",
+      "contestId": "nh-2026-haverhill-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:haverhill_town",
+      "schoolDistrictsAsPrinted": "HAVERHILL COOPERATIVE SCHOOL DISTRICT (SAU #23)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49346",
+      "locality": "HEBRON",
+      "contestId": "nh-2026-hebron-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:hebron_town",
+      "schoolDistrictsAsPrinted": "PASQUANEY SCHOOL DISTRICT (SAU #108)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49351",
+      "locality": "HENNIKER",
+      "contestId": "nh-2026-henniker-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:henniker_town",
+      "schoolDistrictsAsPrinted": "HENNIKER SCHOOL DISTRICT (SAU #24) AND JOHN STARK REGIONAL SCHOOL DISTRICT (SAU #24)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49356",
+      "locality": "HILL",
+      "contestId": "nh-2026-hill-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:hill_town",
+      "schoolDistrictsAsPrinted": "HILL SCHOOL DISTRICT (SAU #103)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49361",
+      "locality": "HILLSBOROUGH",
+      "contestId": "nh-2026-hillsborough-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:hillsborough_town",
+      "schoolDistrictsAsPrinted": "HILLSBORO-DEERING COOPERATIVE SCHOOL DISTRICT (SAU #34)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49366",
+      "locality": "HINSDALE",
+      "contestId": "nh-2026-hinsdale-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:hinsdale_town",
+      "schoolDistrictsAsPrinted": "HINSDALE SCHOOL DISTRICT (SAU #92)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49371",
+      "locality": "HOLDERNESS",
+      "contestId": "nh-2026-holderness-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:holderness_town",
+      "schoolDistrictsAsPrinted": "HOLDERNESS SCHOOL DISTRICT (SAU #48) AND PEMI-BAKER REGIONAL SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49376",
+      "locality": "HOLLIS",
+      "contestId": "nh-2026-hollis-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:hollis_town",
+      "schoolDistrictsAsPrinted": "HOLLIS SCHOOL DISTRICT (SAU #41) AND HOLLIS-BROOKLINE COOPERATIVE SCHOOL DISTRICT (SAU #41)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49381",
+      "locality": "HOOKSETT",
+      "contestId": "nh-2026-hooksett-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:hooksett_town",
+      "schoolDistrictsAsPrinted": "HOOKSETT SCHOOL DISTRICT (SAU #15)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49386",
+      "locality": "HOPKINTON",
+      "contestId": "nh-2026-hopkinton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:hopkinton_town",
+      "schoolDistrictsAsPrinted": "HOPKINTON SCHOOL DISTRICT (SAU #66)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49391",
+      "locality": "HUDSON",
+      "contestId": "nh-2026-hudson-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:hudson_town",
+      "schoolDistrictsAsPrinted": "HUDSON SCHOOL DISTRICT (SAU #81)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49396",
+      "locality": "JACKSON",
+      "contestId": "nh-2026-jackson-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:jackson_town",
+      "schoolDistrictsAsPrinted": "JACKSON SCHOOL DISTRICT (SAU #9)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49401",
+      "locality": "JAFFREY",
+      "contestId": "nh-2026-jaffrey-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:jaffrey_town",
+      "schoolDistrictsAsPrinted": "JAFFREY-RINDGE COOPERATIVE SCHOOL DISTRICT (SAU #47)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49406",
+      "locality": "JEFFERSON",
+      "contestId": "nh-2026-jefferson-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:jefferson_town",
+      "schoolDistrictsAsPrinted": "WHITE MOUNTAINS REGIONAL SCHOOL DISTRICT (SAU #36)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49411",
+      "locality": "KEENE WARD 1",
+      "contestId": "nh-2026-keene-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:keene/ward:1",
+      "schoolDistrictsAsPrinted": "KEENE SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49416",
+      "locality": "KEENE WARD 2",
+      "contestId": "nh-2026-keene-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:keene/ward:2",
+      "schoolDistrictsAsPrinted": "KEENE SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49421",
+      "locality": "KEENE WARD 3",
+      "contestId": "nh-2026-keene-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:keene/ward:3",
+      "schoolDistrictsAsPrinted": "KEENE SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49426",
+      "locality": "KEENE WARD 4",
+      "contestId": "nh-2026-keene-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:keene/ward:4",
+      "schoolDistrictsAsPrinted": "KEENE SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49431",
+      "locality": "KEENE WARD 5",
+      "contestId": "nh-2026-keene-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:keene/ward:5",
+      "schoolDistrictsAsPrinted": "KEENE SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49436",
+      "locality": "KENSINGTON",
+      "contestId": "nh-2026-kensington-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:kensington_town",
+      "schoolDistrictsAsPrinted": "EXETER REGION COOPERATIVE SCHOOL DISTRICT (SAU #16) AND KENSINGTON SCHOOL DISTRICT (SAU #16)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49441",
+      "locality": "KILKENNY",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49446",
+      "locality": "KINGSTON",
+      "contestId": "nh-2026-kingston-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:kingston_town",
+      "schoolDistrictsAsPrinted": "SANBORN REGIONAL SCHOOL DISTRICT (SAU #17)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49451",
+      "locality": "LACONIA WARD 1",
+      "contestId": "nh-2026-laconia-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:laconia/ward:1",
+      "schoolDistrictsAsPrinted": "LACONIA SCHOOL DISTRICT (SAU #30)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49456",
+      "locality": "LACONIA WARD 2",
+      "contestId": "nh-2026-laconia-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:laconia/ward:2",
+      "schoolDistrictsAsPrinted": "LACONIA SCHOOL DISTRICT (SAU #30)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49461",
+      "locality": "LACONIA WARD 3",
+      "contestId": "nh-2026-laconia-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:laconia/ward:3",
+      "schoolDistrictsAsPrinted": "LACONIA SCHOOL DISTRICT (SAU #30)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49466",
+      "locality": "LACONIA WARD 4",
+      "contestId": "nh-2026-laconia-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:laconia/ward:4",
+      "schoolDistrictsAsPrinted": "LACONIA SCHOOL DISTRICT (SAU #30)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49471",
+      "locality": "LACONIA WARD 5",
+      "contestId": "nh-2026-laconia-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:laconia/ward:5",
+      "schoolDistrictsAsPrinted": "LACONIA SCHOOL DISTRICT (SAU #30)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49476",
+      "locality": "LACONIA WARD 6",
+      "contestId": "nh-2026-laconia-ward-6-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:laconia/ward:6",
+      "schoolDistrictsAsPrinted": "LACONIA SCHOOL DISTRICT (SAU #30)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49481",
+      "locality": "LANCASTER",
+      "contestId": "nh-2026-lancaster-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:lancaster_town",
+      "schoolDistrictsAsPrinted": "WHITE MOUNTAINS REGIONAL SCHOOL DISTRICT (SAU #36)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49486",
+      "locality": "LANDAFF",
+      "contestId": "nh-2026-landaff-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:landaff_town",
+      "schoolDistrictsAsPrinted": "LANDAFF SCHOOL DISTRICT (SAU #35)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49491",
+      "locality": "LANGDON",
+      "contestId": "nh-2026-langdon-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:langdon_town",
+      "schoolDistrictsAsPrinted": "FALL MOUNTAIN REGIONAL SCHOOL DISTRICT (SAU #60)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49496",
+      "locality": "LEBANON WARD 1",
+      "contestId": "nh-2026-lebanon-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:lebanon/ward:1",
+      "schoolDistrictsAsPrinted": "LEBANON SCHOOL DISTRICT (SAU #88)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49501",
+      "locality": "LEBANON WARD 2",
+      "contestId": "nh-2026-lebanon-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:lebanon/ward:2",
+      "schoolDistrictsAsPrinted": "LEBANON SCHOOL DISTRICT (SAU #88)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49506",
+      "locality": "LEBANON WARD 3",
+      "contestId": "nh-2026-lebanon-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:lebanon/ward:3",
+      "schoolDistrictsAsPrinted": "LEBANON SCHOOL DISTRICT (SAU #88)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49511",
+      "locality": "LEE",
+      "contestId": "nh-2026-lee-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:lee_town",
+      "schoolDistrictsAsPrinted": "OYSTER RIVER COOP SCHOOL DISTRICT (SAU #5)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49516",
+      "locality": "LEMPSTER",
+      "contestId": "nh-2026-lempster-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town",
+      "schoolDistrictsAsPrinted": "LEMPSTER SCHOOL DISTRICT (SAU #71)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49521",
+      "locality": "LINCOLN",
+      "contestId": "nh-2026-lincoln-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:lincoln_town",
+      "schoolDistrictsAsPrinted": "LINCOLN-WOODSTOCK COOPERATIVE SCHOOL DISTRICT (SAU #68)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49526",
+      "locality": "LISBON",
+      "contestId": "nh-2026-lisbon-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:lisbon_town",
+      "schoolDistrictsAsPrinted": "LISBON REGIONAL SCHOOL DISTRICT (SAU #110)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49531",
+      "locality": "LITCHFIELD",
+      "contestId": "nh-2026-litchfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:litchfield_town",
+      "schoolDistrictsAsPrinted": "LITCHFIELD SCHOOL DISTRICT (SAU #27)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49536",
+      "locality": "LITTLETON",
+      "contestId": "nh-2026-littleton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:littleton_town",
+      "schoolDistrictsAsPrinted": "LITTLETON SCHOOL DISTRICT (SAU #84)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49541",
+      "locality": "LIVERMORE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49546",
+      "locality": "LONDONDERRY",
+      "contestId": "nh-2026-londonderry-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:londonderry_town",
+      "schoolDistrictsAsPrinted": "LONDONDERRY SCHOOL DISTRICT (SAU #12)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49551",
+      "locality": "LOUDON",
+      "contestId": "nh-2026-loudon-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:loudon_town",
+      "schoolDistrictsAsPrinted": "MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49556",
+      "locality": "LOW & BURBANKS GRANT",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49561",
+      "locality": "LYMAN",
+      "contestId": "nh-2026-lyman-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:lyman_town",
+      "schoolDistrictsAsPrinted": "LISBON REGIONAL SCHOOL DISTRICT (SAU #110)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49566",
+      "locality": "LYME",
+      "contestId": "nh-2026-lyme-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:lyme_town",
+      "schoolDistrictsAsPrinted": "LYME SCHOOL DISTRICT (SAU #76)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49571",
+      "locality": "LYNDEBOROUGH",
+      "contestId": "nh-2026-lyndeborough-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:lyndeborough_town",
+      "schoolDistrictsAsPrinted": "WILTON-LYNDEBOROUGH COOPERATIVE SCHOOL DISTRICT (SAU #63)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49576",
+      "locality": "MADBURY",
+      "contestId": "nh-2026-madbury-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:madbury_town",
+      "schoolDistrictsAsPrinted": "OYSTER RIVER COOP SCHOOL DISTRICT (SAU #5)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49581",
+      "locality": "MADISON",
+      "contestId": "nh-2026-madison-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:madison_town",
+      "schoolDistrictsAsPrinted": "MADISON SCHOOL DISTRICT (SAU #13)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49586",
+      "locality": "MANCHESTER WARD 1",
+      "contestId": "nh-2026-manchester-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:1",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49591",
+      "locality": "MANCHESTER WARD 2",
+      "contestId": "nh-2026-manchester-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:2",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49596",
+      "locality": "MANCHESTER WARD 3",
+      "contestId": "nh-2026-manchester-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:3",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49601",
+      "locality": "MANCHESTER WARD 4",
+      "contestId": "nh-2026-manchester-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:4",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49606",
+      "locality": "MANCHESTER WARD 5",
+      "contestId": "nh-2026-manchester-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:5",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49611",
+      "locality": "MANCHESTER WARD 6",
+      "contestId": "nh-2026-manchester-ward-6-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:6",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49616",
+      "locality": "MANCHESTER WARD 7",
+      "contestId": "nh-2026-manchester-ward-7-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:7",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49621",
+      "locality": "MANCHESTER WARD 8",
+      "contestId": "nh-2026-manchester-ward-8-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:8",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49626",
+      "locality": "MANCHESTER WARD 9",
+      "contestId": "nh-2026-manchester-ward-9-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:9",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49631",
+      "locality": "MANCHESTER WARD 10",
+      "contestId": "nh-2026-manchester-ward-10-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:10",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49636",
+      "locality": "MANCHESTER WARD 11",
+      "contestId": "nh-2026-manchester-ward-11-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:11",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49641",
+      "locality": "MANCHESTER WARD 12",
+      "contestId": "nh-2026-manchester-ward-12-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:12",
+      "schoolDistrictsAsPrinted": "MANCHESTER SCHOOL DISTRICT (SAU #37)",
+      "status": "HELD_OR_PREVIOUS_READY_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49646",
+      "locality": "MARLBOROUGH",
+      "contestId": "nh-2026-marlborough-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:marlborough_town",
+      "schoolDistrictsAsPrinted": "MARLBOROUGH SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49651",
+      "locality": "MARLOW",
+      "contestId": "nh-2026-marlow-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:marlow_town",
+      "schoolDistrictsAsPrinted": "MARLOW SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49656",
+      "locality": "MARTIN'S LOCATION",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49661",
+      "locality": "MASON",
+      "contestId": "nh-2026-mason-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:mason_town",
+      "schoolDistrictsAsPrinted": "MASON SCHOOL DISTRICT (SAU #89)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49666",
+      "locality": "MEREDITH",
+      "contestId": "nh-2026-meredith-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:meredith_town",
+      "schoolDistrictsAsPrinted": "INTER-LAKES COOPERATIVE SCHOOL DISTRICT (SAU #2)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49671",
+      "locality": "MERRIMACK",
+      "contestId": "nh-2026-merrimack-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:merrimack_town",
+      "schoolDistrictsAsPrinted": "MERRIMACK SCHOOL DISTRICT (SAU #26)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49676",
+      "locality": "MIDDLETON",
+      "contestId": "nh-2026-middleton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:middleton_town",
+      "schoolDistrictsAsPrinted": "MIDDLETON SCHOOL DISTRICT (SAU #69)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49681",
+      "locality": "MILAN",
+      "contestId": "nh-2026-milan-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:milan_town",
+      "schoolDistrictsAsPrinted": "MILAN SCHOOL DISTRICT (SAU #20)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49686",
+      "locality": "MILFORD",
+      "contestId": "nh-2026-milford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:milford_town",
+      "schoolDistrictsAsPrinted": "MILFORD SCHOOL DISTRICT (SAU #40)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49691",
+      "locality": "MILLSFIELD",
+      "contestId": "nh-2026-millsfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:millsfield_township",
+      "schoolDistrictsAsPrinted": "COOS COUNTY SCHOOL DISTRICT (SAU #98)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49696",
+      "locality": "MILTON",
+      "contestId": "nh-2026-milton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:milton_town",
+      "schoolDistrictsAsPrinted": "MILTON SCHOOL DISTRICT (SAU #64)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49701",
+      "locality": "MONROE",
+      "contestId": "nh-2026-monroe-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:monroe_town",
+      "schoolDistrictsAsPrinted": "MONROE SCHOOL DISTRICT (SAU #77)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49706",
+      "locality": "MONT VERNON",
+      "contestId": "nh-2026-mont-vernon-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:mont_vernon_town",
+      "schoolDistrictsAsPrinted": "MONT VERNON SCHOOL DISTRICT (SAU #39) AND SOUHEGAN COOPERATIVE SCHOOL DISTRICT (SAU #39)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49711",
+      "locality": "MOULTONBOROUGH",
+      "contestId": "nh-2026-moultonborough-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:moultonborough_town",
+      "schoolDistrictsAsPrinted": "MOULTONBOROUGH SCHOOL DISTRICT (SAU #45)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49716",
+      "locality": "NASHUA WARD 1",
+      "contestId": "nh-2026-nashua-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:1",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49721",
+      "locality": "NASHUA WARD 2",
+      "contestId": "nh-2026-nashua-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:2",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49726",
+      "locality": "NASHUA WARD 3",
+      "contestId": "nh-2026-nashua-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:3",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49731",
+      "locality": "NASHUA WARD 4",
+      "contestId": "nh-2026-nashua-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:4",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49736",
+      "locality": "NASHUA WARD 5",
+      "contestId": "nh-2026-nashua-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:5",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49741",
+      "locality": "NASHUA WARD 6",
+      "contestId": "nh-2026-nashua-ward-6-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:6",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49746",
+      "locality": "NASHUA WARD 7",
+      "contestId": "nh-2026-nashua-ward-7-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:7",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49751",
+      "locality": "NASHUA WARD 8",
+      "contestId": "nh-2026-nashua-ward-8-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:8",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49756",
+      "locality": "NASHUA WARD 9",
+      "contestId": "nh-2026-nashua-ward-9-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:9",
+      "schoolDistrictsAsPrinted": "NASHUA SCHOOL DISTRICT (SAU #42)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49761",
+      "locality": "NELSON",
+      "contestId": "nh-2026-nelson-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:nelson_town",
+      "schoolDistrictsAsPrinted": "NELSON SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49766",
+      "locality": "NEW BOSTON",
+      "contestId": "nh-2026-new-boston-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:new_boston_town",
+      "schoolDistrictsAsPrinted": "NEW BOSTON SCHOOL DISTRICT (SAU #19)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49771",
+      "locality": "NEW CASTLE",
+      "contestId": "nh-2026-new-castle-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:new_castle_town",
+      "schoolDistrictsAsPrinted": "NEW CASTLE SCHOOL DISTRICT (SAU #50)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49776",
+      "locality": "NEW DURHAM",
+      "contestId": "nh-2026-new-durham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:new_durham_town",
+      "schoolDistrictsAsPrinted": "GOVERNOR WENTWORTH REGIONAL SCHOOL DISTRICT (SAU #49)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49781",
+      "locality": "NEW HAMPTON",
+      "contestId": "nh-2026-new-hampton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:new_hampton_town",
+      "schoolDistrictsAsPrinted": "NEWFOUND AREA SCHOOL DISTRICT (SAU #4)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49786",
+      "locality": "NEW IPSWICH",
+      "contestId": "nh-2026-new-ipswich-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:new_ipswich_town",
+      "schoolDistrictsAsPrinted": "MASCENIC REGIONAL SCHOOL DISTRICT (SAU #87)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49791",
+      "locality": "NEW LONDON",
+      "contestId": "nh-2026-new-london-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
+      "schoolDistrictsAsPrinted": "KEARSARGE REGIONAL SCHOOL DISTRICT (SAU #65)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49796",
+      "locality": "NEWBURY",
+      "contestId": "nh-2026-newbury-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
+      "schoolDistrictsAsPrinted": "KEARSARGE REGIONAL SCHOOL DISTRICT (SAU #65)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49801",
+      "locality": "NEWFIELDS",
+      "contestId": "nh-2026-newfields-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:newfields_town",
+      "schoolDistrictsAsPrinted": "EXETER REGION COOPERATIVE SCHOOL DISTRICT (SAU #16) AND NEWFIELDS SCHOOL DISTRICT (SAU #16)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49806",
+      "locality": "NEWINGTON",
+      "contestId": "nh-2026-newington-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:newington_town",
+      "schoolDistrictsAsPrinted": "NEWINGTON SCHOOL DISTRICT (SAU #50)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49811",
+      "locality": "NEWMARKET",
+      "contestId": "nh-2026-newmarket-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:newmarket_town",
+      "schoolDistrictsAsPrinted": "NEWMARKET SCHOOL DISTRICT (SAU #31)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49816",
+      "locality": "NEWPORT",
+      "contestId": "nh-2026-newport-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
+      "schoolDistrictsAsPrinted": "NEWPORT SCHOOL DISTRICT (SAU #43)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49821",
+      "locality": "NEWTON",
+      "contestId": "nh-2026-newton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:newton_town",
+      "schoolDistrictsAsPrinted": "SANBORN REGIONAL SCHOOL DISTRICT (SAU #17)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49826",
+      "locality": "NORTH HAMPTON",
+      "contestId": "nh-2026-north-hampton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:north_hampton_town",
+      "schoolDistrictsAsPrinted": "NORTH HAMPTON SCHOOL DISTRICT (SAU #21) AND WINNACUNNET COOPERATIVE SCHOOL DISTRICT (SAU #21)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49831",
+      "locality": "NORTHFIELD",
+      "contestId": "nh-2026-northfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:northfield_town",
+      "schoolDistrictsAsPrinted": "WINNISQUAM REGIONAL SCHOOL DISTRICT (SAU #59)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49836",
+      "locality": "NORTHUMBERLAND",
+      "contestId": "nh-2026-northumberland-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:northumberland_town",
+      "schoolDistrictsAsPrinted": "NORTHUMBERLAND SCHOOL DISTRICT (SAU #58)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49841",
+      "locality": "NORTHWOOD",
+      "contestId": "nh-2026-northwood-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:northwood_town",
+      "schoolDistrictsAsPrinted": "NORTHWOOD SCHOOL DISTRICT (SAU #44)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49846",
+      "locality": "NOTTINGHAM",
+      "contestId": "nh-2026-nottingham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:nottingham_town",
+      "schoolDistrictsAsPrinted": "NOTTINGHAM SCHOOL DISTRICT (SAU #107)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49851",
+      "locality": "ODELL",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49856",
+      "locality": "ORANGE",
+      "contestId": "nh-2026-orange-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:orange_town",
+      "schoolDistrictsAsPrinted": "MASCOMA VALLEY REGIONAL SCHOOL DISTRICT (SAU #62)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49861",
+      "locality": "ORFORD",
+      "contestId": "nh-2026-orford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:orford_town",
+      "schoolDistrictsAsPrinted": "RIVENDELL SCHOOL DISTRICT (SAU #78)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49866",
+      "locality": "OSSIPEE",
+      "contestId": "nh-2026-ossipee-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:ossipee_town",
+      "schoolDistrictsAsPrinted": "GOVERNOR WENTWORTH REGIONAL SCHOOL DISTRICT (SAU #49)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49871",
+      "locality": "PELHAM",
+      "contestId": "nh-2026-pelham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:pelham_town",
+      "schoolDistrictsAsPrinted": "PELHAM SCHOOL DISTRICT (SAU #28)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49876",
+      "locality": "PEMBROKE",
+      "contestId": "nh-2026-pembroke-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:pembroke_town",
+      "schoolDistrictsAsPrinted": "PEMBROKE SCHOOL DISTRICT (SAU #53)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49881",
+      "locality": "PETERBOROUGH",
+      "contestId": "nh-2026-peterborough-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:peterborough_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49886",
+      "locality": "PIERMONT",
+      "contestId": "nh-2026-piermont-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:piermont_town",
+      "schoolDistrictsAsPrinted": "PIERMONT SCHOOL DISTRICT (SAU #23)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49891",
+      "locality": "PINKHAM'S GRANT",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "49896",
+      "locality": "PITTSBURG",
+      "contestId": "nh-2026-pittsburg-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:pittsburg_town",
+      "schoolDistrictsAsPrinted": "PITTSBURG SCHOOL DISTRICT (SAU #7)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49901",
+      "locality": "PITTSFIELD",
+      "contestId": "nh-2026-pittsfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:pittsfield_town",
+      "schoolDistrictsAsPrinted": "PITTSFIELD SCHOOL DISTRICT (SAU #51)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49906",
+      "locality": "PLAINFIELD",
+      "contestId": "nh-2026-plainfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:plainfield_town",
+      "schoolDistrictsAsPrinted": "PLAINFIELD SCHOOL DISTRICT (SAU #32)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49911",
+      "locality": "PLAISTOW",
+      "contestId": "nh-2026-plaistow-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:plaistow_town",
+      "schoolDistrictsAsPrinted": "TIMBERLANE REGIONAL SCHOOL DISTRICT (SAU #106)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49916",
+      "locality": "PLYMOUTH",
+      "contestId": "nh-2026-plymouth-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:plymouth_town",
+      "schoolDistrictsAsPrinted": "PEMI-BAKER REGIONAL SCHOOL DISTRICT (SAU #48) AND PLYMOUTH SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49921",
+      "locality": "PORTSMOUTH WARD 1",
+      "contestId": "nh-2026-portsmouth-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:1",
+      "schoolDistrictsAsPrinted": "PORTSMOUTH SCHOOL DISTRICT (SAU #52)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49926",
+      "locality": "PORTSMOUTH WARD 2",
+      "contestId": "nh-2026-portsmouth-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:2",
+      "schoolDistrictsAsPrinted": "PORTSMOUTH SCHOOL DISTRICT (SAU #52)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49931",
+      "locality": "PORTSMOUTH WARD 3",
+      "contestId": "nh-2026-portsmouth-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:3",
+      "schoolDistrictsAsPrinted": "PORTSMOUTH SCHOOL DISTRICT (SAU #52)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49936",
+      "locality": "PORTSMOUTH WARD 4",
+      "contestId": "nh-2026-portsmouth-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:4",
+      "schoolDistrictsAsPrinted": "PORTSMOUTH SCHOOL DISTRICT (SAU #52)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49941",
+      "locality": "PORTSMOUTH WARD 5",
+      "contestId": "nh-2026-portsmouth-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:5",
+      "schoolDistrictsAsPrinted": "PORTSMOUTH SCHOOL DISTRICT (SAU #52)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49946",
+      "locality": "RANDOLPH",
+      "contestId": "nh-2026-randolph-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:randolph_town",
+      "schoolDistrictsAsPrinted": "GORHAM RANDOLPH SHELBURNE COOPERATIVE SCHOOL DISTRICT (SAU #20)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49951",
+      "locality": "RAYMOND",
+      "contestId": "nh-2026-raymond-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:raymond_town",
+      "schoolDistrictsAsPrinted": "RAYMOND SCHOOL DISTRICT (SAU #33)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49956",
+      "locality": "RICHMOND",
+      "contestId": "nh-2026-richmond-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:richmond_town",
+      "schoolDistrictsAsPrinted": "MONADNOCK REGIONAL SCHOOL DISTRICT (SAU #93)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49961",
+      "locality": "RINDGE",
+      "contestId": "nh-2026-rindge-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:rindge_town",
+      "schoolDistrictsAsPrinted": "JAFFREY-RINDGE COOPERATIVE SCHOOL DISTRICT (SAU #47)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49966",
+      "locality": "ROCHESTER WARD 1",
+      "contestId": "nh-2026-rochester-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:1",
+      "schoolDistrictsAsPrinted": "ROCHESTER SCHOOL DISTRICT (SAU #54)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49971",
+      "locality": "ROCHESTER WARD 2",
+      "contestId": "nh-2026-rochester-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:2",
+      "schoolDistrictsAsPrinted": "ROCHESTER SCHOOL DISTRICT (SAU #54)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49976",
+      "locality": "ROCHESTER WARD 3",
+      "contestId": "nh-2026-rochester-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:3",
+      "schoolDistrictsAsPrinted": "ROCHESTER SCHOOL DISTRICT (SAU #54)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49981",
+      "locality": "ROCHESTER WARD 4",
+      "contestId": "nh-2026-rochester-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:4",
+      "schoolDistrictsAsPrinted": "ROCHESTER SCHOOL DISTRICT (SAU #54)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49986",
+      "locality": "ROCHESTER WARD 5",
+      "contestId": "nh-2026-rochester-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:5",
+      "schoolDistrictsAsPrinted": "ROCHESTER SCHOOL DISTRICT (SAU #54)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "49991",
+      "locality": "ROCHESTER WARD 6",
+      "contestId": "nh-2026-rochester-ward-6-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:6",
+      "schoolDistrictsAsPrinted": "ROCHESTER SCHOOL DISTRICT (SAU #54)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "49996",
+      "locality": "ROLLINSFORD",
+      "contestId": "nh-2026-rollinsford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:rollinsford_town",
+      "schoolDistrictsAsPrinted": "ROLLINSFORD SCHOOL DISTRICT (SAU #104)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50001",
+      "locality": "ROXBURY",
+      "contestId": "nh-2026-roxbury-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:roxbury_town",
+      "schoolDistrictsAsPrinted": "MONADNOCK REGIONAL SCHOOL DISTRICT (SAU #93)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50006",
+      "locality": "RUMNEY",
+      "contestId": "nh-2026-rumney-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:rumney_town",
+      "schoolDistrictsAsPrinted": "PEMI-BAKER REGIONAL SCHOOL DISTRICT (SAU #48) AND RUMNEY SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50011",
+      "locality": "RYE",
+      "contestId": "nh-2026-rye-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:rye_town",
+      "schoolDistrictsAsPrinted": "RYE SCHOOL DISTRICT (SAU #50)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50016",
+      "locality": "SALEM",
+      "contestId": "nh-2026-salem-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:salem_town",
+      "schoolDistrictsAsPrinted": "SALEM SCHOOL DISTRICT (SAU #57)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50021",
+      "locality": "SALISBURY",
+      "contestId": "nh-2026-salisbury-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:salisbury_town",
+      "schoolDistrictsAsPrinted": "MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50026",
+      "locality": "SANBORNTON",
+      "contestId": "nh-2026-sanbornton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:sanbornton_town",
+      "schoolDistrictsAsPrinted": "WINNISQUAM REGIONAL SCHOOL DISTRICT (SAU #59)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50031",
+      "locality": "SANDOWN",
+      "contestId": "nh-2026-sandown-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:sandown_town",
+      "schoolDistrictsAsPrinted": "TIMBERLANE REGIONAL SCHOOL DISTRICT (SAU #106)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50036",
+      "locality": "SANDWICH",
+      "contestId": "nh-2026-sandwich-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:sandwich_town",
+      "schoolDistrictsAsPrinted": "INTER-LAKES COOPERATIVE SCHOOL DISTRICT (SAU #2)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50041",
+      "locality": "SARGENT'S PURCHASE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "50046",
+      "locality": "SEABROOK",
+      "contestId": "nh-2026-seabrook-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:seabrook_town",
+      "schoolDistrictsAsPrinted": "SEABROOK SCHOOL DISTRICT (SAU #21) AND WINNACUNNET COOPERATIVE SCHOOL DISTRICT (SAU #21)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50051",
+      "locality": "SECOND COLLEGE GRANT",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "50056",
+      "locality": "SHARON",
+      "contestId": "nh-2026-sharon-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:sharon_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50061",
+      "locality": "SHELBURNE",
+      "contestId": "nh-2026-shelburne-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:shelburne_town",
+      "schoolDistrictsAsPrinted": "GORHAM RANDOLPH SHELBURNE COOPERATIVE SCHOOL DISTRICT (SAU #20)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50066",
+      "locality": "SOMERSWORTH WARD 1",
+      "contestId": "nh-2026-somersworth-ward-1-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:somersworth/ward:1",
+      "schoolDistrictsAsPrinted": "SOMERSWORTH SCHOOL DISTRICT (SAU #56)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "50071",
+      "locality": "SOMERSWORTH WARD 2",
+      "contestId": "nh-2026-somersworth-ward-2-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:somersworth/ward:2",
+      "schoolDistrictsAsPrinted": "SOMERSWORTH SCHOOL DISTRICT (SAU #56)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "50076",
+      "locality": "SOMERSWORTH WARD 3",
+      "contestId": "nh-2026-somersworth-ward-3-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:somersworth/ward:3",
+      "schoolDistrictsAsPrinted": "SOMERSWORTH SCHOOL DISTRICT (SAU #56)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "50081",
+      "locality": "SOMERSWORTH WARD 4",
+      "contestId": "nh-2026-somersworth-ward-4-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:somersworth/ward:4",
+      "schoolDistrictsAsPrinted": "SOMERSWORTH SCHOOL DISTRICT (SAU #56)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "50086",
+      "locality": "SOMERSWORTH WARD 5",
+      "contestId": "nh-2026-somersworth-ward-5-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/place:somersworth/ward:5",
+      "schoolDistrictsAsPrinted": "SOMERSWORTH SCHOOL DISTRICT (SAU #56)",
+      "status": "NEW_INSTALLABLE_EXPLAINER_WITH_ORIGINAL_WARD_GEOMETRY"
+    },
+    {
+      "sourceNodeId": "50091",
+      "locality": "SOUTH HAMPTON",
+      "contestId": "nh-2026-south-hampton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:south_hampton_town",
+      "schoolDistrictsAsPrinted": "SOUTH HAMPTON SCHOOL DISTRICT (SAU #21)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50096",
+      "locality": "SPRINGFIELD",
+      "contestId": "nh-2026-springfield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
+      "schoolDistrictsAsPrinted": "KEARSARGE REGIONAL SCHOOL DISTRICT (SAU #65)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50101",
+      "locality": "STARK",
+      "contestId": "nh-2026-stark-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:stark_town",
+      "schoolDistrictsAsPrinted": "STARK SCHOOL DISTRICT (SAU #58)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50106",
+      "locality": "STEWARTSTOWN",
+      "contestId": "nh-2026-stewartstown-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:stewartstown_town",
+      "schoolDistrictsAsPrinted": "STEWARTSTOWN SCHOOL DISTRICT (SAU #7)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50111",
+      "locality": "STODDARD",
+      "contestId": "nh-2026-stoddard-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:stoddard_town",
+      "schoolDistrictsAsPrinted": "STODDARD SCHOOL DISTRICT (SAU #24)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50116",
+      "locality": "STRAFFORD",
+      "contestId": "nh-2026-strafford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:strafford/place:strafford_town",
+      "schoolDistrictsAsPrinted": "STRAFFORD SCHOOL DISTRICT (SAU #105)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50121",
+      "locality": "STRATFORD",
+      "contestId": "nh-2026-stratford-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:stratford_town",
+      "schoolDistrictsAsPrinted": "STRATFORD SCHOOL DISTRICT (SAU #58)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50126",
+      "locality": "STRATHAM",
+      "contestId": "nh-2026-stratham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:stratham_town",
+      "schoolDistrictsAsPrinted": "EXETER REGION COOPERATIVE SCHOOL DISTRICT (SAU #16) AND STRATHAM SCHOOL DISTRICT (SAU #16)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50131",
+      "locality": "SUCCESS",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "50136",
+      "locality": "SUGAR HILL",
+      "contestId": "nh-2026-sugar-hill-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:sugar_hill_town",
+      "schoolDistrictsAsPrinted": "LAFAYETTE REGIONAL SCHOOL DISTRICT (SAU #35) AND PROFILE SCHOOL DISTRICT (SAU #35)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50141",
+      "locality": "SULLIVAN",
+      "contestId": "nh-2026-sullivan-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:sullivan_town",
+      "schoolDistrictsAsPrinted": "SULLIVAN SCHOOL DISTRICT (SAU #96)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50146",
+      "locality": "SUNAPEE",
+      "contestId": "nh-2026-sunapee-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:sunapee_town",
+      "schoolDistrictsAsPrinted": "SUNAPEE SCHOOL DISTRICT (SAU #85)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50151",
+      "locality": "SURRY",
+      "contestId": "nh-2026-surry-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:surry_town",
+      "schoolDistrictsAsPrinted": "SURRY SCHOOL DISTRICT (SAU #91)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50156",
+      "locality": "SUTTON",
+      "contestId": "nh-2026-sutton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+      "schoolDistrictsAsPrinted": "KEARSARGE REGIONAL SCHOOL DISTRICT (SAU #65)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50161",
+      "locality": "SWANZEY",
+      "contestId": "nh-2026-swanzey-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:swanzey_town",
+      "schoolDistrictsAsPrinted": "MONADNOCK REGIONAL SCHOOL DISTRICT (SAU #93)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50166",
+      "locality": "TAMWORTH",
+      "contestId": "nh-2026-tamworth-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:tamworth_town",
+      "schoolDistrictsAsPrinted": "TAMWORTH SCHOOL DISTRICT (SAU #13)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50171",
+      "locality": "TEMPLE",
+      "contestId": "nh-2026-temple-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:temple_town",
+      "schoolDistrictsAsPrinted": "CONTOOCOOK VALLEY SCHOOL DISTRICT (SAU #1)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50176",
+      "locality": "THOMPSON & MESERVE'S PURCHASE",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "50181",
+      "locality": "THORNTON",
+      "contestId": "nh-2026-thornton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:thornton_town",
+      "schoolDistrictsAsPrinted": "PEMI-BAKER REGIONAL SCHOOL DISTRICT (SAU #48) AND THORNTON SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50186",
+      "locality": "TILTON",
+      "contestId": "nh-2026-tilton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:belknap/place:tilton_town",
+      "schoolDistrictsAsPrinted": "WINNISQUAM REGIONAL SCHOOL DISTRICT (SAU #59)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50191",
+      "locality": "TROY",
+      "contestId": "nh-2026-troy-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:troy_town",
+      "schoolDistrictsAsPrinted": "MONADNOCK REGIONAL SCHOOL DISTRICT (SAU #93)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50196",
+      "locality": "TUFTONBORO",
+      "contestId": "nh-2026-tuftonboro-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:tuftonboro_town",
+      "schoolDistrictsAsPrinted": "GOVERNOR WENTWORTH REGIONAL SCHOOL DISTRICT (SAU #49)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50201",
+      "locality": "UNITY",
+      "contestId": "nh-2026-unity-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:unity_town",
+      "schoolDistrictsAsPrinted": "UNITY SCHOOL DISTRICT (SAU #109)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50206",
+      "locality": "WAKEFIELD",
+      "contestId": "nh-2026-wakefield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:wakefield_town",
+      "schoolDistrictsAsPrinted": "WAKEFIELD SCHOOL DISTRICT (SAU #101)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50211",
+      "locality": "WALPOLE",
+      "contestId": "nh-2026-walpole-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:walpole_town",
+      "schoolDistrictsAsPrinted": "FALL MOUNTAIN REGIONAL SCHOOL DISTRICT (SAU #60)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50216",
+      "locality": "WARNER",
+      "contestId": "nh-2026-warner-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
+      "schoolDistrictsAsPrinted": "KEARSARGE REGIONAL SCHOOL DISTRICT (SAU #65)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50221",
+      "locality": "WARREN",
+      "contestId": "nh-2026-warren-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:warren_town",
+      "schoolDistrictsAsPrinted": "WARREN SCHOOL DISTRICT (SAU #23)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50226",
+      "locality": "WASHINGTON",
+      "contestId": "nh-2026-washington-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:washington_town",
+      "schoolDistrictsAsPrinted": "WASHINGTON SCHOOL DISTRICT (SAU #34)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50231",
+      "locality": "WATERVILLE VALLEY",
+      "contestId": "nh-2026-waterville-valley-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:waterville_valley_town",
+      "schoolDistrictsAsPrinted": "WATERVILLE VALLEY SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50236",
+      "locality": "WEARE",
+      "contestId": "nh-2026-weare-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:weare_town",
+      "schoolDistrictsAsPrinted": "JOHN STARK REGIONAL SCHOOL DISTRICT (SAU #24) AND WEARE SCHOOL DISTRICT (SAU #24)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50241",
+      "locality": "WEBSTER",
+      "contestId": "nh-2026-webster-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:webster_town",
+      "schoolDistrictsAsPrinted": "MERRIMACK VALLEY SCHOOL DISTRICT (SAU #46)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50246",
+      "locality": "WENTWORTH",
+      "contestId": "nh-2026-wentworth-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:wentworth_town",
+      "schoolDistrictsAsPrinted": "PEMI-BAKER REGIONAL SCHOOL DISTRICT (SAU #48) AND WENTWORTH SCHOOL DISTRICT (SAU #48)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50251",
+      "locality": "WENTWORTH'S LOCATION",
+      "status": "STATEWIDE_QUESTION_ONLY_NO_HB1300_PRINTED",
+      "statewideQuestionId": "ballot-nh-merrimack:cacr-13"
+    },
+    {
+      "sourceNodeId": "50256",
+      "locality": "WESTMORELAND",
+      "contestId": "nh-2026-westmoreland-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:westmoreland_town",
+      "schoolDistrictsAsPrinted": "WESTMORELAND SCHOOL DISTRICT (SAU #29)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50261",
+      "locality": "WHITEFIELD",
+      "contestId": "nh-2026-whitefield-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:coos/place:whitefield_town",
+      "schoolDistrictsAsPrinted": "WHITE MOUNTAINS REGIONAL SCHOOL DISTRICT (SAU #36)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50266",
+      "locality": "WILMOT",
+      "contestId": "nh-2026-wilmot-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
+      "schoolDistrictsAsPrinted": "KEARSARGE REGIONAL SCHOOL DISTRICT (SAU #65)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50271",
+      "locality": "WILTON",
+      "contestId": "nh-2026-wilton-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:wilton_town",
+      "schoolDistrictsAsPrinted": "WILTON-LYNDEBOROUGH COOPERATIVE SCHOOL DISTRICT (SAU #63)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50276",
+      "locality": "WINCHESTER",
+      "contestId": "nh-2026-winchester-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:cheshire/place:winchester_town",
+      "schoolDistrictsAsPrinted": "WINCHESTER SCHOOL DISTRICT (SAU #94)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50281",
+      "locality": "WINDHAM",
+      "contestId": "nh-2026-windham-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:rockingham/place:windham_town",
+      "schoolDistrictsAsPrinted": "WINDHAM SCHOOL DISTRICT (SAU #95)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50286",
+      "locality": "WINDSOR",
+      "contestId": "nh-2026-windsor-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town",
+      "schoolDistrictsAsPrinted": "WINDSOR SCHOOL DISTRICT (SAU #34)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50291",
+      "locality": "WOLFEBORO",
+      "contestId": "nh-2026-wolfeboro-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:wolfeboro_town",
+      "schoolDistrictsAsPrinted": "GOVERNOR WENTWORTH REGIONAL SCHOOL DISTRICT (SAU #49)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50296",
+      "locality": "WOODSTOCK",
+      "contestId": "nh-2026-woodstock-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:woodstock_town",
+      "schoolDistrictsAsPrinted": "LINCOLN-WOODSTOCK COOPERATIVE SCHOOL DISTRICT (SAU #68)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50301",
+      "locality": "ACWORTH",
+      "contestId": "nh-2026-acworth-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
+      "schoolDistrictsAsPrinted": "FALL MOUNTAIN REGIONAL SCHOOL DISTRICT (SAU #60)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50306",
+      "locality": "ALBANY",
+      "contestId": "nh-2026-albany-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:carroll/place:albany_town",
+      "schoolDistrictsAsPrinted": "ALBANY SCHOOL DISTRICT (SAU #9)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    },
+    {
+      "sourceNodeId": "50311",
+      "locality": "ALEXANDRIA",
+      "contestId": "nh-2026-alexandria-hb1300-property-tax-growth",
+      "scopeOcdId": "ocd-division/country:us/state:nh/county:grafton/place:alexandria_town",
+      "schoolDistrictsAsPrinted": "NEWFOUND AREA SCHOOL DISTRICT (SAU #4)",
+      "status": "NEW_INSTALLABLE_EXPLAINER"
+    }
+  ],
+  "localOnlyBallotScope": "The SOSmastercovers state general-election ballots. It explicitly directs readers to local clerks for town/city ballots. The separately held ConcordSchoolDistrict property-sale question remains additional. Other municipal/school-only ballots have not all been independently excluded, so this is not an all-local-measures completeness claim.",
+  "remainingGaps": [
+    {
+      "kind": "LOCAL_ONLY_BALLOT_INVENTORY",
+      "detail": "See local-inventory/municipal-inventory.json: all13citycurrentindicescaptured(12nativeHTML,1completewebtooltext); Concordthree school zones contain the same already explained Dewey question; Somersworth separate Ward3/5 municipal ballot contents remain unacquired, and independent other town/school-only inventory remains open."
+    }
+  ],
+  "sourceCapture": "sources.json",
+  "allStateMasterQuestionsConnected": true,
+  "wardGeometryFile": "ward-geography/map.json",
+  "municipalInventory": "local-inventory/municipal-inventory.json"
+}

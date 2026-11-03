@@ -1,0 +1,76 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "NH",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NH",
+  "inputDirectory": "ballot-input",
+  "sourceCaptures": "sources.json",
+  "sourceSupport": "source-support.json",
+  "officialInventory": "official-inventory.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "wardMembershipProof": "ward-membership-proof.json",
+  "prerequisites": [
+    "../ballot-input"
+  ],
+  "coverage": {
+    "newExplainedMeasures": 271,
+    "newExactWardMemberships": 27,
+    "combinedConnectedHb1300Questions": 297,
+    "combinedExplainedMeasureRecords": 299,
+    "knownOfficialQuestions": 299,
+    "unconnectedWardQuestions": 0,
+    "scope": "All 297 local HB1300 questions printed in 320 current official SOS accessible ballots are connected: 224 exact county subdivisions, 52 wards through whole-base current House district memberships, and 21 wards through original published GRANIT 2022 geometry. Statewide Question 1 and the separate Concord School District property-sale question also have complete explainers. Independent municipal and school-only ballot inventory beyond the state master remains open.",
+    "stateLocalComplete": false,
+    "currentNativeCityIndicesCaptured": 12,
+    "separateLocalBallotAcquisitionGaps": [
+      "Somersworth official Adobe special municipal ballots for Wards 3 and 5, linked by the saved current city index, are not yet fully acquired.",
+      "Other town and school-only ballots beyond the SOS master have not all been independently inventoried."
+    ],
+    "currentCityIndicesCaptured": 13,
+    "cityIndexCaptureFormats": {
+      "originalNativeHTML": 6,
+      "sanitizedNativeHTMLSourceText": 6,
+      "completePublicWebToolText": 1
+    }
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "NH",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "notes": [
+    "Install the prior16NHexplainer packet first. Preserve every unrelated existing ballot fact and existing explanation.",
+    "Install ward-geography/map.json with existing loadStatePlaceMap before ballot-input/nh.json. It replaces the 21 previously unattached ward drafts, which are deleted. Existing Census and postal rules handle ZIP aliases; geometric shares stay unknown and partial intersections retain border slivers. Exact point selection requires the actual NH state polygon and original ward containment test. No address override is installed.",
+    "The27newHouse→ward memberships are exact: the statute assigns the entire baseHouse district to precisely that one named ward. Existing25ward memberships remain untouched.",
+    "The full15.5MBofficialAPI source-text capture is losslessly gzip-compressed; sources.json separates storedfile hashes/lengths from the exact decompressed capturedresponse hash/length. Never treat either as originalPDFbytes.",
+    "Every newMeasureRecord uses truthfulHELD_TEXThash of exact questionText+newline; all conditions come verbatim from that saved question.",
+    "Root owns one READY per state. River installs thedata and verifies live pages; no live outcome is claimed here.",
+    "Ward boundary vintage is 2022, not 2026. The native GRANIT layer remains published and was rechecked November 3; its exact ward labels occur on the current 2026 official ballots. The University of New Hampshire operates NH GRANIT, the statewide GIS clearinghouse identified by NHDOT. Original coordinates and source bytes are preserved. This map data covers only the 21 previously unconnected wards."
+  ],
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "wardGeography": "ward-geography/map.json",
+  "wardGeographyEvidence": "ward-geography/source-captures.json",
+  "wardGeographyReaderChecks": "ward-geography/reader-checks.json",
+  "geographyInstallOperation": {
+    "module": "lib/place-map/load.ts",
+    "function": "loadStatePlaceMap",
+    "arguments": {
+      "db": "existing authorized FactDb",
+      "map": "JSON from ward-geography/map.json"
+    },
+    "order": "After the prior NH sixteen-explainer packet and before this ballot-input publication. The existing function upserts 21 source-backed ward entities and original boundaries, 63 ZIP edges and 62 ZCTA edges, then queues reader places. No new installer or app change."
+  },
+  "municipalInventory": "local-inventory/municipal-inventory.json",
+  "validation": {
+    "rootPublishedReaderChecks": "PASS: all299knownmeasures;271newrecords",
+    "rootOriginalWardGeometryAndSqlReaderChecks": "PASS:21points,32ZIPs,63positiveedges",
+    "rootDecompressedSourceCredentialScan": "PASS:344textartifacts,0findings"
+  }
+}

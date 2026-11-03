@@ -1,0 +1,12 @@
+{
+  "heldRepoFile": "lib/geo/postal-zips.json",
+  "sha256": "66cce944bd222be4aa7247b35f8eafe5f59282a6b41a0be73eb3e9fb86f8833a",
+  "usedLinks": [
+    {
+      "zip": "03805",
+      "zcta": "03869",
+      "addressRequired": false
+    }
+  ],
+  "rule": "Existing buildStatePlaceMap applies published postal links. Address-required mail-only ZIPs do not inherit a settled ward edge; existing ZIP reader can expose linked ZCTA ward memberships as partial. No address override."
+}

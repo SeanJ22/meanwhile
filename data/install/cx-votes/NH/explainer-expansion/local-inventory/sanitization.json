@@ -1,0 +1,110 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "sanitizedCaptureCount": 6,
+  "credentialValueDisclosure": 0,
+  "originalRawBytesLocation": "Private scratch only; never committed. Original raw hash and length remain in source-captures.json.",
+  "sourceContentEffect": "Only confirmed credential substrings were replaced with the existing redaction placeholder. All ballot/election text and source authority links remain unchanged.",
+  "files": [
+    {
+      "originalRawSha256": "b040b01402407fd822108740f640366f7520d910804c768db54c2c109fbb6980",
+      "sanitizedSha256": "4bd82bed2ad7be834bd6b0f78018c46efb31429fe07ebd0fe3267620ea48eacc",
+      "sourceUrl": "https://www.berlinnh.gov/235/Elections-Voting",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "replaced": 1
+    },
+    {
+      "originalRawSha256": "42a1a4cf11cd358cb182c0ae78650451ddf1d02d8294768096d8b7c22cd8030c",
+      "sanitizedSha256": "18b99ad358046507424424f4a02f244de45f0af4ce3a0f464872de5ececa0d94",
+      "sourceUrl": "https://www.concordnh.gov/1708/Sample-Ballots",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 388,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "replaced": 1
+    },
+    {
+      "originalRawSha256": "8b73709132b1931b324268c873fe2cdaf458f52d42ae0471252ab8563a442f2a",
+      "sanitizedSha256": "f8cb55f373d151a769c944a66eb1d1ff27f4ca3a7324546e6f4f1d81df3519fe",
+      "sourceUrl": "https://www.franklinnh.gov/625/Election-Voting",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "replaced": 1
+    },
+    {
+      "originalRawSha256": "5e1bcd5385e5432d3eccb87fcd78753300e96e3d81eab5782087a65d228601aa",
+      "sanitizedSha256": "9766859c5ab3e7bb5a01673d7792ba5b6ec08258e015198b627b5b9e71d42864",
+      "sourceUrl": "https://www.laconianh.gov/176/Elections",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 388,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "replaced": 1
+    },
+    {
+      "originalRawSha256": "690ad9bdbc69a7b64c7be5b499a4d97a4e88829e03adc3139d1b46d1c3500d72",
+      "sanitizedSha256": "c05f23b2eb82cd0520b36f3ee78d52c4d7f7df58fbc78c6ea6a0dbc9e472196b",
+      "sourceUrl": "https://lebanonnh.gov/1006/Sample-Ballots",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 412,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "replaced": 1
+    },
+    {
+      "originalRawSha256": "b8165cdac4de782610aff7df76987bdbee59a11e1054a8e7ea7b7d650aa3b413",
+      "sanitizedSha256": "40ef2007e8c16bce9f02ad503aa58c9c14b2b870d4602c55fe3735bd71e6a73d",
+      "sourceUrl": "https://www.nashuanh.gov/195/Elections-Voter-Registration",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 399,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "replaced": 1
+    }
+  ],
+  "finalRecursiveScan": {
+    "files": 344,
+    "compressedArchivesDecodedBeforeScan": true,
+    "remainingConfirmedCredentials": 0
+  }
+}

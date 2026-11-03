@@ -1,0 +1,2706 @@
+Project Environmental Process Manual
+ENV 1 Manual 3
+7/28/2023
+Approved by: Deputy Commissioner Date
+Connor McGahan 2023ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 2 of 82
+[This page intentionally left blank]ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 3 of 82
+A Note to the Reader:
+“The NH Department of Transportation’s (NHDOT) activities affect the cultural and natural environment
+through land use, natural resource consumption, and transportation corridor development/
+redevelopment and maintenance activities. Operating in compliance with applicable state and federal
+regulations, NHDOT will seek to avoid, minimize, and/or mitigate environmental impacts when planning,
+constructing, and maintaining the state’s transportation infrastructure, and when providing for public
+safety and the economic strength of the state.”
+This policy statement from ENV 1: Environmental Policy guides all NHDOT activities to ensure that
+reasonable and appropriate consideration is given to protect the natural and cultural resources of the
+state in the delivery of all phases of project development and implementation, and in fulfillment of
+“Transportation Excellence.” In furtherance of this goal, “the Bureau of Environment’s principal role is
+to advance the Department’s mission by evaluating transportation construction projects and
+maintenance activities and making recommendations on ways to avoid, minimize, and/or mitigate
+impacts to natural, cultural, and socioeconomic resources. The Bureau also acts as a liaison among the
+Department and federal, state, local, and private environmental organizations. Coordinated interagency
+efforts address such issues as water quality, air quality, noise, wetlands, invasive species, plants, wildlife,
+historic resources, archaeological sites, cemeteries, stonewalls, landscapes, farmlands, solid waste,
+hazardous waste, environmental permitting, and regulatory compliance.”
+This manual is written primarily for NHDOT staff undertaking environmental reviews, and often
+references internal policies, procedures, and processes. However, this manual may also be a valuable
+tool for consultants, and other organizations undertaking these reviews on behalf of NHDOT, as well as
+for those consultants completing environmental reviews for Local Public Agency (LPA) projects, as a
+supplement to the LPA Manual and associated Notices. As such, some linked documents in the manual
+may not be available to entities external to NHDOT. Nevertheless, the information contained herein has
+proven time and again to result in a transparent, coordinated, and multidisciplinary approach to
+successfully identify, evaluate, and document environmental impacts.
+Environmental reviews are a process, and like all processes they can be improved upon as review
+systems are developed or improved, and as regulations change. Suggestions for improvement are
+always welcome, and may be sent to Bureau16@dot.nh.gov.
+Thank you,
+Kevin T. Nyhan
+Bureau of Environment AdministratorENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 4 of 82
+[This page intentionally left blank]ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 5 of 82
+New Hampshire Department of Transportation (NHDOT)
+Project Environmental Process Manual
+Table of Contents
+Purpose & Overview .......................................................................................................................... 7
+Section I: Transportation Planning..................................................................................................... 9
+A. Statewide Planning Process .................................................................................................. 9
+B. Statewide Transportation Plans ............................................................................................ 9
+1. Long Range Statewide Transportation Plan............................................................. 9
+2. State Ten Year Transportation Plan ......................................................................... 10
+3. Statewide Transportation Improvement Program .................................................. 10
+Section II: Assessing Environmental Resources and Impacts ............................................................ 11
+A. Project Initiation and Management ...................................................................................... 11
+B. Data Collection/Resource Identification ............................................................................... 12
+1. Desktop Review ....................................................................................................... 12
+2. Field Review ............................................................................................................. 13
+3. Post-Field Review ..................................................................................................... 14
+4. Reporting on Initial Reviews .................................................................................... 15
+C. Stakeholder Coordination/Public Involvement .................................................................... 15
+1. Initial Contact Letters/Emails ................................................................................... 15
+2. Resource Agency Meetings ...................................................................................... 18
+3. Public Involvement .................................................................................................. 18
+D. Assessment of Environmental Effects/Project Classification ............................................... 20
+1. Defining the Purpose and Need ............................................................................... 21
+2. Identification of the Preferred Alternative .............................................................. 22
+3. Alternative Selection................................................................................................ 22
+Section III: Environmental Documentation ........................................................................................ 25
+A. Class I: Environmental Impact Statement (EIS)..................................................................... 26
+1. Draft Environmental Impact Statement .................................................................. 26
+2. Final Environmental Impact Statement ................................................................... 27
+3. Supplemental Environmental Impact Statement .................................................... 28
+4. Contents of Environmental Impact Statement ........................................................ 29
+5. e-NEPA ..................................................................................................................... 34
+B. Class II: Categorical Exclusion (CE) ........................................................................................ 35ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 6 of 82
+1. Introduction ............................................................................................................. 35
+2. Programmatic Categorical Exclusion (Programmatic CE) ........................................ 38
+3. Individual Categorical Exclusion (Individual CE) ...................................................... 54
+C. Class III: Environmental Assessment (EA) ............................................................................. 54
+1. Scoping ..................................................................................................................... 55
+2. Content .................................................................................................................... 55
+3. Circulation ................................................................................................................ 56
+4. Public Involvement/Comment ................................................................................. 56
+5. EA Revisions ............................................................................................................. 56
+6. FHWA Approval........................................................................................................ 57
+7. Finding of No Significant Impacts (FONSI) ............................................................... 57
+D. Environmental Re-Evaluation ............................................................................................... 58
+1. Purpose .................................................................................................................... 58
+2. Format and Content................................................................................................. 58
+E. Additional Environmental Documentation ........................................................................... 58
+1. Section 4(f) Evaluation ............................................................................................. 59
+2. Programmatic Section 4(f) Evaluation ..................................................................... 60
+3. Environmental Review Short Form – State Funded Projects................................... 60
+Section IV: Environmental Commitments .......................................................................................... 63
+Section V: Environmental Permitting................................................................................................. 65
+A. Project Specific Permits and Approvals ................................................................................ 65
+B. Alteration of Terrain Permit Exemption ............................................................................... 66
+C. National Pollutant Discharge Elimination System General Permits ..................................... 66
+1. Construction General Permit (CGP) ......................................................................... 66
+2. Small Municipal Separate Storm Sewer System (MS4) Permit ................................ 67
+Section VI: Construction and Post-Construction................................................................................ 69
+A. Construction.......................................................................................................................... 69
+B. Post-Construction ................................................................................................................. 69
+Appendix 1: Commonly Used Environmental-Related Acronyms ..................................................... 71
+Appendix 2: Environmental Contact Information .............................................................................. 77
+Appendix 3: Environmental-Related Weblinks .................................................................................. 81ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 7 of 82
+Project Environmental Process Manual
+Purpose and Overview
+PURPOSE
+This manual is issued by NHDOT to facilitate the documentation of environmental impacts in a manner
+that complies with the requirements of the National Environmental Policy Act (NEPA), and ENV 1:
+Environmental Policy. It provides standardized baseline procedures necessary to satisfy the analysis
+requirements of NEPA and has been developed to provide NHDOT environmental personnel with a
+guide for assessing impacts as an integral part of the transportation project development process. Its
+primary purpose is to ensure complete documentation of project impacts in accordance with the laws,
+regulations, policies, and procedures applicable to each segment of the natural, cultural, and socio-
+economic environment.
+AUTHORITY
+This manual is issued under the authority of NHDOT EX 1 Standard Operating System policy and
+approved by the Deputy Commissioner of the NHDOT. The NHDOT Responsible Office is the Bureau of
+Environment (BOE), and the contact person is the BOE Administrator.
+SCOPE
+This manual shall apply to all employees in all organizational units of NHDOT responsible for undertaking
+environmental reviews of NHDOT projects or programs.
+REFERENCES
+This Manual is supported by ENV 1: Environmental Policy, the National Environmental Policy Act of
+1969, 23 CFR 771, 23 CFR 774, and Technical Advisory 6640.8A.
+GENERAL
+Operating in compliance with applicable state and federal regulations, NHDOT will seek to avoid,
+minimize, and/or mitigate environmental impacts when planning, constructing, and maintaining the
+state’s transportation infrastructure, and when providing for public safety and the economic strength of
+the state.
+TRAINING
+Training to support this manual is provided on an as-needed basis by BOE. Annually, NEPA training
+needs are evaluated by the Bureau of Environment and the Federal Highway Administration (FHWA) as
+part of a regular program assessment. Identified training needs are prioritized and scheduled as
+necessary and/or as available.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 8 of 82
+OVERVIEW
+Since the passage of NEPA in 1969, assessing the environmental impacts of transportation projects
+receiving federal aid or requiring federal approval has become an integral part of project development.
+The BOE is the primary NHDOT office for conducting environmental investigations. This manual is
+intended to provide evaluators conducting those investigations guidance in accordance with applicable
+rules and regulations. The evaluation procedures outlined in this manual are applicable to all
+transportation projects funded, assisted, conducted, regulated, or approved by FHWA. It is also
+applicable to NHDOT projects which are not funded or approved by FHWA (procedure ENV 1-2:
+Environmental Documentation of State-Funded Projects). This manual is a guide for the evaluation of
+those projects as well, with additional information provided in Section III.E.3 of this manual.
+This manual is not intended to be all inclusive. It is designed to make the user aware of the issues that
+may arise during project development, and outlines the minimum steps required to address those
+issues. The environmental evaluation and assessment process for each subject area is variable and
+complex. When detailed analysis of a particular issue is required the user should visit other sources of
+information that will provide guidance for the thorough investigation of the anticipated impacts.
+Identifying the key environmental resources and impacts early in the project development process
+helps determine the level of documentation and the effort required to successfully complete the
+analysis process.
+The manual provides:
+1. A brief discussion of the transportation planning process;
+2. An outline of approach on how to assess project-level impacts;
+3. A baseline level of information that enables environmental personnel to conduct project
+assessments in a more effective and efficient manner;
+4. A description of the level of analysis required to complete an acceptable environmental
+document;
+5. A key to additional sources of information when more detailed analyses are required;
+6. An outline of the requirements for different levels of project documentation; and
+7. A brief discussion of subsequent phases in the delivery and operation of a project.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 9 of 82
+Section I: Transportation Planning
+The NHDOT constantly looks ahead to plan for the transportation needs of New Hampshire. Central to
+the planning process, which is managed by the NHDOT Bureau of Planning and Community Assistance, is
+public involvement which takes into consideration the needs of numerous stakeholders. Many
+participants are involved to identify a need and develop a project from concept through construction in
+the project development phase. The NHDOT is required to develop short- and long-range transportation
+plans, programs, and projects so the state may accommodate current and future transportation needs.
+More comprehensive information may be found by visiting the Planning and Community Assistance
+website at https://www.nh.gov/dot/org/projectdevelopment/planning/index.htm.
+A. Statewide Planning Process
+New Hampshire is divided into nine Regional Planning Commissions (RPCs). Five of them (Central, Lakes
+Region, North Country, Southwest, and Upper Valley/Lake Sunapee) are basically rural in nature but may
+contain small urban areas (5,000-50,000 population). The four remaining planning commissions
+(Nashua, Rockingham, Southern, and Strafford) cover areas with a central city, or group of cities that
+have a population greater than 50,000. These areas are designated by the Governor as Metropolitan
+Planning Organizations (MPOs).
+The MPOs are required to develop a twenty-year, project-specific, long range transportation plan and a
+four-year financially constrained Transportation Improvement Program (TIP). The development of these
+two items must be done cooperatively with NHDOT and the providers of public transit services.
+The Rural RPCs also prepare long range transportation plans which may or may not be project specific.
+Some Rural RPCs also prepare TIPs for their regions.
+Other key participants in the transportation planning process include the general public, legislators,
+federal, state, and local officials, other state and federal agencies, and special interest groups.
+B. Statewide Transportation Plans
+The NHDOT has developed a statewide transportation planning process in compliance with federal and
+state laws for all areas of the state. This planning is reflected in the development of a federally required
+Long Range Statewide Transportation Plan (LRSTP) that is not project-specific, the state-required Ten-
+Year Transportation Improvement Plan (TYP) that is project-specific, and a statewide program of
+projects as defined in the Statewide Transportation Improvement Plan (STIP). Statewide transportation
+needs are identified through the LRSTP, TYP, and the STIP in cooperation with the RPCs and the MPOs.
+1. Long Range Statewide Transportation Plan (LRSTP)
+The LRSTP is an essential tool for identifying future transportation trends and needs. By looking at the
+present transportation system, the transportation needs for twenty or more years into the future are
+identified through a series of long-range transportation goals and objectives. In addition, the LRSTP
+reviews and addresses transportation demand and usage for various modes of transportation. The
+LRSTP is developed cooperatively with the RPCs and MPOs to achieve consistency between regional andENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 10 of 82
+state transportation plans. The final LRSTP is adopted by NHDOT as a guide for the future development
+of the transportation system, and then forwarded to FHWA and FTA for their acceptance.
+2. State Ten Year Transportation Plan (TYP)
+New Hampshire RSA 228:99 and RSA 240 require that NHDOT propose a plan for improvements to the
+State's transportation system every two years. The purpose of the TYP is to develop and implement a
+plan allowing New Hampshire to fully participate in federally supported transportation improvement
+projects as well as to outline projects and programs funded with State transportation dollars.
+Project recommendations are developed and prioritized by the RPCs, MPOs and NHDOT. The NHDOT
+proposes a Draft TYP to the Governor’s Advisory Commission on Intermodal Transportation (GACIT).
+After a series of public meetings, GACIT modifies and adopts the TYP, forwards it to the Governor for
+review, and it moves through the traditional legislative process. At the end of the legislative process,
+the approval of the TYP marks the priority direction for NHDOT to follow in the development of capital
+projects.
+The TYP is updated every two years. Once adopted, it forms the basis for the STIP and TIP documents.
+3. Statewide Transportation Improvement Program (STIP)
+The STIP is developed within the goals of the LRSTP and TYP. The STIP is a federally required four-year
+plan that provides details about transportation projects that are being implemented in the state. The
+STIP contains federally funded projects, in addition to regionally significant projects. The STIP is
+required per 23 CFR 450.218 to include a financial plan that shows all currently available funding and is
+financially constrained. It is also a component of the TYP, which is required by state law.
+Each MPO prepares a four-year TIP for their region. Their TIPs are guided by the goals and objectives
+outlined in their long-range regional transportation plans. The MPO TIP must come from their project-
+specific regional long range transportation plan, and also reflect the approved TYP.
+The STIP must include all projects included in the MPO TIPs. For non-MPO areas, NHDOT will utilize the
+TIPs prepared by the RPCs during the development of the STIP, although a project-by-project inclusion is
+not required.
+Opportunities to comment on the TIPs/STIP can be made during the public comment periods that are
+held by all of the MPOs and NHDOT as the documents are developed. The STIP and TIPs are all fully
+updated once every two years.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 11 of 82
+Section II: Assessing Environmental Resources and Impacts
+The project development process includes the design and construction of safe, efficient, economical,
+and environmentally compatible intermodal transportation systems. The environmental review and
+assessment process, within overall project development, can be divided into four (4) general categories:
+• Project Initiation and Management
+• Data Collection/Resource Identification
+• Stakeholder Coordination/Public Involvement
+• Assessment of Environmental Effects/Project Classification
+Following resource identification and assessment of impacts, the four (4) subsequent steps in the
+environmental review process include:
+• Environmental Documentation
+• Environmental Permitting
+• Construction
+• Post-Construction Monitoring
+A. Project Initiation and Management
+The environmental evaluation process begins when the BOE Administrator, BOE Project Management
+Section Chief, or the BOE Operations Management Section Chief receives a:
+• Project Development “Request for Environmental Documentation” form from a project’s
+originating bureau, within the Division of Project Development, or
+• Operations “Request for Environmental Documentation” form from a project’s originating
+bureau, within the Division of Operations.
+Both forms are referred to as a “Green Sheet.” The Green Sheet contains a list of available information,
+a brief description of the project, as well as a synopsis of the need for the project and a list of
+reasonable alternatives to the project. It also contains the names of contact personnel within the
+Department, a tentative schedule for advertising for Project Development and/or a tentative work start
+date for Operations, and a location map.
+After receipt of the Green Sheet, the BOE Administrator or either section chief reviews the project, and
+creates a project listing in the BOE “Projects Database,” and in the computer file management structure.
+The project is then assigned to the appropriate staff member (“Environmental Manager”) for evaluation
+and documentation. Project assignments are based on the scope of the project, anticipated issues, and
+experience and workload of available staff.
+After project assignment, the Environmental Manager should discuss the project with the Project
+Manager and/or appropriate lead person from the originating bureau. The amount of informationENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 12 of 82
+available at the time of project assignment varies from project to project. Base plans of the project area
+which show existing ground detail have oftentimes been developed. Initial design concepts may already
+be in progress, and certain design alternatives considered. Regardless, general information about
+design features, the project area, special considerations, and known restrictions, etc. should be known.
+This discussion will give the Environmental Manager advance knowledge of relevant factors before
+beginning the environmental investigation process.
+B. Data Collection/Resource Identification
+A thorough investigation of a project’s environmental impacts may require gathering information from
+numerous sources (both office and field sources). Information about a specific project, or information
+about a general project area, is available in many forms, including plans, maps, aerial photographs,
+databases, etc.
+Environmental resources considered during the evaluation process can include any/all the following,
+with the most typical resources/issues requiring evaluation identified in bold.
+Natural Resources Cultural Resources Socio-Economic Resources
+Coastal Zone Aesthetics Air Quality Land Acquisition
+Endangered Species Archaeology Businesses Neighborhoods
+Floodplains/Floodways Cemeteries Community Svs. Noise
+Conservation Lands Historic Properties Construction Public Lands
+Groundwater Stonewalls Displacements Recreation
+Designated Rivers Energy Needs Safety
+Surface Waters Env. Justice Transportation Patterns
+Water Quality Farmlands Utilities
+Wetlands Contamination
+Wildlife and Fisheries
+Wild and Scenic Rivers
+1. Desktop Review
+The NHDOT retains information on past projects, as well as projects in construction and in the design
+phase, which may aid in evaluating a current project. These resources include:
+• NHDOT Plan and Proposal Inventory (https://gis.dot.nh.gov/reports/plan-inventory/)
+• NHDOT Roads and Projects Viewer
+(https://granitweb.sr.unh.edu/Geocortex/WebViewer/?app=9ec207d1970d4ddab771dce0d57f82aa)
+Other web-based systems that are useful in evaluating the environmental effects of a project include:
+• NH Natural Heritage Bureau (NHB) DataCheck Tool (https://www4.des.state.nh.us/NHB-
+DataCheck/).ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 13 of 82
+• US Fish & Wildlife Service ‘Information for Planning and Conservation’(IPaC) tool
+(http://ecos.fws.gov/ipac/).
+• NH Fish & Game Department, as necessary, should there be concerns identified through either
+the IPaC tool or NHB review (https://wildlife.state.nh.us/wildlife/environmental-review.html).
+• National Oceanic and Atmospheric Administration (NOAA) Essential Fish Habitat Mapper
+(https://www.fisheries.noaa.gov/resource/map/essential-fish-habitat-mapper).
+• NH Aquatic Restoration Mapper
+(https://nhdes.maps.arcgis.com/apps/webappviewer/index.html?id=21173c9556be4c52bc20e
+a706e1c9f5a).
+• NH Office of Strategic Initiatives Floodplain Management Program, for a project that
+encroaches on a regulatory floodway; creates new obstructions in the 100 year floodplain; or
+alters any drainage patterns (https://www.nh.gov/osi/planning/programs/fmp/index.htm).
+• NH Department of Environmental Services (NHDES) Wetlands Permit Planning Tool
+(https://nhdeswppt.unh.edu/Html5Viewer/index.html?viewer=WPPT.gvh)
+• NHDES OneStop Data Mapper
+(https://www4.des.state.nh.us/onestopdatamapper/onestopmapper.aspx)
+• NHDES Per- and Polyfluoroalkyl Substances (PFAS) Sampling Map
+(https://nhdes.maps.arcgis.com/apps/View/index.html?appid=66770bef141c43a98a445c54a1
+7720e2&extent=-73.5743,42.5413,-69.6852,45.4489).
+• Google Earth (https://earth.google.com)
+• NH GRANIT (NH’s Statewide GIS Clearinghouse) (https://granit.unh.edu/)
+• NH Wildlife Action Plan Maps (https://www.wildlife.state.nh.us/wildlife/wap-using-maps.html)
+• UNH Historical Maps and Atlases (https://library.unh.edu/find/maps-geospatial-data/maps-
+atlases) (Hurd Town & City Atlases, USGS historical maps, geology maps, Gazetteer)
+• NH historical and archaeological records (Enhanced Mapping & Management Information Tool)
+(EMMIT) (https://www.nh.gov/nhdhr/emmit/index.htm)
+2. Field Review
+After conducting a desktop analysis of the project area using known sources of information, most
+project evaluations should include a site visit/field review. The purpose of the site visit is to become
+familiar with the project area to begin a general assessment of the potential impacts associated with the
+project. The information gathered to this point will indicate the presence of certain resources within the
+project area and point to other social and/or economic issues which will need to be addressed. The site
+visit will help to determine the likelihood of impacts to these resources and may identify other issues
+which will require investigation. The site visit should be scheduled to include other BOE/NHDOT
+personnel with specialized knowledge or expertise when beneficial (subject matter experts from the
+BOE Program Management Section). It is important to document the location of such resources and
+include them on project plans, as necessary. Resources/issues routinely evaluated/collected during theENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 14 of 82
+field review include: stonewalls, cemeteries, buildings, potential sources of contamination, wetlands,
+protected shorelands, invasive species, and potential threatened/endangered species.
+The general features of the project area (roads, intersections, intersection approaches, bridges, bridge
+abutments, bridge approaches, etc.) should be photographed, and evaluated, including:
+• All structures in the project area;
+• Bridges, especially abutments and spans;
+• Features of the roadway;
+• Stonewalls (Policy ENV 3: Consideration of Stonewalls in Department Projects/Activities);
+• Cemeteries;
+• Cultural resources;
+• General streetscape;
+• Wetlands and surface waters;
+• Invasive species (ENV 1, Manual 1: Best Management Practices for the Control of Invasive and
+Noxious Plant Species);
+• Threatened/endangered species/other natural features; and
+• Recognized Environmental Conditions (REC) – The presence or likely presence of any hazardous
+substances, hazardous materials, pollution, contamination, or petroleum products in, on, or at
+the property that would indicate any possible source of contamination (Contamination Site
+Screening Form)
+3. Post-Field Review
+Following the field review, the Environmental Manager should consult with the BOE Program
+Management Section as follows:
+• Wetlands Program: Determine if a formal wetlands delineation is necessary for the project,
+and the best method for delineating wetlands/surface waters;
+• Cultural Resources Program: Review photographs and plans to evaluate concerns and
+determine the appropriate next steps for resource identification;
+• Contamination Program: If any contamination or hazardous materials (REC) are suspected in
+the vicinity of the project, provide information for determination if further investigation is
+required, and if necessary, assign a consultant for assistance;
+• Water Quality Program: Determine the applicability of various water quality requirements.
+Refer to the Alteration of Terrain Process Flowchart to determine the level of necessary
+compliance reviews.
+• Air Quality and Noise (Project Management Section Chief): Determine if follow up actions are
+needed for additional analysis, based on project type and impacts;
+• Plants and Wildlife Program: Evaluate the need for additional delineation and/or evaluation of
+the project area for invasive species, as well as threatened/endangered species.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 15 of 82
+4. Reporting on Initial Reviews
+Immediately following completion of the desktop review, the initial site visit/field review, and the work
+post-field review, the Environmental Manager should document the findings and transmit them to the
+Project Manager and/or the design team/lead person for their use during preliminary and final design.
+One resource to document these results is the “NHDOT Bureau of Environment Summary of Initial
+Environmental Review.” Any circumstances that might merit early FHWA coordination, such as unique
+issues of concern or complexity, should be brought to the attention of the Project Management Section
+Chief.
+C. Stakeholder Coordination/Public Involvement
+NHDOT coordinates with federal, state, regional, and local government officials and agencies, as well as
+interested persons or groups, to identify the issues and viable mitigation measures to be analyzed
+during design. The coordination continues throughout the project development process with written
+correspondence, meetings, and other communications.
+It is the responsibility of BOE to evaluate input received during this process, make sure it is considered
+during the development of the project and included in the environmental document. The most
+commonly used methods for stakeholder coordination are listed below.
+For more information on public involvement, please review ENV 1, Manual 2: NEPA Public Involvement
+Manual.
+1. Initial Contact Letters/E-mails
+NEPA regulations (23 CFR 771.111, and 40 CFR 1506.6) require early and continuing opportunities for
+the public to be involved in the NEPA process. The initial contact letters are one of the steps taken to
+comply with these regulations. Initial contact letters are sent early in the design process as soon as a
+preliminary project scope-of-work is known. The scope-of-work generally dictates the number of letters
+sent and the amount of detail included in the letters. The standard version of the initial contact letters
+contains several questions regarding specific resources and issues. The “short” version of the initial
+contact letters does not provide specific questions and is for projects of minimal scope. A project
+location map should be included in each communication. Letters may be sent as hard copies or via E-
+mail. E-mailing letters is acceptable when e-mail addresses for individuals or agencies are readily
+available on the town or agency website or in the town directory. To ensure that letters reach the
+intended recipients, it’s important to send letters to individuals rather than sending a letter addressed
+by title.
+Letters/E-mails should be sent to municipal officials, as well as to state and federal agencies with
+jurisdiction over environmental resources. Letters should be sent to the following local groups, as
+appropriate:ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 16 of 82
+Chair of the Board of selectmen or mayor Fire Chief
+Chair of the Planning Board Emergency Management Director
+Town Planner City Engineer
+Conservation Commission City Manager
+Historical Society Road Agent
+Police Chief
+See https://www.nh.gov/dot/org/projectdevelopment/planning/documents.htm for the “City and Town
+Officials Directory.”
+For projects involving ONLY paving, line striping, or other similar activity within the limits of existing
+pavement areas, letters do not need to be sent. For projects involving paving and upgrades to
+structures such as cross pipes and guardrail, the “short” version of the initial contact letter may be
+used. For all other projects, the standard version of the initial contact letter should be sent.
+The letters should include the project name and number, and describe the project limits, needs, and
+proposed action. There are templates of the Initial Contact Letter, and Short Initial Contact Letter (for
+routine projects of limited scope).
+Other regional, state, and federal agencies that should be considered when sending letters, based on
+resources present in the project area, and the scope of work, include the following. In addition, a
+Resource Specific Contact Letter Template is available.
+• Regional Planning Commissions (https://www.nharpc.org)
+Send the standard initial contact letter for all projects except those that qualify for a
+Programmatic Categorical Exclusion or utilize the Environmental Review Short Form – State
+Funded Projects.
+• Local Advisory Committee of Designated Rivers (https://www4.des.state.nh.us/blogs/rivers/wp-
+content/uploads/lac_contacts.pdf).
+Send the standard initial contact letter if the project is located within ¼ mile of a designated
+River and will involve work outside pavement/guardrail limits.
+• Local Lake Association (https://nhlakes.org/our-local-association-partners/)
+Send the standard initial contact letter if the project is within 250 feet of a lake that has a Lake
+Association and will involve work outside pavement/guardrail limits.
+• DES Lakes Management and Protection Program (https://www.des.nh.gov/water/rivers-and-
+lakes/lakes-management-and-protection).
+Send the standard initial contact letter if the project is located within 250 feet of a lake/public
+water (RSA 271:20) and involves work outside pavement/guardrail limits.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 17 of 82
+• DES Rivers Management and Protection Program (https://www.des.nh.gov/water/rivers-and-
+lakes/rivers-management-and-protection)
+Send the standard initial contact letter if the project is located within 250 feet of a Designated
+River and/or when the Designated River has an inactive Local Advisory Committee.
+• US Forest Service
+Coordinate with the NHDOT’s US Forest Service liaison in the Bureau of Highway Design.
+• DES Drinking Water and Groundwater Program (https://www.des.nh.gov/water/groundwater)
+Send a resource-specific E-mail if drinking water resources are identified in the project area and
+the project will modify existing pavement limits.
+• Scenic and Cultural Byways Program (https://www.nh.gov/dot/programs/scbp/)
+Send a resource-specific E-mail to the NHDOT Scenic and Cultural Byways Program in the Bureau
+of Planning and Community Assistance if the project is located on a scenic byway and involves a
+change in alignment or aesthetics.
+• Bicycle and Pedestrian Program (https://www.nh.gov/dot/programs/bikeped/index.htm)
+Send a resource-specific E-mail to the NHDOT Bicycle and Pedestrian Program if the project may
+result in changes in accessibility or use at a rail trail
+(https://www.nh.gov/dot/programs/bikeped/contactus.htm).
+In addition, contact the following agencies if initial contact letters are required in accordance with
+procedures ENV 1-3: Land and Community Heritage Investment Program Coordination (LCHIP), ENV 1-4:
+Conservation Land Stewardship Program Coordination (CLS), and/or ENV 1-5: Land and Water
+Conservation Fund Coordination (LWCF):
+• LCHIP (https://lchip.org)
+Send a resource-specific E-mail if the project proposes permanent impacts outside of the limits of
+the existing right-of-way and/or any existing easements.
+• CLS (https://www.clsp.nh.gov)
+Send a resource-specific E-mail if the project proposes permanent impacts outside of the limits of
+the existing right-of-way and/or any existing easements.
+• LWCF (https://www.nhstateparks.org/about-us/division)
+Send a resource-specific E-mail if the project proposes permanent or temporary impacts outside
+of the limits of the existing right-of-way and/or any existing easements.
+Appendix 2: Environmental Contact Information of this manual provides additional contact information
+for project-specific consideration.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 18 of 82
+2. Resource Agency Meetings
+State and federal agencies can, and will at times, need to supplement written correspondence in
+determining the extent of environmental impacts and identify needed permits and approvals. Regularly
+scheduled meetings to gain this input include:
+a. Cultural Resource Agency Coordination Meetings
+These meetings aid in determining historical and/or archeological involvement in/near the project
+location (Area of Potential Effect [APE]). Participants include the State Historic Preservation Officer
+(SHPO), US Army Corps of Engineers (ACOE), FHWA, and any identified consulting parties. Meetings are
+held virtually on the second Thursday of each month. In person participation at NHDOT is also available
+upon request. A Request for Projects Review (RPR) form is required and needs to be provided to the BOE
+Cultural Resources Program two (2) weeks prior to the scheduled meeting (Cultural Resources Meetings |
+Environment | NH Department of Transportation). To request to present at one of these meetings, send
+an email to the BOE Cultural Resources Program Manager at: Jillian.L.Edelmann@dot.nh.gov.
+b. Natural Resource Agency Coordination Meetings
+These meetings provide environmental regulatory agencies an opportunity to review proposed designs,
+design alternatives, and potential impacts throughout design. Mitigation opportunities are reviewed as
+needed. Attendance at these meetings is not mandatory for every project but encouraged as needed,
+with emphasis added for projects requiring a Standard Dredge and Fill Wetlands Permit from NHDES.
+Presenting the project in advance of applying for any necessary permits/approvals generally streamlines
+the permitting process by providing a better understanding of potential issues before design is complete
+and permits are applied for, which can save time and money in redesign efforts. Agencies include
+FHWA, US Environmental Protection Agency, US Fish and Wildlife Service, ACOE, NH Fish and Game
+Department, NHB, and NHDES. Meetings are held virtually on the third Wednesday of each month. In
+person participation at NHDOT is also available upon request (Natural Resource Agency Coordination
+Meetings | Environment | NH Department of Transportation). To request to present at one of these
+meetings, prepare an Agenda Item Request (AIR) Form and submit it to the BOE Wetlands Program
+Manager at: Andrew.M.Osullivan@dot.nh.gov.
+3. Public Involvement
+The NHDOT recognizes that incorporating input from community stakeholders (including residents,
+business owners, and public officials) results in better transportation projects. Public engagement can
+occur at all phases of project planning, design, construction and maintenance. Public involvement is a
+fundamental component of NHDOT’s project planning process. Opportunities for public input on the
+environmental impact of a project include, but are not necessarily limited to the following:
+Additional information regarding public involvement may be found in ENV 1, Manual 2: NEPA Public
+Involvement Manual.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 19 of 82
+a. Public Officials Meeting
+At the start of a project, the lead design bureau may schedule a meeting with the governing body(ies) of
+the municipality(ies) in which the project is located. The purpose of this meeting is to introduce the
+project and obtain input on local concerns. This input is used to inform the project’s purpose and need
+and, if applicable, the range of alternatives that are studied. Formal testimony is not taken at a Public
+Officials Meeting. The lead design bureau will generate a conference report or meeting notes for the
+meeting.
+b. Public Informational Meeting
+The purpose of a Public Informational Meeting is to provide the public with opportunities to comment
+on local concerns, resources in the project area, and the project itself. This input is used to inform the
+project’s purpose and need and the range of alternatives that are studied. These meetings provide a
+forum for an open discussion between the project team and the public and afford stakeholders the
+opportunity to provide input on the project and potential impacts.
+The Environmental Manager typically provides a statement on known resources and potential concerns
+in the project area. The statement includes information regarding consultation on historic resources,
+including an invitation to become a consulting party pursuant to Section 106 of the National Historic
+Preservation Act.
+c. Right-of-Way Public Hearing
+The public hearing most commonly held for NHDOT projects follows a formal process dictated by state
+regulations on the use of “eminent domain” (the right of a government to take private property for
+public use, with just compensation). State law requires a Finding of Necessity for the layout of a state
+highway by the Governor with advice of the Executive Council (RSA 230:13) or by a commission of three
+persons, appointed by the Governor, with advice of the Executive Council, or in the case of a limited
+access highway, a special committee, appointed by the Governor. A public hearing is held when it is
+anticipated that eminent domain may be required for the acquisition of private property for public use.
+The Environmental Manager will participate in the public hearing by presenting the environmental
+resource impacts associated with the project.
+The majority of NHDOT projects generally do not require a public hearing for NEPA compliance.
+However, some projects still require a public hearing for the purposes of right-of-way needs. A draft
+of the environmental documentation prepared for the project (See Section III: Environmental
+Documentation) is generally available for public review and comment in advance of, and during, any
+public hearing. Any comments received at the public hearing related to NEPA must be considered and
+addressed as part of the NEPA process and documented in the environmental document.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 20 of 82
+d. Other Opportunities
+Other meetings may be held with individual property owners or with neighborhood groups to discuss
+their concerns. The extent of such meetings will depend on the severity of the anticipated impacts and
+the interest of the abutting property owners. In general, concerned citizens or groups will reach out to
+NHDOT to request these meetings.
+D. Assessment of Environmental Effects/Project Classification
+Pursuant to NEPA, all transportation projects receiving federal funding must be classified in accordance
+with 23 CFR Part 771. Classification occurs only after sufficient environmental studies have been
+undertaken to determine if a project will have significant environmental impacts (Class I), or no
+significant environmental impacts (Class II). If the environmental impact of a project is uncertain, the
+project will be classified as Class III as further described below:
+Class I: Actions that significantly affect the environment require the preparation of an
+Environmental Impact Statement (EIS). A “Record of Decision” (ROD) would be
+issued by FHWA.
+Class II: Actions that do not individually or cumulatively have a significant environmental
+effect require the preparation of a Categorical Exclusion (CE), or Programmatic CE.
+Class III: Actions for which the significance of the environmental impacts is not clearly
+established require the preparation of an Environmental Assessment (EA) to
+determine the appropriate environmental document required. If the project is
+found to have no significant impact, this would result in a “Finding of No Significant
+Impact” (FONSI) by FHWA. If it is likely to have a significant impact, an EIS would be
+prepared.
+After completion of preliminary environmental studies, an environmental document is prepared as
+described in following sections of this manual, and a determination is made as to the classification of the
+project according to the criteria for Class I, II, and III projects. This determination is either made by
+FHWA or BOE, depending on the project type and level of environmental impact. EIS projects, EA
+projects, and non-Programmatic CE projects are classified by FHWA, at the recommendation of the BOE
+Administrator. Once submitted to FHWA, each project is reviewed for concurrence and BOE is notified
+by written correspondence that FHWA either agrees with the recommended classification, or a different
+classification is required. If FHWA concurs, the classification stands. Should NHDOT contest the FHWA
+classification, a meeting is held between FHWA and NHDOT to resolve the dispute. When agreement on
+the classification is reached, the appropriate environmental documentation is finalized.
+For projects which require a public hearing, or which require the preparation of an EA or EIS, FHWA will
+provide a preliminary determination on classification based on the documentation submitted by BOE.
+Following the public hearing, confirmation of the original classification is required by FHWA. After
+consideration of comments received at the public hearing the BOE Administrator, in consultation withENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 21 of 82
+the Environmental Manager, determines if the classification may be sustained. If yes, a letter is sent to
+FHWA recommending reaffirmation of the classification. If no, and re-classification of the project is
+necessary, the appropriate new level of environmental documentation will be required.
+In general, projects may not advance from the preliminary design phase to the final design phase until
+project classification has been finalized and approved.
+The FHWA has authorized NHDOT to process NEPA classification determinations on its behalf when a
+proposed action qualifies for a CE (Class II), as specifically listed in 23 CFR 771.117, provided there are no
+unusual circumstances that would require the preparation of an EA or EIS. This determination process is
+documented in the Programmatic Agreement Between the Federal Highway Administration, New
+Hampshire Division and the New Hampshire Department of Transportation Regarding the Processing of
+Actions Classified as Categorical Exclusions for Federal-Aid Highway Projects.
+1. Defining the Purpose and Need
+The purpose and need for a project is one of the most important aspects of a NEPA document. It
+establishes why a project is being proposed, and the transportation deficiencies that must be addressed.
+It also justifies why environmental impacts are acceptable. A project’s “Need” is a defined
+transportation deficiency or problem, and the “Purpose” are the objectives that will be met to address
+the deficiencies. The evaluation of alternatives is developed and evaluated based on these objectives.
+The purpose and need should be as concise and specific as possible. This will assist in identifying and
+refining the alternatives which should be evaluated. If the purpose and need are specific and clear, the
+number of alternatives that satisfy the objectives can be more easily identified and narrowly limited.
+An example purpose statement would be:
+“The purpose of the subject project is to reduce congestion on US Route 4 in the towns of Epsom and
+Northwood.”
+An example needs statement would be:
+“This project is needed because the capacity of US Route 4 in the towns of Epsom and Northwood is
+inadequate to meet current and future traffic volumes, resulting in congestion and long backups during
+peak traffic hours.”
+The purpose and need statement is NOT the selected alternative/action. Instead, the selected
+alternative is the engineering solution that addresses the purpose and need for the project.
+The FHWA Environmental Review Toolkit provides additional information regarding purpose and need
+statements.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 22 of 82
+2. Identification of the Preferred Alternative
+In the case of Class I (EIS) and Class III (EA) projects, a reasonable number of build alternatives are
+typically evaluated along with a no-build alternative. Using the information gathered from conceptual
+design studies, public comment, and the environmental review, the NHDOT carefully assesses the
+engineering and environmental factors associated with each alternative design in comparison to the
+documented purpose and need of the project. Considered factors include, but are not limited to:
+• Economic, natural, cultural, and socio-economic impacts;
+• Engineering standards;
+• Geometric controls;
+• Availability of funds;
+• Safety concerns;
+• User benefits; and
+• Lifecycle maintenance costs.
+The result of this assessment is the identification of a preferred design alternative. The alternative
+identified at this stage may not be the final project design. The final design will depend on subsequent
+public and agency input, along with the ability to procure the necessary funds and permits.
+In the case of Class II (CE) projects, the process of developing a preferred alternative is typically not as
+elaborate. The number and variety of alternatives examined is usually limited. The opportunity for
+input from the general public and other interested stakeholders may also be limited as a public hearing
+is typically not required. However, the same factors considered for Class I and Class III projects guide
+the design process.
+For every project NHDOT seeks to develop a design that meets the purpose and need of the project,
+while avoiding and minimizing impacts to natural, cultural, and socioeconomic resources.
+3. Alternative Selection
+Following the public hearing (if held), the officials conducting the hearing decide the necessity of the
+highway layout. The BOE oversees the evaluation of the input received at the hearing concerning
+environmental issues and comments received on the pertinent environmental documents to determine
+if the project requires reclassification. In any case, after consideration of all public input, final
+documentation is forwarded to FHWA for acceptance. When FHWA concurs with the classification
+recommendation, NHDOT updates the environmental document, as appropriate, to reflect new
+information and submits it to FHWA for approval.
+FHWA approval of environmental documents for Class I or III projects is confirmed by the issuance of a
+ROD or FONSI, respectively (and a Section 4(f) determination, Wetland Finding, and Floodplain Finding, ifENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 23 of 82
+appropriate). This allows the initiation of final design development. For Class II projects, NHDOT
+proceeds with the design development upon either BOE or FHWA confirmation of appropriate
+documentation (and a Section 4(f) determination, if appropriate).
+If FHWA does not concur with the classification, a meeting may be held between FHWA and NHDOT to
+determine appropriate action. Should reclassification be necessary, the appropriate environmental
+document will be prepared, evaluated, and processed before proceeding with further project design.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 24 of 82
+[This page intentionally left blank]ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 25 of 82
+Section III: Environmental Documentation
+NEPA requires all agencies of the federal government to prepare an EIS for all major actions that have a
+significant effect on the human environment. Section 102(2)(C) of NEPA (42 USC. 4332) requires all
+agencies of the federal government to:
+(A) “utilize a systematic, interdisciplinary approach which will insure the integrated use of the
+natural and social sciences and the environmental design arts in planning and in decision
+making which may have an impact on man’s environment;
+(B) identify and develop methods and procedures, in consultation with the Council on
+Environmental Quality established by subchapter II of this chapter, which will insure that
+presently unquantified environmental amenities and values may be given appropriate
+consideration in decision making along with economic and technical considerations;
+(C) include in every recommendation or report on proposals for legislation and other major
+Federal actions significantly affecting the quality of the human environment, a detailed
+statement by the responsible official on-
+(i) the environmental impact of the proposed action,
+(ii) any adverse environmental effects which cannot be avoided should the proposal
+be implemented,
+(iii) alternatives to the proposed action,
+(iv) the relationship between local short-term uses of man’s environment and the
+maintenance and enhancement of long-term productivity, and
+(v) any irreversible and irretrievable commitments of resources which would be
+involved in the proposed action should it be implement.”
+The FHWA has adopted regulations (23 CFR Part 771) implementing NEPA. FHWA provides an
+“Environmental Review Toolkit” for more information on NEPA and project development here:
+https://www.environment.fhwa.dot.gov/nepa/nepa_projDev.aspx.
+Each project is classified into one of the three (3) environmental levels (Class I, Class II, or Class III) in
+response to NEPA. In general, large-scale projects involving major new location construction through
+environmentally sensitive areas are developed as Class I projects and require the preparation of an EIS.
+Minor construction projects are normally developed as Class II projects, and require the preparation of a
+CE, and more frequently a Programmatic CE, as they result in no significant environmental impacts and
+don’t require an EIS or an EA. Major reconstruction and/or relocation projects, whose environmental
+significance is not clearly established, are normally considered Class III, and require the preparation of
+an EA to determine if an EIS is warranted.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 26 of 82
+A. Class I: Environmental Impact Statement (EIS)
+Actions that significantly affect the environment require an EIS (40 CFR 1508.27). Examples of such
+actions include, but are not limited to:
+• A new controlled access highway,
+• A highway project of four or more lanes on a new location,
+• New construction or extension of fixed rail transit facilities,
+• New construction or extension of a separate roadway for buses or high occupancy vehicles not
+located within an existing highway facility.
+1. Draft Environmental Impact Statement
+a. Notice of Intent
+A draft EIS (DEIS) shall be prepared when the FHWA, or other federal agency, determines that the action
+is likely to cause significant impacts on the environment (FHWA is usually the lead federal agency for our
+transportation projects. However, other agencies, such as the ACOE or FEMA, may fill that role. For
+simplicity, this manual refers to FHWA as the lead federal agency). When the decision has been made by
+the lead agency to prepare an EIS, that agency will issue a Notice of Intent (NOI) for publication in the
+Federal Register. The NHDOT will also announce the intent to prepare an EIS by appropriate means at
+the local level. Note that the Draft NOI must be reviewed by FHWA in advance of issuance. Guidance
+for what must be included in the NOI may be found by reviewing FHWA TA 6640.8A.
+b. Scoping
+After publication of the NOI, FHWA, in cooperation with the NHDOT will begin a scoping process. The
+scoping process will be used to identify the range of alternatives and impact and the significant issues to
+be addressed in the EIS and to achieve the other objectives of 40 CFR 1501.7. For FHWA, scoping is
+normally achieved through public and agency involvement procedures required by 23 CFR 771.111. If a
+scoping meeting is to be held, it should be announced in FHWA’s NOI and by appropriate means at the
+local level.
+c. General Contents
+The DEIS shall evaluate to the same degree all reasonable alternatives to the action and discuss the
+reasons why other alternatives, which may have been considered, were eliminated from detailed study.
+Typically, NHDOT’s preferred alternative(s) is identified. The DEIS shall also summarize the studies,
+reviews, consultations, and coordination required by environmental laws or Executive Orders to the
+extent appropriate at this stage in the environmental process.
+d. Approval
+The FHWA, when satisfied that the DEIS complies with NEPA requirements, will approve the DEIS for
+circulation by signing and dating the cover sheet.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 27 of 82
+e. Circulation
+The DEIS shall be circulated by NHDOT for comment on behalf of FHWA. The DEIS shall be made
+available to the public and transmitted to agencies for comment no later than the time the document is
+filed with the EPA in accordance with 40 CFR 1506.9. The DEIS shall be transmitted to:
+• Public officials, interest groups, and members of the public known to have an interest in the
+proposed action of the DEIS.
+• Federal, state, and local government agencies expected to have jurisdiction or responsibility
+over, or interest or expertise in, the action.
+• States and federal land management entities that may be significantly affected by the proposed
+action or any of the alternatives.
+f. Public Hearing Requirements
+FHWA public hearing requirements are described in 23 CFR 771.111(h) and Section 2.4 of ENV 1, Manual
+2: NEPA Public Involvement Manual. Whenever a public hearing is held, the DEIS shall be available at
+the public hearing and a minimum of 15 days in advance of the public hearing.
+2. Final Environmental Impact Statement
+a. General Contents
+After the DEIS has been circulated and a public hearing has been held, a final EIS (FEIS) shall be
+prepared. The FEIS shall identify the preferred alternative and evaluate all reasonable alternatives
+considered. It shall also discuss substantive comments received on the DEIS and responses thereto,
+summarize public involvement, and describe the mitigation measures that are to be incorporated into
+the proposed action. Mitigation measures presented as commitments in the FEIS will be incorporated
+into the project. The FEIS should also document compliance, to the extent possible, with applicable
+environmental laws and Executive Orders, or provide reasonable assurance that their requirements can
+be met.
+b. Review
+The FEIS will be reviewed for legal sufficiency prior to approval. The FHWA will indicate approval of the
+EIS for an action by signing and dating the cover page.
+c. Circulation
+The FEIS shall be transmitted to any persons, organizations, or agencies that made substantive
+comments on the DEIS or requested a copy, no later than the time the document is filed with EPA. The
+NHDOT shall also publish a notice of availability in local newspapers. When filed with EPA, the FEIS shall
+be available for public review at the NHDOT office and at the appropriate offices of FHWA. A copyENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 28 of 82
+should also be made available for public review at institutions such as local government offices, libraries,
+and schools, as appropriate.
+d. Record of Decision
+The FHWA will complete and sign a ROD no sooner than 30 days after publication of the FEIS notice in
+the Federal Register or 90 days after the publication of a notice for the DEIS, whichever is later. The
+ROD will present the basis for the decision, summarize any mitigation measures that will be
+incorporated in the project, and document any required Section 4(f) approval. Until any required ROD
+has been signed, no future approvals, such as approval to proceed to the final design, or right-of-way
+acquisition phases, may be given except for administrative activities taken to secure further project
+funding and other activities consistent with 40 CFR 1506.1.
+If FHWA subsequently wishes to approve an alternative which was not identified as the preferred
+alternative, but which was fully evaluated in the FEIS, or proposes to make substantial changes to the
+mitigation measures or findings discussed in the ROW, a revised ROD shall be subject to review by those
+agency offices which review the FEIS. To the extent practicable, the approved revised ROD shall be
+provided to all persons, organizations, and agencies that received a copy of the FEIS.
+3. Supplemental Environmental Impact Statement
+A DEIS, FEIS, or supplemental EIS (SEIS) may be supplemented at any time. An EIS shall be
+supplemented whenever FHWA determines that:
+• Changes to the proposed action would result in significant environmental impacts that were not
+evaluated in the EIS, or
+• New information or circumstances relevant to environmental concerns and bearing on proposed
+action to its impacts would result in significant environmental impacts not evaluated in the EIS.
+A SEIS will not be necessary where:
+• The changes to the proposed action, new information, or new circumstances result in a
+lessening of the adverse environmental impacts evaluated in the EIS without causing other
+environmental impacts that are significant and were not evaluated in the EIS, or
+• The FHWA decides to approve an alternative fully evaluated in an approved FEIS but not
+identified as the preferred alternative. In such a case, a revised ROD shall be prepared and
+circulated.
+Where FHWA is uncertain of the significance of the new impacts, NHDOT will develop appropriate
+environmental studies or, if NHDOT deems appropriate, an EA to assess the impacts of the changes, new
+information, or new circumstances. If, based upon the studies, FHWA determines that a SEIS is not
+necessary, NHDOT shall so indicate in the project file.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 29 of 82
+A SEIS is to be developed using the same process and format as an original EIS, except that scoping is not
+required.
+In some cases, a SEIS may be required to address issues of limited scope, such as the extent of proposed
+mitigation or the evaluation of location or design variations for a limited portion of the overall project.
+Where this is the case, the preparation of a SEIS shall not necessarily:
+• prevent the granting of new approvals,
+• require the withdrawal of previous approvals, or
+• require the suspension of project activities, for any activity not directly affected by the
+supplement. If the changes in question are of such magnitude to require a reassessment of the
+entire action, or more than a limited portion of the overall action, FHWA shall suspend any
+activities which would have an adverse environmental impact or limit the choice of reasonable
+alternatives, until the SEIS is completed.
+4. Contents of Environmental Impact Statement
+The EIS should be clear, concise and to the point, and should be supported by evidence that the
+necessary analyses have been made. It should focus on the important impacts and issues with the less
+important areas only briefly discussed.
+a. Cover Sheet
+Each EIS should have a cover sheet containing the following information, which is outlined at:
+https://www.environment.fhwa.dot.gov/legislation/nepa/guidance_preparing_env_documents.aspx#cs:
+• The name of the lead agency and any cooperating agency;
+• Agency contact information;
+• Title of the proposed action and its location;
+• Paragraph abstract of the EIS
+• Date when comments must be received; and
+• Individual and total costs for preparing the Draft EIS, and the Final EIS (or Combined FEIS/ROD).
+b. Purpose and Need for the Action
+The purpose and need section is in many ways the most important part of an environmental study. A
+clear, well-justified purpose and need section explains to the public and decision-makers that the
+expenditure of funds is necessary and worthwhile and that the priority the project is being given relative
+to other needed highway project is warranted. In addition, although significant environmental impacts
+may be caused by the project, the purpose and need section should justify why impacts are acceptable
+based on the project’s importance.
+The project purpose and need drive the process for alternatives consideration, in-depth analysis, and
+ultimate design selection. It should be as comprehensive and specific as possible. It may, and probablyENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 30 of 82
+should, evolve as information is developed and more is learned about the project and the corridor. As
+the purpose and need is refined, a number of alternatives will drop out. If an alternative does not meet
+the project's purpose or satisfy the needs, then the alternative is not prudent. If a project's purpose and
+need are not adequately addressed, specifically delineated, and properly justified, one or possibly
+several alternatives that avoid or limit the impact and "appear" practicable may be generated, making it
+difficult to determine which alternatives are reasonable, prudent, and practicable, and it may be
+impossible to dismiss the no-build alternative.
+The purpose and need section in the document lays out why the proposed action, with its inherent costs
+and environmental impacts, is being pursued. If properly described it also limits the range of
+alternatives that may be considered reasonable, prudent, and practicable in compliance with Section
+4(f), the Executive Orders on Wetlands and Floodplains, and the Section 404(b)(1) guidelines. Further, it
+demonstrates the problems that will result if the project is not implemented.
+The following is a list of items that may assist in the explanation of the need for the proposed action. It
+is by no means all-inclusive or applicable in every situation and is intended only as a guide.
+• Project Status - Briefly describe the project history including actions taken to date, other
+agencies and governmental units involved, actions pending, schedules, etc.
+• System Linkage - Is the proposed project a "connecting link?" How does it fit in the
+transportation system?
+• Capacity - Is the capacity of the present facility inadequate for the present traffic? Projected
+traffic? What capacity is needed? What is the level(s) of service for existing and proposed
+facilities?
+• Transportation Demand - Including relationship to any statewide plan or adopted urban
+transportation plan together with an explanation of the project's traffic forecasts.
+• Legislation - Is there a federal, state, or local governmental mandate for the action?
+• Social Demands or Economic Development - New employment, schools, land use plans,
+recreation, etc. What projected economic development/land use changes indicate the need to
+improve or add to the highway capacity?
+• Modal Interrelationships - How will the proposed facility interface with and serve to
+complement airports, rail and port facilities, mass transit services, etc.
+• Safety - Is the proposed project necessary to correct an existing or potential safety hazard? Is
+the existing accident rate excessively high? Why? How will the proposed project improve it?
+• Roadway Deficiencies - Is the proposed project necessary to correct existing roadway
+deficiencies (e.g., substandard geometrics, load limits on structures, inadequate cross-section,
+or high maintenance costs)? How will the proposed project improve it?ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 31 of 82
+c. Alternatives
+This section of the EIS must discuss a range of alternatives, including all "reasonable alternatives" under
+consideration and those "other alternatives" that were eliminated from detailed study (23 CFR
+771.123(c)). The section should begin with a concise discussion of how and why the "reasonable
+alternatives" were selected for detailed study and explain why "other alternatives" were eliminated. An
+agency is permitted to exclude from evaluation any particular alternative so long as it applies a
+reasonable analysis. An agency is also not required to consider speculative alternatives.
+The following range of alternatives should be considered when determining reasonable alternatives:
+• "No-action" alternative: The "no-action" alternative normally includes short-term minor
+restoration types of activities (safety and maintenance improvements, etc.) that maintain
+continuing operation of the existing roadway.
+• Transportation System Management alternative: The TSM alternative includes those activities
+which maximize the efficiency of the present system. Possible subject areas to include in this
+alternative are options such as fringe parking, ride-sharing, high-occupancy vehicle lanes on
+existing roadways, and traffic signal timing optimization. This limited construction alternative is
+usually relevant only for major projects proposed in urbanized areas over 200,000 population.
+• Mass Transit: This alternative includes those reasonable and feasible transit options (bus
+systems, rail, etc.) even though they may not be within the existing FHWA funding authority. It
+should be considered on all proposed major highway projects in urbanized areas over 200,000
+population. Consideration of this alternative may be accomplished by reference to the regional
+or area transportation plan where that plan considers mass transit, or by an independent
+analysis during early project development.
+• Build alternatives: Both improvement of existing highway(s) and alternatives on new location
+should be evaluated. A representative number of reasonable alternatives must be presented
+and evaluated in detail in the draft EIS (40 CFR 1502.14(a)). For most major projects, there is a
+potential for many reasonable alternatives. Where there are many alternatives, only a
+representative number of the most reasonable examples, covering the full range of alternatives,
+must be presented. The determination of the number of reasonable alternatives in the draft
+EIS, therefore, depends on the particular project and the facts and circumstances in each case.
+NEPA does not require that all environmental concerns be discussed in exhaustive detail. The only
+requirement is that the alternatives be discussed in a reasonable manner to permit a reasonable choice.
+Each alternative should be briefly described using maps or other visual aids. The material should
+provide a clear understanding of each alternative's termini, location, costs, and the project concept
+(number of lanes, right-of-way requirements, median width, access control etc.). Development of more
+detailed design for some aspects (e.g. Section 4(f), permits, noise, wetlands, etc.) of one or more
+alternatives may be necessary during preparation of the draft and final EIS in order to evaluate impacts
+or mitigation measures or to address issues raised by other agencies or the public.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 32 of 82
+All reasonable alternatives under consideration (including the no-build) need to be developed to a
+comparable level of detail in the DEIS so that their comparative merits may be evaluated (40 CFR
+1502.14(b) and (d)). In those situations where NHDOT has officially identified a "preferred" alternative
+or alternatives, based on its early coordination and environmental studies, NHDOT should so indicate in
+the DEIS. In these instances, the DEIS should include a statement indicating that the final selection of an
+alternative will not be made until the alternatives' impacts and comments on the DEIS and from the
+public hearing (if held) have been fully evaluated. Where a preferred alternative has not been
+identified, the DEIS should state that all reasonable alternatives are under consideration and that a
+decision will be made after the alternatives impacts and comments on the DEIS and from the public
+hearing (if held) have been fully evaluated.
+The FEIS must identify the preferred alternative and should discuss the basis for its eventual selection
+(23 CFR 771.25(a)(1)). The discussion should provide the information and rationale which will need to
+be identified in the ROD. If the preferred alternative is modified after the DEIS, the FEIS should clearly
+identify the changes and discuss the reasons why any new impacts are not significant.
+The existence of an unexamined alternative could make an environmental impact statement inadequate
+or lead to the overturning of an agency's decision.
+d. Affected Environment
+The EIS shall succinctly describe the environment of the area(s) to be affected or created by the
+alternatives under consideration. The description shall be no longer than is necessary to understand the
+effects of the alternatives.
+This section provides a concise description of the existing social, economic, and environmental setting
+for the area affected by all alternatives presented in the EIS. Where possible, the description should be
+a single description for the general project area rather than a separate one for each alternative. The
+general population served and/or affected by the proposed action should be identified by race, color,
+national origin, and age. Demographic data should be obtained from available secondary sources unless
+more detailed information is necessary to address specific concerns. All socially, economically, and
+environmentally sensitive locations or features in the proposed project impact area should be identified
+on exhibits and briefly described in the text. It may be necessary to exclude from environmental
+documents the specific location of endangered species, archeological sites or other resources which
+may be sensitive to vandalism or other human activities.
+To reduce paperwork and eliminate extraneous background material, the discussion should be limited to
+data, information, issues, and values which will have a bearing on possible impacts, mitigation
+measures, and on the selection of an alternative. Data and analyses should be commensurate with theENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 33 of 82
+importance of the impact, with the less important material summarized or referenced rather than
+reproduced. Other federal activities which contribute to the significance of the proposed action's
+impacts should be described.
+This section should also briefly describe the scope and status of the planning processes for the local
+jurisdictions and the project area. Maps of any adopted land use and transportation plans for these
+jurisdictions and the project area would be helpful in relating the proposed project to the planning
+processes.
+e. Environmental Consequences
+This section forms the scientific and analytic basis for the comparison of alternatives. The discussion will
+include the environmental impacts of the alternatives including the proposed action, any adverse
+environmental effects which cannot be avoided should the proposal be implemented, the relationship
+between short-term uses of the human environment and the maintenance and enhancement of long-
+term productivity, and any irreversible or irretrievable commitments of resources which would be
+involved in the proposal should it be implemented. This section should not duplicate discussions in the
+Alternatives Section.
+It shall include discussions of the following (40 CFR 1502.16):
+• Direct effects and their significance.
+• Indirect effects and their significance.
+• Possible conflicts between the proposed action and the objectives of Federal, regional,
+State, and local land use plans, policies, and controls for the area concerned.
+• The environmental effects of alternatives including the proposed action. The comparisons
+in the Alternatives section will be based on this discussion.
+• Energy requirements and conservation potential of various alternatives and mitigation
+measures.
+• Natural or depletable resource requirements and conservation potential of various
+alternatives and mitigation measures.
+• Urban quality, historic and cultural resources, and the design of the built environment,
+including the reuse and conservation potential of various alternatives and mitigation measures
+• Means to mitigate adverse environmental impacts.
+f. List of Preparers
+The EIS shall list the names, together with their qualifications of the persons who were primarily
+responsible for preparing the EIS or significant background papers, including basic components of the
+statement. Persons who are responsible for a particular analysis, including analyses in background
+papers, shall be identified.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 34 of 82
+g. Agencies, Organizations, and Persons to whom Copies of the EIS are Sent
+DEIS: List all entities from which comments are being requested.
+FEIS: Identify those entities that submitted comments on the draft EIS and those receiving a copy of the
+final EIS.
+h. Comments and Coordination
+The DEIS should contain copies of pertinent correspondence with each cooperating agency, other
+agencies, and the public. It should summarize: 1)the early coordination process, including scoping; 2)
+the meetings with community groups and individuals, and 3) the key issues and pertinent information
+received from the public and government agencies through these efforts.
+The FEIS should include a copy of all substantive comments received on the DEIS. An appropriate
+response should be provided to each substantive comment. The FEIS should summarize the substantive
+comments on social, economic, environmental, and engineering issues made at the public hearing, if
+one is held, or the public involvement activities, and discuss the consideration given to any substantive
+issue raised and provide sufficient information to support that position. The FEIS should document
+compliance with requirements of all applicable environmental laws, Executive Orders, and other related
+requirements. To the extent possible, all environmental issues should be resolved prior to the
+submission of the final EIS.
+i. Abbreviated Version of Final EIS
+Where the only changes needed in the document are minor and consist of factual corrections and/or an
+explanation of why the comments received on the Draft EIS do not warrant further response, the
+preparation of the Final EIS may be expedited. The Final EIS should consist of the Draft EIS and an
+attachment containing the following:
+• Errata sheets making any necessary corrections to the Draft EIS;
+• A section identifying the preferred alternative and a discussion of the reasons it was
+selected. As applicable the following should also be included:
+o Final Section 4(f) evaluations;
+o Wetland finding;
+o Flood Plain finding;
+o A list of commitments; and
+o Copies of comments received from circulation of the Draft EIS and public hearing
+responses to those comments.
+5. e-NEPA
+Concurrent agency reviews and quality documentation improve the efficiency and effectiveness of the
+NEPA decision making process. e-NEPA is an online workspace and collaboration tool that helps inENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 35 of 82
+facilitating more effective interagency coordination in real time. Management of the development and
+review process for EIS should utilize this tool (e-NEPA Filing Guidance).
+For more information on the e-NEPA process, visit: https://www.epa.gov/nepa/environmental-impact-
+statement-filing-guidance.
+B. Class II: Categorical Exclusion (CE)
+1. Introduction
+Categorical Exclusions (CE) are actions or activities which meet the definition at 40 CFR 1508.4 and,
+based on past experience, do not result in significant environmental impacts. According to Federal
+Highway Administration (FHWA’s) regulations at 23 CFR 771.115, they are actions that do not
+individually or cumulatively have a significant environmental effect.
+Any action which normally would be classified as a CE but could involve unusual circumstances will
+require FHWA, in cooperation with the NH Department of Transportation (NHDOT), to conduct
+appropriate environmental studies to determine if the CE classification is proper. Such unusual
+circumstances include:
+• Significant environmental impacts,
+• Substantial controversy on environmental grounds,
+• Significant impact on properties protected by Section 4(f) of the US DOT Act, or Section 106
+of the National Historic Preservation Act,
+• Inconsistencies with any federal, state, or local law, requirement, or administrative
+determination relating to the environmental aspects of the action, or
+• Projects involving more than a limited number of residential or non-residential
+displacements.
+Categorical Exclusions are divided into two (2) groups based on the action’s potential for impacts.
+Consistent with 23 CFR 771.117(c), the first group is a list of actions which experience has shown never
+or almost never cause significant environmental impacts. They include:
+1. Activities which do not involve or lead directly to construction.
+2. Approval of utility installations along or across a transportation facility.
+3. Construction of bicycle and pedestrian lanes, paths, and facilities.
+4. Activities included in the State's highway safety plan under 23 U.S.C. 402.
+5. Transfer of Federal lands pursuant to 23 U.S.C. 107(d) and/or 23 U.S.C. 317 when the land
+transfer is in support of an action that is not otherwise subject to FHWA review under NEPA.
+6. The installation of noise barriers or alterations to existing publicly owned buildings to provide
+for noise reduction.
+7. Landscaping.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 36 of 82
+8. Installation of fencing, signs, pavement markings, small passenger shelters, traffic signals, and
+railroad warning devices where no substantial land acquisition or traffic disruption will occur.
+9. The following actions for transportation facilities damaged by an incident resulting in an
+emergency declared by the Governor of the State and concurred in by the Secretary, or a
+disaster or emergency declared by the President pursuant to the Robert T. Stafford Act (42
+U.S.C. 5121):
+i. Emergency repairs under 23 U.S.C. 125; and
+ii. The repair, reconstruction, restoration, retrofitting, or replacement of any road,
+highway, bridge, tunnel, or transit facility (such as a ferry dock or bus transfer station),
+including ancillary transportation facilities (such as pedestrian/bicycle paths and bike
+lanes), that is in operation or under construction when damaged and the action:
+A. Occurs within the existing right-of-way and in a manner that substantially
+conforms to the preexisting design, function, and location as the original (which
+may include upgrades to meet existing codes and standards as well as upgrades
+warranted to address conditions that have changed since the original
+construction); and
+B. Is commenced within a 2-year period beginning on the date of the declaration.
+10. Acquisition of scenic easements.
+11. Determination of payback under 23 U.S.C. 156 for property previously acquired with Federal-aid
+participation.
+12. Improvements to existing rest areas and truck weigh stations.
+13. Ridesharing activities.
+14. Bus and rail car rehabilitation.
+15. Alterations to facilities or vehicles in order to make them accessible for elderly and handicapped
+persons.
+16. Program administration, technical assistance activities, and operating assistance to transit
+authorities to continue existing service or increase service to meet routine changes in demand.
+17. The purchase of vehicles by the applicant where the use of these vehicles can be accommodated
+by existing facilities or by new facilities which themselves are within a CE.
+18. Track and railbed maintenance and improvements when carried out within the existing right-of-
+way.
+19. Purchase and installation of operating or maintenance equipment to be located within the
+transit facility and with no significant impacts off the site.
+20. Promulgation of rules, regulations, and directives.
+21. Deployment of electronics, photonics, communications, or information processing used singly or
+in combination, or as components of a fully integrated system, to improve the efficiency or
+safety of a surface transportation system or to enhance security or passenger convenience.
+22. Projects, as defined in 23 U.S.C. 101, that would take place entirely within the existing
+operational right-of-way.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 37 of 82
+23. Federally-funded projects:
+i. That receive less than $5,000,000 (as adjusted annually by the Secretary of
+Transportation to reflect any increases in the Consumer Price Index prepared by the
+Department of Labor) of Federal funds; or
+ii. With a total estimated cost of not more than $30,000,000 (as adjusted annually by the
+Secretary of Transportation to reflect any increases in the Consumer Price Index
+prepared by the Department of Labor) and Federal funds comprising less than 15
+percent of the total estimated project cost.
+24. Localized geotechnical and other investigation to provide information for preliminary design and
+for environmental analyses and permitting purposes.
+25. Environmental restoration and pollution abatement actions to minimize or mitigate the impacts
+of any existing transportation facility (including retrofitting and construction of stormwater
+treatment systems to meet Federal and State requirements under sections 401 and 402 of the
+Federal Water Pollution Control Act (33 U.S.C. 1341; 1342)) carried out to address water
+pollution or environmental degradation.
+26. Modernization of a highway by resurfacing, restoration, rehabilitation, reconstruction, adding
+shoulders, or adding auxiliary lanes (including parking, weaving, turning, and climbing lanes.
+27. Highway safety or traffic operations improvement projects, including the installation of ramp
+metering control devices and lighting.
+28. Bridge rehabilitation, reconstruction, or replacement or the construction of grade separation to
+replace existing at grade railroad crossings.
+29. Purchase, construction, replacement, or rehabilitation of ferry vessels (including improvements
+to ferry vessel safety, navigation, and security systems) that would not require a change in the
+function of the ferry terminals and can be accommodated by existing facilities or by new
+facilities which themselves are within a CE.
+30. Rehabilitation or reconstruction of existing ferry facilities that occupy substantially the same
+geographic footprint, do not result in a change in their functional use, and do not result in a
+substantial increase in the existing facility's capacity.
+Consistent with 23 CFR 771.117(d), the second group includes actions that meet the criteria for a CE in
+the Council on Environmental Quality (CEQ) regulations (https://www.ecfr.gov/current/title-40/chapter-
+V/subchapter-A) as they are authorized under an executed agreement between NHDOT and FHWA.
+They include:
+31. Transportation corridor fringe parking facilities.
+32. Construction of new truck weigh stations or rest areas.
+33. Approvals for disposal of excess right-of-way or for joint or limited use of right-of-way, where
+the proposed use does not have significant adverse impacts.
+34. Approvals for changes in access control.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 38 of 82
+35. Construction of new bus storage and maintenance facilities in areas used predominantly for
+industrial or transportation purposes where such construction is not inconsistent with existing
+zoning and located on or near a street with adequate capacity to handle anticipated bus and
+support vehicle traffic.
+36. Rehabilitation or reconstruction of existing rail and bus buildings and ancillary facilities where
+only minor amounts of additional land are required and there is not a substantial increase in the
+number of users.
+37. Construction of bus transfer facilities (an open area consisting of passenger shelters, boarding
+areas, kiosks and related street improvements) when located in a commercial area or other high
+activity center in which there is adequate street capacity for projected bus traffic.
+38. Construction of rail storage and maintenance facilities in areas used predominantly for industrial
+or transportation purposes where such construction is not inconsistent with existing zoning and
+where there is no significant noise impact on the surrounding community.
+2. Programmatic Categorical Exclusion (Programmatic CE)
+The FHWA has authorized NHDOT to make NEPA determinations on its behalf when a proposed action
+qualifies for a Categorical Exclusion as specifically listed in 23 CFR 771.117, provided there are no
+unusual circumstances that would require the preparation of either an EA (Class III) or an EIS (Class I).
+To document the environmental impact of these projects, BOE developed a streamlined evaluation
+form: Categorical Exclusion Programmatic Determination Checklist (Checklist). The Checklist is divided
+into eleven (11) general sections as follows:
+• General Project Information
+• Programmatic CE Criteria
+• Detailed Discussion of Programmatic CE Criteria
+• Summary of Public Involvement
+• List of Exhibits
+• NEPA Re-Evaluation
+• Environmental Commitments
+• Classification Determination
+• Activities that Qualify for Programmatic Categorical Exclusion
+• Follow-Up Actions for Programmatic Categorical Exclusions for Projects Requiring a Public
+Hearing
+• Post-Hearing Classification Determination
+For more information on Programmatic CEs for NHDOT projects, please review the Programmatic
+Agreement Between the Federal Highway Administration, New Hampshire Division and the New
+Hampshire Department of Transportation Regarding the Processing of Actions Classified as Categorical
+Exclusions for Federal-Aid Highway Projects.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 39 of 82
+a. General Project Information
+Action/Project Name: The municipality where the project is located.
+State Project Number: The unique 5-digit number assigned by NHDOT.
+Federal Project Number: The unique number assigned by NHDOT used for FHWA tracking. It usually
+starts with “X-A00.”
+CE Action Number: This number (from page 6 of the Checklist) identifies which regulation allows the
+project to be classified as a Programmatic CE (https://www.ecfr.gov/current/title-23/chapter-
+I/subchapter-H/part-771/section-771.117).
+Description of Project: This section describes the proposed action. The description should include the
+location, beginning and end points, and design aspects. It also summarizes the scope of the action at
+the time the determination is made. Attach a project location map to the Checklist.
+b. Programmatic Categorical Exclusion (CE) Criteria
+Gather supporting documentation, as appropriate, to address the questions in this section. Respond to
+each question by checking either the YES or NO boxes. Although checking a single YES box will disqualify
+the action for processing programmatically as a CE, all questions must be responded to. This will
+provide a full record for future reference; in case the project scope is subsequently revised, or the
+environmental parameters change.
+Documentation (letters, memos, forms, etc.), as appropriate, should be attached to the Checklist and
+detailed in the List of Exhibits section.
+c. Detailed Discussion of Programmatic CE Criteria
+This section provides a brief narrative response as to how your project qualifies for a Programmatic
+Categorical Exclusion and corresponds to the questions in the previous section.
+1. Right-of-Way – Does the proposed action result in any residential or non-residential
+displacements, or acquisition of property rights to an extent that impairs the functions of the
+affected property? Does the proposed action include acquisition of land for hardship or
+protective purposes?
+To qualify for use of the Checklist, projects involving right-of-way must meet a two-part test. First, the
+action must not require the acquisition of residences or businesses. Second, if the action requires fee
+simple acquisition or permanent easements that will impair the function of the property, the
+Programmatic CE will not apply. These right-of-way “tests” are independent of any cultural resource,ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 40 of 82
+Section 4(f) resource, or Section 6(f) resource impact determination required for Programmatic CE
+approval.
+NOTE: As appropriate, an analysis of the effects of property acquisition should be completed and
+attached to the Checklist. In addition, a copy of the Right-of-Way Certificate should also be attached, if
+available at the time of completing the Checklist.
+2. Traffic – Does the proposed action result in capacity expansion of a roadway by addition of
+through lanes?
+If the proposed action includes capacity expansion, specifically through the construction of through
+lanes, the project is disqualified from using the Checklist.
+3. Roadway Access – Does the proposed action involve the construction of temporary access, or
+the closure of existing road, bridge, or ramps that would result in major traffic disruptions?
+Does the proposed action involve changes in access that pertain to interstate highways, or that
+have wide-reaching ramifications?
+If the proposed action includes major traffic disrupting components, the project is disqualified from
+using the Checklist. The terms “major traffic disruptions,” and “wide-reaching ramifications,” are
+undefined, and are subject to interpretation. Temporary lane closures, and detours do not typically
+meet the traffic “test” for disqualification. Questions should be directed to the Project Manager.
+4. Cultural Resources – Does the proposed action use CE Action Number 26, 27, or 28 AND have an
+Adverse Effect on historic properties pursuant to Section 106 of the National Historic
+Preservation Act?
+Section 106 of the 1966 National Historic Preservation Act (NHPA) and the implementing regulations (36
+CFR 800) of the Advisory Council on Historic Preservation (ACHP) require federal agencies to take into
+account the effects of federally funded or authorized undertakings on properties eligible for or listed in
+the National Register of Historic Places (NRHP). This process is initiated by filling out a Request for
+Project Review (RPR) form and submitting it to the Cultural Resources Program Manager. The RPR form
+is available at: https://www.nh.gov/nhdhr/review/rpr.htm. The FHWA, in consultation with the SHPO,
+must make a “Determination of Effect” on all transportation projects that use federal funds or require
+federal licenses, permits, or approvals. A determination of “No Historic Properties Affected,” or “No
+Adverse Effect,” qualifies the action for Programmatic CE approval. In addition, a determination of
+“Adverse Effect,” is allowable under the Checklist, provided the proposed action is documented without
+using CE Action Numbers 26, 27, or 28.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 41 of 82
+When a project qualifies for processing under the Programmatic Agreement Among the Federal
+Highway Administration, the New Hampshire State Historic Preservation Office, the Advisory Council on
+Historic Preservation, and the New Hampshire Department of Transportation Regarding the Federal Aid
+Highway Program in New Hampshire, the effect findings are made using either the Appendix A
+Certification Form, or the Appendix B Certification Form.
+Contact the Cultural Resources Program to determine the proper response to the cultural resources
+question. In addition, the monthly Cultural Resource Agency Coordination Meetings can be utilized for
+help in assessing impacts to cultural resources.
+5. Section 4(f) – Does the proposed action require the use of any property protected by Section
+4(f) of the 1966 USDOT Act, that cannot be documented with a de minimis impact
+determination, or a programmatic Section 4(f) evaluation, other than the programmatic
+evaluation for the use of historic bridges?
+(https://www.environment.fhwa.dot.gov/legislation/section4f/4fpolicy.aspx)
+This section of the law does not allow, “the use of land from a significant publicly owned public park,
+recreation area, or wildlife and waterfowl refuge, or any significant historic site unless a determination is
+made that there is no feasible and prudent alternative to the use of land from the property and the
+action includes all possible planning to minimize harm to the property resulting from such use.”
+“Use” is defined as a permanent easement, fee acquisition, or “constructive use” of a property.
+“Constructive use” occurs when the proximity impacts of the action on the property, without acquisition
+of land, are so great that the purposes for which the Section 4(f) property exists are substantially
+diminished.
+Any use of Section 4(f) property will disqualify the action from using the Checklist, unless a de minimis
+impact finding has been made by FHWA, or a programmatic Section 4(f) evaluation is applicable (except
+the programmatic evaluation for use of an historic bridge). A finding of de minimis impact on a Section
+4(f) property is applicable if:
+A. For historic properties, the transportation program or project will have no adverse effect on the
+historic site; or
+B. For parks, recreation areas, and wildlife or waterfowl refuges, after public notice and
+opportunity for public review and comment, that the transportation program or project will not
+adversely affect the activities, features, and attributes of the park, recreation area, or wildlife or
+waterfowl refuge eligible for protection under this section; and the finding has received
+concurrence from the officials with jurisdiction over the park, recreation area, or wildlife or
+waterfowl refuge.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 42 of 82
+FHWA determines whether Section 4(f) applies to an action, or if a de minimis impact finding would be
+applicable to the project. For more information on Section 4(f) and whether it applies to a proposed
+action, contact the Project Management Section Chief, or FHWA.
+6. Section 6(f)/Conservation Properties – Does the proposed action require the acquisition or
+conversion of any land under the protection of Section 6(f) of the Land and Water Conservation
+Act of 1965?
+Land and Water Conservation Fund Act
+The Land and Water Conservation Fund Act (LWCFA) of 1965 provides for the preservation and
+development of quality outdoor recreation resources. Section 6(f) states that no property acquired
+under the act shall be converted to non-recreational uses without the approval of the Secretary of
+Interior. Such conversion precludes Programmatic CE approval, and use of the Checklist. New
+Hampshire administers the state’s Section 6(f) lands through the NH Department of Natural and Cultural
+Resources (DNCR), Division of Parks and Recreation.
+If the proposed action does not include permanent or temporary project-related property impacts
+outside the limits of the existing right-of-way and/or existing easements, no coordination nor
+communication with DNCR relative to LWCF shall be required for the project. In such instances, the
+environmental document shall include an environmental commitment stating that the project does not
+include any temporary or permanent impacts outside the limits of the existing right-of-way and/or
+easements, and that if the contractor’s method of construction would require such impacts, including
+construction staging, he/she shall coordinate with DNCR to determine if there would be impacts to
+LWCF properties and if so, comply with any requirements stipulated thereby (see the Environmental
+Commitments section of this manual).
+If, at any time during design, it is determined that proposed work would involve permanent or
+temporary impacts outside of limits of the existing right-of-way and/or any existing easements,
+coordinate with DNCR relative to LWCF to determine if there would be any permanent or temporary
+impacts to LWCF properties. If impacts are anticipated, the requirements outlined in 36 CFR Part 59
+shall be followed, and the Checklist cannot be used. In addition, the commitments in the environmental
+document shall be developed or modified accordingly.
+As applicable, contract documents shall stipulate that the method of construction, including
+construction staging, shall not occur on any public properties, or disrupt access to any public properties,
+without first coordinating with DNCR to ensure compliance with LWCF.
+For more information on Section 6(f) procedures, please see procedure ENV 1-5: Land and Water
+Conservation Fund Coordination.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 43 of 82
+Conservation Land Stewardship Program and Land and Community Heritage Investment Program
+In addition to the consideration given to LWCF properties under this section, protection of other
+conservation properties in NH are governed, in part, by the NH Conservation Land Stewardship Program
+(CLS) (https://www.clsp.nh.gov), and the Land and Community Heritage Investment Program (LCHIP)
+(https://lchip.org/).
+If the proposed action includes work outside the limits of existing right-of-way, or proposes to limit
+access to abutting properties, the Environmental Manager will need to determine if additional special
+conservation lands exist in the project area and if they would be impacted by the proposed action. In
+these cases, the Environmental Manager should contact the Stewardship Specialist at the NH CLS
+Program and LCHIP.
+However, if the proposed action does not include permanent project-related property impacts outside
+the limits of the existing right-of-way and/or existing easements, no coordination nor communication
+with the CLS Program, nor LCHIP shall be required for the project. In such instances, the environmental
+document shall include an environmental commitment stating that the project does not include any
+permanent impacts outside the limits of the existing right-of-way and/or easements, and that if the
+contractor’s method of construction would require such impacts, he/she shall coordinate with the CLS
+Program and LCHIP to determine if there would be impacts to CLS Program properties, or LCHIP
+properties, and if so, comply with any requirements stipulated thereby.
+If impacts are anticipated to CLS Program properties, the requirements outlined in RSA 162-C shall be
+followed. In addition, the commitments in the environmental document shall be developed or modified
+accordingly.
+If impacts are anticipated to LCHIP properties, the requirements outlined in RSA 227-M:13 shall be
+followed. In addition, the commitments in the environmental document shall be developed or modified
+accordingly.
+Impacts to CLS Program properties, or LCHIP properties may disqualify the project from using the
+Checklist. Coordinate with the NHDOT Bureau of Environment for a determination.
+For more information on CLS coordination, please see procedure ENV 1-4: Conservation Land
+Stewardship Coordination.
+For more information on LCHIP coordination, please see procedure ENV 1-3: Land and Community
+Heritage Investment Program Coordination.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 44 of 82
+7. Wetlands/Surface Waters – Does the proposed action require an Army Corps of Engineers
+Individual Permit pursuant to the Clean Water Act, and/or a Section 10 permit pursuant to the
+Rivers and Harbors Act of 1899?
+Impacts to wetlands (i.e. dredge, fill, drain, etc.) require a permit from the NH Department of
+Environmental Services (NHDES) Wetlands Bureau (NHWB), and the Army Corps of Engineers (ACOE), in
+accordance with RSA 482-A and Section 404 of the Clean Water Act. To qualify for use of the Checklist,
+the action must not require an Individual permit from the ACOE. If the action meets the criteria for the
+ACOE’s General Permits for New Hampshire (GPs), or is not in the ACOE’s jurisdiction, it may qualify for
+Programmatic CE approval and use of the Checklist
+(https://www.nae.usace.army.mil/Missions/Regulatory/State-General-Permits/New-Hampshire-
+General-Permit/).
+Permitting under Section 10 of the Rivers and Harbors Act is also administered by the ACOE and is
+applicable when a proposed action includes the construction of any structure in or over any navigable
+water of the United States, the excavation/dredging or deposition of material in these waters, or any
+obstruction or alteration in a “navigable water.” Structures or work outside the limits defined for
+navigable waters of the U.S. require a Section 10 permit if the structure or work affects the course,
+location, condition, or capacity of the water body. Authorization under Section 10 is typically included in
+the permit issued by ACOE for dredge and fill, when applicable.
+Contact the Wetlands Program Manager to determine the potential for impacts to jurisdictional areas.
+In addition, the monthly Natural Resource Agency Coordination Meetings can be utilized for help in
+determining permit thresholds and mitigation requirements.
+8. US Coast Guard – Does the proposed action require a US Coast Guard bridge permit?
+A US Coast Guard bridge permit is required for a project when constructing or modifying a bridge or
+causeway across a navigable waterway of the United States.
+(https://www.dco.uscg.mil/Portals/9/COAST%20GUARD%20BRIDGE%20PERMITTING_Sep2019.pdf).
+Bridge Owners are not required to consult the Coast Guard regarding repairs to a bridge that do not
+alter the clearances, type of structure, or any integral part of the substructure or superstructures or
+navigation conditions, but which consist only in the replacement of worn or obsolete parts.
+If there is doubt as to whether this provision applies, the bridge owner should consult with the Coast
+Guard (33 CFR 115.40). Repairs which permanently alter the horizontal or vertical clearance of the
+bridge do not qualify for this provision. Note: the Coast Guard should be notified 90 days in advance if
+the work will inhibit the navigation of vessels through the bridge.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 45 of 82
+Bridges to be constructed across reaches of waterways not actually navigated other than by logs, log
+rafts, rowboats, canoes, and small motorboats in accordance with 33 CFR 115.70(a).
+Bridge owners with doubt as to whether this provision applies should contact the First Coast Guard
+District Bridge Program. The term “small motorboats” means rowboats, canoes and other similar craft
+with outboard motors. It does not include sailing or cabin cruiser craft (33 CFR 115.70). Note: the Coast
+Guard should be notified 90 days in advance if the work will inhibit the navigation of vessels through the
+bridge.
+The need for a US Coast Guard bridge permit for a proposed action disqualifies the project from using
+the Checklist. See procedure ENV 1-12: Coordination with the US Coast Guard Related to Bridge Work
+for additional information.
+9. Floodways/Floodplains – Does the proposed action encroach on the regulatory floodway of
+water courses or water bodies, resulting in more than a nominal increase in base flood
+elevation? Does the proposed action have a significant or adverse impact on floodplain values,
+or create a significant risk to human life or property?
+Determine if an action is located in a regulatory floodway or floodplain by reviewing the National Flood
+Insurance Program (NFIP) maps issued by the Federal Emergency Management Agency (FEMA) (Flood
+Insurance Rate Maps [FIRM], Flood Boundary & Floodway Map, or Flood Hazard Boundary Map, as
+available, and New Hampshire Flood Hazards Viewer (arcgis.com), and GRANIT). If so, hydraulic analyses
+may be necessary to determine if flood levels will rise or fall as a result of the proposed action. The
+required level of analysis should be determined through consultation with the engineering staff and
+confirmed by the NH Office of Strategic Initiatives Floodplain Management Program. If the analysis
+concludes that there will be no more than a nominal rise in the flood elevation (so as to be ignored) the
+Checklist may be used. Similarly, if the lead designer/Project Manager, in consultation with FHWA, as
+necessary, can assert that floodplain values will not be significantly diminished, and that there will be no
+significant risk to human life or property by the proposed action, the Checklist may be used.
+If, however, it is determined that a proposed action would increase the base flood elevation (BFE) at all
+(more than 0.0 ft.) in a Zone AE area with a floodway, or more than 1.0 foot in any other area, a
+Conditional Letter of Map Revision (CLOMR) is required. A CLOMR is also required if a project results in
+a more than nominal increase in the regulatory floodplain elevation. A CLOMR must be followed by a
+Letter of Map Revision (LOMR) within six months of project completion. A LOMR is not required but
+may be done to revise the FIRM if there is an error in the mapping.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 46 of 82
+A CLOMR is a letter from FEMA commenting on whether a proposed project, if built as proposed, or
+proposed hydrology changes would meet minimum NFIP standards. A LOMR is a letter from FEMA
+officially revising the current NFIP map to show changes to floodplains, regulatory floodways, or flood
+elevations.
+10. Water Quality – Does the proposed action have more than a negligible impact on water quality?
+Projects can affect both surface and groundwater quality. Impacts can be temporary (construction
+phase) and/or longer-term and can vary in magnitude. Typically, temporary effects of small projects of
+short duration can be minimized with proper erosion and sedimentation controls and stormwater
+management measures. These impacts should not result in substantial impairment to water quality.
+Such actions will normally qualify for use of the Checklist.
+All projects must be designed to ensure that water quality will not be diminished as a result of the
+proposed action. There are several programs and permits that must be evaluated in making this
+determination. If/when the proposed action is determined to be in compliance with all applicable water
+quality permit/permit actions, the Checklist may be used.
+NHDES Shoreland Water Quality Protection Act (RSA 483-B) (https://www.des.nh.gov/land/waterfront-
+development)
+NHDES Alteration of Terrain – Water Pollution and Waste Disposal (RSA 485-A:17)
+(https://www.des.nh.gov/land/land-development). Consult with the Water Quality Program, and
+review procedure ENV 1-9: Alteration of Terrain Program Compliance, which outlines the requirements
+to comply with the Alteration of Terrain program. Additional information may be found in the
+Memorandum of Agreement Between the Department of Environmental Services and the Department
+of Transportation Regarding Alteration of Terrain Permits (RSA 485-A).
+Environmental Protection Agency (EPA) Construction General Permit (CGP)
+(https://www.epa.gov/system/files/documents/2022-01/2022-cgp-final-permit.pdf)
+EPA Small Municipal Separate Storm Sewer System (MS4) Permit (Applicable to certain projects with
+one (1) acre or more of land disturbance within designated MS4 Communities.
+Consult with the Wetlands Program or the NH Department of Environmental Services (NHDES), as
+necessary, to determine if sensitive water resources are present, and to determine the magnitude of
+potential impacts.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 47 of 82
+11. Wild and Scenic Rivers – Does the proposed action use CE Action Number 26, 27, or 28 AND
+require any work below the ordinary high water mark of a river designated as a component of,
+or proposed for inclusion in, the National System of Wild and Scenic Rivers, or below the
+ordinary high water mark of a tributary to such river?
+The National Wild and Scenic Rivers System was created by Congress in 1968 (Public Law 90-542; 16
+U.S.C. 1271 et seq.) to preserve certain rivers with outstanding natural, cultural, and recreational values
+in a free-flowing condition for the enjoyment of present and future generations. In NH, there are three
+(3) river segments designated as a component of the National System of Wild and Scenic Rivers:
+Lamprey River, Nashua, Squannacook, and Nissitissit Rivers, and Wildcat River.
+If you determine that the proposed action does not use CE Action Number 26, 27, or 28, and there will
+be no work below the ordinary high water of the named rivers above, or an immediate tributary to
+them, the Checklist may be used.
+12. Noise – Is the proposed action a Type I highway project?
+Federal regulations (23 CFR 772) and the NHDOT Noise Policy require the consideration of abatement
+measures where a Type I project increases traffic noise. This includes construction in a new location or
+changes to an existing highway that substantially alter either the horizontal or vertical alignment or
+increases the number of lanes. Review the definition of a Type I project in the Federal regulations and
+the NHDOT Noise Policy. Questions should be directed to the Project Management Section Chief. Any
+project meeting the definition of a Type I project does not qualify for use of the Checklist.
+For more information regarding the Department’s Noise Policy, please see policy ENV 4: Policy for the
+Assessment and Abatement of Highway Traffic Noise for Type II & Type II Highway Projects.
+13. Endangered Species – Does the proposed action result in a finding of “may affect, likely to
+adversely affect” threatened or endangered species or critical habitat under the Endangered
+Species Act, and Is not included in an approved Biological Opinion for a FHWA Programmatic
+Agreement, or result in impacts subject to the conditions of the Bald and Golden Eagle
+Protection Act?
+Section 7 of the Endangered Species Act (ESA) requires consultation to ensure that actions funded,
+permitted or carried out by federal agencies will not jeopardize the continued existence of any listed
+species or adversely modify designated critical habitats. Determine if an action may affect a federally
+listed species or designated critical habitat.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 48 of 82
+First determine the action area of the proposed project, ‘all areas to be affected directly or indirectly by
+the Federal action and not merely the immediate area involved in the action’ (50 CFR 402.02).
+Determine if the project qualifies for a streamlined project review for routine highway maintenance
+activities, and thus no further coordination with the USFWS is required. Use the US Fish and Wildlife
+Service's (USFWS) digital project planning tool, Information for Planning and Consultation (IPaC) IPaC:
+Home (fws.gov), and the National Oceanic and Atmospheric Administration (NOAA) Fisheries Section 7 :
+Species/Critical Habitat Information & Maps in the Greater Atlantic Region Section 7: Species/Critical
+Habitat Information & Maps in the Greater Atlantic Region | NOAA Fisheries to generate lists of
+federally listed species and critical habitats that may be present in the action area (see Section 17). If
+the IPaC Official Species List includes the Northern Long-eared Bat (NLEB) and the project is eligible for
+the FHWA/FRA/FTA Section 7 Range-wide Consultation for Indiana Bat and NLEB (FHWA Consultation
+for NLEB), complete the FHWA NLEB Consultation and Determination Key through IPaC. If your species
+lists include threatened or endangered species other than the NLEB or does not qualify for the FHWA
+Consultation for NLEB, determine if your project area includes suitable habitat for the species and, if
+there is suitable habitat, consider if the project may affect the suitable habitat. If the project may affect
+a listed species, Section 7 consultation is required. Coordinate with the Plants and Wildlife Program
+Manager to complete consultation.
+The NH Natural Heritage Bureau (NHB) keeps records of known locations of both federal and state rare
+species and exemplary natural communities. Utilize the NHB DataCheck Tool
+(https://www4.des.state.nh.us/NHB-DataCheck/) to determine if there is a known record of rare
+wildlife, plants or exemplary natural communities near the project area. For projects that qualify for
+use, the NHB Data Screening Layer may be used, consistent with the NHB/NHDOT Data Sharing
+Agreement. The NH Native Plant Protection Act (RSA 217-A) prohibits state agencies, to the extent
+possible, from taking actions that jeopardize the continued existence of any protected plant species or
+exemplary natural community. The NH Natural Heritage Bureau rules (Part Ncr 300) apply to measures
+and requirements necessary for the survival of all species of native plants in the state. If the DataCheck
+Tool indicates the presence of NH listed rare plant species or natural communities, coordinate with NHB,
+at (603) 271-2834, or send an e-mail to nhbreview@dncr.nh.gov. The NH Endangered Species
+Conservation Act (RSA 212-A) prohibits the taking of NH listed threatened and endangered wildlife
+species. NH Fish and Game Department rules (Fis 1002-1005) apply to consultation requests for NH Fish
+and Game review of NH protected threatened and endangered wildlife species. All requests for
+consultation and submittals should be sent via email to NHFGreview@wildlife.nh.gov or can be sent by
+mail and must include the NHB Datacheck results letter number in the subject line. For projects
+requiring formal consultation include “formal consultation requested” in the subject line. If the
+DataCheck Tool indicates the presence of protected wildlife species and a formal consultation is not
+required, email: NHFGreview@wildlife.nh.gov. Include the NHB Datacheck results letter number and
+“informal review request” in the email subject line. When the NHB Datacheck results include protected
+wildlife species, follow the steps outlined in the Memorandum of Agreement Between the Fish andENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 49 of 82
+Game Department and the Department fo Transportation Regarding Environmental Review of NHDOT
+Projects. The MOA applies to projects that require formal consultation and projects that will be
+reviewed through informal consultation.
+The Bald and Golden Eagle Protection Act (16 U.S.C. 668-668d) prohibits anyone, without a permit
+issued by the Secretary of the Interior, from "taking" bald or golden eagles, including their parts
+(including feathers), nests, or eggs. If the NHB Datacheck, field review, or other sources of information
+indicate the potential presence of Bald or Golden Eagles or their nests near the project area, complete
+the Northeast Bald Eagle Project Screening Form Northeast Bald Eagle Project Screening Form |
+FWS.gov , adopt indicated avoidance measures and coordinate with the NH Fish and Game Department
+(NHFGreview@wildlife.nh.gov).
+Procedure ENV 1-10: NH Fish & Game Project-level Coordination outlines project-specific interaction
+requirements with the NH Fish and Game Department.
+The Magnuson-Stevens Fishery Conservation and Management Act requires consultation with NOAA
+Fisheries when work will adversely affect Essential Fish Habitat (EFH). The Environmental Manager
+should determine if an action may affect EFH. Review the NOAA EFH Mapper Essential Fish Habitat
+Mapper | NOAA Fisheries. If the project may affect EFH, coordinate with NHDOT to complete
+consultation.
+If any of these reviews result in a finding of “may affect, likely to adversely affect” of a Federally listed,
+threatened or endangered species or critical habitat under the Endangered Species Act and is not
+included in an approved Biological Opinion for a FHWA Programmatic Agreement or result in impacts
+subject to the conditions of the Bald and Golden Eagle Protection Act the Checklist may not be used. If
+the Northeast Bald Eagle Project Screening Form is completed and the project commits to implementing
+all applicable avoidance measures resulting in, “the Service has determined that your proposed activities
+are unlikely to disturb nesting bald eagles,” the Checklist may still be used.
+Note: if a project does not affect a Federally listed, threatened or endangered species, but does affect a
+state listed threatened or endangered species, the Checklist may still be used.
+14. Air Quality – Is the proposed action inconsistent with the State Implementation Plan in air
+quality non-attainment areas, or the Statewide Transportation Improvement Program, or in
+applicable urbanized areas the Transportation Improvement Program? Does the proposed
+action cause or contribute to violations of the National Ambient Air Quality Standards (NAAQS)?
+The Clean Air Act of 1970 (CAA), the Clean Air Act Amendments of 1990 (CAAA) and the National
+Environmental Policy Act (NEPA) require that each federal action be evaluated for potential impacts toENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 50 of 82
+air quality. As such, review all projects for air quality impacts. The air quality review should follow the
+steps below:
+1. CAAA Conformity: Review the most recent major Statewide Transportation Improvement
+Program (STIP) amendment which is available on the Department’s website
+https://www.nh.gov/dot/org/projectdevelopment/planning/stip/.
+a. Review the project scope to ensure it is accurately represented in the STIP. If not, a STIP
+amendment may be required. Contact the Bureau of Planning and Community
+Assistance for additional guidance.
+b. Is the project listed as “regionally significant”? If yes, an air quality analysis may be
+required. Coordination with the Department’s Bureau of Planning and Community
+Assistance, Bureau of Environment, and/or the Regional Planning Commission should be
+initiated to ensure CAAA conformity.
+c. Is the CAA Code listed as “not exempt” (N/E)? If yes, an air quality analysis may be
+required. Coordination with the Department’s Bureau of Planning and Community
+Assistance, Bureau of Environment, and/or the Regional Planning Commission should be
+initiated to ensure CAAA conformity.
+d. Is the project inconsistent with those types of projects listed in Table 2 of 40 CFR §
+93.126 which are exempt from the requirement to determine conformity? If yes, an air
+quality analysis may be required. Coordination with the Department’s Bureau of
+Planning and Community Assistance, Bureau of Environment, and/or the Regional
+Planning Commission should be initiated to ensure CAAA conformity.
+2. NEPA: Review the project for potential adverse air quality impacts.
+a. Will the project require the preparation of an Environmental Assessment (EA) or an EIS?
+If yes, a quantitative air quality assessment of the 3 worst intersections will be necessary
+for both NEPA purposes as well as to demonstrate CAAA conformity.
+b. Will the project result in decreases in the level of service (LOS) below a LOS C on any
+public roadway within or adjacent to the project area? If yes, an air quality analysis may
+be required. Coordination with the Project Management Section Chief should be
+initiated to identify if additional qualitative or quantitative air quality impact assessment
+will be necessary to determine if the project will result in adverse air quality impacts.
+If, after completion of the above steps, air quality impacts are identified, an assessment of potential
+mitigation measures must be evaluated. Any mitigation measure(s) that are found to be both feasible
+and reasonable must be incorporated into the design of the project and included as an environmental
+commitment. In addition, if the proposed action is found to cause or contribute to violations of the
+NAAQS the Checklist may not be used.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 51 of 82
+15. CZMA – Is the proposed action inconsistent with the State’s Coastal Zone Management Plan?
+The Coastal Zone Management Act (CZMA) is the congressional plan for managing America's coasts. It
+was enacted to encourage the participation and cooperation of state, local, regional, and federal
+agencies and governments having programs affecting the coastal zone.
+On February 25, 2019 NOAA Office for Coastal Management (NOAA-OCM) approved a change to the
+federally-approved New Hampshire Coastal Program (NHCP) and concurred that the change constitutes
+a routine program change. As described in the NHCP’s public notice dated November 30, 2018, the
+routine program change involves modification of the NHCP’s list of federal assistance programs subject
+to CZMA federal consistency review, pursuant to 15 CFR Part 930, Subpart F (Consistency for Federal
+Assistance to State and Local Governments). Specifically, the routine program change pertains to the
+Federal Department of Transportation’s Highway Planning and Construction (HPC) Program (Catalog of
+Federal Domestic Assistance #20.205) (Publications | NH Department of Environmental Services).
+The NHCP’s list of federal assistance programs subject to CZMA federal consistency review now specifies
+that activities funded, wholly or in part, by the HPC Program are excluded from CZMA federal
+consistency review by the NHCP except for the following (applicable CE action Numbers in parentheses):
+• Highway construction or reconstruction (#26 for reconstruction),
+• Bridge construction, reconstruction, replacement, or rehabilitation (#28),
+• Construction of truck weigh stations or rest areas (#33),
+• Construction of bus storage or maintenance facilities (#35),
+• Work that alters the hydrology of freshwater perennial streams, tidal waters or tidal wetlands,
+• Work in tidal waters or tidal wetlands to mitigate the impacts of an existing transportation
+facility (#25).
+For all but the six (6) project types identified above, consistency has been programmatically determined,
+meaning you can check NO on the Checklist. For the six (6) project types above, an individual
+consistency determination must be made through the NH Intergovernmental Review Process.
+Procedure ENV 1-13: Coastal Zone Consistency Findings outlines the necessary steps for determining
+consistency. If the results of the Intergovernmental Review Process indicates that the proposed action is
+inconsistent with the CZMA, the Checklist may not be used.
+16. Other – Are there any unusual circumstances that would require additional environmental
+studies to determine if the action would qualify for processing programmatically (e.g.
+substantial environmental controversy, inconsistency with other environmental requirements,
+or significant sources of contamination)?ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 52 of 82
+Other issues can disqualify projects from Programmatic CE approval (and use of the Checklist). Such
+issues may include substantial public opposition or controversy, excessive hazardous or contaminated
+materials involvement, incompatibility with scenic roads, etc.
+Determine if these or other issues exist, and whether use of the Checklist is applicable. Supporting
+documentation should be attached to the Checklist, as appropriate.
+This section may also be used to describe other issues having an impact on a project, such as invasive
+species, which are typically identified during the field review portion of the environmental review
+process. More information may be found in (ENV 1, Manual 1: Best Management Practices for the
+Control of Invasive and Noxious Plant Species), as well as on the BOE website at:
+https://www.nh.gov/dot/org/projectdevelopment/environment/units/program-
+management/invasivespecies.htm.
+d. Summary of Public Involvement
+Public involvement is required as a component of the NEPA process, the level of which depends on the
+complexity of the project. For general information on public involvement, review and use the ENV 1,
+Manual 2: NEPA Public Involvement Manual.
+In this section, indicate if initial contact letters were sent, and what, if any, meetings were held for the
+proposed action. Discuss the opportunities for public input in the project, as well as any relevant
+changes that were made to the project resulting from public input.
+e. List of Exhibits
+During the environmental resource review process, as well as when preparing the Checklist, collect
+documentation supporting the Programmatic CE determination (maps, letters, figures, tables, etc.).
+These documents should be attached to the Checklist and listed in this section.
+f. NEPA Re-Evaluation
+Occasionally, after an environmental review is complete and an Environmental Commitments Memo has
+been issued, the Project Manager and/or design staff will notify BOE of changes to the design of the
+project, which could occur as a result of final design, etc. In these instances, re-evaluate the original
+determination by updating the Checklist and resubmitting it for approval. Oftentimes, these revisions
+are so minor as not to require a written re-evaluation as they do not affect the prior decisions regarding
+environmental impacts. However, if they do, update the Checklist and mark the box indicating that the
+Checklist is a re-evaluation, and that the original classification (Programmatic CE) remains valid. More
+information may be found in Section III.D. of this manual below.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 53 of 82
+If the post-NEPA revisions are of such a magnitude to call into question as to whether the original
+Programmatic CE classification remains valid, discuss it with the Project Management Section Chief for
+guidance, and coordinate with the FHWA Division office, as necessary.
+g. Environmental Commitments
+During the NEPA process, commitments are often made to avoid, minimize, or mitigate project impacts.
+Commitments result from public input, or through the requirements of, or agreements with, resource
+agencies during the environmental review process. It is important that these commitments be carried
+forward through project design, construction, and maintenance and operation. Environmental
+commitments for actions processed as Programmatic CEs must be recorded in this section of the
+Checklist, for future reference. The NEPA approval is contingent upon successful implementation of
+each environmental commitment. Section IV of this manual provides more information regarding
+environmental commitments. Procedure ENV 1-11: Environmental Commitments provides more
+information regarding the process for documentation and ensuring they are adhered to.
+h. Classification Determination
+Upon completion of the environmental review and documentation process, indicate on the Checklist a
+recommendation of whether the action qualifies for a Programmatic CE (and use of the Checklist), by
+marking the appropriate checkbox and signing on the provided signature line. The Checklist should then
+be forwarded to the Project Management Section Chief for review. If it is determined that the project
+does NOT qualify as a Programmatic CE, the Environmental Manager will notify the project manager and
+the project will then need to be addressed as an Individual CE, or other appropriate environmental
+classification.
+i. Activities That Qualify for Programmatic Categorical Exclusion
+This section lists the available CE Action Numbers to choose from when determining whether the project
+type qualifies for a Programmatic CE (and use of the Checklist).
+If your project qualifies for a Programmatic CE (and use of the Checklist) and DOES NOT require a Public
+Hearing, this concludes the environmental documentation process for the project. If a Public Hearing is
+required, you will need to complete the next two (2) sections of the Checklist.
+j. Follow-Up Actions for Programmatic CE for Projects Requiring a Public Hearing
+If the project requires a public hearing, any decisions made because of the hearing should be reviewed
+to determine if the project would change in such a way as to disqualify it from a Programmatic CE (and
+use of the Checklist). Post-hearing reviews are documented in this section.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 54 of 82
+k. Post-Hearing Classification Determination
+Following the public hearing, indicate on the Checklist a recommendation of whether the action
+continues to qualify for a Programmatic CE (and use of the Checklist), by marking the appropriate
+checkbox and signing on the provided signature line. The Checklist should then be forwarded to the
+Project Management Section Chief for review.
+It is worth noting that over the last decade greater than 85% (456) of NHDOT federally funded projects
+have been classified as Programmatic CEs. Thirteen percent (13%) (67) were classified as Individual
+CEs, and just over 1% combined (6) were either EAs or EISs.
+3. Individual Categorical Exclusion (Individual CE)
+For those actions with a higher potential for impacts (i.e. more resources present, greater magnitude of
+impacts, exceed the threshold for processing programmatically, etc.), and therefore do not qualify for
+use of the Checklist, but still qualify for a CE, additional information and possibly technical
+environmental analysis may be required. For this type of project, an individual CE will be required.
+The level of analysis should be sufficient to define the extent of impacts and identify appropriate
+mitigation measures. The information will include a detailed description of the proposed action and, as
+appropriate, its immediate surrounding area. A section describing the need for the project should be as
+comprehensive and specific as possible, and commensurate with the scope of the project. A list of
+alternatives should include the “no build” option, the upgrade option(s), and alternate build options
+which, for one reason or another, were found not to be reasonable or prudent. The discussion of any
+specific areas of environmental concern should be as thorough as necessary to address known and
+foreseeable public and agency concerns.
+The documentation to be submitted to FHWA must demonstrate that the CE criteria are satisfied and
+that the proposed project will not result in significant environmental impacts. When an action may
+involve unusual circumstances, sufficient early coordination, public involvement, and environmental
+studies should be undertaken to determine the likelihood of significant impacts. If no significant impacts
+are likely to occur, the results of environmental studies and any agency and public involvement should
+adequately support such a conclusion and be included in the request to FHWA, for CE approval. If
+significant impacts are likely to occur, an EIS must be prepared. If the likelihood of significant impacts is
+uncertain even after studies have been undertaken, an EA should be prepared.
+C. Class III: Environmental Assessment (EA)
+An EA is prepared in consultation with FHWA for each action that is not a CE and does not clearly require
+the preparation of an EIS. The primary purpose of an EA is to help decide whether or not an EIS is
+needed.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 55 of 82
+1. Scoping
+For actions that require an EA, NHDOT shall initiate consultation with FHWA at the earliest appropriate
+time, begin consultation with interested agencies and others to advise them of the scope of the project
+and to achieve the following objectives:
+• determine which aspects of the proposed action have potential for socioeconomic, cultural, or
+environmental impacts,
+• identify alternatives and measures which might mitigate adverse environmental impacts, and
+• identify other environmental review and consultation requirements which should be performed
+concurrently with the EA.
+2. Content
+The FHWA requirements for an EA are detailed in Technical Advisory T6640.8A, 23 CFR 771.119, and at
+https://www.environment.fhwa.dot.gov/legislation/nepa/guidance_preparing_env_documents.aspx#cs.
+The EA should address only those resources or features which FHWA and NHDOT decide will have a
+likelihood of being significantly impacted. The EA should be a concise document, focusing on the
+resources or issues of concern.
+a. Purpose and Need
+Describe the locations, length, termini, proposed improvements, etc. Identify and describe the
+transportation or other needs which the proposed action is intended to satisfy. On projects where a
+law, Executive Order, or regulation mandates an evaluation of avoidance alternatives, the explanation of
+the project need should be more specific so that avoidance alternatives that do not meet the stated
+project need can be readily dismissed.
+b. Alternatives
+Discuss alternatives to the proposed action, including the no-action alternative, which are being
+considered. The EA may either discuss the preferred alternative and identify any other alternatives
+considered or, if the applicant has not identified a preferred alternative, the alternatives under
+consideration. The EA does not need to evaluate in detail all reasonable alternatives for the project, and
+may be prepared for one or more build alternatives.
+c. Impacts
+For each alternative being considered, discuss any cultural, socioeconomic, and environmental impacts
+whose significance is uncertain. The level of analysis should be sufficient to adequately identify the
+impacts and appropriate mitigation measures, and address known and foreseeable public and agency
+concerns. Describe why these impacts are considered not significant. Identified impact areas which do
+not have a reasonable possibility for individual or cumulative significant environmental impacts need
+not be discussed.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 56 of 82
+d. Comments and Coordination
+Describe the early and continuing coordination efforts, summarize the key issues and pertinent
+information received from the public and government agencies through these efforts, and list the
+agencies and, as appropriate, members of the public consulted.
+e. Appendices (if any)
+The appendices should include only analytical information that substantiates an analysis which is
+important to the document. Other information should be referenced only.
+3. Circulation
+The EA is subject to FHWA approval before it is made available to the public as an FHWA document. The
+EA need not be circulated for comment, but the document must be made available for public inspection
+at the applicant's office and at the appropriate FHWA field offices. Notice of availability of the EA,
+briefly describing the action and its impacts, shall be sent by the NHDOT to the affected units of federal,
+state, and local government. Notice shall also be sent to the state intergovernmental review contacts
+established under Executive Order 12372. For New Hampshire, that means the Office of Strategic
+Initiatives.
+4. Public Involvement/Comment
+When a public hearing is held as part of the application for Federal funds, the EA shall be available at the
+public hearing and for a minimum of 15 days in advance of the public hearing. The notice of the public
+hearing in local newspapers shall announce the availability of the EA and where it may be obtained or
+reviewed. Comments shall be submitted in writing to the NHDOT within 30 days of the availability of the
+EA unless the FHWA determines, for good cause, that a different period is warranted.
+When a public hearing is not held, the NHDOT shall place a notice in a newspaper(s) similar to a public
+hearing notice and at a similar stage of development of the action, advising the public of the availability
+of the EA and where information concerning the action may be obtained. The notice shall invite
+comments from all interested parties. Comments shall be submitted in writing to the NHDOT within 30
+days of the publication of the notice unless the FHWA determines, for good cause, that a different
+period is warranted.
+5. EA Revisions
+Following the public availability period, the EA should be revised or an attachment provided, as
+appropriate, to:
+• reflect changes in the proposed action or mitigation measures resulting from comments
+received on the EA or at the public hearing (if one is held) and any impacts of the changes;
+• include any necessary findings, agreements, or determination (e.g. wetlands, Section 106,
+Section 4(f)) required for the proposal; andENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 57 of 82
+• include a copy of pertinent comments received on the EA and appropriate responses to the
+comments.
+6. FHWA Approval
+If no significant impacts are identified, the NHDOT shall furnish the FHWA:
+• a copy of the revised EA, as appropriate;
+• the public hearing transcript, where applicable;
+• copies of any comments received and responses thereto; and
+• a recommend Finding of No Significant Impact (FONSI). The EA should also document
+compliance, to the extent possible, with all applicable environmental laws and Executive
+Orders, or provide reasonable assurance that their requirements can be met.
+When the FHWA expects to issue a FONSI for an action described in 23 CFR 771.115(a), copies of the EA
+shall be made available for public review for a minimum of 30 days before the FHWA makes its final
+decision. This public availability shall be announced by a notice similar to a public hearing notice.
+If, at any point in the EA process, the FHWA determines that the action is likely to have a significant
+impact on the environment, the preparation of an EIS will be required.
+7. Findings of No Significant Impacts (FONSI)
+The EA, revised or with attachment(s), is submitted by the NHDOT to FHWA along with:
+• a copy of the public hearing transcript, when one is held;
+• a recommendation of the preferred alternative; and
+• a request that a FONSI be made. The basis for the FONSI request should be adequately
+documented in the EA and any attachment(s).
+The FHWA will review the EA and any public hearing comments and other comments received regarding
+the EA. If the FHWA agrees with the NHDOT's recommendations, it will make a separate written FONSI
+incorporating by reference the EA and any other appropriate environmental documents.
+After a FONSI has been made by the FHWA, a notice of availability of the FONSI shall be sent by the
+NHDOT to the affected units of Federal, State, and local government and the document shall be
+available from the NHDOT and the FHWA upon request by the public. Notice shall also be sent to the
+State intergovernmental review contacts established under Executive Order 12372 (NH Office of
+Strategic Initiatives).
+After approval of the Record of Decision (ROD), FONSI, or CE designation, NHDOT shall consult with
+the FHWA prior to requesting any major approvals or grants, to establish whether or not the approved
+environmental document or CE designation remains valid for the requested FHWA action.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 58 of 82
+D. Environmental Re-Evaluation
+Sometimes there are changes to the proposed action, new information or circumstances, or there is a
+lapse of time between preparation of the environmental document and implementation of the action.
+This may trigger the need to revisit the NEPA analysis if there is a remaining federal action. The FHWA
+regulations contain a process for re-evaluating environmental documents or decisions to determine
+whether the original document or decision remains valid, or a supplemental or new analysis is needed
+(23 CFR 771.129). More information is available at Environmental Review Toolkit (dot.gov).
+1. Purpose
+A re-evaluation is a review conducted of any proposed change in action, affected environment,
+anticipated impacts, applicable requirements, or mitigation measures as they relate to the
+environmental document or decision. The purpose of a re-evaluation is to determine whether an
+environmental document or decision remains valid. A re-evaluation is a continuation of the project
+development process, though it does not necessarily re-open the NEPA decision.
+The re-evaluation can occur at any point after completion of the project’s environmental document or
+decision, but only to the extent that there are remaining federal approvals for the project. The re-
+evaluation should be concise and tailored to the change in circumstances. Approval of the re-evaluation
+should be commensurate with the original approval.
+2. Format and Contents
+There is no required format for a written re-evaluation. Documentation may be simple, such as a
+checklist, an email exchange, or a memorandum. Usually for the simplest and least environmentally
+impacting projects, a re-evaluation may be done verbally, followed by documentation to the project file.
+The re-evaluation should focus on, and be commensurate with, the situation triggering the need for the
+re-evaluation. If the re-evaluation is triggered because of a change in conditions, the analysis and
+documentation should:
+• Clearly document the change that triggers the re-evaluation (e.g. changes in scope, design,
+impacts, mitigation) and the reason for the proposed change.
+• Document the changes in environmental impacts or mitigation, and describe how the impacts
+will be different from what was previously approved.
+• Determine whether the original decision remains valid after considering the change.
+E. Additional Environmental Documentation
+It is sometimes necessary to complete separate evaluations for specific types of impacts. These
+evaluations are completed in addition to the NEPA environment document.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 59 of 82
+1. Section 4(f) Evaluation
+Section 4(f) evaluations are completed to demonstrate compliance with 49 U.S.C. 303, originally Section
+4(f) of the DOT Act of 1966. In enacting Section 4(f), Congress declared as national policy that, "special
+effort should be made to preserve the natural beauty of the countryside and public park and recreation
+lands, wildlife and waterfowl refuges, and historic sites." The FHWA regulations state:
+"The Administration may not approve the use of land from a significant publicly owned public
+park, recreation area, or wildlife and waterfowl refuge, or any significant historic site unless a
+determination is made that:
+• There is no feasible and prudent alternative to the use of land from the property; and
+• The action includes all possible planning to minimize harm to the property resulting
+from such use.
+Supporting information must demonstrate that there are unique problems or unusual factors
+involved in the use of alternatives that avoid these properties or that the cost, social, economic,
+and environmental impacts or community disruption resulting from such alternatives reach
+extraordinary magnitudes."
+It should be noted that Section 4(f) applies to all significant historic sites, but only to publicly owned
+public parks, recreational areas, and wildlife and waterfowl refuges. Significant historic sites are those
+listed, or eligible for listing in the National Register of Historic Places.
+A Section 4(f) evaluation must be prepared for each location within a proposed project before the use of
+Section 4(f) land is approved. Early coordination with the Cultural Resources Program, FHWA, and NH
+State Historic Preservation Officer will determine the need for completing a Section 4(f) evaluation, the
+type of evaluation to complete, and the range of alternatives which must be covered within the
+document.
+If a project requires preparation of a Section 4(f) evaluation, approval of the final 4(f) evaluation by
+FHWA is necessary before design approval can be granted by FHWA or obtained in-house.
+The process for development and securing FHWA approval of a Section 4(f) evaluation includes the
+following:
+1. Resource and impact evaluation, including:
+a. Identification of Section 4(f) resources in the project area;
+b. Identification of project uses of those resources,
+c. Evaluation of avoidance alternatives;
+d. Coordination with the officials with jurisdiction over the Section 4(f) resource;
+e. Drafting a “full” Section 4(f) evaluation.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 60 of 82
+2. Submittal of the draft Section 4(f) evaluation to FHWA for a preliminary review, including a
+preliminary legal review.
+3. The FHWA will undertake a 30-day preliminary review, including a preliminary legal review.
+The FHWA will circulate the draft Section 4(f) evaluation to the US Department of the
+Interior (DOI), Housing and Urban Development (HUD), and Agriculture (USDA). The review
+period may be extended by 15 days, if needed. If timely comments are not received, it is
+assumed that the agencies have no objection to the proposed action. The FHWA will return
+consolidated comments to NHDOT.
+4. After addressing the comments received on the draft Section 4(f) evaluation, NHDOT will
+submit the final Section 4(f) evaluation for FHWA review, including a legal sufficiency
+review.
+5. The FHWA undertakes a 30-day legal sufficiency review. At the same time, FHWA transmits
+it to DOI, HUD, USDA, and as appropriate to the National Parks Service for a 45 day review
+period. If comments are not received within 15 days after the comment deadline, FHWA
+can assume a lack of objection and proceed with the action. These agencies may take an
+additional 30 days if the NEPA classification is a Class III: EA.
+6. The NHDOT makes revisions based on the FHWA comments to resolve legal issues, finalizes
+the Section 4(f) evaluation, and
+7. After the review, FHWA will return the Section 4(f) evaluation to NHDOT for completion of
+the Section 4(f) review.
+2. Programmatic Section 4(f) Evaluation
+As an alternative to preparing an individual Section 4(f) evaluation, FHWA may, in certain circumstances,
+have the option of applying a programmatic evaluation. Under a Programmatic Section 4(f) evaluation,
+certain conditions are laid out such that, if a project meets the conditions, it will satisfy the
+requirements of Section 4(f) that there are no feasible and prudent alternatives and that there has been
+all possible planning to minimize harm. These conditions generally relate to the type of project, the
+severity of impacts to Section 4(f) property, the evaluation of alternatives, the establishment of a
+procedure for minimizing harm to the Section 4(f) property, and adequate coordination with
+appropriate entities.
+There are five (5) nationwide programmatic Section 4(f) evaluations, for projects which:
+• necessitate the use of historic bridges;
+• use minor amounts of land from public parks, recreation areas, and wildlife and waterfowl
+refuges;
+• use minor amounts of land from historic sites;
+• construct independent bikeway or walkway projects; and
+• result in an overall net benefit to Section 4(f) properties.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 61 of 82
+A determination of the appropriateness of completing a Section 4(f) evaluation will be made by FHWA.
+Similar to a “full" Section 4(f) evaluation (above), the process for development and securing FHWA
+approval of a Programmatic Section 4(f) evaluation includes the following:
+1. Resource and impact evaluation, including:
+a. Identification of Section 4(f) resources in the project area;
+b. Identification of project uses of those resources,
+c. Evaluation of avoidance alternatives;
+d. Drafting a Section 4(f) evaluation.
+2. Submittal of the preliminary Section 4(f) evaluation to FHWA for review.
+3. After the review, FHWA will return the Section 4(f) evaluation to NHDOT for completion of
+the Section 4(f) review.
+Unlike a “full” Section 4(f) evaluation, the review is conducted at the NH FHWA office only. The NH
+Division office requires a minimum of 14 days for review and comment. A review by other federal
+agencies is not required.
+For additional information, visit:
+https://www.environment.fhwa.dot.gov/env_topics/4f_tutorial/default.aspx or Section 4(f) Outline.docx.
+3. Environmental Review Short Form – State Funded Projects
+The approach to the data collection and environmental review process for projects funded with state
+funds, and which do not include FHWA funding, is no different than that for projects subject to the
+requirements of NEPA. Information about environmental resources and constraints is still necessary to
+ensure that project designs and construction meet Comment #2 of ENV 1: Environmental Policy, which
+states: “NHDOT will strive to avoid, minimize, and/or mitigate impacts to natural and cultural resources
+when planning, constructing, and maintaining the state’s transportation infrastructure.”
+The environmental process and impacts of State-funded projects is documented with an Environmental
+Review Short Form – State Funded Projects (“Non-Federal Short Form”). The procedure for
+documentation and the Non-Federal Short Form is outlined in procedure ENV 1-2: Environmental
+Documentation of State-Funded Projects. Similar to the Programmatic CE, the Non-Federal Short Form
+is a checklist-type document with the following sections:
+• Environmental Review Checklist
+• Discussion of Environmental Impacts
+• Summary of Public Involvement
+• List of Exhibits
+• Environmental Re-Evaluation
+• Environmental CommitmentsENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 62 of 82
+• Approval Determination, and
+• Alternatives Analysis
+* The sections above are linked to the relevant sections of this manual which provide additional details
+on how to complete that section. Note that, unlike the Programmatic CE, if a project requires more
+detailed discussion due to the nature and extent of environmental impacts, an Individual CE would
+not be required for a State-funded project. Instead, Section VIII: Alternatives Analysis of the Non-
+Federal Short Form would be completed. In addition, the Environmental Review Short Form – State
+Funded Projects does not include a review of (2) Traffic, (3) Roadway Access, (5) Section 4(f), or (15)
+CZMA.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 63 of 82
+Section IV: Environmental Commitments
+As the environmental document is being developed, a list of potential environmental commitments will
+be identified by the Environmental Manager. These commitments (including mitigation) are developed
+in response to the anticipated impacts of the transportation project on the natural, cultural and
+socioeconomic environment. Communication and coordination among NHDOT’s bureaus and between
+NHDOT and outside agencies is essential to ensure that the environmental commitments are reasonable
+and implemented. The list of commitments will be developed and/or revised throughout the life of the
+project to reflect changes, deletions, and additions.
+The environmental document will include a “Summary of Environmental Commitments” for easy
+reference. All commitments and mitigation measures will be included in this section. Commitments
+made subsequent to completion of the documents will be appended. All appropriate personnel should
+be kept abreast of modifications to the list of commitments.
+At the conclusion of the environmental documentation process, the Administrator of the Bureau of
+Environment will distribute a memorandum to the project manager and other project personnel,
+transmitting the environmental document with specific reference to the environmental commitments.
+This memorandum will include conditions from permits, Memoranda of Agreement (MOAs), etc., if
+available. Where additional conditions are imposed or commitments are made following the NEPA
+process, a follow-up memo will be issued by the Bureau of Environment transmitting a supplement to be
+appended to the summary of environmental commitments. Copies of these commitments memos will
+be distributed by the Bureau of Environment to FHWA, the lead design bureau, Construction, Right-of-
+Way, Transportation Planning, Maintenance, Bridge Maintenance, and other bureaus as appropriate.
+For more information on environmental commitments, See procedure ENV 1-11: Environmental
+Commitments.
+See here: Standard Environmental Commitments for a menu of environmental commitments shown to
+be typically used in various scenarios for consideration for all projects.
+See here: Environmental Documentation for template Environmental Commitments Memos, which
+identify the conclusion of the environmental documentation process.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 64 of 82
+[This page intentionally left blank]ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 65 of 82
+Section V: Environmental Permitting
+Many projects require permits and approvals before construction activities can begin. Working with the
+Water Quality Program and Wetlands Program, the Environmental Manager will advise design personnel
+of the type(s) of permit(s) required for a proposed action. All required permits must be obtained to
+advertise or authorize funding for construction.
+Adequate time should be provided in the schedule to obtain the permits and approvals. Typically, it can
+be a few months from the time a permit application is submitted to receipt of the permit.
+It is strongly recommended that Environmental Managers use the monthly resource agency meetings as
+projects proceed through design to avoid any unacceptable impacts and substantial re-design late in the
+project development process. Enough detail needs to be presented at the meeting to promote the
+discussion of potential impacts.
+A. Project Specific Permits and Approvals
+Generally, project-specific permits and approvals that can be required include, but are not limited to:
+• Wetlands Permit from NHDES (https://www.des.nh.gov/water/wetlands/permit-assistance).
+Information on permitting timelines can be found at the following links:
+o Project Central - Wetlands Permitting Timeframes MOA with DES.pdf, and
+o Project Central - Wetlands Timeline Clarification Memo 12172021.pdf.
+Additional information/considerations relating to water quality and wetlands, on a project-by-
+project basis, may be found in the following procedures:
+o ENV 1-14: Turbidity Mixing Zones
+o ENV 1-15: Stream Diversions
+o ENV 1-16: Erosion Control Plans
+• Individual Section 404 Permit from the US Army Corps of Engineers (ACOE) if proposed impacts
+exceed those allowed under the NH General Permit
+(https://www.usace.army.mil/Missions/Civil-Works/Regulatory-Program-and-Permits/Obtain-a-
+Permit/). It is also important to note, however, that most projects will qualify for a NH General
+Permit (https://www.nae.usace.army.mil/Missions/Regulatory/State-General-Permits/New-
+Hampshire-General-Permit/).
+• Section 401 Water Quality Certificate when an Individual Section 404 Permit is needed from the
+ACOE (https://www.des.nh.gov/water/rivers-and-lakes/water-quality-certification).
+• NHDES Shoreland Water Quality Protection Act Permit
+(https://www.des.nh.gov/land/waterfront-development).
+• Coastal Zone Consistency finding.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 66 of 82
+• NOAA Essential Fish Habitat Assessment (https://www.fisheries.noaa.gov/new-england-mid-
+atlantic/habitat-conservation/essential-fish-habitat-assessment-consultations).
+It will be the project contractor’s responsibility to obtain permits, variances, or modifications to the
+permits which have already been secured by NHDOT for additional work not shown on the plans or work
+necessary for the contractor’s method of construction.
+B. Alteration of Terrain Permit Exemption
+New Hampshire RSA 485-A:17, Terrain Alteration, requires that any person proposing to undertake
+construction in or on the border of the surface waters of the state, or proposing to significantly alter the
+characteristics of the terrain in such a manner as to impede the natural runoff or create an unnatural
+runoff, shall apply for a permit, and pay a fee to NHDES to authorize such activities. New Hampshire
+RSA 485-A:17, III authorizes NHDES to exempt other state agencies from the permit and fee provisions
+of the statute, provided that the agency has incorporated appropriate protective practices in its projects
+which are substantially equivalent to the requirements established by NHDES under RSA 485-A:17. On
+March 1, 2022 NHDES reaffirmed that NHDOT has done so, and signed a MOA with NHDOT, exempting it
+from the fee and permitting requirements (https://www.des.nh.gov/land/land-development). As such,
+NHDOT does not need to obtain an Alteration of Terrain (AOT) permit, but maintain documentation
+demonstrating substantial equivalence, and reporting annually to NHDES.
+The Environmental Manager should work with the BOE Water Quality Program to determine the
+applicability of the AOT permit exemption to the project (Alteration of Terrain Process Flowchart), and
+review/follow procedure ENV 1-9: Alteration of Terrain Program Compliance.
+C. EPA National Pollutant Discharge Elimination System General Permits
+The Clean Water Act prohibits anybody from discharging “pollutants” through a “point source” into a
+“water of the United States” unless they have an EPA National Pollutant Discharge Elimination System
+(NPDES) permit. The permit will contain limits on what you can discharge, monitoring and reporting
+requirements, and other provisions to ensure that the discharge does not hurt water quality or human
+health. For most projects, there are two (2) NPDES general permits that typically apply.
+1. Construction General Permit (CGP)
+Operators of construction sites where one or more acres of land are disturbed must prepare and submit
+a Notice of Intent (NOI) to obtain coverage under the EPA’s NPDES CGP
+(https://www.epa.gov/npdes/2022-construction-general-permit-cgp). The CGP is designed to ensure
+that construction site operators have the proper stormwater controls in place so that construction can
+proceed in a way that protects clean water and the surrounding environment.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 67 of 82
+2. Small Municipal Separate Storm Sewer System (MS4) Permit
+Because NHDOT is responsible for self-certifying, and self-monitoring/enforcing the provisions of the
+EPA MS4 permit within the ROW, and our related Stormwater Management Plan (EPA NPDES
+#NHR043000), projects within the urbanized area of the state will not need to obtain a separate permit
+or file a Notice of Intent (NOI) (https://www.epa.gov/npdes-permits/new-hampshire-small-ms4-general-
+permit). Instead, NHDOT requires that, prior advertising or construction funding authorization, the
+design lead prepares a technical memorandum for acceptance by the BOE Water Quality Program, that
+addresses the requirements of the EPA MS4 permit. This technical memorandum shall, at a minimum,
+include the following pursuant to Part 2.3.6 of the MS4 permit:
+• Project area,
+• Existing pavement surface area,
+• Proposed pavement area,
+• Pavement analysis, and descriptions of proposed structural treatments,
+• A plan of the proposed structural stormwater treatments, including necessary ROW or
+easements,
+• A statement on responsible parties for operation and maintenance of the proposed structural
+treatments as described in Part 2.3. of the MS4 permit,
+• A copy of the US Fish and Wildlife Service and/or National Marine Fisheries Service
+correspondence, including a current IPaC search and concurrence to listed species,
+• A copy of any National Historic Preservation Act correspondence, including an effects memo and
+Memorandum of Agreement, as necessary, and
+• A signed statement of compliance that the third-party project complies with the MS4 permit
+requirements in accordance with Appendix B of the MS4 permit.
+The Environmental Manager should work with the BOE Water Quality Program to determine the
+applicability of the EPA general permits to the project and required documentation for compliance.
+NHDES provides additional permitting resources at https://www.des.nh.gov/node/3446.
+The Commissioner of NHDOT has delegated certain permit approval authority to individuals as outlined
+in procedure ENV 1-8: Environmental Permits/Approvals Delegation of Authority.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 68 of 82
+[This page intentionally left blank]ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 69 of 82
+Section VI: Construction and Post-Construction
+The environmental review process can occur through all phases of project development, to include the
+construction phase, as well as on-going commitments during operation of the facility after completion of
+construction. Generally speaking, these requirements result from commitments made during design,
+and/or conditions imposed by regulatory agencies in permits issued for the project.
+A. Construction
+Monitoring during construction is occasionally required. Monitoring could include wetland impact
+avoidance, proximity of the project to known areas of contamination, etc. and will help evaluate the
+effectiveness of recommendations made during the design of the project. It will also ensure that all
+environmental commitments made during project development are adhered to during construction. Of
+particular importance is the NHDOT commitment to protecting wetlands and surface waters through the
+use of appropriate erosion and sediment control measures. To this end, the Bureau of Environment
+employs several Environmental Coordinator positions whose primary responsibility is to work with
+contractors and Contract Administrators to ensure that all appropriate permits and commitments are
+adhered to.
+Occasionally during construction due to latent conditions or other unforeseen construction additions
+(such as additional paving or clearing), modifications to the design of the project may warrant a re-
+evaluation of environmental impacts. In such cases, the provisions for re-evaluation in Section III.D. of
+this manual should be followed.
+Additional information/considerations relating to water quality and wetlands during construction, on a
+project-by-project basis, may be found in the following procedures:
+o ENV 1-14: Turbidity Mixing Zones
+o ENV 1-15: Stream Diversions
+o ENV 1-16: Erosion Control Plans
+B. Post-Construction Monitoring
+Certain aspects of a project, or project area, may need to be monitored following completion of
+construction. Such activities are usually associated with wetland and/or wetland mitigation sites but
+may include stormwater features as well. Post-construction monitoring may involve reporting on the
+survival of wetland plantings, eliminating invasive species, or annual reports on the status of wetland
+creation sites. Post-construction monitoring requirements are typically included in the environmental
+commitments for the project, and/or conditions in NHDES Wetlands Bureau or ACOE permits.
+Other areas which may involve post-construction monitoring are noise studies where sound walls have
+been constructed, groundwater sampling in areas of contamination, maintenance of landscaping, and
+maintenance of permanent stormwater control measures.ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 70 of 82
+[This page intentionally left blank]ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 71 of 82
+Appendix 1
+Commonly Used Environmental-Related Acronyms
+AASHTO American Association of State Highway Transportation Officials
+ACEC American Council of Engineering Companies
+ACHP Advisory Council on Historic Preservation
+ACM Asbestos Containing Materials
+ACOE/USACE Army Corps of Engineers, United States
+AOT Alteration of Terrain
+APE Area of Potential Effect
+ASA Archaeologically Sensitive Area
+ASP Architectural Survey Plan
+AST Aboveground Storage Tank
+ATP Authorization to Proceed (task order assignments)
+AUR Activity and Use Restriction
+BFE Base Flood Elevation
+BFW/WBF Bank Full Width/Width at Bank Full
+BMP Best Management Practice
+BO Biological Opinion
+BOE Bureau of Environment, NHDOT
+CA Contract Administrator
+CAA Clean Air Act
+CAAA Clean Air Act Amendments
+CALM Consolidated Assessment and Listing Methodology
+CCDS Culvert and Closed Drainage System
+CE Categorical Exclusion
+CEQ Council on Environmental Quality
+CESWI Certified Erosion, Sediment, & Storm Water Inspector
+CFDA Catalog of Federal Domestic Assistance
+CFR Code of Federal Regulations
+CGP Construction General Permit, EPA
+CIH Certified Industrial Hygienist
+CLG Certified Local Government
+CLOMR Conditional Letter of Map Revision
+CLSP Conservation Land Stewardship Program
+CMAQ Congestion Mitigation and Air Quality
+CORD Council on Resources and Development
+CPESC Certified Professional in Erosion and Sediment Control
+CR Cultural ResourcesENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 72 of 82
+CRA Cultural Resources Agency
+CWA Clean Water Act
+CWS Certified Wetland Scientist
+CZMA Coastal Zone Management Act
+CZMP Coastal Zone Management Program
+DAMF Department of Agriculture, Markets, and Food, New Hampshire
+D&F Dredge and Fill
+dBA Decibels
+DEIS Draft Environmental Impact Statement
+DNCR Department of Natural and Cultural Resources
+DOA Department of the Army, United States
+DOI Department of the Interior, United States
+DOS Department of Safety, New Hampshire
+USDOT Department of Transportation, United States
+DSA Data Sharing Agreement
+EA Environmental Assessment
+EC Environmental Coordinator
+ECP Erosion Control Plan
+EFH Essential Fish Habitat
+EJ Environmental Justice
+EIS Environmental Impact Statement
+EM Environmental Manager
+EMMIT Enhanced Mapping & Management Information Tool
+EO Executive Order
+EPA Environmental Protection Agency, United States
+ESA Endangered Species Act
+FEIS Final Environmental Impact Statement
+FEMA Federal Emergency Management Agency, United States
+FHWA Federal Highway Administration, United States
+FIRM Flood Insurance Rate Map
+FONSI Finding of No Significant Impact
+FPF Flood Plain Finding
+FPPA Farmland Protection Policy Act
+FRA Federal Railroad Administration, United States
+FTA Federal Transit Administration, United States
+GACIT Governor’s Advisory Commission on Intermodal Transportation
+GASB-49 Government Accounting Standards Board Statement No. 49
+GP General Permit
+G&C Governor and Executive Council
+GRANIT NH Geographically Reference Analysis and Information Transfer SystemENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 73 of 82
+GPR Ground Penetrating Radar
+GSA General Services Administration, United States
+HAZMAT Hazardous Materials
+HAZWOPER Hazardous Waste Operations and Emergency Response
+HBI Historic Bridge Inventory
+HD Historic District
+HOTL Highest Observable Tide Line (tidal)
+IGE Independent Government Estimate
+IMP Inventory of Managed Properties database
+IP Individual Permit, ACOE
+IPaC Information for Planning and Consulting
+ISMP Invasive Species Management plan
+ISA Initial Site Assessment
+LCHIP Land and Community Heritage Investment Program
+LCIP Land Conservation Investment Program
+LiDAR Light Detection and Ranging
+LMAC Lakes Management Advisory Committee
+LOMR Letter of Map Revision
+LOS Level of Service
+LPA Local Public Agency
+LRS Limited Reuse Soil
+LRSTP Long Range Statewide Transportation Plan
+LWCF Land and Water Conservation Fund
+MOA Memorandum of Agreement
+MOU Memorandum of Understanding
+MPO Metropolitan Planning Organization
+MtBE Methyl Tertiary Butyl Ether
+MSGP Multi Sector General Permit, EPA
+MS4 Municipal Separate Storm Sewer System, EPA
+NAAQS National Ambient Air Quality Standards
+NAC Noise Abatement Criteria
+NEPA National Environmental Policy Act
+NFIP National Flood Insurance Program
+NHB/NHNHB Natural Heritage Bureau, New Hampshire
+NHCP Coastal Program, New Hampshire
+NHDES/DES Department of Environmental Services, New Hampshire
+NHDHR/DHR Division of Historical Resources, New Hampshire
+NHDOT Department of Transportation, New Hampshire
+NHFG/F&G Fish and Game Department, New HampshireENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 74 of 82
+NHOEM/OEM Office of Emergency Management, New Hampshire
+NHPA National Historic Preservation Act
+NHW Normal High Water (lakes and ponds)
+NHWB Wetlands Bureau, New Hampshire
+NLEB Northern Long-eared Bat
+NMFS National Marine Fisheries Service
+NOAA National Oceanic and Atmospheric Administration
+NOI Notice of Intent
+NOT Notice of Termination
+NPDES National Pollutant Discharge Elimination System
+NPS National Park Service, United States
+NRA Natural Resource Agencies
+NRCS Natural Resources Conservation Service, United States
+NRHP National Register of Historic Places
+NTP Notice to Proceed (contract initiation)
+NTU Nephelometric Turbidity Unit
+NWI National Wetlands Inventory
+O&M Operation and Maintenance
+ODDCF Oil Discharge and Disposal Cleanup Fund (ODD Fund)
+OHW Ordinary High Water (streams and rivers)
+ORW Outstanding Resource Waters
+OSHA Occupational Safety and Health Administration, United States
+OSI Office of Strategic Initiatives, New Hampshire
+PA Programmatic Agreement
+PAF Project Area Form
+PAH Polycyclic Aromatic Hydrocarbon
+PAM Polyacrylamide
+PBO Programmatic Biological Opinion
+PCB Polychlorinated Biphenyls
+PCE Programmatic Categorical Exclusion
+PDA Pease Development Authority
+PFAS Per- and Polyfluoroalkyl Substances
+PG Professional Geologist
+POP Project Operations Plan
+POW Prosecution of Work
+PSI Preliminary Site Investigation
+P3 Public Private Partnership
+RCRA Resource Conservation and Recovery Act
+REC Recognized Environmental Condition
+RFMI Request for More InformationENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 75 of 82
+RFP Request for Proposals
+RGP Remediation General Permit, EPA
+RIMS Reporting and Information Management Section, NHDES
+RMAC Rivers Management Advisory Committee
+ROD Record of Decision
+RPC Regional Planning Commission
+RPR Request for Project Review
+RSA Revised Statutes Annotated, New Hampshire
+RTK Right to Know
+SADES Statewide Asset Data Exchange System
+SCM Stormwater Control Measure
+SEIS Supplemental Environmental Impact Statement
+SHPO State Historic Preservation Officer
+SGMP Soils and Groundwater Management Plan
+SMP Soils Management Plan or Salt Management Plan
+SP Surplus Property
+SPCC Spill Prevention, Control, and Countermeasures
+STIP Statewide Transportation Improvement Program
+STP Shovel Test Pit
+SWPPP Storm Water Pollution Prevention Plan
+SWQPA Shoreland Water Quality Protection Act
+T&E Threatened and Endangered Species
+TCP Traffic Control Plan
+THPO Tribal Historic Preservation Officer
+TIP Transportation Improvement Program
+TMDL Total Maximum Daily Load Study
+TOB Top-of-Bank
+TSCA Toxic Substances Control Act
+TSM Transportation System Management
+TSS Total Suspended Solids
+TYP Ten Year Transportation Plan
+USCG Coast Guard, United States
+USDA Department of Agriculture, United States
+USFWS/FWS Fish and Wildlife Service, United States
+USGS United States Geological Survey
+UST Underground Storage Tank
+WAP Wildlife Action Plan, NHFG
+WMNF White Mountain National Forest
+WQ Water Quality
+WQC Water Quality CertificationENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 76 of 82
+[This page intentionally left blank]ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 77 of 82
+Appendix 2
+Environmental Contact Information
+(Applicable Programmatic Categorical Exclusion Criteria are noted in parentheses)
+Right-of-Way/Traffic/Roadway Access(1, 2, 3)
+NHDOT Project Manager
+Bureau of Planning & Community Assistance
+Cultural Resources(4)
+Bureau of Environment Cultural Resources Program
+(https://www.nh.gov/dot/org/projectdevelopment/environment/units/program-management/cultural.htm)
+Protection of Historic Properties – 36 CFR 800
+Project Review & Compliance – RPR Forms (https://www.nh.gov/nhdhr/review/rpr.htm)
+Enhanced Mapping & Management Information Tool (EMMIT) – https://www.nh.gov/nhdhr/emmit/index.htm
+Jill Edelmann Sheila Charles Laura Black
+Cultural Resources Program Manager Cultural Resources Program Specialist Spec. Projects & Compliance Spec.
+NHDOT Bureau of Environment NHDOT Bureau of Environment NH Division of Historical Resources
+PO Box 483, 7 Hazen Drive (603) 271-4049 19 Pillsbury Street
+Concord, NH 03302-0483 Sheila.J.Charles@dot.nh.gov Concord, NH 03301-3570
+(603) 271-3226 (603) 271-6438
+Jillian.L.Edelmann@dot.nh.gov Laura.S.Black@dncr.nh.gov
+Section 4(f)(5)
+FHWA should only be contacted if publicly-owned parks, recreation areas, and wildlife and waterfowl refuges have
+been identified in the project area. Section 4(f) concerns with historic resources should be addressed through the
+Cultural Resource Agency Coordination Meetings.
+FHWA Section 4(f) Policy Paper (https://www.environment.fhwa.dot.gov/legislation/section4f/4fpolicy.aspx)
+Jamison S. Sikora
+Environmental Program Manager
+Federal Highway Administration, NH Division Office
+James C. Cleveland Federal Building
+53 Pleasant Street, Suite 2200
+Concord, NH 03301
+(603) 410-4870
+Jamie.Sikora@dot.gov
+Section 6(f)/NH Conservation Lands(6, 16)
+NH GRANIT maintains a GIS layer of conservation lands in the state. Coordination, as necessary based on project
+scope, should be carried out with the contacts below.
+GRANITView data mapper (https://granitview.unh.edu/html5viewer/index.html?viewer=granit_view)
+Conservation Land Stewardship Program (https://www.clsp.nh.gov)ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 78 of 82
+Land & Community Heritage Investment Program (LCHIP) (https://lchip.org)
+Land & Water Conservation Fund Program (https://www.nhstateparks.org/about-us/community-recreation/land-
+water-conservation-fund-grant)
+Charlotte Harding Ben Engel Bill Gegas
+Stewardship Specialist Land Conservation Specialist LWCF Program Specialist
+Conservation Land Stewardship Program LCHIP NH Division of Parks & Rec.
+NH Office of Strategic Initiatives (603) 224-4113, Ext. 14 (603) 271-3035
+(603) 271-6809 BEngel@lchip.org vasillios.n.gegas@dncr.nh.gov
+Charlotte.J.Harding@clsp.nh.gov
+Wetlands/Surface Waters(7)
+NHDES and/or the US Army Corps of Engineers should not receive an initial contact letter and should only be
+contacted during the preparation of wetland impact plans/permit application should questions arise regarding
+jurisdictional impacts or the permitting process.
+Bureau of Environment Wetlands Program
+(https://www.nh.gov/dot/org/projectdevelopment/environment/units/program-management/wetlands.htm)
+NHDES Wetlands Permit Planning Tool (https://nhdeswppt.unh.edu/Html5Viewer/index.html?viewer=WPPT.gvh)
+NHDES Wetlands Bureau Permitting (https://www.des.nh.gov/water/wetlands/permit-assistance)
+NHDES OneStop Data Mapper (https://www4.des.state.nh.us/onestopdatamapper/onestopmapper.aspx)
+NHDES Shoreland Water Quality Protection Act (https://www.des.nh.gov/land/waterfront-development)
+US Army Corps of Engineers NH General Permits (https://www.usace.army.mil/Missions/Regulatory/State-
+General-Permits/New-Hampshire-General-Permit/)
+Andrew O’Sullivan Karl Benedict Michael Hicks
+Wetlands Program Manager Public Works Subsection Supervisor Project Manager
+NHDOT Bureau of Environment NHDES Wetlands Bureau US Army Corps of Engineers
+(603) 271-0556 29 Hazen Drive, Po Box 95 Regulatory Branch
+Andrew.M.OSullivan@dot.nh.gov Concord, NH 03302-0095 696 Virginia Road
+Karl.D.Benedict@des.nh.gov Concord, MA 01742-2751
+Michael.C.Hicks@usace.army.mil
+US Coast Guard(8)
+US Coast Guard Bridge Program (https://www.dco.uscg.mil/Our-Organization/Assistant-Commandant-for-
+Prevention-Policy-CG-5P/Office-of-Bridge-Program/Bridge-Permit-Application-Process)
+Gary Croot
+Bridge Management Specialist
+First Coast Guard District – Boston
+(603) 397-9361
+gary.t.croot@uscg.mil
+Floodways/Floodplains(9)
+Office of Strategic Initiatives Floodplain Management Program
+(https://www.nh.gov/osi/planning/programs/fmp/index.htm)ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 79 of 82
+Jennifer Gilbert, CFM
+Floodplain Management Coordinator
+National Flood Insurance Program
+NH Office of Strategic Initiatives
+(603) 271-1762
+Jennifer.R.Gilbert@livefree.nh.gov
+Water Quality(10)
+Prior to contacting the Water Quality Program Manager, please consider if your project requires analysis.
+Coordination should not be made via initial contact letter, but on an as needed basis.
+Bureau of Environment Water Quality Program
+(https://www.nh.gov/dot/org/projectdevelopment/environment/units/program-management/water-quality.htm)
+NHDES Alteration of Terrain Program (https://www.des.nh.gov/land/land-development)
+NHDES Section 401 Water Quality Certification (https://www.des.nh.gov/water/rivers-and-lakes/water-quality-
+certification)
+NPDES Construction General Permit (https://www.epa.gov/npdes/2022-construction-general-permit-cgp)
+NH MS4 Permit (https://www.epa.gov/npdes-permits/new-hampshire-small-ms4-general-permit)
+Mark Hemmerlein
+Water Quality Program Manager
+NHDOT Bureau of Environment
+(603) 271-1550
+Mark.T.Hemmerlein@dot.nh.gov
+General Environmental/Air Quality & Noise(11, 12, 14, 15, 16)
+Prior to contacting the Bureau of Environment Project Management Section Chief, please consider if your project
+requires analysis. Coordination should not be made via initial contact letter, but on an as-needed basis.
+Bureau of Environment Air Quality and Noise
+(https://www.nh.gov/dot/org/projectdevelopment/environment/units/program-management/air-noise.htm)
+Wild and Scenic Rivers (https://www.rivers.gov/new-hampshire.php)
+Coastal Zone Management Act (https://www.des.nh.gov/sites/g/files/ehbemt341/files/documents/r-wd-19-
+28_0.pdf)
+Jon Evans Coastal Zone Management
+Project Management Section Chief Christian Williams
+NHDOT Bureau of Environment Program Coordinator
+(603) 271-4048 NHDES Watershed Management
+Jonathan.A.Evans@dot.nh.gov (603) 559-0025
+Christian.Williams@des.nh.gov
+Endangered Species/Wildlife/Invasive Species(13)
+Prior to contacting the individuals listed below, the following websites should first be consulted to determine what,
+if any, follow up coordination is necessary.
+NH Natural Heritage Bureau (NHB) DataCheck Tool (https://www4.des.state.nh.us/NHB-DataCheck/).ENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 80 of 82
+US Fish & Wildlife Service, Use the ‘Information for Planning and Conservation’(IPaC) tool
+(http://ecos.fws.gov/ipac/).
+NH Fish & Game Department (https://wildlife.state.nh.us/wildlife/environmental-review.html).
+Bureau of Environment Northern Long-Eared Bat
+(https://www.nh.gov/dot/org/projectdevelopment/environment/units/program-management/long-eared-
+bat.htm)
+Rebecca Martin Kevin Newton Maddie Severance
+Plants & Wildlife Program Manager Wildlife Biologist Environmental Reviewer
+NHDOT Bureau of Environment NH Fish & Game Department NH Natural Heritage Bureau
+(603) 271-6781 (603) 271-5860 (603) 271-2214
+Rebecca.A.Martin@dot.nh.gov NHFGreview@wildlife.nh.gov nbhreview@dncr.nh.gov
+kevin.m.newton@wildlife.nh.gov
+Essential Fish Habitat(13)
+Contact the National Marine Fisheries Service only if the project will involve work within tidal waters or waters
+designated as Essential Fish Habitat (EFH). EFH for Atlantic Salmon is listed in Appendix C of the US Army Corps of
+Engineers General Permits for NH. Tributaries of the waters listed in Appendix C are also considered EFH if they
+exhibit Atlantic Salmon habitat characteristics. EFH for Atlantic Salmon and for all other species can be found via
+the EFH mapper tool.
+Army Corps GPs for New Hampshire (https://www.nae.usace.army.mil/Missions/Regulatory/State-General-
+Permits/New-Hampshire-General-Permit/
+EFH Habitat Mapper (https://www.fisheries.noaa.gov/resource/map/essential-fish-habitat-mapper)
+Kaitlyn Shaw David Bean
+Marine Resources Management Specialist Fisheries Biologist
+NOAA/National Marine Fisheries Service National Marine Fisheries Service
+Habitat and Ecosystem Services Division Maine Field Station
+Northeast Regional Office 17 Godfrey Drive
+55 Great Republic Drive Orono, Maine 04473
+Gloucester, MA 01930 (207) 866-4172
+(978) 282-8457 David.Bean@noaa.gov
+kaitlyn.shaw@noaa.gov
+NHDOT Resource Agency Coordination Meetings
+Bureau of Environment Natural Resource Agency Meeting
+(https://www.nh.gov/dot/org/projectdevelopment/environment/units/project-management/nracrmeetings.htm)
+Bureau of Environment Cultural Resource Agency Meeting
+(https://www.nh.gov/dot/org/projectdevelopment/environment/units/program-management/crmeetings.htm)
+Natural Resource Agency Coordination Meeting Cultural Resource Agency Coordination Meeting
+Andrew O’Sullivan Jill Edelmann
+Wetlands Program Manager Cultural Resources Program Manager
+NHDOT Bureau of Environment NHDOT Bureau of Environment
+(603) 271-0556 (603) 271-7968
+Andrew.M.OSullivan@dot.nh.gov Jillian.L.Edelmann@dot.nh.govENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 81 of 82
+Appendix 3
+Environmental-Related Weblinks
+ACOE NH GPs – https://www.nae.usace.army.mil/Missions/Regulatory/State-General-Permits/New-Hampshire-General-Permit/
+ACOE Section 404(b) guidelines – 404(b)(1) guidelines
+Clean Air Act – Clean Air Act of 1970
+Clean Air Act Amendments – Clean Air Act Amendments of 1990
+Conservation Land Stewardship Program – https://www.clsp.nh.gov
+Green Sheet – project initiation request – “Request for Environmental Documentation”
+CZMA link – https://www.des.nh.gov/resource-center/publications?keys=CZMA+022019&purpose=&subcategory=Coastal
+DES OneStop – https://www4.des.state.nh.us/onestopdatamapper/onestopmapper.aspx
+NHDES PFAS Sampling Map – https://nhdes.maps.arcgis.com/apps/View/index.html?appid=66770bef141c43a98a445c54a17720e2&extent=-73.5743,42.5413,-69.6852,45.4489.
+Enhanced Mapping & Management Information Tool (EMMIT) – https://www.nh.gov/nhdhr/emmit/index.htm
+e-NEPA filing link – https://www.epa.gov/nepa/environmental-impact-statement-filing-guidance
+e-NEPA guidance – https://www.epa.gov/sites/default/files/2021-01/documents/e-nepa-guide-on-registration-and-preparing-an-eis-for-electronic-submission.pdf
+EPA GCP – https://www.epa.gov/system/files/documents/2022-01/2022-cgp-final-permit.pdf
+EPA MS4 Permit – https://www.epa.gov/npdes-permits/new-hampshire-small-ms4-general-permit
+Executive Order 11988 – Floodplain Finding
+Executive Order 11990 – Wetlands Finding
+Executive Order 12372 Intergovernmental Review process – Executive Order 12372
+Federal approach to NEPA – Section 102(2)(C) of NEPA (42 USC. 4332)
+FHWA Categorical Exclusions – 23 CFR 771.117
+FHWA c-List Projects – 23 CFR 771.117(c)
+FHWA d-List Projects – 23 CFR 771.117(d)
+FHWA guidance for preparing NEPA and Section 4(f) documents – Technical Advisory T6640.8A
+FHWA Section 4(f) Policy Paper – Section 4(f) evaluation
+FHWA Section 4(f) tutorial – https://www.environment.fhwa.dot.gov/env_topics/4f_tutorial/default.aspx
+Flood Plain Management – https://www.nh.gov/osi/planning/programs/fmp/index.htm
+General NEPA information – National Environmental Policy Act
+Layout of State Highways – RSA 230:13
+LCHIP – https://www.landscope.org/new-hampshire/programs/NH_Land_Community_Heritage/
+National Historic Preservation Act – National Historic Preservation Act
+National Marine Fisheries Service – National Marine Fisheries Service
+NEPA and Project Development FHWA Toolkit – https://www.environment.fhwa.dot.gov/nepa/nepa_projDev.aspx
+NH Fish and Game environmental review – https://wildlife.state.nh.us/wildlife/environmental-review.html
+NH Fish and Game project review rules – Fis 1002-1005
+NH Wetlands Statute – RSA 483-B
+NHB data check mapping tool – https://www4.des.state.nh.us/NHB-DataCheck/
+NHDES AOT Program – https://www.des.nh.gov/land/land-development
+NHDES permitting assistance – https://www.des.nh.gov/node/3446
+NHDES Section 401 Water Quality Certification – https://www.des.nh.gov/water/rivers-and-lakes/water-quality-certification
+NHDES Shoreland Program – https://www.des.nh.gov/land/waterfront-development
+NHDES wetlands permitting assistance – https://www.des.nh.gov/water/wetlands/permit-assistance
+NHDHR Request for Project Review – https://www.nh.gov/nhdhr/review/rpr.htmENV 1 Manual 3
+Project Environmental Process Manual
+Last Updated: July 27, 2023
+Page 82 of 82
+NHDOT AOT procedures – ENV 1-9: Alteration of Terrain Program Compliance
+NHDOT BOE initial reporting summary – “NHDOT Bureau of Environment Summary of Initial Environmental Review”
+NHDOT CLS coordination procedure – ENV 1-4: Conservation Land Stewardship Coordination
+NHDOT environmental commitments procedure (draft) – ENV 1-X: Environmental Commitments
+NHDOT environmental policy – ENV 1: Environmental Policy
+NHDOT Invasive Species Manual – ENV 1, Manual 1: Best Management Practices for the Control of Invasive and Noxious Plant Species
+NHDOT LCHIP procedure – ENV 1-3: Land and Community Heritage Investment Program Coordination
+NHDOT LWCF procedure – ENV 1-5: Land and Water Conservation Fund Coordination
+NHDOT NEPA Public Involvement Manual – ENV 1, Manual 2: NEPA Public Involvement Manual
+NHDOT Noise Policy – ENV 4: Policy for the Assessment and Abatement of Highway Traffic Noise for Type II & Type II Highway Projects
+NHDOT Noise Policy Document – NHDOT Noise Policy
+NHDOT procedure for documentation of state-funded projects – ENV 1-2: Environmental Documentation of State-Funded Projects
+NHDOT Programmatic CE Checklist – Categorical Exclusion Programmatic Determination Checklist
+NHDOT Stonewall Policy – Policy ENV 3: Consideration of Stonewalls in Department Projects/Activities
+NHDOT Stormwater Management Plan – Stormwater Management Plan (EPA NPDES #NHR043000)
+NHOSI Floodplain Program – NH Office of Strategic Initiatives Floodplain Management Program
+NOAA EFH – https://www.fisheries.noaa.gov/new-england-mid-atlantic/habitat-conservation/essential-fish-habitat-assessment-consultations
+NOAA project reviews – Section 7: Species/Critical Habitat Information & Maps in the Greater Atlantic Region | NOAA Fisheries
+Programmatic CE Agreement – NHDOT/FHWA Programmatic Agreement for Categorical Exclusions
+Section 106 NHPA – Section 106 of the National Historic Preservation Act
+Section 4(f) policy – Section 4(f)
+US Fish and Wildlife Service – US Fish and Wildlife Service
+USCG bridge permitting – https://www.dco.uscg.mil/Portals/9/COAST%20GUARD%20BRIDGE%20PERMITTING_Sep2019.pdf
+USDOT Environmental Impact Procedures – 23 CFR Part 771
+USDOT NEPA Re-Evaluations – Environmental Review Toolkit (dot.gov)
+USFWS Bald Eagle Screening Form – Northeast Bald Eagle Project Screening Form | FWS.gov
+USFWS project mapping tool – http://ecos.fws.gov/ipac/
+USFWS project reviews – IPaC: Home (fws.gov)
+Wetlands Planning Permit Tool – https://nhdeswppt.unh.edu/Html5Viewer/index.html?viewer=WPPT.gvh

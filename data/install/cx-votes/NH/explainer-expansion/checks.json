@@ -1,0 +1,30 @@
+{
+  "state": "NH",
+  "officialCurrentMasterBallots": 320,
+  "masterLocalHb1300Questions": 297,
+  "masterStatewideQuestion": 1,
+  "separateHeldConcordSchoolQuestion": 1,
+  "knownDistinctMeasures": 299,
+  "newInstallableExplainers": 271,
+  "actualReaderCompleteWhatYesNo": 299,
+  "newExactWardMemberships": 27,
+  "actualRegisteredSubdivisionReaderChecks": 224,
+  "actualWholeHouseToWardReaderChecks": 52,
+  "actualSourceWardIdReaderChecks": 21,
+  "unconnectedSourceReadyWardQuestions": 0,
+  "fullCompressedSourceByteIdentity": "PASS; stored gzip and decoded capture hashes/lengths independently checked",
+  "currentElectionOnEveryMasterBallot": "PASS",
+  "exactQuestionAndStatutoryQuotes": "PASS",
+  "exactHeldTextHashes": "PASS",
+  "allUnrelatedPriorRowsPreserved": 592,
+  "BallotContestMerge": "PASS",
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "stateLocalComplete": false,
+  "openGaps": [
+    "Complete independent inventory of municipal/school-only ballots beyond the state general-election master and knownConcordSchoolDistrict ballot"
+  ],
+  "productionWrites": 0,
+  "modelCalls": 0,
+  "appCodeChanges": 0
+}

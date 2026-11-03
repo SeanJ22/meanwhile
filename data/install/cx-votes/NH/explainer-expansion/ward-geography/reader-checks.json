@@ -1,0 +1,129 @@
+{
+  "state": "NH",
+  "exactWardPointReaderChecks": [
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:1",
+      "contestId": "nh-2026-claremont-ward-1-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:2",
+      "contestId": "nh-2026-claremont-ward-2-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:3",
+      "contestId": "nh-2026-claremont-ward-3-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:dover/ward:4",
+      "contestId": "nh-2026-dover-ward-4-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:1",
+      "contestId": "nh-2026-franklin-ward-1-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:2",
+      "contestId": "nh-2026-franklin-ward-2-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:3",
+      "contestId": "nh-2026-franklin-ward-3-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:1",
+      "contestId": "nh-2026-laconia-ward-1-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:2",
+      "contestId": "nh-2026-laconia-ward-2-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:3",
+      "contestId": "nh-2026-laconia-ward-3-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:4",
+      "contestId": "nh-2026-laconia-ward-4-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:5",
+      "contestId": "nh-2026-laconia-ward-5-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:6",
+      "contestId": "nh-2026-laconia-ward-6-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:portsmouth/ward:1",
+      "contestId": "nh-2026-portsmouth-ward-1-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:portsmouth/ward:5",
+      "contestId": "nh-2026-portsmouth-ward-5-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:rochester/ward:5",
+      "contestId": "nh-2026-rochester-ward-5-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:1",
+      "contestId": "nh-2026-somersworth-ward-1-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:2",
+      "contestId": "nh-2026-somersworth-ward-2-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:3",
+      "contestId": "nh-2026-somersworth-ward-3-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:4",
+      "contestId": "nh-2026-somersworth-ward-4-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    },
+    {
+      "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:5",
+      "contestId": "nh-2026-somersworth-ward-5-hb1300-property-tax-growth",
+      "status": "EXACT_COMPLETE_EXPLAINER"
+    }
+  ],
+  "distinctPoints": 21,
+  "zipReaderCodesChecked": 32,
+  "zipMembershipEdgesChecked": 63,
+  "zctaMembershipEdges": 62,
+  "actualExistingLoader": "PASS; 21entities,21originalwardboundaries,63ZIPedges,62ZCTAedges encoded by loadStatePlaceMap in an isolated memory query fixture, including pagequeue",
+  "nativeCaptureIdentities": "PASS",
+  "originalCoordinateComponentsUnchanged": "PASS",
+  "eachPointHasExactlyOneLocalExplainer": "PASS",
+  "eachZipExposesEveryCompatibleSourceWardExplainer": "PASS",
+  "actualReaderQueryCounts": {
+    "point": 21,
+    "zip": 32
+  },
+  "boundaryVintage": 2022,
+  "currentSourceCheck": "2026-11-03T04:34:34.511249+00:00",
+  "scope": "21previously unconnected wards only. Positive Census2020ZCTA and GRANIT2022ward geometric intersections are conservative, partial, unknown-share matches; border slivers remain included. Point results additionally require original officialNHstategeometry. No individual residence was queried or retained.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "modelCalls": 0
+}

@@ -1,0 +1,470 @@
+[
+  {
+    "ward": "CONCORD WARD 1",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:1",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:615",
+    "sourceQuote": "District No. 15 Concord Ward 1 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 15,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:616",
+    "sourceQuote": "District No. 16 Concord Ward 2 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 16,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:617",
+    "sourceQuote": "District No. 17 Concord Ward 3 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 17,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 4",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:4",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:618",
+    "sourceQuote": "District No. 18 Concord Ward 4 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 18,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 5",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:5",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:619",
+    "sourceQuote": "District No. 19 Concord Ward 5 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 19,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 6",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:6",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:620",
+    "sourceQuote": "District No. 20 Concord Ward 6 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 20,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 7",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:7",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:621",
+    "sourceQuote": "District No. 21 Concord Ward 7 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 21,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 8",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:8",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:622",
+    "sourceQuote": "District No. 22 Concord Ward 8 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 22,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 9",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:9",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:623",
+    "sourceQuote": "District No. 23 Concord Ward 9 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 23,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "CONCORD WARD 10",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:concord/ward:10",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:624",
+    "sourceQuote": "District No. 24 Concord Ward 10 1",
+    "sourceCounty": "Merrimack",
+    "sourceDistrict": 24,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "DOVER WARD 1",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:dover/ward:1",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:814",
+    "sourceQuote": "District No. 14 Dover Ward 1 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 14,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "DOVER WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:dover/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:815",
+    "sourceQuote": "District No. 15 Dover Ward 2 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 15,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "DOVER WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:dover/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:816",
+    "sourceQuote": "District No. 16 Dover Ward 3 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 16,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "DOVER WARD 5",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:dover/ward:5",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:817",
+    "sourceQuote": "District No. 17 Dover Ward 5 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 17,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "DOVER WARD 6",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:dover/ward:6",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:813",
+    "sourceQuote": "District No. 13 Dover Ward 6 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 13,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "KEENE WARD 1",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:keene/ward:1",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:201",
+    "sourceQuote": "District No. 1 Keene Ward 1 1",
+    "sourceCounty": "Cheshire",
+    "sourceDistrict": 1,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "KEENE WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:keene/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:207",
+    "sourceQuote": "District No. 7 Keene Ward 2 1",
+    "sourceCounty": "Cheshire",
+    "sourceDistrict": 7,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "KEENE WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:keene/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:202",
+    "sourceQuote": "District No. 2 Keene Ward 3 1",
+    "sourceCounty": "Cheshire",
+    "sourceDistrict": 2,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "KEENE WARD 4",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:keene/ward:4",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:204",
+    "sourceQuote": "District No. 4 Keene Ward 4 1",
+    "sourceCounty": "Cheshire",
+    "sourceDistrict": 4,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "KEENE WARD 5",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:keene/ward:5",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:203",
+    "sourceQuote": "District No. 3 Keene Ward 5 1",
+    "sourceCounty": "Cheshire",
+    "sourceDistrict": 3,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "LEBANON WARD 1",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:lebanon/ward:1",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:413",
+    "sourceQuote": "District No. 13 Lebanon Ward 1 1",
+    "sourceCounty": "Grafton",
+    "sourceDistrict": 13,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "LEBANON WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:lebanon/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:414",
+    "sourceQuote": "District No. 14 Lebanon Ward 2 1",
+    "sourceCounty": "Grafton",
+    "sourceDistrict": 14,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "LEBANON WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:lebanon/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:415",
+    "sourceQuote": "District No. 15 Lebanon Ward 3 1",
+    "sourceCounty": "Grafton",
+    "sourceDistrict": 15,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 1",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:1",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:521",
+    "sourceQuote": "District No. 21 Manchester Ward 1 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 21,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:517",
+    "sourceQuote": "District No. 17 Manchester Ward 2 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 17,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:523",
+    "sourceQuote": "District No. 23 Manchester Ward 3 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 23,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 4",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:4",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:524",
+    "sourceQuote": "District No. 24 Manchester Ward 4 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 24,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 5",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:5",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:525",
+    "sourceQuote": "District No. 25 Manchester Ward 5 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 25,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 6",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:6",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:516",
+    "sourceQuote": "District No. 16 Manchester Ward 6 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 16,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 7",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:7",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:526",
+    "sourceQuote": "District No. 26 Manchester Ward 7 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 26,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 8",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:8",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:515",
+    "sourceQuote": "District No. 15 Manchester Ward 8 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 15,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 9",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:9",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:520",
+    "sourceQuote": "District No. 20 Manchester Ward 9 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 20,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 10",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:10",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:519",
+    "sourceQuote": "District No. 19 Manchester Ward 10 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 19,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 11",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:11",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:522",
+    "sourceQuote": "District No. 22 Manchester Ward 11 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 22,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "MANCHESTER WARD 12",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:manchester/ward:12",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:518",
+    "sourceQuote": "District No. 18 Manchester Ward 12 2",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 18,
+    "alreadyHeld": true
+  },
+  {
+    "ward": "NASHUA WARD 1",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:1",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:505",
+    "sourceQuote": "District No. 5 Nashua Ward 1 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 5,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:504",
+    "sourceQuote": "District No. 4 Nashua Ward 2 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 4,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:506",
+    "sourceQuote": "District No. 6 Nashua Ward 3 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 6,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 4",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:4",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:503",
+    "sourceQuote": "District No. 3 Nashua Ward 4 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 3,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 5",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:5",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:509",
+    "sourceQuote": "District No. 9 Nashua Ward 5 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 9,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 6",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:6",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:508",
+    "sourceQuote": "District No. 8 Nashua Ward 6 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 8,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 7",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:7",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:507",
+    "sourceQuote": "District No. 7 Nashua Ward 7 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 7,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 8",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:8",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:511",
+    "sourceQuote": "District No. 11 Nashua Ward 8 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 11,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "NASHUA WARD 9",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:nashua/ward:9",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:510",
+    "sourceQuote": "District No. 10 Nashua Ward 9 3",
+    "sourceCounty": "Hillsborough",
+    "sourceDistrict": 10,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "PORTSMOUTH WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:728",
+    "sourceQuote": "District No. 28 Portsmouth Ward 2 1",
+    "sourceCounty": "Rockingham",
+    "sourceDistrict": 28,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "PORTSMOUTH WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:726",
+    "sourceQuote": "District No. 26 Portsmouth Ward 3 1",
+    "sourceCounty": "Rockingham",
+    "sourceDistrict": 26,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "PORTSMOUTH WARD 4",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:portsmouth/ward:4",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:727",
+    "sourceQuote": "District No. 27 Portsmouth Ward 4 1",
+    "sourceCounty": "Rockingham",
+    "sourceDistrict": 27,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "ROCHESTER WARD 1",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:1",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:805",
+    "sourceQuote": "District No. 5 Rochester Ward 1 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 5,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "ROCHESTER WARD 2",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:2",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:806",
+    "sourceQuote": "District No. 6 Rochester Ward 2 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 6,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "ROCHESTER WARD 3",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:3",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:807",
+    "sourceQuote": "District No. 7 Rochester Ward 3 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 7,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "ROCHESTER WARD 4",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:4",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:808",
+    "sourceQuote": "District No. 8 Rochester Ward 4 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 8,
+    "alreadyHeld": false
+  },
+  {
+    "ward": "ROCHESTER WARD 6",
+    "wardOcdId": "ocd-division/country:us/state:nh/place:rochester/ward:6",
+    "baseHouseOcdId": "ocd-division/country:us/state:nh/sldl:809",
+    "sourceQuote": "District No. 9 Rochester Ward 6 1",
+    "sourceCounty": "Strafford",
+    "sourceDistrict": 9,
+    "alreadyHeld": false
+  }
+]

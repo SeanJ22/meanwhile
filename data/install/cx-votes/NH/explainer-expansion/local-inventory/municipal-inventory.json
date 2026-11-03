@@ -1,0 +1,360 @@
+{
+  "state": "NH",
+  "checkedAt": "2026-11-03T04:48:46Z",
+  "currentNativeCityIndicesCaptured": 12,
+  "charterCitiesTargeted": 13,
+  "newAdditionalMeasureDiscoveries": 0,
+  "knownSeparateConcordSchoolQuestionAlreadyExplained": 1,
+  "separateSomersworthWard35BallotContentsAcquired": false,
+  "allLocalMeasuresComplete": false,
+  "sourceCaptureIndex": "source-captures.json",
+  "cities": [
+    {
+      "city": "Berlin",
+      "sourceUrl": "https://www.berlinnh.gov/235/Elections-Voting",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:04.748689+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "Current2026general-electionindexlistsonlythestategeneralballot. Noadditionalballotquestionislistedintheindex;thisisnotanindependentlegalexclusion.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/4bd82bed2ad7be834bd6b0f78018c46efb31429fe07ebd0fe3267620ea48eacc.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.berlinnh.gov/DocumentCenter/View/4034/Sample-Ballot",
+          "label": "Sample Ballot"
+        }
+      ]
+    },
+    {
+      "city": "Claremont",
+      "sourceUrl": "https://www.claremontnh.com/index.php?section=press-room&prrid=912",
+      "httpStatus": 404,
+      "retrievedAt": "2026-11-03T04:43:04.749581+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED_AS_FULL_WEB_TOOL_TEXT",
+      "finding": "The complete official October 20 notice, Ballots for November 3, 2026 Election, lists exactly the three ward ballots. Native URL returned404, but the public web tool recovered the complete current136line notice. The saved artifact is explicitly source text, not original HTML. No additional local ballot is listed; that absence is not a statewide completeness proof.",
+      "separateLocalBallotsFullyExcluded": false,
+      "observedBallotLinks": [
+        {
+          "url": "https://www.claremontnh.com/index.php?section=press-room&prrid=912",
+          "label": "Ballots for November 3, 2026 Election"
+        }
+      ],
+      "capture": "sources/2ae4b473b1a238c2751749665d750cb0b9c392d1a9da1c8e90619ba9575c8d84.source"
+    },
+    {
+      "city": "Concord",
+      "sourceUrl": "https://www.concordnh.gov/1708/Sample-Ballots",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:04.749998+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "Currentindexlists10generalballotsand3distinctschool-zoneballots. PriorzoneAandcompletecurrentwebPDFextractionsofzoneBandCshowthesameDeweySchoolproperty-salequestionandBoardofEducationraces;noadditionalmeasureinthose3schoolballots.",
+      "separateLocalBallotsFullyExcluded": true,
+      "capture": "sources/18b99ad358046507424424f4a02f244de45f0af4ce3a0f464872de5ececa0d94.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26824/Ward-One-General-Election-Sample-Ballot",
+          "label": "Ward One Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+          "label": "Ward One Sample School District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26825/Ward-Two-General-Election-Sample-Ballot",
+          "label": "Ward Two Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+          "label": "Ward Two Sample School District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26826/Ward-Three-General-Election-Sample-Ballot",
+          "label": "Ward Three Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+          "label": "Ward Three Sample School District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26827/Ward-Four-General-Election-Sample-Ballot",
+          "label": "Ward Four Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26834/CSD---Zone-A-Wards-1-2-3-4",
+          "label": "Ward Four SampleSchool District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26828/Ward-Five-General-Election-Sample-Ballot",
+          "label": "Ward Five Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26835/CSD---Zone-B-Wards-5-6-7",
+          "label": "Ward Five SampleSchool District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26829/Ward-Six-General-Election-Sample-Ballot",
+          "label": "Ward Six Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26835/CSD---Zone-B-Wards-5-6-7",
+          "label": "Ward Six Sample School District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26830/Ward-Seven-General-Election-Sample-Ballot",
+          "label": "Ward Seven Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26835/CSD---Zone-B-Wards-5-6-7",
+          "label": "Ward Seven SampleSchool District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26831/Ward-Eight-General-Election-Sample-Ballot",
+          "label": "Ward Eight SampleGeneral Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26836/CSD---Zone-C-Wards-8-9-10",
+          "label": "Ward Eight SampleSchool District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26832/Ward-Nine-General-Election-Sample-Ballot",
+          "label": "Ward Nine SampleGeneral Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26836/CSD---Zone-C-Wards-8-9-10",
+          "label": "Ward Nine Sample School District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26833/Ward-Ten-General-Election-Sample-Ballot",
+          "label": "Ward Ten Sample General Election Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/DocumentCenter/View/26836/CSD---Zone-C-Wards-8-9-10",
+          "label": "Ward Ten Sample School District Ballot"
+        },
+        {
+          "url": "https://www.concordnh.gov/1708/Sample-Ballots",
+          "label": "Sample Ballots"
+        }
+      ],
+      "distinctAdditionalMeasureCount": 1,
+      "existingExplainedContestId": "nh-2026-concord-school-dewey-property-sale"
+    },
+    {
+      "city": "Dover",
+      "sourceUrl": "https://www.dover.nh.gov/government/open-government/election-information/2026-general-election/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:04.750522+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "Currentcitypageexplicitlydescribestwotextquestions:stateconstitutionalquestionandHB1300. Itsmunicipalelectionindexlists2025and2023,notaseparate2026municipalballot.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/02f0250ab3fd52cd8847ec3d14aabe4e717d9c3daeab2d2f3bb6891414f2f09c.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.sos.nh.gov/hb-1300-ballot-question",
+          "label": "HB 1300 Ballot Question - Legislative History"
+        }
+      ]
+    },
+    {
+      "city": "Franklin",
+      "sourceUrl": "https://www.franklinnh.gov/625/Election-Voting",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:04.751178+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "CurrentcitypageplacesannualmunicipalelectionsonfirstTuesdayofOctoberandlistsNov3NHgeneralelection;separateOct6,2026cityelectionisoutsidethistask.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/f8cb55f373d151a769c944a66eb1d1ff27f4ca3a7324546e6f4f1d81df3519fe.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.sos.nh.gov/elections/sample-ballots",
+          "label": "Sample Ballots | New Hampshire Secretary of State (nh.gov)"
+        }
+      ]
+    },
+    {
+      "city": "Keene",
+      "sourceUrl": "https://keenenh.gov/city-clerk/elections-voting/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:05.233291+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "Currentindexlists2026stategeneralballotsfor5wards;noadditionalNov3localballotislisted.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/cf72b036e9b749d61b5d5d59f9137071ae10c904db06a9804db00f28625f66b4.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.facebook.com/share/v/1F1chrQr4W/",
+          "label": "“Obtaining a Ballot”"
+        }
+      ]
+    },
+    {
+      "city": "Laconia",
+      "sourceUrl": "https://www.laconianh.gov/176/Elections",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:05.254265+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "CurrentcityauthorityexplicitlylimitstheNov3,2026municipalelectiontoBoardofEducationinWards4and5only.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/9766859c5ab3e7bb5a01673d7792ba5b6ec08258e015198b627b5b9e71d42864.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.laconianh.gov/1237/Sample-Ballots",
+          "label": "Sample Ballots"
+        }
+      ]
+    },
+    {
+      "city": "Lebanon",
+      "sourceUrl": "https://lebanonnh.gov/1006/Sample-Ballots",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:05.332947+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "Currentindexlists3Nov3generalballots. Separate2026cityandschoolballotsbelongtoMarch10,2026,notNov3.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/c05f23b2eb82cd0520b36f3ee78d52c4d7f7df58fbc78c6ea6a0dbc9e472196b.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://lebanonnh.gov/1006/Sample-Ballots",
+          "label": "Sample Ballots"
+        },
+        {
+          "url": "https://lebanonnh.gov/DocumentCenter/View/24679",
+          "label": "Ward 1 General Election Sample Ballot"
+        },
+        {
+          "url": "https://lebanonnh.gov/DocumentCenter/View/24678",
+          "label": "Ward 2 General Election Sample Ballot"
+        },
+        {
+          "url": "https://lebanonnh.gov/DocumentCenter/View/24680",
+          "label": "Ward 3 General Election Sample Ballot"
+        }
+      ]
+    },
+    {
+      "city": "Manchester",
+      "sourceUrl": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Sample-Ballot",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:05.546383+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "CurrentpluralSample-Ballotspagewasreadthroughwebtoolandlists12stategeneralwardballotsonly. Nativepluralroutefailedduringglobal503outage;singularrouteshowsgeneric2026electioninformation.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/5bc9eeb4750df66939decb25c6508dc2e815abe5956436e07bb6567fae995fe5.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Sample-Ballots",
+          "label": "Sample Ballots"
+        },
+        {
+          "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Sample-Ballots",
+          "label": "Sample Ballot page"
+        },
+        {
+          "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Sample-Ballots",
+          "label": "Sample Ballots"
+        }
+      ]
+    },
+    {
+      "city": "Nashua",
+      "sourceUrl": "https://www.nashuanh.gov/195/Elections-Voter-Registration",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:05.862642+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "CurrentindexlistsNov3generalelectionandlinksSOSsample-ballotmaster;noadditionallocalballotislisted.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/40ef2007e8c16bce9f02ad503aa58c9c14b2b870d4602c55fe3735bd71e6a73d.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.sos.nh.gov/elections/sample-ballots",
+          "label": "Sample Ballots | New Hampshire Secretary of State"
+        }
+      ]
+    },
+    {
+      "city": "Portsmouth",
+      "sourceUrl": "https://www.portsmouthnh.gov/cityclerk/voting-information",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:05.982530+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "CurrentindexlistsonecombinedPDFforall5stategeneralwardballots;municipalelectionsareinodd-numberedyearspercitypage.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/aad093ce4989860132670e015df29624e8415bb2bcc0e021b6e69f173fb509de.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://files.portsmouthnh.gov/cityclerk/voting/2026-Primary-Counting-of-Ballots-Notice.pdf",
+          "label": "Counting of Ballots"
+        },
+        {
+          "url": "https://files.portsmouthnh.gov/cityclerk/voting/2026-Primary-Testing-of-Ballot-Notice.pdf",
+          "label": "Testing of Ballot Machines"
+        },
+        {
+          "url": "https://files.portsmouthnh.gov/cityclerk/voting/2026NoticeforBallotCounting-10.26.26.pdf",
+          "label": "Counting of Ballots"
+        },
+        {
+          "url": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Testing-of-Ballot-Notice.pdf",
+          "label": "Testing of Ballot Machines"
+        },
+        {
+          "url": "https://www.portsmouthnh.gov/cityclerk/voting-information#sample-ballots",
+          "label": "Sample Ballots"
+        },
+        {
+          "url": "https://files.portsmouthnh.gov/cityclerk/voting/2026-General-Election-Sample-Ballots.pdf",
+          "label": "PDF 2026 General Election Sample Ballots"
+        }
+      ]
+    },
+    {
+      "city": "Rochester",
+      "sourceUrl": "https://news.rochesternh.gov/plan-ahead-to-vote-in-the-nh-state-general-election-on-tuesday-november-3-2026/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:06.045146+00:00",
+      "status": "CURRENT_OFFICIAL_INDEX_CAPTURED",
+      "finding": "CurrentprimarycitypublicationannouncesNov3generalelectionanddirectssample-ballotreaderstoSOSmaster;noadditionalNov3ballotislisted.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/4f36c19c7a2c13c11366d26532184c1e2605555b060e1da364a19b2953c2c485.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://www.sos.nh.gov/elections/sample-ballots",
+          "label": "See Sample Ballot"
+        }
+      ]
+    },
+    {
+      "city": "Somersworth",
+      "sourceUrl": "https://www.somersworthnh.gov/welcome-somersworth/pages/elections-voting",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T04:43:06.098312+00:00",
+      "status": "SEPARATE_LOCAL_BALLOT_ACQUISITION_GAP",
+      "finding": "CurrentofficialindexlinksseparateWard3andWard5specialmunicipalballotsonAdobe. FullcontentshaveNOTbeenacquired:sameglobal503outagehitAdobeandreader;webtoolcannotopenpublicshareURN. Cannotexcludeadditionalquestionsfromthoseballots.",
+      "separateLocalBallotsFullyExcluded": false,
+      "capture": "sources/5c09f2f5f5a5947965cde4436b5731ada95ed7ce259cecac081ef1bceb1a007b.source.gz",
+      "observedBallotLinks": [
+        {
+          "url": "https://acrobat.adobe.com/id/urn:aaid:sc:US:7d49010a-f55a-4a78-8ab2-ffcf952ac95c?x_api_client_id=chrome_extension_viewer&x_api_client_location=share",
+          "label": "General Election Sample Ballots"
+        },
+        {
+          "url": "https://acrobat.adobe.com/id/urn:aaid:sc:US:37c9b441-bd65-458f-b90b-cb385c9b5f85?x_api_client_id=chrome_extension_viewer&x_api_client_location=share",
+          "label": "Ward 3 an Ward 5 Special Municipal Election Sample Ballots"
+        }
+      ]
+    }
+  ],
+  "otherOpenScope": "Independent November3townandschool-onlyballotinventoryoutside13citiesandtheSOSgeneral-electionmasterremainsopen. Negativesearchresultsandabsenceofadditionallinksarenotcountedasproofthatnoothermeasureexists.",
+  "infrastructureObservation": {
+    "at": "2026-11-03T04:44:13Z",
+    "symptom": "Adobe,Jina,ManchesterandConcordnewrequestsallreturnedidentical215byte503envoyresponseimmediately. Thisisaglobalnetworkoutage,notpublisher-specificdenial.",
+    "sharedResponseSha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
+  },
+  "currentCityIndicesCaptured": 13,
+  "citySourceCaptureFormats": {
+    "originalNativeHTML": 6,
+    "sanitizedNativeHTMLSourceText": 6,
+    "completePublicWebToolText": 1
+  },
+  "sourceSanitization": "Six native captured HTML pages contained a browser credential pattern. The existing sanitizeText helper redacted only those credential substrings in branch source-text artifacts; original raw bytes stay in private scratch, with original raw hashes retained separately in source-captures.json. All ballot and election content is unchanged."
+}

@@ -1,0 +1,359 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 84,
+ "name": "Zip Code Tabulation Areas",
+ "type": "Feature Layer",
+ "description": "ZIP Code Tabulation Areas (ZCTAs); Census 2020 - January 1, 2020 vintage",
+ "geometryType": "esriGeometryPolygon",
+ "sourceSpatialReference": {
+  "wkid": 102100,
+  "latestWkid": 3857,
+  "xyTolerance": 0.001,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -20037700,
+  "falseY": -30241100,
+  "xyUnits": 10000,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "spatialReference": {
+  "wkid": 102100,
+  "latestWkid": 3857,
+  "xyTolerance": 0.001,
+  "zTolerance": 2,
+  "mTolerance": 0.001,
+  "falseX": -2.1950603294350002E7,
+  "falseY": -30241100,
+  "xyUnits": 1.443574700445541E8,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "copyrightText": "Source: U.S. Census Bureau",
+ "parentLayer": null,
+ "subLayers": [],
+ "minScale": 3000000,
+ "maxScale": 1001,
+ "drawingInfo": {
+  "renderer": {
+   "type": "simple",
+   "symbol": {
+    "type": "esriSFS",
+    "style": "esriSFSSolid",
+    "color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "outline": {
+     "type": "esriSLS",
+     "style": "esriSLSSolid",
+     "color": [
+      153,
+      69,
+      74,
+      255
+     ],
+     "width": 1.5
+    }
+   }
+  },
+  "scaleSymbols": false,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "defaultVisibility": false,
+ "extent": {
+  "xmin": -1.96697857783E7,
+  "ymin": -1617134.1081999987,
+  "xmax": 1.6233777558700003E7,
+  "ymax": 1.1520001026100002E7,
+  "spatialReference": {
+   "wkid": 102100,
+   "latestWkid": 3857,
+   "xyTolerance": 0.001,
+   "zTolerance": 2,
+   "mTolerance": 0.001,
+   "falseX": -2.1950603294350002E7,
+   "falseY": -30241100,
+   "xyUnits": 1.443574700445541E8,
+   "falseZ": 0,
+   "zUnits": 1,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeNone",
+ "displayField": "BASENAME",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "MTFCC",
+   "type": "esriFieldTypeString",
+   "alias": "MTFCC",
+   "length": 5,
+   "domain": null
+  },
+  {
+   "name": "OID",
+   "type": "esriFieldTypeString",
+   "alias": "OID",
+   "length": 22,
+   "domain": null
+  },
+  {
+   "name": "GEOID",
+   "type": "esriFieldTypeString",
+   "alias": "GEOID",
+   "length": 5,
+   "domain": null
+  },
+  {
+   "name": "BASENAME",
+   "type": "esriFieldTypeString",
+   "alias": "BASENAME",
+   "length": 100,
+   "domain": null
+  },
+  {
+   "name": "NAME",
+   "type": "esriFieldTypeString",
+   "alias": "NAME",
+   "length": 100,
+   "domain": null
+  },
+  {
+   "name": "LSADC",
+   "type": "esriFieldTypeString",
+   "alias": "LSADC",
+   "length": 2,
+   "domain": null
+  },
+  {
+   "name": "FUNCSTAT",
+   "type": "esriFieldTypeString",
+   "alias": "FUNCSTAT",
+   "length": 1,
+   "domain": null
+  },
+  {
+   "name": "AREALAND",
+   "type": "esriFieldTypeBigInteger",
+   "alias": "AREALAND",
+   "domain": null
+  },
+  {
+   "name": "AREAWATER",
+   "type": "esriFieldTypeBigInteger",
+   "alias": "AREAWATER",
+   "domain": null
+  },
+  {
+   "name": "STGEOMETRY",
+   "type": "esriFieldTypeGeometry",
+   "alias": "STGEOMETRY",
+   "domain": null
+  },
+  {
+   "name": "CENTLAT",
+   "type": "esriFieldTypeString",
+   "alias": "CENTLAT",
+   "length": 11,
+   "domain": null
+  },
+  {
+   "name": "CENTLON",
+   "type": "esriFieldTypeString",
+   "alias": "CENTLON",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "INTPTLAT",
+   "type": "esriFieldTypeString",
+   "alias": "INTPTLAT",
+   "length": 11,
+   "domain": null
+  },
+  {
+   "name": "INTPTLON",
+   "type": "esriFieldTypeString",
+   "alias": "INTPTLON",
+   "length": 12,
+   "domain": null
+  },
+  {
+   "name": "ZCTA5CC",
+   "type": "esriFieldTypeString",
+   "alias": "ZCTA5CC",
+   "length": 2,
+   "domain": null
+  },
+  {
+   "name": "ZCTA5",
+   "type": "esriFieldTypeString",
+   "alias": "ZCTA5",
+   "length": 5,
+   "domain": null
+  },
+  {
+   "name": "HU100",
+   "type": "esriFieldTypeDouble",
+   "alias": "HU100",
+   "domain": null
+  },
+  {
+   "name": "POP100",
+   "type": "esriFieldTypeDouble",
+   "alias": "POP100",
+   "domain": null
+  },
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  }
+ ],
+ "geometryField": {
+  "name": "STGEOMETRY",
+  "type": "esriFieldTypeGeometry",
+  "alias": "STGEOMETRY"
+ },
+ "indexes": [
+  {
+   "name": "FDO_OBJECTID",
+   "fields": "OBJECTID",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "FDO_STGEOMETRY",
+   "fields": "STGEOMETRY",
+   "isAscending": true,
+   "isUnique": false,
+   "description": ""
+  },
+  {
+   "name": "ZCTA5_70_BASENAME",
+   "fields": "BASENAME",
+   "isAscending": true,
+   "isUnique": false,
+   "description": ""
+  },
+  {
+   "name": "ZCTA5_70_GEOID",
+   "fields": "GEOID",
+   "isAscending": true,
+   "isUnique": false,
+   "description": ""
+  },
+  {
+   "name": "ZCTA5_70_LSADC",
+   "fields": "LSADC",
+   "isAscending": true,
+   "isUnique": false,
+   "description": ""
+  },
+  {
+   "name": "ZCTA5_70_MTFCC",
+   "fields": "MTFCC",
+   "isAscending": true,
+   "isUnique": false,
+   "description": ""
+  },
+  {
+   "name": "ZCTA5_70_OID",
+   "fields": "OID",
+   "isAscending": true,
+   "isUnique": false,
+   "description": ""
+  },
+  {
+   "name": "ZCTA5_70_PK",
+   "fields": "ZCTA5",
+   "isAscending": true,
+   "isUnique": false,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "canModifyLayer": false,
+ "canScaleSymbols": false,
+ "hasLabels": false,
+ "capabilities": "Map,Query,Data",
+ "maxRecordCount": 100000,
+ "maxSelectionCount": 2000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "isDataVersioned": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "useStandardizedQueries": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsPagination": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsTrueCurve": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": false,
+  "supportsCurrentUserQueries": true
+ },
+ "supportsDatumTransformation": true,
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "STGEOMETRY_Area",
+  "shapeLengthFieldName": "STGEOMETRY_Length",
+  "units": "esriMeters",
+  "mapUnits": {"uwkid": 9001}
+ },
+ "hasMetadata": true,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsCoordinatesQuantization": true,
+ "supportsDynamicLegends": true
+}

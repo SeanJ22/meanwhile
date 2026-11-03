@@ -1,0 +1,300 @@
+[
+  {
+    "url": "https://www.berlinnh.gov/235/Elections-Voting",
+    "file": "sources/4bd82bed2ad7be834bd6b0f78018c46efb31429fe07ebd0fe3267620ea48eacc.source.gz",
+    "sha256": "4bd82bed2ad7be834bd6b0f78018c46efb31429fe07ebd0fe3267620ea48eacc",
+    "byteLength": 107576,
+    "storedEncoding": "gzip",
+    "storedSha256": "511c251722eee5798236230b66740aa51cf1ed335da0fc7c5777c01e9bff06a8",
+    "storedByteLength": 19849,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:04.748689+00:00",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "contentType": "text/html; charset=utf-8",
+    "originalRawSha256": "b040b01402407fd822108740f640366f7520d910804c768db54c2c109fbb6980",
+    "originalRawByteLength": 107585,
+    "hashScope": "Exact UTF-8 sanitized HTML source text after existing fixture-credentials sanitizeText; not original publisher response bytes. Original raw response hash and length are recorded separately; original bytes remain only in private scratch.",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    }
+  },
+  {
+    "url": "https://www.concordnh.gov/1708/Sample-Ballots",
+    "file": "sources/18b99ad358046507424424f4a02f244de45f0af4ce3a0f464872de5ececa0d94.source.gz",
+    "sha256": "18b99ad358046507424424f4a02f244de45f0af4ce3a0f464872de5ececa0d94",
+    "byteLength": 110223,
+    "storedEncoding": "gzip",
+    "storedSha256": "692bc5fefb3f9230c1b249664b3d0b4207c774e388c02df5373ded2a963d60af",
+    "storedByteLength": 22063,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:04.749998+00:00",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "contentType": "text/html; charset=utf-8",
+    "originalRawSha256": "42a1a4cf11cd358cb182c0ae78650451ddf1d02d8294768096d8b7c22cd8030c",
+    "originalRawByteLength": 110232,
+    "hashScope": "Exact UTF-8 sanitized HTML source text after existing fixture-credentials sanitizeText; not original publisher response bytes. Original raw response hash and length are recorded separately; original bytes remain only in private scratch.",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 388,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    }
+  },
+  {
+    "url": "https://www.dover.nh.gov/government/open-government/election-information/2026-general-election/",
+    "file": "sources/02f0250ab3fd52cd8847ec3d14aabe4e717d9c3daeab2d2f3bb6891414f2f09c.source.gz",
+    "sha256": "02f0250ab3fd52cd8847ec3d14aabe4e717d9c3daeab2d2f3bb6891414f2f09c",
+    "byteLength": 185060,
+    "storedEncoding": "gzip",
+    "storedSha256": "70c403aa0aeadbb45ea993424aa8e334731b21b42c96d2a134ba308265dc1073",
+    "storedByteLength": 27421,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:04.750522+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES",
+    "contentType": "text/html"
+  },
+  {
+    "url": "https://www.franklinnh.gov/625/Election-Voting",
+    "file": "sources/f8cb55f373d151a769c944a66eb1d1ff27f4ca3a7324546e6f4f1d81df3519fe.source.gz",
+    "sha256": "f8cb55f373d151a769c944a66eb1d1ff27f4ca3a7324546e6f4f1d81df3519fe",
+    "byteLength": 176662,
+    "storedEncoding": "gzip",
+    "storedSha256": "e186f77e99d2d8255a03f374afd0bff483c3c66624b46096ef9f863db4290072",
+    "storedByteLength": 23391,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:04.751178+00:00",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "contentType": "text/html; charset=utf-8",
+    "originalRawSha256": "8b73709132b1931b324268c873fe2cdaf458f52d42ae0471252ab8563a442f2a",
+    "originalRawByteLength": 176671,
+    "hashScope": "Exact UTF-8 sanitized HTML source text after existing fixture-credentials sanitizeText; not original publisher response bytes. Original raw response hash and length are recorded separately; original bytes remain only in private scratch.",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    }
+  },
+  {
+    "url": "https://keenenh.gov/city-clerk/elections-voting/",
+    "file": "sources/cf72b036e9b749d61b5d5d59f9137071ae10c904db06a9804db00f28625f66b4.source.gz",
+    "sha256": "cf72b036e9b749d61b5d5d59f9137071ae10c904db06a9804db00f28625f66b4",
+    "byteLength": 97784,
+    "storedEncoding": "gzip",
+    "storedSha256": "c7e5b427a2ab57d5daf5c5d57435846f902eea693f5cad1a8049d8d73f4eff04",
+    "storedByteLength": 23133,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:05.233291+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES",
+    "contentType": "text/html; charset=UTF-8"
+  },
+  {
+    "url": "https://www.laconianh.gov/176/Elections",
+    "file": "sources/9766859c5ab3e7bb5a01673d7792ba5b6ec08258e015198b627b5b9e71d42864.source.gz",
+    "sha256": "9766859c5ab3e7bb5a01673d7792ba5b6ec08258e015198b627b5b9e71d42864",
+    "byteLength": 124468,
+    "storedEncoding": "gzip",
+    "storedSha256": "504812ef52961423fd9397f58e9c8610e10fd8c9460ea885c0704bb996693d20",
+    "storedByteLength": 26119,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:05.254265+00:00",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "contentType": "text/html; charset=utf-8",
+    "originalRawSha256": "5e1bcd5385e5432d3eccb87fcd78753300e96e3d81eab5782087a65d228601aa",
+    "originalRawByteLength": 124477,
+    "hashScope": "Exact UTF-8 sanitized HTML source text after existing fixture-credentials sanitizeText; not original publisher response bytes. Original raw response hash and length are recorded separately; original bytes remain only in private scratch.",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 388,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    }
+  },
+  {
+    "url": "https://lebanonnh.gov/1006/Sample-Ballots",
+    "file": "sources/c05f23b2eb82cd0520b36f3ee78d52c4d7f7df58fbc78c6ea6a0dbc9e472196b.source.gz",
+    "sha256": "c05f23b2eb82cd0520b36f3ee78d52c4d7f7df58fbc78c6ea6a0dbc9e472196b",
+    "byteLength": 117916,
+    "storedEncoding": "gzip",
+    "storedSha256": "10fcaafdab25e3248c5ca1102b634d7250165ee41b159d758520ec3486f4ac91",
+    "storedByteLength": 24708,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:05.332947+00:00",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "contentType": "text/html; charset=utf-8",
+    "originalRawSha256": "690ad9bdbc69a7b64c7be5b499a4d97a4e88829e03adc3139d1b46d1c3500d72",
+    "originalRawByteLength": 117925,
+    "hashScope": "Exact UTF-8 sanitized HTML source text after existing fixture-credentials sanitizeText; not original publisher response bytes. Original raw response hash and length are recorded separately; original bytes remain only in private scratch.",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 412,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    }
+  },
+  {
+    "url": "https://www.manchesternh.gov/Departments/City-Clerk/Voter-Registration-and-Elections/Sample-Ballot",
+    "file": "sources/5bc9eeb4750df66939decb25c6508dc2e815abe5956436e07bb6567fae995fe5.source.gz",
+    "sha256": "5bc9eeb4750df66939decb25c6508dc2e815abe5956436e07bb6567fae995fe5",
+    "byteLength": 201332,
+    "storedEncoding": "gzip",
+    "storedSha256": "a2dc0db39be4f05a23f566cf225463ad64975cf95d85eda04d83d97dbfdc9962",
+    "storedByteLength": 26677,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:05.546383+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES",
+    "contentType": "text/html; charset=utf-8"
+  },
+  {
+    "url": "https://www.nashuanh.gov/195/Elections-Voter-Registration",
+    "file": "sources/40ef2007e8c16bce9f02ad503aa58c9c14b2b870d4602c55fe3735bd71e6a73d.source.gz",
+    "sha256": "40ef2007e8c16bce9f02ad503aa58c9c14b2b870d4602c55fe3735bd71e6a73d",
+    "byteLength": 163834,
+    "storedEncoding": "gzip",
+    "storedSha256": "03a295be8258a9c72348d9ebba0febf3bdf8a2a7f546bb0999c62312bbc2fabc",
+    "storedByteLength": 32171,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:05.862642+00:00",
+    "rawFormat": "SANITIZED_SOURCE_TEXT",
+    "contentType": "text/html; charset=utf-8",
+    "originalRawSha256": "b8165cdac4de782610aff7df76987bdbee59a11e1054a8e7ea7b7d650aa3b413",
+    "originalRawByteLength": 163843,
+    "hashScope": "Exact UTF-8 sanitized HTML source text after existing fixture-credentials sanitizeText; not original publisher response bytes. Original raw response hash and length are recorded separately; original bytes remain only in private scratch.",
+    "sanitizer": {
+      "version": "fx-cred-v1-2026-08-28",
+      "replaced": 1,
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 399,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "preserved": []
+    }
+  },
+  {
+    "url": "https://www.portsmouthnh.gov/cityclerk/voting-information",
+    "file": "sources/aad093ce4989860132670e015df29624e8415bb2bcc0e021b6e69f173fb509de.source.gz",
+    "sha256": "aad093ce4989860132670e015df29624e8415bb2bcc0e021b6e69f173fb509de",
+    "byteLength": 58630,
+    "storedEncoding": "gzip",
+    "storedSha256": "57ece0285257cc50a484f338929da2b29c4373f51951f2414ae1e9c678d7b434",
+    "storedByteLength": 10880,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:05.982530+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES",
+    "contentType": "text/html; charset=UTF-8"
+  },
+  {
+    "url": "https://news.rochesternh.gov/plan-ahead-to-vote-in-the-nh-state-general-election-on-tuesday-november-3-2026/",
+    "file": "sources/4f36c19c7a2c13c11366d26532184c1e2605555b060e1da364a19b2953c2c485.source.gz",
+    "sha256": "4f36c19c7a2c13c11366d26532184c1e2605555b060e1da364a19b2953c2c485",
+    "byteLength": 93717,
+    "storedEncoding": "gzip",
+    "storedSha256": "df0f775d5ad78b757ca7d0987735f01009228c3ce5c8e186f1d5bc95de9202f1",
+    "storedByteLength": 18368,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:06.045146+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES",
+    "contentType": "text/html; charset=UTF-8"
+  },
+  {
+    "url": "https://www.somersworthnh.gov/welcome-somersworth/pages/elections-voting",
+    "file": "sources/5c09f2f5f5a5947965cde4436b5731ada95ed7ce259cecac081ef1bceb1a007b.source.gz",
+    "sha256": "5c09f2f5f5a5947965cde4436b5731ada95ed7ce259cecac081ef1bceb1a007b",
+    "byteLength": 81037,
+    "storedEncoding": "gzip",
+    "storedSha256": "75a32338207d7ca538fb4d06c67cd30c458d9cfc0db4c7b084cddb6acb630030",
+    "storedByteLength": 23293,
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:43:06.098312+00:00",
+    "rawFormat": "ORIGINAL_GOVERNMENT_HTML_BYTES",
+    "contentType": "text/html; charset=utf-8"
+  },
+  {
+    "url": "https://www.concordnh.gov/DocumentCenter/View/26835/CSD---Zone-B-Wards-5-6-7",
+    "additionalUrl": "https://www.concordnh.gov/DocumentCenter/View/26836/CSD---Zone-C-Wards-8-9-10",
+    "file": "sources/ba225031c0f4676f661128101e0b717ceb975bdf1f477a3a125855f6704e4a07.source",
+    "sha256": "ba225031c0f4676f661128101e0b717ceb975bdf1f477a3a125855f6704e4a07",
+    "byteLength": 2502,
+    "storedEncoding": "identity",
+    "storedSha256": "ba225031c0f4676f661128101e0b717ceb975bdf1f477a3a125855f6704e4a07",
+    "storedByteLength": 2502,
+    "httpStatus": null,
+    "originHttpStatus": null,
+    "retrievedAt": "2026-11-03T04:45:36Z",
+    "rawFormat": "CAPTURED_WEB_TOOL_SOURCE_TEXT",
+    "captureSucceeded": true,
+    "provider": "public web tool, complete15lineonepagePDFextractionsforeachzone",
+    "hashScope": "Exact savedJSONcontainingcompletewebtooltextresponsefortwoofficialPDFs;notPDFbytes."
+  },
+  {
+    "url": "https://www.claremontnh.com/index.php?section=press-room&prrid=912",
+    "file": "sources/2ae4b473b1a238c2751749665d750cb0b9c392d1a9da1c8e90619ba9575c8d84.source",
+    "sha256": "2ae4b473b1a238c2751749665d750cb0b9c392d1a9da1c8e90619ba9575c8d84",
+    "byteLength": 3831,
+    "storedEncoding": "identity",
+    "storedSha256": "2ae4b473b1a238c2751749665d750cb0b9c392d1a9da1c8e90619ba9575c8d84",
+    "storedByteLength": 3831,
+    "httpStatus": null,
+    "originHttpStatus": null,
+    "nativeFetchHttpStatus": 404,
+    "retrievedAt": "2026-11-03T04:48:46Z",
+    "rawFormat": "CAPTURED_WEB_TOOL_SOURCE_TEXT",
+    "captureSucceeded": true,
+    "provider": "public web tool; complete136lineofficialOctober20,2026ballotnotice",
+    "hashScope": "Exact saved JSON containing the complete observed public web-tool text of the current official city notice, not original publisher HTML bytes."
+  }
+]

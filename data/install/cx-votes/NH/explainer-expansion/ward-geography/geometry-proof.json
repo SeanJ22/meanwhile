@@ -1,0 +1,297 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:1",
+    "officialBallotLocality": "CLAREMONT WARD 1",
+    "publishedWardLabel": "Claremont Ward 1",
+    "sourceFeatureIds": [
+      259
+    ],
+    "sourceCounty": "Sullivan",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:2",
+    "officialBallotLocality": "CLAREMONT WARD 2",
+    "publishedWardLabel": "Claremont Ward 2",
+    "sourceFeatureIds": [
+      260
+    ],
+    "sourceCounty": "Sullivan",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:claremont/ward:3",
+    "officialBallotLocality": "CLAREMONT WARD 3",
+    "publishedWardLabel": "Claremont Ward 3",
+    "sourceFeatureIds": [
+      261
+    ],
+    "sourceCounty": "Sullivan",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:dover/ward:4",
+    "officialBallotLocality": "DOVER WARD 4",
+    "publishedWardLabel": "Dover Ward 4",
+    "sourceFeatureIds": [
+      282
+    ],
+    "sourceCounty": "Strafford",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:1",
+    "officialBallotLocality": "FRANKLIN WARD 1",
+    "publishedWardLabel": "Franklin Ward 1",
+    "sourceFeatureIds": [
+      253
+    ],
+    "sourceCounty": "Merrimack",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:2",
+    "officialBallotLocality": "FRANKLIN WARD 2",
+    "publishedWardLabel": "Franklin Ward 2",
+    "sourceFeatureIds": [
+      254
+    ],
+    "sourceCounty": "Merrimack",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:franklin/ward:3",
+    "officialBallotLocality": "FRANKLIN WARD 3",
+    "publishedWardLabel": "Franklin Ward 3",
+    "sourceFeatureIds": [
+      255
+    ],
+    "sourceCounty": "Merrimack",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:1",
+    "officialBallotLocality": "LACONIA WARD 1",
+    "publishedWardLabel": "Laconia Ward 1",
+    "sourceFeatureIds": [
+      270
+    ],
+    "sourceCounty": "Belknap",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:2",
+    "officialBallotLocality": "LACONIA WARD 2",
+    "publishedWardLabel": "Laconia Ward 2",
+    "sourceFeatureIds": [
+      272
+    ],
+    "sourceCounty": "Belknap",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:3",
+    "officialBallotLocality": "LACONIA WARD 3",
+    "publishedWardLabel": "Laconia Ward 3",
+    "sourceFeatureIds": [
+      268
+    ],
+    "sourceCounty": "Belknap",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:4",
+    "officialBallotLocality": "LACONIA WARD 4",
+    "publishedWardLabel": "Laconia Ward 4",
+    "sourceFeatureIds": [
+      267
+    ],
+    "sourceCounty": "Belknap",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:5",
+    "officialBallotLocality": "LACONIA WARD 5",
+    "publishedWardLabel": "Laconia Ward 5",
+    "sourceFeatureIds": [
+      269
+    ],
+    "sourceCounty": "Belknap",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:laconia/ward:6",
+    "officialBallotLocality": "LACONIA WARD 6",
+    "publishedWardLabel": "Laconia Ward 6",
+    "sourceFeatureIds": [
+      271
+    ],
+    "sourceCounty": "Belknap",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:portsmouth/ward:1",
+    "officialBallotLocality": "PORTSMOUTH WARD 1",
+    "publishedWardLabel": "Portsmouth Ward 1",
+    "sourceFeatureIds": [
+      322
+    ],
+    "sourceCounty": "Rockingham",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:portsmouth/ward:5",
+    "officialBallotLocality": "PORTSMOUTH WARD 5",
+    "publishedWardLabel": "Portsmouth Ward 5",
+    "sourceFeatureIds": [
+      323
+    ],
+    "sourceCounty": "Rockingham",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:rochester/ward:5",
+    "officialBallotLocality": "ROCHESTER WARD 5",
+    "publishedWardLabel": "Rochester Ward 5",
+    "sourceFeatureIds": [
+      273
+    ],
+    "sourceCounty": "Strafford",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:1",
+    "officialBallotLocality": "SOMERSWORTH WARD 1",
+    "publishedWardLabel": "Somersworth Ward 1",
+    "sourceFeatureIds": [
+      316
+    ],
+    "sourceCounty": "Strafford",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:2",
+    "officialBallotLocality": "SOMERSWORTH WARD 2",
+    "publishedWardLabel": "Somersworth Ward 2",
+    "sourceFeatureIds": [
+      317
+    ],
+    "sourceCounty": "Strafford",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:3",
+    "officialBallotLocality": "SOMERSWORTH WARD 3",
+    "publishedWardLabel": "Somersworth Ward 3",
+    "sourceFeatureIds": [
+      318,
+      321
+    ],
+    "sourceCounty": "Strafford",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:4",
+    "officialBallotLocality": "SOMERSWORTH WARD 4",
+    "publishedWardLabel": "Somersworth Ward 4",
+    "sourceFeatureIds": [
+      320
+    ],
+    "sourceCounty": "Strafford",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:nh/place:somersworth/ward:5",
+    "officialBallotLocality": "SOMERSWORTH WARD 5",
+    "publishedWardLabel": "Somersworth Ward 5",
+    "sourceFeatureIds": [
+      319
+    ],
+    "sourceCounty": "Strafford",
+    "sourceUrl": "https://nhgeodata.unh.edu/nhgeodata/rest/services/APB/ElectoralDistricts/MapServer/11/query?where=1%3D1&objectIds=253%2C254%2C255%2C259%2C260%2C261%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C282%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323&outFields=FID%2CNAME%2CCOUNTY%2CDISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+    "originalSourceSha256": "686a2ea8bb7851af84aad2614fc198fa6f485507793d27d0aaaa315743b46fc6",
+    "geometryTransformation": "Original coordinate sequences unchanged. If the same published ward has multiple polygon features, concatenate their complete original polygon components into one MultiPolygon; no union, clipping, simplification or rounding.",
+    "sourceBoundaryYear": 2022,
+    "currentElectionAssociation": "Each exact city and ward label occurs on its currently published November3,2026 official SOS ballot. GRANIT currently publishes this2022redistricting ward layer, XML metadata createdMay5,2024; no claim that geometry was originally createdin2026."
+  }
+]

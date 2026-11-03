@@ -1,0 +1,140 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-van-buren-school-revenue-refunding-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:van_buren_county_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Van Buren County Community School District \u2014 Measure US: School revenue and refinancing bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.vanburencounty.iowa.gov/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+          "provenance": {
+            "sourceUrl": "https://www.vanburencounty.iowa.gov/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+            "sourceOrg": "Van Buren County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T08:02:17.094313+00:00",
+            "verifiedAt": "2026-11-03T08:06:44.750100+00:00",
+            "quote": "Shall the Board of Directors of the Van Buren County Community School District in the Counties of Van Buren, Davis, Henry and Lee, State of Iowa, be authorized to issue approximately $13,800,000 School Infrastructure Sales, Services and Use Tax Revenue and Refunding Bonds, which may be issued in one or more series over multiple fiscal years pursuant to Iowa Code Section 423F.2 and 423E.5, in the approximate amount of $13,800,000 for the purpose of providing funds to build, furnish, and equip an addition to the Keosauqua campus, including a secure entrance, classrooms, commons, and office space, and to improve the site; and to currently refund the outstanding School Infrastructure Sales, Services and Use Tax Revenue Bonds, Series 2022A, dated July 15, 2022, including costs of issuance and a debt service reserve fund if required by the purchaser; with any bond proceeds remaining after completion of this project used for other school infrastructure projects as authorized by the School District's Revenue Purpose Statement?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-van-buren-school-revenue-refunding-bonds:measure",
+          "contestId": "ia-cx-2026-van-buren-school-revenue-refunding-bonds",
+          "officialNumber": "US",
+          "questionText": "Shall the Board of Directors of the Van Buren County Community School District in the Counties of Van Buren, Davis, Henry and Lee, State of Iowa, be authorized to issue approximately $13,800,000 School Infrastructure Sales, Services and Use Tax Revenue and Refunding Bonds, which may be issued in one or more series over multiple fiscal years pursuant to Iowa Code Section 423F.2 and 423E.5, in the approximate amount of $13,800,000 for the purpose of providing funds to build, furnish, and equip an addition to the Keosauqua campus, including a secure entrance, classrooms, commons, and office space, and to improve the site; and to currently refund the outstanding School Infrastructure Sales, Services and Use Tax Revenue Bonds, Series 2022A, dated July 15, 2022, including costs of issuance and a debt service reserve fund if required by the purchaser; with any bond proceeds remaining after completion of this project used for other school infrastructure projects as authorized by the School District's Revenue Purpose Statement?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.vanburencounty.iowa.gov/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+            "sourceOrg": "Van Buren County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T08:02:17.094313+00:00",
+            "verifiedAt": "2026-11-03T08:06:44.750100+00:00",
+            "quote": "Shall the Board of Directors of the Van Buren County Community School District in the Counties of Van Buren, Davis, Henry and Lee, State of Iowa, be authorized to issue approximately $13,800,000 School Infrastructure Sales, Services and Use Tax Revenue and Refunding Bonds, which may be issued in one or more series over multiple fiscal years pursuant to Iowa Code Section 423F.2 and 423E.5, in the approximate amount of $13,800,000 for the purpose of providing funds to build, furnish, and equip an addition to the Keosauqua campus, including a secure entrance, classrooms, commons, and office space, and to improve the site; and to currently refund the outstanding School Infrastructure Sales, Services and Use Tax Revenue Bonds, Series 2022A, dated July 15, 2022, including costs of issuance and a debt service reserve fund if required by the purchaser; with any bond proceeds remaining after completion of this project used for other school infrastructure projects as authorized by the School District's Revenue Purpose Statement?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-van-buren-school-revenue-refunding-bonds",
+          "whatItDoes": "Authorizes about $13.8 million in school sales, services and use-tax revenue and refinancing bonds, which may be issued in one or more batches across budget years. Funds would add classrooms, a secure entrance, common areas and offices at the Keosauqua campus and improve the site; refinance the 2022A infrastructure bonds; and cover issuance costs and a reserve if the purchaser requires one. Leftover money could fund other school infrastructure projects allowed by the district\u2019s revenue-use plan.",
+          "yesMeans": "Authorize the school revenue and refinancing bonds.",
+          "noMeans": "Do not authorize this bond issue.",
+          "parts": [],
+          "sourceUrl": "https://www.vanburencounty.iowa.gov/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+          "sourceHash": "382dc883163dbff4d365a795f7427a0e84b8382d1e3f5a5a835e9323ed8ed615",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:06:44.750100+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:06:44.750100+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://www.vanburencounty.iowa.gov/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+        "finalUrl": "https://cms8.revize.com/revize/vanburen/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+        "httpStatus": 200,
+        "rawHash": "612bf8bece06cb01aba26e3d41d5348de8ba8c8b23c12ef1a87f23a97ac00e86",
+        "retrievedAt": "2026-11-03T08:02:17.094313+00:00",
+        "publisher": "Van Buren County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page sample ballot has clear November3,2026 header and complete US question. Printed school field visually verified after90degree counterclockwise raster rotation; raw PDF unchanged. County election notice independently corroborates same question but has a stale November5 reference in a separate polling paragraph, which is not used for any ordinary data here."
+      }
+    ]
+  }
+}

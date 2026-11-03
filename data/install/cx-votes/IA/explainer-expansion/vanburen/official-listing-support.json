@@ -1,0 +1,29 @@
+{
+  "listing": {
+    "sourceUrl": "https://www.vanburencounty.iowa.gov/offices/administrative/elections.php",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:58:04.174668+00:00",
+    "sourceFile": "sources/df751e4c8d6644bb38017d49b39dd324e4c7522aa625dd8ed0bf96f01f01de15.official-index.html",
+    "originalSha256": "df751e4c8d6644bb38017d49b39dd324e4c7522aa625dd8ed0bf96f01f01de15",
+    "archivedSha256": "df751e4c8d6644bb38017d49b39dd324e4c7522aa625dd8ed0bf96f01f01de15"
+  },
+  "primaryPrintedSample": {
+    "requestedUrl": "https://www.vanburencounty.iowa.gov/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+    "finalUrl": "https://cms8.revize.com/revize/vanburen/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+    "nativePdfSha256": "612bf8bece06cb01aba26e3d41d5348de8ba8c8b23c12ef1a87f23a97ac00e86",
+    "nativeDateHeader": "NOVEMBER3,2026",
+    "questionFieldPage": 2,
+    "cropFile": "sources/US-native-upright-crop.png",
+    "rasterTransformation": "Original landscape scan rotated90degrees counterclockwise for legibility, then upright crop[395,775,590,1210]points at300dpi. Original PDFbytes unchanged.",
+    "dateEvidence": "sources/native-page1-raw-ocr.txt"
+  },
+  "companionNotice": {
+    "sourceUrl": "https://www.vanburencounty.iowa.gov/Notice%20of%20General%20Election-2026.pdf?t=202610200910200",
+    "finalUrl": "https://cms8.revize.com/revize/vanburen/Notice%20of%20General%20Election-2026.pdf?t=202610200910200",
+    "nativePdfSha256": "b4ade3cdb6b46e8b1908cca48210b8e183cff2180e6984444e67a6ae39b2e82b",
+    "sourceFile": "sources/b4ade3cdb6b46e8b1908cca48210b8e183cff2180e6984444e67a6ae39b2e82b.companion-native-notice.pdf",
+    "scope": "US question independently corroborates printed ballot. Notice opening is expressly November3,2026, but later unrelated polling paragraph retains November5. Printed ballot’s clear November3header controls this explainer; no polling data is prepared."
+  },
+  "amountAndConditions": "Approximately13.8million retained as about, not a firm cap. Revenue/refunding classification, multiple-series/fiscal-years allowance,2022Arefunding, conditionalreserve and remaining-proceeds restriction retained.",
+  "scopeLimitation": "One source-checked wholeK12school question; no Iowa all-local completeness assertion."
+}

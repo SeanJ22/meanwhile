@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ia-cx-2026-van-buren-school-revenue-refunding-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:van_buren_county_community_school_district",
+      "unsd",
+      "1928980",
+      "Van Buren County Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole Van Buren County Community School District named in official question, including Van Buren,Davis,Henry,Lee; not publisher county only or older similarly named district."
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "ia-cx-2026-van-buren-school-revenue-refunding-bonds",
+    "sourceUrl": "https://www.vanburencounty.iowa.gov/North%20Village%20VBCCSD%20Sample%20Ballot.pdf?t=202610051143390",
+    "rawHash": "612bf8bece06cb01aba26e3d41d5348de8ba8c8b23c12ef1a87f23a97ac00e86",
+    "sourceFile": "sources/612bf8bece06cb01aba26e3d41d5348de8ba8c8b23c12ef1a87f23a97ac00e86.source",
+    "sourceTextFile": "sources/738e2c31e395d29dedca31b97fe25d042f7a39ddfdd85ec03ef109701a2683c2.txt",
+    "excerpt": "Shall the Board of Directors of the Van Buren County Community School District in the Counties of Van Buren, Davis, Henry and Lee, State of Iowa, be authorized to issue approximately $13,800,000 School Infrastructure Sales, Services and Use Tax Revenue and Refunding Bonds, which may be issued in one or more series over multiple fiscal years pursuant to Iowa Code Section 423F.2 and 423E.5, in the approximate amount of $13,800,000 for the purpose of providing funds to build, furnish, and equip an addition to the Keosauqua campus, including a secure entrance, classrooms, commons, and office space, and to improve the site; and to currently refund the outstanding School Infrastructure Sales, Services and Use Tax Revenue Bonds, Series 2022A, dated July 15, 2022, including costs of issuance and a debt service reserve fund if required by the purchaser; with any bond proceeds remaining after completion of this project used for other school infrastructure projects as authorized by the School District's Revenue Purpose Statement?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Van Buren County Community School District in the Counties of Van Buren, Davis, Henry and Lee, State of Iowa, be authorized to issue approximately $13,800,000 School Infrastructure Sales, Services and Use Tax Revenue and Refunding Bonds, which may be issued in one or more series over multiple fiscal years pursuant to Iowa Code Section 423F.2 and 423E.5, in the approximate amount of $13,800,000 for the purpose of providing funds to build, furnish, and equip an addition to the Keosauqua campus, including a secure entrance, classrooms, commons, and office space, and to improve the site; and to currently refund the outstanding School Infrastructure Sales, Services and Use Tax Revenue Bonds, Series 2022A, dated July 15, 2022, including costs of issuance and a debt service reserve fund if required by the purchaser; with any bond proceeds remaining after completion of this project used for other school infrastructure projects as authorized by the School District's Revenue Purpose Statement?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Van Buren County Community School District in the Counties of Van Buren, Davis, Henry and Lee, State of Iowa, be authorized to issue approximately $13,800,000 School Infrastructure Sales, Services and Use Tax Revenue and Refunding Bonds, which may be issued in one or more series over multiple fiscal years pursuant to Iowa Code Section 423F.2 and 423E.5, in the approximate amount of $13,800,000 for the purpose of providing funds to build, furnish, and equip an addition to the Keosauqua campus, including a secure entrance, classrooms, commons, and office space, and to improve the site; and to currently refund the outstanding School Infrastructure Sales, Services and Use Tax Revenue Bonds, Series 2022A, dated July 15, 2022, including costs of issuance and a debt service reserve fund if required by the purchaser; with any bond proceeds remaining after completion of this project used for other school infrastructure projects as authorized by the School District's Revenue Purpose Statement?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Van Buren County Community School District in the Counties of Van Buren, Davis, Henry and Lee, State of Iowa, be authorized to issue approximately $13,800,000 School Infrastructure Sales, Services and Use Tax Revenue and Refunding Bonds, which may be issued in one or more series over multiple fiscal years pursuant to Iowa Code Section 423F.2 and 423E.5, in the approximate amount of $13,800,000 for the purpose of providing funds to build, furnish, and equip an addition to the Keosauqua campus, including a secure entrance, classrooms, commons, and office space, and to improve the site; and to currently refund the outstanding School Infrastructure Sales, Services and Use Tax Revenue Bonds, Series 2022A, dated July 15, 2022, including costs of issuance and a debt service reserve fund if required by the purchaser; with any bond proceeds remaining after completion of this project used for other school infrastructure projects as authorized by the School District's Revenue Purpose Statement?"
+      ]
+    },
+    "semanticConditions": [
+      "Amount printed approximately13.8million twice: retained as about, not a firm not-to-exceed cap.",
+      "Revenue/refunding bonds not mislabeled as general-obligation bonds or wholly new project debt.",
+      "One-or-more-series/multiple-fiscal-years,2022Arefunding, conditionalreserve and leftoverproceeds perRevenuePurposeStatement retained.",
+      "No tax rate, property-tax exemption, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "One independently source-checked whole K12 question from current Van Buren official sample. Fairfield LR already prepared from Wapello; no duplicate. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract OMP_THREAD_LIMIT1 + visual verification",
+      "page1Based": 2,
+      "originalPageSizePoints": [
+        1235.280029296875,
+        803.280029296875
+      ],
+      "rasterDpi": 300,
+      "rasterRotation": "90degrees counterclockwise, to make scanned original upright",
+      "uprightCropBoxPoints": [
+        395,
+        775,
+        590,
+        1210
+      ],
+      "scope": "Complete operative US question visually verified through final question mark; label verified from full raw OCR/native PDF, source date independently from p1header. No words or conditions omitted."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

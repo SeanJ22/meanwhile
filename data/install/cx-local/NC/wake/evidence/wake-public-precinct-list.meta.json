@@ -1,0 +1,9 @@
+{
+  "url": "https://vt.ncsbe.gov/PPLkup/?handler=LoadPrecincts&countyId=92",
+  "finalUrl": "https://vt.ncsbe.gov/PPLkup/?handler=LoadPrecincts&countyId=92",
+  "status": 200,
+  "fetchedAt": "2026-11-03T04:57:39.239643+00:00",
+  "sha256": "847865b6d902d1fd9dc8f363f8ef04bbc3e1741a7bfb817415fcc1c3e2d2aac8",
+  "bytes": 28894,
+  "contentType": "application/json; charset=utf-8"
+}

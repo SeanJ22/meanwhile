@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no">
+    <title>Election Day Polling Place Search</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" />
+<meta name="x-stylesheet-fallback-test" content="" class="visually-hidden" /><script>!function(a,b,c,d){var e,f=document,g=f.getElementsByTagName("SCRIPT"),h=g[g.length-1].previousElementSibling,i=f.defaultView&&f.defaultView.getComputedStyle?f.defaultView.getComputedStyle(h):h.currentStyle;if(i&&i[a]!==b)for(e=0;e<c.length;e++)f.write('<link href="'+c[e]+'" '+d+"/>")}("position","absolute",["/lib/bootstrap/dist/css/bootstrap.min.css"], "rel=\u0022stylesheet\u0022 ");</script>
+    <link rel="icon" href="/img/favicon.ico" />
+    <link href="https://kendo.cdn.telerik.com/themes/12.0.0/default/default-ocean-blue.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<meta name="x-stylesheet-fallback-test" content="" class="fa-solid" /><script>!function(a,b,c,d){var e,f=document,g=f.getElementsByTagName("SCRIPT"),h=g[g.length-1].previousElementSibling,i=f.defaultView&&f.defaultView.getComputedStyle?f.defaultView.getComputedStyle(h):h.currentStyle;if(i&&i[a]!==b)for(e=0;e<c.length;e++)f.write('<link href="'+c[e]+'" '+d+"/>")}("font-weight","900",["/lib/font-awesome/css/font-awesome.min.css"], "rel=\u0022stylesheet\u0022 ");</script>
+    <link rel="stylesheet" href="/css/site.css?v=SriC2o3ShQD-CFELtlmWCTkoDZkArDHWcrW05wvyp6E" />
+    <link rel="stylesheet" href="/VoterTools.styles.css?v=gpTXNPeln5MSpOsZQyFAkRTe86HoFm-mdzmMysfvf5s" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>(window.jQuery||document.write("\u003Cscript src=\u0022/lib/jquery/jquery.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>(window.JSZip||document.write("\u003Cscript src=\u0022/lib/jszip/jszip.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://cdn.kendostatic.com/2025.3.812/js/kendo.all.min.js"></script>
+<script>(window.kendo && window.kendo.ui||document.write("\u003Cscript src=\u0022/lib/progress/kendo-ui/umd/kendo.all.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://cdn.kendostatic.com/2025.3.812/js/kendo.aspnetmvc.min.js"></script>
+<script>(window.kendo && window.kendo.aspnetmvc||document.write("\u003Cscript src=\u0022/lib/progress/kendo-ui/umd/kendo.aspnetmvc.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    
+    <link rel="stylesheet" href="/css/PollingPlaceLookup/PollingPlaceSearchResults.css" />
+
+<script type="text/javascript">!function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{
+src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js", // The SDK URL Source
+crossOrigin: "anonymous", 
+cfg: { // Application Insights Configuration
+    connectionString: 'InstrumentationKey=eb638385-ba1a-f95b-9c93-dacb136132ba;EndpointSuffix=applicationinsights.us;IngestionEndpoint=https://usgovvirginia-1.in.applicationinsights.azure.us/;LiveEndpoint=https://usgovvirginia.livediagnostics.monitor.azure.us/;AADAudience=https://monitor.azure.us/;ApplicationId=219e0eee-a6c3-4980-ba82-f3cb64603a95'
+}});</script></head>
+<body class="k-content" style=" background-color: #f3f3f4;">
+<div b-ct5k6qwudn class="border-bottom white-bg" style="white-space: nowrap;">
+        <nav b-ct5k6qwudn class="navbar navbar-static-top" role="navigation" style="padding: 5px;">
+            <div b-ct5k6qwudn class="navbar-header">
+                <button b-ct5k6qwudn id="button_menu"
+                        aria-controls="navbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation menu"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbar"
+                        class="navbar-toggle collapsed"
+                        type="button">
+                    <i b-ct5k6qwudn class="fa fa-reorder" aria-hidden="true"></i>
+                </button>
+                <a b-ct5k6qwudn href="https://www.ncsbe.gov/"><img style="padding-right: 12px;" src="/img/Logo_Web.png" alt="North Carolina State Board of Elections Logo" /></a>
+            </div>
+            <div b-ct5k6qwudn class="navbar-collapse collapse navbar-right" id="navbar" style="width:224px;">
+                <ul b-ct5k6qwudn id="menu_mobile" class="nav navbar-nav" style="float:right;">
+                    <li b-ct5k6qwudn class="dropdown hidden-xs" id="headerMenuDropdown">
+                        <a b-ct5k6qwudn id="applicationAnchor" aria-expanded="false" aria-haspopup="true" role="button" class="dropdown-toggle" data-bs-toggle="dropdown" href="#">Applications<span b-ct5k6qwudn class="caret"></span></a>
+                        <ul b-ct5k6qwudn id="menu_desktop" class="dropdown-menu" aria-labelledby="applicationAnchor" aria-expanded="false">
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+                <div b-ct5k6qwudn class="text-center" style="white-space: normal;">
+                    <h1 b-ct5k6qwudn style="margin-top: 12px;">Election Day Polling Place Search</h1>
+                </div>
+        </nav>
+       
+    </div>
+
+    <main b-ct5k6qwudn>
+        <div b-ct5k6qwudn id="mainContent" class="wrapper-content">
+            
+
+<form action="/PPLkup/PollingPlaceResult?CountyID=92&amp;PollingPlaceID=175" method="post">    <!-- Live region for dynamic announcements -->
+    <div id="liveAnnouncer" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+    <div class="ibox float-e-margins">
+        <div class="ibox-content search-ibox-content">
+            <div id="divPPSearch" class="row">
+                    <div class="ibox text-center">
+                        <div>
+                            <button class="btn button-search" id="btnNewSearch" onclick="window.location.href=&#x27;/PPLkup&#x27;" style="background-color:#1578BB;color:#FFFFFF;border-color:#1578BB;white-space:nowrap;min-width:180px;" type="button">New Search</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+        <div id="divPPDetail" class="row">
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-title blue-bg collapse-link">
+                        <h2 style="font-weight: bold;">Election Day Polling Place Information</h2>
+                        <div class="ibox-tools">
+                            <a style="color: white;">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content ibox-content-xs">
+                        <div id="divPollingPlace">
+                            <p>
+                                FOX ROAD BOYS &amp; GIRLS CLUB
+                                <br />
+                                <a href="https://maps.google.com/?q=5616 FOX RD,RALEIGH, NC 27616" style="text-decoration:underline" target="_blank">
+                                    5616 FOX RD
+                                    <br />
+                                    RALEIGH, NC 27616
+                                    <br />
+                                </a>
+                                <strong>Precinct:</strong> PRECINCT 13-07
+                            </p>
+                                <p>
+                                    <a href="/PPLkup/ViewImages?CountyID=92&amp;PollingPlaceID=175" style="text-decoration:underline" target="_blank">View Images</a>
+                                </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title blue-bg collapse-link">
+                    <h2 style="font-weight: bold;">Sample Ballots</h2>
+                        <div class="ibox-tools">
+                            <a style="color: white;">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content ibox-content-xs">
+                            <div>
+                                <div id="gridBallotStyles" name="gridBallotStyles"></div><script>(typeof KendoLicensing === 'object' && KendoLicensing.setScriptKey('141j041f611f063e0837023e133i0i490g310c3a18445h425d3857395g3f5k3e5f3d603j590k5c14510f3j0f1e031c0i20162513223g23004i072806211a1i365e464f072c032419251420395f161e1258325d405f445h445b400f2339275i0j582c412i5a153h0342224h40155a2g3a00552i09511k4c421a5a1c3e254k2k381h58024h275d1557205k39284k2h5g30472c4627522i094f2f511b142d3j214d0b5047094h22371k31113425542e093c0f47511b4i253727442i5b13562b4i25143h2k5j0g5a184b29431a3a1c34003a2g5a19395j1a442a3e0k3d19550c2k0a4f22370326612h603e005h2h0a35003a2g5a183c2752295g2950204f41175d2h0f3311385b2g5k29461132165a2j502e3d023724380a4f3k4i2i5f2j0c310k41234f0938244f1f50490j400d5h2a3e045e2k3k214702264i0j57330k4a04380e2e5817423058163b2j57153k4e245h1j340c390d5g2d572f0c330h1b3a0g5h2i3i183b175b2g430229600441254d2c53003e1f55435g2a033103591e534527025e13610i3c2g0b510d4e470c5h2e550d5j3e1d32275e0k5h0i304a2b5623183d304j1k490h3c1b0j4e221658034g0i522k561a5511330f315e25520i5c0d4k1f401b59310c55065c2a023f1c3h1i5821311h4c21452k5c2i5309330b4j195h3c0550460d2k350k1f57093e0c4c27003d0443264h205j1e3j114e3h0h420c5g3d5g085f1c114721441d3103472b402601550k37215h1d56330436083f2k3d1k482a380b330f39285j0k5a1348203k0a56012b462i4224400g461k4d0f5c014f1j3a1i5k0e4855173h2e59331f345b244b0e421h5316541d35005b075c331j0559235j20074k462j5b1421462d3g2145273k005h1k0g1b341j4f004g0i520756064c1e0g1c500442121i5728321f4h2c5c16484g2d365k300b350k3f2g3g03571k52440c3e1a5405482j0a362a045c0f54022g551a4i07264d1e412k5e105310385e17554623521k1a3a115e2c0k3a0k'));window._wrappersMetadata = Object.freeze({"name":"@progress/kendo-ui","productCode":"UIASPCORE","productName":"Telerik UI for ASP.NET Core","version":"2026.1.212","licensingDocsUrl":"https://www.telerik.com/aspnet-core-ui/documentation/installation/activating-your-license/setting-up-your-license"});kendo.syncReady(function(){jQuery("#gridBallotStyles").kendoGrid({"dataBound":onBallotStylesGridDataBound,"sortable":false,"columns":[{"title":"Election","attributes":{"class":"desktop-col"},"headerAttributes":{"class":"desktop-col"},"width":"65%","template":"#= ElectionDt # #= ElectionTypeDesc ? ElectionTypeDesc : \u0027\u0027 #","field":"ElectionDt","filterable":{"checkAll":false},"encoded":true},{"title":"Ballot(s)","attributes":{"class":"desktop-col"},"headerAttributes":{"class":"desktop-col"},"width":"35%","template":"#= renderBallotStyles(BallotStyleList) #","field":"BallotStyleList","filterable":{"checkAll":false},"encoded":true},{"title":"\u003cspan class=\u0027sr-only\u0027\u003eElection and Ballot info\u003c/span\u003e","attributes":{"class":"mobile-combined-col"},"headerAttributes":{"class":"mobile-combined-col"},"template":kendo.template(jQuery('#ballotMobileTemplate').html()),"field":"ElectionDt","filterable":{"checkAll":false},"encoded":true}],"scrollable":false,"dataSource":{"type":(function(){if(kendo.data.transports['aspnetmvc-ajax']){return 'aspnetmvc-ajax';} else{throw new Error('The kendo.aspnetmvc.min.js script is not included.');}})(),"transport":{"read":{"url":""},"prefix":""},"schema":{"data":"Data","total":"Total","errors":"Errors","model":{"fields":{"ElectionID":{"type":"number"},"ElectionDt":{"type":"string"},"ElectionTypeDesc":{"type":"string"},"BallotStyleList":{"type":"object"}}}},"data":{"Data":[{"ElectionID":122,"ElectionDt":"11/03/2026","ElectionTypeDesc":"GENERAL","BallotStyleList":[{"ElectionID":122,"HasSampleBallot":true,"SampleBallotUrl":"https://s3.amazonaws.com/ncsbesb/20261103/1497_92_B0103.pdf","Name":"B0103"},{"ElectionID":122,"HasSampleBallot":true,"SampleBallotUrl":"https://s3.amazonaws.com/ncsbesb/20261103/1498_92_B0104.pdf","Name":"B0104"}]}],"Total":1}}});});</script>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                    <div class="ibox">
+                        <div class="ibox-title blue-bg collapse-link">
+                            <h2 style="font-weight: bold;">County Information</h2>
+                            <div class="ibox-tools">
+                                <a style="color: white;">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content ibox-content-xs">
+                            <a href="/cdn-cgi/l/email-protection#b1c7dec5d4c3f1c6d0dad49fd6dec7" style="text-decoration:underline">
+                                Wake County Board of Elections
+                            </a>
+                            <address>
+                                1200 N NEW HOPE ROAD
+                                <br />
+                                RALEIGH, NC 27610-1414
+                            </address>
+                            <p>
+                                919-404-4040
+                                <br />
+                                919-743-4746 (fax)
+                                <br />
+                                <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5721382332251720363c3279303821">[email&#160;protected]</a>
+                            </p>
+                            <p>
+                                <strong>Office Hours:</strong> M-F (8:30AM-5:15PM) Election Day (6:30AM-7:30PM)
+                            </p>
+                            <div id="divCountyImg" class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <a id="CountyImgModal" data-bs-toggle="modal" data-bs-target="#modalCounty" href="#" style="cursor: pointer;" aria-haspopup="dialog">
+                                        <img alt="County Board of Elections" class="img-responsive county-image" src="https://s3.amazonaws.com/ncsbeppi/2545_92_.jpg">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="modalCounty" tabindex="-1" aria-labelledby="modalCountyLabel">
+                                <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw; width: auto; margin: 1.75rem auto; display: flex; justify-content: center; align-items: center; min-height: calc(100% - 3.5rem);">
+                                    <div class="modal-content" style="background: transparent; border: none; width: fit-content;">
+                                        <div class="modal-header" style="border: none; padding: 0; position: relative;">
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; top: -15px; right: -15px; background-color: white; border-radius: 50%; padding: 0.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 1;"></button>
+                                        </div>
+                                        <div class="modal-body p-0 text-center">
+                                            <img alt="County Board of Elections" class="img-fluid" src="https://s3.amazonaws.com/ncsbeppi/2545_92_.jpg" style="max-width: 100%; max-height: 85vh; height: auto; width: auto; border-radius: 4px; display: block;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function renderBallotStyles(list) {
+            if (!list || list.length === 0) return "";
+            var html = "";
+            for (var i = 0; i < list.length; i++) {
+                var b = list[i];
+                if (b.HasSampleBallot && b.SampleBallotUrl) {
+                    html += '<a href="' + b.SampleBallotUrl + '" style="text-decoration:underline" target="_blank">' + b.Name + '</a>';
+                } else {
+                    html += b.Name;
+                }
+                html += '<br />';
+            }
+            return html;
+        }
+    </script>
+<input name="__RequestVerificationToken" type="hidden" value="CfDJ8PSp4a7CHlBAs7RKpVMiGfSerY4_GcDYtFW2Pe91LIM4NnaCura6x6Ft0Uv__GvfO3ogFyGKzcvgPkp0EX_Qb-aR09l7SaJX3lHRWe_wLNYvADSSYwWKm-nS5yLbyQoJIQF7SVAQvQc9EXL60FZ68tM" /></form>
+
+
+        </div>
+        <noscript b-ct5k6qwudn>
+            <style type="text/css">
+                #mainContent {
+                    display: none;
+                }
+            </style>
+            <div b-ct5k6qwudn class="wrapper-content text-danger text-center" role="alert" aria-live="assertive" tabindex="0">
+                <br b-ct5k6qwudn/>
+                <h3 b-ct5k6qwudn>You don’t have javascript enabled. This site will not function without enabling it.</h3>
+            </div>
+        </noscript>
+    </main>
+
+
+    <footer b-ct5k6qwudn class="footer text-center d-flex align-items-center">
+        <div b-ct5k6qwudn id="footerText" tabindex="-1">
+            © 2014-2026
+            <a b-ct5k6qwudn type="button" class="btn-link" href="https://www.ncsbe.gov/" style="white-space: nowrap;"><strong b-ct5k6qwudn>NC State Board of Elections</strong></a>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>(window.bootstrap||document.write("\u003Cscript src=\u0022/lib/bootstrap/dist/js/bootstrap.bundle.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="/js/site.js?v=GuwVJ50QYASP6IuY2YdMcPd5okaoSJYjeX4_2eBHAdY"></script>
+    <script type="text/javascript">
+        // Close all navbar menus when viewport crosses the mobile/desktop breakpoint
+        (function() {
+            var mobileBreakpoint = 768;
+            var wasMobile = window.innerWidth < mobileBreakpoint;
+            
+            function closeAllNavbarMenus() {
+                // Close Bootstrap collapse (mobile hamburger menu)
+                var navbarCollapse = document.getElementById('navbar');
+                if (navbarCollapse) {
+                    var bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    } else {
+                        navbarCollapse.classList.remove('show');
+                    }
+                }
+                
+                // Close Bootstrap dropdown (desktop Applications menu)
+                var dropdownToggle = document.getElementById('applicationAnchor');
+                if (dropdownToggle) {
+                    var bsDropdown = bootstrap.Dropdown.getInstance(dropdownToggle);
+                    if (bsDropdown) {
+                        bsDropdown.hide();
+                    }
+                }
+                // Also remove show class from dropdown menu container
+                var dropdownMenu = document.getElementById('menu_desktop');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('show');
+                }
+                var dropdownParent = document.getElementById('headerMenuDropdown');
+                if (dropdownParent) {
+                    dropdownParent.classList.remove('show');
+                }
+            }
+            
+            window.addEventListener('resize', function() {
+                var isMobile = window.innerWidth < mobileBreakpoint;
+                // If we crossed the breakpoint, close all menus
+                if (isMobile !== wasMobile) {
+                    closeAllNavbarMenus();
+                    wasMobile = isMobile;
+                }
+            });
+        })();
+
+        //load the menu with the sites in /sites.txt
+        $(document).ready(function () {
+                var fileSites = new XMLHttpRequest();
+                var arrSites;
+                var timeDayHourMinute = String(new Date().getDate()) + '-' + String(new Date().getHours()) + '-' + String(new Date().getMinutes());
+
+                fileSites.open('get', "/sites.txt" + '?v=' + timeDayHourMinute, false);
+                fileSites.send(null);
+
+                arrSites = JSON.parse(fileSites.responseText);
+
+                arrSites.sort(function (a, b) {
+                    if (a.name > b.name) { return 1 }
+                    if (a.name < b.name) { return -1 }
+                    return 0;
+                });
+
+            for (i = 0; i < arrSites.length; i++) {
+                var linkHtml = '<a class="dropdown-item" href="' + arrSites[i].url + '">' + arrSites[i].name + '</a>';
+                $('#menu_mobile').append('<li class="visible-xs-block">' + linkHtml + '</li>');
+                $('#menu_desktop').append('<li>' + linkHtml + '</li>');
+                if ($('#menu_index').length) {
+                    // Directly add style for color to the <a> tag for menu_index links
+                    $('#menu_index').append('<li>' + linkHtml.replace('<a ', '<a style="color:#337ab7;" ') + '</li>');
+                }
+            }
+            });
+    </script>
+    
+    <script src="/js/PollingPlaceLookup/PollingPlaceSearchResults.js"></script>
+    <script id="ballotMobileTemplate" type="text/x-kendo-template">
+        <div class="ballot-mobile-cell">
+            <strong>Election:</strong> #= ElectionDt # #= ElectionTypeDesc ? ElectionTypeDesc : '' #<br />
+            <strong>Ballot(s):</strong>#if(BallotStyleList && BallotStyleList.length > 1){#<br />#}# #= renderBallotStyles(BallotStyleList) #
+        </div>
+    </script>
+
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-50M238KFRX"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', 'G-50M238KFRX');
+        </script>
+</body>
+</html>

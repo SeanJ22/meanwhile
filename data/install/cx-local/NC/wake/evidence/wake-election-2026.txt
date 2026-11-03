@@ -1,0 +1,1396 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# ">
+  <head>
+    <meta charset="utf-8" />
+<meta name="description" content="Find information on Early Voting in Wake County." />
+<link rel="canonical" href="https://www.wake.gov/departments-government/board-elections/election-information/2026-general-election" />
+<link rel="image_src" href="/themes/custom/paladin/images/WCLogoFullColor.svg" />
+<meta property="og:site_name" content="Wake County Government" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.wake.gov/departments-government/board-elections/election-information/2026-general-election" />
+<meta property="og:title" content="2026 General Election" />
+<meta property="og:description" content="Find information on Early Voting in Wake County." />
+<meta property="og:image" content="https://www.wake.gov/themes/custom/paladin/images/WCLogoFullColor.svg" />
+<meta property="og:image:alt" content="Logo for Wake County, North Carolina" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="Find information on Early Voting in Wake County." />
+<meta name="twitter:site" content="@wakegov" />
+<meta name="twitter:title" content="2026 General Election" />
+<meta name="twitter:creator" content="@wakegov" />
+<meta name="twitter:image" content="https://www.wake.gov/themes/custom/paladin/images/WCLogoFullColor.svg" />
+<meta name="twitter:image:alt" content="Logo for Wake County, North Carolina" />
+<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>div#sliding-popup, div#sliding-popup .eu-cookie-withdraw-banner, .eu-cookie-withdraw-tab {background: #0779bf} div#sliding-popup.eu-cookie-withdraw-wrapper { background: transparent; } #sliding-popup h1, #sliding-popup h2, #sliding-popup h3, #sliding-popup p, #sliding-popup label, #sliding-popup div, .eu-cookie-compliance-more-button, .eu-cookie-compliance-secondary-button, .eu-cookie-withdraw-tab { color: #ffffff;} .eu-cookie-withdraw-tab { border-color: #ffffff;}</style>
+<script type="text/javascript">var mixpanel_init_variables = {"project_token":"e283635481b84817a2ac2f6e01b03a1c","host":null,"debug":"0"}</script>
+<script type="text/javascript">var mixpanel_page_variables = {"page_title":"2026 General Election","last_updated":"2026-10-31T15:44:35-04:00","page_type":"page","node_id":"1039","Department":["Board of Elections"]}</script>
+<meta name="departments-data" content="[{&quot;name&quot;:&quot;Board of Elections&quot;,&quot;icon&quot;:&quot;fas fa-vote-yea&quot;,&quot;color&quot;:&quot;dark-turquoise&quot;}]" class="swiftype" data-type="text" />
+<meta name="department" content="Board of Elections" class="swiftype" data-type="string" />
+<meta name="body" content="Find information on Early Voting in Wake County." class="swiftype" data-type="text" />
+<meta name="title" content="2026 General Election" class="swiftype" data-type="string" />
+<meta name="type" content="Page &amp; Document" class="swiftype" data-type="enum" />
+<link rel="icon" href="/themes/custom/paladin/images/favicon/favicon.ico" type="image/vnd.microsoft.icon" />
+<script src="/themes/custom/paladin/js/eu_cookie_compliance.script.js?0" defer></script>
+
+    <title>2026 General Election | Wake County Government</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_MUhY478VRyq23yi2lJvW_lK-JRQawEZSIgG-_a9QZvM.css?delta=0&amp;language=en&amp;theme=paladin&amp;include=eJxtj9FuwzAIRX_Iij_JovZtQouNC7ba_v2yaU0etic4B3QFWQ2x2OwkC93oFTBTVr0z9lK7MLWM-J9MBVeaMgJeQ7jdPym_GG6PCXunyYlyViusLR5d2Dep8G6GVj_oqm2ctKLBOB-8QTrsnFcV5Ck4jdpKjf0n0Wg16pt_7jrNMlufF2HfUILzwJMLEglsRG48gmtmklRRmNL3Mx7_qmVsqAj-9oEaL-T4ArHQgis" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_rHxTPqXTOKprC1pAUr8rUN436422MERTWtVB-HhcoGw.css?delta=1&amp;language=en&amp;theme=paladin&amp;include=eJxtj9FuwzAIRX_Iij_JovZtQouNC7ba_v2yaU0etic4B3QFWQ2x2OwkC93oFTBTVr0z9lK7MLWM-J9MBVeaMgJeQ7jdPym_GG6PCXunyYlyViusLR5d2Dep8G6GVj_oqm2ctKLBOB-8QTrsnFcV5Ck4jdpKjf0n0Wg16pt_7jrNMlufF2HfUILzwJMLEglsRG48gmtmklRRmNL3Mx7_qmVsqAj-9oEaL-T4ArHQgis" />
+<link rel="stylesheet" media="all" href="//fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro:400,600" />
+<link rel="stylesheet" media="print" href="/sites/default/files/css/css_myopajhoqt5ujOFFPc0rcOPxMMrSzTWRM4bcVpQyQCI.css?delta=3&amp;language=en&amp;theme=paladin&amp;include=eJxtj9FuwzAIRX_Iij_JovZtQouNC7ba_v2yaU0etic4B3QFWQ2x2OwkC93oFTBTVr0z9lK7MLWM-J9MBVeaMgJeQ7jdPym_GG6PCXunyYlyViusLR5d2Dep8G6GVj_oqm2ctKLBOB-8QTrsnFcV5Ck4jdpKjf0n0Wg16pt_7jrNMlufF2HfUILzwJMLEglsRG48gmtmklRRmNL3Mx7_qmVsqAj-9oEaL-T4ArHQgis" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/1039","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"gtag":{"tagId":"AW-11439134708","consentMode":true,"otherIds":[],"events":[],"additionalConfigInfo":[]},"ajaxPageState":{"libraries":"eJxtUluW2yAM3RA2Z7ohjgIyVgKIItEkux_czoRMmh_MfSBfCbA7z3whHJ9cE0HxaPEN6QJu0JOat2LU_P7UEAzeNFG52NB6hbR-QbNxUbiicEb7tF_lTzSROSZ0CtHGsbziFc5w-0lmQ5vLdKtQMFkqpOYsf5NwwaJ2qHKlTZ3eK64P3v0yeZi5QYnoBHKyL3hVFDUjOAQqFj4-7stGN5RJec8tEJfJhLBgBkoL-R_0KL1kLH1RjiP6VJTzLHjC7bEPjWvg6yxyTGpaIxZs5B94x1SxTX2nMP-yj-lWiJM40k3v-XfHdl-O0cBs-Ig7ASf0PT01zy1CIXlKLwjN78sJ2iu1se_Tp-QvOD06Ji4J9EjXIDaou3y_mMmsvdR-SiQ7BiOkeB0NOkjY9N-dC3uC5DIGAnc8M7H_U6vumNHIXRSzPYHgJ6ugLCc","theme":"paladin","theme_token":null},"ajaxTrustedUrl":[],"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_classes":false,"allowlist_classes":"","blocklist_classes":"","include_environment":false,"environment_id":"","environment_token":""},"tagIds":["GTM-TV3Z4XT2"]},"data":{"extlink":{"extTarget":true,"extTargetAppendNewWindowDisplay":true,"extTargetAppendNewWindowLabel":"(opens in a new window)","extTargetNoOverride":false,"extNofollow":false,"extTitleNoOverride":false,"extNoreferrer":false,"extFollowNoOverride":false,"extClass":"0","extLabel":"(link is external)","extImgClass":false,"extSubdomains":false,"extExclude":"","extInclude":"(^.+\\.(([pP][dD][fF]))$)|(^.+\\.(([mM][pP][3]))$)|(^.+\\.(([wW][aA][vV]))$)","extCssExclude":".rrssb-buttons","extCssInclude":"","extCssExplicit":"","extAlert":false,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","extHideIcons":false,"mailtoClass":"0","telClass":"","mailtoLabel":"(link sends email)","telLabel":"(link is a phone number)","extUseFontAwesome":false,"extIconPlacement":"append","extPreventOrphan":false,"extFaLinkClasses":"fa fa-external-link","extFaMailtoClasses":"fa fa-envelope-o","extAdditionalLinkClasses":"","extAdditionalMailtoClasses":"","extAdditionalTelClasses":"","extFaTelClasses":"fa fa-phone","allowedDomains":[],"extExcludeNoreferrer":""}},"eu_cookie_compliance":{"cookie_policy_version":"1.0.0","popup_enabled":true,"popup_agreed_enabled":false,"popup_hide_agreed":false,"popup_clicking_confirmation":false,"popup_scrolling_confirmation":false,"popup_html_info":"\u003Cdiv class=\u0022eu-cookie-compliance-banner eu-cookie-compliance-banner-info eu-cookie-compliance-banner--opt-in\u0022\u003E\n  \u003Cdiv class=\u0022popup-content info eu-cookie-compliance-content\u0022\u003E\n        \u003Cdiv id=\u0022popup-text\u0022 class=\u0022eu-cookie-compliance-message\u0022 role=\u0022document\u0022\u003E\n      \u003Ch2\u003EWe use cookies on this site to enhance your user experience\u003C\/h2\u003E\u003Cp\u003EBy clicking the Accept button, you agree to us doing so.\u003C\/p\u003E\n              \u003Cbutton type=\u0022button\u0022 class=\u0022find-more-button eu-cookie-compliance-more-button\u0022\u003EMore info\u003C\/button\u003E\n          \u003C\/div\u003E\n\n    \n    \u003Cdiv id=\u0022popup-buttons\u0022 class=\u0022eu-cookie-compliance-buttons\u0022\u003E\n            \u003Cbutton type=\u0022button\u0022 class=\u0022agree-button eu-cookie-compliance-secondary-button button button--small\u0022\u003EAccept\u003C\/button\u003E\n              \u003Cbutton type=\u0022button\u0022 class=\u0022decline-button eu-cookie-compliance-default-button button button--small button--primary\u0022\u003ENo, thanks\u003C\/button\u003E\n          \u003C\/div\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E","use_mobile_message":false,"mobile_popup_html_info":"\u003Cdiv class=\u0022eu-cookie-compliance-banner eu-cookie-compliance-banner-info eu-cookie-compliance-banner--opt-in\u0022\u003E\n  \u003Cdiv class=\u0022popup-content info eu-cookie-compliance-content\u0022\u003E\n        \u003Cdiv id=\u0022popup-text\u0022 class=\u0022eu-cookie-compliance-message\u0022 role=\u0022document\u0022\u003E\n      \n              \u003Cbutton type=\u0022button\u0022 class=\u0022find-more-button eu-cookie-compliance-more-button\u0022\u003EMore info\u003C\/button\u003E\n          \u003C\/div\u003E\n\n    \n    \u003Cdiv id=\u0022popup-buttons\u0022 class=\u0022eu-cookie-compliance-buttons\u0022\u003E\n            \u003Cbutton type=\u0022button\u0022 class=\u0022agree-button eu-cookie-compliance-secondary-button button button--small\u0022\u003EAccept\u003C\/button\u003E\n              \u003Cbutton type=\u0022button\u0022 class=\u0022decline-button eu-cookie-compliance-default-button button button--small button--primary\u0022\u003ENo, thanks\u003C\/button\u003E\n          \u003C\/div\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E","mobile_breakpoint":768,"popup_html_agreed":false,"popup_use_bare_css":false,"popup_height":"auto","popup_width":"100%","popup_delay":1000,"popup_link":"\/","popup_link_new_window":true,"popup_position":false,"fixed_top_position":true,"popup_language":"en","store_consent":false,"better_support_for_screen_readers":false,"cookie_name":"","reload_page":false,"domain":"","domain_all_sites":false,"popup_eu_only":false,"popup_eu_only_js":false,"cookie_lifetime":100,"cookie_session":0,"set_cookie_session_zero_on_disagree":0,"disagree_do_not_show_popup":false,"method":"opt_in","automatic_cookies_removal":true,"allowed_cookies":"","withdraw_markup":"\u003Cbutton type=\u0022button\u0022 class=\u0022eu-cookie-withdraw-tab\u0022\u003EPrivacy settings\u003C\/button\u003E\n\u003Cdiv class=\u0022eu-cookie-withdraw-banner\u0022\u003E\n  \u003Cdiv class=\u0022popup-content info eu-cookie-compliance-content\u0022\u003E\n    \u003Cdiv id=\u0022popup-text\u0022 class=\u0022eu-cookie-compliance-message\u0022 role=\u0022document\u0022\u003E\n      \u003Ch2\u003EWe use cookies on this site to enhance your user experience\u003C\/h2\u003E\u003Cp\u003EYou have given your consent for us to set cookies.\u003C\/p\u003E\n    \u003C\/div\u003E\n    \u003Cdiv id=\u0022popup-buttons\u0022 class=\u0022eu-cookie-compliance-buttons\u0022\u003E\n      \u003Cbutton type=\u0022button\u0022 class=\u0022eu-cookie-withdraw-button  button button--small button--primary\u0022\u003EWithdraw consent\u003C\/button\u003E\n    \u003C\/div\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E","withdraw_enabled":false,"reload_options":0,"reload_routes_list":"","withdraw_button_on_info_popup":false,"cookie_categories":[],"cookie_categories_details":[],"enable_save_preferences_button":true,"cookie_value_disagreed":"0","cookie_value_agreed_show_thank_you":"1","cookie_value_agreed":"2","containing_element":"body","settings_tab_enabled":false,"olivero_primary_button_classes":" button button--small button--primary","olivero_secondary_button_classes":" button button--small","close_button_action":"close_banner","open_by_default":true,"modules_allow_popup":true,"hide_the_banner":false,"geoip_match":true,"unverified_scripts":[]},"miniorange_saml":{"base_url":"https:\/\/www.wake.gov"},"sitewideAlert":{"refreshInterval":120000,"automaticRefresh":false,"showCount":false,"serverSideRender":false},"user":{"uid":0,"permissionsHash":"d1a56ad424080bf3333c40bc42f7446a0b564066d86d52bad551556acd852c14"}}</script>
+<script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
+<script src="/sites/default/files/js/js_XQXu4cJEX9z8IFDE22WegM0Bxrq_KTee7cg5914nH0M.js?scope=header&amp;delta=1&amp;language=en&amp;theme=paladin&amp;include=eJx1kGFuwyAMhS8EQd2FkAsOdQuYgbMkty-pprBW2h_w-2zsh3GxjvlB2K9UIkF2aIMkg_8kFG4SKT-Mr0uBOP1KNXMWWLFxQvMnntpPUIE5RLQCwYR-fOoJ7rC9w6Rotom2AhmjoUyi7u3lhDNmMT3bVprFyl5wOrn9UqkXc4Uc0DZI0XzoSbCJ6sbBUzZwuex6pg3bQM5x9cR5EO81JqCoyb3h3lonzIsWDt36mbnifMa-cvG8jmc38qPy1jdUIAxwTBhe7t8L1l0f34Nh-hh5ioZQ3U1foX6imd0yWgm5B44a6RtpEQRVI8G1e7IQscpr1U8kLM0O"></script>
+<script src="https://kit.fontawesome.com/21d00407a4.js" defer crossorigin="anonymous"></script>
+<!-- generic favicons -->
+    <link rel="icon" href="/themes/custom/paladin/images/favicon/favicon-32.png" sizes="32x32">
+    <link rel="icon" href="/themes/custom/paladin/images/favicon/favicon-57.png" sizes="57x57">
+    <link rel="icon" href="/themes/custom/paladin/images/favicon/favicon-76.png" sizes="76x76">
+    <link rel="icon" href="/themes/custom/paladin/images/favicon/favicon-96.png" sizes="96x96">
+    <link rel="icon" href="/themes/custom/paladin/images/favicon/favicon-128.png" sizes="128x128">
+    <link rel="icon" href="/themes/custom/paladin/images/favicon/favicon-192.png" sizes="192x192">
+    <link rel="icon" href="/themes/custom/paladin/images/favicon/favicon-228.png" sizes="228x228">
+
+    <!-- Android -->
+    <link rel="shortcut icon" sizes="196x196" href="/themes/custom/paladin/images/favicon/favicon-196.png">
+
+    <!-- iOS -->
+    <link rel="apple-touch-icon" href="/themes/custom/paladin/images/favicon/favicon-120.png" sizes="120x120">
+    <link rel="apple-touch-icon" href="/themes/custom/paladin/images/favicon/favicon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="/themes/custom/paladin/images/favicon/favicon-180.png" sizes="180x180">
+
+    <!-- Windows 8 IE 10-->
+    <meta name="msapplication-TileColor" content="#017bc4">
+    <meta name="msapplication-TileImage" content="/themes/custom/paladin/images/favicon/favicon-144.png">
+
+    <!-- IF VOX code -->
+    <script type="text/javascript">
+      /* survicate init */
+      (function(w) {
+        var s = document.createElement('script');
+        s.src = 'https://survey.survicate.com/workspaces/b76a53e0865ea7bf7a720db3f6005404/web_surveys.js';
+        s.async = true;
+        var e = document.getElementsByTagName('script')[0];
+        e.parentNode.insertBefore(s, e);
+      })(window);
+      /* make survey question focusable */
+      const makeQFocusable = function() {
+        const svQ = document.body.querySelector('#survicate-box .sv__point-question');
+        console.log(svQ);
+        if (svQ) {
+          svQ.setAttribute('tabindex','0');
+        }
+      }
+      const startSurvicateMPLogging = function(){
+        // check if survicate has been initialized
+        if (!window._sva || !window._svd || !window._svd.surveys) return;
+        // check if mixpanel has been initialized; start a new instance if not
+        if (!window.mixpanel) {
+          (function (f, b) { if (!b.__SV) { var e, g, i, h; window.mixpanel = b; b._i = []; b.init = function (e, f, c) { function g(a, d) { var b = d.split("."); 2 == b.length && ((a = a[b[0]]), (d = b[1])); a[d] = function () { a.push([d].concat(Array.prototype.slice.call(arguments, 0))); }; } var a = b; "undefined" !== typeof c ? (a = b[c] = []) : (c = "mixpanel"); a.people = a.people || []; a.toString = function (a) { var d = "mixpanel"; "mixpanel" !== c && (d += "." + c); a || (d += " (stub)"); return d; }; a.people.toString = function () { return a.toString(1) + ".people (stub)"; }; i = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split( " "); for (h = 0; h < i.length; h++) g(a, i[h]); var j = "set set_once union unset remove delete".split(" "); a.get_group = function () { function b(c) { d[c] = function () { call2_args = arguments; call2 = [c].concat(Array.prototype.slice.call(call2_args, 0)); a.push([e, call2]); }; } for ( var d = {}, e = ["get_group"].concat( Array.prototype.slice.call(arguments, 0)), c = 0; c < j.length; c++) b(j[c]); return d; }; b._i.push([e, f, c]); }; b.__SV = 1.2; e = f.createElement("script"); e.type = "text/javascript"; e.async = !0; e.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "file:" === f.location.protocol && "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//) ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"; g = f.getElementsByTagName("script")[0]; g.parentNode.insertBefore(e, g); } })(document, window.mixpanel || []);
+          mixpanel.init('e283635481b84817a2ac2f6e01b03a1c', {debug: false, track_pageview: false, persistence: 'localStorage'});
+        }
+        _sva.addEventListener('survey_displayed', function(surveyId, surveyName) {
+          _sva.setVisitorTraits({
+            "mixpanel_distinct_id":  mixpanel.get_distinct_id()
+          });
+          const currentSurvey = _svd.surveys.find(survey => survey.id === surveyId);
+          window._if_survey = currentSurvey;
+          //focus on survey box
+          const svBox = document.body.querySelector('#survicate-box .sv__survey');
+          if (svBox) {
+            svBox.setAttribute('tabindex','-1');
+            svBox.focus({ preventScroll: true, focusVisible: true });
+          }
+          setTimeout(makeQFocusable, 1);
+        });
+        _sva.addEventListener('survey_closed', function(surveyId) {
+          // On close, focus the first focusable element on the page
+          const firstFocusable = document.body.querySelector(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (firstFocusable) {
+            firstFocusable.focus();
+          }
+        });
+        _sva.addEventListener('question_answered', function(surveyId, questionId, answer) {
+          if (!answer || !answer.hasOwnProperty('answer_type')) {
+            return;
+            //invalid entry
+          }
+          const currentQ = window._if_survey.points.find(q => q.id === questionId);
+          let mpProps = {'surveyId': surveyId, 'svQuestionId': questionId, 'svAnswer': answer};
+          // log question text
+          let qLower = '';
+          if(currentQ && currentQ.content) {
+            mpProps.question = currentQ.content;
+            qLower = currentQ.content.toLowerCase();
+          }
+          if (answer.answer_type == "nps") {
+            mpProps['question ID'] = 'nps'; // mimic old vox values
+            if (answer.hasOwnProperty('answer_value')) {
+              const vNumeric = parseInt(answer.answer_value);
+              if(!isNaN(vNumeric)) {
+                mpProps.response = vNumeric;
+                // set user property
+                if (!window._if_identified) {
+                  window.mixpanel.identify();
+                  window._if_identified = true;
+                }
+                window.mixpanel.people.set({'satisfaction':vNumeric});
+              }
+            }
+          } else if (answer.answer_type == "single" && answer.hasOwnProperty('answer_id') && currentQ.hasOwnProperty('answers')) {
+            const currentA = currentQ.answers.find(a => a.id === answer.answer_id);
+            if(currentA && currentA.possible_answer) {
+              mpProps.response = currentA.possible_answer;
+              if(qLower.includes("were you successful")) {
+                mpProps['question ID'] = 'comp'; // mimic old vox values
+                // set user property
+                if (!window._if_identified) {
+                  window.mixpanel.identify();
+                  window._if_identified = true;
+                }
+                window.mixpanel.people.set({'success':currentA.possible_answer});
+              } else if (qLower.includes("why did you come to the website")) {
+                mpProps['question ID'] = 'pov'; // mimic old vox values
+                // set user property
+                if (!window._if_identified) {
+                  window.mixpanel.identify();
+                  window._if_identified = true;
+                }
+                window.mixpanel.people.set({'purpose':currentA.possible_answer});
+              } else if (qLower.includes("describes your relationship")) {
+                mpProps['question ID'] = 'rel'; // mimic old vox values
+              } else if (qLower.includes("what is your age group")) {
+                mpProps['question ID'] = 'age'; // mimic old vox values
+              }
+            }
+          } else if (answer.answer_type == "text" && answer.hasOwnProperty('answer_value')) {
+            mpProps.response = answer.answer_value;
+            if(qLower.includes("why were you not successful")) {
+              mpProps['question ID'] = 'fail'; // mimic old vox values
+            }
+          }
+          mixpanel.track('VOX response', mpProps);
+          setTimeout(makeQFocusable, 100);
+        });
+      }
+      setTimeout(startSurvicateMPLogging, 1000);
+    </script>
+  </head>
+  <body class="path-departments-government-board-elections-election-information-2026-general-election published terms--board-of-elections page--node-1039 path-node node-type-page">
+    <script type="text/javascript">
+      (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+        (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+        e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+      })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+      _st('install','FfY736WeihY7HiVd-wfS','2.0.0');
+    </script>
+        </head>
+        <a href="#main-content" class="visually-hidden focusable">
+      Skip to main content
+    </a>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TV3Z4XT2"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<div data-sitewide-alert aria-live="polite"></div>
+
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+<header class="header">
+  <div>
+    
+	<div id="block-paladin-branding">
+  
+    
+  <span class="visually-hidden">Wake County, NC</span>
+<a href="/" rel="home">
+  <img src="/themes/custom/paladin/images/WCLogoFullColor.svg" alt="Home" />
+</a>
+
+</div>
+
+
+	<div class="header__container">
+		
+
+
+<nav aria-labelledby="block-main-menu-menu" id="block-main-menu">
+            
+  <h2 class="visually-hidden" id="block-main-menu-menu">Main Menu</h2>
+  
+
+        
+
+<ul class="menu menu-level-0">
+          <li class="menu-item">
+              <a href="/living-visiting">Living &amp; Visiting</a>
+                          
+
+
+          </li>
+    
+          <li class="menu-item menu-item--expanded">
+              <div class="expanded"><a href="/doing-business" class="parent-link">Doing Business</a><a href="#" class="menu-icon">
+                </a></div>
+                          
+
+  <ul class="menu menu-level-1">
+                  
+        <li class="menu-item">
+          <a href="/doing-business/business-resources" data-drupal-link-system-path="node/46">Business Resources</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/find-planning-zoning-info" data-drupal-link-system-path="node/47">Find Planning &amp; Zoning Info</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/local-and-state-permits" data-drupal-link-system-path="node/49">Local &amp; State Permits</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/mwbe-business-resources" data-drupal-link-system-path="node/10494">MWBE Business Resources</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/municipal-requirements" data-drupal-link-system-path="node/50">Municipal Requirements</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/starting-business" data-drupal-link-system-path="node/51">Starting a Business</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/state-license-information-federal-referrals" data-drupal-link-system-path="node/52">State License Information &amp; Federal Referrals</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/vendor-faq" data-drupal-link-system-path="node/10497">Vendor FAQ</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/doing-business/wake-county-tax-information" data-drupal-link-system-path="node/53">Wake County Tax Information</a>
+                                
+
+
+                  </li>
+          </ul>
+
+
+
+
+          </li>
+    
+          <li class="menu-item menu-item--expanded menu-item--active-trail">
+              <div class="expanded"><a href="/departments-government" class="parent-link">Departments &amp; Government</a><a href="#" class="menu-icon">
+                </a></div>
+                          
+
+  <ul class="menu menu-level-1">
+                  
+        <li class="menu-item">
+          <a href="/departments-government/strategic-plan" data-drupal-link-system-path="node/3571">Strategic Plan</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/86it-anti-litter-campaign" data-drupal-link-system-path="node/3109">86it Anti-Litter Campaign</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/advisory-boards" data-drupal-link-system-path="node/25">Advisory Boards</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/behavioral-health" data-drupal-link-system-path="node/8216">Behavioral Health</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/comprehensive-planning" data-drupal-link-system-path="node/14759">Comprehensive Planning</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/wake-county-continuum-care" data-drupal-link-system-path="node/4471">Continuum of Care</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/employee-benefits" title="View employee benefit information including health insurance, paid leave, retirement, and more" data-drupal-link-system-path="node/1051">Employee Benefits</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/wake-county-food-security-program" data-drupal-link-system-path="node/3394">Food Security Program</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/job-titles-salary-structure" title="View job titles, pay ranges and salary schedules" data-drupal-link-system-path="node/1052">Job Titles &amp; Salary Structure</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/language-access-support" data-drupal-link-system-path="node/4168">Language Access &amp; Support</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/nc-cooperative-extension-wake-county-center" data-drupal-link-system-path="node/1827">NC Cooperative Extension – Wake County Center</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/office-organizational-excellence" data-drupal-link-system-path="node/23064">Office of Organizational Excellence</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/onsite-water-protection" data-drupal-link-system-path="node/3865">Onsite Water Protection</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/permits-and-inspections" data-drupal-link-system-path="node/14764">Permits &amp; Inspections</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/public-health" data-drupal-link-system-path="node/12218">Public Health</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/social-services" data-drupal-link-system-path="node/12222">Social Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/what-we-do" title="Human Resources&#039; mission, vision and goals" data-drupal-link-system-path="node/1050">What We Do</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/zoning-and-subdivision" data-drupal-link-system-path="node/17893">Zoning and Subdivision</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/animal-services" title="Animal Services" data-drupal-link-system-path="node/9">Animal Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/board-commissioners" data-drupal-link-system-path="node/24">Board of Commissioners</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/core-values" title="Apply for a career at Wake County, view featured job openings, research employee benefits, view job titles and salary ranges." data-drupal-link-system-path="node/1554">Core Values</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed menu-item--active-trail">
+          <a href="/departments-government/board-elections" data-drupal-link-system-path="node/28">Board of Elections</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/budget-management-services" data-drupal-link-system-path="node/39">Budget &amp; Management Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/wake-county-bureau-forensic-services" data-drupal-link-system-path="node/29">Wake County Bureau of Forensic Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/communications-office" data-drupal-link-system-path="node/40">Communications Office</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/community-services" data-drupal-link-system-path="node/41">Community Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/county-attorneys-office" data-drupal-link-system-path="node/42">County Attorney Office</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/county-managers-office" data-drupal-link-system-path="node/38">County Manager&#039;s Office</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/emergency-medical-services-ems" data-drupal-link-system-path="node/30">Emergency Medical Services (EMS)</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/facilities-design-construction" data-drupal-link-system-path="node/34">Facilities Design &amp; Construction</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/finance" data-drupal-link-system-path="node/11">Finance</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/fire-services-emergency-management" data-drupal-link-system-path="node/32">Fire Services &amp; Emergency Management</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/general-services-administration" title="GSA" data-drupal-link-system-path="node/44">General Services Administration</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/geographic-information-services-gis" data-drupal-link-system-path="node/17">Geographic Information Services (GIS)</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/housing-affordability-community-revitalization" data-drupal-link-system-path="node/22">Housing Affordability &amp; Community Revitalization</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/wake-county-human-services-agency" data-drupal-link-system-path="node/23">Health &amp; Human Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/information-technology" title="The county&#039;s internal provider of technology services" data-drupal-link-system-path="node/43">Information Technology</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/libraries" data-drupal-link-system-path="node/96">Libraries</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/parks-recreation-open-space" data-drupal-link-system-path="node/10">Parks, Recreation &amp; Open Space</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/planning-and-development-services" data-drupal-link-system-path="node/20">Planning &amp; Development Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/register-deeds" title="Apply for a Marriage License, Obtain a Birth, Marriage or Death Certificate, Search Real Estate or Vital Records" data-drupal-link-system-path="node/31">Register of Deeds</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/sheriffs-office-willie-rowe-sheriff" data-drupal-link-system-path="node/27">Sheriff&#039;s Office</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/soil-and-water-conservation-district" data-drupal-link-system-path="node/33">Soil &amp; Water Conservation</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/tax-administration" data-drupal-link-system-path="node/21">Tax Administration</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/veterans-services" data-drupal-link-system-path="node/267">Veterans Services</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/solid-waste-management" title="Wake County’s Solid Waste Management Division provides waste disposal and recycling services to residents and businesses in Wake County." data-drupal-link-system-path="node/18">Solid Waste Management</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/watershed-management" data-drupal-link-system-path="node/19">Watershed Management</a>
+                                
+
+
+                  </li>
+          </ul>
+
+
+
+
+          </li>
+    
+          <li class="menu-item">
+              <a href="/news">News</a>
+                          
+
+
+          </li>
+    
+          <li class="menu-item">
+              <a href="/events">Events</a>
+                      </li>
+    
+  <li><button class="search-trigger blue">Search <i class="fas fa-search"></i></button></li>
+</ul>
+
+  </nav>
+<button class="mobile-menu-trigger">
+  <span class="open"><i class="far fa-bars burger"></i><span class="txt">Menu</span></span>
+  <span class="close"><i class="far fa-times close-x"></i><span class="txt">Close</span></span>
+</button>
+
+		<div class="header__utilities">
+			<div class="dropdown translate__wrapper">
+				<button class="translate__button">
+					<i class="fa fa-language" aria-hidden="true"></i>
+					Translate</button>
+				<div class="dropdown__container translate__container"></div>
+			</div>
+
+      <span>|</span>
+
+			<a class="header__utilities__link" href="/departments-government/human-resources">Careers</a>
+		</div>
+	</div>
+
+
+  </div>
+  
+
+
+<div id="block-searchuiautocomplete" class="block block-js-component block-js-componentcomponent-2">
+  
+    
+      <div class="content">
+      <div id="swiftype-autocomplete" class="js-component js-component--component-2"></div>
+    </div>
+  </div>
+
+</header>
+
+
+
+<div class="layout-container">
+
+  
+
+  <main id="main-content" class="row" aria-label="Main Page Content">
+        <aside class="layout-sidebar-first col percent-25" role="complementary">
+          <div class=" card__menu">
+          <span class="sidebar-menu-title margin-bottom-05"><a href="/departments-government/board-elections/election-information">Election Information</a></span>
+        
+
+  <ul data-region="sidebar_first" class="menu menu-level-0">
+                  
+        <li class="menu-item menu-item--collapsed">
+          <a href="/departments-government/board-elections/election-information/absentee-mail-voting" data-drupal-link-system-path="node/1038">Absentee by Mail Voting</a>
+                                
+
+
+                  </li>
+                      
+        <li class="is-active menu-item menu-item--active-trail">
+          <a href="/departments-government/board-elections/election-information/2026-general-election" data-drupal-link-system-path="node/1039" class="is-active" aria-current="page">Early Voting</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/board-elections/election-information/election-day-voting" data-drupal-link-system-path="node/1037">Election Day Voting</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/board-elections/election-information/future-election-dates" data-drupal-link-system-path="node/1036">Future Election Dates</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/board-elections/election-information/polling-places" data-drupal-link-system-path="node/1041">Polling Places</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/board-elections/election-information/related-websites-links" data-drupal-link-system-path="node/1040">Related Websites &amp; Links</a>
+                                
+
+
+                  </li>
+                      
+        <li class="menu-item">
+          <a href="/departments-government/board-elections/election-information/upcoming-election-information" data-drupal-link-system-path="node/1228">Upcoming Election Information</a>
+                                
+
+
+                  </li>
+          </ul>
+
+
+  </div>
+<nav aria-labelledby="block-featured-menu-sidebar-left-menu" id="block-featured-menu-sidebar-left">
+      
+  <span id="block-featured-menu-sidebar-left-menu">I want to...</span>
+  
+
+        
+        <div class="featured-menu-container">
+      <label for="sidebarSelect" class="visually-hidden">I want to...</label>
+      <select id="sidebarSelect" placeholder="Select a Department">
+      <option selected="selected" value="/#">Select a task</option>
+            <option value="/departments-government/tax-administration/real-estate">
+              Find Real Estate Information
+        </option>
+            <option value="/departments-government/libraries">
+              Explore the Libraries
+        </option>
+            <option value="https://maps.raleighnc.gov/iMAPS/">
+              Access iMAPS
+        </option>
+            <option value="/find-records-certificates">
+              Find Records &amp; Certificates
+        </option>
+            <option value="/search-pay-tax-bills">
+              Pay a Tax Bill
+        </option>
+            <option value="https://ewaketalent.csod.com/ux/ats/careersite/3/home?c=ewaketalent">
+              Apply for a Job
+        </option>
+            <option value="/departments-government/wake-county-bureau-forensic-services/identification-division/arrest-records">
+              Review Arrest Records
+        </option>
+            <option value="/departments-government/animal-services/pet-adoptions">
+              Adopt a Pet
+        </option>
+            <option value="/get-permits">
+              Get Permits
+        </option>
+            <option value="/departments-government/register-deeds/apply-marriage-license">
+              Get a Marriage License
+        </option>
+            <option value="/departments-government/board-elections/voter-information/register-vote">
+              Register to Vote
+        </option>
+            <option value="/departments-government/solid-waste-management">
+              Get Trash &amp; Recycling Info
+        </option>
+            <option value="/living-visiting">
+              Apply for Benefits &amp; Assistance
+        </option>
+            <option value="/departments-government/housing-affordability-community-revitalization">
+              Access Housing Assistance
+        </option>
+            <option value="/wake-county-non-discrimination-ordinance-complaint-process">
+              File a Discrimination Complaint
+        </option>
+            <option value="/find-park">
+              Locate a Park
+        </option>
+            <option value="/departments-government/communications-office/public-records-requests">
+              Request a Public Record
+        </option>
+            <option value="/departments-government/advisory-boards/openings-month">
+              Apply for an Advisory Board
+        </option>
+            <option value="/doing-business/find-planning-zoning-info">
+              Find Planning &amp; Zoning Info
+        </option>
+            <option value="/water-quality-wells-septic-systems">
+              Learn About Water Quality
+        </option>
+            <option value="/departments-government/finance/vendor-enrollment-and-management">
+              Register as a Vendor
+        </option>
+            <option value="/departments-government/animal-services/lost-found-pets">
+              Report Lost or Found Pets
+        </option>
+            <option value="https://s3.us-west-2.amazonaws.com/wakegov.com.if-us-west-2/prod/documents/2021-07/Zoning%20Verification%20Request%20Form.pdf">
+              Request a Zoning Verification
+        </option>
+            </select>
+      <button class="menu--sidebar-button" id="i-want-to-button" type="submit" aria-label="Submit selection from I Want To widget">Go</button>
+    </div>
+  
+
+
+  </nav>
+
+
+    </aside>
+    
+    <div class="layout-content clearfix col">
+        <div id="block-paladin-breadcrumbs">
+  
+    
+        <nav aria-labelledby="system-breadcrumb">
+    <span id="system-breadcrumb" class="visually-hidden">Breadcrumb</span>
+    <ol>
+          <li>
+                  <a href="/">Home</a> <i class="fas fa-caret-right"></i>              </li>
+          <li>
+                  <a href="/departments-government">Departments &amp; Government</a> <i class="fas fa-caret-right"></i>              </li>
+          <li>
+                  <a href="/departments-government/board-elections">Board of Elections</a> <i class="fas fa-caret-right"></i>              </li>
+          <li>
+                  <a href="/departments-government/board-elections/election-information">Election Information</a> <i class="fas fa-caret-right"></i>              </li>
+          <li>
+                  <a href="/departments-government/board-elections/election-information/2026-general-election">Early Voting</a>               </li>
+        </ol>
+  </nav>
+
+  </div>
+<div data-drupal-messages-fallback class="hidden"></div>
+<div id="block-paladin-page-title">
+  
+    
+      
+  <h1><span property="schema:name">2026 General Election</span>
+</h1>
+
+
+  </div>
+<div id="block-paladin-content">
+  
+    
+      <article about="/departments-government/board-elections/election-information/2026-general-election" typeof="schema:WebPage">
+
+  
+      <span property="schema:name" content="2026 General Election" class="hidden"></span>
+
+
+  
+  <div>
+    
+              <div class="paragraph paragraph--type--highlight paragraph--view-mode--default">
+        <div class="highlight-container brand-blue-bg">
+            <div class="highlight-container-text">
+                  <h2><strong>
+            Early Voting Has Ended
+      </strong></h2>
+        
+        
+            <p><strong>Election Day is Tuesday, November 3, 2026. Polling places will be open from 6:30 a.m. to 7:30 p.m. Registered voters must vote at their assigned polling place on Election Day.</strong></p>
+      
+                  <a class="
+            cta
+      " href="/departments-government/board-elections/election-information/election-day-voting">Find Your Election Day Polling Place</a>
+              </div>
+    </div>
+      </div>
+
+            <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <h4 class="text-align-center"><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-10/2026EVunofficial_18.pdf" data-entity-type="media" data-entity-uuid="00f37fb0-db4b-4efa-9dfc-dae0d50e6774" data-entity-substitution="media"><strong>Early Voting Unofficial Turnout</strong></a></h4>
+      
+          </div>
+
+          
+
+
+        <div class="paragraph paragraph--type--image paragraph--view-mode--default clearfix">
+                    <figure class="img-wrap center full">
+                      <img src="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/styles/max_1300x1300/public/images/2026-06/g26evwebsitemap.jpg?itok=qaSltEa-" alt="Map listing the 18 Early Voting Sites for the 2026 General Election by the Wake County Board of Elections" />
+                              </figure>
+            </div>
+
+            <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <table><tbody><tr><td><h5><strong>Abbotts Creek Community Center</strong></h5><p><a href="https://maps.app.goo.gl/5Np3UkpoBvWUchaX7">9950 Durant Road, Raleigh, NC 27614</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/AbbottsCreek_1.pdf" data-entity-type="media" data-entity-uuid="9d90ffd7-579e-47a1-9fb5-bb2f2458cf3c" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Avery Street Recreation Center</strong></h5><p><a href="https://maps.app.goo.gl/85FvoyV3um2Ln9Te8">125 Avery Street, Garner, NC 27529</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/AveryStreet.pdf" data-entity-type="media" data-entity-uuid="efc742c2-1aad-44e0-9a2d-b21fc6aa4746" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Beech Bluff County Park</strong></h5><p><a href="https://maps.app.goo.gl/onaooUeaFWZiHgJi6">7005 Beech Bluff Park Drive, Willow Spring, NC 27592</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/BeechBluff.pdf" data-entity-type="media" data-entity-uuid="e4c302f4-36db-47c6-b0a2-92d5e9e33956" data-entity-substitution="media"><span>Site Details</span></a></p></td></tr><tr><td><h5><strong>Cary Senior Center</strong></h5><p><a href="https://maps.app.goo.gl/bsU5M1RfWBX7S7aB9">120 Maury Odell Place, Cary, NC 27513</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/CarySenior_1.pdf" data-entity-type="media" data-entity-uuid="2247bd74-d9c5-4e70-a94f-7b87c455ac0b" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Herbert C. Young Community Center</strong></h5><p><a href="https://maps.app.goo.gl/SqBdguomutgJ2qsSA">101 Wilkinson Avenue, Cary, NC 27513</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/HerbertCYoung_1.pdf" data-entity-type="media" data-entity-uuid="8a7bc057-3bf1-4d66-8666-67f0d051babb" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Hilltop Needmore Town Park Clubhouse</strong></h5><p><a href="https://maps.app.goo.gl/iRBdZkytZ3zCKXxA6">4621 Shady Greens Drive, Fuquay-Varina, NC 27526</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/HilltopNeedmore.pdf" data-entity-type="media" data-entity-uuid="7b26689d-a037-47de-962c-7090c7da17d5" data-entity-substitution="media"><span>Site Details</span></a></p></td></tr><tr><td><h5><strong>John Chavis Memorial Park Community Center</strong></h5><p><a href="https://maps.app.goo.gl/iruB8fvQYRcFWaME7">505 Martin Luther King Jr Boulevard, Raleigh, NC 27601</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/Chavis_0.pdf" data-entity-type="media" data-entity-uuid="2c5bc7b4-e9d2-40a5-bc23-3877b4844edc" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>John M. Brown Community Center</strong></h5><p><a href="https://maps.app.goo.gl/RTCKSAk5TA5TxraS7">53 Hunter Street, Apex, NC 27502</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/JohnBrown_0.pdf" data-entity-type="media" data-entity-uuid="1c61b377-b275-42e0-bc86-0a520adefe7d" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Joyner Park Community Center</strong></h5><p><a href="https://maps.app.goo.gl/U6e2uTjfyMqpxxCv6">701 Harris Road, Wake Forest, NC 27587</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/JoynerPark_0.pdf" data-entity-type="media" data-entity-uuid="2c01b2ec-8bb2-45ef-b796-f740438a8d61" data-entity-substitution="media"><span>Site Details</span></a></p></td></tr><tr><td><h5><strong>Knightdale Recreation Center</strong></h5><p><a href="https://maps.app.goo.gl/p5mZqmMhEGUzcySAA">102 Lawson Ridge Road, Knightdale, NC 27545</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/KnightdaleRec.pdf" data-entity-type="media" data-entity-uuid="6eec4f90-9e46-4253-8329-e24a6d43a990" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Lake Lynn Community Center</strong></h5><p><a href="https://maps.app.goo.gl/57xMGJtg6QQsZqPx8">7921 Ray Road, Raleigh, NC 27613</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/LakeLynn_0.pdf" data-entity-type="media" data-entity-uuid="71322f54-78cc-409f-b17d-0f9c855f429b" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Laurel Hills Community Center</strong></h5><p><a href="https://maps.app.goo.gl/GwgZVg2x2ST1tx5T7">3808 Edwards Mill Road, Raleigh, NC 27612</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/LaurelHills_1.pdf" data-entity-type="media" data-entity-uuid="27c5a790-8fe4-4a39-8a80-e43470c2a09e" data-entity-substitution="media"><span>Site Details</span></a></p></td></tr><tr><td><h5><strong>NCSU Western Boulevard Business Services</strong></h5><p><a href="https://maps.app.goo.gl/bzd5UHX8LsWKK5Lg9">1220 Varsity Drive, Raleigh, NC 27606</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/NCSUBusinessServices.pdf" data-entity-type="media" data-entity-uuid="9cdffb4e-b046-4c0a-92ab-bcad587e9ee1" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Optimist Park Community Center</strong></h5><p><a href="https://maps.app.goo.gl/wL8MaLqVYKnFw2XB7">5900 Whittier Drive, Raleigh, NC 27609</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/OptimistPark_0.pdf" data-entity-type="media" data-entity-uuid="1e4a1072-2134-4308-a62c-cf21276bbef9" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>W.E. Hunt Recreation Center</strong></h5><p><a href="https://maps.app.goo.gl/YfnxCcNwMjDYhMgr7">301 Stinson Avenue, Holly Springs, 27540</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/WEHunt_2.pdf" data-entity-type="media" data-entity-uuid="6bb34af0-b6ca-461b-9be0-d2d60862d9c6" data-entity-substitution="media"><span>Site Details</span></a></p></td></tr><tr><td><h5><strong>Wake County Commons Building</strong></h5><p><a href="https://maps.app.goo.gl/HBS44fqvXKG58Kzo8">4011 Carya Drive, Raleigh, NC 27610</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/WakeCountyCommons.pdf" data-entity-type="media" data-entity-uuid="67c57042-82c9-4ba7-bdff-e9ab4a141893" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><span><strong>Wake Tech South Campus - Building T</strong></span></h5><p><a href="https://maps.app.goo.gl/NywPYdd2cA68jZJj6"><span>4723 Advantage Way, Raleigh NC 27603</span></a></p><p><span>&nbsp;</span></p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/WakeTechSouth.pdf" data-entity-type="media" data-entity-uuid="03c14d32-320c-4db3-ad08-1e2931b2628d" data-entity-substitution="media"><span>Site Details</span></a></p></td><td><h5><strong>Wendell Community Center</strong></h5><p><a href="https://maps.app.goo.gl/CoNGM3VnPZJxhjZk7">601 W 3rd Street, Wendell, 27591</a></p><p>&nbsp;</p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/WendellCC.pdf" data-entity-type="media" data-entity-uuid="937a6dd3-5427-49fc-b01a-93ac73ea7dd5" data-entity-substitution="media"><span>Site Details</span></a></p></td></tr></tbody></table>
+      
+          </div>
+
+            <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <table><thead><tr><th>Date</th><th>Day</th><th>Start Time</th><th>End Time</th></tr></thead><tbody><tr><td>October 15, 2026</td><td>Thursday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 16, 2026</td><td>Friday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 17, 2026</td><td>Saturday</td><td>8:00 a.m.</td><td>3:00 p.m.</td></tr><tr><td>October 18, 2026</td><td>Sunday</td><td>1:00 p.m.</td><td>6:00 p.m.</td></tr><tr><td>October 19, 2026</td><td>Monday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 20, 2026</td><td>Tuesday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 21, 2026</td><td>Wednesday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 22, 2026</td><td>Thursday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 23, 2026</td><td>Friday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 24, 2026</td><td>Saturday</td><td>8:00 a.m.</td><td>3:00 p.m.</td></tr><tr><td>October 25, 2026</td><td>Sunday</td><td>1:00 p.m.</td><td>6:00 p.m.</td></tr><tr><td>October 26, 2026</td><td>Monday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 27, 2026</td><td>Tuesday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 28, 2026</td><td>Wednesday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 29, 2026</td><td>Thursday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 30, 2026</td><td>Friday</td><td>8:00 a.m.</td><td>7:30 p.m.</td></tr><tr><td>October 31, 2026</td><td>Saturday</td><td>8:00 a.m.</td><td>3:00 p.m.</td></tr></tbody></table><p>&nbsp;</p><h5><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/2026GeneralEVFlyer.pdf" data-entity-type="media" data-entity-uuid="56fdce02-5a1c-40c0-9ff7-f44ab37b903e" data-entity-substitution="media">2026 General Election Flyer</a></h5>
+      
+          </div>
+
+          
+
+
+  <div class="paragraph paragraph--type--accordion-group">
+              <h2>
+            Early Voting FAQs
+      </h2>
+        <div class="accordion-container">
+        
+            
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            How do I find information regarding the photo ID requirement for voting?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>Voters will now be asked to present a valid photo identification when voting in person. If you do not have a valid photo ID card, you may obtain one from your county board of elections prior to the election, through the end of the early voting period.</p>
+
+<p>If you do not have a valid photo ID card on Election Day, you may still vote and have your vote counted by signing an affidavit of reasonable impediment (or "Photo ID Exception Form") as to why you have not presented a valid photo ID. The Exception Form can also be used if you have a religious objection to being photographed or are a victim of a recently declared natural disaster.</p>
+
+<p>As an alternative, if you don't have your ID when you vote, you can still vote and then bring your valid photo ID to your county board of elections by noon on the third business day after Election Day.</p>
+
+<p>If you vote by mail, then you must include a photocopy of a valid photo ID when returning your ballot. You may also complete the Absentee Photo ID Exception Form that is provided with your absentee ballot materials.</p>
+
+<p>A list of all types of ID that can be used for voting is available on the&nbsp;<a href="https://www.ncsbe.gov/voting/voter-id">State Board of Elections Voter ID</a>&nbsp;webpage. For information on how to get a free ID, see&nbsp;<a href="https://www.ncsbe.gov/voting/voter-id/get-free-voter-photo-id">Get a Free Voter Photo ID</a>.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            I missed the voter registration deadline. May I register and vote at an Early Voting location?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p><span>Yes.&nbsp;Eligible individuals may register and vote during the Early Voting period. Please note that same-day registration is not available during second primaries.</span></p><p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/2026_NOTICE TO SAME DAY REGISTRANTS-General.pdf" data-entity-type="media" data-entity-uuid="20041d29-16af-4a5a-b9e9-c24fa352c38b" data-entity-substitution="media">Learn about same-day registration requirements for the 2026 November General Election.</a></p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            Who may vote at Early Voting locations? 
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>Any eligible Wake County voter may vote at any Wake County Early Voting location.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            May I update my name or address at an Early Voting location? 
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>Yes. You may update your name and address before voting.</p>
+
+<p>If you moved 30 or more days before Election Day, you will receive the ballot style of your new address.<br>
+If you moved fewer than 30 days before Election Day, you will receive the ballot style of your old address.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            I am a college student. What are my options for registering and voting?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>College students may register to vote in the county/state of their home address or in the county/state where they are attending college. Learn about Election Day, absentee by mail, and Early Voting options for college students&nbsp;<a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="0d89c5c2-3b80-43e5-8fb5-27fdc8f32f12" href="/departments-government/board-elections/voter-information/resources-teens-and-youth/information-college-students">here</a>.&nbsp;</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            What are the registration and voting requirements for persons in the criminal justice system?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>Eligible individuals may register and vote during the Early Voting period.&nbsp;</p>
+
+<p>If you have been convicted of a misdemeanor you do not lose your right to vote.</p>
+
+<p>To register to vote, you must not be serving a felony sentence, including any period of probation, post-release supervision, or parole.</p>
+
+<p><a href="https://www.ncsbe.gov/registering/who-can-register/registering-person-nc-criminal-justice-system">View information on registering as a person in the NC Criminal Justice System</a></p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            May I change my party affiliation at an Early Voting location? 
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>No. Changes to party affiliation cannot be made during the Early Voting period.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            How can I determine whether I’m registered to vote? 
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p><a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="7564cc2b-5cf1-4445-b6ae-c107131d7d43" href="/departments-government/board-elections/voter-information/view-my-voter-information">Check your voter registration status</a>.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            How may I vote if am physically unable to enter the Early Voting site?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p><a href="https://www.ncsbe.gov/voting/help-voters-disabilities/accessible-voting-sites/curbside-voting">Curbside voting</a> is offered at all Wake County Early Voting sites.&nbsp;To be eligible for curbside voting, you must be unable to enter the voting enclosure due to age or physical disability. Look for the parking spaces near the site entrance labeled "Curbside Voting." Early Voting officials monitor the parking area throughout the day and will walk to your car when you park in one of the designated spaces. Click the <strong><em>Site Details&nbsp;</em></strong>links above to view the designated curbside voting area at each site.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            What voting equipment is used in Wake County?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>You can find information about the voting machines and software used in Wake County&nbsp;<a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="2dfd9088-b447-41cb-9b64-2886ccf71588" href="/departments-government/board-elections/about-board-elections/voting-systems-overview">here</a>.</p>
+
+<p>The North Carolina State Board of Elections also has an overview of all voting systems used in North Carolina&nbsp;<a href="https://www.ncsbe.gov/voting/voting-equipment">here</a>.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            Why are the lines so long at Early Voting locations? 
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>Lines are generally not long during the first days of Early Voting. Voting lines are the longest on the final 3 days of Early Voting.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            I heard that if I vote at an Early Voting location, my vote may not get counted. Is that true? 
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p>No. Your vote will be counted on Election Day along with the ballots cast in the polling places.</p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            How can I view historical Early Voting dates, times, and turnout?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+              <div class="paragraph paragraph--type--text paragraph--view-mode--default">
+                  
+            <p><a href="https://s3.us-west-1.amazonaws.com/wakegov.com.if-us-west-1/s3fs-public/documents/2026-09/EarlyVotingSitesWithTurnout.pdf" data-entity-type="media" data-entity-uuid="04f35a0e-38e2-4ec9-8108-8cd6ebc9ffba" data-entity-substitution="media">Early Voting Historical Data</a></p>
+      
+          </div>
+
+      
+        </div>
+    </div>
+  
+          
+      <div class="accordion-item">
+      <h3 class="title dark-blue">
+            How can my facility become an Early Voting Site?
+       <i class="fas fa-sort-down"></i><i class="fas fa-sort-up"></i></h3>
+        <div class="body">
+          
+            
+  <div class="paragraph paragraph--type--button-link-grid paragraph--view-mode--default button-grid-wrapper">
+                <div class="button-grid">
+      <a class="button button-grid-item" href="https://airtable.com/appAL6KsUEvshj4br/pagDxW2lPJ45lhrGc/form" >Early Voting Site Interest Form</a>
+  </div>
+      </div>
+
+      
+        </div>
+    </div>
+  
+      
+    </div>
+      </div>
+
+      
+  </div>
+
+</article>
+
+  </div>
+
+
+    </div>
+    
+  </main>
+
+</div>
+<footer>
+  <div class="footer__top">
+  <div class="footer__address">
+    <figure class="footer__logo">
+      <img src="/themes/custom/paladin/images/WCLogoWhite.svg" alt="Wake County, North Carolina" />
+    </figure>
+  </div>
+
+  <nav aria-labelledby="block-footer-first-menu" id="block-footer-first">
+            
+  <h2 class="visually-hidden" id="block-footer-first-menu">Footer Menu (First Column)</h2>
+  
+
+        
+              <ul>
+                      <li>
+          <a href="/departments-government/core-values" data-drupal-link-system-path="node/1554">Core Values</a>
+                  </li>
+                    <li>
+          <a href="/living-visiting" data-drupal-link-system-path="node/6">Living &amp; Visiting</a>
+                  </li>
+                    <li>
+          <a href="/doing-business" data-drupal-link-system-path="node/4">Doing Business</a>
+                  </li>
+                    <li>
+          <a href="/news" data-drupal-link-system-path="news">News</a>
+                  </li>
+                    <li>
+          <a href="/events" data-drupal-link-system-path="events">Events</a>
+                  </li>
+                    <li>
+          <a href="https://thewire.wake.gov/" title="Employee intranet">Employee Access</a>
+                  </li>
+          </ul>
+      
+
+
+  </nav>
+
+
+  <nav aria-labelledby="block-footer-second-menu" id="block-footer-second">
+            
+  <h2 class="visually-hidden" id="block-footer-second-menu">Footer Menu (Second Column)</h2>
+  
+
+        
+              <ul>
+                      <li>
+          <a href="/about-wake-county" data-drupal-link-system-path="node/74">About Wake County</a>
+                  </li>
+                    <li>
+          <a href="/public-records-information" data-drupal-link-system-path="node/1379">Public Records</a>
+                  </li>
+                    <li>
+          <a href="/departments-government/libraries" data-drupal-link-system-path="node/96">Explore the Libraries</a>
+                  </li>
+                    <li>
+          <a href="/departments-government/libraries/books-more" data-drupal-link-system-path="node/1531">Books &amp; More</a>
+                  </li>
+                    <li>
+          <a href="/departments-government/strategic-plan" data-drupal-link-system-path="node/3571">Strategic Plan</a>
+                  </li>
+                    <li>
+          <a href="/transparency-portal" data-drupal-link-system-path="node/75">Transparency Portal</a>
+                  </li>
+          </ul>
+      
+
+
+  </nav>
+
+
+  <div id="block-socialmedialinks" class="block-social-media-links">
+  
+    
+      
+
+<ul class="social-media-links--platforms platforms vertical">
+      <li>
+      <a class="social-media-link-icon--facebook" href="https://www.facebook.com/wakegov"  target="_blank" aria-label="Like us on Facebook" title="Like us on Facebook" >
+        <span class='fab fa-facebook fa-fw'></span>
+      </a>
+
+              
+        <span><a class="social-media-link--facebook" href="https://www.facebook.com/wakegov"  target="_blank" aria-label="Like us on Facebook" title="Like us on Facebook">Facebook</a></span>
+          </li>
+      <li>
+      <a class="social-media-link-icon--twitter" href="https://x.com/wakegov"  target="_blank" aria-label="Follow us on X" title="Follow us on X" >
+        <span class='fab fa-x-twitter fa-fw'></span>
+      </a>
+
+              
+        <span><a class="social-media-link--twitter" href="https://x.com/wakegov"  target="_blank" aria-label="Follow us on X" title="Follow us on X">X</a></span>
+          </li>
+      <li>
+      <a class="social-media-link-icon--instagram" href="https://www.instagram.com/wakegov"  target="_blank" aria-label="Follow us on Instagram" title="Follow us on Instagram" >
+        <span class='fab fa-instagram fa-fw'></span>
+      </a>
+
+              
+        <span><a class="social-media-link--instagram" href="https://www.instagram.com/wakegov"  target="_blank" aria-label="Follow us on Instagram" title="Follow us on Instagram">Instagram</a></span>
+          </li>
+      <li>
+      <a class="social-media-link-icon--youtube" href="https://www.youtube.com/user/wakegov"  target="_blank" aria-label="Subscribe to us on YouTube" title="Subscribe to us on YouTube" >
+        <span class='fab fa-youtube fa-fw'></span>
+      </a>
+
+              
+        <span><a class="social-media-link--youtube" href="https://www.youtube.com/user/wakegov"  target="_blank" aria-label="Subscribe to us on YouTube" title="Subscribe to us on YouTube">YouTube</a></span>
+          </li>
+      <li>
+      <a class="social-media-link-icon--linkedin" href="https://www.linkedin.com/company/wake-county"  target="_blank" aria-label="Find us on LinkedIn" title="Find us on LinkedIn" >
+        <span class='fab fa-linkedin fa-fw'></span>
+      </a>
+
+              
+        <span><a class="social-media-link--linkedin" href="https://www.linkedin.com/company/wake-county"  target="_blank" aria-label="Find us on LinkedIn" title="Find us on LinkedIn">LinkedIn</a></span>
+          </li>
+  </ul>
+
+  </div>
+
+
+</div>
+<div class="footer__bottom">
+  <div class="footer__utilities">
+    <nav aria-labelledby="block-footer-utilities-menu" id="block-footer-utilities">
+            
+  <h2 class="visually-hidden" id="block-footer-utilities-menu">Footer Utilities Menu</h2>
+  
+
+        
+              <ul>
+                      <li>
+          <a href="/disclaimers" data-drupal-link-system-path="node/77">Disclaimers</a>
+                  </li>
+                    <li>
+          <a href="/accessibility" data-drupal-link-system-path="node/78">Accessibility</a>
+                  </li>
+                    <li>
+          <a href="/website-help-support" data-drupal-link-system-path="node/79">Site Help</a>
+                  </li>
+          </ul>
+      
+
+
+  </nav>
+
+  </div>
+  <div class="footer__copyright">
+    Copyright &copy; 2026. All rights reserved.   </div>
+</div>
+
+</footer>
+
+  </div>
+
+    
+    <script src="/sites/default/files/js/js_NMC_WjYwTmeXh8ZW9JWF3jRovGNUmeAMhfgbaKDSHqE.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=paladin&amp;include=eJx1kGFuwyAMhS8EQd2FkAsOdQuYgbMkty-pprBW2h_w-2zsh3GxjvlB2K9UIkF2aIMkg_8kFG4SKT-Mr0uBOP1KNXMWWLFxQvMnntpPUIE5RLQCwYR-fOoJ7rC9w6Rotom2AhmjoUyi7u3lhDNmMT3bVprFyl5wOrn9UqkXc4Uc0DZI0XzoSbCJ6sbBUzZwuex6pg3bQM5x9cR5EO81JqCoyb3h3lonzIsWDt36mbnifMa-cvG8jmc38qPy1jdUIAxwTBhe7t8L1l0f34Nh-hh5ioZQ3U1foX6imd0yWgm5B44a6RtpEQRVI8G1e7IQscpr1U8kLM0O"></script>
+<script src="//cdn.weglot.com/weglot.min.js"></script>
+<script src="/sites/default/files/js/js_bRWKM2wFdHIYs3Dw0K1GZBMBboglJ5YKa7OEP6Rp_0Q.js?scope=footer&amp;delta=2&amp;language=en&amp;theme=paladin&amp;include=eJx1kGFuwyAMhS8EQd2FkAsOdQuYgbMkty-pprBW2h_w-2zsh3GxjvlB2K9UIkF2aIMkg_8kFG4SKT-Mr0uBOP1KNXMWWLFxQvMnntpPUIE5RLQCwYR-fOoJ7rC9w6Rotom2AhmjoUyi7u3lhDNmMT3bVprFyl5wOrn9UqkXc4Uc0DZI0XzoSbCJ6sbBUzZwuex6pg3bQM5x9cR5EO81JqCoyb3h3lonzIsWDt36mbnifMa-cvG8jmc38qPy1jdUIAxwTBhe7t8L1l0f34Nh-hh5ioZQ3U1foX6imd0yWgm5B44a6RtpEQRVI8G1e7IQscpr1U8kLM0O"></script>
+
+
+
+
+      </body>
+</html>

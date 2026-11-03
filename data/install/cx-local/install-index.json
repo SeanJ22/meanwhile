@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:46:35.895307+00:00",
+  "preparedAt": "2026-11-03T05:46:42.473272+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -843,6 +843,27 @@
         "geometryFeatures": 69,
         "preciseDistrictsAbsentReaderRegistry": 24
       }
+    },
+    {
+      "state": "NC",
+      "county": "Wake",
+      "populationRank": 36,
+      "manifest": "NC/wake/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 30,
+      "measureContests": 0,
+      "candidacies": 57,
+      "newContests": 24,
+      "refreshedContests": 6,
+      "sourceInputSha256": "dc24c6a2f6ae3c9a66f4959292a8400547403df9c78a6d31d7c95ce58468b28c",
+      "coverage": [
+        "Complete current county-style candidate coverage: all171 original state sample PDFs/342 pages acquired through216 public polling-place results. Thirty local candidate fields and57 named candidates are included. Every applicable style agrees on full names, printed parties and vote limits; the current stateCSV independently matches every field. Six held county/Raleigh contest IDs and20 held candidacy IDs are preserved;24 genuinely missing candidate fields are added.",
+        "County combined booklet cover/key confirms171 double-sided styles. Its302 precinct/style rows for216 precincts exactly match all public state results, including75 split precincts. No registered-voter lookup, name, birth date, registration number or personal address was used. Election/date/county are checked in every PDF.",
+        "Superior Court and District Court subdistricts are separate electorates even when district labels coincide. DistrictAttorney10, county commission districts1/2/3/7, school-board districts1/2/7/9 and Raleigh council districtsA\u2013E retain exact nominal district IDs. Source-backed style/precinct facts await boundary/division joins; split precincts are not installed as whole-member links. At-large county and Raleigh offices preserve their established full electorates.",
+        "All printed named candidates are retained, including unopposed judicial/commission/council fields and minor-party names where applicable. Blank Write-in lines are excluded as identities. No separate local declared-write-in certification or cancellation list was established; no blanket absence is asserted. Other election dates in the state candidateCSV are not imported into November fields.",
+        "Federal, statewide Supreme/Appellate and legislative contests, held measures and explainers remain preserved by omission. County/Raleigh/Knightdale bond questions visible on the full source set are ancillary source coverage; no new measure is installed in this candidate-first packet.",
+        "All171 original sample PDFs and the original current state candidateCSV are included with hashes. Filed address/contact columns are excluded from reader excerpts/quotes. The county352-page combined booklet original is210MB and remains in task scratch; honestly labelled derived first10 cover/key pages are included, with original URL/hash/byte count. Helpers remain in scratch and no production publication or git operation was performed."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -868,17 +889,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 34,
-    "packetsPrepared": 35,
-    "candidateAndRetentionContests": 2316,
+    "countiesPrepared": 35,
+    "packetsPrepared": 36,
+    "candidateAndRetentionContests": 2346,
     "measureContests": 109,
-    "candidacyEntries": 5332,
-    "newContestEntriesAgainstCheckedInBaseline": 1923,
-    "distinctPreparedContestIds": 2404,
-    "distinctPreparedCandidateIds": 5271,
-    "distinctNewContestsAgainstCheckedInBaseline": 1912,
+    "candidacyEntries": 5389,
+    "newContestEntriesAgainstCheckedInBaseline": 1947,
+    "distinctPreparedContestIds": 2434,
+    "distinctPreparedCandidateIds": 5328,
+    "distinctNewContestsAgainstCheckedInBaseline": 1936,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 35
+    "distinctCountyHandoffs": 36
   },
   "remainingWork": [
     {

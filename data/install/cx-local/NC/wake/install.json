@@ -1,0 +1,344 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NC",
+  "county": "Wake",
+  "countyFips": "37183",
+  "populationRank": 36,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NC",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10d-seat-01",
+      "title": "NC District Court Judge District 10D Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10d",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 44
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10d-seat-02",
+      "title": "NC District Court Judge District 10D Seat 2",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10d",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 44
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10d-seat-03",
+      "title": "NC District Court Judge District 10D Seat 3",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10d",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 44
+    },
+    {
+      "id": "nc-cx-local-2026-wake-district-attorney-district-10",
+      "title": "District Attorney District 10",
+      "ocdId": "ocd-division/country:us/state:nc/prosecutorial_district:10",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 171
+    },
+    {
+      "id": "nc-local-2026-0b8978ece21d2a6f8497",
+      "title": "WAKE COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake",
+      "candidates": 4,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 171
+    },
+    {
+      "id": "nc-local-2026-da0a583024aa056926e9",
+      "title": "WAKE COUNTY CLERK OF SUPERIOR COURT",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 171
+    },
+    {
+      "id": "nc-local-2026-b7b7c3504ec33f0e871a",
+      "title": "WAKE COUNTY SHERIFF",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 171
+    },
+    {
+      "id": "nc-local-2026-7b0630f7f174756781df",
+      "title": "WAKE SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake",
+      "candidates": 6,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 171
+    },
+    {
+      "id": "nc-local-2026-98d370b12b25696ad3e8",
+      "title": "CITY OF RALEIGH MAYOR",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 71
+    },
+    {
+      "id": "nc-local-2026-a2dd288f24d18051cae7",
+      "title": "CITY OF RALEIGH CITY COUNCIL AT-LARGE",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh",
+      "candidates": 4,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 71
+    },
+    {
+      "id": "nc-cx-local-2026-wake-city-of-raleigh-city-council-district-d",
+      "title": "City of Raleigh City Council District D",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh/council_district:d",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf",
+      "sourceStyle": "B0001",
+      "sourceStyleCount": 13
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-superior-court-judge-district-10d-seat-01",
+      "title": "NC Superior Court Judge District 10D Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:10d",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1384_92_B0003.pdf",
+      "sourceStyle": "B0003",
+      "sourceStyleCount": 33
+    },
+    {
+      "id": "nc-cx-local-2026-wake-city-of-raleigh-city-council-district-e",
+      "title": "City of Raleigh City Council District E",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh/council_district:e",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1384_92_B0003.pdf",
+      "sourceStyle": "B0003",
+      "sourceStyleCount": 16
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-commissioners-district-07",
+      "title": "Wake County Board of Commissioners District 7",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/county_commission_district:7",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1385_92_B0004.pdf",
+      "sourceStyle": "B0004",
+      "sourceStyleCount": 32
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10f-seat-01",
+      "title": "NC District Court Judge District 10F Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10f",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1388_92_B0171.pdf",
+      "sourceStyle": "B0171",
+      "sourceStyleCount": 16
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-commissioners-district-03",
+      "title": "Wake County Board of Commissioners District 3",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/county_commission_district:3",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1388_92_B0171.pdf",
+      "sourceStyle": "B0171",
+      "sourceStyleCount": 11
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-education-district-07",
+      "title": "Wake County Board of Education District 7",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/school_board_district:7",
+      "candidates": 3,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1389_92_B0170.pdf",
+      "sourceStyle": "B0170",
+      "sourceStyleCount": 21
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-superior-court-judge-district-10b-seat-01",
+      "title": "NC Superior Court Judge District 10B Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/superior_court_district:10b",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1394_92_B0010.pdf",
+      "sourceStyle": "B0010",
+      "sourceStyleCount": 32
+    },
+    {
+      "id": "nc-cx-local-2026-wake-city-of-raleigh-city-council-district-c",
+      "title": "City of Raleigh City Council District C",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh/council_district:c",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1395_92_B0011.pdf",
+      "sourceStyle": "B0011",
+      "sourceStyleCount": 11
+    },
+    {
+      "id": "nc-cx-local-2026-wake-city-of-raleigh-city-council-district-a",
+      "title": "City of Raleigh City Council District A",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh/council_district:a",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1397_92_B0013.pdf",
+      "sourceStyle": "B0013",
+      "sourceStyleCount": 15
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-education-district-09",
+      "title": "Wake County Board of Education District 9",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/school_board_district:9",
+      "candidates": 3,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1402_92_B0167.pdf",
+      "sourceStyle": "B0167",
+      "sourceStyleCount": 14
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10a-seat-01",
+      "title": "NC District Court Judge District 10A Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10a",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1408_92_B0161.pdf",
+      "sourceStyle": "B0161",
+      "sourceStyleCount": 27
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-commissioners-district-01",
+      "title": "Wake County Board of Commissioners District 1",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/county_commission_district:1",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1408_92_B0161.pdf",
+      "sourceStyle": "B0161",
+      "sourceStyleCount": 37
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-education-district-01",
+      "title": "Wake County Board of Education District 1",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/school_board_district:1",
+      "candidates": 3,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1408_92_B0161.pdf",
+      "sourceStyle": "B0161",
+      "sourceStyleCount": 15
+    },
+    {
+      "id": "nc-cx-local-2026-wake-city-of-raleigh-city-council-district-b",
+      "title": "City of Raleigh City Council District B",
+      "ocdId": "ocd-division/country:us/state:nc/place:raleigh/council_district:b",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1408_92_B0161.pdf",
+      "sourceStyle": "B0161",
+      "sourceStyleCount": 16
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10e-seat-01",
+      "title": "NC District Court Judge District 10E Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10e",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1409_92_B0017.pdf",
+      "sourceStyle": "B0017",
+      "sourceStyleCount": 20
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10e-seat-02",
+      "title": "NC District Court Judge District 10E Seat 2",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10e",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1409_92_B0017.pdf",
+      "sourceStyle": "B0017",
+      "sourceStyleCount": 20
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-commissioners-district-02",
+      "title": "Wake County Board of Commissioners District 2",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/county_commission_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1449_92_B0057.pdf",
+      "sourceStyle": "B0057",
+      "sourceStyleCount": 13
+    },
+    {
+      "id": "nc-cx-local-2026-wake-nc-district-court-judge-district-10b-seat-01",
+      "title": "NC District Court Judge District 10B Seat 1",
+      "ocdId": "ocd-division/country:us/state:nc/district_court_district:10b",
+      "candidates": 1,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "sourceStyle": "B0084",
+      "sourceStyleCount": 34
+    },
+    {
+      "id": "nc-cx-local-2026-wake-wake-county-board-of-education-district-02",
+      "title": "Wake County Board of Education District 2",
+      "ocdId": "ocd-division/country:us/state:nc/county:wake/school_board_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://s3.amazonaws.com/ncsbesb/20261103/1487_92_B0093.pdf",
+      "sourceStyle": "B0093",
+      "sourceStyleCount": 13
+    }
+  ],
+  "operation": "Prepare-only partial candidate merge through existing River ballot path. Preserve exact held NC identities and all unrelated contests/measures/legislative fields. No production publication. Exact district reader joins remain explicit.",
+  "coverage": [
+    "Complete current county-style candidate coverage: all171 original state sample PDFs/342 pages acquired through216 public polling-place results. Thirty local candidate fields and57 named candidates are included. Every applicable style agrees on full names, printed parties and vote limits; the current stateCSV independently matches every field. Six held county/Raleigh contest IDs and20 held candidacy IDs are preserved;24 genuinely missing candidate fields are added.",
+    "County combined booklet cover/key confirms171 double-sided styles. Its302 precinct/style rows for216 precincts exactly match all public state results, including75 split precincts. No registered-voter lookup, name, birth date, registration number or personal address was used. Election/date/county are checked in every PDF.",
+    "Superior Court and District Court subdistricts are separate electorates even when district labels coincide. DistrictAttorney10, county commission districts1/2/3/7, school-board districts1/2/7/9 and Raleigh council districtsA\u2013E retain exact nominal district IDs. Source-backed style/precinct facts await boundary/division joins; split precincts are not installed as whole-member links. At-large county and Raleigh offices preserve their established full electorates.",
+    "All printed named candidates are retained, including unopposed judicial/commission/council fields and minor-party names where applicable. Blank Write-in lines are excluded as identities. No separate local declared-write-in certification or cancellation list was established; no blanket absence is asserted. Other election dates in the state candidateCSV are not imported into November fields.",
+    "Federal, statewide Supreme/Appellate and legislative contests, held measures and explainers remain preserved by omission. County/Raleigh/Knightdale bond questions visible on the full source set are ancillary source coverage; no new measure is installed in this candidate-first packet.",
+    "All171 original sample PDFs and the original current state candidateCSV are included with hashes. Filed address/contact columns are excluded from reader excerpts/quotes. The county352-page combined booklet original is210MB and remains in task scratch; honestly labelled derived first10 cover/key pages are included, with original URL/hash/byte count. Helpers remain in scratch and no production publication or git operation was performed."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:nc/county:wake/county_commission_district:1",
+    "ocd-division/country:us/state:nc/county:wake/county_commission_district:2",
+    "ocd-division/country:us/state:nc/county:wake/county_commission_district:3",
+    "ocd-division/country:us/state:nc/county:wake/county_commission_district:7",
+    "ocd-division/country:us/state:nc/county:wake/school_board_district:1",
+    "ocd-division/country:us/state:nc/county:wake/school_board_district:2",
+    "ocd-division/country:us/state:nc/county:wake/school_board_district:7",
+    "ocd-division/country:us/state:nc/county:wake/school_board_district:9",
+    "ocd-division/country:us/state:nc/district_court_district:10a",
+    "ocd-division/country:us/state:nc/district_court_district:10b",
+    "ocd-division/country:us/state:nc/district_court_district:10d",
+    "ocd-division/country:us/state:nc/district_court_district:10e",
+    "ocd-division/country:us/state:nc/district_court_district:10f",
+    "ocd-division/country:us/state:nc/place:raleigh/council_district:a",
+    "ocd-division/country:us/state:nc/place:raleigh/council_district:b",
+    "ocd-division/country:us/state:nc/place:raleigh/council_district:c",
+    "ocd-division/country:us/state:nc/place:raleigh/council_district:d",
+    "ocd-division/country:us/state:nc/place:raleigh/council_district:e",
+    "ocd-division/country:us/state:nc/prosecutorial_district:10",
+    "ocd-division/country:us/state:nc/superior_court_district:10b",
+    "ocd-division/country:us/state:nc/superior_court_district:10d"
+  ],
+  "counts": {
+    "sampleStyles": 171,
+    "samplePages": 342,
+    "publicPrecinctResults": 216,
+    "precinctStyleRelations": 302,
+    "splitPrecincts": 75,
+    "localCandidateFields": 30,
+    "candidateRows": 57,
+    "existingContestsCompared": 6,
+    "existingCandidacyIdsPreserved": 20,
+    "newCandidateContests": 24,
+    "unresolvedReaderDivisions": 21,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_ALL171_STYLES_AND_CURRENT_STATE_CSV_MATCH",
+    "precinctStyleKeyComparison": "PASS_ALL302_RELATIONS_FOR216_PRECINCTS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "unrelatedContestsAndCandidateCoreFields": "PRESERVED_BY_EXISTING_PARTIAL_MERGE",
+    "secondarySourceQuotes": "PASS_57_EXACT_QUOTES",
+    "sourceHashesAndQuotes": "PASS: 389 captured sources and 87 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge against latest held NC with canonical IDs preserved, join exact court/DA/commission/school/council reader electorates from prepared style/precinct facts and correct boundaries, verify reader delivery; declared write-in/cancellation scope remains separate."
+}

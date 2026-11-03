@@ -1,0 +1,8 @@
+{
+  "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=123",
+  "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=123",
+  "status": 200,
+  "fetchedAt": "2026-11-03T04:59:11.463683+00:00",
+  "sha256": "a98b00f3ac978d3663fc5005cbda3a52e1358a68d3e24922433e939bdd2a7801",
+  "bytes": 26549
+}

@@ -1,0 +1,3976 @@
+[
+  {
+    "CountyId": 92,
+    "Label": "01-01",
+    "Description": "PRECINCT 01-01",
+    "PollingPlaceId": 1,
+    "PollingPlaceName": "BROOKS AVENUE CHURCH OF CHRIST",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=1",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=1",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.587095+00:00",
+      "sha256": "298225d0e0e78c0bb6a019b54b7e0ad56c41b085174f1b17e27efdb602dec2ab",
+      "bytes": 26556
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-02",
+    "Description": "PRECINCT 01-02",
+    "PollingPlaceId": 2,
+    "PollingPlaceName": "UNITARIAN UNIVERSALIST FELLOWSHIP OF RALEIGH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=2",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=2",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.422226+00:00",
+      "sha256": "8f53e27cd99f081a542b59ff020ec016abecc37b5dc6368e5ca08efcd21b20a4",
+      "bytes": 26568
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1383_92_B0002.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-03",
+    "Description": "PRECINCT 01-03",
+    "PollingPlaceId": 3,
+    "PollingPlaceName": "ST JOHNS BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=3",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=3",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.437092+00:00",
+      "sha256": "31ee6289c52b1ed45d1082f1a11a48ce82c801d6d4523456e3d71214762f8a3f",
+      "bytes": 26559
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1384_92_B0003.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-04",
+    "Description": "PRECINCT 01-04",
+    "PollingPlaceId": 4,
+    "PollingPlaceName": "OBERLIN MAGNET MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=4",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=4",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.317400+00:00",
+      "sha256": "549bcc1bf269e0c9beec574063f38168190b22d977777d284228b82aa1a834c2",
+      "bytes": 26556
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1385_92_B0004.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-05",
+    "Description": "PRECINCT 01-05",
+    "PollingPlaceId": 5,
+    "PollingPlaceName": "WHITE MEMORIAL PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=5",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=5",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.340935+00:00",
+      "sha256": "9483e16d197f61b2a0679fc7912e369fe4f1c9433d3a93c442d50cfa7166a8fe",
+      "bytes": 26564
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1386_92_B0005.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-06",
+    "Description": "PRECINCT 01-06",
+    "PollingPlaceId": 6,
+    "PollingPlaceName": "OBERLIN REGIONAL LIBRARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=6",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=6",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.588169+00:00",
+      "sha256": "f2ed7739821db8730d561aa1c10b7d4fa6ba081d48813110872e0b9f4f0bbee6",
+      "bytes": 26550
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1387_92_B0006.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-07",
+    "Description": "PRECINCT 01-07",
+    "PollingPlaceId": 7,
+    "PollingPlaceName": "BULLA YOUTH CENTER AT EDENTON STREET UMC",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=7",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=7",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.429985+00:00",
+      "sha256": "8d315180f4548efe9a49246e66cfcb57d06faef3396a63e1ecaa52f8d90d66f4",
+      "bytes": 26566
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1382_92_B0001.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-09",
+    "Description": "PRECINCT 01-09",
+    "PollingPlaceId": 9,
+    "PollingPlaceName": "OUR SAVIOR LUTHERAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=9",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=9",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.336019+00:00",
+      "sha256": "b10664f3cae60ffbef441fe09dc9c3bec292d9e2eb6a670eaaadfaad48084efa",
+      "bytes": 26558
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1391_92_B0007.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-10",
+    "Description": "PRECINCT 01-10",
+    "PollingPlaceId": 10,
+    "PollingPlaceName": "WESTMINSTER PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=10",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=10",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.311095+00:00",
+      "sha256": "cac1b76c83af68af8278fea9f4c867cd7ab94548e46d391fd0490a96f9ffc0be",
+      "bytes": 26575
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1392_92_B0008.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-11",
+    "Description": "PRECINCT 01-11",
+    "PollingPlaceId": 11,
+    "PollingPlaceName": "ROOT ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=11",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=11",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.026607+00:00",
+      "sha256": "3fb42f1ea1ef8f31b4c673be113a44e0a230b4a51db40904f634dbf94550adf9",
+      "bytes": 26560
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1393_92_B0009.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-12",
+    "Description": "PRECINCT 01-12",
+    "PollingPlaceId": 12,
+    "PollingPlaceName": "EMMANUEL BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=12",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=12",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.980740+00:00",
+      "sha256": "c5a8d9a5364a2f13eefd8d7c4bb6117e6e3b60b5292bc0c649266bef786bc35e",
+      "bytes": 26549
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1394_92_B0010.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-13",
+    "Description": "PRECINCT 01-13",
+    "PollingPlaceId": 13,
+    "PollingPlaceName": "ST MATTHEW AME CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=13",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=13",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.157522+00:00",
+      "sha256": "160190b77e34610d16b2c895ac7df90a00836352b126892166cef75faed237a3",
+      "bytes": 26551
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1395_92_B0011.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-14",
+    "Description": "PRECINCT 01-14",
+    "PollingPlaceId": 14,
+    "PollingPlaceName": "OPEN TABLE UNITED METHODIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=14",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=14",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:01.611337+00:00",
+      "sha256": "dd50423de2b0e299460883b762e394e711bd16810c5000acbd4d36bbce685b76",
+      "bytes": 26572
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1396_92_B0012.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-15",
+    "Description": "PRECINCT 01-15",
+    "PollingPlaceId": 15,
+    "PollingPlaceName": "DOUGLAS ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=15",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=15",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.010349+00:00",
+      "sha256": "065927dcf441d96a101a040ebb9dc6a577ee1bedb44f519ec5b12d4dc0975add",
+      "bytes": 26551
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1397_92_B0013.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-16",
+    "Description": "PRECINCT 01-16",
+    "PollingPlaceId": 16,
+    "PollingPlaceName": "GLEN EDEN PILOT PARK COMM CNTR",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=16",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=16",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.231999+00:00",
+      "sha256": "372335e8606149eb8ea453427e2561c578bad151ae3b80553e45b3c5c62a93d0",
+      "bytes": 26564
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1398_92_B0014.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-17",
+    "Description": "PRECINCT 01-17",
+    "PollingPlaceId": 17,
+    "PollingPlaceName": "ST MARKS UNITED METHODIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=17",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=17",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.320725+00:00",
+      "sha256": "6c4646c425ed7295e468c26b749f3f01016f4b47f85e41c729c623065e0a5e9d",
+      "bytes": 26566
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1399_92_B0015.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-18",
+    "Description": "PRECINCT 01-18",
+    "PollingPlaceId": 18,
+    "PollingPlaceName": "EASTGATE PARK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=18",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=18",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.448303+00:00",
+      "sha256": "f3e543e668a1b4141ed48dbb600d75c213c255a8a4a5a29a913165d50f0fff20",
+      "bytes": 26570
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1400_92_B0016.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-19",
+    "Description": "PRECINCT 01-19",
+    "PollingPlaceId": 19,
+    "PollingPlaceName": "POE MAGNET ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=19",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=19",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.512034+00:00",
+      "sha256": "c247434f0a194af2f3d2befbee1106ddf11079d325b13d2a3ffeeb92fb746b3d",
+      "bytes": 26554
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1409_92_B0017.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-20",
+    "Description": "PRECINCT 01-20",
+    "PollingPlaceId": 20,
+    "PollingPlaceName": "ROBERTS PARK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=20",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=20",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.550564+00:00",
+      "sha256": "a69c31188e5d38da1ce4e8ba358950d54de97570ded8e2a120159c05b513ec0e",
+      "bytes": 26561
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1409_92_B0017.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-21",
+    "Description": "PRECINCT 01-21",
+    "PollingPlaceId": 21,
+    "PollingPlaceName": "CAROLINA PINES COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=21",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=21",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.089755+00:00",
+      "sha256": "83945f3c6e4d177b7d51c13a90314e603182570d7a8f5897c08308304fe29a07",
+      "bytes": 26708
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1410_92_B0018.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1411_92_B0019.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-22",
+    "Description": "PRECINCT 01-22",
+    "PollingPlaceId": 22,
+    "PollingPlaceName": "SOUTHEAST RALEIGH MAGNET HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=22",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=22",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.325972+00:00",
+      "sha256": "3ad78d52a6ecccd8532a0f2b4e6ae6b424443beacb3459716eb6c2d2d5e8d26a",
+      "bytes": 26711
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1412_92_B0020.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1413_92_B0021.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-23",
+    "Description": "PRECINCT 01-23",
+    "PollingPlaceId": 23,
+    "PollingPlaceName": "PULLEN COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=23",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=23",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.974847+00:00",
+      "sha256": "2158809f8c36d3b620115b7d114589c7a8799e69baba2bd6f141bb2c0b99e3ea",
+      "bytes": 26547
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1414_92_B0022.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-25",
+    "Description": "PRECINCT 01-25",
+    "PollingPlaceId": 24,
+    "PollingPlaceName": "WALNUT TERRACE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=24",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=24",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.039620+00:00",
+      "sha256": "7db3bebd6c2729688bd96aef07afbf2187e8595cb5e1daf4d19db832ddc13345",
+      "bytes": 26546
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1411_92_B0019.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-26",
+    "Description": "PRECINCT 01-26",
+    "PollingPlaceId": 25,
+    "PollingPlaceName": "JOHN CHAVIS MEMORIAL PARK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=25",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=25",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.041459+00:00",
+      "sha256": "500934f0c3edee4cb92af9ae6f76a55b47daa02dd13973eeb801847727b2d847",
+      "bytes": 26592
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1409_92_B0017.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-27",
+    "Description": "PRECINCT 01-27",
+    "PollingPlaceId": 26,
+    "PollingPlaceName": "PROJECT ENLIGHTENMENT",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=26",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=26",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.157513+00:00",
+      "sha256": "300c97217136022fdd4b9ad66ded287ea9223936328d88ce1d2c6e8bd25072c3",
+      "bytes": 26553
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1415_92_B0023.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-28",
+    "Description": "PRECINCT 01-28",
+    "PollingPlaceId": 27,
+    "PollingPlaceName": "POWELL ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=27",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=27",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.188703+00:00",
+      "sha256": "668de1b316bcf0666ff47845f44207e3ce91c960017867afabd49e61ef01a24a",
+      "bytes": 26562
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1416_92_B0024.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-29",
+    "Description": "PRECINCT 01-29",
+    "PollingPlaceId": 28,
+    "PollingPlaceName": "LACY ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=28",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=28",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.234764+00:00",
+      "sha256": "57896224e2dd5ade3d7cae89d8e3370d830aafa8be5a62d412d5ebb06a759b55",
+      "bytes": 26560
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1417_92_B0025.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-30",
+    "Description": "PRECINCT 01-30",
+    "PollingPlaceId": 29,
+    "PollingPlaceName": "BROOKS MUSEUMS MAGNET ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=29",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=29",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.729780+00:00",
+      "sha256": "197e6a7db78db83e243d7788f7faa9c168bfefce8b45c30eb5bf0e95f7c09c00",
+      "bytes": 26573
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1399_92_B0015.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-31",
+    "Description": "PRECINCT 01-31",
+    "PollingPlaceId": 30,
+    "PollingPlaceName": "METHOD COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=30",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=30",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:02.902304+00:00",
+      "sha256": "003048810f7298fea7947efe52563fa510f8e5a3f189366c8cb393c59e66b601",
+      "bytes": 26549
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1418_92_B0026.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-32",
+    "Description": "PRECINCT 01-32",
+    "PollingPlaceId": 31,
+    "PollingPlaceName": "THOMAS G CROWDER WOODLAND CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=31",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=31",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.897536+00:00",
+      "sha256": "1905d3692fc1d690d609e2ad89cadfaed72c3fcb3f726f2f9446c44d03ff4628",
+      "bytes": 26570
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1419_92_B0027.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-33",
+    "Description": "PRECINCT 01-33",
+    "PollingPlaceId": 32,
+    "PollingPlaceName": "MARTIN GT MAGNET MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=32",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=32",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.420014+00:00",
+      "sha256": "dcb95663af2530074dbb0e98e050ae30ced4a2bbc40d3915ea6329ac3cfdbe9d",
+      "bytes": 26556
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1398_92_B0014.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-34",
+    "Description": "PRECINCT 01-34",
+    "PollingPlaceId": 33,
+    "PollingPlaceName": "TARBORO ROAD COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=33",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=33",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.672938+00:00",
+      "sha256": "a92ba21bbb2657bf83d5167257fab6fd8f13de91c5470b36fa14e7013acb8703",
+      "bytes": 26561
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1420_92_B0028.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-35",
+    "Description": "PRECINCT 01-35",
+    "PollingPlaceId": 34,
+    "PollingPlaceName": "CARNAGE MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=34",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=34",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.223060+00:00",
+      "sha256": "eda1fe44c8dfae198c4bbeaa913a60acc2b5723e6663122ed50324659b979b7c",
+      "bytes": 26551
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1409_92_B0017.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-36",
+    "Description": "PRECINCT 01-36",
+    "PollingPlaceId": 35,
+    "PollingPlaceName": "KIWANIS PARK AND NEIGHBORHOOD CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=35",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=35",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.803207+00:00",
+      "sha256": "3ba98d9070913420388c5d26a1d4c32befa0a64c8621c91616b7514f898110c9",
+      "bytes": 26562
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1391_92_B0007.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-37",
+    "Description": "PRECINCT 01-37",
+    "PollingPlaceId": 36,
+    "PollingPlaceName": "HUDSON MEMORIAL PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=36",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=36",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.881627+00:00",
+      "sha256": "5ba582a8327acd28096ee508e5f336229e4dd14bc1ffab2d02df9c230a344aa1",
+      "bytes": 26569
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1397_92_B0013.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-38",
+    "Description": "PRECINCT 01-38",
+    "PollingPlaceId": 37,
+    "PollingPlaceName": "BRENTWOOD PARK AND NEIGHBORHOOD CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=37",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=37",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.993945+00:00",
+      "sha256": "bb88e44160e74dd0d4242c6006c38a3902c33500bacb09dd4f802943d2348dc8",
+      "bytes": 26566
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1400_92_B0016.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-39",
+    "Description": "PRECINCT 01-39",
+    "PollingPlaceId": 38,
+    "PollingPlaceName": "OPTIMIST PARK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=38",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=38",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.581577+00:00",
+      "sha256": "f6385142ea2b2793f3a5af9312f983c0f627814c11c6b7aadfdb53cc54f7f5d9",
+      "bytes": 26562
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1399_92_B0015.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-40",
+    "Description": "PRECINCT 01-40",
+    "PollingPlaceId": 39,
+    "PollingPlaceName": "WORTHDALE COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=39",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=39",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.408469+00:00",
+      "sha256": "e9032501aef5b2c6da48d6ccd377168a078185bdff1390061cb2395a5efd0f3f",
+      "bytes": 26691
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1409_92_B0017.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1410_92_B0018.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-41",
+    "Description": "PRECINCT 01-41",
+    "PollingPlaceId": 40,
+    "PollingPlaceName": "COMBS LEADERSHIP MAGNET ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=40",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=40",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.577503+00:00",
+      "sha256": "1f172dc9bd0ff5ff0b49f60f883cc2fcb453bb09662c5f91be3d8cdc46e31dcf",
+      "bytes": 26571
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1418_92_B0026.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-42",
+    "Description": "PRECINCT 01-42",
+    "PollingPlaceId": 41,
+    "PollingPlaceName": "MILLBROOK EXCHANGE PARK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=41",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=41",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.088480+00:00",
+      "sha256": "87e5638b32a140e0c50ac378725d0ac112fdcd360c8a829b0a27d29ac62b567b",
+      "bytes": 26719
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1421_92_B0029.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1422_92_B0030.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-43",
+    "Description": "PRECINCT 01-43",
+    "PollingPlaceId": 42,
+    "PollingPlaceName": "ST RAPHAEL CATHOLIC CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=42",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=42",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.391168+00:00",
+      "sha256": "2bfef7130c1af7a6619e5efa94715bc5fb4f89d6d878efe9a6503904fafae38b",
+      "bytes": 26570
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1397_92_B0013.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-44",
+    "Description": "PRECINCT 01-44",
+    "PollingPlaceId": 43,
+    "PollingPlaceName": "MILLBROOK ELEMENTARY MAGNET SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=43",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=43",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:03.752659+00:00",
+      "sha256": "6c67f860677cdc1a950654fb969cf1e49ea46d87955352a41fe6fd52d960a243",
+      "bytes": 26572
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1423_92_B0031.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-45",
+    "Description": "PRECINCT 01-45",
+    "PollingPlaceId": 44,
+    "PollingPlaceName": "THE KING'S CHAPEL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=44",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=44",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.392412+00:00",
+      "sha256": "0737e780900a3e2cfb1f3fc05b874cc9150e1f0e0e7f6490941e066643eed788",
+      "bytes": 26548
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1397_92_B0013.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-46",
+    "Description": "PRECINCT 01-46",
+    "PollingPlaceId": 45,
+    "PollingPlaceName": "GREEN ROAD PARK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=45",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=45",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.564402+00:00",
+      "sha256": "5613859dd9d6a6ba5496ce92b2d1df1c16fc437f12fb7407cfe3caaba8286506",
+      "bytes": 26695
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1400_92_B0016.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1424_92_B0032.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-47",
+    "Description": "PRECINCT 01-47",
+    "PollingPlaceId": 46,
+    "PollingPlaceName": "NORTH RIDGE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=46",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=46",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.441927+00:00",
+      "sha256": "76ed39136a68e60440439cc424629e1caa094849e6f522e117e7cb38c19eb7e3",
+      "bytes": 26565
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1422_92_B0030.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-48",
+    "Description": "PRECINCT 01-48",
+    "PollingPlaceId": 132,
+    "PollingPlaceName": "WESTERN BOULEVARD PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=132",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=132",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.418930+00:00",
+      "sha256": "2d01cebadbfe6299d80a2f29812ff3c7b358a5caa68961e98fb8fcfe6ef90d94",
+      "bytes": 26567
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1419_92_B0027.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-49",
+    "Description": "PRECINCT 01-49",
+    "PollingPlaceId": 169,
+    "PollingPlaceName": "ALL STS ANTIOCHIAN ORTHODOX CHRISTIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=169",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=169",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.455643+00:00",
+      "sha256": "4b971924fef0cf2e6e3efd70d4e504910c6a49bceac6b667e3aff0326901510f",
+      "bytes": 26717
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1425_92_B0033.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1426_92_B0034.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-50",
+    "Description": "PRECINCT 01-50",
+    "PollingPlaceId": 154,
+    "PollingPlaceName": "MACEDONIA NEW LIFE CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=154",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=154",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.820082+00:00",
+      "sha256": "996062fe6fabae3145aaa1ae1411dd7b7eb86a7e1e2e3346ccd939bd203c120f",
+      "bytes": 26702
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1412_92_B0020.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1413_92_B0021.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "01-51",
+    "Description": "PRECINCT 01-51",
+    "PollingPlaceId": 166,
+    "PollingPlaceName": "NORTH BEND CLUBHOUSE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=166",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=166",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.636236+00:00",
+      "sha256": "dd80135fb72cd8803f14739d9025387a1d2cee0a57df7165abde209c3ee71417",
+      "bytes": 26558
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1397_92_B0013.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "02-01",
+    "Description": "PRECINCT 02-01",
+    "PollingPlaceId": 47,
+    "PollingPlaceName": "BAILEYWICK ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=47",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=47",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.036249+00:00",
+      "sha256": "5bff546aa77a576931082bffad83eba95759ca9de4572524cec313bc13e23845",
+      "bytes": 26706
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1427_92_B0035.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1428_92_B0036.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "02-02",
+    "Description": "PRECINCT 02-02",
+    "PollingPlaceId": 48,
+    "PollingPlaceName": "PLEASANT UNION ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=48",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=48",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.031186+00:00",
+      "sha256": "b4677c1f0bc84c1cb8099a8670291ba8cdcb87fd9563e12114c0eccb99b5aaba",
+      "bytes": 26590
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1429_92_B0037.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "02-03",
+    "Description": "PRECINCT 02-03",
+    "PollingPlaceId": 49,
+    "PollingPlaceName": "FAITH HARVEST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=49",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=49",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.590689+00:00",
+      "sha256": "a8e6065d77c92151fac63d5f95e3f28e1523469a1067ea05614f3b184a390980",
+      "bytes": 26558
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1430_92_B0038.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "02-04",
+    "Description": "PRECINCT 02-04",
+    "PollingPlaceId": 50,
+    "PollingPlaceName": "BRASSFIELD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=50",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=50",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.614192+00:00",
+      "sha256": "87520ed5ffdffc67109c9217cf025a21de33332cdbca42f88d70b0aaec0cd528",
+      "bytes": 26701
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1430_92_B0038.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1431_92_B0039.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "02-05",
+    "Description": "PRECINCT 02-05",
+    "PollingPlaceId": 133,
+    "PollingPlaceName": "NORTHERN WAKE FIRE DEPARTMENT STATION #3",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=133",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=133",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.621846+00:00",
+      "sha256": "7ce22e503ef9ea5ba22926529b5f8999067c83c749dcfcc8fd275f6a7957d62b",
+      "bytes": 26574
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1427_92_B0035.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "02-06",
+    "Description": "PRECINCT 02-06",
+    "PollingPlaceId": 134,
+    "PollingPlaceName": "NORTH RALEIGH CHURCH OF CHRIST",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=134",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=134",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.829356+00:00",
+      "sha256": "c4b73cffd13365ef4f2907ca48f1b3fbfce586342eeafdc8be35603413a5f147",
+      "bytes": 26713
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1430_92_B0038.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1432_92_B0040.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "03-01",
+    "Description": "PRECINCT 03-01",
+    "PollingPlaceId": 232,
+    "PollingPlaceName": "APEX FRIENDSHIP MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=232",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=232",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.315631+00:00",
+      "sha256": "c53ea6c6e92285b399d22e75432ed460e3f01edc867b83dff9f99775dd47f51d",
+      "bytes": 26563
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1433_92_B0041.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "03-02",
+    "Description": "PRECINCT 03-02",
+    "PollingPlaceId": 233,
+    "PollingPlaceName": "NEW HILL COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=233",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=233",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.788797+00:00",
+      "sha256": "1eea35caf31e271729a8d2089b682cebb3bb0dab735c0cb7d0c67e0e4729d708",
+      "bytes": 26579
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1433_92_B0041.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-01",
+    "Description": "PRECINCT 04-01",
+    "PollingPlaceId": 52,
+    "PollingPlaceName": "CARY PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=52",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=52",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.255510+00:00",
+      "sha256": "c0477412dd25bd9443f18ea884176b08be21bd197eb1fb1a5dbeef0ae9a0863e",
+      "bytes": 26546
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1434_92_B0042.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-02",
+    "Description": "PRECINCT 04-02",
+    "PollingPlaceId": 53,
+    "PollingPlaceName": "CHRIST THE KING LUTHERAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=53",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=53",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:04.820969+00:00",
+      "sha256": "85028053c5c726f225da552eeb08432a94634d29808d771ea12f620f94c29172",
+      "bytes": 26551
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1434_92_B0042.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-03",
+    "Description": "PRECINCT 04-03",
+    "PollingPlaceId": 54,
+    "PollingPlaceName": "CARY FIRE STATION # 9",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=54",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=54",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.512430+00:00",
+      "sha256": "af880c8a4174d064183c61011d4cfc11263ece00c10657fac9d40d40b239961e",
+      "bytes": 26543
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1435_92_B0043.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-04",
+    "Description": "PRECINCT 04-04",
+    "PollingPlaceId": 55,
+    "PollingPlaceName": "CARY ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=55",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=55",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.010852+00:00",
+      "sha256": "846dede4da821f1d7a316bb8f54218f000691ec890a34c02f17b95a5e453c27c",
+      "bytes": 26556
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1434_92_B0042.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-05",
+    "Description": "PRECINCT 04-05",
+    "PollingPlaceId": 56,
+    "PollingPlaceName": "REEDY CREEK MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=56",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=56",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.558763+00:00",
+      "sha256": "b7969e1d1e7c8d3809cefb55c7eb28bc6c9df8eee001556f8e43c48b2fe1ed42",
+      "bytes": 26692
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1436_92_B0044.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1437_92_B0045.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-06",
+    "Description": "PRECINCT 04-06",
+    "PollingPlaceId": 57,
+    "PollingPlaceName": "FARMINGTON WOODS ELEM SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=57",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=57",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.567871+00:00",
+      "sha256": "49084d1797e1e803b3dd41e32559e64843e2375d7ee6b1891806c3516a38c2d9",
+      "bytes": 26566
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1435_92_B0043.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-07",
+    "Description": "PRECINCT 04-07",
+    "PollingPlaceId": 58,
+    "PollingPlaceName": "FELLOWSHIP OF CHRIST PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=58",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=58",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.728785+00:00",
+      "sha256": "383ed9c0e5204fce57aadca86144e9f135099fb2122590a3e58aefdc4146228c",
+      "bytes": 26576
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1438_92_B0046.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-08",
+    "Description": "PRECINCT 04-08",
+    "PollingPlaceId": 59,
+    "PollingPlaceName": "CARY FIRST CHRISTIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=59",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=59",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.208928+00:00",
+      "sha256": "9d84f7e8df92e39315f85d21ea4b2e6b3aed83040405ef742df16bd74e05b0b8",
+      "bytes": 26547
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1439_92_B0047.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-09",
+    "Description": "PRECINCT 04-09",
+    "PollingPlaceId": 60,
+    "PollingPlaceName": "WEATHERSTONE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=60",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=60",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.848954+00:00",
+      "sha256": "e5dde31c0baad46a3731a5b7d9d97cd0c025c7118674a233af1b59aad6c7ddd3",
+      "bytes": 26576
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1439_92_B0047.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-10",
+    "Description": "PRECINCT 04-10",
+    "PollingPlaceId": 61,
+    "PollingPlaceName": "LAUREL PARK ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=61",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=61",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.852766+00:00",
+      "sha256": "0dd6e8c676bdf11bed0ddcc712be6133c31a26b3d9ba85fcc971e78efe5d009d",
+      "bytes": 26700
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1435_92_B0043.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1440_92_B0048.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-11",
+    "Description": "PRECINCT 04-11",
+    "PollingPlaceId": 63,
+    "PollingPlaceName": "HERBERT C YOUNG COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=63",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=63",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.074015+00:00",
+      "sha256": "b8c183582c2b67430c1b312a4c703b5852bbc5973c38d78821873d91e05ee78a",
+      "bytes": 26560
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1434_92_B0042.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-12",
+    "Description": "PRECINCT 04-12",
+    "PollingPlaceId": 62,
+    "PollingPlaceName": "ADAMS ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=62",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=62",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.851071+00:00",
+      "sha256": "6d42e95efbe5e676e8527bfe5fabce4da9bb693e88c33dd03c711baad23f5110",
+      "bytes": 26555
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1435_92_B0043.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-13",
+    "Description": "PRECINCT 04-13",
+    "PollingPlaceId": 64,
+    "PollingPlaceName": "DEVOTED CITY CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=64",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=64",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.702895+00:00",
+      "sha256": "5f1861a22be818222016deb10819b9de423184feaac727cdde5a4d1ab62b091c",
+      "bytes": 26543
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1441_92_B0049.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-14",
+    "Description": "PRECINCT 04-14",
+    "PollingPlaceId": 65,
+    "PollingPlaceName": "BETHEL BAPTIST CARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=65",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=65",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:05.721423+00:00",
+      "sha256": "943c6e6dbf3a8394920326c869877b50944b4a3496bb752f4129556bf3e1637f",
+      "bytes": 26306
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1435_92_B0043.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-15",
+    "Description": "PRECINCT 04-15",
+    "PollingPlaceId": 66,
+    "PollingPlaceName": "GOOD SHEPHERD UNITED CHURCH OF CHRIST",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=66",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=66",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.290539+00:00",
+      "sha256": "f2af385be193aacc29e918de32989a0141c25131c97172d7f06c0178dbe7b38f",
+      "bytes": 26567
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1434_92_B0042.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-16",
+    "Description": "PRECINCT 04-16",
+    "PollingPlaceId": 238,
+    "PollingPlaceName": "IGLESIA CRISTIANA DE CARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=238",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=238",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.429811+00:00",
+      "sha256": "1b1ebddd9ac38e49f1a594d1900c01c4414aa4df5c36207453368656edb013e7",
+      "bytes": 26555
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1435_92_B0043.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-17",
+    "Description": "PRECINCT 04-17",
+    "PollingPlaceId": 143,
+    "PollingPlaceName": "CARY FIRE STATION #1",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=143",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=143",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.707258+00:00",
+      "sha256": "eb6fef05222e8048bf090bfa22ad136f704287a91c7af26900f2b99af8bfd616",
+      "bytes": 26554
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1439_92_B0047.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-18",
+    "Description": "PRECINCT 04-18",
+    "PollingPlaceId": 144,
+    "PollingPlaceName": "CARY ACADEMY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=144",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=144",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.276650+00:00",
+      "sha256": "bebbde520e846f36771a941dade327c5fa49a5f50e060ea8be2614259a948431",
+      "bytes": 26546
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1439_92_B0047.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-19",
+    "Description": "PRECINCT 04-19",
+    "PollingPlaceId": 145,
+    "PollingPlaceName": "CARY SENIOR CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=145",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=145",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.589292+00:00",
+      "sha256": "c662d34081a939de94bba15c6f5eb7828c66569680ce9426d0ea357e7118476a",
+      "bytes": 26550
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1441_92_B0049.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-20",
+    "Description": "PRECINCT 04-20",
+    "PollingPlaceId": 160,
+    "PollingPlaceName": "SHA'AREI SHALOM CONGREGATION",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=160",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=160",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.039996+00:00",
+      "sha256": "eb9c7ec322865f19b05d654b167e8af3ae067b1f35f956e81ca1e8d2288e555f",
+      "bytes": 26559
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1434_92_B0042.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "04-21",
+    "Description": "PRECINCT 04-21",
+    "PollingPlaceId": 178,
+    "PollingPlaceName": "WEST CARY MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=178",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=178",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.043518+00:00",
+      "sha256": "0704486763ec786de237a7cce2a245b9b3f34cba721ef58b0884efe387b3e3ac",
+      "bytes": 26545
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1442_92_B0050.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "05-01",
+    "Description": "PRECINCT 05-01",
+    "PollingPlaceId": 68,
+    "PollingPlaceName": "MORRISVILLE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=68",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=68",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.769923+00:00",
+      "sha256": "af0fefa0f7d17952c55815836570165dd02c08b96d4491281b88a2a62a2be437",
+      "bytes": 26579
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1443_92_B0051.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "05-03",
+    "Description": "PRECINCT 05-03",
+    "PollingPlaceId": 181,
+    "PollingPlaceName": "CHANDELIER WEDDING AND EVENT VENUE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=181",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=181",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.674435+00:00",
+      "sha256": "3e800acfac31c0d55722026271417162b4ccb11765b172bde2a1997c14bdf5e7",
+      "bytes": 26566
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1443_92_B0051.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "05-05",
+    "Description": "PRECINCT 05-05",
+    "PollingPlaceId": 188,
+    "PollingPlaceName": "BRIER CREEK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=188",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=188",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.299944+00:00",
+      "sha256": "9b0b05eaa2ac46564ff9c4e230ba4d0841e0c7eb0962e9c36a1af4a79ecab649",
+      "bytes": 26969
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1444_92_B0052.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1445_92_B0053.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1446_92_B0054.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1447_92_B0055.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "05-06",
+    "Description": "PRECINCT 05-06",
+    "PollingPlaceId": 189,
+    "PollingPlaceName": "CARPENTER ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=189",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=189",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.016659+00:00",
+      "sha256": "3b76bc80141174165fe62bd6c81ecdf033e8c56c464265065eea4b16471342aa",
+      "bytes": 26565
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1443_92_B0051.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "05-08",
+    "Description": "PRECINCT 05-08",
+    "PollingPlaceId": 221,
+    "PollingPlaceName": "HINDU SOCIETY OF NORTH CAROLINA",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=221",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=221",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.029505+00:00",
+      "sha256": "dfdaf2548c687a25d2c620281b0f628cd1014f6f6a0e691f2c584b679fadeac0",
+      "bytes": 26575
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1448_92_B0056.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "05-09",
+    "Description": "PRECINCT 05-09",
+    "PollingPlaceId": 240,
+    "PollingPlaceName": "CEDAR FORK COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=240",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=240",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.374872+00:00",
+      "sha256": "e9e19c66132b7087b00c8cff03ac3d44de368c3c04b9b3027c01116b4bfcdc4e",
+      "bytes": 26579
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1448_92_B0056.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "05-10",
+    "Description": "PRECINCT 05-10",
+    "PollingPlaceId": 220,
+    "PollingPlaceName": "PARKSIDE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=220",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=220",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.597278+00:00",
+      "sha256": "e4f1351f22bbf6ee0758bb92c79e479691f223a50c96caea2aa34032f4d26ef2",
+      "bytes": 26580
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1448_92_B0056.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-04",
+    "Description": "PRECINCT 06-04",
+    "PollingPlaceId": 190,
+    "PollingPlaceName": "HUNT COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=190",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=190",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.239107+00:00",
+      "sha256": "0cbef98906fd60977089d00ae747edcbfd1a6086a358c27751e0ae6c973dae8f",
+      "bytes": 26702
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1449_92_B0057.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1450_92_B0058.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-05",
+    "Description": "PRECINCT 06-05",
+    "PollingPlaceId": 191,
+    "PollingPlaceName": "HOLLY RIDGE MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=191",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=191",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.319477+00:00",
+      "sha256": "8287a2add7d14aef126ced731b3d3c80085212cabef95e8c00b66c5e39495184",
+      "bytes": 26579
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1451_92_B0059.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-06",
+    "Description": "PRECINCT 06-06",
+    "PollingPlaceId": 192,
+    "PollingPlaceName": "HOLLY SPRINGS ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=192",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=192",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.701891+00:00",
+      "sha256": "931d8e3c5b072a7803ebcd76d79c902b61255acb2baaa610d9dd713e1b6c97c7",
+      "bytes": 26585
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1450_92_B0058.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-07",
+    "Description": "PRECINCT 06-07",
+    "PollingPlaceId": 193,
+    "PollingPlaceName": "TRIANGLE COMMUNITY CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=193",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=193",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.254733+00:00",
+      "sha256": "c149e5396ce6c51fd205ede5f90d3d441647c454f32ff97aaf52c62119190a83",
+      "bytes": 26563
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1452_92_B0060.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-08",
+    "Description": "PRECINCT 06-08",
+    "PollingPlaceId": 203,
+    "PollingPlaceName": "HOLLY SPRINGS CULTURAL CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=203",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=203",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:06.959763+00:00",
+      "sha256": "640e053a430673d3e87851f20a2a7adbec9a61a3bb9ea56a40d25874a3bd3249",
+      "bytes": 26581
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1450_92_B0058.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-10",
+    "Description": "PRECINCT 06-10",
+    "PollingPlaceId": 205,
+    "PollingPlaceName": "HOLLY GROVE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=205",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=205",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.412687+00:00",
+      "sha256": "974d64163a687ea4395367cca62feed76993dddf4b3b9dfc3eb1695641dbb673",
+      "bytes": 26581
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1453_92_B0061.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-11",
+    "Description": "PRECINCT 06-11",
+    "PollingPlaceId": 204,
+    "PollingPlaceName": "WAKE COUNTY FIREARMS EDUCATION AND TRAINING CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=204",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=204",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.225842+00:00",
+      "sha256": "e32c42f3d0499a75ec15a88c2b41e0f4d97ab4f0c86765a6353622db2a581ab5",
+      "bytes": 26606
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1449_92_B0057.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "06-12",
+    "Description": "PRECINCT 06-12",
+    "PollingPlaceId": 234,
+    "PollingPlaceName": "OAKVIEW ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=234",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=234",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.665428+00:00",
+      "sha256": "100af297b1092d8bd186480530e6a89b770c33cc2601bd42ecba037dd7bd8abb",
+      "bytes": 26583
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1449_92_B0057.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-01",
+    "Description": "PRECINCT 07-01",
+    "PollingPlaceId": 70,
+    "PollingPlaceName": "ST GILES PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=70",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=70",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.403458+00:00",
+      "sha256": "d93a59c169127c342e7a9d25a81704ee20c4870957a65b7c637f8838516b8612",
+      "bytes": 26560
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1454_92_B0062.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-02",
+    "Description": "PRECINCT 07-02",
+    "PollingPlaceId": 71,
+    "PollingPlaceName": "JEFFREYS GROVE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=71",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=71",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.417436+00:00",
+      "sha256": "68abefa1e2c4148d0840bc742d8a545daf9e43f652789e8c5c16b9ca55bb6399",
+      "bytes": 26703
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1455_92_B0063.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1456_92_B0064.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-03",
+    "Description": "PRECINCT 07-03",
+    "PollingPlaceId": 72,
+    "PollingPlaceName": "SANDERSON HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=72",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=72",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.793227+00:00",
+      "sha256": "ac9af47712d5710a587fb1a88b66bcb3f587754f91a5c8300f3a4e445e0346a2",
+      "bytes": 26684
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1457_92_B0065.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1458_92_B0066.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-04",
+    "Description": "PRECINCT 07-04",
+    "PollingPlaceId": 73,
+    "PollingPlaceName": "LYNN ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=73",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=73",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.500780+00:00",
+      "sha256": "4a8f3919d3afccf8397e3176eb89a117d353472ce30012a89fd7d7064553a671",
+      "bytes": 26551
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1399_92_B0015.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-05",
+    "Description": "PRECINCT 07-05",
+    "PollingPlaceId": 74,
+    "PollingPlaceName": "NORTH REGIONAL LIBRARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=74",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=74",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.544319+00:00",
+      "sha256": "9e5a0d3cadde8d77920b211bc77d646034f57ad7398b1372c09f90d2987f6f15",
+      "bytes": 26695
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1459_92_B0067.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1460_92_B0068.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-06",
+    "Description": "PRECINCT 07-06",
+    "PollingPlaceId": 75,
+    "PollingPlaceName": "LEAD MINE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=75",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=75",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.958690+00:00",
+      "sha256": "d394f98b0d9111c7d41e9f16b7f9430829cb1ccf1f7972c47aec4297a96ae2ea",
+      "bytes": 26569
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1461_92_B0069.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-07",
+    "Description": "PRECINCT 07-07",
+    "PollingPlaceId": 76,
+    "PollingPlaceName": "GOOD SHEPHERD LUTHERAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=76",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=76",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.607798+00:00",
+      "sha256": "eb822c080f6500cee1ca8a42b8ba842671b89e347f9d09b6890854051e629b5b",
+      "bytes": 26700
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1455_92_B0063.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1456_92_B0064.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-09",
+    "Description": "PRECINCT 07-09",
+    "PollingPlaceId": 137,
+    "PollingPlaceName": "BENSON MEMORIAL UNITED METHODIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=137",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=137",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.160545+00:00",
+      "sha256": "800336183698a888fdbec848d195ee1acbd34a641e174c7f64aceffb2270875f",
+      "bytes": 26712
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1399_92_B0015.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1462_92_B0070.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-10",
+    "Description": "PRECINCT 07-10",
+    "PollingPlaceId": 138,
+    "PollingPlaceName": "PILGRIM PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=138",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=138",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.137350+00:00",
+      "sha256": "d59a612d39a35f9c290cc66ce0603b7f89da9c8b74f930b12710e85550503661",
+      "bytes": 26712
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1463_92_B0071.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1464_92_B0072.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-11",
+    "Description": "PRECINCT 07-11",
+    "PollingPlaceId": 167,
+    "PollingPlaceName": "GREYSTONE BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=167",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=167",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.707711+00:00",
+      "sha256": "1100cc1c787ca454c719b76b444c9e01bb54d472690a7cbd6015f7f0909ab5e6",
+      "bytes": 26560
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1465_92_B0073.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-12",
+    "Description": "PRECINCT 07-12",
+    "PollingPlaceId": 161,
+    "PollingPlaceName": "UNITY OF THE TRIANGLE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=161",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=161",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.338406+00:00",
+      "sha256": "714a571752e90b535a9b245d2549d5193ccf516caf708e8fda10a788615cf4ca",
+      "bytes": 26553
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1466_92_B0074.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "07-13",
+    "Description": "PRECINCT 07-13",
+    "PollingPlaceId": 174,
+    "PollingPlaceName": "IMAGO DEI CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=174",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=174",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.865764+00:00",
+      "sha256": "e405df14f2c85c71eba66f51835bd361b43623c0a46ee3203c40dfb014dd8adc",
+      "bytes": 26691
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1459_92_B0067.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1460_92_B0068.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-02",
+    "Description": "PRECINCT 08-02",
+    "PollingPlaceId": 79,
+    "PollingPlaceName": "SOUTHBRIDGE FELLOWSHIP",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=79",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=79",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.874706+00:00",
+      "sha256": "ee97c81c2a2e7c8dd13147cc2eeeb091a5a4b4574c3806fbc38fa23badf35c97",
+      "bytes": 26697
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1466_92_B0074.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1467_92_B0075.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-03",
+    "Description": "PRECINCT 08-03",
+    "PollingPlaceId": 80,
+    "PollingPlaceName": "SYCAMORE CREEK ELEMENTARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=80",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=80",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:07.880378+00:00",
+      "sha256": "25be6ead0473a539bbe922b556955b1f0f1a83c0da9d0f535751e117e965ea8a",
+      "bytes": 26698
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1468_92_B0076.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1469_92_B0077.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-04",
+    "Description": "PRECINCT 08-04",
+    "PollingPlaceId": 81,
+    "PollingPlaceName": "SOAPSTONE UNITED METHODIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=81",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=81",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.767697+00:00",
+      "sha256": "6b819f2bf1158470b15f14874ba7ea561556cc6b50dcd5656f248ec9c2175170",
+      "bytes": 26565
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1470_92_B0078.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-05",
+    "Description": "PRECINCT 08-05",
+    "PollingPlaceId": 82,
+    "PollingPlaceName": "NORTH RALEIGH PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=82",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=82",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.325617+00:00",
+      "sha256": "8f88006ccb7d5b3e4007cb07b3e80c096b042b1b06353eaa4abaace41425044e",
+      "bytes": 26708
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1455_92_B0063.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1456_92_B0064.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-06",
+    "Description": "PRECINCT 08-06",
+    "PollingPlaceId": 83,
+    "PollingPlaceName": "LAKE LYNN COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=83",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=83",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.056689+00:00",
+      "sha256": "e7786939602466a50a0aed1a8f53550c548848dfc9ca9ee0ba3676d5c4cb14d6",
+      "bytes": 26685
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1467_92_B0075.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1471_92_B0079.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-07",
+    "Description": "PRECINCT 08-07",
+    "PollingPlaceId": 153,
+    "PollingPlaceName": "WOOD VALLEY SWIM AND RACQUET CLUB",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=153",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=153",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.064518+00:00",
+      "sha256": "da5c758370f765ce33c1cfec20ca643b87e8b1e291df4a973b3fa100efe18318",
+      "bytes": 26706
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1470_92_B0078.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1472_92_B0080.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-08",
+    "Description": "PRECINCT 08-08",
+    "PollingPlaceId": 168,
+    "PollingPlaceName": "DURHAM HIGHWAY FIRE STATION #1",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=168",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=168",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.495203+00:00",
+      "sha256": "f0f2f1122ec3da3032217c729c0d542bc40876bbad5d2c5ddfd244fa1e339046",
+      "bytes": 26701
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1468_92_B0076.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1469_92_B0077.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-09",
+    "Description": "PRECINCT 08-09",
+    "PollingPlaceId": 179,
+    "PollingPlaceName": "HILBURN DRIVE ACADEMY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=179",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=179",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.232522+00:00",
+      "sha256": "0ab1fe0b13ba93e089d90a0718c931f6b9fdb689a40fd82aed5a8cb22d8ca0ac",
+      "bytes": 26690
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1466_92_B0074.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1467_92_B0075.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-10",
+    "Description": "PRECINCT 08-10",
+    "PollingPlaceId": 207,
+    "PollingPlaceName": "LEESVILLE ROAD HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=207",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=207",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.255101+00:00",
+      "sha256": "de01e1f917b9d82be441867bda78645113dda61282d2e5448e65618da98e4fb0",
+      "bytes": 26693
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1473_92_B0081.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1474_92_B0082.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "08-11",
+    "Description": "PRECINCT 08-11",
+    "PollingPlaceId": 206,
+    "PollingPlaceName": "LONG LAKE CLUBHOUSE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=206",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=206",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.951570+00:00",
+      "sha256": "2928fe88926a86346c05e5fa0b8ef1689d27638b2f61c528475c6d9412669501",
+      "bytes": 26696
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1473_92_B0081.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1474_92_B0082.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "09-01",
+    "Description": "PRECINCT 09-01",
+    "PollingPlaceId": 84,
+    "PollingPlaceName": "RILEY HILL BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=84",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=84",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.323455+00:00",
+      "sha256": "4967e3499d2ec881e369947586778dde06b605b0e761a3b143cfb8701f541e7a",
+      "bytes": 26561
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1475_92_B0083.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "09-02",
+    "Description": "PRECINCT 09-02",
+    "PollingPlaceId": 85,
+    "PollingPlaceName": "ZEBULON COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=85",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=85",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.439061+00:00",
+      "sha256": "8736e07ad909f7c432ce38198bc2589ca360fb1a55d67184b106b06f04cf3484",
+      "bytes": 26697
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1477_92_B0085.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "09-03",
+    "Description": "PRECINCT 09-03",
+    "PollingPlaceId": 150,
+    "PollingPlaceName": "WAKE COUNTY EASTERN REGIONAL CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=150",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=150",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.795565+00:00",
+      "sha256": "e0d919b1bde0791a82fbf242f05d29c163475addfdb1cc5a0e2b3bf05f2528d3",
+      "bytes": 26567
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1478_92_B0086.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "10-01",
+    "Description": "PRECINCT 10-01",
+    "PollingPlaceId": 86,
+    "PollingPlaceName": "EAST WAKE HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=86",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=86",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.504101+00:00",
+      "sha256": "ea2c970da22df1c19b3b5bf0d05382a233b750d1774eb741e8f5207a160fdf81",
+      "bytes": 26557
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1479_92_B0087.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "10-02",
+    "Description": "PRECINCT 10-02",
+    "PollingPlaceId": 87,
+    "PollingPlaceName": "WENDELL MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=87",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=87",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.497544+00:00",
+      "sha256": "f0cbbbf36ca38eaec1c63a649bf61a9e8f6a65b7752eeea544222b832d335574",
+      "bytes": 26549
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1480_92_B0088.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "10-03",
+    "Description": "PRECINCT 10-03",
+    "PollingPlaceId": 172,
+    "PollingPlaceName": "CARVER ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=172",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=172",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.607943+00:00",
+      "sha256": "a4dbf7f50f61ef1c0a6d4d6ae8d18c3a46d177bc78cf9a0799e27c4f61e630f9",
+      "bytes": 26697
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1477_92_B0085.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "10-05",
+    "Description": "PRECINCT 10-05",
+    "PollingPlaceId": 173,
+    "PollingPlaceName": "GOOD HOPE BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=173",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=173",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.798664+00:00",
+      "sha256": "2a0d1f9cc2bd31ba019bf7bae188fd33e474d4aa2e63d8fe4125e203860bbd7d",
+      "bytes": 26705
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1477_92_B0085.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "10-06",
+    "Description": "PRECINCT 10-06",
+    "PollingPlaceId": 230,
+    "PollingPlaceName": "LAKE MYRA ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=230",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=230",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.673754+00:00",
+      "sha256": "2bca2c320427e14afee3aff6ad1c05d9ae65134cdd0de83e2930a7fce84141e0",
+      "bytes": 26700
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1481_92_B0089.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "11-01",
+    "Description": "PRECINCT 11-01",
+    "PollingPlaceId": 88,
+    "PollingPlaceName": "LINCOLNVILLE AME CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=88",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=88",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.682519+00:00",
+      "sha256": "9f0a0a8aa35ac7e3840b6eeb42522ccca818b93785952c78450485b155cef540",
+      "bytes": 26698
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1482_92_B0090.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1483_92_B0091.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "11-02",
+    "Description": "PRECINCT 11-02",
+    "PollingPlaceId": 89,
+    "PollingPlaceName": "ST PAUL'S CHRISTIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=89",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=89",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.773687+00:00",
+      "sha256": "666c8a4c619bf9695a84379ab8526f6501f41fcdbe5e0c9d822735226bf6035a",
+      "bytes": 26704
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1398_92_B0014.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1486_92_B0092.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-02",
+    "Description": "PRECINCT 12-02",
+    "PollingPlaceId": 91,
+    "PollingPlaceName": "FUQUAY VARINA COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=91",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=91",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.778682+00:00",
+      "sha256": "8fa79b3e41bd105088b055fd1ac6f9e816982b5bcd43117df4bdf54e36264fec",
+      "bytes": 26568
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1487_92_B0093.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-04",
+    "Description": "PRECINCT 12-04",
+    "PollingPlaceId": 93,
+    "PollingPlaceName": "WILLOW SPRINGS ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=93",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=93",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.838890+00:00",
+      "sha256": "2fe04912d23646258bbf5d9398f55068455462afb5156a4fdd5dd8dc6093b283",
+      "bytes": 26588
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-06",
+    "Description": "PRECINCT 12-06",
+    "PollingPlaceId": 170,
+    "PollingPlaceName": "WAKE COUNTY SOUTHERN REGIONAL CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=170",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=170",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.222766+00:00",
+      "sha256": "97364cf136ce21e0a0aa679bd97d8fd65bcf4b29314f58572e16f55d99669f4b",
+      "bytes": 26586
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-07",
+    "Description": "PRECINCT 12-07",
+    "PollingPlaceId": 184,
+    "PollingPlaceName": "BANKS ROAD ELEMENTARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=184",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=184",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.952367+00:00",
+      "sha256": "d4ed06fd568c4cbdbbb8d3dbc8f1685deb6f99f120d76b91034feee090aa107e",
+      "bytes": 26557
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-08",
+    "Description": "PRECINCT 12-08",
+    "PollingPlaceId": 194,
+    "PollingPlaceName": "ST AUGUSTA MISSIONARY BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=194",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=194",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.949662+00:00",
+      "sha256": "0fec634be552f28a63851f0d72845457fea1ad0ea2245b48ec5c122c62d8c1de",
+      "bytes": 26576
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1489_92_B0095.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-09",
+    "Description": "PRECINCT 12-09",
+    "PollingPlaceId": 195,
+    "PollingPlaceName": "FUQUAY-VARINA HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=195",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=195",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.410754+00:00",
+      "sha256": "a3e1596502f7ac9acea7e8b106f5362e7e1febe76c25c8d1ca74b97da0083e91",
+      "bytes": 26569
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1451_92_B0059.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-10",
+    "Description": "PRECINCT 12-10",
+    "PollingPlaceId": 149,
+    "PollingPlaceName": "WEST LAKE MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=149",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=149",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.972351+00:00",
+      "sha256": "971c3a72ce86b037c16b72de2163d34a786c7d90cf0499d63cf261e21be8475f",
+      "bytes": 26553
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1490_92_B0096.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-11",
+    "Description": "PRECINCT 12-11",
+    "PollingPlaceId": 231,
+    "PollingPlaceName": "HILLTOP NEEDMORE TOWN PARK AND PRESERVE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=231",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=231",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:08.980033+00:00",
+      "sha256": "fdaa664cdcb3c0fb981bceeacb6d6de6415c61072de768125996ce0ed9501960",
+      "bytes": 26593
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1490_92_B0096.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-12",
+    "Description": "PRECINCT 12-12",
+    "PollingPlaceId": 90,
+    "PollingPlaceName": "BALLENTINE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=90",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=90",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.830262+00:00",
+      "sha256": "19840f0465bddce2911635f9487fb7deca49e45e5460c7ddcbfcb6c4768a11ba",
+      "bytes": 26576
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "12-13",
+    "Description": "PRECINCT 12-13",
+    "PollingPlaceId": 241,
+    "PollingPlaceName": "SOUTH LAKES ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=241",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=241",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.141530+00:00",
+      "sha256": "117e2f5083061b8873d676be592e39cfe64fe3c8442ee0c420b683a2874daecf",
+      "bytes": 26585
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-02",
+    "Description": "PRECINCT 13-02",
+    "PollingPlaceId": 95,
+    "PollingPlaceName": "DURANT ROAD MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=95",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=95",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.605977+00:00",
+      "sha256": "0368d04e8b5b4f3c59f420870fc25a67b877873a9b3c439bb2ec53df524c5bdd",
+      "bytes": 26692
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1491_92_B0097.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1492_92_B0098.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-05",
+    "Description": "PRECINCT 13-05",
+    "PollingPlaceId": 148,
+    "PollingPlaceName": "RIVERTREE CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=148",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=148",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.159699+00:00",
+      "sha256": "0da21a0481ce4eaef62671ee114fedf3947f3242aeeb2f2d4c56f9e25b3a40d4",
+      "bytes": 26689
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1493_92_B0099.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1494_92_B0100.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-06",
+    "Description": "PRECINCT 13-06",
+    "PollingPlaceId": 177,
+    "PollingPlaceName": "DURANT ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=177",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=177",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.162192+00:00",
+      "sha256": "38f5203214b8c32797f506e457836c091953071d90f91c93671cb8c5ddd353b8",
+      "bytes": 26696
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1495_92_B0101.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1496_92_B0102.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-07",
+    "Description": "PRECINCT 13-07",
+    "PollingPlaceId": 175,
+    "PollingPlaceName": "FOX ROAD BOYS & GIRLS CLUB",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=175",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=175",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.158566+00:00",
+      "sha256": "9a12774f433f5426fa6ba63d7829e910fd83e59d2c1d0028b8eabb18c9b0402a",
+      "bytes": 26691
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1497_92_B0103.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1498_92_B0104.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-08",
+    "Description": "PRECINCT 13-08",
+    "PollingPlaceId": 208,
+    "PollingPlaceName": "FOX ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=208",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=208",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.315332+00:00",
+      "sha256": "d88c235306cbb4cb1d3db27a04b6f7653de9e44f85fc3a31e0151574f66d8b9b",
+      "bytes": 26687
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1499_92_B0105.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1500_92_B0106.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-09",
+    "Description": "PRECINCT 13-09",
+    "PollingPlaceId": 209,
+    "PollingPlaceName": "WILDWOOD FOREST ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=209",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=209",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.340960+00:00",
+      "sha256": "759436b9080ad7c98f150d939a8a85229ad3543acc8ed39a1af093856d453741",
+      "bytes": 26720
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1499_92_B0105.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1500_92_B0106.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-10",
+    "Description": "PRECINCT 13-10",
+    "PollingPlaceId": 210,
+    "PollingPlaceName": "BEDFORD AT FALLS RIVER CLUBHOUSE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=210",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=210",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.595989+00:00",
+      "sha256": "a643caa00ecbbf8774c22ca9f628cc70eed301f9f3f2e330375f0acdd58d3190",
+      "bytes": 26711
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1501_92_B0107.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1502_92_B0108.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-11",
+    "Description": "PRECINCT 13-11",
+    "PollingPlaceId": 211,
+    "PollingPlaceName": "THE GREENWAY CLUB AT FALLS RIVER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=211",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=211",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.337870+00:00",
+      "sha256": "f0c2920d7ccda5c4cc8b7f133a1ddc865069ef8d4698b254374aa60a18e17ed0",
+      "bytes": 26711
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1501_92_B0107.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1502_92_B0108.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-12",
+    "Description": "PRECINCT 13-12",
+    "PollingPlaceId": 94,
+    "PollingPlaceName": "SAINT MATTHEW BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=94",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=94",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.486373+00:00",
+      "sha256": "db1245e22fd769b559dc9a58b6913575d73941b1dd8084d0ae9697c098652e41",
+      "bytes": 26973
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1497_92_B0103.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1498_92_B0104.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1503_92_B0109.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1504_92_B0110.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "13-13",
+    "Description": "PRECINCT 13-13",
+    "PollingPlaceId": 242,
+    "PollingPlaceName": "RIVER BEND MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=242",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=242",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.880221+00:00",
+      "sha256": "ce31e16e5eff7df872629d133f0e5ad97c162ce2daa8339c9bf0abacbbef005a",
+      "bytes": 26983
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1503_92_B0109.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1504_92_B0110.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1505_92_B0111.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1506_92_B0112.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "14-01",
+    "Description": "PRECINCT 14-01",
+    "PollingPlaceId": 97,
+    "PollingPlaceName": "OLIVE GROVE BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=97",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=97",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.503988+00:00",
+      "sha256": "ef536a8b739ab8e19cb7a865a0fe2e9b5ca5a59f8b2e1237b093d6c5e2e7dcf8",
+      "bytes": 26582
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1430_92_B0038.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "14-02",
+    "Description": "PRECINCT 14-02",
+    "PollingPlaceId": 98,
+    "PollingPlaceName": "STONY HILL BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=98",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=98",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.506081+00:00",
+      "sha256": "dba11f9f412a32845583f6cc2a5f48b3fa60230b3ebf55909777e597613b3fad",
+      "bytes": 26569
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1430_92_B0038.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "15-01",
+    "Description": "PRECINCT 15-01",
+    "PollingPlaceId": 99,
+    "PollingPlaceName": "JUNIPER LEVEL MISSIONARY BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=99",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=99",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.575082+00:00",
+      "sha256": "43c678de085c7419a1387320a6802d200644737908ab165c348f0fe3eac0b372",
+      "bytes": 26565
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "15-02",
+    "Description": "PRECINCT 15-02",
+    "PollingPlaceId": 100,
+    "PollingPlaceName": "VANCE ELEMENTARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=100",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=100",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.654203+00:00",
+      "sha256": "feb6bee387fb6f9b1a487a587e04aae9f88e8a9c7ebacac3ce4cfa5ac7b8c137",
+      "bytes": 26552
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "15-03",
+    "Description": "PRECINCT 15-03",
+    "PollingPlaceId": 155,
+    "PollingPlaceName": "BEECH BLUFF COUNTY PARK",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=155",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=155",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.672336+00:00",
+      "sha256": "e1de3c9488d5ef03b3c6459aa12e05ba35888ee3442972529e3312b972c21dc2",
+      "bytes": 26557
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "15-04",
+    "Description": "PRECINCT 15-04",
+    "PollingPlaceId": 156,
+    "PollingPlaceName": "RAND ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=156",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=156",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.671474+00:00",
+      "sha256": "398160cf674c673385b308c6cb45c818e62320d8b405ac3acfc01a95fdc41060",
+      "bytes": 26565
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1488_92_B0094.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-01",
+    "Description": "PRECINCT 16-01",
+    "PollingPlaceId": 101,
+    "PollingPlaceName": "SPRINGFIELD BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=101",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=101",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.739500+00:00",
+      "sha256": "96980e379e9e88f833f8ca6466f475c252c574a3ac69cfa5050d7db3913cb298",
+      "bytes": 26715
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1507_92_B0113.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1508_92_B0114.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-02",
+    "Description": "PRECINCT 16-02",
+    "PollingPlaceId": 102,
+    "PollingPlaceName": "CREECH ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=102",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=102",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.575435+00:00",
+      "sha256": "10abf05adccbdd6db14bcd1eaa6fd3f1078440c0a418bb7d47945f11358fd884",
+      "bytes": 26692
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1509_92_B0115.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1510_92_B0116.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-03",
+    "Description": "PRECINCT 16-03",
+    "PollingPlaceId": 103,
+    "PollingPlaceName": "GARNER ADVENT CHRISTIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=103",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=103",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.771838+00:00",
+      "sha256": "cf276a504599e5b81ed7e191b63f977f641ac85c39604e73db21fc372d3a254c",
+      "bytes": 26576
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1511_92_B0117.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-04",
+    "Description": "PRECINCT 16-04",
+    "PollingPlaceId": 104,
+    "PollingPlaceName": "AVERSBORO ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=104",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=104",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.818050+00:00",
+      "sha256": "5348f5e848d834722104113c12a78c296e99ba5b54e01e1d65695727d978ac37",
+      "bytes": 26561
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1512_92_B0118.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-05",
+    "Description": "PRECINCT 16-05",
+    "PollingPlaceId": 105,
+    "PollingPlaceName": "SMITH ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=105",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=105",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.213967+00:00",
+      "sha256": "969ef3fe40b12353a4fcbeed650594b47759869012baf7201f434e4b3b071552",
+      "bytes": 26555
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1513_92_B0119.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-06",
+    "Description": "PRECINCT 16-06",
+    "PollingPlaceId": 106,
+    "PollingPlaceName": "SOUTHEAST REGIONAL LIBRARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=106",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=106",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.499368+00:00",
+      "sha256": "a87808b5bf1ac7747c365ed35beb4455fc45f16480bc7929bd7adc142f64fa9b",
+      "bytes": 26556
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1511_92_B0117.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-07",
+    "Description": "PRECINCT 16-07",
+    "PollingPlaceId": 107,
+    "PollingPlaceName": "HEATHER HILLS CLUBHOUSE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=107",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=107",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.917564+00:00",
+      "sha256": "e128a1cfd94a0aa48bc31943348cf9e6edfdb1d98b269c7b6f0a9e6e1024f31c",
+      "bytes": 26553
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1512_92_B0118.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-09",
+    "Description": "PRECINCT 16-09",
+    "PollingPlaceId": 183,
+    "PollingPlaceName": "SOUTH GARNER HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=183",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=183",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.941722+00:00",
+      "sha256": "f6e809a798dd32125bebc4847ffea5e39173443e198a61a59848cda0c3597bcb",
+      "bytes": 26840
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1507_92_B0113.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1508_92_B0114.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1514_92_B0120.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-10",
+    "Description": "PRECINCT 16-10",
+    "PollingPlaceId": 182,
+    "PollingPlaceName": "BARWELL ROAD COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=182",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=182",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.985972+00:00",
+      "sha256": "8b332f64a1e5151d7c8a4f6d03e994e31fb1b456355028da4aa30d180459f261",
+      "bytes": 26708
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1515_92_B0121.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1516_92_B0122.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "16-11",
+    "Description": "PRECINCT 16-11",
+    "PollingPlaceId": 226,
+    "PollingPlaceName": "EAST GARNER ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=226",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=226",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:09.998748+00:00",
+      "sha256": "92c709462790875188f13b2616c285031b85172197050b357ba22db7be2d1048",
+      "bytes": 26708
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1515_92_B0121.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1516_92_B0122.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-01",
+    "Description": "PRECINCT 17-01",
+    "PollingPlaceId": 108,
+    "PollingPlaceName": "WILBURN ELEMENTARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=108",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=108",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.852805+00:00",
+      "sha256": "c667054a0d68f1847cf62058b6296d6374b9e4d5d90bf269f19f46ec9101bddb",
+      "bytes": 26695
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1416_92_B0024.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1517_92_B0123.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-02",
+    "Description": "PRECINCT 17-02",
+    "PollingPlaceId": 109,
+    "PollingPlaceName": "KNIGHTDALE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=109",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=109",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.224578+00:00",
+      "sha256": "bd7a4e219bd5cfa9a69a5b412cfd3171b6c185538bbf3e632dac66a0aaaf7a9f",
+      "bytes": 26971
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1518_92_B0124.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1519_92_B0125.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1520_92_B0126.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1521_92_B0127.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-03",
+    "Description": "PRECINCT 17-03",
+    "PollingPlaceId": 246,
+    "PollingPlaceName": "NEW HOPE COLLABORATIVE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=246",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=246",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.481215+00:00",
+      "sha256": "6d39c15d0ce0975ab4a043a6248a9ed414e60cc0a751f038578be614095887f8",
+      "bytes": 26697
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1522_92_B0128.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1523_92_B0129.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-05",
+    "Description": "PRECINCT 17-05",
+    "PollingPlaceId": 110,
+    "PollingPlaceName": "BEACON BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=110",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=110",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.162124+00:00",
+      "sha256": "13965fa040cd0ce64d3d4ebec4fae59c9570566c38b2595065a065430d2354e0",
+      "bytes": 26690
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1396_92_B0012.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1524_92_B0130.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-06",
+    "Description": "PRECINCT 17-06",
+    "PollingPlaceId": 113,
+    "PollingPlaceName": "NEW RESTORATION OUTREACH COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=113",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=113",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.166812+00:00",
+      "sha256": "d72429049f3bb17652f83da7abd4196ba09f6e9b0c71246fe397320660d85de2",
+      "bytes": 26843
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1525_92_B0131.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1526_92_B0132.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1527_92_B0133.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-07",
+    "Description": "PRECINCT 17-07",
+    "PollingPlaceId": 139,
+    "PollingPlaceName": "ROGERS LANE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=139",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=139",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.333316+00:00",
+      "sha256": "87e650e05b792bd05acb26598af01fe5292d342a9def04c5f0f37f3f3fb4fa82",
+      "bytes": 26698
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1528_92_B0134.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1529_92_B0135.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-09",
+    "Description": "PRECINCT 17-09",
+    "PollingPlaceId": 180,
+    "PollingPlaceName": "ABUNDANT LIFE CHRISTIAN CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=180",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=180",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.707217+00:00",
+      "sha256": "9241908381b26fac57b884bc2a1bd95459def75cf98c5bd8293ee86a370b9454",
+      "bytes": 26703
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1530_92_B0136.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1531_92_B0137.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-10",
+    "Description": "PRECINCT 17-10",
+    "PollingPlaceId": 185,
+    "PollingPlaceName": "ST JAMES UNITED METHODIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=185",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=185",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.421286+00:00",
+      "sha256": "919e0385e8e53178179d8cf0a90fb48a05d83e3b5bec8d602af02a47136657f4",
+      "bytes": 26580
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1395_92_B0011.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-11",
+    "Description": "PRECINCT 17-11",
+    "PollingPlaceId": 112,
+    "PollingPlaceName": "TRINITY PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=112",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=112",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.397626+00:00",
+      "sha256": "f0c99ac779b1b62598aeb3a7ad1fabb5a122b15b50af9a221dddd3912b1925b2",
+      "bytes": 26702
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1528_92_B0134.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1532_92_B0138.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-12",
+    "Description": "PRECINCT 17-12",
+    "PollingPlaceId": 146,
+    "PollingPlaceName": "HODGE ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=146",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=146",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.500914+00:00",
+      "sha256": "d1b95c32e88aaee03af3b63dcbe4b1f897b32d664fda64e41d25dc3fe3acc21c",
+      "bytes": 26715
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1533_92_B0139.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1534_92_B0140.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-13",
+    "Description": "PRECINCT 17-13",
+    "PollingPlaceId": 228,
+    "PollingPlaceName": "GREEN PINES BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=228",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=228",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.602020+00:00",
+      "sha256": "f7ef4697f3a7ae8334e58783222f5374bdbb4b4db5aceaf68dcceec749328b34",
+      "bytes": 26701
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1533_92_B0139.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1534_92_B0140.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-15",
+    "Description": "PRECINCT 17-15",
+    "PollingPlaceId": 235,
+    "PollingPlaceName": "KNIGHTDALE HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=235",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=235",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.586082+00:00",
+      "sha256": "9c56b8a85c0c8c1e1f4df23ee81d3140c3b83764a11c831d1f961d9071809bdb",
+      "bytes": 26703
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1481_92_B0089.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-16",
+    "Description": "PRECINCT 17-16",
+    "PollingPlaceId": 111,
+    "PollingPlaceName": "EAST REGIONAL LIBRARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=111",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=111",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.024393+00:00",
+      "sha256": "face9f55a78ff73e1336dccc1c8b1fc74aad27051bf121868ee5ec28c3a9ad91",
+      "bytes": 26845
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1481_92_B0089.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1535_92_B0141.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "17-17",
+    "Description": "PRECINCT 17-17",
+    "PollingPlaceId": 245,
+    "PollingPlaceName": "WAKE CHAPEL CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=245",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=245",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.672277+00:00",
+      "sha256": "b9f74a33cab24a841c04bd5700908b69976bdbd5f565b6701504c4b40f7f3f9d",
+      "bytes": 26697
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1476_92_B0084.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1535_92_B0141.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-01",
+    "Description": "PRECINCT 18-01",
+    "PollingPlaceId": 114,
+    "PollingPlaceName": "CENTENNIAL CAMPUS MAGNET MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=114",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=114",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.129239+00:00",
+      "sha256": "08f2092c942dc93155f862e56d3690ee4fd8f3cc9e0816da5c27c391b52c39b3",
+      "bytes": 26715
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1414_92_B0022.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1536_92_B0142.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-02",
+    "Description": "PRECINCT 18-02",
+    "PollingPlaceId": 115,
+    "PollingPlaceName": "FAIRVIEW BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=115",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=115",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.736383+00:00",
+      "sha256": "ba51ab9566648bb2284e080152991ef5c94e8b20c763cb2ce44dceb69bf323b2",
+      "bytes": 26549
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1537_92_B0143.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-03",
+    "Description": "PRECINCT 18-03",
+    "PollingPlaceId": 116,
+    "PollingPlaceName": "PINEY PLAIN CHRISTIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=116",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=116",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.764637+00:00",
+      "sha256": "5b286b45d1b08c366b5738e71bbd446b980688c286427039f43aa05d2a2aa8ff",
+      "bytes": 26564
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1435_92_B0043.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-04",
+    "Description": "PRECINCT 18-04",
+    "PollingPlaceId": 117,
+    "PollingPlaceName": "YATES MILL ELEMENTARY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=117",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=117",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.769663+00:00",
+      "sha256": "bfc638321b99411f32bbaf9552ae0e6073326924bf147b5050a1d587a2638aff",
+      "bytes": 26706
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1538_92_B0144.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1539_92_B0145.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-05",
+    "Description": "PRECINCT 18-05",
+    "PollingPlaceId": 118,
+    "PollingPlaceName": "OAK GROVE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=118",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=118",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.294106+00:00",
+      "sha256": "5775b939c0dbc231a8a85a168db60695b993e2999da7c5e861a85428c584d3fe",
+      "bytes": 26557
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1452_92_B0060.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-06",
+    "Description": "PRECINCT 18-06",
+    "PollingPlaceId": 140,
+    "PollingPlaceName": "DILLARD DRIVE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=140",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=140",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.873922+00:00",
+      "sha256": "fdca7ddecd33673d1ef93e88ceab56968b06bbbbb195f208c677f64619674304",
+      "bytes": 26700
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1540_92_B0146.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1541_92_B0147.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-07",
+    "Description": "PRECINCT 18-07",
+    "PollingPlaceId": 159,
+    "PollingPlaceName": "MID-WAY BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=159",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=159",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.897535+00:00",
+      "sha256": "a6ec4d025d45e6f68f4a758e6999f3f17474460b417550b5dbd16a4fe5790ead",
+      "bytes": 26564
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1542_92_B0148.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "18-08",
+    "Description": "PRECINCT 18-08",
+    "PollingPlaceId": 162,
+    "PollingPlaceName": "SOUTH HILLS BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=162",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=162",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.932254+00:00",
+      "sha256": "b0c6f6032d50dd7b3f81d709c56533923ca0e7958a1daea9090a2c9b89b1e658",
+      "bytes": 26570
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1543_92_B0149.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-03",
+    "Description": "PRECINCT 19-03",
+    "PollingPlaceId": 121,
+    "PollingPlaceName": "WAKE FOREST CHURCH OF GOD",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=121",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=121",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:10.934041+00:00",
+      "sha256": "bbd852a87e8bfac6230ee2b6c7c043ffcbd47e469436fae2223f0076eb554b21",
+      "bytes": 26565
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1544_92_B0150.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-05",
+    "Description": "PRECINCT 19-05",
+    "PollingPlaceId": 131,
+    "PollingPlaceName": "WAKE FOREST PRESBYTERIAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=131",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=131",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.016341+00:00",
+      "sha256": "eae60c0626500c8264c365a5f7678c1b83d96153b2c92c77988c51767951254d",
+      "bytes": 26577
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1544_92_B0150.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-07",
+    "Description": "PRECINCT 19-07",
+    "PollingPlaceId": 164,
+    "PollingPlaceName": "J B FLAHERTY PARK COMMUNITY CTR",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=164",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=164",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.064564+00:00",
+      "sha256": "1e36eab84588324cd92f10177d4a9879b8fc56803710d00aaada342352871023",
+      "bytes": 26571
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1544_92_B0150.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-09",
+    "Description": "PRECINCT 19-09",
+    "PollingPlaceId": 196,
+    "PollingPlaceName": "NEW BETHEL BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=196",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=196",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.071216+00:00",
+      "sha256": "ad3f378b50ea7a6f319a6f8cea105d2fba652c37cfda39b8db7d33c7aaad0887",
+      "bytes": 26561
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1475_92_B0083.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-11",
+    "Description": "PRECINCT 19-11",
+    "PollingPlaceId": 198,
+    "PollingPlaceName": "WAKE FOREST COMMUNITY HOUSE",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=198",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=198",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.032636+00:00",
+      "sha256": "b69630349ceb4681047532c5f38d70e9d156f57d83bd7a6b1537a0d03923548d",
+      "bytes": 26565
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1545_92_B0151.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-13",
+    "Description": "PRECINCT 19-13",
+    "PollingPlaceId": 212,
+    "PollingPlaceName": "WAKEFIELD MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=212",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=212",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.109773+00:00",
+      "sha256": "e76c3cf5b64b8cd75bbb65ea4f0539003fc4d6926a0a7951d435520ccfaa1fae",
+      "bytes": 26708
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1546_92_B0152.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1547_92_B0153.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-14",
+    "Description": "PRECINCT 19-14",
+    "PollingPlaceId": 213,
+    "PollingPlaceName": "NORTH FOREST PINES ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=213",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=213",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.187072+00:00",
+      "sha256": "361eccfa230121e8200521be988d93732ea63035663535ab7dc6ae2594c32a43",
+      "bytes": 26717
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1547_92_B0153.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1548_92_B0154.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-15",
+    "Description": "PRECINCT 19-15",
+    "PollingPlaceId": 214,
+    "PollingPlaceName": "NORTH WAKE COLLEGE AND CAREER ACADEMY",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=214",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=214",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.197553+00:00",
+      "sha256": "923ce348b01cbb8ac349714526afc676d720c0bb185cef0effb51b74807aaa91",
+      "bytes": 26710
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1548_92_B0154.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1549_92_B0155.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-16",
+    "Description": "PRECINCT 19-16",
+    "PollingPlaceId": 215,
+    "PollingPlaceName": "HARRIS CREEK ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=215",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=215",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.204634+00:00",
+      "sha256": "88eccf97a9d3dd5ab2d404e184d0187bace2c9e8528862e10ffa65e917a57fa9",
+      "bytes": 26707
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1480_92_B0088.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1550_92_B0156.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-17",
+    "Description": "PRECINCT 19-17",
+    "PollingPlaceId": 216,
+    "PollingPlaceName": "WAKE CROSS ROADS BAPTIST CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=216",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=216",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.695087+00:00",
+      "sha256": "c7643eb37b5f740f113ff4f2eb0b61ba0fec3fe3792a315e9a0d83da8be3ce75",
+      "bytes": 26466
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1551_92_B0157.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1552_92_B0158.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-18",
+    "Description": "PRECINCT 19-18",
+    "PollingPlaceId": 197,
+    "PollingPlaceName": "JONES DAIRY ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=197",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=197",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.239320+00:00",
+      "sha256": "ecb7f7276f4b1eef31f39c79fc0b4a97ca59dbd994dba1d994a2da5aedd21940",
+      "bytes": 26577
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1479_92_B0087.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-20",
+    "Description": "PRECINCT 19-20",
+    "PollingPlaceId": 122,
+    "PollingPlaceName": "RICHLAND CREEK COMMUNITY CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=122",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=122",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.375988+00:00",
+      "sha256": "521c870ee9278444f74d4d8311fbf007f8c2f03f82474b28fd7f7e69d21eed1b",
+      "bytes": 26589
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1485_92_B0159.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-21",
+    "Description": "PRECINCT 19-21",
+    "PollingPlaceId": 229,
+    "PollingPlaceName": "ROLESVILLE MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=229",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=229",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.299287+00:00",
+      "sha256": "3c1225dc0d7688f4283b815c07c93abf932396b6bcdf7586442fb80dfc6133b4",
+      "bytes": 26717
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1408_92_B0161.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1484_92_B0160.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-22",
+    "Description": "PRECINCT 19-22",
+    "PollingPlaceId": 236,
+    "PollingPlaceName": "NORTHERN REGIONAL CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=236",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=236",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.348556+00:00",
+      "sha256": "c54ed712410166998da45f62b49db19a4bcaee2e62574da303e530467ed2d98a",
+      "bytes": 26568
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1429_92_B0037.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-23",
+    "Description": "PRECINCT 19-23",
+    "PollingPlaceId": 199,
+    "PollingPlaceName": "HERITAGE MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=199",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=199",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.367972+00:00",
+      "sha256": "29df31c5109a884d522606c0e244a9cdaa14d4928477f8cf91387ccf1bf033bf",
+      "bytes": 26697
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1429_92_B0037.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1549_92_B0155.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-24",
+    "Description": "PRECINCT 19-24",
+    "PollingPlaceId": 243,
+    "PollingPlaceName": "HOPE LUTHERAN CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=243",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=243",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.373777+00:00",
+      "sha256": "1f110cb1122a87dc0dd70c65b81bf22fda590b9db4b3f3f76dd3398ce6968e46",
+      "bytes": 26558
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1479_92_B0087.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "19-25",
+    "Description": "PRECINCT 19-25",
+    "PollingPlaceId": 227,
+    "PollingPlaceName": "SANFORD CREEK ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=227",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=227",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.398526+00:00",
+      "sha256": "5033a22914a9b28dd66ac52af48e4ba003a9c918ffeec7f6cad5f0771c8029ea",
+      "bytes": 26583
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1479_92_B0087.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-01",
+    "Description": "PRECINCT 20-01",
+    "PollingPlaceId": 123,
+    "PollingPlaceName": "LUFKIN ROAD MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=123",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=123",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.463683+00:00",
+      "sha256": "a98b00f3ac978d3663fc5005cbda3a52e1358a68d3e24922433e939bdd2a7801",
+      "bytes": 26549
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1407_92_B0162.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-03",
+    "Description": "PRECINCT 20-03",
+    "PollingPlaceId": 125,
+    "PollingPlaceName": "JOHN M BROWN COMMUNITY CENTER",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=125",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=125",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.475668+00:00",
+      "sha256": "3f7d49e57676d72f7020dd035650447151ea9bfec43f0ed457997cf46e75c568",
+      "bytes": 26549
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1406_92_B0163.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-04",
+    "Description": "PRECINCT 20-04",
+    "PollingPlaceId": 126,
+    "PollingPlaceName": "DAVIS DRIVE MIDDLE SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=126",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=126",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.510361+00:00",
+      "sha256": "8a64b6e94508ca16f80d807cf80d083aff169ea27c84e1a420c0b7ac6e70ab31",
+      "bytes": 26547
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1405_92_B0164.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-05",
+    "Description": "PRECINCT 20-05",
+    "PollingPlaceId": 127,
+    "PollingPlaceName": "PENNY ROAD ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=127",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=127",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.535197+00:00",
+      "sha256": "09b3da04e7a037f7515feef5d0a0f883e50a9381196e840b49f48e2073d3ecbf",
+      "bytes": 26552
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1452_92_B0060.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-06A",
+    "Description": "PRECINCT 20-06A",
+    "PollingPlaceId": 200,
+    "PollingPlaceName": "SCOTTS RIDGE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=200",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=200",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.643791+00:00",
+      "sha256": "bcf47c94650450bea6f0b7d4e3e98a7241369fe2c1891d164d84c911cc0bc6c1",
+      "bytes": 26569
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1404_92_B0165.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-06B",
+    "Description": "PRECINCT 20-06B",
+    "PollingPlaceId": 218,
+    "PollingPlaceName": "OLIVE CHAPEL ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=218",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=218",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.548430+00:00",
+      "sha256": "550261d644391db7eafd550f3817fd654df4f5784d60a52182ab77ecec626270",
+      "bytes": 26567
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1404_92_B0165.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-08",
+    "Description": "PRECINCT 20-08",
+    "PollingPlaceId": 157,
+    "PollingPlaceName": "BAUCOM ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=157",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=157",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.558350+00:00",
+      "sha256": "137d9ecb9ec5d4c50a54e6913507b0235c728e05ef19c6941292cb465938f9b8",
+      "bytes": 26546
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1404_92_B0165.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-09",
+    "Description": "PRECINCT 20-09",
+    "PollingPlaceId": 158,
+    "PollingPlaceName": "ST ANDREW THE APOSTLE CATHOLIC CHURCH",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=158",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=158",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:12.439575+00:00",
+      "sha256": "fe27a4264ab59183c9f55a859ee7fff764f0f6c5818c2c2ebb91769243f5cc80",
+      "bytes": 26571
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1403_92_B0166.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-10",
+    "Description": "PRECINCT 20-10",
+    "PollingPlaceId": 171,
+    "PollingPlaceName": "CARY FIRE STATION #5",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=171",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=171",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.634833+00:00",
+      "sha256": "86844bcf78a4eeed2a11c1effc634a258b94fc4137b1f438cde797948c909f4c",
+      "bytes": 26552
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1402_92_B0167.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-11",
+    "Description": "PRECINCT 20-11",
+    "PollingPlaceId": 217,
+    "PollingPlaceName": "TMSA HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=217",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=217",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.672548+00:00",
+      "sha256": "c073ea7d617679783f6eed2d153c735e3fb7e97691f19c270722cf97a58eab02",
+      "bytes": 26548
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1404_92_B0165.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-12",
+    "Description": "PRECINCT 20-12",
+    "PollingPlaceId": 239,
+    "PollingPlaceName": "GREEN LEVEL HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=239",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=239",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:12.157050+00:00",
+      "sha256": "610b439b02872f06464dee57521ea7409465616fbe7b8baea75c39c69748d78f",
+      "bytes": 26549
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1404_92_B0165.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-15",
+    "Description": "PRECINCT 20-15",
+    "PollingPlaceId": 224,
+    "PollingPlaceName": "ALSTON RIDGE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=224",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=224",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.709202+00:00",
+      "sha256": "9f3b111c4d4903fa62f00809b028c881f0174e52472fadcd2a05919ca2ef50f1",
+      "bytes": 26580
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1401_92_B0168.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-17",
+    "Description": "PRECINCT 20-17",
+    "PollingPlaceId": 225,
+    "PollingPlaceName": "HIGHCROFT DRIVE ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=225",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=225",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.719607+00:00",
+      "sha256": "2a3680bad3bc7df0e2200ada796632a44d2339e57d4c9886f122aa9656a6c795",
+      "bytes": 26563
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1390_92_B0169.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-18",
+    "Description": "PRECINCT 20-18",
+    "PollingPlaceId": 244,
+    "PollingPlaceName": "PANTHER CREEK HIGH SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=244",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=244",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.826990+00:00",
+      "sha256": "495c4081b1737ad56933fb7bb893bd330e829516d2601ffa5cfa8f8f342b4ebb",
+      "bytes": 26559
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1389_92_B0170.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-19",
+    "Description": "PRECINCT 20-19",
+    "PollingPlaceId": 222,
+    "PollingPlaceName": "MILLS PARK ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=222",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=222",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:11.699759+00:00",
+      "sha256": "24e9d39aa8eee2ada561cf364aa6fb16f163df50ab3cd67495f0b94d096ca05c",
+      "bytes": 26695
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1388_92_B0171.pdf",
+      "https://s3.amazonaws.com/ncsbesb/20261103/1389_92_B0170.pdf"
+    ]
+  },
+  {
+    "CountyId": 92,
+    "Label": "20-20",
+    "Description": "PRECINCT 20-20",
+    "PollingPlaceId": 223,
+    "PollingPlaceName": "WHITE OAK ELEMENTARY SCHOOL",
+    "source": {
+      "url": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=223",
+      "finalUrl": "https://vt.ncsbe.gov/PPLkup/PollingPlaceResult?CountyID=92&PollingPlaceID=223",
+      "status": 200,
+      "fetchedAt": "2026-11-03T04:59:12.016121+00:00",
+      "sha256": "38dde507073159533f66a7b8d84363e1da1b97b0086ca6acf97e419b6448cdac",
+      "bytes": 26571
+    },
+    "sampleUrls": [
+      "https://s3.amazonaws.com/ncsbesb/20261103/1388_92_B0171.pdf"
+    ]
+  }
+]

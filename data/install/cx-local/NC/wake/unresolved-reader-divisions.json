@@ -1,0 +1,23 @@
+[
+  "ocd-division/country:us/state:nc/county:wake/county_commission_district:1",
+  "ocd-division/country:us/state:nc/county:wake/county_commission_district:2",
+  "ocd-division/country:us/state:nc/county:wake/county_commission_district:3",
+  "ocd-division/country:us/state:nc/county:wake/county_commission_district:7",
+  "ocd-division/country:us/state:nc/county:wake/school_board_district:1",
+  "ocd-division/country:us/state:nc/county:wake/school_board_district:2",
+  "ocd-division/country:us/state:nc/county:wake/school_board_district:7",
+  "ocd-division/country:us/state:nc/county:wake/school_board_district:9",
+  "ocd-division/country:us/state:nc/district_court_district:10a",
+  "ocd-division/country:us/state:nc/district_court_district:10b",
+  "ocd-division/country:us/state:nc/district_court_district:10d",
+  "ocd-division/country:us/state:nc/district_court_district:10e",
+  "ocd-division/country:us/state:nc/district_court_district:10f",
+  "ocd-division/country:us/state:nc/place:raleigh/council_district:a",
+  "ocd-division/country:us/state:nc/place:raleigh/council_district:b",
+  "ocd-division/country:us/state:nc/place:raleigh/council_district:c",
+  "ocd-division/country:us/state:nc/place:raleigh/council_district:d",
+  "ocd-division/country:us/state:nc/place:raleigh/council_district:e",
+  "ocd-division/country:us/state:nc/prosecutorial_district:10",
+  "ocd-division/country:us/state:nc/superior_court_district:10b",
+  "ocd-division/country:us/state:nc/superior_court_district:10d"
+]

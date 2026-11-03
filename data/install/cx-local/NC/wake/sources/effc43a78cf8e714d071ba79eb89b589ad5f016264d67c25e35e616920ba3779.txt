@@ -1,0 +1,1182 @@
+[
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US SENATE",
+    "name_on_ballot": "Michael Dublin",
+    "party_candidate": "GRE",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "6"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US SENATE",
+    "name_on_ballot": "Roy Cooper",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "6"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US SENATE",
+    "name_on_ballot": "Shannon W. Bray",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "6"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US SENATE",
+    "name_on_ballot": "Michael Whatley",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "6"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 02",
+    "name_on_ballot": "Eugene F. Douglass",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 02",
+    "name_on_ballot": "Deborah K. Ross",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 02",
+    "name_on_ballot": "Matthew Laszacs",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 04",
+    "name_on_ballot": "Valerie P. Foushee",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 04",
+    "name_on_ballot": "Guy Meilleur",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 04",
+    "name_on_ballot": "Mahesh (Max) Ganorkar",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 13",
+    "name_on_ballot": "Paul Barringer",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 13",
+    "name_on_ballot": "Steven Swinton",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "US HOUSE OF REPRESENTATIVES DISTRICT 13",
+    "name_on_ballot": "Brad Knott",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC SUPREME COURT ASSOCIATE JUSTICE SEAT 01",
+    "name_on_ballot": "Anita Earls",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC SUPREME COURT ASSOCIATE JUSTICE SEAT 01",
+    "name_on_ballot": "Sarah Stevens",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC COURT OF APPEALS JUDGE SEAT 01",
+    "name_on_ballot": "Michael C. Byrne",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC COURT OF APPEALS JUDGE SEAT 01",
+    "name_on_ballot": "John S. Arrowood",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC COURT OF APPEALS JUDGE SEAT 02",
+    "name_on_ballot": "George Cooper Bell",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC COURT OF APPEALS JUDGE SEAT 02",
+    "name_on_ballot": "Tobias (Toby) Hampson",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC COURT OF APPEALS JUDGE SEAT 03",
+    "name_on_ballot": "Craig Collins",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC COURT OF APPEALS JUDGE SEAT 03",
+    "name_on_ballot": "Christine Marie Walczyk",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 13",
+    "name_on_ballot": "Robert van Brederode",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 13",
+    "name_on_ballot": "Lisa Grafstein",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 14",
+    "name_on_ballot": "Dan Blue",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 14",
+    "name_on_ballot": "Angela B. McCarty",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 15",
+    "name_on_ballot": "Jay J. Chaudhuri",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 15",
+    "name_on_ballot": "David Bankert",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 16",
+    "name_on_ballot": "Gale Adcock",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 16",
+    "name_on_ballot": "Jonathan D. Miller",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 16",
+    "name_on_ballot": "Philip Hensley",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 17",
+    "name_on_ballot": "Patrick J. Bowersox",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 17",
+    "name_on_ballot": "Mrs. Sydney Batch",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 17",
+    "name_on_ballot": "Shirley Johnson",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 18",
+    "name_on_ballot": "Haseeb Fatmi",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 18",
+    "name_on_ballot": "Chris Stock",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC STATE SENATE DISTRICT 18",
+    "name_on_ballot": "Brad Hessel",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 011",
+    "name_on_ballot": "Allison A. Dahle",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 011",
+    "name_on_ballot": "Matthew Kordon",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 021",
+    "name_on_ballot": "Ya Liu",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 021",
+    "name_on_ballot": "Bryson Johnson",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 033",
+    "name_on_ballot": "Matthew Orr",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 033",
+    "name_on_ballot": "Monika Johnson-Hostler",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 034",
+    "name_on_ballot": "Tim Longest",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 034",
+    "name_on_ballot": "Ed George",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 035",
+    "name_on_ballot": "Mike Schietzelt",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 035",
+    "name_on_ballot": "Evonne S. Hopkins",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 036",
+    "name_on_ballot": "Julie von Haefen",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 036",
+    "name_on_ballot": "Mary Insprucker",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 037",
+    "name_on_ballot": "Winn Decker",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 037",
+    "name_on_ballot": "Erin Pare",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 038",
+    "name_on_ballot": "Abe Jones",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 039",
+    "name_on_ballot": "Jorge Cordova",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 039",
+    "name_on_ballot": "Wayne Cockrell",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 039",
+    "name_on_ballot": "James A. Roberson",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 040",
+    "name_on_ballot": "Phil Rubin",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 040",
+    "name_on_ballot": "Lucas Everett Jones",
+    "party_candidate": "LIB",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 041",
+    "name_on_ballot": "Bruce Forster",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 041",
+    "name_on_ballot": "Maria Cervania",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 049",
+    "name_on_ballot": "Cynthia Ball",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 049",
+    "name_on_ballot": "Daran Thomas",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC HOUSE OF REPRESENTATIVES DISTRICT 066",
+    "name_on_ballot": "Sarah Crawford",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC SUPERIOR COURT JUDGE DISTRICT 10B SEAT 01",
+    "name_on_ballot": "Vince Rozier, Jr.",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC SUPERIOR COURT JUDGE DISTRICT 10D SEAT 01",
+    "name_on_ballot": "Keith Gregory",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "8"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10A SEAT 01",
+    "name_on_ballot": "Rashad A. Hauter",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10B SEAT 01",
+    "name_on_ballot": "David K. Baker",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10D SEAT 01",
+    "name_on_ballot": "Margaret Eagles",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10D SEAT 02",
+    "name_on_ballot": "Amalia Mercedes Restucha",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10D SEAT 02",
+    "name_on_ballot": "J. Brian Ratledge",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10D SEAT 03",
+    "name_on_ballot": "Kevin Boxberger",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10E SEAT 01",
+    "name_on_ballot": "Ms. Sam Hamadani",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10E SEAT 02",
+    "name_on_ballot": "Louis Meyer",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "NC DISTRICT COURT JUDGE DISTRICT 10F SEAT 01",
+    "name_on_ballot": "Chris Brooks",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "DISTRICT ATTORNEY DISTRICT 10",
+    "name_on_ballot": "Wiley Nickel",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+    "name_on_ballot": "Kyle Stogoski",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+    "name_on_ballot": "Mona Singh",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+    "name_on_ballot": "Christine Kushner",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS AT-LARGE",
+    "name_on_ballot": "Gary Dale Hartong",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS DISTRICT 01",
+    "name_on_ballot": "Don Mial",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS DISTRICT 02",
+    "name_on_ballot": "John B. Adcock",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS DISTRICT 02",
+    "name_on_ballot": "Safiyah Jackson",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS DISTRICT 03",
+    "name_on_ballot": "Cheryl F. Stallings",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF COMMISSIONERS DISTRICT 07",
+    "name_on_ballot": "Vickie Adamson",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY CLERK OF SUPERIOR COURT",
+    "name_on_ballot": "Claudia C. Croom",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY CLERK OF SUPERIOR COURT",
+    "name_on_ballot": "Joe E. Teague, Jr.",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY SHERIFF",
+    "name_on_ballot": "Kenny Blackwell",
+    "party_candidate": "REP",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY SHERIFF",
+    "name_on_ballot": "Willie Rowe",
+    "party_candidate": "DEM",
+    "is_partisan": "TRUE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 01",
+    "name_on_ballot": "Jasmine Zavala",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 01",
+    "name_on_ballot": "Sebrina Pierce",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 01",
+    "name_on_ballot": "Bonnie Greaves",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 02",
+    "name_on_ballot": "Ann Schubarg",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 02",
+    "name_on_ballot": "Christina A. Gordon",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 07",
+    "name_on_ballot": "Jacob Arthur",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 07",
+    "name_on_ballot": "Maddie Segal",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 07",
+    "name_on_ballot": "Amita Gupta",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 09",
+    "name_on_ballot": "Cheryl Alexis",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 09",
+    "name_on_ballot": "Tyler Swanson",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE COUNTY BOARD OF EDUCATION DISTRICT 09",
+    "name_on_ballot": "Brian Olson",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+    "name_on_ballot": "Beth Pugh Farrell",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+    "name_on_ballot": "Jim White",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+    "name_on_ballot": "Terence Thomas",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+    "name_on_ballot": "Brian K. Lewis",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+    "name_on_ballot": "Samantha Krop",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "WAKE SOIL AND WATER CONSERVATION DISTRICT SUPERVISOR",
+    "name_on_ballot": "Cece Grant",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH MAYOR",
+    "name_on_ballot": "Ashleigh Heath Armstrong",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH MAYOR",
+    "name_on_ballot": "Janet Cowell",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL AT-LARGE",
+    "name_on_ballot": "Joshua Bradley",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL AT-LARGE",
+    "name_on_ballot": "Ms. Stormie Denise Forte",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL AT-LARGE",
+    "name_on_ballot": "Clark Rinehart",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL AT-LARGE",
+    "name_on_ballot": "Sana Siddiqui",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "2",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT A",
+    "name_on_ballot": "Whitney Hill",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT A",
+    "name_on_ballot": "Mitchell Silver",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT B",
+    "name_on_ballot": "Megan Patton",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "4"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT C",
+    "name_on_ballot": "Corey Branch",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT C",
+    "name_on_ballot": "Jared S. Ollison",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT D",
+    "name_on_ballot": "Jane Harrison",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT D",
+    "name_on_ballot": "Jevon Smith-Cook",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT E",
+    "name_on_ballot": "Christina Jones",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "2"
+  },
+  {
+    "election_dt": "11/03/2026",
+    "county_name": "WAKE",
+    "contest_name": "CITY OF RALEIGH CITY COUNCIL DISTRICT E",
+    "name_on_ballot": "Marc Scruggs",
+    "party_candidate": "",
+    "is_partisan": "FALSE",
+    "vote_for": "1",
+    "term": "2"
+  }
+]

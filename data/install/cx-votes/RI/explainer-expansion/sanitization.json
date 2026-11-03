@@ -1,0 +1,24 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "captures": [
+    {
+      "sourceUrl": "https://www.richmondri.gov/m/newsflash/home/detail/1878",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "sourceHashKind": "SANITIZED_SOURCE_TEXT",
+      "originalSourceSha256": "3ad0f51bfc510697d50402cb843eb23303b64954329cef39398a776a268efa10",
+      "originalByteLength": 103554,
+      "storedSha256": "a8e7aee3e0669c7cf0e79cd2c9e3b2876dbe997903c352acbd1093ae74aaba78",
+      "storedByteLength": 103545,
+      "storedPath": "sources/a8e7aee3e0669c7cf0e79cd2c9e3b2876dbe997903c352acbd1093ae74aaba78.sanitized.html",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "replacedSubstrings": 1,
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "sourceContentEffect": "Existing sanitizer replaced only detected credential substrings. Election text and official authority links are unchanged. Stored hash fingerprints sanitized representation, not original publisher response bytes. Original bytes retained only in scratch."
+    }
+  ],
+  "credentialValuesDisclosed": 0,
+  "measureRecordSourceHashesUnchanged": true,
+  "measureRecordReason": "Every affected measure is sourced to its retained original ballot or guide PDF/other original source; the sanitized pages only establish authority and link to those documents."
+}

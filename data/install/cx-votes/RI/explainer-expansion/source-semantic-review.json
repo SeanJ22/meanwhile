@@ -1,0 +1,34 @@
+{
+  "state": "RI",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedAt": "2026-11-03T05:04:47.186971+00:00",
+  "packetSha256": "3f184c04efa9a3d652e975d0c814f66a666a8059de3943eb01e295a20922c459",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "sourceScope": "Complete official Cranston municipal6bondquestionguide and fullChariho schoolbondnotice; no statewide local denominator claim.",
+  "findings": [],
+  "checks": [
+    "All7exactfullquestionsandcompleteprovidedofficialstatements preserved.",
+    "Allcapsnotmorethan/nottoexceedareexplained asup to.",
+    "Allborrowingpurposeandconditionalstateaidtermsretained; Chariho61%minimumatissuance/may65%completion.",
+    "Cranstonestimatedissuancecosts/projectallocations/20year4%interestassumptionsretained; allfinancialvaluescheckedagainstfulltables.",
+    "Chariho30year4.65%examplegross230360611/net89840638at61%or80626214at65%identifiedasestimates. No guaranteed reimbursement.",
+    "CranstonMayoral/CityCouncilfurtheractionbeforebondissuance/spendingpreserved fromofficialApproveexplanation.",
+    "CorrectCranstonmunicipalgovernmentcousubandCharihoCensusschooldistrictIDsselectedfromexistingregistry, notguessed.",
+    "Recordwhat/yes/noeverymaterialsentencehasexactofficialsupport; contracts/hash/wholequestion/usable-readerchecksPASS."
+  ],
+  "questionIds": [
+    "ri-cranston-2026:question-6",
+    "ri-cranston-2026:question-7",
+    "ri-cranston-2026:question-8",
+    "ri-cranston-2026:question-9",
+    "ri-cranston-2026:question-10",
+    "ri-cranston-2026:question-11",
+    "ri-chariho-2026:question-6"
+  ],
+  "identityCorrection": {
+    "basis": "Exact fresh live-audit published key/election metadata reused; no new fallback election id.",
+    "heldBallotKey": "RI:ri-2026-11-03-general",
+    "sourceFactsAndRecordIdsUnchanged": true
+  }
+}

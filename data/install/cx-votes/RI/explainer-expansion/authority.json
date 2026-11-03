@@ -1,0 +1,27 @@
+{
+  "scope": "Complete6Cranston local bond questions and1Chariho school district bond question. Five statewide questions alreadyheld and explained. Remaining RhodeIsland local master denominator not established.",
+  "cranstonOfficialGuideUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/",
+  "cranstonPublishedDenominatorQuote": "There are five statewide questions, and six local Cranston questions, which will appear on the Cranston ballot for the Nov. 3, 2026 General Election.",
+  "charihoOfficialLinkingPagePath": "sources/a8e7aee3e0669c7cf0e79cd2c9e3b2876dbe997903c352acbd1093ae74aaba78.sanitized.html",
+  "charihoPublishedSourceLink": {
+    "text": "About Ballot Question 6",
+    "url": "https://www.richmondri.gov/DocumentCenter/View/4674/Chariho-Public-Notice-1022026"
+  },
+  "excludedElectionResultsPrelaunchApi": "Publicplatformonlylistsoneplaceholderballotitem, not a complete official question inventory. Notused for candidate, measure, or result facts.",
+  "sanitizedLinkingPageCapture": {
+    "sourceUrl": "https://www.richmondri.gov/m/newsflash/home/detail/1878",
+    "representation": "SANITIZED_LINKING_PAGE",
+    "sourceHashKind": "SANITIZED_SOURCE_TEXT",
+    "originalSourceSha256": "3ad0f51bfc510697d50402cb843eb23303b64954329cef39398a776a268efa10",
+    "originalByteLength": 103554,
+    "storedSha256": "a8e7aee3e0669c7cf0e79cd2c9e3b2876dbe997903c352acbd1093ae74aaba78",
+    "storedByteLength": 103545,
+    "storedPath": "sources/a8e7aee3e0669c7cf0e79cd2c9e3b2876dbe997903c352acbd1093ae74aaba78.sanitized.html",
+    "sanitizerVersion": "fx-cred-v1-2026-08-28",
+    "replacedSubstrings": 1,
+    "redactedClasses": [
+      "google_api_key"
+    ],
+    "sourceContentEffect": "Existing sanitizer replaced only detected credential substrings. Election text and official authority links are unchanged. Stored hash fingerprints sanitized representation, not original publisher response bytes. Original bytes retained only in scratch."
+  }
+}

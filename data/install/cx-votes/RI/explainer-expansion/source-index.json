@@ -1,0 +1,55 @@
+{
+  "packetPath": "ballot-input/ri.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/",
+      "finalUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/",
+      "rawPath": "sources/937c318a62cb9400bea353354690faea1c0dc936aa54435cbfa5435afc242781.html",
+      "rawHash": "937c318a62cb9400bea353354690faea1c0dc936aa54435cbfa5435afc242781",
+      "textPath": "sources/b20e126a14c8f7202b9aeb9ae625283a5ad9d3dda33a273718380e23635b3bef.txt",
+      "textSha256": "b20e126a14c8f7202b9aeb9ae625283a5ad9d3dda33a273718380e23635b3bef",
+      "sourceFormat": "ORIGINAL_HTML_BYTES",
+      "contestIds": [
+        "ri-cranston-2026:question-6",
+        "ri-cranston-2026:question-7",
+        "ri-cranston-2026:question-8",
+        "ri-cranston-2026:question-9",
+        "ri-cranston-2026:question-10",
+        "ri-cranston-2026:question-11"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.richmondri.gov/DocumentCenter/View/4674/Chariho-Public-Notice-1022026",
+      "finalUrl": "https://www.richmondri.gov/DocumentCenter/View/4674/Chariho-Public-Notice-1022026",
+      "rawPath": "sources/b656b41b349faa0e920a667cd1b6529d7ddff72ddd3d6fda94312bf65fcb8aa2.source",
+      "rawHash": "b656b41b349faa0e920a667cd1b6529d7ddff72ddd3d6fda94312bf65fcb8aa2",
+      "textPath": "sources/b013779ffdb1bf68194b8b66b52212650d31cebc99279f1f1503ccc2b0f5e2fe.txt",
+      "textSha256": "b013779ffdb1bf68194b8b66b52212650d31cebc99279f1f1503ccc2b0f5e2fe",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ri-chariho-2026:question-6"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json",
+  "linkingPageArchives": [
+    {
+      "sourceUrl": "https://www.richmondri.gov/m/newsflash/home/detail/1878",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "sourceHashKind": "SANITIZED_SOURCE_TEXT",
+      "originalSourceSha256": "3ad0f51bfc510697d50402cb843eb23303b64954329cef39398a776a268efa10",
+      "originalByteLength": 103554,
+      "storedSha256": "a8e7aee3e0669c7cf0e79cd2c9e3b2876dbe997903c352acbd1093ae74aaba78",
+      "storedByteLength": 103545,
+      "storedPath": "sources/a8e7aee3e0669c7cf0e79cd2c9e3b2876dbe997903c352acbd1093ae74aaba78.sanitized.html",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "replacedSubstrings": 1,
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "sourceContentEffect": "Existing sanitizer replaced only detected credential substrings. Election text and official authority links are unchanged. Stored hash fingerprints sanitized representation, not original publisher response bytes. Original bytes retained only in scratch."
+    }
+  ]
+}

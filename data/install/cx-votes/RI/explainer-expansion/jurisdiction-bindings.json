@@ -1,0 +1,100 @@
+[
+  {
+    "contestId": "ri-cranston-2026:question-6",
+    "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+    "registeredDivisionIndex": 21,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "cousub",
+      "4400719180",
+      "Cranston city"
+    ],
+    "registryPath": "data/derived/registration/ri.json",
+    "registrySha256": "157381b29e0462da7d087d06a146e8e9aedf9808ef91a74bf4956f7156de0f5c",
+    "basis": "Exact existing registered Census municipal government (Cranston cousub) or unified school district (Chariho), named by the official ballot question."
+  },
+  {
+    "contestId": "ri-cranston-2026:question-7",
+    "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+    "registeredDivisionIndex": 21,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "cousub",
+      "4400719180",
+      "Cranston city"
+    ],
+    "registryPath": "data/derived/registration/ri.json",
+    "registrySha256": "157381b29e0462da7d087d06a146e8e9aedf9808ef91a74bf4956f7156de0f5c",
+    "basis": "Exact existing registered Census municipal government (Cranston cousub) or unified school district (Chariho), named by the official ballot question."
+  },
+  {
+    "contestId": "ri-cranston-2026:question-8",
+    "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+    "registeredDivisionIndex": 21,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "cousub",
+      "4400719180",
+      "Cranston city"
+    ],
+    "registryPath": "data/derived/registration/ri.json",
+    "registrySha256": "157381b29e0462da7d087d06a146e8e9aedf9808ef91a74bf4956f7156de0f5c",
+    "basis": "Exact existing registered Census municipal government (Cranston cousub) or unified school district (Chariho), named by the official ballot question."
+  },
+  {
+    "contestId": "ri-cranston-2026:question-9",
+    "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+    "registeredDivisionIndex": 21,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "cousub",
+      "4400719180",
+      "Cranston city"
+    ],
+    "registryPath": "data/derived/registration/ri.json",
+    "registrySha256": "157381b29e0462da7d087d06a146e8e9aedf9808ef91a74bf4956f7156de0f5c",
+    "basis": "Exact existing registered Census municipal government (Cranston cousub) or unified school district (Chariho), named by the official ballot question."
+  },
+  {
+    "contestId": "ri-cranston-2026:question-10",
+    "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+    "registeredDivisionIndex": 21,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "cousub",
+      "4400719180",
+      "Cranston city"
+    ],
+    "registryPath": "data/derived/registration/ri.json",
+    "registrySha256": "157381b29e0462da7d087d06a146e8e9aedf9808ef91a74bf4956f7156de0f5c",
+    "basis": "Exact existing registered Census municipal government (Cranston cousub) or unified school district (Chariho), named by the official ballot question."
+  },
+  {
+    "contestId": "ri-cranston-2026:question-11",
+    "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+    "registeredDivisionIndex": 21,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "cousub",
+      "4400719180",
+      "Cranston city"
+    ],
+    "registryPath": "data/derived/registration/ri.json",
+    "registrySha256": "157381b29e0462da7d087d06a146e8e9aedf9808ef91a74bf4956f7156de0f5c",
+    "basis": "Exact existing registered Census municipal government (Cranston cousub) or unified school district (Chariho), named by the official ballot question."
+  },
+  {
+    "contestId": "ri-chariho-2026:question-6",
+    "ocdId": "ocd-division/country:us/state:ri/school_district:chariho_regional_school_district",
+    "registeredDivisionIndex": 85,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/school_district:chariho_regional_school_district",
+      "unsd",
+      "4400150",
+      "Chariho Regional School District"
+    ],
+    "registryPath": "data/derived/registration/ri.json",
+    "registrySha256": "157381b29e0462da7d087d06a146e8e9aedf9808ef91a74bf4956f7156de0f5c",
+    "basis": "Exact existing registered Census municipal government (Cranston cousub) or unified school district (Chariho), named by the official ballot question."
+  }
+]

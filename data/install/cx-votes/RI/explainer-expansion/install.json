@@ -1,0 +1,74 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "RI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:RI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 7,
+    "newPlainLanguageExplanations": 7,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "LOCAL_INVENTORY_NOT_ESTABLISHED"
+  },
+  "subjects": [
+    {
+      "id": "ri-cranston-2026:question-6",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "sourceUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/"
+    },
+    {
+      "id": "ri-cranston-2026:question-7",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "sourceUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/"
+    },
+    {
+      "id": "ri-cranston-2026:question-8",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "sourceUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/"
+    },
+    {
+      "id": "ri-cranston-2026:question-9",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "sourceUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/"
+    },
+    {
+      "id": "ri-cranston-2026:question-10",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "sourceUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/"
+    },
+    {
+      "id": "ri-cranston-2026:question-11",
+      "ocdId": "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "sourceUrl": "https://www.cranstonri.gov/a-guide-to-cranston-local-bond-referenda/"
+    },
+    {
+      "id": "ri-chariho-2026:question-6",
+      "ocdId": "ocd-division/country:us/state:ri/school_district:chariho_regional_school_district",
+      "sourceUrl": "https://www.richmondri.gov/DocumentCenter/View/4674/Chariho-Public-Notice-1022026"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete original official Cranston HTML and Chariho PDF guide bytes; full questions, official statements, cost tables and vote meanings retained.",
+  "reviewedScratchPacketSha256": "3f184c04efa9a3d652e975d0c814f66a666a8059de3943eb01e295a20922c459",
+  "canonicalInputSha256": "ac9821e83dd2df161db272c7e3b2f660dbfd22bfae95ad600e0186923c4d77da",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

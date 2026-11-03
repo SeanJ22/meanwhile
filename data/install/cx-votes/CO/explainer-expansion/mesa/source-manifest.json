@@ -1,0 +1,20 @@
+[
+  {
+    "requestedUrl": "https://www.mesacounty.us/sites/default/files/2026-09/2026%20General%20Election%20TABOR%20Booklet%20%5BADA%5D_0.pdf",
+    "retrievedAt": "2026-11-03T06:15:10.821255+00:00",
+    "finalUrl": "https://www.mesacounty.us/sites/default/files/2026-09/2026%20General%20Election%20TABOR%20Booklet%20%5BADA%5D_0.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "2f8f6028300303c6adbd434abeb0407c5bbb50f635249cf9aabbdfd63ad00b63",
+    "bytes": 311463,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "mesa-tabor-booklet.pdf",
+    "sourceOrg": "Mesa County Clerk and Recorder",
+    "savedFile": "sources/2f8f6028300303c6adbd434abeb0407c5bbb50f635249cf9aabbdfd63ad00b63.pdf.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "cc70e75e0138d80d133aa5f6e4b2214bf3fa076344b0b40a306c9bb4fa953a13",
+    "storedBytes": 304274,
+    "hashScope": "Original complete PDF response bytes after decoding gzip; storage SHA separately identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

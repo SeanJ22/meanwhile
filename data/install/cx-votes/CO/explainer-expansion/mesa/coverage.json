@@ -1,0 +1,18 @@
+{
+  "county": "Mesa",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureCount": 5,
+  "newPreparedAttachedCount": 5,
+  "newPendingExactTerritoryCount": 0,
+  "currentBallotStylesChecked": 9,
+  "sourceUrl": "https://www.mesacounty.us/sites/default/files/2026-09/2026%20General%20Election%20TABOR%20Booklet%20%5BADA%5D_0.pdf",
+  "sourceSha256": "2f8f6028300303c6adbd434abeb0407c5bbb50f635249cf9aabbdfd63ad00b63",
+  "styleSourceManifest": "sample-style-source-manifest.json",
+  "sourceCaveats": [
+    "Native TABOR booklet labels the fire district PALSADE in its caption; the full question and exact registration correctly say PALISADE.",
+    "Grand Junction sample captions say Referred Measure2B; TABOR booklet calls it Orchard Mesa Pool Ballot Issue2B. Same full question.",
+    "Style8originalPDF contains the complete main ballot followed by duplicate partial accessibility text. Native raw PDF extraction independently confirms the artifact; it is not another measure or a truncated main question.",
+    "Palisade allocation wording is preserved in exact source quotes:0.75% and0.25% of the increased1% tax. Prose expresses the corresponding portions of the one-percentage-point increase."
+  ],
+  "limits": "Nine-style current county union plus native TABOR booklet denominator only; not statewide local completeness."
+}

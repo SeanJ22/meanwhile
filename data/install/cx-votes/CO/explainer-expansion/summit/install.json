@@ -1,0 +1,31 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-summit-county-2026-ballot-1a",
+      "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php"
+    },
+    {
+      "id": "co-summit-school-district-re1-2026-ballot-4a",
+      "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php"
+    },
+    {
+      "id": "co-west-grand-school-district-1jt-2026-ballot-5a",
+      "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php"
+    }
+  ],
+  "operation": "Merge only these 3 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

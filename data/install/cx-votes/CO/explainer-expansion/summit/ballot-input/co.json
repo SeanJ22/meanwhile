@@ -1,0 +1,180 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-summit-county-2026-ballot-1a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:summit",
+          "divisionVintage": "2026",
+          "title": "Summit County Referred Measure 1A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT RAISING ANY ADDITIONAL TAXES AND TO CONTINUE FUNDING FOR: WILDFIRE PREVENTION; MENTAL HEALTH, SUBSTANCE ABUSE SERVICES, AND SUICIDE PREVENTION PROGRAMS FOR SUMMIT COUNTY YOUTH AND ADULTS; AFFORDABLE EARLY CHILDHOOD CARE AND LEARNING FOR SUMMIT COUNTY FAMILIES AND WORKERS; IMPROVING PUBLIC BUILDINGS/COMMUNITY FACILITIES AND EXTENDING THEIR USEFUL LIFE; AND SUSTAINING RECYCLING AND WASTE DIVERSION PROGRAMS, SHALL SUMMIT COUNTY BE AUTHORIZED TO CONTINUE TO COLLECT AND EXPEND REVENUES PREVIOUSLY APPROVED BY SUMMIT COUNTY VOTERS IN 2018 BY SUMMIT COUNTY REFERRED MEASURE 1A BY THE ONGOING EXTENSION OF THE EXISTING FOUR AND SIX HUNDRED FIFTY-TWO THOUSANDTHS MILL LEVY PROPERTY TAX COMMENCING JANUARY 1, 2028, AND CONTINUING THEREAFTER AS A VOTER-APPROVED REVENUE CHANGE, WITHOUT LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW, WITH ALL EXPENDITURES MADE IN CONSIDERATION OF INDEPENDENT CITIZEN ADVISORY COMMITTEE RECOMMENDATIONS AND SUBJECT TO ANNUAL INDEPENDENT FINANCIAL AUDIT?",
+            "sourceOrg": "Summit County Clerk and Recorder",
+            "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+            "collectedAt": "2026-11-03T06:31:55.555085+00:00",
+            "verifiedAt": "2026-11-03T06:38:26.436677+00:00"
+          }
+        },
+        {
+          "id": "co-summit-school-district-re1-2026-ballot-4a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:summit_school_district_re_1",
+          "divisionVintage": "2026",
+          "title": "Summit School District RE-1 Ballot Issue 4A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL SUMMIT SCHOOL DISTRICT RE-1 TAXES BE INCREASED $5.9 MILLION FOR TAX COLLECTION YEAR 2027 AND IN SUCH AMOUNTS AS MAY BE COLLECTED ANNUALLY THEREAFTER; WITH FUNDS TO BE USED FOR PURPOSES SUCH AS: 1. ATTRACTING AND RETAINING HIGH-QUALITY TEACHERS AND STAFF THROUGH COMPETITIVE COMPENSATION AND BENEFITS; 2. STRENGTHENING PK-12 PROGRAMS AND INCREASING STUDENTS’ OPPORTUNITIES FOR COLLEGE CREDITS, CAREER AND TECHNICAL INDUSTRY CERTIFICATIONS, AND HANDS-ON LEARNING EXPERIENCES ALIGNED TO WORKFORCE AND POSTSECONDARY PATHWAYS; 3. STRENGTHENING ACADEMIC OUTCOMES AND REDUCING ACHIEVEMENT GAPS; FROM THE IMPOSITION OF A MILL LEVY IMPOSED AT A RATE, WHEN COMBINED WITH PRIOR VOTER APPROVED MILL LEVY OVERRIDE QUESTIONS, WILL GENERATE REVENUES UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S.; SUCH ADDITIONAL REVENUES TO BE DEPOSITED IN THE GENERAL FUND AND USED FOR EDUCATIONAL PURPOSES AS PROVIDED HEREIN AND AS PREVIOUSLY APPROVED BY THE DISTRICT VOTERS PURSUANT TO SECTION 22-54-108(V), C.R.S.; AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Summit County Clerk and Recorder",
+            "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+            "collectedAt": "2026-11-03T06:31:55.555085+00:00",
+            "verifiedAt": "2026-11-03T06:38:26.436677+00:00"
+          }
+        },
+        {
+          "id": "co-west-grand-school-district-1jt-2026-ballot-5a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/school_district:west_grand_school_district_1_jt",
+          "divisionVintage": "2026",
+          "title": "West Grand School District 1-JT. Ballot Issue 5A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "WITHOUT IMPOSING ANY NEW TAX, SHALL WEST GRAND SCHOOL DISTRICT DEBT BE INCREASED UP TO $13.3 MILLION, WITH A REPAYMENT COST OF UP TO $24.97 MILLION (PRINCIPAL AND INTEREST), WITH THE PROCEEDS OF SUCH DEBT TO BE USED TO FINANCE CAPITAL IMPROVEMENTS TO DISTRICT FACILITIES, INCLUDING: RENOVATION OF JR/SR HIGH SCHOOL TO FOCUS ON HEALTH, SAFETY, ACCESSIBILITY AND SECURITY UPGRADES AND IMPROVEMENTS; PROVIDE MATCHING FUNDS IN ORDER TO RECEIVE A STATE GRANT IN AN APPROXIMATE AMOUNT OF $10 MILLION (THE RECEIPT OF WHICH IS CONTINGENT UPON THE DISTRICT’S ABILITY TO PROVIDE THE MATCHING AMOUNT AND WHICH GRANT DOES NOT NEED TO BE REPAID); AND SHALL THE TAXES AUTHORIZED AT THE 2006 ELECTION BE EXTENDED AND USED TO PAY THIS DEBT IN ADDITION TO THE 2006 DEBT; AND SHALL THE MILL LEVY BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE BUT ONLY IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, PREMIUM, IF ANY, AND INTEREST ON SUCH DEBT OR ANY REFUNDING DEBT (OR TO CREATE A RESERVE FOR SAME); AND MAY SUCH DEBT BE EVIDENCED BY THE ISSUANCE OF GENERAL OBLIGATION BONDS SOLD IN ONE SERIES OR MORE, FOR A PRICE ABOVE OR BELOW THE PRINCIPAL AMOUNT, ON TERMS AND CONDITIONS, AND WITH SUCH MATURITIES AS PERMITTED BY LAW; AND SHALL THE REVENUES FROM SUCH DEBT AND TAXES AND ANY INVESTMENT EARNINGS THEREON BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Summit County Clerk and Recorder",
+            "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+            "collectedAt": "2026-11-03T06:31:55.555085+00:00",
+            "verifiedAt": "2026-11-03T06:38:26.436677+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-summit-county-2026-ballot-1a#question",
+          "contestId": "co-summit-county-2026-ballot-1a",
+          "officialNumber": "1A",
+          "questionText": "WITHOUT RAISING ANY ADDITIONAL TAXES AND TO CONTINUE FUNDING FOR: WILDFIRE PREVENTION; MENTAL HEALTH, SUBSTANCE ABUSE SERVICES, AND SUICIDE PREVENTION PROGRAMS FOR SUMMIT COUNTY YOUTH AND ADULTS; AFFORDABLE EARLY CHILDHOOD CARE AND LEARNING FOR SUMMIT COUNTY FAMILIES AND WORKERS; IMPROVING PUBLIC BUILDINGS/COMMUNITY FACILITIES AND EXTENDING THEIR USEFUL LIFE; AND SUSTAINING RECYCLING AND WASTE DIVERSION PROGRAMS, SHALL SUMMIT COUNTY BE AUTHORIZED TO CONTINUE TO COLLECT AND EXPEND REVENUES PREVIOUSLY APPROVED BY SUMMIT COUNTY VOTERS IN 2018 BY SUMMIT COUNTY REFERRED MEASURE 1A BY THE ONGOING EXTENSION OF THE EXISTING FOUR AND SIX HUNDRED FIFTY-TWO THOUSANDTHS MILL LEVY PROPERTY TAX COMMENCING JANUARY 1, 2028, AND CONTINUING THEREAFTER AS A VOTER-APPROVED REVENUE CHANGE, WITHOUT LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW, WITH ALL EXPENDITURES MADE IN CONSIDERATION OF INDEPENDENT CITIZEN ADVISORY COMMITTEE RECOMMENDATIONS AND SUBJECT TO ANNUAL INDEPENDENT FINANCIAL AUDIT?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT RAISING ANY ADDITIONAL TAXES AND TO CONTINUE FUNDING FOR: WILDFIRE PREVENTION; MENTAL HEALTH, SUBSTANCE ABUSE SERVICES, AND SUICIDE PREVENTION PROGRAMS FOR SUMMIT COUNTY YOUTH AND ADULTS; AFFORDABLE EARLY CHILDHOOD CARE AND LEARNING FOR SUMMIT COUNTY FAMILIES AND WORKERS; IMPROVING PUBLIC BUILDINGS/COMMUNITY FACILITIES AND EXTENDING THEIR USEFUL LIFE; AND SUSTAINING RECYCLING AND WASTE DIVERSION PROGRAMS, SHALL SUMMIT COUNTY BE AUTHORIZED TO CONTINUE TO COLLECT AND EXPEND REVENUES PREVIOUSLY APPROVED BY SUMMIT COUNTY VOTERS IN 2018 BY SUMMIT COUNTY REFERRED MEASURE 1A BY THE ONGOING EXTENSION OF THE EXISTING FOUR AND SIX HUNDRED FIFTY-TWO THOUSANDTHS MILL LEVY PROPERTY TAX COMMENCING JANUARY 1, 2028, AND CONTINUING THEREAFTER AS A VOTER-APPROVED REVENUE CHANGE, WITHOUT LIMITATION OR CONDITION UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW, WITH ALL EXPENDITURES MADE IN CONSIDERATION OF INDEPENDENT CITIZEN ADVISORY COMMITTEE RECOMMENDATIONS AND SUBJECT TO ANNUAL INDEPENDENT FINANCIAL AUDIT?",
+            "sourceOrg": "Summit County Clerk and Recorder",
+            "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+            "collectedAt": "2026-11-03T06:31:55.555085+00:00",
+            "verifiedAt": "2026-11-03T06:38:26.436677+00:00"
+          }
+        },
+        {
+          "id": "co-summit-school-district-re1-2026-ballot-4a#question",
+          "contestId": "co-summit-school-district-re1-2026-ballot-4a",
+          "officialNumber": "4A",
+          "questionText": "SHALL SUMMIT SCHOOL DISTRICT RE-1 TAXES BE INCREASED $5.9 MILLION FOR TAX COLLECTION YEAR 2027 AND IN SUCH AMOUNTS AS MAY BE COLLECTED ANNUALLY THEREAFTER; WITH FUNDS TO BE USED FOR PURPOSES SUCH AS: 1. ATTRACTING AND RETAINING HIGH-QUALITY TEACHERS AND STAFF THROUGH COMPETITIVE COMPENSATION AND BENEFITS; 2. STRENGTHENING PK-12 PROGRAMS AND INCREASING STUDENTS’ OPPORTUNITIES FOR COLLEGE CREDITS, CAREER AND TECHNICAL INDUSTRY CERTIFICATIONS, AND HANDS-ON LEARNING EXPERIENCES ALIGNED TO WORKFORCE AND POSTSECONDARY PATHWAYS; 3. STRENGTHENING ACADEMIC OUTCOMES AND REDUCING ACHIEVEMENT GAPS; FROM THE IMPOSITION OF A MILL LEVY IMPOSED AT A RATE, WHEN COMBINED WITH PRIOR VOTER APPROVED MILL LEVY OVERRIDE QUESTIONS, WILL GENERATE REVENUES UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S.; SUCH ADDITIONAL REVENUES TO BE DEPOSITED IN THE GENERAL FUND AND USED FOR EDUCATIONAL PURPOSES AS PROVIDED HEREIN AND AS PREVIOUSLY APPROVED BY THE DISTRICT VOTERS PURSUANT TO SECTION 22-54-108(V), C.R.S.; AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL SUMMIT SCHOOL DISTRICT RE-1 TAXES BE INCREASED $5.9 MILLION FOR TAX COLLECTION YEAR 2027 AND IN SUCH AMOUNTS AS MAY BE COLLECTED ANNUALLY THEREAFTER; WITH FUNDS TO BE USED FOR PURPOSES SUCH AS: 1. ATTRACTING AND RETAINING HIGH-QUALITY TEACHERS AND STAFF THROUGH COMPETITIVE COMPENSATION AND BENEFITS; 2. STRENGTHENING PK-12 PROGRAMS AND INCREASING STUDENTS’ OPPORTUNITIES FOR COLLEGE CREDITS, CAREER AND TECHNICAL INDUSTRY CERTIFICATIONS, AND HANDS-ON LEARNING EXPERIENCES ALIGNED TO WORKFORCE AND POSTSECONDARY PATHWAYS; 3. STRENGTHENING ACADEMIC OUTCOMES AND REDUCING ACHIEVEMENT GAPS; FROM THE IMPOSITION OF A MILL LEVY IMPOSED AT A RATE, WHEN COMBINED WITH PRIOR VOTER APPROVED MILL LEVY OVERRIDE QUESTIONS, WILL GENERATE REVENUES UP TO THE LIMIT ESTABLISHED FOR THE DISTRICT BY SECTION 22-54-108(3)(B)(VI), C.R.S.; SUCH ADDITIONAL REVENUES TO BE DEPOSITED IN THE GENERAL FUND AND USED FOR EDUCATIONAL PURPOSES AS PROVIDED HEREIN AND AS PREVIOUSLY APPROVED BY THE DISTRICT VOTERS PURSUANT TO SECTION 22-54-108(V), C.R.S.; AND SHALL THE REVENUES FROM SUCH TAXES AND ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Summit County Clerk and Recorder",
+            "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+            "collectedAt": "2026-11-03T06:31:55.555085+00:00",
+            "verifiedAt": "2026-11-03T06:38:26.436677+00:00"
+          }
+        },
+        {
+          "id": "co-west-grand-school-district-1jt-2026-ballot-5a#question",
+          "contestId": "co-west-grand-school-district-1jt-2026-ballot-5a",
+          "officialNumber": "5A",
+          "questionText": "WITHOUT IMPOSING ANY NEW TAX, SHALL WEST GRAND SCHOOL DISTRICT DEBT BE INCREASED UP TO $13.3 MILLION, WITH A REPAYMENT COST OF UP TO $24.97 MILLION (PRINCIPAL AND INTEREST), WITH THE PROCEEDS OF SUCH DEBT TO BE USED TO FINANCE CAPITAL IMPROVEMENTS TO DISTRICT FACILITIES, INCLUDING: RENOVATION OF JR/SR HIGH SCHOOL TO FOCUS ON HEALTH, SAFETY, ACCESSIBILITY AND SECURITY UPGRADES AND IMPROVEMENTS; PROVIDE MATCHING FUNDS IN ORDER TO RECEIVE A STATE GRANT IN AN APPROXIMATE AMOUNT OF $10 MILLION (THE RECEIPT OF WHICH IS CONTINGENT UPON THE DISTRICT’S ABILITY TO PROVIDE THE MATCHING AMOUNT AND WHICH GRANT DOES NOT NEED TO BE REPAID); AND SHALL THE TAXES AUTHORIZED AT THE 2006 ELECTION BE EXTENDED AND USED TO PAY THIS DEBT IN ADDITION TO THE 2006 DEBT; AND SHALL THE MILL LEVY BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE BUT ONLY IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, PREMIUM, IF ANY, AND INTEREST ON SUCH DEBT OR ANY REFUNDING DEBT (OR TO CREATE A RESERVE FOR SAME); AND MAY SUCH DEBT BE EVIDENCED BY THE ISSUANCE OF GENERAL OBLIGATION BONDS SOLD IN ONE SERIES OR MORE, FOR A PRICE ABOVE OR BELOW THE PRINCIPAL AMOUNT, ON TERMS AND CONDITIONS, AND WITH SUCH MATURITIES AS PERMITTED BY LAW; AND SHALL THE REVENUES FROM SUCH DEBT AND TAXES AND ANY INVESTMENT EARNINGS THEREON BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "WITHOUT IMPOSING ANY NEW TAX, SHALL WEST GRAND SCHOOL DISTRICT DEBT BE INCREASED UP TO $13.3 MILLION, WITH A REPAYMENT COST OF UP TO $24.97 MILLION (PRINCIPAL AND INTEREST), WITH THE PROCEEDS OF SUCH DEBT TO BE USED TO FINANCE CAPITAL IMPROVEMENTS TO DISTRICT FACILITIES, INCLUDING: RENOVATION OF JR/SR HIGH SCHOOL TO FOCUS ON HEALTH, SAFETY, ACCESSIBILITY AND SECURITY UPGRADES AND IMPROVEMENTS; PROVIDE MATCHING FUNDS IN ORDER TO RECEIVE A STATE GRANT IN AN APPROXIMATE AMOUNT OF $10 MILLION (THE RECEIPT OF WHICH IS CONTINGENT UPON THE DISTRICT’S ABILITY TO PROVIDE THE MATCHING AMOUNT AND WHICH GRANT DOES NOT NEED TO BE REPAID); AND SHALL THE TAXES AUTHORIZED AT THE 2006 ELECTION BE EXTENDED AND USED TO PAY THIS DEBT IN ADDITION TO THE 2006 DEBT; AND SHALL THE MILL LEVY BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE BUT ONLY IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, PREMIUM, IF ANY, AND INTEREST ON SUCH DEBT OR ANY REFUNDING DEBT (OR TO CREATE A RESERVE FOR SAME); AND MAY SUCH DEBT BE EVIDENCED BY THE ISSUANCE OF GENERAL OBLIGATION BONDS SOLD IN ONE SERIES OR MORE, FOR A PRICE ABOVE OR BELOW THE PRINCIPAL AMOUNT, ON TERMS AND CONDITIONS, AND WITH SUCH MATURITIES AS PERMITTED BY LAW; AND SHALL THE REVENUES FROM SUCH DEBT AND TAXES AND ANY INVESTMENT EARNINGS THEREON BE COLLECTED AND SPENT AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND ANY OTHER LAW?",
+            "sourceOrg": "Summit County Clerk and Recorder",
+            "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+            "collectedAt": "2026-11-03T06:31:55.555085+00:00",
+            "verifiedAt": "2026-11-03T06:38:26.436677+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-summit-county-2026-ballot-1a",
+          "whatItDoes": "Extend Summit County’s existing 4.652-mill property tax at its current rate beginning January 1, 2028, on an ongoing basis. It would continue funding wildfire prevention; mental health, substance-use and suicide-prevention services; affordable early-childhood care and learning; improvements to public buildings and community facilities; and recycling and waste diversion. Spending must consider independent citizen advisory committee recommendations and undergo an independent financial audit each year. The county could continue collecting and spending the revenue under the proposed constitutional and other legal revenue-limit exception.",
+          "yesMeans": "Extend the existing property tax on an ongoing basis for the listed programs, with citizen recommendations, annual audits and the revenue-limit exception.",
+          "noMeans": "Do not approve this ongoing extension of the existing property tax through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+          "sourceHash": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:38:26.436677+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-summit-school-district-re1-2026-ballot-4a",
+          "whatItDoes": "Authorize $5.9 million in additional school property taxes for collection in 2027, followed by amounts collected in later years. The rate would be set so this levy and previously approved extra local school levies together produce revenue up to the combined limit in the cited state school-funding law. Money would go into the general fund for educational purposes, including competitive teacher and staff pay and benefits, preschool-through-grade-12 learning, college credit and career credentials, hands-on career preparation, and efforts to improve academic results and reduce achievement gaps. Tax revenue and investment earnings could be kept and spent under the proposed constitutional and other legal revenue-limit exception.",
+          "yesMeans": "Approve the additional school property taxes within the combined legal limit and the revenue-limit exception.",
+          "noMeans": "Do not authorize this additional school property-tax funding or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+          "sourceHash": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:38:26.436677+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-west-grand-school-district-1jt-2026-ballot-5a",
+          "whatItDoes": "Allow West Grand School District to borrow up to $13.3 million for facility improvements, with total principal-and-interest repayment capped at $24.97 million. Projects include junior/senior high school health, safety, accessibility and security improvements and matching money needed to receive an approximately $10 million state grant that would not need repayment. The grant depends on the district providing its match. Property taxes authorized in 2006 would be extended to pay the new debt as well as the 2006 debt. The property-tax rate could rise without a mill-rate ceiling, but only enough to cover debt payments and reserves.",
+          "yesMeans": "Approve the school-facility borrowing, extension of the existing debt-repayment taxes and the proposed revenue-limit exception.",
+          "noMeans": "Do not authorize this new borrowing or the associated tax extension through this measure.",
+          "parts": [
+            {
+              "id": "co-west-grand-school-district-1jt-2026-ballot-5a#financing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bond terms and revenue",
+              "what": "The district could issue general-obligation bonds in one or more sales, above or below their principal amount, with terms permitted by law. Debt proceeds, tax revenue and investment earnings could be collected and spent under the proposed constitutional and other legal revenue-limit exception."
+            }
+          ],
+          "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+          "sourceHash": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:38:26.436677+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:38:26.436677+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+        "finalUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+        "publisher": "Summit County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:31:55.555085+00:00",
+        "httpStatus": 200,
+        "rawHash": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+        "reviewedEvidence": "Current official November3,2026 election page, bounded Local Questions section, gives all three full questions. Original HTML bytes scanned with existing credential sanitizer; no replacements required. Exact existing county/school jurisdictions; no advocacy used."
+      }
+    ]
+  }
+}

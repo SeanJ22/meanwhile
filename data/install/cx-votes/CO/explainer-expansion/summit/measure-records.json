@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "co-summit-county-2026-ballot-1a",
+    "whatItDoes": "Extend Summit County’s existing 4.652-mill property tax at its current rate beginning January 1, 2028, on an ongoing basis. It would continue funding wildfire prevention; mental health, substance-use and suicide-prevention services; affordable early-childhood care and learning; improvements to public buildings and community facilities; and recycling and waste diversion. Spending must consider independent citizen advisory committee recommendations and undergo an independent financial audit each year. The county could continue collecting and spending the revenue under the proposed constitutional and other legal revenue-limit exception.",
+    "yesMeans": "Extend the existing property tax on an ongoing basis for the listed programs, with citizen recommendations, annual audits and the revenue-limit exception.",
+    "noMeans": "Do not approve this ongoing extension of the existing property tax through this measure.",
+    "parts": [],
+    "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "sourceHash": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:38:26.436677+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-summit-school-district-re1-2026-ballot-4a",
+    "whatItDoes": "Authorize $5.9 million in additional school property taxes for collection in 2027, followed by amounts collected in later years. The rate would be set so this levy and previously approved extra local school levies together produce revenue up to the combined limit in the cited state school-funding law. Money would go into the general fund for educational purposes, including competitive teacher and staff pay and benefits, preschool-through-grade-12 learning, college credit and career credentials, hands-on career preparation, and efforts to improve academic results and reduce achievement gaps. Tax revenue and investment earnings could be kept and spent under the proposed constitutional and other legal revenue-limit exception.",
+    "yesMeans": "Approve the additional school property taxes within the combined legal limit and the revenue-limit exception.",
+    "noMeans": "Do not authorize this additional school property-tax funding or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "sourceHash": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:38:26.436677+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-west-grand-school-district-1jt-2026-ballot-5a",
+    "whatItDoes": "Allow West Grand School District to borrow up to $13.3 million for facility improvements, with total principal-and-interest repayment capped at $24.97 million. Projects include junior/senior high school health, safety, accessibility and security improvements and matching money needed to receive an approximately $10 million state grant that would not need repayment. The grant depends on the district providing its match. Property taxes authorized in 2006 would be extended to pay the new debt as well as the 2006 debt. The property-tax rate could rise without a mill-rate ceiling, but only enough to cover debt payments and reserves.",
+    "yesMeans": "Approve the school-facility borrowing, extension of the existing debt-repayment taxes and the proposed revenue-limit exception.",
+    "noMeans": "Do not authorize this new borrowing or the associated tax extension through this measure.",
+    "parts": [
+      {
+        "id": "co-west-grand-school-district-1jt-2026-ballot-5a#financing",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond terms and revenue",
+        "what": "The district could issue general-obligation bonds in one or more sales, above or below their principal amount, with terms permitted by law. Debt proceeds, tax revenue and investment earnings could be collected and spent under the proposed constitutional and other legal revenue-limit exception."
+      }
+    ],
+    "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "sourceHash": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:38:26.436677+00:00",
+    "citation": "measure-source"
+  }
+]

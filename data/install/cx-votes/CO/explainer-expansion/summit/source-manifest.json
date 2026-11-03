@@ -1,0 +1,19 @@
+[
+  {
+    "requestedUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "retrievedAt": "2026-11-03T06:31:55.555085+00:00",
+    "finalUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "sha256": "a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646",
+    "bytes": 130036,
+    "rawFormat": "HTML_BYTES",
+    "file": "summit-general-index.html",
+    "sourceOrg": "Summit County Clerk and Recorder",
+    "savedFile": "sources/a5410cf9ebda055a1feddeecfe4d076dbb8848cb9cb6f1e6090c16df411e1646.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "1cc9d6e43e16fd28757b7a3c14a6717975c9f1c8953daafcee99f4a15982f2df",
+    "storedBytes": 25617,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes."
+  }
+]

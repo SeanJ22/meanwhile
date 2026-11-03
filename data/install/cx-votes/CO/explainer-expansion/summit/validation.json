@@ -1,0 +1,34 @@
+{
+  "state": "CO",
+  "county": "summit",
+  "preparedAttachedMeasures": 3,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": 3,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 10,
+  "exactExistingRegisteredAttachments": 3,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/county:summit",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:summit_school_district_re_1",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:west_grand_school_district_1_jt",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 14,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

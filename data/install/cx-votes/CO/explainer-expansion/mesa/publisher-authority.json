@@ -1,0 +1,83 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections",
+      "retrievedAt": "2026-11-03T06:14:12.530181+00:00",
+      "finalUrl": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "d654c13a6a43eafeb71784ef12043a22ebd97d9bdc2617afdc79d3724a16f85d",
+      "bytes": 44438,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "mesa-current-index.html",
+      "savedFile": "sources/mesa-current-index.sanitized.html",
+      "savedSha256": "d654c13a6a43eafeb71784ef12043a22ebd97d9bdc2617afdc79d3724a16f85d",
+      "sanitization": {
+        "originalSha256": "d654c13a6a43eafeb71784ef12043a22ebd97d9bdc2617afdc79d3724a16f85d",
+        "savedSha256": "d654c13a6a43eafeb71784ef12043a22ebd97d9bdc2617afdc79d3724a16f85d",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections/notice-election-and-sample-ballots",
+      "retrievedAt": "2026-11-03T06:14:24.849005+00:00",
+      "finalUrl": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections/notice-election-and-sample-ballots",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "94ab5842f23fed004fa8dd2eed9e8c8073c63d839f7f01c1b5c5116829127afe",
+      "bytes": 36511,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "mesa-notice-index.html",
+      "savedFile": "sources/mesa-notice-index.sanitized.html",
+      "savedSha256": "94ab5842f23fed004fa8dd2eed9e8c8073c63d839f7f01c1b5c5116829127afe",
+      "sanitization": {
+        "originalSha256": "94ab5842f23fed004fa8dd2eed9e8c8073c63d839f7f01c1b5c5116829127afe",
+        "savedSha256": "94ab5842f23fed004fa8dd2eed9e8c8073c63d839f7f01c1b5c5116829127afe",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Mesa",
+      "to": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections"
+    },
+    {
+      "from": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections",
+      "linkText": "Sample Ballots and Notices",
+      "to": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections/notice-election-and-sample-ballots"
+    },
+    {
+      "from": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections/notice-election-and-sample-ballots",
+      "links": [
+        "https://www.mesacounty.us/sites/default/files/2026-09/2026%20General%20Election%20TABOR%20Booklet%20%5BADA%5D_0.pdf",
+        "https://drive.google.com/drive/folders/1gnSBNYNhYYfI-cQKXW056acArofZYmf0?usp=sharing"
+      ]
+    }
+  ]
+}

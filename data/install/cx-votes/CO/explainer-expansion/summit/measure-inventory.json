@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "co-summit-county-2026-ballot-1a",
+    "officialTitle": "Summit County Referred Measure 1A",
+    "officialNumber": "1A",
+    "ocdId": "ocd-division/country:us/state:co/county:summit",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/county:summit",
+      "county",
+      "08117",
+      "Summit County"
+    ],
+    "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-summit-school-district-re1-2026-ballot-4a",
+    "officialTitle": "Summit School District RE-1 Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:summit_school_district_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:summit_school_district_re_1",
+      "unsd",
+      "0806810",
+      "Summit School District RE-1"
+    ],
+    "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-west-grand-school-district-1jt-2026-ballot-5a",
+    "officialTitle": "West Grand School District 1-JT. Ballot Issue 5A",
+    "officialNumber": "5A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:west_grand_school_district_1_jt",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:west_grand_school_district_1_jt",
+      "unsd",
+      "0805070",
+      "West Grand School District 1-JT"
+    ],
+    "sourceUrl": "https://www.summitcountyco.gov/services/clerk_recorder/elections/2026_general_election.php",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T08:39:35.078471+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-polk-school-operating-millage",
+      "title": "Polk County schools — Millage for school safety, teachers and career education",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district"
+    }
+  ],
+  "operation": "Merge the positively verified school-tax question and neutral explainer, preserving prior candidate and measure facts.",
+  "coverageLimit": "Establishes this school-district question from the current county compilation and school notice. Wider official local inventory remains open.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T08:40:08.737Z",
+    "preparedRecords": 1,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; full English question, school heading, and bilingual Yes/No choices visually checked",
+    "officialAuthority": "PASS; current county .gov sample",
+    "jurisdiction": "PASS; exact registered Polk County School District; official school notice confirms all qualified Polk County voters",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs",
+    "actualReaderAndJurisdiction": "PASS; existing merge, admission, withMeasureTranslations and ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "productionWrites": 0,
+    "providerCalls": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "d412871f83ff50bc45b9cc6d9ef1fbeb6071969a5051e652a7cc22ee787f9b7d",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

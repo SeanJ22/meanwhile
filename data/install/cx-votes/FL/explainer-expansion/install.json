@@ -51,17 +51,7 @@
     }
   ],
   "replacementExplainers": [],
-  "pendingScope": [
-    {
-      "id": "fl-lee-2026-mosquito-district-merger",
-      "reason": "Voting electorate is residents of the two named mosquito-control districts, per official index. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide."
-    },
-    {
-      "id": "fl-lee-2026-fire-district-merger",
-      "reason": "Only voters in the two named fire districts. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide."
-    }
-  ],
-  "operation": "Merge only ballot-input through the existing ballot publication path. Root must replace older prepared MO6 prose in its main packet before River installs; do not retain contradictory active install routes. Pending-scope measures are fully drafted but excluded from ballot-input until exact special-district scope is resolved. No candidacy or polling rows are changed.",
+  "operation": "Merge these eight measure-only contests and source-backed explanations through existing ballot publication, preserving unrelated facts. The two formerly scope-held Lee questions now have independent exact-scope install packets listed in scopeFollowUpInstalls.",
   "validation": {
     "originalSourceHashes": "PASS",
     "officialAuthorityLinks": "PASS",
@@ -75,5 +65,9 @@
     "parentSourceArtifactHashAndCredentialChecks": "PASS",
     "neutralMeaningAndMaterialConditions": "PASS"
   },
-  "coverageLimit": "This packet closes the specific newly found local official-source gaps. It does not certify every local question in the state or live delivery. Live checks and broader local-index recovery remain with root/River."
+  "coverageLimit": "This packet closes the specific newly found local official-source gaps. It does not certify every local question in the state or live delivery. Live checks and broader local-index recovery remain with root/River.",
+  "scopeFollowUpInstalls": [
+    "lee-fire-merger/install.json",
+    "lee-mosquito-merger/install.json"
+  ]
 }

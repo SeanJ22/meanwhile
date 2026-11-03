@@ -1,0 +1,153 @@
+{
+  "preparedAt": "2026-11-03T08:32:09.513096+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20.pdf",
+      "sha256": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+      "bytes": 404875,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_QUESTION",
+      "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+      "retrievedAt": "2026-11-03T03:44:05.112573+00:00"
+    },
+    {
+      "file": "sources/10167b8798a2712c32ddc973e511412f68cad7b6d2e341c095a7be33b7df3872.txt",
+      "sha256": "10167b8798a2712c32ddc973e511412f68cad7b6d2e341c095a7be33b7df3872",
+      "bytes": 1345,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20.pdf"
+    },
+    {
+      "file": "sources/f7c3b48f999e1b6417831a4a212d0028e2eaf39ca57904bc73d1735275e4f488.pdf",
+      "sha256": "f7c3b48f999e1b6417831a4a212d0028e2eaf39ca57904bc73d1735275e4f488",
+      "bytes": 110758,
+      "kind": "ORIGINAL_OFFICIAL_ENROLLED_HB4035",
+      "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/4035/BillText/er/PDF",
+      "retrievedAt": "2026-11-03T08:20:55.019979+00:00"
+    },
+    {
+      "file": "sources/b3cd0154e31270f847902886eb38d56b777e03a2efbe2293a1daea0a3923d4b3.txt",
+      "sha256": "b3cd0154e31270f847902886eb38d56b777e03a2efbe2293a1daea0a3923d4b3",
+      "bytes": 9497,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/f7c3b48f999e1b6417831a4a212d0028e2eaf39ca57904bc73d1735275e4f488.pdf"
+    },
+    {
+      "file": "sources/12e63c898847f45c3b338fa9d8249665fc164219ece9732c3eb508f2f6b30a1f.txt",
+      "sha256": "12e63c898847f45c3b338fa9d8249665fc164219ece9732c3eb508f2f6b30a1f",
+      "bytes": 967,
+      "kind": "RELEVANT_ENROLLED_OPERATIVE_TEXT",
+      "derivedFrom": "sources/f7c3b48f999e1b6417831a4a212d0028e2eaf39ca57904bc73d1735275e4f488.pdf",
+      "sourceLineRanges": [
+        [
+          90,
+          95
+        ],
+        [
+          115,
+          125
+        ]
+      ],
+      "extractionMethod": "Exact numbered enrolled-bill lines, with printed line numbers and page headers excluded; whitespace normalized. Full native bill retained."
+    },
+    {
+      "file": "sources/bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9.pdf",
+      "sha256": "bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9",
+      "bytes": 29119,
+      "kind": "ORIGINAL_OFFICIAL_ENACTED_CHAPTER_2025_235",
+      "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1090",
+      "retrievedAt": "2026-11-03T07:32:52.703486+00:00"
+    },
+    {
+      "file": "sources/ce07b9960bad0c448259f61c6d5594d0102eb8b385afac21c764d81a448063ee.txt",
+      "sha256": "ce07b9960bad0c448259f61c6d5594d0102eb8b385afac21c764d81a448063ee",
+      "bytes": 5548,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9.pdf"
+    },
+    {
+      "file": "sources/28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692.pdf",
+      "sha256": "28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692",
+      "bytes": 31921,
+      "kind": "ORIGINAL_OFFICIAL_FMB_CHARTER_CHAPTER_2001_335",
+      "sourceUrl": "https://laws.flrules.org/files/Ch_2001-335.pdf",
+      "retrievedAt": "2026-11-03T08:20:54.538858+00:00"
+    },
+    {
+      "file": "sources/f15f071196519da6e37dfd59e6a16a1923f5d48c12664249bb393156618d9389.txt",
+      "sha256": "f15f071196519da6e37dfd59e6a16a1923f5d48c12664249bb393156618d9389",
+      "bytes": 19673,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692.pdf"
+    },
+    {
+      "file": "sources/4b674d2da374564cc588cbabf05b0a639d5271e6da152c40052c37526ddcf7f2.txt",
+      "sha256": "4b674d2da374564cc588cbabf05b0a639d5271e6da152c40052c37526ddcf7f2",
+      "bytes": 1323,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20.pdf",
+        "sources/f7c3b48f999e1b6417831a4a212d0028e2eaf39ca57904bc73d1735275e4f488.pdf"
+      ]
+    },
+    {
+      "file": "sources/26b725f8ab168e5469481d1fb13431fb7727f565a011054c11db537aa2db10e5.png",
+      "sha256": "26b725f8ab168e5469481d1fb13431fb7727f565a011054c11db537aa2db10e5",
+      "bytes": 131956,
+      "kind": "RENDERED_OFFICIAL_QUESTION_PAGE",
+      "derivedFrom": "sources/199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/8c662b02c901a71236d4552b43d02cedba3b3b304dadf393bbae059ee368f579.png",
+      "sha256": "8c662b02c901a71236d4552b43d02cedba3b3b304dadf393bbae059ee368f579",
+      "bytes": 147835,
+      "kind": "RENDERED_OFFICIAL_LEGAL_SCOPE_PAGE",
+      "derivedFrom": "sources/bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/b9a0e4b75b8bf0f302c16ef4099572552473fe12e43046e2cdfc20683c8b66d4.png",
+      "sha256": "b9a0e4b75b8bf0f302c16ef4099572552473fe12e43046e2cdfc20683c8b66d4",
+      "bytes": 143446,
+      "kind": "RENDERED_OFFICIAL_LEGAL_SCOPE_PAGE",
+      "derivedFrom": "sources/bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/c3b278251c21fbb3650474de4d9045140c35eea948046e6de667a0cf1f27814d.png",
+      "sha256": "c3b278251c21fbb3650474de4d9045140c35eea948046e6de667a0cf1f27814d",
+      "bytes": 56521,
+      "kind": "RENDERED_OFFICIAL_LEGAL_SCOPE_PAGE",
+      "derivedFrom": "sources/bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/8057525ef7d90841de2b055c264a79752262eb1197688e258f933c8c1ad3faf6.png",
+      "sha256": "8057525ef7d90841de2b055c264a79752262eb1197688e258f933c8c1ad3faf6",
+      "bytes": 148704,
+      "kind": "RENDERED_OFFICIAL_LEGAL_SCOPE_PAGE",
+      "derivedFrom": "sources/28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/64358aa92c4da9c7c94783bacefc4b664c8038a67c128f83681cf447042a3c81.png",
+      "sha256": "64358aa92c4da9c7c94783bacefc4b664c8038a67c128f83681cf447042a3c81",
+      "bytes": 162651,
+      "kind": "RENDERED_OFFICIAL_LEGAL_SCOPE_PAGE",
+      "derivedFrom": "sources/28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/8bddfd8036debbba795b7dc9c714851c2463cfc97e79ef7132141353ea90cdee.txt",
+      "sha256": "8bddfd8036debbba795b7dc9c714851c2463cfc97e79ef7132141353ea90cdee",
+      "bytes": 5636,
+      "kind": "RELEVANT_STATUTORY_BOUNDARY_COMPARISON",
+      "derivedFrom": [
+        "sources/bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9.pdf",
+        "sources/28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692.pdf"
+      ],
+      "representation": "Native prior-law text displayed struck in the2025 amendment is the pre-referendum Lee MCD scope; FMB charter boundary is independently published in2001 charter. Raw originals and rendered pages retained."
+    }
+  ]
+}

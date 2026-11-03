@@ -1,0 +1,49 @@
+[
+  {
+    "contestId": "fl-2026-polk-school-operating-millage",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district",
+    "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+    "rawPdfFile": "sources/f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f.pdf",
+    "rawPdfSha256": "f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f",
+    "nativeTextFile": "sources/1add9f99cc6eb1e2bb88fc07a63b84f14530fb0a384330558e5c8560f28ad0c4.txt",
+    "boundedTextFile": "sources/c69e7f0febc41ce0e8ef2727e8ef9af830944eef132eedb2b05873a64e91deb7.txt",
+    "textFilePerMeasure": "sources/2dcb00ecfdfde3d195880d835fa46d4e2d06306253fe6024cfef31e87678b04d.txt",
+    "imageFile": "sources/1362fcdf9b74b5c7f53994fb6114a2bd055fc1458bc35b14e7829ac552f29333.png",
+    "sourcePage": 2,
+    "bbox": [
+      4,
+      924,
+      544,
+      1134
+    ],
+    "jurisdictionQuote": "County School Board Referendum",
+    "governmentId": "government:US-FL:cog:201566",
+    "scopeSource": {
+      "sourceUrl": "https://www.polkschoolsfl.com/about/publicnotices",
+      "nativeCaptureSha256": "274272b8573beca115632cbd8c5e0fdf5411bc12fc85200a465b0a1d50c39ab2",
+      "retrievedAt": "2026-11-03T08:20:54.539790+00:00",
+      "textFile": "sources/16112204e90efbbb13e4b1296baabced0032c5e3f5e2051d3bef7a9543960192.txt",
+      "quote": "All qualified voters residing within Polk County may vote in said election.",
+      "sanitizedPageFile": "sources/274272b8573beca115632cbd8c5e0fdf5411bc12fc85200a465b0a1d50c39ab2.html",
+      "sanitizedPageSha256": "274272b8573beca115632cbd8c5e0fdf5411bc12fc85200a465b0a1d50c39ab2",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Polk County School District levy an additional 1.0 mill in ad valorem taxes annually to fund school operations for teacher recruitment and retention and education support staff, for career and technical education, school safety, arts, and early learning--with proceeds shared with charter schools as required by law and monitored by an independent citizens' oversight committee?"
+      ],
+      "yesMeans": [
+        "Shall the Polk County School District levy an additional 1.0 mill in ad valorem taxes annually to fund school operations for teacher recruitment and retention and education support staff, for career and technical education, school safety, arts, and early learning--with proceeds shared with charter schools as required by law and monitored by an independent citizens' oversight committee?"
+      ],
+      "noMeans": [
+        "Shall the Polk County School District levy an additional 1.0 mill in ad valorem taxes annually to fund school operations for teacher recruitment and retention and education support staff, for career and technical education, school safety, arts, and early learning--with proceeds shared with charter schools as required by law and monitored by an independent citizens' oversight committee?"
+      ]
+    },
+    "choices": [
+      "Yes / Sí",
+      "No / No"
+    ],
+    "hashScope": "Original complete official county sample PDF bytes",
+    "reviewNote": "All stated uses, annual rate, lawful charter-school sharing and independent oversight retained. Neither the official question nor the corresponding public notice specifies an end date; no duration is invented."
+  }
+]

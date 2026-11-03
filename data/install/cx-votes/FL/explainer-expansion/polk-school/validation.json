@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-03T08:40:08.737Z",
+  "preparedRecords": 1,
+  "originalSourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "boundedNativeSourceReading": "PASS; full English question, school heading, and bilingual Yes/No choices visually checked",
+  "officialAuthority": "PASS; current county .gov sample",
+  "jurisdiction": "PASS; exact registered Polk County School District; official school notice confirms all qualified Polk County voters",
+  "normalPublicationAdmission": "PASS; existing check-expansion.mjs",
+  "actualReaderAndJurisdiction": "PASS; existing merge, admission, withMeasureTranslations and ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0
+}

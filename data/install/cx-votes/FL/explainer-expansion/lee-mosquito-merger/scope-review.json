@@ -1,0 +1,33 @@
+{
+  "status": "STATUTORY_COMBINED_COUNTY_ELECTORATE_VERIFIED",
+  "ocdId": "ocd-division/country:us/state:fl/county:lee",
+  "governmentIds": [
+    "government:US-FL:cog:183712",
+    "government:US-FL:cog:184778"
+  ],
+  "countyWideCombinedElectorate": true,
+  "individualLeeDistrictCountyWideBeforeApproval": false,
+  "proof": {
+    "priorLeeScope": "All Lee County except the described tract T, reproduced as prior text in Chapter2025-235 section1.",
+    "fmbScope": "Tract T, codified in Chapter2001-335 section3, charter section2.",
+    "sharedStartingPoint": "Southeast corner of Section24,Township46South,Range24East.",
+    "orderedCallDistancesFeet": [
+      2700,
+      8300,
+      4200,
+      10000,
+      6100,
+      3200,
+      22800,
+      3900,
+      8000,
+      10600
+    ],
+    "commonAreaAcresApproximate": 14615,
+    "matchingRoute": "Westerly south Section24 line to Estero Bay; southwest across Estero Bay; south across Bay/Starvation Flats; southeast/south/southwest across Bay/BigCarlosPass; northwest along EsteroIsland; northwest along same shoreline; northwest continuation; northwest continuation; northwest across SanCarlosBay to westward northSection13 line; east along Section13 and Sections18–13; south along Sections13/24 to beginning.2001 adds legacy AreaNo.5/AreaNo.1 references to these same boundaries.",
+    "setIdentity": "(Lee County minus T) union T = Lee County. This is a combined-electorate identity, not a pre-merger government-boundary reassignment.",
+    "comparisonFile": "sources/8bddfd8036debbba795b7dc9c714851c2463cfc97e79ef7132141353ea90cdee.txt"
+  },
+  "approvalRule": "Majority of qualified voters voting in EACH district; statutory sections4(4)and5.",
+  "geometryRequired": "None added; exact combined electorate equals the already registered Lee County division."
+}

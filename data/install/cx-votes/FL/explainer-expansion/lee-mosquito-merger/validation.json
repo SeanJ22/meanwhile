@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-03T08:37:51.557Z",
+  "preparedRecords": 1,
+  "originalSourceHashes": "PASS; current official question, enrolled bill, enacted chapter, historical codified charter",
+  "exactSupportQuotes": "PASS",
+  "nativeSourceReading": "PASS; question page and all five retained legal scope pages visually reviewed; struck prior Lee exclusion compared with FMB charter, matching start, route, distances and area",
+  "officialAuthority": "PASS; record links the official Florida Legislature enrolled bill and current Lee election authority question",
+  "jurisdiction": "PASS; pre-referendum Lee County minus tract T and Fort Myers Beach tract T form the registered Lee County electorate; separate district majorities preserved",
+  "normalPublicationAdmission": "PASS; existing check-expansion.mjs",
+  "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations, ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

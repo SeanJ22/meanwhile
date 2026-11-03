@@ -1,0 +1,67 @@
+[
+  {
+    "contestId": "fl-lee-2026-mosquito-district-merger",
+    "ocdId": "ocd-division/country:us/state:fl/county:lee",
+    "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/4035/BillText/er/PDF",
+    "rawPdfFile": "sources/199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20.pdf",
+    "rawPdfSha256": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+    "nativeTextFile": "sources/10167b8798a2712c32ddc973e511412f68cad7b6d2e341c095a7be33b7df3872.txt",
+    "textFilePerMeasure": "sources/4b674d2da374564cc588cbabf05b0a639d5271e6da152c40052c37526ddcf7f2.txt",
+    "imageFile": "sources/26b725f8ab168e5469481d1fb13431fb7727f565a011054c11db537aa2db10e5.png",
+    "sourcePage": 1,
+    "legalSources": [
+      {
+        "sourceUrl": "https://www.flsenate.gov/Session/Bill/2025/4035/BillText/er/PDF",
+        "rawPdfFile": "sources/f7c3b48f999e1b6417831a4a212d0028e2eaf39ca57904bc73d1735275e4f488.pdf",
+        "rawPdfSha256": "f7c3b48f999e1b6417831a4a212d0028e2eaf39ca57904bc73d1735275e4f488",
+        "nativeTextFile": "sources/b3cd0154e31270f847902886eb38d56b777e03a2efbe2293a1daea0a3923d4b3.txt",
+        "operativeTextFile": "sources/12e63c898847f45c3b338fa9d8249665fc164219ece9732c3eb508f2f6b30a1f.txt"
+      },
+      {
+        "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1090",
+        "rawPdfFile": "sources/bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9.pdf",
+        "rawPdfSha256": "bded3e87c758a0cd8456eddc18d954eb97ad17f3bf3c9fbd052c8e8d6be12be9",
+        "nativeTextFile": "sources/ce07b9960bad0c448259f61c6d5594d0102eb8b385afac21c764d81a448063ee.txt"
+      },
+      {
+        "sourceUrl": "https://laws.flrules.org/files/Ch_2001-335.pdf",
+        "rawPdfFile": "sources/28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692.pdf",
+        "rawPdfSha256": "28fe638d708b85bbe32880b2de3c6af9ad8b26a2b3a877a1e63b172b72f4f692",
+        "nativeTextFile": "sources/f15f071196519da6e37dfd59e6a16a1923f5d48c12664249bb393156618d9389.txt"
+      }
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Chapter 2025-235, Laws of Florida, amending the boundaries of the Lee County Mosquito Control District to include all of Lee County, abolishing the Fort Myers Beach Mosquito Control District, and transferring the assets and liabilities of the Fort Myers Beach Mosquito Control District to the Lee County Mosquito Control District, become effective?",
+        "Section 3.       As of the effective date of this act, the Fort Myers Beach Mosquito Control District is merged into the Lee County Mosquito Control District. All assets and liabilities of the Fort Myers Beach Mosquito Control District as of that date shall be transferred to the Lee County Mosquito Control District.\n\n(4)      In the event this question is answered affirmatively by a majority of the qualified voters in each district voting in the referendum, this act shall take effect. The referendum election shall be conducted by the Supervisor of Elections of Lee County in accordance with the Florida Election Code. Section 5.         This act shall take effect only upon its approval by a majority vote of those qualified electors of Lee County Mosquito Control District and of the Fort Myers Beach Mosquito Control District voting in a referendum to be held on November 3, 2026, except that this section and section 4 shall take effect upon becoming a law."
+      ],
+      "yesMeans": [
+        "Shall Chapter 2025-235, Laws of Florida, amending the boundaries of the Lee County Mosquito Control District to include all of Lee County, abolishing the Fort Myers Beach Mosquito Control District, and transferring the assets and liabilities of the Fort Myers Beach Mosquito Control District to the Lee County Mosquito Control District, become effective?",
+        "Section 3.       As of the effective date of this act, the Fort Myers Beach Mosquito Control District is merged into the Lee County Mosquito Control District. All assets and liabilities of the Fort Myers Beach Mosquito Control District as of that date shall be transferred to the Lee County Mosquito Control District.\n\n(4)      In the event this question is answered affirmatively by a majority of the qualified voters in each district voting in the referendum, this act shall take effect. The referendum election shall be conducted by the Supervisor of Elections of Lee County in accordance with the Florida Election Code. Section 5.         This act shall take effect only upon its approval by a majority vote of those qualified electors of Lee County Mosquito Control District and of the Fort Myers Beach Mosquito Control District voting in a referendum to be held on November 3, 2026, except that this section and section 4 shall take effect upon becoming a law."
+      ],
+      "noMeans": [
+        "Shall Chapter 2025-235, Laws of Florida, amending the boundaries of the Lee County Mosquito Control District to include all of Lee County, abolishing the Fort Myers Beach Mosquito Control District, and transferring the assets and liabilities of the Fort Myers Beach Mosquito Control District to the Lee County Mosquito Control District, become effective?",
+        "Section 3.       As of the effective date of this act, the Fort Myers Beach Mosquito Control District is merged into the Lee County Mosquito Control District. All assets and liabilities of the Fort Myers Beach Mosquito Control District as of that date shall be transferred to the Lee County Mosquito Control District.\n\n(4)      In the event this question is answered affirmatively by a majority of the qualified voters in each district voting in the referendum, this act shall take effect. The referendum election shall be conducted by the Supervisor of Elections of Lee County in accordance with the Florida Election Code. Section 5.         This act shall take effect only upon its approval by a majority vote of those qualified electors of Lee County Mosquito Control District and of the Fort Myers Beach Mosquito Control District voting in a referendum to be held on November 3, 2026, except that this section and section 4 shall take effect upon becoming a law."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "governmentIds": [
+      "government:US-FL:cog:183712",
+      "government:US-FL:cog:184778"
+    ],
+    "hashScope": "Exact unchanged official question plus newline plus relevant enrolled HB4035 operative text.",
+    "jurisdictionProof": "scope-review.json",
+    "jurisdictionTextFile": "sources/8bddfd8036debbba795b7dc9c714851c2463cfc97e79ef7132141353ea90cdee.txt",
+    "legalScopeImages": [
+      "sources/8c662b02c901a71236d4552b43d02cedba3b3b304dadf393bbae059ee368f579.png",
+      "sources/b9a0e4b75b8bf0f302c16ef4099572552473fe12e43046e2cdfc20683c8b66d4.png",
+      "sources/c3b278251c21fbb3650474de4d9045140c35eea948046e6de667a0cf1f27814d.png",
+      "sources/8057525ef7d90841de2b055c264a79752262eb1197688e258f933c8c1ad3faf6.png",
+      "sources/64358aa92c4da9c7c94783bacefc4b664c8038a67c128f83681cf447042a3c81.png"
+    ],
+    "reviewNote": "County-wide is the combined voting electorate, not a claim that the pre-merger Lee MCD alone already covers the county. Separate majorities in each district remain required; no pooled-county majority is substituted."
+  }
+]

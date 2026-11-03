@@ -1,0 +1,84 @@
+{
+  "preparedAt": "2026-11-03T08:39:35.078471+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f.pdf",
+      "sha256": "f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f",
+      "bytes": 4002268,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_ELECTION_SOURCE",
+      "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026",
+      "retrievedAt": "2026-11-03T07:00:35.916787+00:00"
+    },
+    {
+      "file": "sources/1add9f99cc6eb1e2bb88fc07a63b84f14530fb0a384330558e5c8560f28ad0c4.txt",
+      "sha256": "1add9f99cc6eb1e2bb88fc07a63b84f14530fb0a384330558e5c8560f28ad0c4",
+      "bytes": 31074,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f.pdf"
+    },
+    {
+      "file": "sources/16112204e90efbbb13e4b1296baabced0032c5e3f5e2051d3bef7a9543960192.txt",
+      "sha256": "16112204e90efbbb13e4b1296baabced0032c5e3f5e2051d3bef7a9543960192",
+      "bytes": 1797,
+      "kind": "EXACT_OFFICIAL_NOTICE_CONTENT_DECODED_FROM_NATIVE_PAGE",
+      "sourceUrl": "https://www.polkschoolsfl.com/about/publicnotices",
+      "retrievedAt": "2026-11-03T08:20:54.539790+00:00",
+      "nativeCaptureSha256": "274272b8573beca115632cbd8c5e0fdf5411bc12fc85200a465b0a1d50c39ab2",
+      "extractionMethod": "Decode the exact November 3, 2026 notice content JSON string embedded in the native official school-district public-notices page, remove HTML tags, decode entities, normalize whitespace. Full sanitized linking page retained separately."
+    },
+    {
+      "file": "sources/c69e7f0febc41ce0e8ef2727e8ef9af830944eef132eedb2b05873a64e91deb7.txt",
+      "sha256": "c69e7f0febc41ce0e8ef2727e8ef9af830944eef132eedb2b05873a64e91deb7",
+      "bytes": 1130,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        4,
+        924,
+        544,
+        1134
+      ]
+    },
+    {
+      "file": "sources/2dcb00ecfdfde3d195880d835fa46d4e2d06306253fe6024cfef31e87678b04d.txt",
+      "sha256": "2dcb00ecfdfde3d195880d835fa46d4e2d06306253fe6024cfef31e87678b04d",
+      "bytes": 389,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        4,
+        924,
+        544,
+        1134
+      ]
+    },
+    {
+      "file": "sources/1362fcdf9b74b5c7f53994fb6114a2bd055fc1458bc35b14e7829ac552f29333.png",
+      "sha256": "1362fcdf9b74b5c7f53994fb6114a2bd055fc1458bc35b14e7829ac552f29333",
+      "bytes": 95763,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/f4685a6c7dc4326bf8c7ce7101c47ac20f104d8b8516adde4e8a8af6232fe95f.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        4,
+        924,
+        544,
+        1134
+      ]
+    },
+    {
+      "file": "sources/274272b8573beca115632cbd8c5e0fdf5411bc12fc85200a465b0a1d50c39ab2.html",
+      "sha256": "274272b8573beca115632cbd8c5e0fdf5411bc12fc85200a465b0a1d50c39ab2",
+      "bytes": 347639,
+      "kind": "SANITIZED_OFFICIAL_SCHOOL_NOTICE_PAGE",
+      "sourceUrl": "https://www.polkschoolsfl.com/about/publicnotices",
+      "retrievedAt": "2026-11-03T08:20:54.539790+00:00",
+      "nativeCaptureSha256": "274272b8573beca115632cbd8c5e0fdf5411bc12fc85200a465b0a1d50c39ab2",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized full official school-district notice page; original native bytes retained in acquisition scratch. Stored hash identifies sanitized bytes, not the original capture."
+    }
+  ]
+}

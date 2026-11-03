@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-lee-2026-mosquito-district-merger",
+      "title": "Lee County and Fort Myers Beach — Mosquito control district merger",
+      "ocdId": "ocd-division/country:us/state:fl/county:lee"
+    }
+  ],
+  "scopeReview": "scope-review.json",
+  "operation": "Merge one source-checked mosquito merger question and explainer using its proven combined Lee County electorate; preserve prior candidate and measure facts. No map or code change needed.",
+  "coverageLimit": "This resolves the original mosquito district scope through explicit matching statutory descriptions. Other local inventories remain open.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T08:37:51.557Z",
+    "preparedRecords": 1,
+    "originalSourceHashes": "PASS; current official question, enrolled bill, enacted chapter, historical codified charter",
+    "exactSupportQuotes": "PASS",
+    "nativeSourceReading": "PASS; question page and all five retained legal scope pages visually reviewed; struck prior Lee exclusion compared with FMB charter, matching start, route, distances and area",
+    "officialAuthority": "PASS; record links the official Florida Legislature enrolled bill and current Lee election authority question",
+    "jurisdiction": "PASS; pre-referendum Lee County minus tract T and Fort Myers Beach tract T form the registered Lee County electorate; separate district majorities preserved",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs",
+    "actualReaderAndJurisdiction": "PASS; existing merge, manual admission, withMeasureTranslations, ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "58e7635a81f8313db27b9948aeea774b2737226f4ec6849b8f8cd67b8e6bcea9",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

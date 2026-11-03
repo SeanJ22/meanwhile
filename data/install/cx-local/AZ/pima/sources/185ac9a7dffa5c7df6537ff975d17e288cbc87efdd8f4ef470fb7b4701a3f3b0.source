@@ -1,0 +1,37 @@
+{
+    "api": {
+        "url": "../../api",
+        "queryLimit": 200
+    },
+    "searchPanel": {
+        "selectedQueryId": null,
+        "selectedQueryIdQSField": "cqid",
+        "showSingleQuery": true,
+        "keywordList": null,
+        "useQueryStringKeywords": true,
+        
+        "ftSearchText": null,
+        "ftSearchTextQSField": null,
+        "showDocTypes": false,
+        "selectedDocTypeId": null,
+
+        "folderId": null,
+        "folderIdQSField": null,
+
+        "defaultStartDate": null,
+        "defaultEndDate": null,
+        
+        "operatorConstraints": [
+            
+        ]
+    },
+    "docHitList": {
+        "autoDisplaySingleDoc": true,
+        "viewerMode": null,
+        "overlayMode": null
+    },
+    "language": {
+        "default": "en",
+        "rememberUserPreference": true
+    }
+}

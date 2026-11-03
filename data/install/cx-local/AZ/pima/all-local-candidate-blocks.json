@@ -1,0 +1,787 @@
+[
+  {
+    "contestId": "cx-local-az-pima-2026-supervisor-5",
+    "title": "Pima County — Board of Supervisors, District 5",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/council_district:5",
+    "voteFor": 1,
+    "preprintedNames": [
+      "CANO, ANDRÉS",
+      "RHODES, JEFF"
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 5,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nMANSOUR, NICK\nREP\nNORTON, ELIJAH\nDEM\nRUIZ, TERESA LEYBA\nREP\nYEE, KIMBERLY\nDEM\nMATLOCK, BRIAN\nREP\nPRESMYK, WALTER \"LES\"\nDEM\nHILL, JONATHON\nDEM\nPRATTE, CLARA\nREP\nHEAP, RALPH\nREP\nTHOMPSON, KEVIN\nGRN\nCEASE, MIKE\nDEM\nCANO, ANDRÉS\nREP\nRHODES, JEFF \n( 1 Write-In Candidate)\nCounty Offices \nDist. 5\nBoard of Supervisors\nJunta de Supervisores\nVote por no más de 1\nVote for not more than 1\nVote por no más de 2\nVote for not more than 2\nComisionado de Corporaciones\nVote for not more than 1\nInspector Estatal de Minas\nVote por no más de 1\nState Mine Inspector\nCorporation Commissioner \nVote por no más de 1\nVote por no más de 1\nVote for not more than 1\nTesorero Estatal\nVote for not more than 1\nSuperintendente de Instrucción Pública\nSuperintendent of Public Instruction\nState Treasurer\nUPDATED: 9/9/2026   8:00 AM\nPage 5 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ARYHZ4VHTieftyMahuy0oaevHV8AWg3%C3%89OuYrSEs%C3%818MGYw3pWG8BTGtuHY8qUjFNoEY1I8POmtkL1%C3%899XzH5NDlJI%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-43-0",
+    "declaredWriteInDistinctionPending": true
+  },
+  {
+    "contestId": "ballot-az-pima-general-2026-clerk-of-the-superior-court",
+    "title": "Clerk of the Superior Court",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "GIACOMINO, JAMES W."
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 6,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nGIACOMINO, JAMES W. \nDEM\nSTEELE, VICTORIA\nDEM\nWILLIAMS, SARA MAE\nIND\nHOPKINS, RODNEY W.\nDEM\nMIHOLICH, MORGAN\n( 1 Write-In Candidate)\nREP\nCARROLL, RAYMOND\nDist. de Justicia 6\nJustice Prec. 1\nDist. de Justicia 1\nJustice Prec. 7\nDist. de Justicia 7\nJuez de Paz\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nVote for not more than 1\nJustice Prec. 3\nDist. de Justicia 3\nJustice Prec. 6\nJustice of the Peace\nClerk of the Superior Court\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nArchivero de la Corte Superior\nVote por no más de 1\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nUPDATED: 9/9/2026   8:00 AM\nPage 6 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-justice-1",
+    "title": "Pima County — Justice of the Peace, Precinct 1",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:1",
+    "voteFor": 1,
+    "preprintedNames": [
+      "STEELE, VICTORIA"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 6,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nGIACOMINO, JAMES W. \nDEM\nSTEELE, VICTORIA\nDEM\nWILLIAMS, SARA MAE\nIND\nHOPKINS, RODNEY W.\nDEM\nMIHOLICH, MORGAN\n( 1 Write-In Candidate)\nREP\nCARROLL, RAYMOND\nDist. de Justicia 6\nJustice Prec. 1\nDist. de Justicia 1\nJustice Prec. 7\nDist. de Justicia 7\nJuez de Paz\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nVote for not more than 1\nJustice Prec. 3\nDist. de Justicia 3\nJustice Prec. 6\nJustice of the Peace\nClerk of the Superior Court\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nArchivero de la Corte Superior\nVote por no más de 1\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nUPDATED: 9/9/2026   8:00 AM\nPage 6 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASM4pz79W1qeuq1XzVgD3RMYb1cMU00MRbvXq1G%C3%81NEocaDTBj9%C3%81NXj0nhhSIuBDSLdbz4jelhqpFBXNzOT6wOIk%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-220-0",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-justice-3",
+    "title": "Pima County — Justice of the Peace, Precinct 3",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:3",
+    "voteFor": 1,
+    "preprintedNames": [
+      "WILLIAMS, SARA MAE",
+      "HOPKINS, RODNEY W."
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 6,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nGIACOMINO, JAMES W. \nDEM\nSTEELE, VICTORIA\nDEM\nWILLIAMS, SARA MAE\nIND\nHOPKINS, RODNEY W.\nDEM\nMIHOLICH, MORGAN\n( 1 Write-In Candidate)\nREP\nCARROLL, RAYMOND\nDist. de Justicia 6\nJustice Prec. 1\nDist. de Justicia 1\nJustice Prec. 7\nDist. de Justicia 7\nJuez de Paz\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nVote for not more than 1\nJustice Prec. 3\nDist. de Justicia 3\nJustice Prec. 6\nJustice of the Peace\nClerk of the Superior Court\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nArchivero de la Corte Superior\nVote por no más de 1\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nUPDATED: 9/9/2026   8:00 AM\nPage 6 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/Aacg1plmaEW5ElmsUEJI%C3%895wGqqLZcTkQcJt0fW%C3%81nHsVANKjQh3BQB84ZM56SwxbMc8wH0SdZcEghQFJFEIrGp1c%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-2-0",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-justice-6",
+    "title": "Pima County — Justice of the Peace, Precinct 6",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:6",
+    "voteFor": 1,
+    "preprintedNames": [
+      "MIHOLICH, MORGAN"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 6,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nGIACOMINO, JAMES W. \nDEM\nSTEELE, VICTORIA\nDEM\nWILLIAMS, SARA MAE\nIND\nHOPKINS, RODNEY W.\nDEM\nMIHOLICH, MORGAN\n( 1 Write-In Candidate)\nREP\nCARROLL, RAYMOND\nDist. de Justicia 6\nJustice Prec. 1\nDist. de Justicia 1\nJustice Prec. 7\nDist. de Justicia 7\nJuez de Paz\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nVote for not more than 1\nJustice Prec. 3\nDist. de Justicia 3\nJustice Prec. 6\nJustice of the Peace\nClerk of the Superior Court\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nArchivero de la Corte Superior\nVote por no más de 1\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nUPDATED: 9/9/2026   8:00 AM\nPage 6 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AWAxFhxAvtSePeBUBD7K0bYjeV9V3MPXm8SbQwxOPXz4QeaQBEkcGAMXhH4Il2u7KsO0rwy69HGJvZSmzn%C3%814IQg%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-34-1",
+    "declaredWriteInDistinctionPending": true
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-justice-7",
+    "title": "Pima County — Justice of the Peace, Precinct 7",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:7",
+    "voteFor": 1,
+    "preprintedNames": [
+      "CARROLL, RAYMOND"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 6,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nGIACOMINO, JAMES W. \nDEM\nSTEELE, VICTORIA\nDEM\nWILLIAMS, SARA MAE\nIND\nHOPKINS, RODNEY W.\nDEM\nMIHOLICH, MORGAN\n( 1 Write-In Candidate)\nREP\nCARROLL, RAYMOND\nDist. de Justicia 6\nJustice Prec. 1\nDist. de Justicia 1\nJustice Prec. 7\nDist. de Justicia 7\nJuez de Paz\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nVote for not more than 1\nJustice Prec. 3\nDist. de Justicia 3\nJustice Prec. 6\nJustice of the Peace\nClerk of the Superior Court\nJustice of the Peace\nVote por no más de 1\nVote for not more than 1\nArchivero de la Corte Superior\nVote por no más de 1\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nJustice of the Peace\nUPDATED: 9/9/2026   8:00 AM\nPage 6 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-justice-8",
+    "title": "Pima County — Justice of the Peace, Precinct 8",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:8",
+    "voteFor": 1,
+    "preprintedNames": [
+      "FOSTER, KRISTEL ANN",
+      "PARVEN, WILLIAM"
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 7,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nFOSTER, KRISTEL ANN\nREP\nPARVEN, WILLIAM\nDEM\nLOPEZ, FRANCISCO\n( 1 Write-In Candidate)\nDEM\nMARTIN, LETITIA\nREP\nKRZNARICH, ERIC\nDEM\nACUÑA, GERARD\n( 1 Write-In Candidate)\nNONPARTISAN\nLOPEZ IV, JOHN\nNONPARTISAN\nBREARCLIFFE, SEAN\nNONPARTISAN\nKELLY, MICHAEL\nNONPARTISAN\nSKLAR, JEFFREY\nJustice Prec. 9\nDist. de Justicia 9\nJustice Prec. 8\nDist. de Justicia 8\nDist. de Justicia 3\nJustice Prec. 3\nJustice Prec. 2\nDist. de Justicia 2\nConstable\nVote for not more than 1\nJuez de la Tribunal de Apelacíon División II\nJustice of the Peace\nConstable\nVote por no más de 1\nJustice of the Arizona Supreme Court\nJuez de la Corte Suprema de Arizona\nAlguacil\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nAlguacil\nConstable\nVote por no más de 1\nVote for not more than 1\nAlguacil\nVote por no más de 1\nJudges\nJudge of the Court of Appeals Division II\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 7 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AcRjkB9A1uhOpdc6hq3sBpGMhznU%C3%89451a005QoBG6C5eExKsuCiYNzU8g3jsOAkbbecjQeAoyaaUH5o0PNOqMO4%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-192-0",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-constable-2",
+    "title": "Pima County — Constable, Justice Precinct 2",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:2",
+    "voteFor": 1,
+    "preprintedNames": [
+      "LOPEZ, FRANCISCO"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 7,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nFOSTER, KRISTEL ANN\nREP\nPARVEN, WILLIAM\nDEM\nLOPEZ, FRANCISCO\n( 1 Write-In Candidate)\nDEM\nMARTIN, LETITIA\nREP\nKRZNARICH, ERIC\nDEM\nACUÑA, GERARD\n( 1 Write-In Candidate)\nNONPARTISAN\nLOPEZ IV, JOHN\nNONPARTISAN\nBREARCLIFFE, SEAN\nNONPARTISAN\nKELLY, MICHAEL\nNONPARTISAN\nSKLAR, JEFFREY\nJustice Prec. 9\nDist. de Justicia 9\nJustice Prec. 8\nDist. de Justicia 8\nDist. de Justicia 3\nJustice Prec. 3\nJustice Prec. 2\nDist. de Justicia 2\nConstable\nVote for not more than 1\nJuez de la Tribunal de Apelacíon División II\nJustice of the Peace\nConstable\nVote por no más de 1\nJustice of the Arizona Supreme Court\nJuez de la Corte Suprema de Arizona\nAlguacil\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nAlguacil\nConstable\nVote por no más de 1\nVote for not more than 1\nAlguacil\nVote por no más de 1\nJudges\nJudge of the Court of Appeals Division II\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 7 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASlVT1C3fiTVm57CFJnUJsE4dmXLV%C3%81%C3%89xRePLKFpJ1X1MtOhS3TKr%C3%89rDjxYkngP3Vz4vKmBrwdnQsWiqz7hPGyYs%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-264-0",
+    "declaredWriteInDistinctionPending": true
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-constable-3",
+    "title": "Pima County — Constable, Justice Precinct 3",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:3",
+    "voteFor": 1,
+    "preprintedNames": [
+      "MARTIN, LETITIA",
+      "KRZNARICH, ERIC"
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 7,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nFOSTER, KRISTEL ANN\nREP\nPARVEN, WILLIAM\nDEM\nLOPEZ, FRANCISCO\n( 1 Write-In Candidate)\nDEM\nMARTIN, LETITIA\nREP\nKRZNARICH, ERIC\nDEM\nACUÑA, GERARD\n( 1 Write-In Candidate)\nNONPARTISAN\nLOPEZ IV, JOHN\nNONPARTISAN\nBREARCLIFFE, SEAN\nNONPARTISAN\nKELLY, MICHAEL\nNONPARTISAN\nSKLAR, JEFFREY\nJustice Prec. 9\nDist. de Justicia 9\nJustice Prec. 8\nDist. de Justicia 8\nDist. de Justicia 3\nJustice Prec. 3\nJustice Prec. 2\nDist. de Justicia 2\nConstable\nVote for not more than 1\nJuez de la Tribunal de Apelacíon División II\nJustice of the Peace\nConstable\nVote por no más de 1\nJustice of the Arizona Supreme Court\nJuez de la Corte Suprema de Arizona\nAlguacil\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nAlguacil\nConstable\nVote por no más de 1\nVote for not more than 1\nAlguacil\nVote por no más de 1\nJudges\nJudge of the Court of Appeals Division II\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 7 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/Aacg1plmaEW5ElmsUEJI%C3%895wGqqLZcTkQcJt0fW%C3%81nHsVANKjQh3BQB84ZM56SwxbMc8wH0SdZcEghQFJFEIrGp1c%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-2-0",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-constable-9",
+    "title": "Pima County — Constable, Justice Precinct 9",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:9",
+    "voteFor": 1,
+    "preprintedNames": [
+      "ACUÑA, GERARD"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 7,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nFOSTER, KRISTEL ANN\nREP\nPARVEN, WILLIAM\nDEM\nLOPEZ, FRANCISCO\n( 1 Write-In Candidate)\nDEM\nMARTIN, LETITIA\nREP\nKRZNARICH, ERIC\nDEM\nACUÑA, GERARD\n( 1 Write-In Candidate)\nNONPARTISAN\nLOPEZ IV, JOHN\nNONPARTISAN\nBREARCLIFFE, SEAN\nNONPARTISAN\nKELLY, MICHAEL\nNONPARTISAN\nSKLAR, JEFFREY\nJustice Prec. 9\nDist. de Justicia 9\nJustice Prec. 8\nDist. de Justicia 8\nDist. de Justicia 3\nJustice Prec. 3\nJustice Prec. 2\nDist. de Justicia 2\nConstable\nVote for not more than 1\nJuez de la Tribunal de Apelacíon División II\nJustice of the Peace\nConstable\nVote por no más de 1\nJustice of the Arizona Supreme Court\nJuez de la Corte Suprema de Arizona\nAlguacil\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nAlguacil\nConstable\nVote por no más de 1\nVote for not more than 1\nAlguacil\nVote por no más de 1\nJudges\nJudge of the Court of Appeals Division II\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 7 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ARYHZ4VHTieftyMahuy0oaevHV8AWg3%C3%89OuYrSEs%C3%818MGYw3pWG8BTGtuHY8qUjFNoEY1I8POmtkL1%C3%899XzH5NDlJI%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-43-0",
+    "declaredWriteInDistinctionPending": true
+  },
+  {
+    "contestId": "az-pima-general-2026-court-of-appeals-division-ii-brearcliffe-sean-retention",
+    "title": "Court of Appeals, Division II — BREARCLIFFE, SEAN — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "BREARCLIFFE, SEAN"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 7,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nFOSTER, KRISTEL ANN\nREP\nPARVEN, WILLIAM\nDEM\nLOPEZ, FRANCISCO\n( 1 Write-In Candidate)\nDEM\nMARTIN, LETITIA\nREP\nKRZNARICH, ERIC\nDEM\nACUÑA, GERARD\n( 1 Write-In Candidate)\nNONPARTISAN\nLOPEZ IV, JOHN\nNONPARTISAN\nBREARCLIFFE, SEAN\nNONPARTISAN\nKELLY, MICHAEL\nNONPARTISAN\nSKLAR, JEFFREY\nJustice Prec. 9\nDist. de Justicia 9\nJustice Prec. 8\nDist. de Justicia 8\nDist. de Justicia 3\nJustice Prec. 3\nJustice Prec. 2\nDist. de Justicia 2\nConstable\nVote for not more than 1\nJuez de la Tribunal de Apelacíon División II\nJustice of the Peace\nConstable\nVote por no más de 1\nJustice of the Arizona Supreme Court\nJuez de la Corte Suprema de Arizona\nAlguacil\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nAlguacil\nConstable\nVote por no más de 1\nVote for not more than 1\nAlguacil\nVote por no más de 1\nJudges\nJudge of the Court of Appeals Division II\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 7 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-court-of-appeals-division-ii-kelly-michael-retention",
+    "title": "Court of Appeals, Division II — KELLY, MICHAEL — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "KELLY, MICHAEL"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 7,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nFOSTER, KRISTEL ANN\nREP\nPARVEN, WILLIAM\nDEM\nLOPEZ, FRANCISCO\n( 1 Write-In Candidate)\nDEM\nMARTIN, LETITIA\nREP\nKRZNARICH, ERIC\nDEM\nACUÑA, GERARD\n( 1 Write-In Candidate)\nNONPARTISAN\nLOPEZ IV, JOHN\nNONPARTISAN\nBREARCLIFFE, SEAN\nNONPARTISAN\nKELLY, MICHAEL\nNONPARTISAN\nSKLAR, JEFFREY\nJustice Prec. 9\nDist. de Justicia 9\nJustice Prec. 8\nDist. de Justicia 8\nDist. de Justicia 3\nJustice Prec. 3\nJustice Prec. 2\nDist. de Justicia 2\nConstable\nVote for not more than 1\nJuez de la Tribunal de Apelacíon División II\nJustice of the Peace\nConstable\nVote por no más de 1\nJustice of the Arizona Supreme Court\nJuez de la Corte Suprema de Arizona\nAlguacil\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nAlguacil\nConstable\nVote por no más de 1\nVote for not more than 1\nAlguacil\nVote por no más de 1\nJudges\nJudge of the Court of Appeals Division II\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 7 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-court-of-appeals-division-ii-sklar-jeffrey-retention",
+    "title": "Court of Appeals, Division II — SKLAR, JEFFREY — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "SKLAR, JEFFREY"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 7,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nDEM\nFOSTER, KRISTEL ANN\nREP\nPARVEN, WILLIAM\nDEM\nLOPEZ, FRANCISCO\n( 1 Write-In Candidate)\nDEM\nMARTIN, LETITIA\nREP\nKRZNARICH, ERIC\nDEM\nACUÑA, GERARD\n( 1 Write-In Candidate)\nNONPARTISAN\nLOPEZ IV, JOHN\nNONPARTISAN\nBREARCLIFFE, SEAN\nNONPARTISAN\nKELLY, MICHAEL\nNONPARTISAN\nSKLAR, JEFFREY\nJustice Prec. 9\nDist. de Justicia 9\nJustice Prec. 8\nDist. de Justicia 8\nDist. de Justicia 3\nJustice Prec. 3\nJustice Prec. 2\nDist. de Justicia 2\nConstable\nVote for not more than 1\nJuez de la Tribunal de Apelacíon División II\nJustice of the Peace\nConstable\nVote por no más de 1\nJustice of the Arizona Supreme Court\nJuez de la Corte Suprema de Arizona\nAlguacil\nVote por no más de 1\nVote for not more than 1\nJuez de Paz\nAlguacil\nConstable\nVote por no más de 1\nVote for not more than 1\nAlguacil\nVote por no más de 1\nJudges\nJudge of the Court of Appeals Division II\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 7 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-2-goodwin-j-alan-retention",
+    "title": "Pima County Superior Court, Division 2 — GOODWIN, J. ALAN — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "GOODWIN, J. ALAN"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-4-bostwick-janet-calkins-retention",
+    "title": "Pima County Superior Court, Division 4 — BOSTWICK, JANET CALKINS — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "BOSTWICK, JANET CALKINS"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-6-liwski-danelle-bennett-retention",
+    "title": "Pima County Superior Court, Division 6 — LIWSKI, DANELLE BENNETT — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "LIWSKI, DANELLE BENNETT"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-15-bensley-sandra-m-retention",
+    "title": "Pima County Superior Court, Division 15 — BENSLEY, SANDRA M. — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "BENSLEY, SANDRA M."
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-17-woods-catherine-m-retention",
+    "title": "Pima County Superior Court, Division 17 — WOODS, CATHERINE M. — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "WOODS, CATHERINE M."
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-19-quigley-kathleen-a-retention",
+    "title": "Pima County Superior Court, Division 19 — QUIGLEY, KATHLEEN A. — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "QUIGLEY, KATHLEEN A."
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-20-san-angelo-laurie-b-retention",
+    "title": "Pima County Superior Court, Division 20 — SAN ANGELO, LAURIE B. — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "SAN ANGELO, LAURIE B."
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-21-kuhn-cynthia-t-retention",
+    "title": "Pima County Superior Court, Division 21 — KUHN, CYNTHIA T. — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "KUHN, CYNTHIA T."
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-22-bergin-jeffrey-t-retention",
+    "title": "Pima County Superior Court, Division 22 — BERGIN, JEFFREY T. — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "BERGIN, JEFFREY T."
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "az-pima-general-2026-pima-county-superior-court-division-25-burnett-randi-retention",
+    "title": "Pima County Superior Court, Division 25 — BURNETT, RANDI — Retention",
+    "type": "RETENTION",
+    "ocdId": "ocd-division/country:us/state:az/county:pima",
+    "voteFor": 1,
+    "preprintedNames": [
+      "BURNETT, RANDI"
+    ],
+    "namedCandidates": 1,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-tucson-school",
+    "title": "Tucson Unified School District No. 1 — Governing Board",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+    "voteFor": 2,
+    "preprintedNames": [
+      "ACOSTA RUIZ, PILAR",
+      "ECKSTROM, JENNIFER",
+      "FERNANDEZ, SKYE",
+      "RHODES, TRE'DAVON",
+      "ROMERO, VAL"
+    ],
+    "namedCandidates": 5,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ARYHZ4VHTieftyMahuy0oaevHV8AWg3%C3%89OuYrSEs%C3%818MGYw3pWG8BTGtuHY8qUjFNoEY1I8POmtkL1%C3%899XzH5NDlJI%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-43-0",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-amphi-school-four",
+    "title": "Amphitheater Unified School District No. 10 — Governing Board (four-year term)",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+    "voteFor": 2,
+    "preprintedNames": [
+      "FIFE, JOHN",
+      "GODLEWSKI, NINA",
+      "SLATER, ELIZABETH"
+    ],
+    "namedCandidates": 3,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 8,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGOODWIN, J. ALAN - DIVISION 2\nNONPARTISAN\nBOSTWICK, JANET CALKINS - DIVISION 4\nNONPARTISAN\nLIWSKI, DANELLE BENNETT - DIVISION 6\nNONPARTISAN\nBENSLEY, SANDRA M. - DIVISION 15\nNONPARTISAN\nWOODS, CATHERINE M. - DIVISION 17\nNONPARTISAN\nQUIGLEY, KATHLEEN A. - DIVISION 19\nNONPARTISAN\nSAN ANGELO, LAURIE B. - DIVISION 20\nNONPARTISAN\nKUHN, CYNTHIA T. - DIVISION 21\nNONPARTISAN\nBERGIN, JEFFREY T. - DIVISION 22\nNONPARTISAN\nBURNETT, RANDI - DIVISION 25\nNONPARTISAN\nACOSTA RUIZ, PILAR\nNONPARTISAN\nECKSTROM, JENNIFER\nNONPARTISAN\nFERNANDEZ, SKYE\nNONPARTISAN\nRHODES, TRE'DAVON\nNONPARTISAN\nROMERO, VAL\nNONPARTISAN\nFIFE, JOHN\nNONPARTISAN\nGODLEWSKI, NINA\nNONPARTISAN\nSLATER, ELIZABETH\nGoverning Board\nTucson Unified School District No. 1\nDistrito Unificado Escolar Núm. 1 de Tucson\nVote for not more than 2\nVote por no más de 2\nAmphitheater Unified School District No. 10\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 2\nJunta de Gobierno\nVote por no más de 2\nJunta de Gobierno\nNonpartisan Contests (Schools, Fire Districts, Municipalities)\nJudge of the Superior Court \nJuez del Tribunal Superior\nGoverning Board\nUPDATED: 9/9/2026   8:00 AM\nPage 8 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AWAxFhxAvtSePeBUBD7K0bYjeV9V3MPXm8SbQwxOPXz4QeaQBEkcGAMXhH4Il2u7KsO0rwy69HGJvZSmzn%C3%814IQg%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-34-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-amphi-school-two",
+    "title": "Amphitheater Unified School District No. 10 — Governing Board (term expires December 31, 2028)",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+    "voteFor": 1,
+    "preprintedNames": [
+      "GEMMA, MICHAEL",
+      "OUTLAW RYAN, KIMBERLY"
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 9,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGEMMA, MICHAEL\nNONPARTISAN\nOUTLAW RYAN, KIMBERLY\nNONPARTISAN\nJORDAN, PIPER\nNONPARTISAN\nPETERSON, BETH\nNONPARTISAN\nTRASK, THOMAS\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nRODRIGUEZ, RAUL\nNONPARTISAN\nSPARKS, JOHN\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nLEHR, BETH\nNONPARTISAN\nRANKIN ELLIOTT, CINDY\nDistrito Conjunto de Educación Técnica 2\nTanque Verde Unified School District No. 13\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 1\nVote por no más de 1\nTerm expires 12/31/2028\nCargo vence 31/12/2028\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nVote por no más de 2\nDistrito Unificado Escolar Núm. 13 de Tanque Verde\nVote for not more than 2\nVote for not more than 1\nVote por no más de 1\nVote for not more than 2\nDistrito Unificado Escolar Núm. 30 de Sahuarita\nSahuarita Unified School District No. 30\nVote por no más de 2\nAmphitheater Unified School District No. 10\nJoint Technical Education District 2\nUPDATED: 9/9/2026   8:00 AM\nPage 9 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AWAxFhxAvtSePeBUBD7K0bYjeV9V3MPXm8SbQwxOPXz4QeaQBEkcGAMXhH4Il2u7KsO0rwy69HGJvZSmzn%C3%814IQg%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-34-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-tanque-school",
+    "title": "Tanque Verde Unified School District No. 13 — Governing Board",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+    "voteFor": 2,
+    "preprintedNames": [
+      "JORDAN, PIPER",
+      "PETERSON, BETH",
+      "TRASK, THOMAS"
+    ],
+    "namedCandidates": 3,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 9,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGEMMA, MICHAEL\nNONPARTISAN\nOUTLAW RYAN, KIMBERLY\nNONPARTISAN\nJORDAN, PIPER\nNONPARTISAN\nPETERSON, BETH\nNONPARTISAN\nTRASK, THOMAS\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nRODRIGUEZ, RAUL\nNONPARTISAN\nSPARKS, JOHN\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nLEHR, BETH\nNONPARTISAN\nRANKIN ELLIOTT, CINDY\nDistrito Conjunto de Educación Técnica 2\nTanque Verde Unified School District No. 13\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 1\nVote por no más de 1\nTerm expires 12/31/2028\nCargo vence 31/12/2028\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nVote por no más de 2\nDistrito Unificado Escolar Núm. 13 de Tanque Verde\nVote for not more than 2\nVote for not more than 1\nVote por no más de 1\nVote for not more than 2\nDistrito Unificado Escolar Núm. 30 de Sahuarita\nSahuarita Unified School District No. 30\nVote por no más de 2\nAmphitheater Unified School District No. 10\nJoint Technical Education District 2\nUPDATED: 9/9/2026   8:00 AM\nPage 9 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASoV7JHA18t1GdJJDGvPWSE4yMNe2AtnQIUnFLs2WirrFii8auk43ZBpzJrqxVM1MWpfsnX9mxslTJ54wAW3JN8%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-179-0",
+    "declaredWriteInDistinctionPending": true
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-sahuarita-school",
+    "title": "Sahuarita Unified School District No. 30 — Governing Board",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+    "voteFor": 2,
+    "preprintedNames": [
+      "RODRIGUEZ, RAUL",
+      "SPARKS, JOHN"
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 9,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGEMMA, MICHAEL\nNONPARTISAN\nOUTLAW RYAN, KIMBERLY\nNONPARTISAN\nJORDAN, PIPER\nNONPARTISAN\nPETERSON, BETH\nNONPARTISAN\nTRASK, THOMAS\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nRODRIGUEZ, RAUL\nNONPARTISAN\nSPARKS, JOHN\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nLEHR, BETH\nNONPARTISAN\nRANKIN ELLIOTT, CINDY\nDistrito Conjunto de Educación Técnica 2\nTanque Verde Unified School District No. 13\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 1\nVote por no más de 1\nTerm expires 12/31/2028\nCargo vence 31/12/2028\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nVote por no más de 2\nDistrito Unificado Escolar Núm. 13 de Tanque Verde\nVote for not more than 2\nVote for not more than 1\nVote por no más de 1\nVote for not more than 2\nDistrito Unificado Escolar Núm. 30 de Sahuarita\nSahuarita Unified School District No. 30\nVote por no más de 2\nAmphitheater Unified School District No. 10\nJoint Technical Education District 2\nUPDATED: 9/9/2026   8:00 AM\nPage 9 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": true
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-jted-2",
+    "title": "Pima JTED — Governing Board, District 2",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/special_district:pima_county_joint_technical_education_district/governing_board_district:2",
+    "voteFor": 1,
+    "preprintedNames": [
+      "LEHR, BETH",
+      "RANKIN ELLIOTT, CINDY"
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 9,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nGEMMA, MICHAEL\nNONPARTISAN\nOUTLAW RYAN, KIMBERLY\nNONPARTISAN\nJORDAN, PIPER\nNONPARTISAN\nPETERSON, BETH\nNONPARTISAN\nTRASK, THOMAS\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nRODRIGUEZ, RAUL\nNONPARTISAN\nSPARKS, JOHN\nNONPARTISAN\n( 1 Write-In Candidate)\nNONPARTISAN\nLEHR, BETH\nNONPARTISAN\nRANKIN ELLIOTT, CINDY\nDistrito Conjunto de Educación Técnica 2\nTanque Verde Unified School District No. 13\nDistrito Unificado Escolar Núm. 10 de Amphitheater\nVote for not more than 1\nVote por no más de 1\nTerm expires 12/31/2028\nCargo vence 31/12/2028\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nGoverning Board\nJunta de Gobierno\nVote por no más de 2\nDistrito Unificado Escolar Núm. 13 de Tanque Verde\nVote for not more than 2\nVote for not more than 1\nVote por no más de 1\nVote for not more than 2\nDistrito Unificado Escolar Núm. 30 de Sahuarita\nSahuarita Unified School District No. 30\nVote por no más de 2\nAmphitheater Unified School District No. 10\nJoint Technical Education District 2\nUPDATED: 9/9/2026   8:00 AM\nPage 9 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-231-1",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-fire-hidden-valley",
+    "title": "Hidden Valley Fire District — Board Member",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/special_district:hidden_valley_fire_district",
+    "voteFor": 1,
+    "preprintedNames": [
+      "FLORES, RICHARD",
+      "MULLIGAN, TREVOR"
+    ],
+    "namedCandidates": 2,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 10,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\n( 3 Write-In Candidates)\nNONPARTISAN\nFLORES, RICHARD\nNONPARTISAN\nMULLIGAN, TREVOR\nNONPARTISAN\nANDREWS, BRUCE\nNONPARTISAN\nLAW, DANA\nNONPARTISAN\nLIBERCCI, STEPHANIE\nNONPARTISAN\nNERVIK, MIKE\nNONPARTISAN\nTEMPLE II, WADE\nNONPARTISAN\nWISE, DEBORAH\nNONPARTISAN\nHESTAND, PAUL\nNONPARTISAN\nTALAS, DAVID\nNONPARTISAN\nWRIGHT, ROGER\nMescal-J6 Fire District\nVote for not more than 3\nVote por no más de 3\nBoard Member\nDistrito de Bomberos de Drexel Heights \nDistrito de Bomberos de Hidden Valley \nBoard Member\nMiembro de Junta\nNorthwest Fire District\nVote for not more than 2\nVote por no más de 2\nDistrito de Bomberos de Mescal-J6\nDistrito de Bomberos de Northwest\nVote por no más de 2\nBoard Member\nMiembro de Junta\nHidden Valley Fire District\nMiembro de Junta\nDrexel Heights Fire District\nVote for not more than 2\nVote por no más de 1\nBoard Member\nMiembro de Junta\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 10 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASM4pz79W1qeuq1XzVgD3RMYb1cMU00MRbvXq1G%C3%81NEocaDTBj9%C3%81NXj0nhhSIuBDSLdbz4jelhqpFBXNzOT6wOIk%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-220-0",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-fire-mescal-j6",
+    "title": "Mescal-J6 Fire District — Board Member",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/special_district:mescal_j6_fire_district",
+    "voteFor": 3,
+    "preprintedNames": [
+      "ANDREWS, BRUCE",
+      "LAW, DANA",
+      "LIBERCCI, STEPHANIE",
+      "NERVIK, MIKE",
+      "TEMPLE II, WADE",
+      "WISE, DEBORAH"
+    ],
+    "namedCandidates": 6,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 10,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\n( 3 Write-In Candidates)\nNONPARTISAN\nFLORES, RICHARD\nNONPARTISAN\nMULLIGAN, TREVOR\nNONPARTISAN\nANDREWS, BRUCE\nNONPARTISAN\nLAW, DANA\nNONPARTISAN\nLIBERCCI, STEPHANIE\nNONPARTISAN\nNERVIK, MIKE\nNONPARTISAN\nTEMPLE II, WADE\nNONPARTISAN\nWISE, DEBORAH\nNONPARTISAN\nHESTAND, PAUL\nNONPARTISAN\nTALAS, DAVID\nNONPARTISAN\nWRIGHT, ROGER\nMescal-J6 Fire District\nVote for not more than 3\nVote por no más de 3\nBoard Member\nDistrito de Bomberos de Drexel Heights \nDistrito de Bomberos de Hidden Valley \nBoard Member\nMiembro de Junta\nNorthwest Fire District\nVote for not more than 2\nVote por no más de 2\nDistrito de Bomberos de Mescal-J6\nDistrito de Bomberos de Northwest\nVote por no más de 2\nBoard Member\nMiembro de Junta\nHidden Valley Fire District\nMiembro de Junta\nDrexel Heights Fire District\nVote for not more than 2\nVote por no más de 1\nBoard Member\nMiembro de Junta\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 10 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AZVypdg9x5E43Ps67qvLhtRqrfetD%C3%81vJXb5SQkJjcA6wtcrtrrIHXMO1dGs%C3%89poUeZVXGM%C3%89llf36gKVa1Oo%C3%89UMR0%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-165-3",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-fire-northwest",
+    "title": "Northwest Fire District — Board Member",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/special_district:northwest_fire_district",
+    "voteFor": 2,
+    "preprintedNames": [
+      "HESTAND, PAUL",
+      "TALAS, DAVID",
+      "WRIGHT, ROGER"
+    ],
+    "namedCandidates": 3,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 10,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\n( 3 Write-In Candidates)\nNONPARTISAN\nFLORES, RICHARD\nNONPARTISAN\nMULLIGAN, TREVOR\nNONPARTISAN\nANDREWS, BRUCE\nNONPARTISAN\nLAW, DANA\nNONPARTISAN\nLIBERCCI, STEPHANIE\nNONPARTISAN\nNERVIK, MIKE\nNONPARTISAN\nTEMPLE II, WADE\nNONPARTISAN\nWISE, DEBORAH\nNONPARTISAN\nHESTAND, PAUL\nNONPARTISAN\nTALAS, DAVID\nNONPARTISAN\nWRIGHT, ROGER\nMescal-J6 Fire District\nVote for not more than 3\nVote por no más de 3\nBoard Member\nDistrito de Bomberos de Drexel Heights \nDistrito de Bomberos de Hidden Valley \nBoard Member\nMiembro de Junta\nNorthwest Fire District\nVote for not more than 2\nVote por no más de 2\nDistrito de Bomberos de Mescal-J6\nDistrito de Bomberos de Northwest\nVote por no más de 2\nBoard Member\nMiembro de Junta\nHidden Valley Fire District\nMiembro de Junta\nDrexel Heights Fire District\nVote for not more than 2\nVote por no más de 1\nBoard Member\nMiembro de Junta\nVote for not more than 1\nUPDATED: 9/9/2026   8:00 AM\nPage 10 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AdPGbUOtzJ8%C3%81vV3EOPi9VRuDQAYy6i2YTNRNV26hVsI3BR3CVxPlpJjwVFlIM1J6TC09uOiYhMobCXawn7TcI%C3%81o%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-228-0",
+    "declaredWriteInDistinctionPending": false
+  },
+  {
+    "contestId": "cx-local-az-pima-2026-south-tucson",
+    "title": "City of South Tucson — Council Member (runoff)",
+    "type": "CANDIDACY",
+    "ocdId": "ocd-division/country:us/state:az/place:south_tucson",
+    "voteFor": 2,
+    "preprintedNames": [
+      "AGUIRRE, CESAR",
+      "BACA, EDUARDO",
+      "FEDERICO, DEBBIE",
+      "FLAGG, BRIAN"
+    ],
+    "namedCandidates": 4,
+    "completePreprintedCandidateList": true,
+    "rosterPage": 11,
+    "nativeRoster": {
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "sourceOrg": "Pima County Elections Department",
+      "collectedAt": "2026-11-03T05:23:01.700885+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "General Election-November 3, 2026\n Candidate List\nNONPARTISAN\nAGUIRRE, CESAR\nNONPARTISAN\nBACA, EDUARDO\nNONPARTISAN\nFEDERICO, DEBBIE\nNONPARTISAN\nFLAGG, BRIAN\nCiudad de Sur de Tucson\nVote por no más de 2\nVote for not more than 2\nCity of South Tucson\nMiembro de Concejo\nCouncil Member\nUPDATED: 9/9/2026   8:00 AM\nPage 11 of 11\n"
+    },
+    "actualSampleSourceUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AVk5A4EPuT3NP2SxW2ymzhTovpEkrMV21Zdehqo%C3%81WRCQN2VnIBTQw23uMa5nrTFgSDrrJCqmSVM8mLHhwYcdO40%3D/?ViewerMode=PDF&ForceDownload=true",
+    "actualSampleSourceName": "sample-47-0",
+    "declaredWriteInDistinctionPending": false
+  }
+]

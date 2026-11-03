@@ -1,0 +1,28 @@
+{
+  "rawOfficialSourcesUnchanged": true,
+  "derivedGeometryRepairs": [
+    {
+      "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "officialFeatureOBJECTID": 4,
+      "sourceValidityIssue": "Self-intersection[-111.040862183105 31.7803640145708]",
+      "method": "Shapely make_valid, default linework method; no simplification, snapping or coordinate rounding. Official native source file is preserved unchanged. Repair resolves source ring intersections; River must review before geometry integration.",
+      "sourceAreaSquareDegrees": 0.15043751526739052,
+      "derivedAreaSquareDegrees": 0.15043751526738977,
+      "absoluteAreaDifferenceSquareDegrees": 7.494005416219807e-16,
+      "relativeAreaDifference": 4.981473805187368e-15
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:az/special_district:northwest_fire_district",
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/4/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "officialFeatureOBJECTID": 5,
+      "sourceValidityIssue": "Ring Self-intersection[-111.033776326485 32.4491995082102]",
+      "method": "Shapely make_valid, default linework method; no simplification, snapping or coordinate rounding. Official native source file is preserved unchanged. Repair resolves source ring intersections; River must review before geometry integration.",
+      "sourceAreaSquareDegrees": 0.03990338380066238,
+      "derivedAreaSquareDegrees": 0.03990338379318308,
+      "absoluteAreaDifferenceSquareDegrees": 7.479294961143523e-12,
+      "relativeAreaDifference": 1.8743510571700865e-10
+    }
+  ],
+  "reviewOwner": "River"
+}

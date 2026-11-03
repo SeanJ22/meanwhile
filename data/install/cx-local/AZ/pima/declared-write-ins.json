@@ -1,0 +1,142 @@
+{
+  "status": "COMPLETE_CURRENT_OFFICIAL_LOCAL_WRITE_IN_LIST",
+  "localNamedWriteIns": 9,
+  "records": [
+    {
+      "name": "TRAMPOSCH DI GENOVA, TRISTA",
+      "fieldKey": "supervisor-5",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/council_district:5",
+      "partyLabel": "IND",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "TRAMPOSCH DI GENOVA, TRISTA"
+      }
+    },
+    {
+      "name": "DOWUONA-IMPRAIM, FRANCIS",
+      "fieldKey": "justice-6",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:6",
+      "partyLabel": "DEM",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "DOWUONA-IMPRAIM, FRANCIS"
+      }
+    },
+    {
+      "name": "PERALTA, ARTURO",
+      "fieldKey": "constable-2",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:2",
+      "partyLabel": "DEM",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "PERALTA, ARTURO"
+      }
+    },
+    {
+      "name": "LEVE, MATT",
+      "fieldKey": "constable-9",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:9",
+      "partyLabel": "DEM",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "LEVE, MATT"
+      }
+    },
+    {
+      "name": "NYSTROM, ERIK",
+      "fieldKey": "tanque-school",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+      "partyLabel": "NONPARTISAN",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "NYSTROM, ERIK"
+      }
+    },
+    {
+      "name": "SUNDBERG, CHRISTEN",
+      "fieldKey": "sahuarita-school",
+      "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+      "partyLabel": "NONPARTISAN",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "SUNDBERG, CHRISTEN"
+      }
+    },
+    {
+      "name": "BYNUM, GARY",
+      "fieldKey": "drexel-writein-only",
+      "ocdId": "ocd-division/country:us/state:az/special_district:drexel_heights_fire_district",
+      "partyLabel": "NONPARTISAN",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "BYNUM, GARY"
+      }
+    },
+    {
+      "name": "DAILEY, LAURA",
+      "fieldKey": "drexel-writein-only",
+      "ocdId": "ocd-division/country:us/state:az/special_district:drexel_heights_fire_district",
+      "partyLabel": "NONPARTISAN",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "DAILEY, LAURA"
+      }
+    },
+    {
+      "name": "RENSHAW, KELLEN",
+      "fieldKey": "drexel-writein-only",
+      "ocdId": "ocd-division/country:us/state:az/special_district:drexel_heights_fire_district",
+      "partyLabel": "NONPARTISAN",
+      "status": "OFFICIAL_QUALIFIED_DECLARED_WRITE_IN; NOT_PREPRINTED",
+      "readerStatus": "PENDING_SUPPORTED_WRITE_IN_DISPLAY",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+        "sourceOrg": "Pima County Elections Department",
+        "collectedAt": "2026-11-03T05:23:01.701801+00:00",
+        "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+        "quote": "RENSHAW, KELLEN"
+      }
+    }
+  ],
+  "excludedStateAndFederalWriteIns": 5
+}

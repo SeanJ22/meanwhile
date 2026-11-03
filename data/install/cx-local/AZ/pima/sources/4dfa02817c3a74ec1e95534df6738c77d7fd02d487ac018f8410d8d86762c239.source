@@ -1,0 +1,445 @@
+//my onclick javascript function isn't found in my iframe
+
+//Elections Polling Location Finder Tool/Report
+function initLocate(formAddress) {
+
+//Required dojo components for referenced classes	   
+require(["dojo/dom", "esri/tasks/locator", "esri/tasks/query", "esri/tasks/QueryTask", "dojo/domReady!"],
+        function (dom, Locator, Query, QueryTask) {
+   
+
+
+  //clear data and map output from previous searches
+  clearData();
+  //if an address was submitted - display the processing indicator
+  if (formAddress != "")
+  dojo.style("Processing", {display: "table-row"});
+  //We use our Parcel Address locator so the location point used for data overlay comes from adparcel
+  var locator = new esri.tasks.Locator("https://pimamaps.pima.gov/pmgp/rest/services/Locators/ParcelAddress_Locator/GeocodeServer?token=" +tkn2);
+  //our 10.0 locator accepts single line input format for the address
+  var address = {"Single Line Input": formAddress};
+  //Currently using default outFields but below is reference syntax for specifying   
+  //var params = {address: address, outFields: ["Point", "Score", "Match_addr"]}; 
+  var params = {address: address};
+  //addressToLocations method is used to generate callback of array of candidates
+  locator.addressToLocations(params);
+  dojo.connect(locator, "onAddressToLocationsComplete", getCandidateList);
+                                  
+
+function getCandidateList(Candidates) {  
+  //determine how to proceed given the address supplied
+  numMatches = Candidates.length
+  //this assumes that array of Candidates always sorts by (descending) score - VERIFY
+  //can only set this variable if there is data in the array
+  if (numMatches !=0)
+  topScore = Candidates[0].score;
+  //alert("TopScore " + topScore);
+  //alert("Number of Address Matches = " + numMatches);
+  if (numMatches == 0 ){
+	dojo.style("NM", {display: "table-row"});
+	//hide the processing indicator
+    dojo.style("Processing", {display: "none"});  
+                       }    
+    else if (numMatches == 1 || topScore == 100)  {				
+      var MAddrX = Candidates[0].location.x;
+      var MAddrY = Candidates[0].location.y;
+      var MAddr = Candidates[0].address;  
+      makePoint(MAddrX, MAddrY, MAddr);
+                                                  }	 
+     //if there are multiple candidates and none score 100, show radio button options
+	 else if (numMatches > 1 && topScore != 100){       
+       if (numMatches < 3) 
+	     var numToLoop = numMatches;
+		   else
+		 var numToLoop = 3; 		                              
+		 //loop through either only first 3 candidates or the actual number, if less than 3
+		 //this assumes that array of Candidates always sorts by (descending) score - VERIFY
+           for (var i=0, il=numToLoop; i<il; i++) {  
+             var MAddrX = Candidates[i].location.x;
+             var MAddrY = Candidates[i].location.y;
+             var MAddr = Candidates[i].address;    
+             //button click will clear buttons display and pass x,y, and Address to makePoint function
+             
+
+             //Note that due to scoping issues introduced with the nested functions in the new API syntax for this particular call below we had to reference the functions
+	     //including the parent function name.  Before these can be used the names have to be declared as variables later in code after each of the two referenced functions
+             //https://stackoverflow.com/questions/8817872/javascript-call-nested-function
+             
+             var button = '<input type="radio" name="group1" value="button' + i  + '" id="button' + i + '"' +  ' onclick="initLocate.clearData();initLocate.makePoint(' + MAddrX + ',' + MAddrY + ',&#39;' + MAddr + '&#39;);" />&nbsp;&nbsp;' + Candidates[i].address;
+ 
+             //display Instructions and up to 3 Matched address options as radio buttons
+			 dojo.style("CANDINSTRUCT", {display: "table-row"});
+			 var divName = "CAND" + i; 
+             dojo.style(divName, {display: "table-row"});
+             var addrText = "candidate" + i;   
+             dojo.byId(addrText).innerHTML = button;
+                                                   }
+      //hide the processing indicator
+      
+      dojo.style("Processing", {display: "none"});                                      
+												 }
+                                            }
+
+function makePoint(MAddrX, MAddrY, MAddr) {  
+  //Display processing indicator in case, address is supplied via radio button, which clears the previously displayed processing indicator
+  dojo.style("Processing", {display: "table-row"}); 
+  //created an address point using the x, y which is in our spatial reference - 2868
+  voterAddrPoint = new esri.geometry.Point(MAddrX, MAddrY, new esri.SpatialReference({ wkid : 2868 }));
+  //console.log(voterAddrPoint);	  
+  //use our geometry service to reproject the point into lat-lon for use with Google Maps - wkid 4326
+  var outSR = new esri.SpatialReference({wkid: 4326}); 
+  var gs = new esri.tasks.GeometryService("https://pimamaps.pima.gov/pmgp/rest/services/Utilities/Geometry/GeometryServer?token=" +tkn2);
+  //gs.project completes the projection and uses callback to send the reprojected point object to another function
+  gs.project([voterAddrPoint], outSR, startAddr);  
+  //send the point object (still in our 2868 spatial reference) to dataOverlay function for overlay with other data
+  defineOverlay(voterAddrPoint, MAddr);
+                                         }
+//the name of the parent function has to be declared as a variable to this nested function name for successfull use in the specific call in the earlier dynamic radio buttons.
+initLocate.makePoint = makePoint;                                         
+											 
+function startAddr(startAddrPoint) {
+  //establish global variables so they can be used in a later function to make a google map
+  XstartAddrPoint = startAddrPoint[0].x;
+  YstartAddrPoint = startAddrPoint[0].y;
+                                   }											 
+										 
+function defineOverlay(voterAddrPoint, MAddr) {
+  //for each desire layer overlay define the Service URL, Output Fields, and Output Function Name
+  //syntax instruction: dataOverlay(voterAddrPoint, MAddr, AGS Service URL as string, Output Fields as string, Name of Output Function as string)
+  //syntax example: dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/Districts/MapServer/4", '"DISTRICT","NAME"', "outputBOSDist")
+  //Note that while the calls below still define individual outFields, those variables are not used in the query due to 
+  //a problem caused when multiple fields are included.  As a solution I used the wildcard to match all fields until another fix is found
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/DistrictsSensitive/MapServer/0?token=" + tkn, '"PRECINCT","PRECINCT_N"', "outputPrecinct");
+  table = dojo.byId("DataTable");  
+    dojo.style(table, {display: "table-row"});	
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Community/Schools/MapServer/5?token=" + tkn, '"SDISTNAME", "JTED"', "outputSchoolDist");  
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/Districts/MapServer/0?token=" + tkn, "DISTRICT", "outputConDist");
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/Districts/MapServer/4?token=" + tkn, "DISTRICT", "outputLegDist");
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/Districts/MapServer/8?token=" + tkn, "DISTRICT", "outputBOSDist");
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/Districts/MapServer/1?token=" + tkn, "NAME", "outputFireDist");
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/AdminBoundaries/MapServer/1?token=" + tkn, "NAME", "outputJuris");
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/Districts/MapServer/2?token=" + tkn, "JPDIST", "outputJPDist");
+  dataOverlay(voterAddrPoint, MAddr, "https://pimamaps.pima.gov/arcgis/rest/services/Boundaries/Districts/MapServer/7?token=" + tkn, "PCCDIST", "outputPCCDist");
+                                              }
+
+function dataOverlay(voterAddrPoint, MAddr, svcURL, outFields, reportCall) {
+  //console.log(reportCall);
+  //console.log(voterAddrPoint);
+  //console.log(MAddr);
+  //console.log(outFields);
+  //console.log(svcURL);
+  //outFieldArray = [outFields];
+  //outFieldArray = eval(outFieldArrayNO);
+  //outFieldArray = "[" + outFieldvar + "]"
+  //console.log(outFieldArray + " outFields array Variable");
+  //build queries to get data from other layers where the point falls inside a polygon
+  queryTask = new QueryTask(svcURL);  
+  query = new Query();
+  query.geometry = voterAddrPoint;
+  query.spatialRelationship = esri.tasks.Query.SPATIAL_REL_WITHIN;
+  query.returnGeometry = false;
+  //query.outFields = [outFieldArray],
+  query.outFields = ["*"],
+  //because the queryTask.execute can't use a string to call the necessary output function we change to object first
+  //console.log("just before query execution");
+  reportCallObject = eval(reportCall);  
+  queryTask.execute(query, reportCallObject, errorFunc); 
+  //output the final address used for the query
+  outputAddress(MAddr);
+  //console.log("end of dataOverlay function");
+                                                                            }
+
+function errorFunc(errObj) {
+  //console.log(errObj + "THE ERROR OBJECT!!!");    
+    
+}
+                                                                            
+function outputAddress(MAddr){	  
+  FAddr = '<font size="+1">' + MAddr + '</font>'  
+  //output the final address used for the query
+  tableRow = dojo.byId("MADDR");
+  //display:"table-row" is preferred syntax but is not ie7 back-compatible so using "block" for now
+    dojo.style(tableRow, {display: "table-row"});				
+  dojo.byId("Maddr").innerHTML = FAddr;
+                              }
+  
+function outputPrecinct(attData){
+  if (attData.features.length == 0) {
+  var dataOutputErr = "A Voting Precinct was Not Found - Unable to Continue";
+  dojo.byId("precinct").innerHTML = dataOutputErr;  
+                                     }
+    else                           
+           {                           
+  var recordList = attData.features[0].attributes;
+  //console.log(recordList + "In outputPrecinct function");
+  var dataOutput = recordList.PRECINCT;
+//  alert(dataOutput);
+  oblink = "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/etc/cq/results.html?cqid=401&OBKey__1060_1=" + dataOutput;
+//  dojo.byId("oblink").innerHTML = oblink;
+  document.getElementById("oblink").href= oblink;
+//  alert(oblink);
+  //console.log(dataOutput + " is the precinct attribute");
+  tableRow = dojo.byId("PREC"); 
+    dojo.style(tableRow, {display: "table-row"});
+  dojo.byId("precinct").innerHTML = dataOutput;
+//  dojo.byId("precinct").innerHTML = dataOutput;
+  //display the polling location data
+  var pollLocOutput = recordList.PRECINCT_N;
+  var pollLocOutputTC = toTitleCase(pollLocOutput)
+  var pollLocAddrOutput = recordList.PRECINCT_A;
+  var pollLocAddrOutputTC = toTitleCase(pollLocAddrOutput)
+  var roomLocOutput = recordList.ROOM_LOCAT;
+  var roomLocOutputTC = toTitleCase(roomLocOutput)
+  tableRow = dojo.byId("POL"); 
+    dojo.style(tableRow, {display: "table-row"});
+  //polLocFormat = pollLocOutputTC + '<br>' + roomLocOutputTC;
+  if  (pollLocOutputTC == "All Mail Precinct") {
+  polLocFormat = '<br>' + pollLocOutputTC + '<br>';
+                                          }			
+      else {
+  polLocFormat = pollLocOutputTC + '<br>' + roomLocOutputTC + '<br>' + pollLocAddrOutputTC;	  
+	       }                               }			
+  //dojo.byId("polllocation").innerHTML = polLocFormat  
+  //Unhide the overlay datatable which had to be hidden due to the empty table border creating a dot on the screen
+  table = dojo.byId("DataTable");  
+    dojo.style(table, {display: "table-row"});	
+  //send the polling location X and Y coordinates to make a google map
+  var PLAddrX = recordList.POINT_X;
+  var PLAddrY = recordList.POINT_Y;
+  makePointPol(PLAddrX, PLAddrY, pollLocOutputTC);
+  //hide the processing indicator - This is set here so it happens after the table is visible
+  //there is no guarantee this is the last part to finish but samples show it is likely
+  dojo.style("Processing", {display: "none"}); 
+             }	
+                                 
+
+
+function outputSchoolDist(attData){
+  
+
+  //console.log("into the outputSchoolDist function");
+  //console.log(attData);
+  if (attData.features.length == 0) {
+  var dataOutputTC = "None";
+  //If address is not in a school district it is not in JTED
+  var dataOutJTED = "Out";  
+                                     }
+    else                             {
+  var recordList = attData.features[0].attributes;
+  var dataOutput = recordList.SDISTNAME;
+  var dataOutputTC = toTitleCase(dataOutput);
+  var dataJTED = recordList.JTED;
+  if (dataJTED == "Y") 	  
+       var dataOutJTED = "In";	                     
+	  else if (dataJTED == "N")
+	   var dataOutJTED = "Out";
+	  else
+      var dataOutJTED = "Data Error";
+	                                  }
+  tableRow = dojo.byId("SCH");
+	dojo.style(tableRow, {display: "table-row"});
+  dojo.byId("schdist").innerHTML = dataOutputTC;
+  tableRow = dojo.byId("JTED");
+	dojo.style(tableRow, {display: "table-row"});     
+  dojo.byId("jteddist").innerHTML = dataOutJTED;	  
+		                           }				
+
+function outputFireDist(attData){
+  if (attData.features.length == 0) {
+  var dataOutputTC = "None";  
+                                     }
+    else                             {
+  var recordList = attData.features[0].attributes;
+  var dataOutput = recordList.NAME;
+  var dataOutputTC = toTitleCase(dataOutput);                                              
+							         }												   
+  tableRow = dojo.byId("FIRE");
+	dojo.style(tableRow, {display: "table-row"});
+   dojo.byId("firedist").innerHTML = dataOutputTC;                                                  
+                                 }												 
+ 	
+function outputBOSDist(attData){
+  if (attData.features.length == 0) {
+  var dataOutputTC = "None";  
+                                     }
+    else                             {
+  var recordList = attData.features[0].attributes;
+  var BOSDist = recordList.DISTRICT;
+  //we no longer report the supervisor name since this is potentially for new boundaries
+  //var BOSName = recordList.NAME;  
+  //var dataOutput = "DISTRICT " + BOSDist + " - " + BOSName;
+  //convert to string first to prevent error during title case change
+  var dataOutput = String(BOSDist);
+  var dataOutputTC = toTitleCase(dataOutput);
+                                      }
+   tableRow = dojo.byId("BOS"); 
+	dojo.style(tableRow, {display: "table-row"});
+   dojo.byId("bosdist").innerHTML = dataOutputTC;
+                                  }			
+	
+function outputLegDist(attData){
+  if (attData.features.length == 0) {
+  var dataOutputTC = "None";  
+                                     }
+    else                             {
+  var recordList = attData.features[0].attributes;
+  var dataOutput = recordList.DISTRICT;
+  var dataOutputTC = toTitleCase(dataOutput);
+                                     }
+  tableRow = dojo.byId("LEG"); 
+    dojo.style(tableRow, {display: "table-row"});
+  dojo.byId("legdist").innerHTML = dataOutputTC;
+                                 }						
+	
+function outputJuris(attData){
+  if (attData.features.length == 0) {
+  var dataOutputTC = "None";  
+                                     }
+    else                             {
+  var recordList = attData.features[0].attributes;
+  var dataOutput = recordList.NAME;
+  var dataOutputTC = toTitleCase(dataOutput);
+                                     }
+  tableRow = dojo.byId("JUR");
+    dojo.style(tableRow, {display: "table-row"});
+  dojo.byId("juris").innerHTML = dataOutputTC;
+                                 }						
+	
+function outputConDist(attData){
+   if (attData.features.length == 0) {
+  var dataOutputTC = "None";  
+                                     }
+    else                             {  
+  var recordList = attData.features[0].attributes;
+  var dataOutput = recordList.DISTRICT;
+  var dataOutputTC = toTitleCase(dataOutput);
+                                      }
+  tableRow = dojo.byId("CON");
+    dojo.style(tableRow, {display: "table-row"});
+  dojo.byId("condist").innerHTML = dataOutputTC;
+                                 }						
+	
+function outputJPDist(attData){
+  if (attData.features.length == 0) {
+  var dataOutput = "None";  
+                                     }
+    else                             {        
+  var recordList = attData.features[0].attributes;
+  var dataOutput = recordList.JPDIST;
+  var dataOutputTC = toTitleCase(dataOutput);
+                                     } 
+  tableRow = dojo.byId("JP");
+    dojo.style(tableRow, {display: "table-row"});
+  dojo.byId("jpdist").innerHTML = dataOutputTC;
+                                 }							
+
+function outputPCCDist(attData){  
+  if (attData.features.length == 0) {
+  var dataOutput = "None";  
+                                     }
+    else                             {
+  var recordList = attData.features[0].attributes;
+  //convert to string first to prevent error during title case change
+  var dataOutput = String(recordList.PCCDIST);
+  var dataOutputTC = toTitleCase(dataOutput);
+                                      }	
+  tableRow = dojo.byId("PCC");
+	dojo.style(tableRow, {display: "table-row"});
+   dojo.byId("pccdist").innerHTML = dataOutputTC;     
+                                 }				
+	
+function makePointPol(PLAddrX, PLAddrY, pollLocOutput) {    
+  //if the X and Y points have "0" zero as their value then that record(location)is in a precinct currently marked as mail in only so do not display a map link
+  //if  (PLAddrX != "0") {
+  // in 2020 we switched to using the criteria below for filtering map based on mail in status	  
+	if  (pollLocOutput != "All Mail Precinct") {  
+    //alert ("test");		      		
+    //create an address point using the x, y which is in our spatial reference - 2868
+    PolLocAddrPoint = new esri.geometry.Point(PLAddrX, PLAddrY, new esri.SpatialReference({ wkid : 2868 }));
+    //console.log(addressPoint);	
+    //use our geometry service to reproject the point into lat-lon for use with Google Maps - wkid 4326
+    var outSR = new esri.SpatialReference({wkid: 4326}); 
+    var gs = new esri.tasks.GeometryService("https://pimamaps.pima.gov/pmgp/rest/services/Utilities/Geometry/GeometryServer?token=" +tkn2);
+    //gs.project completes the projection and uses callback to send the reprojected point object to the 
+    gs.project([PolLocAddrPoint], outSR, mapPoint);
+						}							
+                                        }		
+								 
+function mapPoint(DestAddrPoint) {
+  //display the breaker line just above the map and driving directions area
+  //alert ("making visible");
+  tableRow = dojo.byId("dataMapLine");
+    dojo.style(tableRow, {display: "table-row"});
+  //The object created from the projection method from the geometry service is always an array even if only one point.
+  //http://help.arcgis.com/en/webapi/javascript/arcgis/help/jsapi_start.htm
+  var XDestAddrPoint = DestAddrPoint[0].x;
+  var YDestAddrPoint = DestAddrPoint[0].y;
+  //define end portion of url to generate/ hold Google Map - cannot use quoted, complete url in variable for window.open or getElement.hfref
+  mapUrl = YstartAddrPoint + ',' + XstartAddrPoint + '&daddr=' + YDestAddrPoint + ',' + XDestAddrPoint;
+  //Display a link to the map  
+  document.getElementById("maplink").href="http://maps.google.com/maps?saddr=" + mapUrl;
+  tableRow = dojo.byId("maplinkDiv");
+    dojo.style(tableRow, {display: "table-row"});
+  //window.open("http://maps.google.com/maps?saddr=" + mapUrl + "" );
+                                  }	
+			 
+function clearData() {
+  //clear the address candidate radio button options
+  dojo.style("CANDINSTRUCT", {display: "none"});
+  dojo.style("CAND0", {display: "none"});
+  dojo.style("CAND1", {display: "none"});
+  dojo.style("CAND2", {display: "none"});
+  //hide the datatable which because even when the table is empty the table border creates a dot on the screen
+  dojo.style("DataTable", {display: "none"});	
+  //clear the data output - even though these are hidden when the data table above is hidden
+  //we hide each one individually because display isn't always in sync with table visibility
+  dojo.style("MADDR", {display: "none"});
+  dojo.style("PREC", {display: "none"});
+  dojo.style("SCH", {display: "none"});
+  dojo.style("FIRE", {display: "none"});
+  dojo.style("BOS", {display: "none"});
+  dojo.style("LEG", {display: "none"});
+  dojo.style("JUR", {display: "none"});
+  dojo.style("CON", {display: "none"});
+  dojo.style("JP", {display: "none"});
+  dojo.style("PCC", {display: "none"});  
+
+  //clear the polling location data
+  dojo.style("POL", {display: "none"});
+  //dojo.style("PLA", {display: "none"});
+  //dojo.style("RML", {display: "none"});
+
+  //clear the driving directions and map
+  //dojo.style("right", {display: "none"});
+  //dojo.style("left", {display: "none"});
+
+  //clear the No Matching address found message
+  dojo.style("NM", {display: "none"});
+
+  //clear the "Processing Query" indicator
+  dojo.style("Processing", {display: "none"});
+
+  //hide the line between the data and map areas
+  dojo.style("dataMapLine", {display: "none"}); 
+
+  //hide maplink
+  dojo.style("maplinkDiv", {display: "none"}); 
+				     }
+//the name of the parent function has to be declared as a variable to this nested function name for successfull use in the specific call in the earlier dynamic radio buttons.
+initLocate.clearData = clearData;
+
+function toTitleCase(str) 
+{ 
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}); 
+} 
+
+}); // end of require function statement
+}  // end of initLocate function
+					 
+					 
+					 
+					 
+	
+	
+	
+	

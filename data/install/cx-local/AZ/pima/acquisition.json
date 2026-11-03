@@ -1,0 +1,896 @@
+{
+  "checkedAt": "2026-11-03T05:40:13.492827+00:00",
+  "publicAcquisition": "Official public OnBase query 401; date and precinct keyword searches only, no voter identity or residential address. Default 200-record pagination overlaps final precinct and finishes with Truncated false. Native raster PDFs retained unchanged; deterministic derivative OCR explicitly labeled.",
+  "witnesses": [
+    {
+      "sourceName": "sample-231-1",
+      "precinct": 231,
+      "districts": [
+        "justice-7",
+        "school-30",
+        "jted-2"
+      ],
+      "assignedDistricts": [
+        "jted-2",
+        "justice-7",
+        "school-30"
+      ],
+      "catalogRecord": {
+        "ID": "AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZqÉNqtCw54vMuMZy8mrgrExWxMeEdVJgw=",
+        "Name": "EL - Sample Ballots - 231 -  - ORANGE - 11/3/2026 - N - Y - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "231",
+            "RawValue": "231"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 231 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-2"
+      }
+    },
+    {
+      "sourceName": "sample-43-0",
+      "precinct": 43,
+      "districts": [
+        "justice-9",
+        "supervisor-5",
+        "school-10",
+        "school-1"
+      ],
+      "assignedDistricts": [
+        "justice-9",
+        "school-1",
+        "school-10",
+        "supervisor-5"
+      ],
+      "catalogRecord": {
+        "ID": "ARYHZ4VHTieftyMahuy0oaevHV8AWg3ÉOuYrSEsÁ8MGYw3pWG8BTGtuHY8qUjFNoEY1I8POmtkL1É9XzH5NDlJI=",
+        "Name": "EL - Sample Ballots - 43 -  - TAN - 11/3/2026 - Y - N - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "43",
+            "RawValue": "43"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 43 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-0"
+      }
+    },
+    {
+      "sourceName": "sample-34-1",
+      "precinct": 34,
+      "districts": [
+        "justice-6",
+        "school-10",
+        "fire-NORTHWEST"
+      ],
+      "assignedDistricts": [
+        "fire-NORTHWEST",
+        "justice-6"
+      ],
+      "catalogRecord": {
+        "ID": "AWAxFhxAvtSePeBUBD7K0bYjeV9V3MPXm8SbQwxOPXz4QeaQBEkcGAMXhH4Il2u7KsO0rwy69HGJvZSmznÁ4IQg=",
+        "Name": "EL - Sample Ballots - 34 -  - TAN - 11/3/2026 - Y - N - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "34",
+            "RawValue": "34"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 34 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-0"
+      }
+    },
+    {
+      "sourceName": "sample-220-0",
+      "precinct": 220,
+      "districts": [
+        "justice-1",
+        "school-13",
+        "school-1",
+        "fire-HIDDEN VALLEY"
+      ],
+      "assignedDistricts": [
+        "fire-HIDDEN VALLEY",
+        "justice-1",
+        "school-13"
+      ],
+      "catalogRecord": {
+        "ID": "ASM4pz79W1qeuq1XzVgD3RMYb1cMU00MRbvXq1GÁNEocaDTBj9ÁNXj0nhhSIuBDSLdbz4jelhqpFBXNzOT6wOIk=",
+        "Name": "EL - Sample Ballots - 220 -  - BLACK - 11/3/2026 - N - Y - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "220",
+            "RawValue": "220"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 220 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-2"
+      }
+    },
+    {
+      "sourceName": "sample-2-0",
+      "precinct": 2,
+      "districts": [
+        "justice-3"
+      ],
+      "assignedDistricts": [
+        "justice-3"
+      ],
+      "catalogRecord": {
+        "ID": "Aacg1plmaEW5ElmsUEJIÉ5wGqqLZcTkQcJt0fWÁnHsVANKjQh3BQB84ZM56SwxbMc8wH0SdZcEghQFJFEIrGp1c=",
+        "Name": "EL - Sample Ballots - 2 -  - NONE - 11/3/2026 - N - Y - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "2",
+            "RawValue": "2"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 2 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-0"
+      }
+    },
+    {
+      "sourceName": "sample-264-0",
+      "precinct": 264,
+      "districts": [
+        "justice-2",
+        "school-1"
+      ],
+      "assignedDistricts": [
+        "justice-2"
+      ],
+      "catalogRecord": {
+        "ID": "ASlVT1C3fiTVm57CFJnUJsE4dmXLVÁÉxRePLKFpJ1X1MtOhS3TKrÉrDjxYkngP3Vz4vKmBrwdnQsWiqz7hPGyYs=",
+        "Name": "EL - Sample Ballots - 264 -  - TAN - 11/3/2026 - Y - N - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "264",
+            "RawValue": "264"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 264 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-3"
+      }
+    },
+    {
+      "sourceName": "sample-192-0",
+      "precinct": 192,
+      "districts": [
+        "justice-8",
+        "school-1"
+      ],
+      "assignedDistricts": [
+        "justice-8"
+      ],
+      "catalogRecord": {
+        "ID": "AcRjkB9A1uhOpdc6hq3sBpGMhznUÉ451a005QoBG6C5eExKsuCiYNzU8g3jsOAkbbecjQeAoyaaUH5o0PNOqMO4=",
+        "Name": "EL - Sample Ballots - 192 -  - TAN - 11/3/2026 - Y - N - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "192",
+            "RawValue": "192"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 192 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-2"
+      }
+    },
+    {
+      "sourceName": "sample-165-3",
+      "precinct": 165,
+      "districts": [
+        "justice-7",
+        "school-30",
+        "fire-MESCAL-J6"
+      ],
+      "assignedDistricts": [
+        "fire-MESCAL-J6"
+      ],
+      "catalogRecord": {
+        "ID": "AZVypdg9x5E43Ps67qvLhtRqrfetDÁvJXb5SQkJjcA6wtcrtrrIHXMO1dGsÉpoUeZVXGMÉllf36gKVa1OoÉUMR0=",
+        "Name": "EL - Sample Ballots - 165 -  - GOLD - 11/3/2026 - N - Y - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "165",
+            "RawValue": "165"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 165 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-2"
+      }
+    },
+    {
+      "sourceName": "sample-179-0",
+      "precinct": 179,
+      "districts": [
+        "school-13"
+      ],
+      "assignedDistricts": [],
+      "catalogRecord": {
+        "ID": "ASoV7JHA18t1GdJJDGvPWSE4yMNe2AtnQIUnFLs2WirrFii8auk43ZBpzJrqxVM1MWpfsnX9mxslTJ54wAW3JN8=",
+        "Name": "EL - Sample Ballots - 179 -  - ORANGE - 11/3/2026 - N - Y - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "179",
+            "RawValue": "179"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 179 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-2"
+      }
+    },
+    {
+      "sourceName": "sample-228-0",
+      "precinct": 228,
+      "districts": [
+        "fire-NORTHWEST"
+      ],
+      "assignedDistricts": [],
+      "catalogRecord": {
+        "ID": "AdPGbUOtzJ8ÁvV3EOPi9VRuDQAYy6i2YTNRNV26hVsI3BR3CVxPlpJjwVFlIM1J6TC09uOiYhMobCXawn7TcIÁo=",
+        "Name": "EL - Sample Ballots - 228 -  - BLACK - 11/3/2026 - N - Y - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "228",
+            "RawValue": "228"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 228 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-2"
+      }
+    },
+    {
+      "sourceName": "sample-47-0",
+      "precinct": 47,
+      "districts": [
+        "south-tucson"
+      ],
+      "assignedDistricts": [],
+      "catalogRecord": {
+        "ID": "AVk5A4EPuT3NP2SxW2ymzhTovpEkrMV21ZdehqoÁWRCQN2VnIBTQw23uMa5nrTFgSDrrJCqmSVM8mLHhwYcdO40=",
+        "Name": "EL - Sample Ballots - 47 -  - TAN - 11/3/2026 - Y - N - 9/29/2026",
+        "DisplayType": "Image",
+        "DisplayColumnValues": [
+          {
+            "Value": "47",
+            "RawValue": "47"
+          },
+          {
+            "Value": "",
+            "RawValue": null
+          },
+          {
+            "Value": "11/3/2026",
+            "RawValue": "1793664000000"
+          },
+          {
+            "Value": "Sample Ballot - Precinct 47 - 2026 General Election",
+            "RawValue": null
+          }
+        ],
+        "sourceName": "onbase-index-0"
+      }
+    }
+  ],
+  "nativeSources": [
+    {
+      "name": "elections",
+      "url": "https://www.pima.gov/394/Elections",
+      "retrievedAt": "2026-11-03T05:22:47.344805+00:00",
+      "finalUrl": "https://www.pima.gov/elections",
+      "status": 200,
+      "rawHash": "e3bc1f74e1d3ff9d0d90e625b609a6e54c0d964837ea852cdb3f5fd8833e7ac9",
+      "file": "elections.html",
+      "bytes": 1557425
+    },
+    {
+      "name": "general-candidates",
+      "url": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "retrievedAt": "2026-11-03T05:23:01.700885+00:00",
+      "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+      "status": 200,
+      "rawHash": "ed48de5bbf563ce81b84701eeec100486f7efa1d7824e492f0f48332359fa397",
+      "file": "general-candidates.pdf",
+      "bytes": 149881,
+      "textFile": "general-candidates.txt",
+      "textHash": "e66051afa5e254fc0a07588054d3c00259c9e26eb93af0950288792df3e509bd"
+    },
+    {
+      "name": "write-ins",
+      "url": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+      "retrievedAt": "2026-11-03T05:23:01.701801+00:00",
+      "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+      "status": 200,
+      "rawHash": "43b0f8ccbf82eb15ab4b1aba3c97f20628bc117547fbb22cbd1b55f2bed8ff00",
+      "file": "write-ins.pdf",
+      "bytes": 68704,
+      "textFile": "write-ins.txt",
+      "textHash": "cc9f85f2e9e8896e850b9695692d1d7d59b76fa0366db6eda135c94c50768949"
+    },
+    {
+      "name": "sample-locator",
+      "url": "https://pimamaps.pima.gov/geoapps/elections/sampleballot.htm",
+      "retrievedAt": "2026-11-03T05:22:47.346195+00:00",
+      "finalUrl": "https://pimamaps.pima.gov/geoapps/elections/sampleballot.htm",
+      "status": 200,
+      "rawHash": "9a2374932cbeaaba6c0521067853a8622fa2fad92036edbcecd0a768dd9ac901",
+      "file": "sample-locator.html",
+      "bytes": 7305
+    },
+    {
+      "name": "sample-locator-js",
+      "url": "https://pimamaps.pima.gov/geoapps/elections/js/sampleballot.js",
+      "retrievedAt": "2026-11-03T05:23:27.345017+00:00",
+      "finalUrl": "https://pimamaps.pima.gov/geoapps/elections/js/sampleballot.js",
+      "status": 200,
+      "rawHash": "4dfa02817c3a74ec1e95534df6738c77d7fd02d487ac018f8410d8d86762c239",
+      "file": "sample-locator-js.html",
+      "bytes": 22642
+    },
+    {
+      "name": "obpa-config",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/etc/cq/obpa-config.json",
+      "retrievedAt": "2026-11-03T05:24:41.520209+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/etc/cq/obpa-config.json",
+      "status": 200,
+      "rawHash": "185ac9a7dffa5c7df6537ff975d17e288cbc87efdd8f4ef470fb7b4701a3f3b0",
+      "file": "obpa-config.html",
+      "bytes": 863
+    },
+    {
+      "name": "obpa-queries",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery",
+      "retrievedAt": "2026-11-03T05:25:08.342802+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery",
+      "status": 200,
+      "rawHash": "64adb425c6c8b03c65b76a64dd01021e35c5e1d651a9c7fc2f5d58208180a5a3",
+      "file": "obpa-queries.html",
+      "bytes": 255
+    },
+    {
+      "name": "onbase-keywords",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Keywords",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Keywords",
+      "status": 200,
+      "retrievedAt": "2026-11-03T05:25:23.052361+00:00",
+      "rawHash": "f475c70fc71c5d58d834ef58577092be8deeb16d7281528b21a893306a21ab0d",
+      "file": "onbase-keywords.json",
+      "bytes": 1297,
+      "method": "POST",
+      "requestJson": {
+        "QueryID": 401
+      }
+    },
+    {
+      "name": "onbase-index-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "status": 200,
+      "retrievedAt": "2026-11-03T05:26:43.510261+00:00",
+      "rawHash": "27e2ef087cf7441a57b138cb16b9b2fc2aad1ab80d68ade482e3fd97aad69e18",
+      "file": "onbase-index-0.json",
+      "bytes": 83620,
+      "method": "POST",
+      "requestJson": {
+        "QueryID": 401,
+        "Keywords": [
+          {
+            "ID": 1060,
+            "Value": "1",
+            "KeywordOperator": ">="
+          }
+        ],
+        "FromDate": "01/01/2026",
+        "ToDate": "12/31/2026",
+        "QueryLimit": 200
+      }
+    },
+    {
+      "name": "onbase-index-1",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "status": 200,
+      "retrievedAt": "2026-11-03T05:26:44.190410+00:00",
+      "rawHash": "e1819d6bf03214edfb25a17ee63193af8213539eea7688696dd1eed3c6b276f5",
+      "file": "onbase-index-1.json",
+      "bytes": 84362,
+      "method": "POST",
+      "requestJson": {
+        "QueryID": 401,
+        "Keywords": [
+          {
+            "ID": 1060,
+            "Value": "82",
+            "KeywordOperator": ">="
+          }
+        ],
+        "FromDate": "01/01/2026",
+        "ToDate": "12/31/2026",
+        "QueryLimit": 200
+      }
+    },
+    {
+      "name": "onbase-index-2",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "status": 200,
+      "retrievedAt": "2026-11-03T05:26:44.844643+00:00",
+      "rawHash": "fc6b5431c0394b7179511e7275d37dde8593990546bdf8768f84c8260a36b810",
+      "file": "onbase-index-2.json",
+      "bytes": 84512,
+      "method": "POST",
+      "requestJson": {
+        "QueryID": 401,
+        "Keywords": [
+          {
+            "ID": 1060,
+            "Value": "165",
+            "KeywordOperator": ">="
+          }
+        ],
+        "FromDate": "01/01/2026",
+        "ToDate": "12/31/2026",
+        "QueryLimit": 200
+      }
+    },
+    {
+      "name": "onbase-index-3",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/CustomQuery/KeywordSearch",
+      "status": 200,
+      "retrievedAt": "2026-11-03T05:26:45.492269+00:00",
+      "rawHash": "5334dba12080db672ee026a21d9326881f1b751a34e64768b4c875190f4bda34",
+      "file": "onbase-index-3.json",
+      "bytes": 24360,
+      "method": "POST",
+      "requestJson": {
+        "QueryID": 401,
+        "Keywords": [
+          {
+            "ID": 1060,
+            "Value": "242",
+            "KeywordOperator": ">="
+          }
+        ],
+        "FromDate": "01/01/2026",
+        "ToDate": "12/31/2026",
+        "QueryLimit": 200
+      }
+    },
+    {
+      "name": "court-electorates",
+      "url": "https://www.azleg.gov/ars/12/00120-02.htm",
+      "retrievedAt": "2026-11-03T05:23:01.702915+00:00",
+      "finalUrl": "https://www.azleg.gov/ars/12/00120-02.htm",
+      "status": 200,
+      "rawHash": "80d66ffe23f6da01d7a5079341882b076cee4d896a6e6e09fff844f806f42e90",
+      "file": "court-electorates.html",
+      "bytes": 1762
+    },
+    {
+      "name": "canceled-school-elections",
+      "url": "https://www.schools.pima.gov/elections/canceled-elections",
+      "retrievedAt": "2026-11-03T05:23:51.650229+00:00",
+      "finalUrl": "https://www.schools.pima.gov/elections/canceled-elections",
+      "status": 200,
+      "rawHash": "85da2bd1e2e73e239723e101471b5b3c95df3b8b245ea08edf9495c42ddde93a",
+      "file": "canceled-school-elections.html",
+      "bytes": 15714
+    },
+    {
+      "name": "school-candidate-statements",
+      "url": "https://www.schools.pima.gov/elections/2026-governing-board-candidate-statements",
+      "retrievedAt": "2026-11-03T05:23:52.405251+00:00",
+      "finalUrl": "https://www.schools.pima.gov/elections/2026-governing-board-candidate-statements",
+      "status": 200,
+      "rawHash": "c6d316725b42fa5146ba0db7f85ed4e6be79e4c9486ec9001c66d92874f0e0f7",
+      "file": "school-candidate-statements.html",
+      "bytes": 17370
+    },
+    {
+      "name": "clean-elections",
+      "url": "https://www.azcleanelections.gov/november-3-2026/pima",
+      "retrievedAt": "2026-11-03T05:22:47.346686+00:00",
+      "finalUrl": "https://www.azcleanelections.gov/november-3-2026/pima",
+      "status": 200,
+      "rawHash": "905bc860e9a95b5fc32849e9ca44d0cd75499ba6b9ceb0cbf8969ceec9ae5a3c",
+      "file": "clean-elections.html",
+      "bytes": 28739
+    },
+    {
+      "name": "open-boundaries",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer?f=pjson",
+      "retrievedAt": "2026-11-03T05:24:18.999751+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer?f=pjson",
+      "status": 200,
+      "rawHash": "28413259bc8761cf5374ac798b296b3b7f82600ecffb0ae16428cb8c1c4c0bbc",
+      "file": "open-boundaries.html",
+      "bytes": 7414
+    },
+    {
+      "name": "open-community2",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer?f=pjson",
+      "retrievedAt": "2026-11-03T05:25:08.343612+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer?f=pjson",
+      "status": 200,
+      "rawHash": "6d975c5219f1aeb8b3dcc2a216e95b8d8d654ea53f51c5e07f6c305abeccdd65",
+      "file": "open-community2.html",
+      "bytes": 7767
+    },
+    {
+      "name": "open-justice-metadata",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12?f=pjson",
+      "retrievedAt": "2026-11-03T05:24:19.000892+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12?f=pjson",
+      "status": 200,
+      "rawHash": "240b1d8101a1d9f733e91d0bcd1c7fff8875039ceed116459c7d9ce39c887458",
+      "file": "open-justice-metadata.html",
+      "bytes": 8704
+    },
+    {
+      "name": "justice-layer-description",
+      "url": "https://gis.pima.gov/data/contents/metadet.cfm?name=dist_jp",
+      "retrievedAt": "2026-11-03T05:24:42.151097+00:00",
+      "finalUrl": "https://gis.pima.gov/data/contents/metadet.cfm?name=dist_jp",
+      "status": 200,
+      "rawHash": "55accebcee056d3c7aec886787138850a935e20b6dfe07ffea1d4e22e9d39185",
+      "file": "justice-layer-description.html",
+      "bytes": 5532
+    },
+    {
+      "name": "school-metadata",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14?f=pjson",
+      "retrievedAt": "2026-11-03T05:26:11.926728+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14?f=pjson",
+      "status": 200,
+      "rawHash": "02a4398e4c473e531e3309bba43a2a4d9b8a7e1e5fe83e2d2182393aa427edea",
+      "file": "school-metadata.html",
+      "bytes": 9476
+    },
+    {
+      "name": "jted-metadata",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/17?f=pjson",
+      "retrievedAt": "2026-11-03T05:26:11.927226+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/17?f=pjson",
+      "status": 200,
+      "rawHash": "040e1a67ee70b934400d9d6af083ac321d4aef19c982b990dfffd816b52aae50",
+      "file": "jted-metadata.html",
+      "bytes": 5763
+    },
+    {
+      "name": "open-justice-geometry",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:24:41.521267+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "50f6c35cf009dafe4aba705d95e9a95b0c3d39fb4b503e322f964aafad0ef8c5",
+      "file": "open-justice-geometry.html",
+      "bytes": 705144
+    },
+    {
+      "name": "open-supervisor-geometry",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/5/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:24:41.523282+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/5/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "50cfa2c124c5097658dbe7df387a01de465d3098f7f87c8a1b3bf0d66a7fe181",
+      "file": "open-supervisor-geometry.html",
+      "bytes": 767030
+    },
+    {
+      "name": "open-school-geometry",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:27:10.504770+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "d373de88e4f46225cda5a8b5b535d9ceab209752114f5f5eda968dacb182b349",
+      "file": "open-school-geometry.html",
+      "bytes": 830398
+    },
+    {
+      "name": "open-jted-geometry",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/17/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:27:10.505345+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/17/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "8587c5d61e7aea2f10fc05d5253b9ae7e8b2cc7b749627bd48105f6931f60613",
+      "file": "open-jted-geometry.html",
+      "bytes": 660796
+    },
+    {
+      "name": "open-fire-geometry",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/4/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:24:41.522427+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/4/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "12decaf2b4095c5744a3b9b8a4988d8c85cd8b060275d7e81476fa48d13e3b28",
+      "file": "open-fire-geometry.html",
+      "bytes": 1463467
+    },
+    {
+      "name": "open-municipal-geometry",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/11/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:24:41.524009+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/11/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "4fa4923396561bafcc8147aa0b6cbf2635ce4426c969320cab803becb009b22b",
+      "file": "open-municipal-geometry.html",
+      "bytes": 1637467
+    },
+    {
+      "name": "open-precinct-geometry",
+      "url": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/8/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:27:10.504037+00:00",
+      "finalUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/8/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "3e3d499f3416a49d573f97b2b62db90a8e77986dbf1a3a5628201f44f4884ea6",
+      "file": "open-precinct-geometry.html",
+      "bytes": 3283446
+    },
+    {
+      "name": "sample-231-1",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:34.307975+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AV1TjWZnPzrKUzTf351JX3QQXSaSlAio7DVxCLmyqsL8BndOZhRjLNZq%C3%89NqtCw54vMuMZy8mrgrExWxMeEdVJgw%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "fd54b673dcd4146477bf57b9019bb590ec5ad8b16c184bfcc4db74245c73676c",
+      "file": "sample-231-1.pdf",
+      "bytes": 2345119,
+      "textFile": "sample-231-1.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-43-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ARYHZ4VHTieftyMahuy0oaevHV8AWg3%C3%89OuYrSEs%C3%818MGYw3pWG8BTGtuHY8qUjFNoEY1I8POmtkL1%C3%899XzH5NDlJI%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:34.306558+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ARYHZ4VHTieftyMahuy0oaevHV8AWg3%C3%89OuYrSEs%C3%818MGYw3pWG8BTGtuHY8qUjFNoEY1I8POmtkL1%C3%899XzH5NDlJI%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "03af683860e5e134a85ca68b0367aba7350d2f3d1708b6b5654dd319932d22c0",
+      "file": "sample-43-0.pdf",
+      "bytes": 2443320,
+      "textFile": "sample-43-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-34-1",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AWAxFhxAvtSePeBUBD7K0bYjeV9V3MPXm8SbQwxOPXz4QeaQBEkcGAMXhH4Il2u7KsO0rwy69HGJvZSmzn%C3%814IQg%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:47.015982+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AWAxFhxAvtSePeBUBD7K0bYjeV9V3MPXm8SbQwxOPXz4QeaQBEkcGAMXhH4Il2u7KsO0rwy69HGJvZSmzn%C3%814IQg%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "00b17c0784816451822db568c3b489e8071783454e277d86e1205f25b8b8ef86",
+      "file": "sample-34-1.pdf",
+      "bytes": 2545198,
+      "textFile": "sample-34-1.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-220-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASM4pz79W1qeuq1XzVgD3RMYb1cMU00MRbvXq1G%C3%81NEocaDTBj9%C3%81NXj0nhhSIuBDSLdbz4jelhqpFBXNzOT6wOIk%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:34.309571+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASM4pz79W1qeuq1XzVgD3RMYb1cMU00MRbvXq1G%C3%81NEocaDTBj9%C3%81NXj0nhhSIuBDSLdbz4jelhqpFBXNzOT6wOIk%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "f04e4bb8afb52b61ed43a6f9b4cf1d3a50c2204b8b053b975edd573411c9f102",
+      "file": "sample-220-0.pdf",
+      "bytes": 2234643,
+      "textFile": "sample-220-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-2-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/Aacg1plmaEW5ElmsUEJI%C3%895wGqqLZcTkQcJt0fW%C3%81nHsVANKjQh3BQB84ZM56SwxbMc8wH0SdZcEghQFJFEIrGp1c%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:47.194470+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/Aacg1plmaEW5ElmsUEJI%C3%895wGqqLZcTkQcJt0fW%C3%81nHsVANKjQh3BQB84ZM56SwxbMc8wH0SdZcEghQFJFEIrGp1c%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "dca3b3244afb88929450019ae8887dd88c0b27118b29f417bb87390e98b0c0ef",
+      "file": "sample-2-0.pdf",
+      "bytes": 2153715,
+      "textFile": "sample-2-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-264-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASlVT1C3fiTVm57CFJnUJsE4dmXLV%C3%81%C3%89xRePLKFpJ1X1MtOhS3TKr%C3%89rDjxYkngP3Vz4vKmBrwdnQsWiqz7hPGyYs%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:47.053371+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASlVT1C3fiTVm57CFJnUJsE4dmXLV%C3%81%C3%89xRePLKFpJ1X1MtOhS3TKr%C3%89rDjxYkngP3Vz4vKmBrwdnQsWiqz7hPGyYs%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "c17f2cbff7157fbb3a2570dd33d18886ed6a57041f9371b7ac06fbee4a1e9bb6",
+      "file": "sample-264-0.pdf",
+      "bytes": 2434265,
+      "textFile": "sample-264-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-192-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AcRjkB9A1uhOpdc6hq3sBpGMhznU%C3%89451a005QoBG6C5eExKsuCiYNzU8g3jsOAkbbecjQeAoyaaUH5o0PNOqMO4%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:47.943336+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AcRjkB9A1uhOpdc6hq3sBpGMhznU%C3%89451a005QoBG6C5eExKsuCiYNzU8g3jsOAkbbecjQeAoyaaUH5o0PNOqMO4%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "caff77d0fd8c0ff5975c023ade3658ad4b1ed34cb6fd2fb552a300b02da4bc50",
+      "file": "sample-192-0.pdf",
+      "bytes": 2439889,
+      "textFile": "sample-192-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-165-3",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AZVypdg9x5E43Ps67qvLhtRqrfetD%C3%81vJXb5SQkJjcA6wtcrtrrIHXMO1dGs%C3%89poUeZVXGM%C3%89llf36gKVa1Oo%C3%89UMR0%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:59.804431+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AZVypdg9x5E43Ps67qvLhtRqrfetD%C3%81vJXb5SQkJjcA6wtcrtrrIHXMO1dGs%C3%89poUeZVXGM%C3%89llf36gKVa1Oo%C3%89UMR0%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "fa557ac8575bebf8efbd3b4aeca8bf5457116aac88858bdc5491b41fbb641e47",
+      "file": "sample-165-3.pdf",
+      "bytes": 2328724,
+      "textFile": "sample-165-3.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-179-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASoV7JHA18t1GdJJDGvPWSE4yMNe2AtnQIUnFLs2WirrFii8auk43ZBpzJrqxVM1MWpfsnX9mxslTJ54wAW3JN8%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:31:52.032984+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/ASoV7JHA18t1GdJJDGvPWSE4yMNe2AtnQIUnFLs2WirrFii8auk43ZBpzJrqxVM1MWpfsnX9mxslTJ54wAW3JN8%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "57d2acd20598a847935be3c72b9d6ff7bc441b879fba48ccb96d74f4aa407ea9",
+      "file": "sample-179-0.pdf",
+      "bytes": 2339802,
+      "textFile": "sample-179-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-228-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AdPGbUOtzJ8%C3%81vV3EOPi9VRuDQAYy6i2YTNRNV26hVsI3BR3CVxPlpJjwVFlIM1J6TC09uOiYhMobCXawn7TcI%C3%81o%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:31:52.033942+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AdPGbUOtzJ8%C3%81vV3EOPi9VRuDQAYy6i2YTNRNV26hVsI3BR3CVxPlpJjwVFlIM1J6TC09uOiYhMobCXawn7TcI%C3%81o%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "c2de29da9f66d77a924df98c20fc1e6f8c7c42dcbff57aacead4b8c11f981edd",
+      "file": "sample-228-0.pdf",
+      "bytes": 2318128,
+      "textFile": "sample-228-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-47-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AVk5A4EPuT3NP2SxW2ymzhTovpEkrMV21Zdehqo%C3%81WRCQN2VnIBTQw23uMa5nrTFgSDrrJCqmSVM8mLHhwYcdO40%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:32:49.415412+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AVk5A4EPuT3NP2SxW2ymzhTovpEkrMV21Zdehqo%C3%81WRCQN2VnIBTQw23uMa5nrTFgSDrrJCqmSVM8mLHhwYcdO40%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "50dc21d64907472885cabafefaf6bd393caf155d3e60630ff851a1f6f4e25cfb",
+      "file": "sample-47-0.pdf",
+      "bytes": 2275402,
+      "textFile": "sample-47-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    },
+    {
+      "name": "sample-102-0",
+      "url": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AZLrywOH3mM2l%C3%89YAw%C3%81a8iyTEpBgajZM%C3%81EW3Iae94KZs%C3%89HTYvFoe8TOWVDYOz9gfNFQegSs9vqB4%C3%81lzD2SyY1HOI%3D/?ViewerMode=PDF&ForceDownload=true",
+      "retrievedAt": "2026-11-03T05:28:47.752508+00:00",
+      "finalUrl": "https://onbase.pima.gov/PublicAccess/EL_NextGen_Single/api/Document/AZLrywOH3mM2l%C3%89YAw%C3%81a8iyTEpBgajZM%C3%81EW3Iae94KZs%C3%89HTYvFoe8TOWVDYOz9gfNFQegSs9vqB4%C3%81lzD2SyY1HOI%3D/?ViewerMode=PDF&ForceDownload=true",
+      "status": 200,
+      "rawHash": "4a2254bbf1c6d2d7cd2f7226ac891cdb4487ce985de22b54b9e9e0a2b11c8afb",
+      "file": "sample-102-0.pdf",
+      "bytes": 2250727,
+      "textFile": "sample-102-0.txt",
+      "textHash": "7060584c3e59f0b2f12f34aa0b40faadf4aa5790a0459f3319852bcd63262cbb"
+    }
+  ]
+}

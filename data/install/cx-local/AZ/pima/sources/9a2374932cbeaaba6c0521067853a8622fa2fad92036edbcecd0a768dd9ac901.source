@@ -1,0 +1,138 @@
+<!doctype html>
+
+<html>
+<head>   
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+   <title>Sample Ballot Locator - Elections (520) 724-6830 | Pima County Arizona</title>
+   <link rel="stylesheet" href="https://js.arcgis.com/3.22/esri/css/esri.css">
+   <link rel="stylesheet" type="text/css" href="css/electionsapp.css" />  
+   <script src="https://js.arcgis.com/3.22/"></script>
+   <script src="https://pimamaps.pima.gov/geoapps/elections/js/sampleballot.js"></script>
+   <script>
+       var xmlhttp = new XMLHttpRequest();
+       var url = "https://pimamaps.pima.gov/geoapps/elections/ElectionsTkns/prodgnsvctkn.txt";
+         xmlhttp.onreadystatechange = function() {
+           if (this.readyState == 4 && this.status ==  200) {
+             var myArr = JSON.parse(this.responseText);
+             tkn = myArr.tkn;              
+                                                          }
+                                             };
+         xmlhttp.open("GET", url, true);
+         xmlhttp.send();
+   </script>
+   <script>
+       var xmlhttp = new XMLHttpRequest();
+       var url = "https://pimamaps.pima.gov/geoapps/elections/ElectionsTkns/proddflttkn.txt";
+         xmlhttp.onreadystatechange = function() {
+           if (this.readyState == 4 && this.status ==  200) {
+             var myArr = JSON.parse(this.responseText);
+             tkn2 = myArr.tkn;              
+                                                          }
+                                             };
+         xmlhttp.open("GET", url, true);
+         xmlhttp.send();
+	</script>
+</head>
+
+<body style="padding: 0px 40px 10px 10px;">
+<h1 style="font-size: 140%;">Sample Ballot Locator</h1>
+
+<div style="font-family: 'Open Sans', sans-serif;">
+<p><strong>Enter the home address of registered voter and click submit button to identify precinct.</strong> You will get at least two sample ballots. One is the federal only ballot for people who have not provided the County Registrar of Voters adequate identification required by state law. The other is the ballot for your precinct. About 60 precincts have voting districts that bisect the precinct, mostly school districts. For instance, a precinct may have voters who reside in Tucson Unified School District and voters who reside in Catalina Foothills School District. To pick the correct sample ballot for you, you will need to know which jurisdiction you reside in. If you are uncertain, you'll need to check your registration on the <a href="https://www.recorder.pima.gov/VoterStats/VoterInfo" target="_blank"> County Recorder's website.</a></p>
+   <form name="input" onsubmit="javascript:initLocate(document.input.Address.value);return false;">
+      Address:
+      <input type="text" name="Address" value="" size="40" />
+      <input type="button" name="submit" value="Submit" onclick="initLocate(document.input.Address.value);" />
+   </form>
+<br />
+Sample Format:&nbsp;&nbsp;&nbsp;<em>201 N Stone Ave 85701</em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(The direction, suffix and zip code are optional)
+<br />
+<br />
+<hr style="margin-left: 0px" width="100%" size="1" />
+<br />
+</div>
+<table class="telerik-reTable-1">  
+   <tr id="CANDINSTRUCT" style="display:none" valign="top">
+      <td align="left" ><strong>Select the Correct Address From the List Below:</strong></td>     
+   </tr>
+   <tr id="CAND0" style="display:none" valign="top">
+      <td><span id="candidate0"></span></td>      
+   </tr>
+   <tr id="CAND1" style="display:none" valign="top">
+      <td><span id="candidate1"></span></td>    
+   </tr>   
+   <tr id="CAND2" style="display:none" valign="top">
+      <td><span id="candidate2"></span></td>     
+   </tr>
+   </table>
+<table class="telerik-reTable-1" id="MsgTable" border="0" cellspacing="0" cellpadding="5">
+   <tr id="NM" style="display:none" valign="top">
+      <td colspan="2" align="left" ><span style=""><strong>No Matched Address Found</strong></span> - Please Check Format and Spelling and Try Again </td>
+   </tr>
+   <tr id="Processing" style="display:none" valign="top">
+      <td align="left" > Processing Query:&nbsp;&nbsp;<img src="https://pimamaps.pima.gov/images/progressflowerblack.gif"></td>     
+   </tr>
+   </table>
+<table class="telerik-reTable-1" id="DataTable" style="display:none" border="0" cellspacing="0" cellpadding="5">
+<!--   <tr><td><p>Click on precinct number to show sample ballots</p></td></tr> -->
+   <tr id="MADDR" valign="top" style="display: none;">
+      <td colspan = "2" align="center" ><strong>Precinct For:&nbsp;&nbsp;<font size="+1"></font></strong><span id="Maddr"></span><br></td>
+   </tr>
+   <tr id="POL" style="display:none" valign="top">
+      <td colspan = "2" align="center" ><span id="polllocation"></span>Click on precinct number below to show sample ballots<br>
+      <span id="maplinkDiv"><a id="maplink" name="maplink" href="#" target="_blank">Map & Directions</a></span></td>
+   </tr>
+<!--   <tr id="PREC" style="display:none" valign="top">
+      <td align="left" ><strong>Voter Precinct:</strong></td>
+      <td align="left" ><span id="precinct"></span><br></td>
+   </tr> -->
+      <tr id="PREC" style="display:none" valign="top">
+      <td align="left" ><strong>Voter Precinct:</strong></td>
+<!--  <td align="left" ><span id="precinct1"></span><br></td> -->
+      <td align="left" ><a id="oblink" target="_blank"><span id="precinct"></span></a></td>
+   </tr>
+   <tr id="SCH" style="display:none" valign="top">
+<!--      <td align="left" ><strong>School District:</strong></td>
+      <td><div id="schdist"></div></td> -->
+   </tr>
+   <tr id="FIRE" style="display:none" valign="top">
+<!--      <td align="left" ><strong>Fire Taxation District:</strong></td>
+      <td><div id="firedist"></div></td> -->
+   </tr>
+   <tr id="BOS" style="display:none" valign="top">
+<!--      <td align="left" ><strong>Supervisor District:</strong></td>
+      <td><div id="bosdist"></div></td> -->
+   </tr>
+   <tr id="CON" style="display:none" valign="top">
+<!--      <td align="left" ><strong>U.S. Congressional District:</strong></td>
+      <td><div id="condist"></div></td> -->
+   </tr>
+   <tr id="LEG" style="display:none" valign="top">
+<!--      <td align="left" ><strong>State Legislative District:</strong></td>
+      <td><div id="legdist"></div></td> -->
+   </tr>
+   <tr id="JP" style="display:none" valign="top">
+<!--      <td align="left" ><strong>Justice Precinct:</strong></td>
+      <td><div id="jpdist"></div></td> -->
+   </tr>
+   <tr id="PCC" style="display:none" valign="top">
+<!--      <td align="left" ><strong>Pima Community College Taxation District:</strong></td>
+      <td><div id="pccdist"></div></td> -->
+   </tr>
+   <tr id="JUR" style="display:none" valign="top">
+<!--      <td align="left" ><strong>Incorporated City, Town or Unincorporated Pima County:</strong></td>
+      <td><div id="juris"></div></td> -->
+   </tr>
+   <tr id="JTED" style="display:none" valign="top">
+<!--      <td align="left" ><strong>JTED District:</strong></td>
+      <td><div id="jteddist"></div></td> -->
+   </tr>
+</table>
+<br />
+<br />
+<hr id="dataMapLine" style="display:none" width="100%" size="1" />
+<br />
+<br />
+</body>
+</html>

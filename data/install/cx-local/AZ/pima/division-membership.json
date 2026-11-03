@@ -1,0 +1,308 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 1,
+    "geometryCoverage": "FULL_OFFICIAL_JUSTICE_PRECINCT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.521267+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":1,\"UNIT\":2,\"JPDIST\":\"2\",\"TOTAL_POP\":0,\"TOTAL__DEV\":0,\"TOTAL__DVP\":0,\"WHITE\":0,\"WHITE_P\":0,\"BLACK_AA\":0,\"BLACK_AA_P\":0,\"AM_INDIAN\":0,\"AM_INDIA_P\":0,\"ASIAN\":0,\"ASIAN_P\":0,\"HAWAIIAN\":0,\"HAWAIIAN_P\":0,\"OTHER\":0,\"OTHER_P\":0,\"AGE_18_AND\":0,\"AGE_18_A_P\":0,\"HISPANIC\":0,\"HISPANIC_P\":0,\"Shape.STArea()\":2050083099.5211554,\"Shape.STLength()\":336287.81369427481,\"GlobalID\":\"{971A821A-BC4C-4531-9AE9-49915CA53C2D}\",\"last_edited_user\":\"CENTRAL\\\\u129291 - \\\"CENTRAL\\\\U129291\\\"\",\"last_edited_date\":1712940666000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:1",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 2,
+    "geometryCoverage": "FULL_OFFICIAL_JUSTICE_PRECINCT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.521267+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":2,\"UNIT\":1,\"JPDIST\":\"1\",\"TOTAL_POP\":0,\"TOTAL__DEV\":0,\"TOTAL__DVP\":0,\"WHITE\":0,\"WHITE_P\":0,\"BLACK_AA\":0,\"BLACK_AA_P\":0,\"AM_INDIAN\":0,\"AM_INDIA_P\":0,\"ASIAN\":0,\"ASIAN_P\":0,\"HAWAIIAN\":0,\"HAWAIIAN_P\":0,\"OTHER\":0,\"OTHER_P\":0,\"AGE_18_AND\":0,\"AGE_18_A_P\":0,\"HISPANIC\":0,\"HISPANIC_P\":0,\"Shape.STArea()\":7993797024.1410723,\"Shape.STLength()\":632609.69111434883,\"GlobalID\":\"{C5BCF5DB-B65C-40E9-86EE-E0C8A3372691}\",\"last_edited_user\":\"CENTRAL\\\\u129291 - \\\"CENTRAL\\\\U129291\\\"\",\"last_edited_date\":1712938635000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:9",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 4,
+    "geometryCoverage": "FULL_OFFICIAL_JUSTICE_PRECINCT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.521267+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":4,\"UNIT\":9,\"JPDIST\":\"9\",\"TOTAL_POP\":0,\"TOTAL__DEV\":0,\"TOTAL__DVP\":0,\"WHITE\":0,\"WHITE_P\":0,\"BLACK_AA\":0,\"BLACK_AA_P\":0,\"AM_INDIAN\":0,\"AM_INDIA_P\":0,\"ASIAN\":0,\"ASIAN_P\":0,\"HAWAIIAN\":0,\"HAWAIIAN_P\":0,\"OTHER\":0,\"OTHER_P\":0,\"AGE_18_AND\":0,\"AGE_18_A_P\":0,\"HISPANIC\":0,\"HISPANIC_P\":0,\"Shape.STArea()\":4194837164.1653895,\"Shape.STLength()\":420647.37420387036,\"GlobalID\":\"{246A359A-9249-43D3-8FAB-49A1CBA3BE51}\",\"last_edited_user\":\"CENTRAL\\\\u129291 - \\\"CENTRAL\\\\U129291\\\"\",\"last_edited_date\":1712750638000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:6",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 6,
+    "geometryCoverage": "FULL_OFFICIAL_JUSTICE_PRECINCT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.521267+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":6,\"UNIT\":6,\"JPDIST\":\"6\",\"TOTAL_POP\":0,\"TOTAL__DEV\":0,\"TOTAL__DVP\":0,\"WHITE\":0,\"WHITE_P\":0,\"BLACK_AA\":0,\"BLACK_AA_P\":0,\"AM_INDIAN\":0,\"AM_INDIA_P\":0,\"ASIAN\":0,\"ASIAN_P\":0,\"HAWAIIAN\":0,\"HAWAIIAN_P\":0,\"OTHER\":0,\"OTHER_P\":0,\"AGE_18_AND\":0,\"AGE_18_A_P\":0,\"HISPANIC\":0,\"HISPANIC_P\":0,\"Shape.STArea()\":893133604.29959452,\"Shape.STLength()\":254428.80316185413,\"GlobalID\":\"{75D6D3CC-E86D-4206-993A-F5053FB5804E}\",\"last_edited_user\":\"CENTRAL\\\\u129291 - \\\"CENTRAL\\\\U129291\\\"\",\"last_edited_date\":1712853575000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:7",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 7,
+    "geometryCoverage": "FULL_OFFICIAL_JUSTICE_PRECINCT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.521267+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":7,\"UNIT\":7,\"JPDIST\":\"7\",\"TOTAL_POP\":0,\"TOTAL__DEV\":0,\"TOTAL__DVP\":0,\"WHITE\":0,\"WHITE_P\":0,\"BLACK_AA\":0,\"BLACK_AA_P\":0,\"AM_INDIAN\":0,\"AM_INDIA_P\":0,\"ASIAN\":0,\"ASIAN_P\":0,\"HAWAIIAN\":0,\"HAWAIIAN_P\":0,\"OTHER\":0,\"OTHER_P\":0,\"AGE_18_AND\":0,\"AGE_18_A_P\":0,\"HISPANIC\":0,\"HISPANIC_P\":0,\"Shape.STArea()\":42948794264.891312,\"Shape.STLength()\":1358074.8001935491,\"GlobalID\":\"{697C4967-330C-4262-9B76-D1F03A863ACA}\",\"last_edited_user\":\"CENTRAL\\\\u129291 - \\\"CENTRAL\\\\U129291\\\"\",\"last_edited_date\":1712940775000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:3",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 8,
+    "geometryCoverage": "FULL_OFFICIAL_JUSTICE_PRECINCT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.521267+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":8,\"UNIT\":3,\"JPDIST\":\"3\",\"TOTAL_POP\":0,\"TOTAL__DEV\":0,\"TOTAL__DVP\":0,\"WHITE\":0,\"WHITE_P\":0,\"BLACK_AA\":0,\"BLACK_AA_P\":0,\"AM_INDIAN\":0,\"AM_INDIA_P\":0,\"ASIAN\":0,\"ASIAN_P\":0,\"HAWAIIAN\":0,\"HAWAIIAN_P\":0,\"OTHER\":0,\"OTHER_P\":0,\"AGE_18_AND\":0,\"AGE_18_A_P\":0,\"HISPANIC\":0,\"HISPANIC_P\":0,\"Shape.STArea()\":147986526193.73398,\"Shape.STLength()\":2037851.1393427637,\"GlobalID\":\"{929B1587-B00B-4D70-B658-299EB08E3321}\",\"last_edited_user\":\"CENTRAL\\\\u129291 - \\\"CENTRAL\\\\U129291\\\"\",\"last_edited_date\":1648046452000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:8",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 9,
+    "geometryCoverage": "FULL_OFFICIAL_JUSTICE_PRECINCT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/12/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.521267+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":9,\"UNIT\":8,\"JPDIST\":\"8\",\"TOTAL_POP\":0,\"TOTAL__DEV\":0,\"TOTAL__DVP\":0,\"WHITE\":0,\"WHITE_P\":0,\"BLACK_AA\":0,\"BLACK_AA_P\":0,\"AM_INDIAN\":0,\"AM_INDIA_P\":0,\"ASIAN\":0,\"ASIAN_P\":0,\"HAWAIIAN\":0,\"HAWAIIAN_P\":0,\"OTHER\":0,\"OTHER_P\":0,\"AGE_18_AND\":0,\"AGE_18_A_P\":0,\"HISPANIC\":0,\"HISPANIC_P\":0,\"Shape.STArea()\":12982448307.043234,\"Shape.STLength()\":881883.78912322898,\"GlobalID\":\"{66FD2DA2-0890-4355-B834-AAE9E466B613}\",\"last_edited_user\":\"CENTRAL\\\\u129291 - \\\"CENTRAL\\\\U129291\\\"\",\"last_edited_date\":1712940448000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/county:pima/council_district:5",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 2,
+    "geometryCoverage": "FULL_OFFICIAL_SUPERVISOR_DISTRICT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/5/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.523282+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":2,\"DISTRICT\":5,\"NAME\":\"ANDRÉS CANO\",\"Shape.STArea()\":3895210949.1776624,\"Shape.STLength()\":521471.63105515094,\"GlobalID\":\"{A58DE22C-4F5A-4447-B16F-A30E02DA5E6C}\",\"last_edited_user\":\"U129291\",\"last_edited_date\":1744911652000,\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 2,
+    "geometryCoverage": "FULL_PUBLISHED_COUNTY_SCHOOL_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:27:10.504770+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":2,\"SDISTNAME\":\"AMPHITHEATER UNIFIED SCHOOL DISTRICT\",\"URL\":\"https://www.amphi.com/\",\"DISTNO\":10,\"JTED\":\"Y\",\"Shape.STArea()\":3061242114.0954347,\"Shape.STLength()\":340586.52720617934,\"GlobalID\":\"{9858787C-0DEC-444A-BA7D-7AB6FA121754}\",\"last_edited_user\":\"U147861\",\"last_edited_date\":1753811586000,\"created_user\":\"U157087\",\"created_date\":1726858722000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 4,
+    "geometryCoverage": "FULL_PUBLISHED_COUNTY_SCHOOL_FEATURE",
+    "geometryNormalization": "DERIVED_GEOS_MAKE_VALID_LINEWORK; RAW_OFFICIAL_SOURCE_PRESERVED",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:27:10.504770+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":4,\"SDISTNAME\":\"SAHUARITA UNIFIED SCHOOL DISTRICT\",\"URL\":\"http://www.susd30.us\",\"DISTNO\":30,\"JTED\":\"Y\",\"Shape.STArea()\":16999573000.729111,\"Shape.STLength()\":954752.81217512977,\"GlobalID\":\"{59ED9FA4-1C7A-457A-B152-FAFF74EA5FA9}\",\"last_edited_user\":\"U159592\",\"last_edited_date\":1757631826000,\"created_user\":\"U157087\",\"created_date\":1726870718000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 9,
+    "geometryCoverage": "FULL_PUBLISHED_COUNTY_SCHOOL_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:27:10.504770+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":9,\"SDISTNAME\":\"TANQUE VERDE UNIFIED SCHOOL DISTRICT\",\"URL\":\"http://www.tanqueverdeschools.org\",\"DISTNO\":13,\"JTED\":\"Y\",\"Shape.STArea()\":2156393848.757494,\"Shape.STLength()\":203262.59681904854,\"GlobalID\":\"{59169654-8D60-47BA-B778-F97FE525A05D}\",\"last_edited_user\":\"U147861\",\"last_edited_date\":1753392799000,\"created_user\":\"U157087\",\"created_date\":1726767693000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 15,
+    "geometryCoverage": "FULL_PUBLISHED_COUNTY_SCHOOL_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/14/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:27:10.504770+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":15,\"SDISTNAME\":\"TUCSON UNIFIED SCHOOL DISTRICT\",\"URL\":\"http://www.tusd1.org/\",\"DISTNO\":1,\"JTED\":\"Y\",\"Shape.STArea()\":6392565932.2223768,\"Shape.STLength()\":527590.5048863322,\"GlobalID\":\"{8BE1C213-0E3D-490C-8DFC-3BFD494D55D3}\",\"last_edited_user\":\"U147861\",\"last_edited_date\":1754951248000,\"created_user\":\"U157087\",\"created_date\":1726701233000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/special_district:pima_county_joint_technical_education_district/governing_board_district:2",
+    "sourceBackedIdentity": true,
+    "registryPresent": false,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "PRECISE_SOURCE_ID_MAPPING_PENDING",
+    "officialFeatureOBJECTID": 2,
+    "geometryCoverage": "FULL_PUBLISHED_COUNTY_JTED_GOVERNING_DISTRICT_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Community2/MapServer/17/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:27:10.505345+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":2,\"GOVERNBRD\":2,\"Shape.STArea()\":4676235711.220974,\"Shape.STLength()\":502456.24056447617}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/special_district:mescal_j6_fire_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 1,
+    "geometryCoverage": "PUBLISHED_COUNTY_SOURCE_FIRE_FEATURE; CROSS_COUNTY_COMPLETENESS_NOT_ASSERTED",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/4/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.522427+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":1,\"NAME\":\"MESCAL-J6\",\"PCUID\":0,\"WEBSITE\":\"http://www.mescalj6fd.com/\",\"Shape.STArea()\":172089769.51598477,\"Shape.STLength()\":82520.106536758671,\"GlobalID\":\"{1798087B-C073-45A2-A2A4-019DAD770429}\",\"last_edited_date\":1572354226000,\"last_edited_user\":\"CENTRAL\\\\U104660 - \\\"CENTRAL\\\\U104660\\\"\",\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/special_district:northwest_fire_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 5,
+    "geometryCoverage": "PUBLISHED_COUNTY_SOURCE_FIRE_FEATURE; CROSS_COUNTY_COMPLETENESS_NOT_ASSERTED",
+    "geometryNormalization": "DERIVED_GEOS_MAKE_VALID_LINEWORK; RAW_OFFICIAL_SOURCE_PRESERVED",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/4/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.522427+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":5,\"NAME\":\"NORTHWEST\",\"PCUID\":null,\"WEBSITE\":\"https://nwfdaz.gov/\",\"Shape.STArea()\":4481829079.698308,\"Shape.STLength()\":1781091.7803247874,\"GlobalID\":\"{91CEC580-1634-451A-9557-C90E5BCA7576}\",\"last_edited_date\":1791236304000,\"last_edited_user\":\"U120967\",\"created_user\":\"U120967\",\"created_date\":1790798794000}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/special_district:drexel_heights_fire_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 7,
+    "geometryCoverage": "PUBLISHED_COUNTY_SOURCE_FIRE_FEATURE; CROSS_COUNTY_COMPLETENESS_NOT_ASSERTED",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/4/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.522427+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":7,\"NAME\":\"DREXEL HEIGHTS\",\"PCUID\":null,\"WEBSITE\":\"https://www.drexelfire.org/\",\"Shape.STArea()\":1621871471.1425624,\"Shape.STLength()\":488516.49418916542,\"GlobalID\":\"{6FBCBDAC-AE55-4E8B-BFCC-851AFFCA5DB5}\",\"last_edited_date\":1765994438000,\"last_edited_user\":\"U120967\",\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/special_district:hidden_valley_fire_district",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 16,
+    "geometryCoverage": "PUBLISHED_COUNTY_SOURCE_FIRE_FEATURE; CROSS_COUNTY_COMPLETENESS_NOT_ASSERTED",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/4/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.522427+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":16,\"NAME\":\"HIDDEN VALLEY\",\"PCUID\":null,\"WEBSITE\":\"https://www.ruralmetrofire.com/pima-county-arizona/fire-districts-in-pima-county.html\",\"Shape.STArea()\":36137554.099617302,\"Shape.STLength()\":53238.49443107038,\"GlobalID\":\"{0093F7BF-A9DB-4AB4-9F61-A251945671FD}\",\"last_edited_date\":1572354393000,\"last_edited_user\":\"CENTRAL\\\\U104660 - \\\"CENTRAL\\\\U104660\\\"\",\"created_user\":null,\"created_date\":null}"
+    }
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:az/place:south_tucson",
+    "sourceBackedIdentity": true,
+    "registryPresent": true,
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "CANONICAL_REGISTRY_ID_PRESENT",
+    "officialFeatureOBJECTID": 6,
+    "geometryCoverage": "FULL_PUBLISHED_MUNICIPAL_FEATURE",
+    "geometryNormalization": "NONE_SOURCE_GEOMETRY_VALID",
+    "provenance": {
+      "sourceUrl": "https://gisdata.pima.gov/arcgis1/rest/services/GISOpenData/Boundaries/MapServer/11/query?where=1%3D1&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "Pima County GIS",
+      "collectedAt": "2026-11-03T05:24:41.524009+00:00",
+      "verifiedAt": "2026-11-03T05:40:13.492827+00:00",
+      "quote": "{\"OBJECTID\":6,\"NAME\":\"SOUTH TUCSON\",\"INCORP\":1,\"Shape.STArea()\":28553313.75063787,\"Shape.STLength()\":22136.248413157773,\"GlobalID\":\"{1915BEA7-F1DA-44C6-A232-72FA526F952E}\",\"last_edited_user\":\"CENTRAL\\\\u141330 - \\\"CENTRAL\\\\U141330\\\"\",\"last_edited_date\":1551095039000,\"created_user\":null,\"created_date\":null}"
+    }
+  }
+]

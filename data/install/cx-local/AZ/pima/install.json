@@ -1,0 +1,276 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "AZ",
+  "county": "Pima",
+  "populationRank": 44,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AZ",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-az-pima-2026-supervisor-5",
+      "title": "Pima County \u2014 Board of Supervisors, District 5",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "ballot-az-pima-general-2026-clerk-of-the-superior-court",
+      "title": "Clerk of the Superior Court",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-justice-1",
+      "title": "Pima County \u2014 Justice of the Peace, Precinct 1",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:1",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-justice-3",
+      "title": "Pima County \u2014 Justice of the Peace, Precinct 3",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:3",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-justice-6",
+      "title": "Pima County \u2014 Justice of the Peace, Precinct 6",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:6",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-justice-7",
+      "title": "Pima County \u2014 Justice of the Peace, Precinct 7",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:7",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-justice-8",
+      "title": "Pima County \u2014 Justice of the Peace, Precinct 8",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:8",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-constable-2",
+      "title": "Pima County \u2014 Constable, Justice Precinct 2",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:2",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-constable-3",
+      "title": "Pima County \u2014 Constable, Justice Precinct 3",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:3",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-constable-9",
+      "title": "Pima County \u2014 Constable, Justice Precinct 9",
+      "ocdId": "ocd-division/country:us/state:az/county:pima/justice_precinct:9",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-court-of-appeals-division-ii-brearcliffe-sean-retention",
+      "title": "Court of Appeals, Division II \u2014 BREARCLIFFE, SEAN \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-court-of-appeals-division-ii-kelly-michael-retention",
+      "title": "Court of Appeals, Division II \u2014 KELLY, MICHAEL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-court-of-appeals-division-ii-sklar-jeffrey-retention",
+      "title": "Court of Appeals, Division II \u2014 SKLAR, JEFFREY \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-2-goodwin-j-alan-retention",
+      "title": "Pima County Superior Court, Division 2 \u2014 GOODWIN, J. ALAN \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-4-bostwick-janet-calkins-retention",
+      "title": "Pima County Superior Court, Division 4 \u2014 BOSTWICK, JANET CALKINS \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-6-liwski-danelle-bennett-retention",
+      "title": "Pima County Superior Court, Division 6 \u2014 LIWSKI, DANELLE BENNETT \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-15-bensley-sandra-m-retention",
+      "title": "Pima County Superior Court, Division 15 \u2014 BENSLEY, SANDRA M. \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-17-woods-catherine-m-retention",
+      "title": "Pima County Superior Court, Division 17 \u2014 WOODS, CATHERINE M. \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-19-quigley-kathleen-a-retention",
+      "title": "Pima County Superior Court, Division 19 \u2014 QUIGLEY, KATHLEEN A. \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-20-san-angelo-laurie-b-retention",
+      "title": "Pima County Superior Court, Division 20 \u2014 SAN ANGELO, LAURIE B. \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-21-kuhn-cynthia-t-retention",
+      "title": "Pima County Superior Court, Division 21 \u2014 KUHN, CYNTHIA T. \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-22-bergin-jeffrey-t-retention",
+      "title": "Pima County Superior Court, Division 22 \u2014 BERGIN, JEFFREY T. \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "az-pima-general-2026-pima-county-superior-court-division-25-burnett-randi-retention",
+      "title": "Pima County Superior Court, Division 25 \u2014 BURNETT, RANDI \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "candidates": 1,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-tucson-school",
+      "title": "Tucson Unified School District No. 1 \u2014 Governing Board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "candidates": 5,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-amphi-school-four",
+      "title": "Amphitheater Unified School District No. 10 \u2014 Governing Board (four-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+      "candidates": 3,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-amphi-school-two",
+      "title": "Amphitheater Unified School District No. 10 \u2014 Governing Board (term expires December 31, 2028)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:amphitheater_unified_district",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-tanque-school",
+      "title": "Tanque Verde Unified School District No. 13 \u2014 Governing Board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+      "candidates": 3,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-sahuarita-school",
+      "title": "Sahuarita Unified School District No. 30 \u2014 Governing Board",
+      "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-jted-2",
+      "title": "Pima JTED \u2014 Governing Board, District 2",
+      "ocdId": "ocd-division/country:us/state:az/special_district:pima_county_joint_technical_education_district/governing_board_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-fire-hidden-valley",
+      "title": "Hidden Valley Fire District \u2014 Board Member",
+      "ocdId": "ocd-division/country:us/state:az/special_district:hidden_valley_fire_district",
+      "candidates": 2,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-fire-mescal-j6",
+      "title": "Mescal-J6 Fire District \u2014 Board Member",
+      "ocdId": "ocd-division/country:us/state:az/special_district:mescal_j6_fire_district",
+      "candidates": 6,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-fire-northwest",
+      "title": "Northwest Fire District \u2014 Board Member",
+      "ocdId": "ocd-division/country:us/state:az/special_district:northwest_fire_district",
+      "candidates": 3,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    },
+    {
+      "id": "cx-local-az-pima-2026-south-tucson",
+      "title": "City of South Tucson \u2014 Council Member (runoff)",
+      "ocdId": "ocd-division/country:us/state:az/place:south_tucson",
+      "candidates": 4,
+      "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+    }
+  ],
+  "operation": "Merge only these reviewed local fields into River latest AZ state. Preserve held identities and unrelated measures/analysis. Resolve precise missing districts, named write-in display status and the held write-in-only field before corresponding reader publication. No production publication performed.",
+  "resolvedHeldContests": [],
+  "coverage": {
+    "preparedContests": 33,
+    "preparedNamedChoices": 59,
+    "preparedCandidateElections": 20,
+    "preparedRetentionQuestions": 13,
+    "allLocalPrintedCandidateFieldsIncludingHeldWriteInOnly": 34,
+    "allLocalPreprintedNames": 59,
+    "declaredLocalWriteInNames": 9,
+    "writeInOnlyFieldsHeld": 1,
+    "newContests": 19,
+    "newNamedChoices": 45,
+    "refreshedHeldContests": 14,
+    "refreshedHeldChoices": 14,
+    "actualSampleWitnessPdfs": 11,
+    "actualSampleWitnessPages": 22,
+    "fullSampleStyles": 384,
+    "completePublicCatalogRecords": 649,
+    "fullStylePdfCensus": false,
+    "sourceCaptures": 41,
+    "geometryFeatures": 18,
+    "missingReaderDistrictIds": 9
+  },
+  "summary": "33 ready local fields / 59 preprinted named choices: 20 candidate elections plus 13 retained judicial retention questions. One additional Drexel Heights field has no preprinted names and three qualified write-ins, so it remains held. All nine local declared write-ins are preserved separately. Every prepared field is corroborated by native current official roster text and actual raster sample PDFs with explicitly labeled derivative OCR.",
+  "nextOwner": "River: latest-state merge, exact district registration/geometry integration, write-in status model, controlled publication and reader checks.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 41 captured sources and 92 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

@@ -1,0 +1,285 @@
+
+
+
+
+
+
+
+  
+Pima County - GIS Library Layer dist_jp: Justice Precincts
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+  
+ 
+    
+
+
+
+
+
+
+   
+
+GIS Library Contents - Metadata
+
+
+
+
+Justice Precincts
+
+
+
+
+
+
+
+
+
+
+
+    
+       
+ 
+      
+
+      
+
+
+        
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+    
+
+
+This metadata information is subject to our 
+disclaimer
+.
+Most metadata information here is maintained manually.  Some metadata fields may not be current. 
+All metadata is subject to errors inherent in a manual process. 
+
+ 
+
+
+
+
+
+
+
+
+ 
+
+
+Descriptive name
+Justice Precincts
+
+
+File name
+dist_jp
+
+
+Spatial domain
+Pima County
+
+
+Abstract
+dist_jp displays Justice Precincts in Pima County.  Justice Precincts define areas served by Justices of the Peace and Constables. 
+
+
+
+      
+
+  
+
+
+
+Known errors/qualifications
+Population and demographic data have not been added to the newest version of dist_jp.
+
+
+  
+
+
+
+
+
+Feature type
+polygon
+
+
+Feature count
+
+                         9 
+                 
+ 
+         
+
+Thumbnail Map
+
+  
+    
+dist_jp.pdf 
+  
+    (411,686  bytes, PDF created 07/08/2025 )
+        
+
+
+
+
+Projection
+NAD83 HPGN (
+Parameters
+)
+ 
+
+Rectification
+unknown
+
+
+
+
+Field/value metadata
+
+
+Field metadata
+
+
+
+
+
+
+Source organization
+PC ITD
+
+
+Source contact
+
+
+Source document or file name
+
+
+Source date
+20210820
+
+
+Source scale
+
+                 
+
+
+Source format
+Unknown
+	
+
+ 
+
+
+
+
+
+
+
+
+ 
+
+       
+ 
+Last edit/refresh date
+
+
+  2024-04-12 at 09:53 AM - Accuracy may vary.
+
+    																					  															 															 
+
+
+
+
+
+
+  
+
+
+
+
+
+
+Lineage
+This layer was originally called "Districts - Justice of the Peace" but the name was changed to the more correct "Justice Precincts" in 11/2007.
+20120918 - District boundary changed due to 2010 census data and redistricting effort.
+20220323 - Boundaries updated following Board of Supervisors action on 09/21/2021.
+20240104 - Boundaries updated following Board of Supervisors action (to adjust boundaries to follow consolidated voter precinct boundaries) on 12/19/2023.
+
+
+
+
+On maintenance?
+No
+
+
+Maintenance organization
+
+
+
+Maintenance description
+
+
+ 
+  
+On 
+ Pima County Geospatial Data Portal
+?
+  
+Yes
+  
+    
+ 
+
+
+
+
+
+
+See 
+Metadata Field Descriptions
+.
+
+
+
+ GIS Library Data Layer Metadata
+ search page.
+
+
+
+
+
+  
+
+
+
+
+
+
+

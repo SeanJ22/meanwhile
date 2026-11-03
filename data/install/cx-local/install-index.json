@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:48:04.924785+00:00",
+  "preparedAt": "2026-11-03T05:48:09.022932+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1046,6 +1046,41 @@
         "heldInputSha256": "2eb85dcc4ec5c16d976fe68d7cf9445885dd441b9bd36d469db361db1344a483",
         "retainedExactCommissionPolygons": 4
       }
+    },
+    {
+      "state": "AZ",
+      "county": "Pima",
+      "populationRank": 44,
+      "manifest": "AZ/pima/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 33,
+      "measureContests": 0,
+      "candidacies": 59,
+      "newContests": 19,
+      "refreshedContests": 14,
+      "sourceInputSha256": "d6cd56452d936f22ce20a3ffedeab7d7cd848df51fdd672319d88f5498bf3610",
+      "coverage": {
+        "preparedContests": 33,
+        "preparedNamedChoices": 59,
+        "preparedCandidateElections": 20,
+        "preparedRetentionQuestions": 13,
+        "allLocalPrintedCandidateFieldsIncludingHeldWriteInOnly": 34,
+        "allLocalPreprintedNames": 59,
+        "declaredLocalWriteInNames": 9,
+        "writeInOnlyFieldsHeld": 1,
+        "newContests": 19,
+        "newNamedChoices": 45,
+        "refreshedHeldContests": 14,
+        "refreshedHeldChoices": 14,
+        "actualSampleWitnessPdfs": 11,
+        "actualSampleWitnessPages": 22,
+        "fullSampleStyles": 384,
+        "completePublicCatalogRecords": 649,
+        "fullStylePdfCensus": false,
+        "sourceCaptures": 41,
+        "geometryFeatures": 18,
+        "missingReaderDistrictIds": 9
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1071,17 +1106,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 41,
-    "packetsPrepared": 42,
-    "candidateAndRetentionContests": 2443,
+    "countiesPrepared": 42,
+    "packetsPrepared": 43,
+    "candidateAndRetentionContests": 2476,
     "measureContests": 110,
-    "candidacyEntries": 5539,
-    "newContestEntriesAgainstCheckedInBaseline": 1993,
-    "distinctPreparedContestIds": 2532,
-    "distinctPreparedCandidateIds": 5478,
-    "distinctNewContestsAgainstCheckedInBaseline": 1982,
+    "candidacyEntries": 5598,
+    "newContestEntriesAgainstCheckedInBaseline": 2012,
+    "distinctPreparedContestIds": 2565,
+    "distinctPreparedCandidateIds": 5537,
+    "distinctNewContestsAgainstCheckedInBaseline": 2001,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 42
+    "distinctCountyHandoffs": 43
   },
   "remainingWork": [
     {

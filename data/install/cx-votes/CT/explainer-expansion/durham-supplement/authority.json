@@ -1,0 +1,63 @@
+{
+  "scope": "DurhamQuestion3new; Question1/2implementation-dateimprovements. CTcompleteinventory53;48nowprepared/explained,5remain.",
+  "officialSourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+  "officialCurrentLinkingPageUrl": "https://www.townofdurhamct.org/entities/elections",
+  "officialLinkingPagePath": "sources/482daadb5d5e4e65a483673cc3f5551de72daea8df6729304593b5552ee97660.html",
+  "officialLinkingPageSha256": "482daadb5d5e4e65a483673cc3f5551de72daea8df6729304593b5552ee97660",
+  "officialLinkingPageFormat": "ORIGINAL_HTML_BYTES",
+  "linkingPageCredentialScan": "Existing sanitizer scan found0confirmedcredentialsubstrings; original HTMLbytes unchanged.",
+  "publishedSourceLinks": [
+    {
+      "text": "Final Proposed Amendments to Town Charter",
+      "url": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164262/Final%20proposed%20amendments%20town%20charter%20for%20approval%20November%202026_BOS.pdf"
+    },
+    {
+      "text": "Charter Revision Questions Explanatory Text",
+      "url": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf"
+    }
+  ],
+  "censusGovernmentAuthority": {
+    "file": "data/reference/census_govt_units_2022.csv",
+    "sha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097",
+    "exactRow": {
+      "census_id_pid6": "101725",
+      "census_id_gidid": "07300400500000",
+      "unit_name": "TOWN OF DURHAM",
+      "gov_type": "TOWNSHIP",
+      "unit_type_raw": "3 - TOWNSHIP",
+      "function_name": "",
+      "title": "FIRST SELECTMAN",
+      "address1": "PO BOX 428",
+      "address2": "",
+      "city": "DURHAM",
+      "state": "CT",
+      "zip": "06422",
+      "zip4": "0428",
+      "web_address": "http://www.townofdurhamct.org/",
+      "population": "7231",
+      "population_year": "2021",
+      "enrollment": "",
+      "enrollment_year": "",
+      "school_level_description": "",
+      "fips_state": "09",
+      "fips_county": "130",
+      "fips_place": "20810",
+      "county_area_name": "LOWER CONNECTICUT RIVER VALLEY",
+      "is_active": "Y",
+      "source_sheet": "General Purpose"
+    },
+    "officialCensusSource": "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP",
+    "basis": "NativeCensusgovernment-directoryrecordattestsexactDurhamgovernmentID101725andtownofdurhamct.orgdomain; officialtownpagepublishesexactS3documentURLs. No fabricated.govHTMLlink."
+  },
+  "sotsAuthorityExistingPath": "data/install/cx-votes/CT/explainer-expansion/authority.json",
+  "documentAuthorityQuote": "This explanatory text has been prepared by the Town Clerk pursuant to Connecticut General Statutes §9-369b(a). It is not intended to advocate for either the approval or disapproval of the referendum questions.",
+  "electionDate": "November3,2026",
+  "semanticNotes": [
+    "Question1boardexpansionandQuestion2appointmentconversionareseparatevotes; Question3doesnotadoptthosechanges.",
+    "40,000TownMeetingthresholdstrictlyexceeded;10%netbudgetreferendumthresholdinclusive.",
+    "Publicemergencydeclaration5days; emergencyordinances90days. Distinctapprovalandexpiry rulespreserved.",
+    "No inferreddefinitionofnetbudgetorhouseholdtaxestimate; currentclerkexampleusedverbatim.",
+    "Road/property/easementsummary doesnotfalselyclaimuniversalTownMeetingapproval; chartercontainsqualifiedexceptions.",
+    "GeneralotherrevisionseffectiveJan1,2027underexplicittransitionclause9.6, whichcontrols inconsistentgeneralclauses."
+  ]
+}

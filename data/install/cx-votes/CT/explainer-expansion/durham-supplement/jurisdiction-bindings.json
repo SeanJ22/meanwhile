@@ -1,0 +1,71 @@
+[
+  {
+    "contestId": "ct-sots-2026:durham-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+    "registeredDivisionIndex": 52,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "cousub",
+      "0913020810",
+      "Durham town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "101725",
+      "ct:city:town-of-durham",
+      "TOWN OF DURHAM",
+      "TOWNSHIP",
+      52,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "ExactexistingTOWNOFDURHAMgovernmentprimaryCensuscounty-subdivisionbinding."
+  },
+  {
+    "contestId": "ct-sots-2026:durham-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+    "registeredDivisionIndex": 52,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "cousub",
+      "0913020810",
+      "Durham town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "101725",
+      "ct:city:town-of-durham",
+      "TOWN OF DURHAM",
+      "TOWNSHIP",
+      52,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "ExactexistingTOWNOFDURHAMgovernmentprimaryCensuscounty-subdivisionbinding."
+  },
+  {
+    "contestId": "ct-sots-2026:durham-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+    "registeredDivisionIndex": 52,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "cousub",
+      "0913020810",
+      "Durham town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "101725",
+      "ct:city:town-of-durham",
+      "TOWN OF DURHAM",
+      "TOWNSHIP",
+      52,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "ExactexistingTOWNOFDURHAMgovernmentprimaryCensuscounty-subdivisionbinding."
+  }
+]

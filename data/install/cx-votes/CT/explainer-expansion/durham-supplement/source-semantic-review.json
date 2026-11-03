@@ -1,0 +1,18 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "378d22ba64fe812c35e8bef0288c8469e88f4f7b7ee9a33b5954d452c2d5fe88",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Completeofficialclerkexplanationread; all3fullquestionsandstatementsretained. NewQ3explicitlyexcludesseparateQ1/Q2proposals.",
+    "Q1/Q2exactexistingquestions, fullcontestobjects andofficialquestionbookmarksunchanged; implementationdates/transitionconditionssupplied.",
+    "Complete66pageofficialmarkedproposalcaptured; nativecolorfilterretainsblack/blue, excludestrackeddeletions; specificfiscal/emergency/transitionpages visuallycheckedaslisted, notanallpagesvisualclaim.",
+    "10%inclusiveand40,000strictthresholds, currentexample, fundinglimits, payapprovalconditions, majorityvotes,5daydeclarationsand90dayordinancespreserved.",
+    "Property/roadsummarydoesnotdenycharterexceptions; BoardofFinance, assessorandappealindependenceconditionsrepresentedwithoutclaimingunchangedrulesallnew.",
+    "NativeCensusexact101725government/domain+currenttownlinkingHTMLproveS3publisherauthority; existingcredentialsanitizerfinds0confirmedcredentialsubstrings. No fabricated.govHTMLlink.",
+    "OriginalPDFbytehashes andrepresentationtruthful, perfieldquotesexact, registeredjurisdiction andexactheldidentity, normalmerge/checkAuthority/manualcandidate/reader3allpass.",
+    "Fullcandidate-retentionreplayremainsrootowned."
+  ]
+}

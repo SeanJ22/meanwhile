@@ -1,0 +1,55 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 2,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 5
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:durham-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:durham-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:durham-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original official Durham clerk PDF bytes, complete native proposed-charter PDF bytes, full original text and labeled deterministic accepted-color text. Current town HTML links exact S3 source documents; native Census directory attests exact town government/domain. No false .gov-host claim.",
+  "reviewedScratchPacketSha256": "378d22ba64fe812c35e8bef0288c8469e88f4f7b7ee9a33b5954d452c2d5fe88",
+  "canonicalInputSha256": "93f7ea5f840f287202cdd7273e763b8007ff13d0716ab261916ed8b02d7a53c3",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": "Merge after prior CT supplements; improve existing Durham Questions1/2 while preserving their exact full contest objects/bookmarks and add Question3.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

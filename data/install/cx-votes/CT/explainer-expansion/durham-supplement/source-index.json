@@ -1,0 +1,71 @@
+{
+  "packetPath": "ballot-input/ct.json",
+  "sources": [
+    {
+      "requestedUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+      "finalUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+      "rawPath": "sources/1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c.source",
+      "rawHash": "1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c",
+      "textPath": "sources/9e81f2779108b3da9ef7c02f2f79859e1159c1fdda95b20cd2fcf81258f2b972.txt",
+      "textSha256": "9e81f2779108b3da9ef7c02f2f79859e1159c1fdda95b20cd2fcf81258f2b972",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:durham-question-1"
+      ]
+    },
+    {
+      "requestedUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+      "finalUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+      "rawPath": "sources/1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c.source",
+      "rawHash": "1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c",
+      "textPath": "sources/497d3a21b70574c5e7934b1c92f3beb7faaefd7bb22f8b4c621f5d67b422a1fb.txt",
+      "textSha256": "497d3a21b70574c5e7934b1c92f3beb7faaefd7bb22f8b4c621f5d67b422a1fb",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:durham-question-2"
+      ]
+    },
+    {
+      "requestedUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+      "finalUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+      "rawPath": "sources/1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c.source",
+      "rawHash": "1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c",
+      "textPath": "sources/3ba7694b14632bf115fdbdf5533673e6ada5a9660d7777810ad750b80d10fa5e.txt",
+      "textSha256": "3ba7694b14632bf115fdbdf5533673e6ada5a9660d7777810ad750b80d10fa5e",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:durham-question-3"
+      ]
+    },
+    {
+      "requestedUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164262/Final%20proposed%20amendments%20town%20charter%20for%20approval%20November%202026_BOS.pdf",
+      "finalUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164262/Final%20proposed%20amendments%20town%20charter%20for%20approval%20November%202026_BOS.pdf",
+      "rawPath": "sources/0ccdefe3af03d4cc0d3050c4a72ca8e588b65e76e423775efc0ace58a0263906.source",
+      "rawHash": "0ccdefe3af03d4cc0d3050c4a72ca8e588b65e76e423775efc0ace58a0263906",
+      "textPath": "sources/6d3b3e02e7c2ed1fc62fc8fa9b93ac15cd78bee01534c835274c68bb563058af.txt",
+      "textSha256": "6d3b3e02e7c2ed1fc62fc8fa9b93ac15cd78bee01534c835274c68bb563058af",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ct-sots-2026:durham-question-1",
+        "ct-sots-2026:durham-question-2",
+        "ct-sots-2026:durham-question-3"
+      ]
+    },
+    {
+      "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+      "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+      "rawPath": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+      "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+      "textPath": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+      "textSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+      "sourceFormat": "ORIGINAL_JSON_BYTES",
+      "contestIds": [
+        "ct-sots-2026:durham-question-1",
+        "ct-sots-2026:durham-question-2"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

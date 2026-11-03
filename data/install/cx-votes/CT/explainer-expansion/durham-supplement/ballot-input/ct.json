@@ -1,0 +1,183 @@
+{
+  "ballots": {
+    "CT:ct-2026-general": {
+      "election": {
+        "id": "ct-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CT"
+      },
+      "contests": [
+        {
+          "id": "ct-sots-2026:durham-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+          "divisionVintage": "2023",
+          "title": "Durham — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:durham-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+          "divisionVintage": "2023",
+          "title": "Durham — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:durham-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+          "divisionVintage": "2023",
+          "title": "Durham Question 3 — other town charter revisions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+          "provenance": {
+            "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+            "sourceOrg": "Durham Town Clerk — official neutral November 3 charter explanation",
+            "collectedAt": "2026-11-03T06:16:28.323544+00:00",
+            "verifiedAt": "2026-11-03T06:26:48.560423+00:00",
+            "quote": "Shall additional provisions of the Durham Town Charter be amended other than as provided in questions #1 and #2 above, all as recommended in the final report of the Charter Revision Commission dated August 5, 2026, as subsequently amended by the Board of Selectmen on August 24, 2026, and as on file with the Durham Town Clerk?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ct-sots-2026:durham-question-1#question",
+          "contestId": "ct-sots-2026:durham-question-1",
+          "questionText": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?",
+          "officialStatement": "On the November 3, 2026 election ballot, there will be three referendum questions\nregarding the Charter of the Town of Durham. This explanatory text has been prepared\nby the Town Clerk pursuant to Connecticut General Statutes §9-369b(a). It is not\nintended to advocate for either the approval or disapproval of the referendum questions.\nVoters are also urged to read the proposed Charter revision as published on the town\nwebsite and in the Middletown Press in full prior to casting their ballot so that they may\ndraw their own conclusions.\n\nGeneral Explanation\n\nThe Charter of the Town of Durham defines the form of government for the town and\nsets out the roles and responsibilities of most elected and appointed town officials. The\nCharter also governs the framework for how town government is conducted, such as the\nprocess for adopting ordinances and the town budget, and the identification and\noperation of various town agencies. Periodically, communities update their charters to\nreflect changes in the way the business of government is conducted, to reassign roles\nand responsibilities or to clarify certain provisions. This process, called charter revision,\nmay result in minor technical and administrative changes, as well as substantive\nchanges to the structure of local government.\n\nOn July 21, 2025, the Board of Selectmen voted to appoint a Charter Revision\nCommission to consider and report on amendments to the Charter of the Town of\nDurham, according to the process set forth by the Connecticut General Statutes. The\nexisting Charter was most recently revised in 2006. The proposed Charter is the\ncompilation of the proposed amendments to the Charter approved by the Charter\nRevision Commission and the Board of Selectmen during this process. The Board of\nSelectmen, on August 24, 2026, rejected certain proposed revisions and, on September\n2, 2026, voted to have the proposed Charter submitted to the voters of the Town of\nDurham in three separate questions on the November 3, 2026 ballot.\n\nThe revised Charter, in Sections 2.1, 4.1 and 9.5, proposes to increase the\nnumber of members of the Board of Selectmen from three to five – a First Selectman\nand four other members of the Board of Selectmen. The additional members would be\nelected at the next municipal election to be held in November 2027.",
+          "officialNumber": "1",
+          "provenance": {
+            "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+            "sourceOrg": "Durham Town Clerk — official neutral November 3 charter explanation",
+            "collectedAt": "2026-11-03T06:16:28.323544+00:00",
+            "verifiedAt": "2026-11-03T06:26:48.560423+00:00",
+            "quote": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:durham-question-2#question",
+          "contestId": "ct-sots-2026:durham-question-2",
+          "questionText": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?",
+          "officialStatement": "On the November 3, 2026 election ballot, there will be three referendum questions\nregarding the Charter of the Town of Durham. This explanatory text has been prepared\nby the Town Clerk pursuant to Connecticut General Statutes §9-369b(a). It is not\nintended to advocate for either the approval or disapproval of the referendum questions.\nVoters are also urged to read the proposed Charter revision as published on the town\nwebsite and in the Middletown Press in full prior to casting their ballot so that they may\ndraw their own conclusions.\n\nGeneral Explanation\n\nThe Charter of the Town of Durham defines the form of government for the town and\nsets out the roles and responsibilities of most elected and appointed town officials. The\nCharter also governs the framework for how town government is conducted, such as the\nprocess for adopting ordinances and the town budget, and the identification and\noperation of various town agencies. Periodically, communities update their charters to\nreflect changes in the way the business of government is conducted, to reassign roles\nand responsibilities or to clarify certain provisions. This process, called charter revision,\nmay result in minor technical and administrative changes, as well as substantive\nchanges to the structure of local government.\n\nOn July 21, 2025, the Board of Selectmen voted to appoint a Charter Revision\nCommission to consider and report on amendments to the Charter of the Town of\nDurham, according to the process set forth by the Connecticut General Statutes. The\nexisting Charter was most recently revised in 2006. The proposed Charter is the\ncompilation of the proposed amendments to the Charter approved by the Charter\nRevision Commission and the Board of Selectmen during this process. The Board of\nSelectmen, on August 24, 2026, rejected certain proposed revisions and, on September\n2, 2026, voted to have the proposed Charter submitted to the voters of the Town of\nDurham in three separate questions on the November 3, 2026 ballot.\n\nCurrently, the Town Clerk and the Tax Collector are elected by the voters for four-\nyear terms at the biennial municipal elections. The revised Charter, in Sections 2.1, 5.4,\nand 9.4 propose to change these positions to be appointed by the First Selectman. This\nchange would take effect at the end of the current term of office for those positions,\nwhich is December 2027",
+          "officialNumber": "2",
+          "provenance": {
+            "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+            "sourceOrg": "Durham Town Clerk — official neutral November 3 charter explanation",
+            "collectedAt": "2026-11-03T06:16:28.323544+00:00",
+            "verifiedAt": "2026-11-03T06:26:48.560423+00:00",
+            "quote": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:durham-question-3#question",
+          "contestId": "ct-sots-2026:durham-question-3",
+          "questionText": "Shall additional provisions of the Durham Town Charter be amended other than as provided in questions #1 and #2 above, all as recommended in the final report of the Charter Revision Commission dated August 5, 2026, as subsequently amended by the Board of Selectmen on August 24, 2026, and as on file with the Durham Town Clerk?",
+          "officialStatement": "On the November 3, 2026 election ballot, there will be three referendum questions\nregarding the Charter of the Town of Durham. This explanatory text has been prepared\nby the Town Clerk pursuant to Connecticut General Statutes §9-369b(a). It is not\nintended to advocate for either the approval or disapproval of the referendum questions.\nVoters are also urged to read the proposed Charter revision as published on the town\nwebsite and in the Middletown Press in full prior to casting their ballot so that they may\ndraw their own conclusions.\n\nGeneral Explanation\n\nThe Charter of the Town of Durham defines the form of government for the town and\nsets out the roles and responsibilities of most elected and appointed town officials. The\nCharter also governs the framework for how town government is conducted, such as the\nprocess for adopting ordinances and the town budget, and the identification and\noperation of various town agencies. Periodically, communities update their charters to\nreflect changes in the way the business of government is conducted, to reassign roles\nand responsibilities or to clarify certain provisions. This process, called charter revision,\nmay result in minor technical and administrative changes, as well as substantive\nchanges to the structure of local government.\n\nOn July 21, 2025, the Board of Selectmen voted to appoint a Charter Revision\nCommission to consider and report on amendments to the Charter of the Town of\nDurham, according to the process set forth by the Connecticut General Statutes. The\nexisting Charter was most recently revised in 2006. The proposed Charter is the\ncompilation of the proposed amendments to the Charter approved by the Charter\nRevision Commission and the Board of Selectmen during this process. The Board of\nSelectmen, on August 24, 2026, rejected certain proposed revisions and, on September\n2, 2026, voted to have the proposed Charter submitted to the voters of the Town of\nDurham in three separate questions on the November 3, 2026 ballot.\n\nIn addition to the revisions proposed in Questions 1 and 2, the Charter Revision\nCommission has recommended a number of other changes, many of which are stylistic\nor grammatical, and others of which are substantive.\n\n       Listed below are some of the substantive revisions that are proposed. Please\nnote that this list is not exhaustive and the actual document should be consulted by the\nvoters.\n\n   •   2.9 – Compensation of town officials and employees may be adjusted as\n       determined by the Board of Selectmen to be in the town’s best interests, subject\n       to budgetary limitations\n   •   3.1.4 – Notice and warning requirements for town meetings have been expanded\n       and modernized\n   •   3.2.1 – Detailed Town meeting procedures have been proposed\n   •   3.4 – Provisions have been proposed to establish a process for emergency\n       appropriations and for the declaration of a public emergency\n   •   3.5.1 – Proposed revision allows for the amendment or repeal of ordinances\n       upon petition of 100 electors, in addition to existing provisions for the adoption of\n       ordinances\n\n   •   3.5.3 – Provisions have been proposed to establish a process for adoption of and\n       limitations on emergency ordinances\n   •   3.6 – Detailed provisions have been proposed for the sale, purchase or\n       disposition of town-owned real estate\n   •   3.7 – Provisions have been proposed for granting or acceptance of easements,\n       rights of way and temporary construction access\n   •   3.8 – Provisions have been proposed for acceptance of private roads and road\n       discontinuance procedures\n   •   3.9 – The threshold requirement for referendum approval of a special\n       appropriation has been proposed to be amended from $100,000 to 10% of the\n       Town’s net budget. For context, for the 2026-2027 budget, 10% of the Town’s net\n       budget is $523,534.40.\n   •   5.1.9 – Detailed provisions have been proposed for special appropriations and\n       the limit of such appropriations not requiring town meeting approval has been\n       proposed to increase from $20,000 to $40,000\n   •   5.2 – Additional criteria have been proposed for qualifications and provision of\n       assessment services\n   •   5.3 – Statutory requirements for the Board of Assessment Appeals have been\n       detailed in the proposed Charter\n   •   5.5 and 5.6 – Proposed revisions clarify the respective duties of the Town\n       Treasurer and the Finance Director\n   •   Chapter 6 – the descriptions and duties of the various officers, boards and\n       commissions are proposed to be updated to reflect changes in the statutes and\n       procedures since the adoption of the current Charter and to more closely align\n       duties and functions with statutory powers and requirements\n   •   7.3 – the proposed revision calls for the Board of Selectmen to consider whether\n       a charter revision would be appropriate at least once every ten years\n   •   7.6 – proposes to add provisions permitting remote and hybrid board and\n       commission meetings in accordance with state law\n   •   7.8 – proposes to establish clearer ownership rights and privileges with respect\n       to town assets and property\n   •   Chapter 8 – the various public safety functions and providers are consolidated\n       into this one section\n   •   Chapter 9 – proposes the transition provisions and effective dates for the Charter\n       revisions\n\nA majority vote on each question will determine whether the proposed Charter is\napproved or not.\n\nCopies of the current Charter, the proposed Charter and a document comparing the\ncurrent Charter and the proposed Charter are available in the office of the Town Clerk\nand on the Town of Durham website at www.townofdurhamct.org.",
+          "officialNumber": "3",
+          "provenance": {
+            "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+            "sourceOrg": "Durham Town Clerk — official neutral November 3 charter explanation",
+            "collectedAt": "2026-11-03T06:16:28.323544+00:00",
+            "verifiedAt": "2026-11-03T06:26:48.560423+00:00",
+            "quote": "Shall additional provisions of the Durham Town Charter be amended other than as provided in questions #1 and #2 above, all as recommended in the final report of the Charter Revision Commission dated August 5, 2026, as subsequently amended by the Board of Selectmen on August 24, 2026, and as on file with the Durham Town Clerk?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ct-sots-2026:durham-question-1",
+          "whatItDoes": "Expands Durham’s Board of Selectmen from 3 to 5 members: the First Selectman and 4 other selectmen. The 2 additional members would be elected at the next municipal election in November 2027; the existing 3-member board would continue until then. Their initial terms could be adjusted to establish the staggered election cycle.",
+          "yesMeans": "Approve expanding the board to 5 members at the November 2027 municipal election.",
+          "noMeans": "Reject the expansion and retain the 3-member Board of Selectmen.",
+          "parts": [],
+          "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+          "sourceHash": "1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:26:48.560423+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:durham-question-2",
+          "whatItDoes": "Changes the town clerk and tax collector from offices elected by voters for 4-year terms to positions appointed by the First Selectman. The change would take effect when the current elected terms end in December 2027; incumbents would serve the rest of those terms unless they resign or otherwise leave office earlier.",
+          "yesMeans": "Approve First Selectman appointments for town clerk and tax collector after the current elected terms end in December 2027.",
+          "noMeans": "Reject the change and retain elected town clerk and tax collector offices.",
+          "parts": [],
+          "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+          "sourceHash": "1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:26:48.560423+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:durham-question-3",
+          "whatItDoes": "Adopts Durham’s other charter revisions, separate from the board expansion and appointed-officer questions. These other revisions would take effect January 1, 2027. The special-appropriation or borrowing amount requiring a referendum would change from $100,000 to 10% or more of the town’s net budget; acquiring or taking property by eminent domain would also require a referendum. The clerk gives a 2026–2027 example of $523,534.40 for the 10% threshold; the dollar amount would vary with the net budget. The amount above which special appropriations need Town Meeting approval would rise from $20,000 to $40,000. Such special appropriations would need Finance Board recommendation, cover unanticipated or nonrecurring expenses, use only surplus revenue or an approved contingency or reserve fund, and could not fund ongoing operations or exceed legal budget limits. Between annual budgets, the Selectmen could adjust officials’ or employees’ pay with Finance Board approval limited to financial feasibility, within lawful appropriation rules and the town’s best interests; changes must be made publicly and recorded by both boards. It updates Town Meeting notices, voting and procedures; 100 qualified electors could petition to adopt, amend, or repeal an ordinance, with a meeting within 21 days after a valid petition and majority approval required. For an emergency threatening life, health, safety, property or essential government functions, the First Selectman could declare an emergency that ends after 5 days unless the Selectmen end it earlier or extend it; emergency spending would require the First Selectman’s recommendation and majority Selectmen approval. Emergency ordinances would require a majority Selectmen vote, a statement of the emergency in the meeting notice, and prompt publication; they expire after 90 days unless adopted through the regular process. They could not amend the charter, authorize long-term debt, impose permanent fees, taxes or land-use rules, override state law, or infringe federal or state constitutional rights. It sets procedures for town real-estate transactions, easements, access agreements, and accepting or discontinuing roads, with approval, public-review and recordkeeping requirements subject to the charter’s exceptions. It clarifies treasurer and finance-director duties, financial controls and funding requirements for contracts, updates assessor qualifications and shared-assessment arrangements, and details assessment-appeal board independence, training and conflict-of-interest rules. It also updates other offices and boards, consolidates public-safety provisions, permits lawful remote or hybrid public meetings, and clarifies town ownership and control of assets while preserving state-law, charter and ordinance exceptions and accepted donors’ intentions. Selectmen would consider whether charter revision is appropriate at least every 10 years; the package also updates wording and transition procedures.",
+          "yesMeans": "Approve the other charter revision package, with its general January 1, 2027 effective date; Questions 1 and 2 are decided separately.",
+          "noMeans": "Reject this other charter revision package; Questions 1 and 2 are decided separately.",
+          "parts": [],
+          "sourceUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+          "sourceHash": "1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:26:48.560423+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:26:48.560423+00:00",
+    "reviewedBy": "CX-VOTES official Durham clerk, complete proposed charter and neutral explanations",
+    "sources": [
+      {
+        "requestedUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+        "finalUrl": "https://municipal-documents.s3.amazonaws.com/uploads/durham-ct/elections/documents/notices/164261/Charter%20Revision%20Questions%20Explanatory%20Text.pdf",
+        "httpStatus": 200,
+        "rawHash": "1eb9ca3d532f60817298dcf4bbe537cb9dc824492f1cf708b1b1bf6bf6dede3c",
+        "retrievedAt": "2026-11-03T06:16:28.323544+00:00",
+        "publisher": "Durham Town Clerk; document directly linked by official Durham elections page",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "CompleteoriginalofficialclerkPDF, explicitlyNovember3,2026; fullthreequestionsandtheirneutralexplanationsretained. Officialtownpublisherattestedby nativeCensusCSVexactgovernmentID101725/domain anddirectcurrentofficialelectionpagelinks tothese exactS3URLs. Fullproposedcharterretainedsupplementally; notclaimedgovernment.govdomain."
+      },
+      {
+        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "httpStatus": 200,
+        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+        "retrievedAt": "2026-11-03T03:44:14.462291+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current official November 3, 2026 referendum inventory retrieved successfully. Original response bytes and exact questions retained. 42 newly sourced question/neutral explainer records prepared; all missing jurisdictions or incorporated omnibus text remain explicit separate gaps. No candidate or polling-place facts added. Independent semantic peer review remains pending."
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "ri-scituate-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-0c22-08df1e27bdfe",
+    "sourceTitle": "Scituate: 6. MOTIONS AT THE ANNUAL FINANCIAL TOWN MEETING",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3001.pdf",
+    "sourceFile": "../../official-samples/sources/59d7d22fe6e32f553e7833da11ba27225e263d994879c241bda7f398f320a1f1.pdf",
+    "sourceSha256": "59d7d22fe6e32f553e7833da11ba27225e263d994879c241bda7f398f320a1f1",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/59d7d22fe6e32f553e7833da11ba27225e263d994879c241bda7f398f320a1f1.txt",
+    "extractedTextSha256": "be3771333e6fad33da8aaa3ce23a4218bd84d9e5527b0aed54a9dc43f80d6c34",
+    "exactQuestion": "Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act regarding motions at the Town of Scituate annual Financial Town Meeting\" be approved?",
+    "officialStatement": "This act requires prior notice and posting of motions to be made from the floor at the annual Financial Town Meeting of the Town of Scituate now held on the first Tuesday in the month of June. This requirement does not apply to special meetings held under R.I. Gen. Laws §45-3-6 or §45-3-7.",
+    "fullQuestionAndExplanationBlock": "6. MOTIONS AT THE ANNUAL FINANCIAL TOWN MEETING (Chapters 315/316 – Public Laws of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act regarding motions at the Town of Scituate annual Financial Town Meeting\" be approved? Explanation: This act requires prior notice and posting of motions to be made from the floor at the annual Financial Town Meeting of the Town of Scituate now held on the first Tuesday in the month of June. This requirement does not apply to special meetings held under R.I. Gen. Laws §45-3-6 or §45-3-7.",
+    "excerptFile": "excerpts/d808267818c19e4e4cf9abd48e99e9d3c7ac9caabc9839def3c074fadeff8886.txt",
+    "excerptSha256": "d808267818c19e4e4cf9abd48e99e9d3c7ac9caabc9839def3c074fadeff8886",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. MOTIONS AT THE ANNUAL FINANCIAL TOWN MEETING (Chapters 315/316 – Public Laws of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act regarding motions at the Town of Scituate annual Financial Town Meeting\" be approved? Explanation: This act requires prior notice and posting of motions to be made from the floor at the annual Financial Town Meeting of the Town of Scituate now held on the first Tuesday in the month of June. This requirement does not apply to special meetings held under R.I. Gen. Laws §45-3-6 or §45-3-7."
+      ],
+      "yesMeans": [
+        "6. MOTIONS AT THE ANNUAL FINANCIAL TOWN MEETING (Chapters 315/316 – Public Laws of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act regarding motions at the Town of Scituate annual Financial Town Meeting\" be approved? Explanation: This act requires prior notice and posting of motions to be made from the floor at the annual Financial Town Meeting of the Town of Scituate now held on the first Tuesday in the month of June. This requirement does not apply to special meetings held under R.I. Gen. Laws §45-3-6 or §45-3-7."
+      ],
+      "noMeans": [
+        "6. MOTIONS AT THE ANNUAL FINANCIAL TOWN MEETING (Chapters 315/316 – Public Laws of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act regarding motions at the Town of Scituate annual Financial Town Meeting\" be approved? Explanation: This act requires prior notice and posting of motions to be made from the floor at the annual Financial Town Meeting of the Town of Scituate now held on the first Tuesday in the month of June. This requirement does not apply to special meetings held under R.I. Gen. Laws §45-3-6 or §45-3-7."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

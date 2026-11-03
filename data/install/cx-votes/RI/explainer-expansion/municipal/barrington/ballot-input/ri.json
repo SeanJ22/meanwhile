@@ -1,0 +1,212 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-barrington-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+          "divisionVintage": "2026",
+          "title": "Barrington town — Question 6: Signatures for voter-proposed referendum questions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?"
+          }
+        },
+        {
+          "id": "ri-barrington-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+          "divisionVintage": "2026",
+          "title": "Barrington town — Question 7: How the referendum budget is selected",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?"
+          }
+        },
+        {
+          "id": "ri-barrington-2026:question-8",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+          "divisionVintage": "2026",
+          "title": "Barrington town — Question 8: Limit on voter-submitted questions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?"
+          }
+        },
+        {
+          "id": "ri-barrington-2026:question-9",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:bristol/place:barrington_town",
+          "divisionVintage": "2026",
+          "title": "Barrington town — Question 9: Scope of voter-proposed budget questions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-barrington-2026:question-6:measure",
+          "contestId": "ri-barrington-2026:question-6",
+          "questionText": "Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?"
+          }
+        },
+        {
+          "id": "ri-barrington-2026:question-7:measure",
+          "contestId": "ri-barrington-2026:question-7",
+          "questionText": "Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?"
+          }
+        },
+        {
+          "id": "ri-barrington-2026:question-8:measure",
+          "contestId": "ri-barrington-2026:question-8",
+          "questionText": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?"
+          }
+        },
+        {
+          "id": "ri-barrington-2026:question-9:measure",
+          "contestId": "ri-barrington-2026:question-9",
+          "questionText": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:52:59.597833+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.723402+00:00",
+            "quote": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-barrington-2026:question-6",
+          "whatItDoes": "Require 300 registered voters’ signatures for a voter-proposed Financial Town Referendum ballot question.",
+          "yesMeans": "Approve the 300-signature requirement.",
+          "noMeans": "Reject this proposed signature requirement.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "sourceHash": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:35.723402+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-barrington-2026:question-7",
+          "whatItDoes": "Make the budget receiving the most votes at the Financial Town Referendum take effect. The Committee on Appropriations budget would take effect unless an alternative budget is proposed and receives more votes than that committee budget.",
+          "yesMeans": "Approve those rules for selecting the budget that takes effect.",
+          "noMeans": "Reject this proposed clarification of budget voting rules.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "sourceHash": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:35.723402+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-barrington-2026:question-8",
+          "whatItDoes": "Allow each registered voter to submit no more than one ballot question to the Financial Town Referendum.",
+          "yesMeans": "Approve limiting each registered voter to one submitted question.",
+          "noMeans": "Reject this proposed limit on submitted questions.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "sourceHash": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:35.723402+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-barrington-2026:question-9",
+          "whatItDoes": "Limit voter-proposed Financial Town Referendum questions to the total municipal budget, total school budget, or both. Those questions could not propose changes to individual budget line items.",
+          "yesMeans": "Approve the budget-total limit and exclusion of individual line-item changes.",
+          "noMeans": "Reject this proposed restriction on voter-proposed questions.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+          "sourceHash": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:35.723402+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:11:35.723402+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+        "httpStatus": 200,
+        "rawHash": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+        "retrievedAt": "2026-11-03T07:52:59.597833+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

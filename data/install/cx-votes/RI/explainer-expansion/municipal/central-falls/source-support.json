@@ -1,0 +1,178 @@
+[
+  {
+    "contestId": "ri-central-falls-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-9f22-08df1e27a891",
+    "sourceTitle": "Central Falls: 6. MAYORAL TERM LIMITS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0401.pdf",
+    "sourceFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.pdf",
+    "sourceSha256": "7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.txt",
+    "extractedTextSha256": "a63962f18d920e4b552babb6cba265d0df2b855bc2667ba1a15040a81b42ce56",
+    "exactQuestion": "Shall section 3-400 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a Mayor to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as Mayor?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. MAYORAL TERM LIMITS Shall section 3-400 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a Mayor to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as Mayor? 6. LÍMITES DE MANDATO DEL ALCALDE ¿Se enmendará la sección 3-400 de la Carta Constitutiva para eliminar la disposición que actualmente permite el servicio ilimitado de por vida al autorizar que un alcalde ejerza el cargo durante 8 años, deje pasar un mandato y vuelva a postularse indefinidamente, y en su lugar establecer un límite vitalicio de 12 años para ejercer el cargo de alcalde?",
+    "excerptFile": "excerpts/db19880ec0b4d8e6a576efab8ae4a42572801cd2918d451afbd6512221c3bbc5.txt",
+    "excerptSha256": "db19880ec0b4d8e6a576efab8ae4a42572801cd2918d451afbd6512221c3bbc5",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall section 3-400 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a Mayor to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as Mayor?"
+      ],
+      "yesMeans": [
+        "Shall section 3-400 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a Mayor to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as Mayor?"
+      ],
+      "noMeans": [
+        "Shall section 3-400 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a Mayor to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as Mayor?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-central-falls-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-204c-08df1e27a8a1",
+    "sourceTitle": "Central Falls: 7. CITY COUNCIL TERM LIMITS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0401.pdf",
+    "sourceFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.pdf",
+    "sourceSha256": "7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.txt",
+    "extractedTextSha256": "a63962f18d920e4b552babb6cba265d0df2b855bc2667ba1a15040a81b42ce56",
+    "exactQuestion": "Shall section 2-100 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a City Council member to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as a City Council member?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. CITY COUNCIL TERM LIMITS Shall section 2-100 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a City Council member to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as a City Council member? 7. LÍMITES DE MANDATO DEL CONCEJO MUNICIPAL ¿Se enmendará la sección 2-100 de la Carta Constitutiva para eliminar la disposición que actualmente permite el servicio ilimitado de por vida al autorizar que un miembro del Concejo Municipal ejerza el cargo durante 8 años, deje pasar un mandato y vuelva a postularse indefinidamente, y en su lugar establecer un límite vitalicio de 12 años para ejercer el cargo como miembro del Concejo Municipal?",
+    "excerptFile": "excerpts/4eb1bf28f5f42bc976fe43d3ecd419d22aaace0c915b0cbea1dad417acc0d633.txt",
+    "excerptSha256": "4eb1bf28f5f42bc976fe43d3ecd419d22aaace0c915b0cbea1dad417acc0d633",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall section 2-100 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a City Council member to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as a City Council member?"
+      ],
+      "yesMeans": [
+        "Shall section 2-100 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a City Council member to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as a City Council member?"
+      ],
+      "noMeans": [
+        "Shall section 2-100 of the Charter be amended to remove the consecutive-service loophole that currently permits unlimited lifetime service by allowing a City Council member to serve 8 years, sit out a term, and run again indefinitely, and instead establish a 12-year lifetime limit for service as a City Council member?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-central-falls-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-6300-08df1e27a8b0",
+    "sourceTitle": "Central Falls: 8. COMPLIANCE WITH ETHICS LAWS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0401.pdf",
+    "sourceFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.pdf",
+    "sourceSha256": "7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.txt",
+    "extractedTextSha256": "a63962f18d920e4b552babb6cba265d0df2b855bc2667ba1a15040a81b42ce56",
+    "exactQuestion": "Shall sections 8-100, 300, and 301 of the Charter be amended to remove ambiguity, clarify that all elected and appointed officers must comply with all relevant city and state ethics laws, and update related enforcement and penalty provisions accordingly?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. COMPLIANCE WITH ETHICS LAWS Shall sections 8-100, 300, and 301 of the Charter be amended to remove ambiguity, clarify that all elected and appointed officers must comply with all relevant city and state ethics laws, and update related enforcement and penalty provisions accordingly? 8. CUMPLIMIENTO DE LAS LEYES DE ÉTICA ¿Se enmendarán las secciones 8-100, 300 y 301 de la Carta Constitutiva para eliminar ambigüedades, aclarar que todos los funcionarios electos y designados deben cumplir con todas las leyes de ética municipales y estatales aplicables, y actualizar en consecuencia las disposiciones relacionadas con la aplicación y las sanciones?",
+    "excerptFile": "excerpts/24d30b215b1f2df43d132d7234e2b62a336601ca15bd14b2947c0d129befcc04.txt",
+    "excerptSha256": "24d30b215b1f2df43d132d7234e2b62a336601ca15bd14b2947c0d129befcc04",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall sections 8-100, 300, and 301 of the Charter be amended to remove ambiguity, clarify that all elected and appointed officers must comply with all relevant city and state ethics laws, and update related enforcement and penalty provisions accordingly?"
+      ],
+      "yesMeans": [
+        "Shall sections 8-100, 300, and 301 of the Charter be amended to remove ambiguity, clarify that all elected and appointed officers must comply with all relevant city and state ethics laws, and update related enforcement and penalty provisions accordingly?"
+      ],
+      "noMeans": [
+        "Shall sections 8-100, 300, and 301 of the Charter be amended to remove ambiguity, clarify that all elected and appointed officers must comply with all relevant city and state ethics laws, and update related enforcement and penalty provisions accordingly?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-central-falls-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-1b1f-08df1e27a8bf",
+    "sourceTitle": "Central Falls: 9. APPOINTMENT OF POLICE AND FIRE CHIEFS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0401.pdf",
+    "sourceFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.pdf",
+    "sourceSha256": "7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/7cf11aa923e787b8b12406fc00d92f30056dc0c41a3f3cbe3f52db277f971651.txt",
+    "extractedTextSha256": "a63962f18d920e4b552babb6cba265d0df2b855bc2667ba1a15040a81b42ce56",
+    "exactQuestion": "Shall section 4-700 of the Charter be amended to provide that the Mayor, with the approval of a majority of members of the City Council, shall appoint the Police Chief and the Fire Chief?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. APPOINTMENT OF POLICE AND FIRE CHIEFS Shall section 4-700 of the Charter be amended to provide that the Mayor, with the approval of a majority of members of the City Council, shall appoint the Police Chief and the Fire Chief? 9. NOMBRAMIENTO DE LOS JEFES DE POLICÍA Y BOMBEROS ¿Se enmendará la sección 4-700 de la Carta Constitutiva para disponer que el alcalde, con la aprobación de la mayoría de los miembros del Concejo Municipal, nombre al Jefe de Policía y al Jefe de Bomberos?",
+    "excerptFile": "excerpts/1bb9cdc72924c6c16899399f7710034f8a3dfb6a3a83ab4a16dd75b70946cda9.txt",
+    "excerptSha256": "1bb9cdc72924c6c16899399f7710034f8a3dfb6a3a83ab4a16dd75b70946cda9",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall section 4-700 of the Charter be amended to provide that the Mayor, with the approval of a majority of members of the City Council, shall appoint the Police Chief and the Fire Chief?"
+      ],
+      "yesMeans": [
+        "Shall section 4-700 of the Charter be amended to provide that the Mayor, with the approval of a majority of members of the City Council, shall appoint the Police Chief and the Fire Chief?"
+      ],
+      "noMeans": [
+        "Shall section 4-700 of the Charter be amended to provide that the Mayor, with the approval of a majority of members of the City Council, shall appoint the Police Chief and the Fire Chief?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

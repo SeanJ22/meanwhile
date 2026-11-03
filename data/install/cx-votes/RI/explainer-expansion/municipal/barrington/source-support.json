@@ -1,0 +1,178 @@
+[
+  {
+    "contestId": "ri-barrington-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-4ed5-08df1e27a60d",
+    "sourceTitle": "Barrington: 6. FINANCIAL TOWN REFERENDUM",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+    "sourceFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.pdf",
+    "sourceSha256": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.txt",
+    "extractedTextSha256": "bfd69d9e0bbcdc16152956641b9410dd2a8bb03e0dbb6c3a3454b88b6f118e44",
+    "exactQuestion": "Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. FINANCIAL TOWN REFERENDUM Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?",
+    "excerptFile": "excerpts/e05bd45b2e9d9f922d2b616ef3f85948abf2037f31922c3c0ec9c92b5f89f5a4.txt",
+    "excerptSha256": "e05bd45b2e9d9f922d2b616ef3f85948abf2037f31922c3c0ec9c92b5f89f5a4",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?"
+      ],
+      "yesMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?"
+      ],
+      "noMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to require that voter-proposed Financial Town Referendum ballot questions be signed by 300 registered voters?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-barrington-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-0856-08df1e27a696",
+    "sourceTitle": "Barrington: 7. FINANCIAL TOWN REFERENDUM",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+    "sourceFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.pdf",
+    "sourceSha256": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.txt",
+    "extractedTextSha256": "bfd69d9e0bbcdc16152956641b9410dd2a8bb03e0dbb6c3a3454b88b6f118e44",
+    "exactQuestion": "Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. FINANCIAL TOWN REFERENDUM Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?",
+    "excerptFile": "excerpts/4a86903e6da3cc413dc6886c114b56187076b3d8a64687f01bb8680eb3998a68.txt",
+    "excerptSha256": "4a86903e6da3cc413dc6886c114b56187076b3d8a64687f01bb8680eb3998a68",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?"
+      ],
+      "yesMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?"
+      ],
+      "noMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to clarify the voting procedures for the Financial Town Referendum by providing that the budget receiving the most votes shall take effect, and that if no alternative budget is proposed and receives more votes than the Committee on Appropriations budget, the Committee on Appropriations budget shall take effect?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-barrington-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-e7ae-08df1e27a6a4",
+    "sourceTitle": "Barrington: 8. FINANCIAL TOWN REFERENDUM",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+    "sourceFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.pdf",
+    "sourceSha256": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.txt",
+    "extractedTextSha256": "bfd69d9e0bbcdc16152956641b9410dd2a8bb03e0dbb6c3a3454b88b6f118e44",
+    "exactQuestion": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. FINANCIAL TOWN REFERENDUM Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?",
+    "excerptFile": "excerpts/51704db7b4790c321d4e38243031b8b24e78d0c6edf320aef229d979aa214648.txt",
+    "excerptSha256": "51704db7b4790c321d4e38243031b8b24e78d0c6edf320aef229d979aa214648",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?"
+      ],
+      "yesMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?"
+      ],
+      "noMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that an individual registered voter may submit no more than one (1) ballot question?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-barrington-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-9323-08df1e27a6b4",
+    "sourceTitle": "Barrington: 9. FINANCIAL TOWN REFERENDUM",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0101.pdf",
+    "sourceFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.pdf",
+    "sourceSha256": "c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/c1ad3082033e870a00df8c4c7829c533b8985d79baf5972b74f9ade655493e25.txt",
+    "extractedTextSha256": "bfd69d9e0bbcdc16152956641b9410dd2a8bb03e0dbb6c3a3454b88b6f118e44",
+    "exactQuestion": "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. FINANCIAL TOWN REFERENDUM Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?",
+    "excerptFile": "excerpts/c9b8af8475e424d6ed11e7e6dd8f838bfd1419fbba0ed028a0b73b9a39f196ae.txt",
+    "excerptSha256": "c9b8af8475e424d6ed11e7e6dd8f838bfd1419fbba0ed028a0b73b9a39f196ae",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?"
+      ],
+      "yesMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?"
+      ],
+      "noMeans": [
+        "Shall Section 7-1-15 of the Barrington Town Charter be amended to provide that voter-proposed ballot questions shall be limited to proposals affecting the bottom line of the municipal budget or school budget, or both, and shall not propose changes to individual line items within either the municipal or school budget?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

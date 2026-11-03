@@ -1,0 +1,80 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-narragansett-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:washington/place:narragansett_town",
+          "divisionVintage": "2026",
+          "title": "Narragansett town — Question 6: Fire station borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2001.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2001.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:02.227199+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.401598+00:00",
+            "quote": "Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Narragansett to finance the equipping, expansion, improvement, and renovation of fire stations in the Town of Narragansett and to issue not more than $3,000,000 bonds and notes therefor\" be approved?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-narragansett-2026:question-6:measure",
+          "contestId": "ri-narragansett-2026:question-6",
+          "questionText": "Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Narragansett to finance the equipping, expansion, improvement, and renovation of fire stations in the Town of Narragansett and to issue not more than $3,000,000 bonds and notes therefor\" be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2001.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:02.227199+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.401598+00:00",
+            "quote": "Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Narragansett to finance the equipping, expansion, improvement, and renovation of fire stations in the Town of Narragansett and to issue not more than $3,000,000 bonds and notes therefor\" be approved?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-narragansett-2026:question-6",
+          "whatItDoes": "Allow Narragansett to borrow up to $3 million through bonds and notes to equip, expand, improve and renovate town fire stations.",
+          "yesMeans": "Approve up to $3 million in borrowing for those fire station projects.",
+          "noMeans": "Reject this proposed fire station borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2001.pdf",
+          "sourceHash": "4c6a59709e7dbb23d13e38babb85ee026a2f008f9d903983694bfa4264c1ffe2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.401598+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:13:43.401598+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2001.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2001.pdf",
+        "httpStatus": 200,
+        "rawHash": "4c6a59709e7dbb23d13e38babb85ee026a2f008f9d903983694bfa4264c1ffe2",
+        "retrievedAt": "2026-11-03T07:53:02.227199+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-glocester-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+          "divisionVintage": "2026",
+          "title": "Glocester town — Question 6: Appointed town administrator",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+          "divisionVintage": "2026",
+          "title": "Glocester town — Question 7: School Department accounting responsibility",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-8",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+          "divisionVintage": "2026",
+          "title": "Glocester town — Question 8: Assessment Review Board membership and terms",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-9",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+          "divisionVintage": "2026",
+          "title": "Glocester town — Question 9: Phased capital-reserve increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-10",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+          "divisionVintage": "2026",
+          "title": "Glocester town — Question 10: Emergency management director qualification",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-glocester-2026:question-6:measure",
+          "contestId": "ri-glocester-2026:question-6",
+          "questionText": "Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-7:measure",
+          "contestId": "ri-glocester-2026:question-7",
+          "questionText": "Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-8:measure",
+          "contestId": "ri-glocester-2026:question-8",
+          "questionText": "Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-9:measure",
+          "contestId": "ri-glocester-2026:question-9",
+          "questionText": "Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?"
+          }
+        },
+        {
+          "id": "ri-glocester-2026:question-10:measure",
+          "contestId": "ri-glocester-2026:question-10",
+          "questionText": "Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.151978+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.396136+00:00",
+            "quote": "Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-glocester-2026:question-6",
+          "whatItDoes": "Establish a town administrator appointed by the Town Council to coordinate daily town administration under the council’s direction and perform other duties the council assigns by ordinance or resolution. The amendment would take effect January 1, 2027, with the first appointment by December 31, 2027. The council would retain appointment, discipline, suspension and removal powers unless the charter provides otherwise.",
+          "yesMeans": "Approve the administrator position, appointment deadline and retained council powers.",
+          "noMeans": "Reject this proposed administrator position and charter change.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "sourceHash": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.396136+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-glocester-2026:question-7",
+          "whatItDoes": "Transfer School Department financial and managerial accounting from the town Finance Department to the superintendent and School Committee. School funds would remain with the town treasurer, and payments would remain subject to the finance director’s review, as further provided by ordinance.",
+          "yesMeans": "Approve the accounting transfer with those custody and payment-review conditions.",
+          "noMeans": "Reject this proposed transfer of school accounting responsibility.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "sourceHash": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.396136+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-glocester-2026:question-8",
+          "whatItDoes": "Expand the Board of Assessment Review from three members to five qualified town voters appointed by the Town Council. Replace six-year terms with staggered three-year terms.",
+          "yesMeans": "Approve the five-member board and staggered three-year terms.",
+          "noMeans": "Reject this proposed membership and term change.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "sourceHash": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.396136+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-glocester-2026:question-9",
+          "whatItDoes": "Increase the annual Capital Reserve Fund contribution from 2% to 4% of the operating budget. Phase it in by 0.25 percentage points each year over eight years, beginning July 1, 2027.",
+          "yesMeans": "Approve that eight-year increase from 2% to 4%.",
+          "noMeans": "Reject this proposed increase in capital-reserve contributions.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "sourceHash": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.396136+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-glocester-2026:question-10",
+          "whatItDoes": "Remove the charter requirement that the emergency management director be a qualified town voter.",
+          "yesMeans": "Approve removing that town-voter qualification.",
+          "noMeans": "Keep that qualification in the charter.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+          "sourceHash": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.396136+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:13:43.396136+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+        "httpStatus": 200,
+        "rawHash": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+        "retrievedAt": "2026-11-03T07:53:01.151978+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

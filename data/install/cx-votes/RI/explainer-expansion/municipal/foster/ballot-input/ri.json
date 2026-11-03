@@ -1,0 +1,168 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-foster-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+          "divisionVintage": "2026",
+          "title": "Foster town — Question 6: Financial Town Meeting date and procedures",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.770985+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.393394+00:00",
+            "quote": "Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting."
+          }
+        },
+        {
+          "id": "ri-foster-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+          "divisionVintage": "2026",
+          "title": "Foster town — Question 7: Capital Reserve Fund contribution",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.770985+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.393394+00:00",
+            "quote": "Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program."
+          }
+        },
+        {
+          "id": "ri-foster-2026:question-8",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+          "divisionVintage": "2026",
+          "title": "Foster town — Question 8: Conveyance-tax allocation to the Land Trust",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.770985+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.393394+00:00",
+            "quote": "Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-foster-2026:question-6:measure",
+          "contestId": "ri-foster-2026:question-6",
+          "questionText": "Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.770985+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.393394+00:00",
+            "quote": "Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting."
+          }
+        },
+        {
+          "id": "ri-foster-2026:question-7:measure",
+          "contestId": "ri-foster-2026:question-7",
+          "questionText": "Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.770985+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.393394+00:00",
+            "quote": "Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program."
+          }
+        },
+        {
+          "id": "ri-foster-2026:question-8:measure",
+          "contestId": "ri-foster-2026:question-8",
+          "questionText": "Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.770985+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.393394+00:00",
+            "quote": "Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-foster-2026:question-6",
+          "whatItDoes": "Move the annual Financial Town Meeting from May to the first Tuesday in June at 7 p.m. It would consider taxes, appropriations and other lawful town financial business. Remove voting-procedure language described on the ballot as conflicting with state law.",
+          "yesMeans": "Approve that June meeting schedule and the proposed replacement provision.",
+          "noMeans": "Reject this proposed Financial Town Meeting change.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+          "sourceHash": "a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.393394+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-foster-2026:question-7",
+          "whatItDoes": "Increase the annual Capital Reserve Fund addition from 2% to 4% of all other appropriations approved at the Financial Town Meeting. The addition would automatically be included in the amount raised through taxes without another vote. The finance director would hold and invest the money separately; spending it on improvements in the capital program would require annual or special Financial Town Meeting approval.",
+          "yesMeans": "Approve the 4% automatic capital-reserve addition and the stated custody and spending rules.",
+          "noMeans": "Reject this proposed increase from 2% to 4%.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+          "sourceHash": "a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.393394+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-foster-2026:question-8",
+          "whatItDoes": "Reduce the Foster Land Trust’s allocation from all town-retained Land Use Conveyance Tax receipts to a minimum of 50%. The money would be used for acquiring and preserving open space, except that the trust would reimburse the town for its operating and administrative budget approved by voters at the annual Financial Town Meeting.",
+          "yesMeans": "Approve the minimum 50% allocation and the stated open-space and voter-approved administrative-budget provisions.",
+          "noMeans": "Reject this proposed reduction in the Land Trust allocation.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+          "sourceHash": "a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.393394+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:13:43.393394+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+        "httpStatus": 200,
+        "rawHash": "a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0",
+        "retrievedAt": "2026-11-03T07:53:00.770985+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

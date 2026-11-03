@@ -1,0 +1,90 @@
+[
+  {
+    "contestId": "ri-portsmouth-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-3d39-08df1e27bace",
+    "sourceTitle": "Portsmouth: 6. SCHOOL CONSTRUCTION AND RENOVATION PROJECTS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+    "sourceFile": "../../official-samples/sources/ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3.pdf",
+    "sourceSha256": "ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3.txt",
+    "extractedTextSha256": "a1ea3f4c91cf5661d22b1fea087812c1ea3e699d8fba77a8225bab53d7924aa7",
+    "exactQuestion": "Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved?",
+    "officialStatement": "If approved, the Town shall borrow an amount not to exceed $41,000,000 for the above school projects. All school projects included in the Necessity of School Construction Stage II application approved by the Council on Elementary and Secondary Education and funded by the bond will be eligible for a minimum of 35% Housing Aid Reimbursement.",
+    "fullQuestionAndExplanationBlock": "6. SCHOOL CONSTRUCTION AND RENOVATION PROJECTS $41,000,000 BONDS AND NOTES (Local Acts 017/018 - Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved? Explanation: If approved, the Town shall borrow an amount not to exceed $41,000,000 for the above school projects. All school projects included in the Necessity of School Construction Stage II application approved by the Council on Elementary and Secondary Education and funded by the bond will be eligible for a minimum of 35% Housing Aid Reimbursement.",
+    "excerptFile": "excerpts/8416851e33c204951417ac3be63e5f09c6158582f2d0c5fd0596481964e7afab.txt",
+    "excerptSha256": "8416851e33c204951417ac3be63e5f09c6158582f2d0c5fd0596481964e7afab",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. SCHOOL CONSTRUCTION AND RENOVATION PROJECTS $41,000,000 BONDS AND NOTES (Local Acts 017/018 - Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved? Explanation: If approved, the Town shall borrow an amount not to exceed $41,000,000 for the above school projects. All school projects included in the Necessity of School Construction Stage II application approved by the Council on Elementary and Secondary Education and funded by the bond will be eligible for a minimum of 35% Housing Aid Reimbursement."
+      ],
+      "yesMeans": [
+        "6. SCHOOL CONSTRUCTION AND RENOVATION PROJECTS $41,000,000 BONDS AND NOTES (Local Acts 017/018 - Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved? Explanation: If approved, the Town shall borrow an amount not to exceed $41,000,000 for the above school projects. All school projects included in the Necessity of School Construction Stage II application approved by the Council on Elementary and Secondary Education and funded by the bond will be eligible for a minimum of 35% Housing Aid Reimbursement."
+      ],
+      "noMeans": [
+        "6. SCHOOL CONSTRUCTION AND RENOVATION PROJECTS $41,000,000 BONDS AND NOTES (Local Acts 017/018 - Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved? Explanation: If approved, the Town shall borrow an amount not to exceed $41,000,000 for the above school projects. All school projects included in the Necessity of School Construction Stage II application approved by the Council on Elementary and Secondary Education and funded by the bond will be eligible for a minimum of 35% Housing Aid Reimbursement."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-portsmouth-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-71b2-08df1e27bae9",
+    "sourceTitle": "Portsmouth: 7. NON-PARTISAN TOWN COUNCIL AND SCHOOL COMMITTEE ELECTIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+    "sourceFile": "../../official-samples/sources/ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3.pdf",
+    "sourceSha256": "ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3.txt",
+    "extractedTextSha256": "a1ea3f4c91cf5661d22b1fea087812c1ea3e699d8fba77a8225bab53d7924aa7",
+    "exactQuestion": "Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701)",
+    "officialStatement": "If approved, Article II, Section 201, and Article VII, Section 701, of the Portsmouth Town Charter will be amended to identify the offices of Town Council and School Committee as “non-partisan”, to remove party designations from the ballot, and to add text for a candidate placement lottery for School Committee candidates.",
+    "fullQuestionAndExplanationBlock": "7. NON-PARTISAN TOWN COUNCIL AND SCHOOL COMMITTEE ELECTIONS (Resolution of the Town Council adopted April 14, 2025) Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701) Explanation: If approved, Article II, Section 201, and Article VII, Section 701, of the Portsmouth Town Charter will be amended to identify the offices of Town Council and School Committee as “non-partisan”, to remove party designations from the ballot, and to add text for a candidate placement lottery for School Committee candidates.",
+    "excerptFile": "excerpts/4868f8796b88725c92180d610960938e6fd43dd208e9fed4a85a6ac3d02ac0b7.txt",
+    "excerptSha256": "4868f8796b88725c92180d610960938e6fd43dd208e9fed4a85a6ac3d02ac0b7",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "7. NON-PARTISAN TOWN COUNCIL AND SCHOOL COMMITTEE ELECTIONS (Resolution of the Town Council adopted April 14, 2025) Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701) Explanation: If approved, Article II, Section 201, and Article VII, Section 701, of the Portsmouth Town Charter will be amended to identify the offices of Town Council and School Committee as “non-partisan”, to remove party designations from the ballot, and to add text for a candidate placement lottery for School Committee candidates."
+      ],
+      "yesMeans": [
+        "7. NON-PARTISAN TOWN COUNCIL AND SCHOOL COMMITTEE ELECTIONS (Resolution of the Town Council adopted April 14, 2025) Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701) Explanation: If approved, Article II, Section 201, and Article VII, Section 701, of the Portsmouth Town Charter will be amended to identify the offices of Town Council and School Committee as “non-partisan”, to remove party designations from the ballot, and to add text for a candidate placement lottery for School Committee candidates."
+      ],
+      "noMeans": [
+        "7. NON-PARTISAN TOWN COUNCIL AND SCHOOL COMMITTEE ELECTIONS (Resolution of the Town Council adopted April 14, 2025) Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701) Explanation: If approved, Article II, Section 201, and Article VII, Section 701, of the Portsmouth Town Charter will be amended to identify the offices of Town Council and School Committee as “non-partisan”, to remove party designations from the ballot, and to add text for a candidate placement lottery for School Committee candidates."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

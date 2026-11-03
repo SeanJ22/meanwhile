@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "ri-hopkinton-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-6168-08df1e27b1d3",
+    "sourceTitle": "Hopkinton: 7. CHARTER AMENDMENT - TOWN CLERK",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1401.pdf",
+    "sourceFile": "../../official-samples/sources/f35eed11b6afd7f5539e2edff913f5d071f87860427bf8918738d570c11063bf.pdf",
+    "sourceSha256": "f35eed11b6afd7f5539e2edff913f5d071f87860427bf8918738d570c11063bf",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/f35eed11b6afd7f5539e2edff913f5d071f87860427bf8918738d570c11063bf.txt",
+    "extractedTextSha256": "ba34d5be659770b27ae5b9bdffad1adf708ce948aa04ea0bcea8f3f3acedfb03",
+    "exactQuestion": "Shall Sections 2130 and 4110 of the Home Rule Charter be amended to reflect that the Town Clerk's position no longer be an elected position, but appointed by the Town Council?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. CHARTER AMENDMENT - TOWN CLERK (Resolution of the Town Council adopted August 3, 2026) Shall Sections 2130 and 4110 of the Home Rule Charter be amended to reflect that the Town Clerk's position no longer be an elected position, but appointed by the Town Council?",
+    "excerptFile": "excerpts/58ffde768e1582b24e65793d79bb363def4a4e7057c3ae9e065a0c86a520e684.txt",
+    "excerptSha256": "58ffde768e1582b24e65793d79bb363def4a4e7057c3ae9e065a0c86a520e684",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "7. CHARTER AMENDMENT - TOWN CLERK (Resolution of the Town Council adopted August 3, 2026) Shall Sections 2130 and 4110 of the Home Rule Charter be amended to reflect that the Town Clerk's position no longer be an elected position, but appointed by the Town Council?"
+      ],
+      "yesMeans": [
+        "7. CHARTER AMENDMENT - TOWN CLERK (Resolution of the Town Council adopted August 3, 2026) Shall Sections 2130 and 4110 of the Home Rule Charter be amended to reflect that the Town Clerk's position no longer be an elected position, but appointed by the Town Council?"
+      ],
+      "noMeans": [
+        "7. CHARTER AMENDMENT - TOWN CLERK (Resolution of the Town Council adopted August 3, 2026) Shall Sections 2130 and 4110 of the Home Rule Charter be amended to reflect that the Town Clerk's position no longer be an elected position, but appointed by the Town Council?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "ri-jamestown-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-c5e8-08df1e27b236",
+    "sourceTitle": "Jamestown: 6. AFFORDABLE HOUSING PROJECTS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1501.pdf",
+    "sourceFile": "../../official-samples/sources/da4b82857a9a33e02fde266a46c3746722df1e0438bedcc4f18da65934cf3401.pdf",
+    "sourceSha256": "da4b82857a9a33e02fde266a46c3746722df1e0438bedcc4f18da65934cf3401",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/da4b82857a9a33e02fde266a46c3746722df1e0438bedcc4f18da65934cf3401.txt",
+    "extractedTextSha256": "53ecf2a21cc729afa52131d6c8dba0e75eaee1a7a42404935ec6c4e5538a0a4f",
+    "exactQuestion": "Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Jamestown to fund affordable housing projects and to issue not more than $3,000,000 bonds and notes therefor\" be approved?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. AFFORDABLE HOUSING PROJECTS $3,000,000 BONDS AND NOTES (Local Acts 007/008 – Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Jamestown to fund affordable housing projects and to issue not more than $3,000,000 bonds and notes therefor\" be approved?",
+    "excerptFile": "excerpts/13f8c5def21af6de9316f99d8908db47dcfee8ffb51407556f05da13fd142030.txt",
+    "excerptSha256": "13f8c5def21af6de9316f99d8908db47dcfee8ffb51407556f05da13fd142030",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. AFFORDABLE HOUSING PROJECTS $3,000,000 BONDS AND NOTES (Local Acts 007/008 – Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Jamestown to fund affordable housing projects and to issue not more than $3,000,000 bonds and notes therefor\" be approved?"
+      ],
+      "yesMeans": [
+        "6. AFFORDABLE HOUSING PROJECTS $3,000,000 BONDS AND NOTES (Local Acts 007/008 – Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Jamestown to fund affordable housing projects and to issue not more than $3,000,000 bonds and notes therefor\" be approved?"
+      ],
+      "noMeans": [
+        "6. AFFORDABLE HOUSING PROJECTS $3,000,000 BONDS AND NOTES (Local Acts 007/008 – Acts and Resolves of 2026) Shall an act, passed at the 2026 session of the General Assembly, entitled \"An Act authorizing the Town of Jamestown to fund affordable housing projects and to issue not more than $3,000,000 bonds and notes therefor\" be approved?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

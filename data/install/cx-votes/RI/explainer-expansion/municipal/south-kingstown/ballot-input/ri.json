@@ -1,0 +1,80 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-south-kingstown-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:washington/place:south_kingstown_town",
+          "divisionVintage": "2026",
+          "title": "South Kingstown town — Question 6: Police rules without council approval",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3201.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.195264+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.406140+00:00",
+            "quote": "Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-south-kingstown-2026:question-6:measure",
+          "contestId": "ri-south-kingstown-2026:question-6",
+          "questionText": "Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3201.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:04.195264+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.406140+00:00",
+            "quote": "Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-south-kingstown-2026:question-6",
+          "whatItDoes": "Allow the police chief to issue rules and regulations governing all Police Department members without Town Council approval.",
+          "yesMeans": "Approve removing the council-approval requirement for those police rules.",
+          "noMeans": "Keep the Town Council approval requirement.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3201.pdf",
+          "sourceHash": "84248711065342b973ea8fbde9b09b258956bab35a0b8814c63bad025d31e5a9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.406140+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:13:43.406140+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3201.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3201.pdf",
+        "httpStatus": 200,
+        "rawHash": "84248711065342b973ea8fbde9b09b258956bab35a0b8814c63bad025d31e5a9",
+        "retrievedAt": "2026-11-03T07:53:04.195264+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

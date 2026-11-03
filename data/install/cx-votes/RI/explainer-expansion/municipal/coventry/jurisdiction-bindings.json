@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "ri-coventry-2026:question-6",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:kent/place:coventry_town",
+      "cousub",
+      "4400318640",
+      "Coventry town"
+    ],
+    "officialNamedElectorate": "Coventry",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+    "basis": "The original official sample ballot prints this municipality and local question number. Exact held Census county subdivision matches municipality, government type and county; municipal charter questions cover the town, not its separately registered CDP or school district.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:ri",
+      "ocd-division/country:us/state:ri/county:kent",
+      "ocd-division/country:us/state:ri/county:kent/place:east_greenwich_town",
+      "ocd-division/country:us/state:ri/county:kent/place:warwick_city",
+      "ocd-division/country:us/state:ri/county:kent/place:west_greenwich_town",
+      "ocd-division/country:us/state:ri/county:kent/place:west_warwick_town",
+      "ocd-division/country:us/state:ri/school_district:coventry_school_district"
+    ]
+  },
+  {
+    "contestId": "ri-coventry-2026:question-7",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:kent/place:coventry_town",
+      "cousub",
+      "4400318640",
+      "Coventry town"
+    ],
+    "officialNamedElectorate": "Coventry",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+    "basis": "The original official sample ballot prints this municipality and local question number. Exact held Census county subdivision matches municipality, government type and county; municipal charter questions cover the town, not its separately registered CDP or school district.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:ri",
+      "ocd-division/country:us/state:ri/county:kent",
+      "ocd-division/country:us/state:ri/county:kent/place:east_greenwich_town",
+      "ocd-division/country:us/state:ri/county:kent/place:warwick_city",
+      "ocd-division/country:us/state:ri/county:kent/place:west_greenwich_town",
+      "ocd-division/country:us/state:ri/county:kent/place:west_warwick_town",
+      "ocd-division/country:us/state:ri/school_district:coventry_school_district"
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1401.pdf",
+    "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1401.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:53:01.233112+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "f35eed11b6afd7f5539e2edff913f5d071f87860427bf8918738d570c11063bf",
+    "storedHash": "f35eed11b6afd7f5539e2edff913f5d071f87860427bf8918738d570c11063bf",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "../../official-samples/sources/f35eed11b6afd7f5539e2edff913f5d071f87860427bf8918738d570c11063bf.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://vote.sos.ri.gov/Home/PollingPlaces?ActiveFlag=2",
+    "finalUrl": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:50:12.339021+00:00",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6",
+    "storedHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+    "encoding": "identity",
+    "method": "POST",
+    "lookupPurpose": "Public official SmithfieldTownHall address (not residential or personal voter lookup), solely to open official sample ballot URL through normal public UI."
+  }
+]

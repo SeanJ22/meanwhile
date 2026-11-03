@@ -1,0 +1,124 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-coventry-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:kent/place:coventry_town",
+          "divisionVintage": "2026",
+          "title": "Coventry town — Question 6: Minimum conveyance-tax allocation for open space",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.265987+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.730298+00:00",
+            "quote": "Shall the Town of Coventry Home Rule Charter be amended to reduce the minimum percentage of Real Estate Conveyance Tax receipts required to be set aside annually for the Coventry Land Trust for the acquisition and preservation of open space from no less than fifty percent (50%) to no less than twenty-five percent (25%), while retaining the requirement that such funds be used exclusively for capital expenditures and not for administrative expenses, and while permitting the Town Council to appropriate a higher percentage in its discretion?"
+          }
+        },
+        {
+          "id": "ri-coventry-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:kent/place:coventry_town",
+          "divisionVintage": "2026",
+          "title": "Coventry town — Question 7: Seek legislation for municipal fire and EMS consolidation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.265987+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.730298+00:00",
+            "quote": "Shall the Town Council be authorized and directed to seek enabling legislation of the Rhode Island General Assembly to establish a full-time career municipal Fire and Emergency Medical Services Department and to consolidate into it the fire protection services now furnished by the fire districts within the Town, no provision hereof being self-executing and each step to take effect only as the approvals required by Rhode Island law are obtained?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-coventry-2026:question-6:measure",
+          "contestId": "ri-coventry-2026:question-6",
+          "questionText": "Shall the Town of Coventry Home Rule Charter be amended to reduce the minimum percentage of Real Estate Conveyance Tax receipts required to be set aside annually for the Coventry Land Trust for the acquisition and preservation of open space from no less than fifty percent (50%) to no less than twenty-five percent (25%), while retaining the requirement that such funds be used exclusively for capital expenditures and not for administrative expenses, and while permitting the Town Council to appropriate a higher percentage in its discretion?",
+          "officialStatement": "This amendment would modify Article VIII, Section 8.16(d) of the Home Rule Charter, which governs the allocation of Real Estate Conveyance Tax receipts to the Coventry Land Trust. Under the current Charter, the Town Council is required to set aside, as part of each annual budget, an amount equal to no less than fifty percent (50%) of all monies remitted to the Town by the Rhode Island Tax Administrator under the Real Estate Conveyance Tax, R.I. Gen. Laws § 44-25-1 et seq. Those funds must be used exclusively by the Coventry Land Trust for the acquisition and preservation of open space, for capital expenditures only, with no portion available for administrative expenses. This amendment would reduce the mandatory minimum allocation from fifty percent (50%) to twenty-five percent (25%). The Town Council would retain the discretion to appropriate more than twenty-five percent (25%) in any given budget year. All other conditions on the use of the funds - exclusive use by the Coventry Land Trust for open space acquisition and preservation, capital expenditures only, no administrative use - would remain unchanged. A vote to Approve would adopt this Charter amendment, reducing the minimum required allocation to twenty-five percent (25%). A vote to Reject would leave the current fifty percent (50%) minimum requirement unchanged.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.265987+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.730298+00:00",
+            "quote": "Shall the Town of Coventry Home Rule Charter be amended to reduce the minimum percentage of Real Estate Conveyance Tax receipts required to be set aside annually for the Coventry Land Trust for the acquisition and preservation of open space from no less than fifty percent (50%) to no less than twenty-five percent (25%), while retaining the requirement that such funds be used exclusively for capital expenditures and not for administrative expenses, and while permitting the Town Council to appropriate a higher percentage in its discretion?"
+          }
+        },
+        {
+          "id": "ri-coventry-2026:question-7:measure",
+          "contestId": "ri-coventry-2026:question-7",
+          "questionText": "Shall the Town Council be authorized and directed to seek enabling legislation of the Rhode Island General Assembly to establish a full-time career municipal Fire and Emergency Medical Services Department and to consolidate into it the fire protection services now furnished by the fire districts within the Town, no provision hereof being self-executing and each step to take effect only as the approvals required by Rhode Island law are obtained?",
+          "officialStatement": "The Town is served by four independent fire districts - the Coventry (Anthony), Central Coventry, Hopkins Hill, and Western Coventry fire districts - each of which levies its own taxes and operates independently of the Town. This question asks whether the Town Council should pursue replacing them with a single municipal department. It does not itself create the Department, dissolve any district, abolish any district's taxing authority, or amend the Charter. Legislation from the General Assembly is required, because the 1948 act authorizing a Town fire department conditioned that authority on acceptance at a special financial town meeting that, which was never held and which no longer exists, and because that act does not dissolve the districts or transfer their property to the Town. If this question is approved, the Town Council will seek that legislation. The terms of the consolidation - including the treatment of district personnel, property, and taxation - will be set in the enabling act. This question does not approve any legislation. No act of the General Assembly relating to this subject can take effect in the Town unless and until it is separately approved by the Town's voters at a general or special election, as Article XIII, Section 4 of the Rhode Island Constitution requires. Voters will therefore have a further opportunity to review and vote on the actual legislation - including its terms for the fire districts, their personnel, and taxation - before anything takes effect. Any amendment to the Town Charter will likewise be submitted separately to the voters under Charter Section 15.20. The consolidation and dissolution of the fire districts would combine the fire districts' existing tax levies into the Town's tax levy. Residents would no longer pay separate fire district taxes for the consolidated services, but the Town's levy would increase to fund them. Because consolidation may fold the districts' existing levies into the Town's levy, it may implicate a one-time increase above the four percent (4%) annual property-tax levy limitation of R.I. Gen. Laws § 44-5-2, which the Town may exceed only through the means the law provides. The financial terms would be set in the enabling legislation. This question takes no position on whether the electors of any fire district must approve its consolidation; that is left to the General Assembly and applicable law. A vote to Approve would direct the Town Council to pursue the Fire and Emergency Medical Services Department and consolidation, and to seek the necessary legislation. A vote to Reject would leave the current fire district structure unchanged.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:00.265987+00:00",
+            "verifiedAt": "2026-11-03T08:11:35.730298+00:00",
+            "quote": "Shall the Town Council be authorized and directed to seek enabling legislation of the Rhode Island General Assembly to establish a full-time career municipal Fire and Emergency Medical Services Department and to consolidate into it the fire protection services now furnished by the fire districts within the Town, no provision hereof being self-executing and each step to take effect only as the approvals required by Rhode Island law are obtained?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-coventry-2026:question-6",
+          "whatItDoes": "Reduce the minimum share of real-estate conveyance-tax receipts set aside each year for the Coventry Land Trust from 50% to 25%. The council could allocate a larger share. The money would still be limited to capital spending for acquiring and preserving open space, with no administrative spending.",
+          "yesMeans": "Approve lowering the required minimum allocation to 25% while retaining those use restrictions and council discretion to allocate more.",
+          "noMeans": "Keep the minimum allocation at 50%.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+          "sourceHash": "3d310d63b4965e40fb440142c409d2c07b585cdb440a9fb506c568d7468104b5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:35.730298+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-coventry-2026:question-7",
+          "whatItDoes": "Direct the council to seek General Assembly legislation for a full-time career municipal fire and emergency medical services department, consolidating services now provided by four independent fire districts. Approval would begin that legislative effort. Any enabling act would need a later, separate town vote before taking effect; charter changes would also need a separate vote. Legislation would set the terms for personnel, property and taxation. Consolidation would combine district levies into the town levy, replacing separate fire-district taxes with town funding; any increase above the annual 4% levy limit would require a legally permitted route. The question leaves any required fire-district voter approvals to the General Assembly and applicable law.",
+          "yesMeans": "Direct the council to pursue consolidation and seek the necessary legislation, with later approvals required before changes take effect.",
+          "noMeans": "Leave the current fire-district structure unchanged through this question.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+          "sourceHash": "3d310d63b4965e40fb440142c409d2c07b585cdb440a9fb506c568d7468104b5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:11:35.730298+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:11:35.730298+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0601.pdf",
+        "httpStatus": 200,
+        "rawHash": "3d310d63b4965e40fb440142c409d2c07b585cdb440a9fb506c568d7468104b5",
+        "retrievedAt": "2026-11-03T07:53:00.265987+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

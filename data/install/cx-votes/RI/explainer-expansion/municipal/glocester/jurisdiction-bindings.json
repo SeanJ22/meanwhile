@@ -1,0 +1,157 @@
+[
+  {
+    "contestId": "ri-glocester-2026:question-6",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "cousub",
+      "4400730340",
+      "Glocester town"
+    ],
+    "officialNamedElectorate": "Glocester",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "basis": "The original official sample ballot prints this municipality and local question number. Exact held Census county subdivision matches municipality, government type and county; municipal charter questions cover the town, not its separately registered CDP or school district.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:ri",
+      "ocd-division/country:us/state:ri/county:providence",
+      "ocd-division/country:us/state:ri/county:providence/place:burrillville_town",
+      "ocd-division/country:us/state:ri/county:providence/place:central_falls_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cumberland_town",
+      "ocd-division/country:us/state:ri/county:providence/place:east_providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+      "ocd-division/country:us/state:ri/county:providence/place:johnston_town",
+      "ocd-division/country:us/state:ri/county:providence/place:lincoln_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:pawtucket_city",
+      "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:scituate_town",
+      "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city"
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-7",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "cousub",
+      "4400730340",
+      "Glocester town"
+    ],
+    "officialNamedElectorate": "Glocester",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "basis": "The original official sample ballot prints this municipality and local question number. Exact held Census county subdivision matches municipality, government type and county; municipal charter questions cover the town, not its separately registered CDP or school district.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:ri",
+      "ocd-division/country:us/state:ri/county:providence",
+      "ocd-division/country:us/state:ri/county:providence/place:burrillville_town",
+      "ocd-division/country:us/state:ri/county:providence/place:central_falls_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cumberland_town",
+      "ocd-division/country:us/state:ri/county:providence/place:east_providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+      "ocd-division/country:us/state:ri/county:providence/place:johnston_town",
+      "ocd-division/country:us/state:ri/county:providence/place:lincoln_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:pawtucket_city",
+      "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:scituate_town",
+      "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city"
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-8",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "cousub",
+      "4400730340",
+      "Glocester town"
+    ],
+    "officialNamedElectorate": "Glocester",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "basis": "The original official sample ballot prints this municipality and local question number. Exact held Census county subdivision matches municipality, government type and county; municipal charter questions cover the town, not its separately registered CDP or school district.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:ri",
+      "ocd-division/country:us/state:ri/county:providence",
+      "ocd-division/country:us/state:ri/county:providence/place:burrillville_town",
+      "ocd-division/country:us/state:ri/county:providence/place:central_falls_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cumberland_town",
+      "ocd-division/country:us/state:ri/county:providence/place:east_providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+      "ocd-division/country:us/state:ri/county:providence/place:johnston_town",
+      "ocd-division/country:us/state:ri/county:providence/place:lincoln_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:pawtucket_city",
+      "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:scituate_town",
+      "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city"
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-9",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "cousub",
+      "4400730340",
+      "Glocester town"
+    ],
+    "officialNamedElectorate": "Glocester",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "basis": "The original official sample ballot prints this municipality and local question number. Exact held Census county subdivision matches municipality, government type and county; municipal charter questions cover the town, not its separately registered CDP or school district.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:ri",
+      "ocd-division/country:us/state:ri/county:providence",
+      "ocd-division/country:us/state:ri/county:providence/place:burrillville_town",
+      "ocd-division/country:us/state:ri/county:providence/place:central_falls_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cumberland_town",
+      "ocd-division/country:us/state:ri/county:providence/place:east_providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+      "ocd-division/country:us/state:ri/county:providence/place:johnston_town",
+      "ocd-division/country:us/state:ri/county:providence/place:lincoln_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:pawtucket_city",
+      "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:scituate_town",
+      "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city"
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-10",
+    "registeredDivision": [
+      "ocd-division/country:us/state:ri/county:providence/place:glocester_town",
+      "cousub",
+      "4400730340",
+      "Glocester town"
+    ],
+    "officialNamedElectorate": "Glocester",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "basis": "The original official sample ballot prints this municipality and local question number. Exact held Census county subdivision matches municipality, government type and county; municipal charter questions cover the town, not its separately registered CDP or school district.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:ri",
+      "ocd-division/country:us/state:ri/county:providence",
+      "ocd-division/country:us/state:ri/county:providence/place:burrillville_town",
+      "ocd-division/country:us/state:ri/county:providence/place:central_falls_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cranston_city",
+      "ocd-division/country:us/state:ri/county:providence/place:cumberland_town",
+      "ocd-division/country:us/state:ri/county:providence/place:east_providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:foster_town",
+      "ocd-division/country:us/state:ri/county:providence/place:johnston_town",
+      "ocd-division/country:us/state:ri/county:providence/place:lincoln_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_providence_town",
+      "ocd-division/country:us/state:ri/county:providence/place:north_smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:pawtucket_city",
+      "ocd-division/country:us/state:ri/county:providence/place:providence_city",
+      "ocd-division/country:us/state:ri/county:providence/place:scituate_town",
+      "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+      "ocd-division/country:us/state:ri/county:providence/place:woonsocket_city"
+    ]
+  }
+]

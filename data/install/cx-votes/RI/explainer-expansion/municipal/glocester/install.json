@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "RI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:RI",
+  "inputDirectory": "ballot-input",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "sourceCaptures": "source-captures.json",
+  "coverage": {
+    "municipality": "GLOCESTER",
+    "newExplainedMeasures": 5,
+    "officialQuestionNumbers": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "municipalLocalQuestionsInSample": 5,
+    "sourceInventory": "../../official-samples/inventory.json",
+    "officialEnrMeasureSlotsAcrossState": 108,
+    "stateLocalComplete": false,
+    "allBallotStylesClaim": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "RI",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "sourceStorage": "Shared original source bytes under ../../official-samples; no duplicate primary captures. Native PDF hashes and separately hashed extracted text retained.",
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

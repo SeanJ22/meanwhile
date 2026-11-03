@@ -1,0 +1,222 @@
+[
+  {
+    "contestId": "ri-glocester-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-db03-08df1e27b0f4",
+    "sourceTitle": "Glocester: 6. APPOINTMENT OF TOWN ADMINISTRATOR",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "sourceFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.pdf",
+    "sourceSha256": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.txt",
+    "extractedTextSha256": "d4d25e96a4e3c4c261370aa824fc29a1b5a5e6fe99348fdf06e6650d2662b7ca",
+    "exactQuestion": "Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. APPOINTMENT OF TOWN ADMINISTRATOR Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?",
+    "excerptFile": "excerpts/dbcb6fb4ea30b17ed64880484937b90a792112c9899814863e768ed18773a9d7.txt",
+    "excerptSha256": "dbcb6fb4ea30b17ed64880484937b90a792112c9899814863e768ed18773a9d7",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. APPOINTMENT OF TOWN ADMINISTRATOR Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?"
+      ],
+      "yesMeans": [
+        "6. APPOINTMENT OF TOWN ADMINISTRATOR Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?"
+      ],
+      "noMeans": [
+        "6. APPOINTMENT OF TOWN ADMINISTRATOR Shall the Home Rule Charter be amended, effective January 1, 2027, with the first Town Administrator to be appointed not later than December 31, 2027, to establish the position of Town Administrator, appointed by the Town Council to coordinate the daily administration of Town government under the direction and control of the Town Council and to perform such other duties as the Town Council may assign by ordinance or resolution, provided that all powers of appointment, discipline, including suspension, and removal are retained by the Town Council except as otherwise provided in the Charter?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-3b53-08df1e27b105",
+    "sourceTitle": "Glocester: 7. SCHOOL FINANCIAL ACCOUNTING (Art. VI, Sec. C6-9)",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "sourceFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.pdf",
+    "sourceSha256": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.txt",
+    "extractedTextSha256": "d4d25e96a4e3c4c261370aa824fc29a1b5a5e6fe99348fdf06e6650d2662b7ca",
+    "exactQuestion": "Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. SCHOOL FINANCIAL ACCOUNTING (Art. VI, Sec. C6-9) Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?",
+    "excerptFile": "excerpts/39fb0cd20e3ff57bb8285863ec6da2f0ff060aa71dded8fa1b51d250874f46fe.txt",
+    "excerptSha256": "39fb0cd20e3ff57bb8285863ec6da2f0ff060aa71dded8fa1b51d250874f46fe",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "7. SCHOOL FINANCIAL ACCOUNTING (Art. VI, Sec. C6-9) Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?"
+      ],
+      "yesMeans": [
+        "7. SCHOOL FINANCIAL ACCOUNTING (Art. VI, Sec. C6-9) Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?"
+      ],
+      "noMeans": [
+        "7. SCHOOL FINANCIAL ACCOUNTING (Art. VI, Sec. C6-9) Shall Section C6-9 (Financial Accounting) of the Home Rule Charter be amended to transfer responsibility for the financial and managerial accounting of the School Department from the Town Department of Finance to the Superintendent of Schools and the School Committee, with school funds remaining in the custody of the Town Treasurer and disbursements remaining subject to review by the Director of Finance, as further provided by ordinance?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-6e86-08df1e27b116",
+    "sourceTitle": "Glocester: 8. BOARD OF ASSESSMENT REVIEW MEMBERSHIP (Art. VII, Sec. C7-9)",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "sourceFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.pdf",
+    "sourceSha256": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.txt",
+    "extractedTextSha256": "d4d25e96a4e3c4c261370aa824fc29a1b5a5e6fe99348fdf06e6650d2662b7ca",
+    "exactQuestion": "Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. BOARD OF ASSESSMENT REVIEW MEMBERSHIP (Art. VII, Sec. C7-9) Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?",
+    "excerptFile": "excerpts/58bdb03900c940ba61797fac752eb4988b515201bc53587035ae28468275f950.txt",
+    "excerptSha256": "58bdb03900c940ba61797fac752eb4988b515201bc53587035ae28468275f950",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "8. BOARD OF ASSESSMENT REVIEW MEMBERSHIP (Art. VII, Sec. C7-9) Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?"
+      ],
+      "yesMeans": [
+        "8. BOARD OF ASSESSMENT REVIEW MEMBERSHIP (Art. VII, Sec. C7-9) Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?"
+      ],
+      "noMeans": [
+        "8. BOARD OF ASSESSMENT REVIEW MEMBERSHIP (Art. VII, Sec. C7-9) Shall Section C7-9 (Board of Assessment Review) of the Home Rule Charter be amended to increase the membership of the Board of Assessment Review from three members to five members, each a qualified elector of the Town appointed by the Town Council, and to change the term of office from six years to three years, with the terms so arranged that they expire on a staggered basis?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-3a53-08df1e27b127",
+    "sourceTitle": "Glocester: 9. INCREASE CAPITAL RESERVE FUND (Art. VIII, Sec. C8-8)",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "sourceFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.pdf",
+    "sourceSha256": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.txt",
+    "extractedTextSha256": "d4d25e96a4e3c4c261370aa824fc29a1b5a5e6fe99348fdf06e6650d2662b7ca",
+    "exactQuestion": "Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. INCREASE CAPITAL RESERVE FUND (Art. VIII, Sec. C8-8) Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?",
+    "excerptFile": "excerpts/644c6c50979efe14ff10bb91f33487659b77c4e6f113174c8e7cda15d0a76ad6.txt",
+    "excerptSha256": "644c6c50979efe14ff10bb91f33487659b77c4e6f113174c8e7cda15d0a76ad6",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "9. INCREASE CAPITAL RESERVE FUND (Art. VIII, Sec. C8-8) Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?"
+      ],
+      "yesMeans": [
+        "9. INCREASE CAPITAL RESERVE FUND (Art. VIII, Sec. C8-8) Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?"
+      ],
+      "noMeans": [
+        "9. INCREASE CAPITAL RESERVE FUND (Art. VIII, Sec. C8-8) Shall Section C8-8 (Capital Reserve Fund) of the Home Rule Charter be amended to increase the annual capital reserve fund contribution from 2% to 4% of the operating budget, phased in by one-quarter of one percent (0.25%) per year over an eight-year period beginning July 1, 2027?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-glocester-2026:question-10",
+    "officialQuestionNumber": 10,
+    "sourceBallotItemId": "01000000-59ac-daed-5223-08df1e27b13a",
+    "sourceTitle": "Glocester: 10. EMERGENCY MANAGEMENT DIRECTOR QUALIFICATION (Art. XI, Sec. C11-4)",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1301.pdf",
+    "sourceFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.pdf",
+    "sourceSha256": "db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/db0c8a33058e110e9b4121d7738402038ae445e60d1ed1b5153382a658ab5afb.txt",
+    "extractedTextSha256": "d4d25e96a4e3c4c261370aa824fc29a1b5a5e6fe99348fdf06e6650d2662b7ca",
+    "exactQuestion": "Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "10. EMERGENCY MANAGEMENT DIRECTOR QUALIFICATION (Art. XI, Sec. C11-4) Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?",
+    "excerptFile": "excerpts/e6c684459a17b5593425d785443020724699a912f2487ce3f6303d4da0c32e58.txt",
+    "excerptSha256": "e6c684459a17b5593425d785443020724699a912f2487ce3f6303d4da0c32e58",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "10. EMERGENCY MANAGEMENT DIRECTOR QUALIFICATION (Art. XI, Sec. C11-4) Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?"
+      ],
+      "yesMeans": [
+        "10. EMERGENCY MANAGEMENT DIRECTOR QUALIFICATION (Art. XI, Sec. C11-4) Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?"
+      ],
+      "noMeans": [
+        "10. EMERGENCY MANAGEMENT DIRECTOR QUALIFICATION (Art. XI, Sec. C11-4) Shall Section C11-4 (Emergency Management) of the Home Rule Charter be amended by deleting Subsection 5, which requires that the Director of Emergency Management be a qualified elector of the Town?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

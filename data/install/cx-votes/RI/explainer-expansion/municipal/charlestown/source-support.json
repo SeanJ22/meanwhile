@@ -1,0 +1,178 @@
+[
+  {
+    "contestId": "ri-charlestown-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-d70c-08df1e27a987",
+    "sourceTitle": "Charlestown: 7. PLANNING COMMISSION",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0501.pdf",
+    "sourceFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.pdf",
+    "sourceSha256": "5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.txt",
+    "extractedTextSha256": "a068f12ede6dd70376143cf2b03a4c731f282c017a85e62220ef0ccf1ba98365",
+    "exactQuestion": "Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-172 Establishment and organization; compensation, to provide for a Planning Commission composed of five (5) members elected at large on a non-partisan basis for terms of four (4) years with staggered terms, plus two (2) alternate members elected on a non-partisan basis for terms of two (2) years, subject to ratification of these amendments by special act of the RI General Assembly?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. PLANNING COMMISSION Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-172 Establishment and organization; compensation, to provide for a Planning Commission composed of five (5) members elected at large on a non-partisan basis for terms of four (4) years with staggered terms, plus two (2) alternate members elected on a non-partisan basis for terms of two (2) years, subject to ratification of these amendments by special act of the RI General Assembly?",
+    "excerptFile": "excerpts/9c15fdaa308a7c60942dab4c1123a22675cb7134384cf6a9ef654f7c662301d7.txt",
+    "excerptSha256": "9c15fdaa308a7c60942dab4c1123a22675cb7134384cf6a9ef654f7c662301d7",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-172 Establishment and organization; compensation, to provide for a Planning Commission composed of five (5) members elected at large on a non-partisan basis for terms of four (4) years with staggered terms, plus two (2) alternate members elected on a non-partisan basis for terms of two (2) years, subject to ratification of these amendments by special act of the RI General Assembly?"
+      ],
+      "yesMeans": [
+        "Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-172 Establishment and organization; compensation, to provide for a Planning Commission composed of five (5) members elected at large on a non-partisan basis for terms of four (4) years with staggered terms, plus two (2) alternate members elected on a non-partisan basis for terms of two (2) years, subject to ratification of these amendments by special act of the RI General Assembly?"
+      ],
+      "noMeans": [
+        "Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-172 Establishment and organization; compensation, to provide for a Planning Commission composed of five (5) members elected at large on a non-partisan basis for terms of four (4) years with staggered terms, plus two (2) alternate members elected on a non-partisan basis for terms of two (2) years, subject to ratification of these amendments by special act of the RI General Assembly?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-charlestown-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-ce87-08df1e27a996",
+    "sourceTitle": "Charlestown: 8. ORDINANCES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0501.pdf",
+    "sourceFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.pdf",
+    "sourceSha256": "5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.txt",
+    "extractedTextSha256": "a068f12ede6dd70376143cf2b03a4c731f282c017a85e62220ef0ccf1ba98365",
+    "exactQuestion": "Shall the Town Charter be amended at Part 2, Town Council, Article IX, Ordinances, § C-33, Introduction, to provide, when allowable by law, a summary of the proposed ordinance, including a description of the matter under consideration and the intent and effect of the proposed ordinance be published in a newspaper of general circulation within the Town, with the full text of the proposed ordinance made available on the Town’s official website? The summary shall include directions on where to locate the proposed ordinance.",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. ORDINANCES Shall the Town Charter be amended at Part 2, Town Council, Article IX, Ordinances, § C-33, Introduction, to provide, when allowable by law, a summary of the proposed ordinance, including a description of the matter under consideration and the intent and effect of the proposed ordinance be published in a newspaper of general circulation within the Town, with the full text of the proposed ordinance made available on the Town’s official website? The summary shall include directions on where to locate the proposed ordinance.",
+    "excerptFile": "excerpts/8897899f8ab8522307345a7139482f9223cac23305da8103d800b6a5bdd2b290.txt",
+    "excerptSha256": "8897899f8ab8522307345a7139482f9223cac23305da8103d800b6a5bdd2b290",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Charter be amended at Part 2, Town Council, Article IX, Ordinances, § C-33, Introduction, to provide, when allowable by law, a summary of the proposed ordinance, including a description of the matter under consideration and the intent and effect of the proposed ordinance be published in a newspaper of general circulation within the Town, with the full text of the proposed ordinance made available on the Town’s official website? The summary shall include directions on where to locate the proposed ordinance."
+      ],
+      "yesMeans": [
+        "Shall the Town Charter be amended at Part 2, Town Council, Article IX, Ordinances, § C-33, Introduction, to provide, when allowable by law, a summary of the proposed ordinance, including a description of the matter under consideration and the intent and effect of the proposed ordinance be published in a newspaper of general circulation within the Town, with the full text of the proposed ordinance made available on the Town’s official website? The summary shall include directions on where to locate the proposed ordinance."
+      ],
+      "noMeans": [
+        "Shall the Town Charter be amended at Part 2, Town Council, Article IX, Ordinances, § C-33, Introduction, to provide, when allowable by law, a summary of the proposed ordinance, including a description of the matter under consideration and the intent and effect of the proposed ordinance be published in a newspaper of general circulation within the Town, with the full text of the proposed ordinance made available on the Town’s official website? The summary shall include directions on where to locate the proposed ordinance."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-charlestown-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-79ca-08df1e27a9a5",
+    "sourceTitle": "Charlestown: 9. PURCHASING",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0501.pdf",
+    "sourceFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.pdf",
+    "sourceSha256": "5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.txt",
+    "extractedTextSha256": "a068f12ede6dd70376143cf2b03a4c731f282c017a85e62220ef0ccf1ba98365",
+    "exactQuestion": "Shall the Town Charter be amended at Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases and Paragraph D, For all other purchases, to be increased or decreased annually hereafter at the same rate as the Boston Regional Consumer Price Index, as per R.I. Gen. Law § 45-55-9, as amended?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. PURCHASING Shall the Town Charter be amended at Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases and Paragraph D, For all other purchases, to be increased or decreased annually hereafter at the same rate as the Boston Regional Consumer Price Index, as per R.I. Gen. Law § 45-55-9, as amended?",
+    "excerptFile": "excerpts/1d566bddf9bfb211afa27fe307b39834669d108c2f682920b061c0a1eeb6e5cc.txt",
+    "excerptSha256": "1d566bddf9bfb211afa27fe307b39834669d108c2f682920b061c0a1eeb6e5cc",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Charter be amended at Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases and Paragraph D, For all other purchases, to be increased or decreased annually hereafter at the same rate as the Boston Regional Consumer Price Index, as per R.I. Gen. Law § 45-55-9, as amended?"
+      ],
+      "yesMeans": [
+        "Shall the Town Charter be amended at Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases and Paragraph D, For all other purchases, to be increased or decreased annually hereafter at the same rate as the Boston Regional Consumer Price Index, as per R.I. Gen. Law § 45-55-9, as amended?"
+      ],
+      "noMeans": [
+        "Shall the Town Charter be amended at Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases and Paragraph D, For all other purchases, to be increased or decreased annually hereafter at the same rate as the Boston Regional Consumer Price Index, as per R.I. Gen. Law § 45-55-9, as amended?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-charlestown-2026:question-10",
+    "officialQuestionNumber": 10,
+    "sourceBallotItemId": "01000000-59ac-daed-6f1a-08df1e27a9b4",
+    "sourceTitle": "Charlestown: 10. CHARTER REVISIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/0501.pdf",
+    "sourceFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.pdf",
+    "sourceSha256": "5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/5be5584e10a833be2b04fb2ef0e716f1c37d5da94fd11a454cf591422b1823ae.txt",
+    "extractedTextSha256": "a068f12ede6dd70376143cf2b03a4c731f282c017a85e62220ef0ccf1ba98365",
+    "exactQuestion": "Shall the Town Charter be revised in the following Sections to remove and/or insert words, terms, and/or phrases to remove scrivener’s errors and/or clarify, correct word usage, terms, and phrases: a. Preamble, be amended to remove the words “and Providence Plantations” from the name of the State of Rhode Island, to conform to the amendment of the Rhode Island Constitution in November 2020? b. Part 1, Establishment of Town; Effect of Charter, Article V, Real and Personal Property Held by Town, § C-16 Granting Use of Property; regulation for clarity to who is authorized? c. Part 3, Administrator, Article X, Appointment and Qualifications, § C-41 Appointment; term, Paragraph C., to insert the word “of” to resolve a scrivener’s drafting error? d. Part 3, Administrator, Article XIV, Acting Administrator, § C-46 Appointment for temporary absences, to insert the word “to” to resolve a scrivener’s drafting error? e. Part 5, (Reserved), Article XVIII, Clerk and Deputy Clerk § C-51, Paragraph A, to insert a comma “,” after the word 'interviews' to resolve a scrivener’s drafting error? f. Part 5, (Reserved), Article XIX, Duties of Clerk, § C-53 Enumeration, Paragraph I, to insert the word “of” to resolve a scrivener’s drafting error? g. Part 6 Finance, Article XXIII Tax Assessment, § C-65, Duties of Tax Assessor, to insert the word \"in\" to resolve a scrivener's drafting error? h. Part 8, Inspectors, Article XXXII Function of Building Inspector/Zoning Official, § C-115, Powers and Duties, Sub-Paragraph F to delete a comma \",\" between the words 'Housing' and 'Maintenance' to resolve a scrivener's drafting error? i. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? j. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph D, For all other purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? k. Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-174, Powers and duties, at E. to remove the requirement to provide a report with the Rhode Island Development Council as that entity is no longer in existence?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "10. CHARTER REVISIONS Shall the Town Charter be revised in the following Sections to remove and/or insert words, terms, and/or phrases to remove scrivener’s errors and/or clarify, correct word usage, terms, and phrases: a. Preamble, be amended to remove the words “and Providence Plantations” from the name of the State of Rhode Island, to conform to the amendment of the Rhode Island Constitution in November 2020? b. Part 1, Establishment of Town; Effect of Charter, Article V, Real and Personal Property Held by Town, § C-16 Granting Use of Property; regulation for clarity to who is authorized? c. Part 3, Administrator, Article X, Appointment and Qualifications, § C-41 Appointment; term, Paragraph C., to insert the word “of” to resolve a scrivener’s drafting error? d. Part 3, Administrator, Article XIV, Acting Administrator, § C-46 Appointment for temporary absences, to insert the word “to” to resolve a scrivener’s drafting error? e. Part 5, (Reserved), Article XVIII, Clerk and Deputy Clerk § C-51, Paragraph A, to insert a comma “,” after the word 'interviews' to resolve a scrivener’s drafting error? f. Part 5, (Reserved), Article XIX, Duties of Clerk, § C-53 Enumeration, Paragraph I, to insert the word “of” to resolve a scrivener’s drafting error? g. Part 6 Finance, Article XXIII Tax Assessment, § C-65, Duties of Tax Assessor, to insert the word \"in\" to resolve a scrivener's drafting error? h. Part 8, Inspectors, Article XXXII Function of Building Inspector/Zoning Official, § C-115, Powers and Duties, Sub-Paragraph F to delete a comma \",\" between the words 'Housing' and 'Maintenance' to resolve a scrivener's drafting error? i. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? j. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph D, For all other purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? k. Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-174, Powers and duties, at E. to remove the requirement to provide a report with the Rhode Island Development Council as that entity is no longer in existence?",
+    "excerptFile": "excerpts/3c8d117523ca7f0775adf619750efe5a499552e88a217ee2ac7d0e5f1a2ca15b.txt",
+    "excerptSha256": "3c8d117523ca7f0775adf619750efe5a499552e88a217ee2ac7d0e5f1a2ca15b",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Charter be revised in the following Sections to remove and/or insert words, terms, and/or phrases to remove scrivener’s errors and/or clarify, correct word usage, terms, and phrases: a. Preamble, be amended to remove the words “and Providence Plantations” from the name of the State of Rhode Island, to conform to the amendment of the Rhode Island Constitution in November 2020? b. Part 1, Establishment of Town; Effect of Charter, Article V, Real and Personal Property Held by Town, § C-16 Granting Use of Property; regulation for clarity to who is authorized? c. Part 3, Administrator, Article X, Appointment and Qualifications, § C-41 Appointment; term, Paragraph C., to insert the word “of” to resolve a scrivener’s drafting error? d. Part 3, Administrator, Article XIV, Acting Administrator, § C-46 Appointment for temporary absences, to insert the word “to” to resolve a scrivener’s drafting error? e. Part 5, (Reserved), Article XVIII, Clerk and Deputy Clerk § C-51, Paragraph A, to insert a comma “,” after the word 'interviews' to resolve a scrivener’s drafting error? f. Part 5, (Reserved), Article XIX, Duties of Clerk, § C-53 Enumeration, Paragraph I, to insert the word “of” to resolve a scrivener’s drafting error? g. Part 6 Finance, Article XXIII Tax Assessment, § C-65, Duties of Tax Assessor, to insert the word \"in\" to resolve a scrivener's drafting error? h. Part 8, Inspectors, Article XXXII Function of Building Inspector/Zoning Official, § C-115, Powers and Duties, Sub-Paragraph F to delete a comma \",\" between the words 'Housing' and 'Maintenance' to resolve a scrivener's drafting error? i. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? j. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph D, For all other purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? k. Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-174, Powers and duties, at E. to remove the requirement to provide a report with the Rhode Island Development Council as that entity is no longer in existence?"
+      ],
+      "yesMeans": [
+        "Shall the Town Charter be revised in the following Sections to remove and/or insert words, terms, and/or phrases to remove scrivener’s errors and/or clarify, correct word usage, terms, and phrases: a. Preamble, be amended to remove the words “and Providence Plantations” from the name of the State of Rhode Island, to conform to the amendment of the Rhode Island Constitution in November 2020? b. Part 1, Establishment of Town; Effect of Charter, Article V, Real and Personal Property Held by Town, § C-16 Granting Use of Property; regulation for clarity to who is authorized? c. Part 3, Administrator, Article X, Appointment and Qualifications, § C-41 Appointment; term, Paragraph C., to insert the word “of” to resolve a scrivener’s drafting error? d. Part 3, Administrator, Article XIV, Acting Administrator, § C-46 Appointment for temporary absences, to insert the word “to” to resolve a scrivener’s drafting error? e. Part 5, (Reserved), Article XVIII, Clerk and Deputy Clerk § C-51, Paragraph A, to insert a comma “,” after the word 'interviews' to resolve a scrivener’s drafting error? f. Part 5, (Reserved), Article XIX, Duties of Clerk, § C-53 Enumeration, Paragraph I, to insert the word “of” to resolve a scrivener’s drafting error? g. Part 6 Finance, Article XXIII Tax Assessment, § C-65, Duties of Tax Assessor, to insert the word \"in\" to resolve a scrivener's drafting error? h. Part 8, Inspectors, Article XXXII Function of Building Inspector/Zoning Official, § C-115, Powers and Duties, Sub-Paragraph F to delete a comma \",\" between the words 'Housing' and 'Maintenance' to resolve a scrivener's drafting error? i. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? j. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph D, For all other purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? k. Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-174, Powers and duties, at E. to remove the requirement to provide a report with the Rhode Island Development Council as that entity is no longer in existence?"
+      ],
+      "noMeans": [
+        "Shall the Town Charter be revised in the following Sections to remove and/or insert words, terms, and/or phrases to remove scrivener’s errors and/or clarify, correct word usage, terms, and phrases: a. Preamble, be amended to remove the words “and Providence Plantations” from the name of the State of Rhode Island, to conform to the amendment of the Rhode Island Constitution in November 2020? b. Part 1, Establishment of Town; Effect of Charter, Article V, Real and Personal Property Held by Town, § C-16 Granting Use of Property; regulation for clarity to who is authorized? c. Part 3, Administrator, Article X, Appointment and Qualifications, § C-41 Appointment; term, Paragraph C., to insert the word “of” to resolve a scrivener’s drafting error? d. Part 3, Administrator, Article XIV, Acting Administrator, § C-46 Appointment for temporary absences, to insert the word “to” to resolve a scrivener’s drafting error? e. Part 5, (Reserved), Article XVIII, Clerk and Deputy Clerk § C-51, Paragraph A, to insert a comma “,” after the word 'interviews' to resolve a scrivener’s drafting error? f. Part 5, (Reserved), Article XIX, Duties of Clerk, § C-53 Enumeration, Paragraph I, to insert the word “of” to resolve a scrivener’s drafting error? g. Part 6 Finance, Article XXIII Tax Assessment, § C-65, Duties of Tax Assessor, to insert the word \"in\" to resolve a scrivener's drafting error? h. Part 8, Inspectors, Article XXXII Function of Building Inspector/Zoning Official, § C-115, Powers and Duties, Sub-Paragraph F to delete a comma \",\" between the words 'Housing' and 'Maintenance' to resolve a scrivener's drafting error? i. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph C, For construction purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? j. Part 6 Finance, Article XXVII Purchasing, § C-103, Policy, Paragraph D, For all other purchases, Sub-Paragraph (ii) to clarify purchasing thresholds? k. Shall the Town Charter be amended at Part 14, Commissions and Boards, Article LIII, Planning Commission, § C-174, Powers and duties, at E. to remove the requirement to provide a report with the Rhode Island Development Council as that entity is no longer in existence?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

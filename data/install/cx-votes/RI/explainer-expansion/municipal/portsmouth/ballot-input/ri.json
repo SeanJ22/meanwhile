@@ -1,0 +1,124 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-portsmouth-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:portsmouth_town",
+          "divisionVintage": "2026",
+          "title": "Portsmouth town — Question 6: School construction and renovation borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.395103+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.403049+00:00",
+            "quote": "Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved?"
+          }
+        },
+        {
+          "id": "ri-portsmouth-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:portsmouth_town",
+          "divisionVintage": "2026",
+          "title": "Portsmouth town — Question 7: Nonpartisan council and school elections",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.395103+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.403049+00:00",
+            "quote": "Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701)"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-portsmouth-2026:question-6:measure",
+          "contestId": "ri-portsmouth-2026:question-6",
+          "questionText": "Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved?",
+          "officialStatement": "If approved, the Town shall borrow an amount not to exceed $41,000,000 for the above school projects. All school projects included in the Necessity of School Construction Stage II application approved by the Council on Elementary and Secondary Education and funded by the bond will be eligible for a minimum of 35% Housing Aid Reimbursement.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.395103+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.403049+00:00",
+            "quote": "Shall an act, passed at the 2026 session of the General Assembly, entitled “An Act authorizing the Town of Portsmouth to issue not to exceed $41,000,000 general obligation bonds, notes, and other evidences of indebtedness to finance the construction, additions, renovation, improvement, alteration, repair, furnishing, and equipping of schools and school facilities throughout the Town\" be approved?"
+          }
+        },
+        {
+          "id": "ri-portsmouth-2026:question-7:measure",
+          "contestId": "ri-portsmouth-2026:question-7",
+          "questionText": "Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701)",
+          "officialStatement": "If approved, Article II, Section 201, and Article VII, Section 701, of the Portsmouth Town Charter will be amended to identify the offices of Town Council and School Committee as “non-partisan”, to remove party designations from the ballot, and to add text for a candidate placement lottery for School Committee candidates.",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.395103+00:00",
+            "verifiedAt": "2026-11-03T08:13:43.403049+00:00",
+            "quote": "Shall the offices of Town Council and School Committee be non-partisan? (Amends Art. II, Sec. 201 and Art. VII, Sec 701)"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-portsmouth-2026:question-6",
+          "whatItDoes": "Allow Portsmouth to borrow up to $41 million in general-obligation debt for school and school-facility construction, additions, renovations, improvements, repairs, furnishings and equipment throughout town. The official explanation says bond-funded projects included in the Council on Elementary and Secondary Education’s approved Stage II school-construction application would qualify for at least 35% state Housing Aid reimbursement.",
+          "yesMeans": "Approve up to $41 million in school-project borrowing, with state-aid eligibility as described.",
+          "noMeans": "Reject this proposed school-project borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+          "sourceHash": "ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.403049+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-portsmouth-2026:question-7",
+          "whatItDoes": "Make Town Council and School Committee offices nonpartisan, removing party labels from their ballots. Also add a lottery for the ballot placement of School Committee candidates.",
+          "yesMeans": "Approve nonpartisan elections for both bodies and the School Committee placement lottery.",
+          "noMeans": "Reject this proposed election change.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+          "sourceHash": "ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:43.403049+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:13:43.403049+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/2701.pdf",
+        "httpStatus": 200,
+        "rawHash": "ce84d3c8bd1030c5d6bf2fe7ed39ed34f7f7350eee0b35fec0d15a32a96554c3",
+        "retrievedAt": "2026-11-03T07:53:03.395103+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

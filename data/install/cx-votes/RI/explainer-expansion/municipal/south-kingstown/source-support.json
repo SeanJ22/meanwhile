@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "ri-south-kingstown-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-986b-08df1e27bf8f",
+    "sourceTitle": "South Kingstown: 6. POLICE DEPARTMENT RULES AND REGULATIONS – TOWN COUNCIL APPROVAL",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3201.pdf",
+    "sourceFile": "../../official-samples/sources/84248711065342b973ea8fbde9b09b258956bab35a0b8814c63bad025d31e5a9.pdf",
+    "sourceSha256": "84248711065342b973ea8fbde9b09b258956bab35a0b8814c63bad025d31e5a9",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/84248711065342b973ea8fbde9b09b258956bab35a0b8814c63bad025d31e5a9.txt",
+    "extractedTextSha256": "b40e6f12c16d7335a146d147799f645a60eb8b56b0a578ab8cc09c4224a1a8d0",
+    "exactQuestion": "Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. POLICE DEPARTMENT RULES AND REGULATIONS – TOWN COUNCIL APPROVAL (Resolution of the Town Council adopted May 26, 2026) Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?",
+    "excerptFile": "excerpts/c94af6f09acb0b0f610e875e30d4ca79ea8f0cff909f6b94ca3b47c9bacf4337.txt",
+    "excerptSha256": "c94af6f09acb0b0f610e875e30d4ca79ea8f0cff909f6b94ca3b47c9bacf4337",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. POLICE DEPARTMENT RULES AND REGULATIONS – TOWN COUNCIL APPROVAL (Resolution of the Town Council adopted May 26, 2026) Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?"
+      ],
+      "yesMeans": [
+        "6. POLICE DEPARTMENT RULES AND REGULATIONS – TOWN COUNCIL APPROVAL (Resolution of the Town Council adopted May 26, 2026) Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?"
+      ],
+      "noMeans": [
+        "6. POLICE DEPARTMENT RULES AND REGULATIONS – TOWN COUNCIL APPROVAL (Resolution of the Town Council adopted May 26, 2026) Shall Sec. 4414.4 of the Town Charter be amended to provide that the Chief of Police may issue rules and regulations for the conduct of all members of the Police Department without being required to receive Town Council approval for such rules and regulations?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

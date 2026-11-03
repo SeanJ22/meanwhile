@@ -1,0 +1,134 @@
+[
+  {
+    "contestId": "ri-foster-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-46a8-08df1e27b057",
+    "sourceTitle": "Foster: 6. ARTICLE X, FINANCIAL PROCEDURES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+    "sourceFile": "../../official-samples/sources/a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0.pdf",
+    "sourceSha256": "a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0.txt",
+    "extractedTextSha256": "40955df6c1493b086af1a601301c0cf549fae4a9559c3470819e1dd03c34cea8",
+    "exactQuestion": "Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting.",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. ARTICLE X, FINANCIAL PROCEDURES To move the Financial Town Meeting from May to June and to remove language regarding voting procedures in conflict with State law. Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting.",
+    "excerptFile": "excerpts/0b19f23eb0a04494954ef485603a6b8ace03f52133a78d41da8531961fc09db0.txt",
+    "excerptSha256": "0b19f23eb0a04494954ef485603a6b8ace03f52133a78d41da8531961fc09db0",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "6. ARTICLE X, FINANCIAL PROCEDURES To move the Financial Town Meeting from May to June and to remove language regarding voting procedures in conflict with State law. Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting."
+      ],
+      "yesMeans": [
+        "6. ARTICLE X, FINANCIAL PROCEDURES To move the Financial Town Meeting from May to June and to remove language regarding voting procedures in conflict with State law. Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting."
+      ],
+      "noMeans": [
+        "6. ARTICLE X, FINANCIAL PROCEDURES To move the Financial Town Meeting from May to June and to remove language regarding voting procedures in conflict with State law. Shall Article X, Sec. 10.02, entitled \"Financial Town Meeting\", be amended to read as follows?: The electors of the Town shall assemble each year in a Financial Town Meeting on the first Tuesday in June at 7:00 p.m. for the purpose of ordering any tax which lawfully may be ordered, making appropriations, and transacting any other business appertaining to the financial affairs of the Town which legally may come before such meeting."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-foster-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-d31c-08df1e27b068",
+    "sourceTitle": "Foster: 7. ARTICLE X, FINANCIAL PROCEDURES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+    "sourceFile": "../../official-samples/sources/a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0.pdf",
+    "sourceSha256": "a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0.txt",
+    "extractedTextSha256": "40955df6c1493b086af1a601301c0cf549fae4a9559c3470819e1dd03c34cea8",
+    "exactQuestion": "Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program.",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. ARTICLE X, FINANCIAL PROCEDURES To increase the appropriated amount from two to four percent. Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program.",
+    "excerptFile": "excerpts/0d927028523c9a1367eecced5f5549de3aa5dd0be7c76116c72fda0e02169298.txt",
+    "excerptSha256": "0d927028523c9a1367eecced5f5549de3aa5dd0be7c76116c72fda0e02169298",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "7. ARTICLE X, FINANCIAL PROCEDURES To increase the appropriated amount from two to four percent. Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program."
+      ],
+      "yesMeans": [
+        "7. ARTICLE X, FINANCIAL PROCEDURES To increase the appropriated amount from two to four percent. Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program."
+      ],
+      "noMeans": [
+        "7. ARTICLE X, FINANCIAL PROCEDURES To increase the appropriated amount from two to four percent. Shall Article X, Sec. 10.10, entitled \"Capital Reserve Fund\", be amended to read as follows?: There shall be an annual addition to the amount appropriated by the Financial Town Meeting equivalent to four percent (4%) of the total of all other appropriations approved at the meeting, as a capital reserve fund. Such appropriation, and the addition of the same to the amount to be raised by taxation, shall be made by operation of this section of the Charter, without the necessity of any vote or any other action by the Town. Such amount and any accumulations shall be held and invested by the Finance Director as a separate fund, and from time to time any amount from such funds may be expended upon authorization by the annual or a special Financial Town Meeting for the purchase of improvements set forth in the capital program."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-foster-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-002d-08df1e27b07b",
+    "sourceTitle": "Foster: 8. ARTICLE X, FINANCIAL PROCEDURES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1201.pdf",
+    "sourceFile": "../../official-samples/sources/a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0.pdf",
+    "sourceSha256": "a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/a12268ba1bd4d9ec73f841267da235b4b5cdb2f2a23ce4bd9b896e3ea74e57b0.txt",
+    "extractedTextSha256": "40955df6c1493b086af1a601301c0cf549fae4a9559c3470819e1dd03c34cea8",
+    "exactQuestion": "Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17.",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. ARTICLE X, FINANCIAL PROCEDURES To reduce the percentage of the Land Use Conveyance Tax received by the Foster Land Trust from 100% to 50%. Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17.",
+    "excerptFile": "excerpts/1f79356ebc16aa6a904b511b7c1f01cd2339aad529cda68e65de5f0128fc7f75.txt",
+    "excerptSha256": "1f79356ebc16aa6a904b511b7c1f01cd2339aad529cda68e65de5f0128fc7f75",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation or Statement of Purpose is officialStatement; questionText uses the complete English question only, and any Spanish parallel wording remains in the full bilingual excerpt. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "8. ARTICLE X, FINANCIAL PROCEDURES To reduce the percentage of the Land Use Conveyance Tax received by the Foster Land Trust from 100% to 50%. Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17."
+      ],
+      "yesMeans": [
+        "8. ARTICLE X, FINANCIAL PROCEDURES To reduce the percentage of the Land Use Conveyance Tax received by the Foster Land Trust from 100% to 50%. Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17."
+      ],
+      "noMeans": [
+        "8. ARTICLE X, FINANCIAL PROCEDURES To reduce the percentage of the Land Use Conveyance Tax received by the Foster Land Trust from 100% to 50%. Shall Article X, Sec. 10.17 of the Foster Town Charter be amended to read as follows?: The Town Council shall set aide, as part of each annual budget, no less than 50% of all funds collected pursuant to the Land Use Conveyance Tax which are retained by the Town of Foster as provided by State law. Except as provided for in Section 10.17(a), the funds shall be used exclusively by the Foster Land Trust for the acquisition and preservation of open space pursuant to the legislative Charter of said Land Trust. (a) The operating and administrative budget of the Foster Land Trust shall be approved by the voters at the annual Financial Town Meeting. The approved amount shall be reimbursed to the Town by the Foster Land Trust from the funds designated in section 10.17."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

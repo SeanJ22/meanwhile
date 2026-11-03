@@ -1,0 +1,185 @@
+[
+  {
+    "id": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+    "title": "Chief Justice, 15th Court of Appeals District",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Chief Justice, 15th Court of Appeals District\n(Juez Presidente, Corte De Apelaciones Del\n15th Distrito)\nVote for None or One\n(Vote por Ninguno o Uno)\nScott Brister Rep\nJerry Zimmerer Dem"
+    },
+    "action": "EXISTING_DALLAS_OR_TARRANT_SHARED_CONTEST_PRESERVED_NOT_DUPLICATED"
+  },
+  {
+    "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+    "title": "Justice, 15th Court of Appeals District, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Justice, 15th Court of Appeals District, Place 2\n(Juez, Corte De Apelaciones Del 15th Distrito,\nLugar Núm. 2)\nVote for None or One\n(Vote por Ninguno o Uno)\nScott K. Field Rep\nTom Baker Dem"
+    },
+    "action": "EXISTING_DALLAS_OR_TARRANT_SHARED_CONTEST_PRESERVED_NOT_DUPLICATED"
+  },
+  {
+    "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+    "title": "Justice, 15th Court of Appeals District, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Justice, 15th Court of Appeals District, Place 3\n(Juez, Corte de Apelaciones del 15th Distrito,\nLugar Núm. 3)\nVote for None or One\n(Vote por Ninguno o Uno)\nApril Farris Rep\nMarc M. Meyer Dem"
+    },
+    "action": "EXISTING_DALLAS_OR_TARRANT_SHARED_CONTEST_PRESERVED_NOT_DUPLICATED"
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-3",
+    "title": "Justice, 5th Court of Appeals District, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Justice, 5th Court of Appeals District, Place 3\n(Juez, Corte de Apelaciones del 5th Distrito,\nLugar Núm. 3)\nVote for None or One\n(Vote por Ninguno o Uno)\nMatthew Kolodoski Rep\nAmanda Reichek Dem"
+    },
+    "action": "EXISTING_DALLAS_OR_TARRANT_SHARED_CONTEST_PRESERVED_NOT_DUPLICATED"
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-6",
+    "title": "Justice, 5th Court of Appeals District, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Justice, 5th Court of Appeals District, Place 6\n(Juez, Corte de Apelaciones del 5th Distrito,\nLugar Núm. 6)\nVote for None or One\n(Vote por Ninguno o Uno)\nBen Smith Rep\nMonica Purdy Dem"
+    },
+    "action": "EXISTING_DALLAS_OR_TARRANT_SHARED_CONTEST_PRESERVED_NOT_DUPLICATED"
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-8",
+    "title": "Justice, 5th Court of Appeals District, Place 8",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Justice, 5th Court of Appeals District, Place 8\n(Juez, Corte de Apelaciones del 5th Distrito,\nLugar Núm. 8)\nVote for None or One\n(Vote por Ninguno o Uno)\nAshley Wysocki Rep\nAndrea D. Plumlee Dem"
+    },
+    "action": "EXISTING_DALLAS_OR_TARRANT_SHARED_CONTEST_PRESERVED_NOT_DUPLICATED"
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-city-of-dallas-proposition-a",
+    "title": "CITY OF DALLAS PROPOSITION A",
+    "ocdId": "ocd-division/country:us/state:tx/place:dallas",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Proposition A\nTHIS IS A TAX INCREASE;The issuance of\n$443,000,000 general obligation bonds for public\nsafety improvements and facilities, including fire,\npolice and emergency services; the levying of a tax\nsufficient to pay principal and interest thereon; the\nestimated amount of repayment, including principal\nand interest based on current market conditions\nbeing $629,618,180."
+    },
+    "action": "EXISTING_DALLAS_SHARED_MEASURE_PRESERVED_NOT_DUPLICATED",
+    "sampleQuestion": "THIS IS A TAX INCREASE;The issuance of $443,000,000 general obligation bonds for public safety improvements and facilities, including fire, police and emergency services; the levying of a tax sufficient to pay principal and interest thereon; the estimated amount of repayment, including principal and interest based on current market conditions being $629,618,180.",
+    "heldQuestion": "THIS IS A TAX INCREASE.\nThe issuance of $443,000,000 general obligation bonds for public safety improvements and facilities, including fire, police and emergency services; the levying of a tax sufficient to pay principal and interest thereon; the estimated amount of repayment, including principal and interest based on current market conditions being $629,618,180."
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-city-of-garland-proposition-a",
+    "title": "City of Garland Proposition A",
+    "ocdId": "ocd-division/country:us/state:tx/place:garland",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Proposition A\nTHIS IS A TAX INCREASE; Approving the ad\nvalorem tax rate of $0.679900 per $100 valuation in\nthe City of Garland, Texas for the current year, a rate\nthat is $0.036646 higher per $100 of valuation than\nthe voter-approval tax rate of the City of Garland,\nTexas, for the purpose of increasing staff for the\npolice department, fire department, 9-1-1 dispatch\ndepartment and parks department, increasing funding\nfor roadway construction and maintenance,\nmaintaining and enhancing levels of city-wide\nservices and competitive pay for public safety and\ncity personnel. Last year, the ad valorem tax rate in\nthe City of Garland, Texas was $0.689746 per $100\nvaluation."
+    },
+    "action": "EXISTING_DALLAS_SHARED_MEASURE_PRESERVED_NOT_DUPLICATED",
+    "sampleQuestion": "THIS IS A TAX INCREASE; Approving the ad valorem tax rate of $0.679900 per $100 valuation in the City of Garland, Texas for the current year, a rate that is $0.036646 higher per $100 of valuation than the voter-approval tax rate of the City of Garland, Texas, for the purpose of increasing staff for the police department, fire department, 9-1-1 dispatch department and parks department, increasing funding for roadway construction and maintenance, maintaining and enhancing levels of city-wide services and competitive pay for public safety and city personnel. Last year, the ad valorem tax rate in the City of Garland, Texas was $0.689746 per $100 valuation.",
+    "heldQuestion": "THIS IS A TAX INCREASE\nApproving the ad valorem tax rate of $0.679900 per $100 valuation in the City of Garland, Texas for the current year, a rate that is $0.036646 higher per $100 of valuation than the voter-approval tax rate of the City of Garland, Texas, for the purpose of increasing staff for the police department, fire department, 9-1-1 dispatch department and parks department, increasing funding for roadway construction and maintenance, maintaining and enhancing levels of city-wide services and competitive pay for public safety and city personnel. Last year, the ad valorem tax rate in the City of Garland, Texas was $0.689746 per $100 valuation."
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-a",
+    "title": "CITY OF WYLIE, TEXAS PROPOSITION A",
+    "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Proposition A\nTHIS IS A TAX INCREASE\nThe issuance of $25,500,000 general obligation\nbonds for street improvements in the Wylie\nDowntown Historic District and Ballard/Sachse Road\nand the imposition of a tax sufficient to pay the\nprincipal of and interest on the bonds."
+    },
+    "action": "EXISTING_DALLAS_SHARED_MEASURE_PRESERVED_NOT_DUPLICATED",
+    "sampleQuestion": "THIS IS A TAX INCREASE The issuance of $25,500,000 general obligation bonds for street improvements in the Wylie Downtown Historic District and Ballard/Sachse Road and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+    "heldQuestion": "THIS IS A TAX INCREASE\nThe issuance of $25,500,000 general obligation bonds for street improvements in the Wylie Downtown Historic District and Ballard/Sachse Road and the imposition of a tax sufficient to pay the principal of and interest on the bonds."
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-b",
+    "title": "CITY OF WYLIE, TEXAS PROPOSITION B",
+    "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Proposition B\nTHIS IS A TAX INCREASE\nThe issuance of $22,500,000 general obligation\nbonds for park and recreation facilities at Founders\nPark, Community Park, East Fork Park and Avalon\nLake Park, the acquisition of land for future park\nfacilities, the renovation of an existing city building for\na parks building and the imposition of a tax sufficient\nto pay the principal of and interest on the bonds."
+    },
+    "action": "EXISTING_DALLAS_SHARED_MEASURE_PRESERVED_NOT_DUPLICATED",
+    "sampleQuestion": "THIS IS A TAX INCREASE The issuance of $22,500,000 general obligation bonds for park and recreation facilities at Founders Park, Community Park, East Fork Park and Avalon Lake Park, the acquisition of land for future park facilities, the renovation of an existing city building for a parks building and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+    "heldQuestion": "THIS IS A TAX INCREASE\nThe issuance of $22,500,000 general obligation bonds for park and recreation facilities at Founders Park, Community Park, East Fork Park and Avalon Lake Park, the acquisition of land for future park facilities, the renovation of an existing city building for a parks building and the imposition of a tax sufficient to pay the principal of and interest on the bonds."
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-c",
+    "title": "CITY OF WYLIE, TEXAS PROPOSITION C",
+    "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Proposition C\nTHIS IS A TAX INCREASE\nThe issuance of $25,000,000 general obligation\nbonds for public safety facilities and the imposition of\na tax sufficient to pay the principal of and interest on\nthe bonds."
+    },
+    "action": "EXISTING_DALLAS_SHARED_MEASURE_PRESERVED_NOT_DUPLICATED",
+    "sampleQuestion": "THIS IS A TAX INCREASE The issuance of $25,000,000 general obligation bonds for public safety facilities and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+    "heldQuestion": "THIS IS A TAX INCREASE\nThe issuance of $25,000,000 general obligation bonds for public safety facilities and the imposition of a tax sufficient to pay the principal of and interest on the bonds."
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-d",
+    "title": "CITY OF WYLIE, TEXAS PROPOSITION D",
+    "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Proposition D\nTHIS IS A TAX INCREASE\nThe issuance of $5,500,000 general obligation bonds\nfor a public works complex, the renovation of an\nexisting city building for a public works building and\nthe imposition of a tax sufficient to pay the principal\nof and interest on the bonds."
+    },
+    "action": "EXISTING_DALLAS_SHARED_MEASURE_PRESERVED_NOT_DUPLICATED",
+    "sampleQuestion": "THIS IS A TAX INCREASE The issuance of $5,500,000 general obligation bonds for a public works complex, the renovation of an existing city building for a public works building and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+    "heldQuestion": "THIS IS A TAX INCREASE\nThe issuance of $5,500,000 general obligation bonds for a public works complex, the renovation of an existing city building for a public works building and the imposition of a tax sufficient to pay the principal of and interest on the bonds."
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-e",
+    "title": "CITY OF WYLIE, TEXAS PROPOSITION E",
+    "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+    "sourceProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Proposition E\nTHIS IS A TAX INCREASE\nThe issuance of $12,000,000 general obligation\nbonds for an animal shelter and the imposition of a\ntax sufficient to pay the principal of and interest on\nthe bonds."
+    },
+    "action": "EXISTING_DALLAS_SHARED_MEASURE_PRESERVED_NOT_DUPLICATED",
+    "sampleQuestion": "THIS IS A TAX INCREASE The issuance of $12,000,000 general obligation bonds for an animal shelter and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+    "heldQuestion": "THIS IS A TAX INCREASE\nThe issuance of $12,000,000 general obligation bonds for an animal shelter and the imposition of a tax sufficient to pay the principal of and interest on the bonds."
+  }
+]

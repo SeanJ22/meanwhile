@@ -1,0 +1,72 @@
+[
+  {
+    "district": "Verona Special Utility District",
+    "electionDate": "2026-11-03",
+    "status": "CANCELLED_UNOPPOSED_DECLARED_ELECTED",
+    "orderAdoptedOn": "2026-08-18",
+    "office": "Director",
+    "names": [
+      "Nathan McTee",
+      "Gary Cantrell"
+    ],
+    "statusProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/verona-sud-certification-of-unopposed-candidates-and-cancellation-of-election.pdf?sfvrsn=b1d389ab_3",
+      "sourceOrg": "Verona Special Utility District",
+      "collectedAt": "2026-11-03T04:52:14.015680+00:00",
+      "verifiedAt": "2026-11-03T04:52:14.015680+00:00",
+      "quote": "The Board of Directors of Verona Special Utility District hereby cancels the General Election\nscheduled to be held on Tuesday, November 3, 2026, in accordance with Section 2.053(a) of\ntheTexas Election Code. The following candidates have been certified as unopposed and are\nherebyelected:"
+    },
+    "nameProvenances": [
+      {
+        "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/verona-sud-certification-of-unopposed-candidates-and-cancellation-of-election.pdf?sfvrsn=b1d389ab_3",
+        "sourceOrg": "Verona Special Utility District",
+        "collectedAt": "2026-11-03T04:52:14.015680+00:00",
+        "verifiedAt": "2026-11-03T04:52:14.015680+00:00",
+        "quote": "Nathan McTee"
+      },
+      {
+        "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/verona-sud-certification-of-unopposed-candidates-and-cancellation-of-election.pdf?sfvrsn=b1d389ab_3",
+        "sourceOrg": "Verona Special Utility District",
+        "collectedAt": "2026-11-03T04:52:14.015680+00:00",
+        "verifiedAt": "2026-11-03T04:52:14.015680+00:00",
+        "quote": "Gary Cantrell"
+      }
+    ],
+    "representation": "Separate cancelled-election source history; these four names are not ordinary active printed sample choices."
+  },
+  {
+    "district": "Wylie Northeast Special Utility District",
+    "electionDate": "2026-11-03",
+    "status": "CANCELLED_UNOPPOSED_DECLARED_ELECTED",
+    "orderAdoptedOn": "2026-09-14",
+    "office": "Director",
+    "names": [
+      "Christian Shamas",
+      "Jason West"
+    ],
+    "statusProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/wylie-ne-sud-order-of-cancellation.pdf?sfvrsn=2e46d485_3",
+      "sourceOrg": "Wylie Northeast Special Utility District",
+      "collectedAt": "2026-11-03T04:52:15.035827+00:00",
+      "verifiedAt": "2026-11-03T04:52:15.035827+00:00",
+      "quote": "The Board of Directors of Wylie Northeast Special Utility District hereby cancels the General\nElection scheduled to be held on Tuesday, November 3, 2026, in accordance with Section\n2.053(a) of the Texas Election Code. The following candidates have been certified as unopposed\nand are hereby elected:"
+    },
+    "nameProvenances": [
+      {
+        "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/wylie-ne-sud-order-of-cancellation.pdf?sfvrsn=2e46d485_3",
+        "sourceOrg": "Wylie Northeast Special Utility District",
+        "collectedAt": "2026-11-03T04:52:15.035827+00:00",
+        "verifiedAt": "2026-11-03T04:52:15.035827+00:00",
+        "quote": "Christian Shamas"
+      },
+      {
+        "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/wylie-ne-sud-order-of-cancellation.pdf?sfvrsn=2e46d485_3",
+        "sourceOrg": "Wylie Northeast Special Utility District",
+        "collectedAt": "2026-11-03T04:52:15.035827+00:00",
+        "verifiedAt": "2026-11-03T04:52:15.035827+00:00",
+        "quote": "Jason West"
+      }
+    ],
+    "representation": "Separate cancelled-election source history; these four names are not ordinary active printed sample choices."
+  }
+]

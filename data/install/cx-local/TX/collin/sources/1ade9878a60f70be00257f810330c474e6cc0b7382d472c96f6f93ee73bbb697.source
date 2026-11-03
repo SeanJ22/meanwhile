@@ -1,0 +1,792 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		 <base href="https://www.lowrycrossingtexas.org/elections.php" />	
+
+
+<link href="/revize/plugins/setup/css/revize.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/revize/plugins/document_center/document_center_styles.css">
+<script type="text/javascript" src="/revize/plugins/document_center/simple_accordian.js"></script><script type="text/javascript">
+
+//----- Check href of all <a...> tags, if it matchs page url and immediate parent is <LI>,
+//		append "active" to className of all ancestor <LI> tags until the parent of the <LI>
+//		tag is not <UL> or the parent of the <UL> is not another <LI> tag.
+var functionRef = function setClassActive()
+{
+	var e;
+	try
+	{
+		var pattern = new RegExp("http[s]?://.*?/(.*)[?#]?","");
+		var tags = document.getElementsByTagName("A");
+		if (tags)
+		{
+			for (var i=0;i<tags.length;i++)
+			{
+				var el = tags[i];
+				var resultsTag = el.href.match(pattern);
+				var resultsPage = location.href.match(pattern);
+				if (!resultsTag || !resultsPage) continue;
+				if (resultsTag[1] != resultsPage[1]) continue;
+	
+				// go up li tree marking this and all parent class=active
+				var li = el.parentNode;
+				while (li && li.tagName == 'LI')
+				{
+					if (li.className != '') 
+						li.className += ' ';
+					li.className += 'active';
+					var ul = li.parentNode;
+					if (!ul || ul.tagName != 'UL') break;
+					li = ul.parentNode;
+				}
+				//let's catch all links e.g. topnav, leftnav, quick links, etc
+				//break;	//found url match, quit checking tags
+			}
+		}
+	}
+	catch (e) {}
+}
+//----- Activate topnavActive once page loads
+if (typeof addEventListener != 'undefined') addEventListener('load', functionRef, false);	//standards browser
+else if (typeof attachEvent != 'undefined') attachEvent("onload", functionRef);				//IE early versions
+</script>
+
+
+
+<script type="text/javascript">
+
+
+
+</script>
+
+
+
+
+	
+	
+	
+
+
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+	<link rel="stylesheet" href="_assets_/fonts/font-awesome/css/font-awesome.min.css">
+	<!--[if (lt IE 9)]><script src="_assets_/plugins/tiny-slider/dist/min/tiny-slider.helper.ie8.js"></script><![endif]-->
+	
+    <link rel="stylesheet" href="/revize/plugins/revize_photo_gallery/css/isotope.css">
+    <link rel="stylesheet" href="/revize/plugins/revize_photo_gallery/css/prettyPhoto.css">
+
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+	<!-- Metadata Area Starts -->
+
+
+
+
+
+	<title>Lowry Crossing, TX</title>
+	<meta property="og:title" content="Lowry Crossing, TX" />
+
+
+
+	<meta name="keywords" content="Lowry Crossing, TX"/>
+
+
+
+	<meta name="description" content=""/>
+	<meta property="og:description" content="" />
+
+
+
+
+	 
+
+<meta property="og:image" content="//webgen1.revize.com/revize/logo/logo-lowry.png?t=1694447444589" />
+
+
+
+	<meta name="robots" content="index, follow">
+
+
+
+<link rel="shortcut icon" href="logo/favicon(29).png?t=1694447444589">
+
+<link rel="apple-touch-icon" href="logo/favicon(29).png?t=1694447444589">
+<link rel="apple-touch-icon" sizes="72x72" href="logo/favicon(29).png?t=1694447444589">
+<link rel="apple-touch-icon" sizes="114x114" href="logo/favicon(29).png?t=1694447444589">
+<link rel="apple-touch-icon" sizes="144x144" href="logo/favicon(29).png?t=1694447444589">
+
+	
+
+	<link href="/revize/plugins/revize_calendar/core/main.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/daygrid/main.min.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/timegrid/main.min.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/list/main.min.css" rel="stylesheet" />
+<link href="_assets_/plugins/revizeCalendar/css/mini.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/core/nav-panels.css" rel="stylesheet" /><script>
+	var defaultCalendarColor = "#3788d8";
+	var ImportCals = [];
+	var calendarProps = {'6' : { 'color' : '' , 'name' : 'calendar-list-options' },
+'7' : { 'color' : '#3787d8' , 'name' : 'Main' },
+};
+	var RZCalendarTimezone = "";
+</script>
+
+
+	<link rel="stylesheet" href="_assets_/css/layout.css?t=1694447444589">
+	<link rel="stylesheet" href="_assets_/css/styles.css?t=1694447444589">
+
+	<!-- Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+</head>
+<body id="freeform" class="mega">
+
+
+
+
+<script type="text/javascript">
+if (typeof(RZ) == 'undefined') RZ = {};
+if (!RZ.link) RZ.link = new Object();
+RZ.pagetype = 'template'
+RZ.baseurlprefix = '../'
+RZ.baseurlpath = 'operations/'
+RZ.protocolRelativeRevizeBaseUrl='//webgen1.revize.com'
+
+RZ.pagetemplatename = 'freeform'
+RZ.pagetemplateid = '32'
+RZ.pagemodule = 'links'
+RZ.pagemoduleid = '5'
+RZ.pagerecordid = '101';
+
+RZ.pageid = 'links-101';
+RZ.pageparentid = '87';
+RZ.pagesectionid = '87';
+RZ.pagesectionname = 'operations';
+RZ.pagesectionlevel = '1';
+RZ.pagesectionfolder = 'operations/';
+RZ.pagesectionfilter = 'sectionid=87';
+RZ.pagelinkfilter = 'linklevel=1 and linksectionid=87';
+RZ.pagelinklevel = '1';
+RZ.pagelinkid = '101';
+RZ.pageidfield = '';
+
+RZ.isnewrecord = false;
+RZ.editmodule = '';
+RZ.editrecordid = '101';
+RZ.editrecordversion = '';
+RZ.editversion = '';
+RZ.editaction = '';
+
+RZ.page_roles = ''
+RZ.page_users = 'd31810a2dca2987c1838494ef44721b31eafc5d7dca7854346dfe92eb4230d7b'
+RZ.page_key = 'freeform[101]'
+RZ.parent_key = 'freeform[87]'
+RZ.inherit_key = 'index[]'
+RZ.workflowname = ''
+RZ.permissions_options = ''
+RZ.permissions_module = 'webspace_page_permissions'
+RZ.webspace = 'lowrycrossingtx'
+RZ.webspacedesc = "Colorville";
+
+RZ.featurespattern = '(EZ)';
+null
+
+RZ.webspacelinksurl = ''
+RZ.webspacelinksurl = './webspace/links.html'
+RZ.workflowlist = ''
+RZ.revizeserverurl = 'https://webgen1.revize.com/revize/lowrycrossingtx';
+
+if (!RZ.nextseq) RZ.nextseq = {linknames:{},modules:{}};
+
+RZ.webspace_config = new Object();
+RZ.webspace_config.admin_email = "noreply@co.walla-walla.wa.us";
+RZ.webspace_config.calendar_options = "max_events=4";
+RZ.webspace_config.form_captcha = "yes";
+RZ.webspace_config.form_server = "revizeserver";
+RZ.webspace_config.form_technology = "jsp";
+RZ.webspace_config.formwizard_ftp_password = "";
+RZ.webspace_config.formwizard_ftp_port = "";
+RZ.webspace_config.formwizard_ftp_server = "";
+RZ.webspace_config.formwizard_ftp_user = "";
+RZ.webspace_config.formwizard_setup = "yes";
+RZ.webspace_config.formwizard_smtp_password = "xxx";
+RZ.webspace_config.formwizard_smtp_server = "xxx";
+RZ.webspace_config.formwizard_smtp_user = "xxx";
+RZ.webspace_config.google_analytics = "";
+RZ.webspace_config.home_pageid = "0";
+RZ.webspace_config.home_sectionid = "0";
+RZ.webspace_config.home_template = "home,index,sitemap";
+RZ.webspace_config.icon_email = "<img src=\"/revize/images/email_icon_yellow.gif\" width=\"16\" border=\"0\" height=\"17\" title=\"Request email notification when page changes\" alt=\"Request email notification when page changes\" style=\"\" />";
+RZ.webspace_config.image_maxheight = "3000";
+RZ.webspace_config.image_maxwidth = "3000";
+RZ.webspace_config.image_setup = "yes";
+RZ.webspace_config.livesite_url = "";
+RZ.webspace_config.menu_links_module = "links";
+RZ.webspace_config.menu_newsection = "";
+RZ.webspace_config.menu_nexturl = "webspace_menu-editform.jsp";
+RZ.webspace_config.menu_sections_module = "sections";
+RZ.webspace_config.menu_system = "custom";
+RZ.webspace_config.menu_version = "1.00";
+RZ.webspace_config.new_menu_manager_enabled = "yes";
+RZ.webspace_config.notify_return_url = "enotify/index.php";
+RZ.webspace_config.rte_setup = "yes";
+RZ.webspace_config.to_email = "";
+RZ.webspace_config.use_folders = "1";
+RZ.webspace_config.use_new_buttons = "yes";
+
+RZ.isauthenticationactive = true
+RZ.warning = ""
+RZ.adminwinmsg = null
+
+RZ.channels = 'revize,fileschannel';
+RZ.jsversion = 1.2</script>
+<script type="text/javascript" src="/revize/util/snippet_helper.js"></script>
+
+
+
+<header>
+
+	<a href="operations/elections.php#main" id="skip" tabindex="0" class="btn">Skip to main content</a>
+
+	
+
+
+
+
+
+	<div id="header-inner">
+		<div id="toggles" class="d-lg-none">
+		<div id="search-toggle" class="fa fa-search"></div>
+		<div id="nav-toggle" class="fa fa-bars"></div>
+	</div><!--/#toggles-->
+
+		<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-3">
+				
+
+
+
+
+
+
+<a href="./" id="logo">
+	<img src="logo/logo-lowry.png" alt="Lowry Crossing, TX logo">
+	
+</a><!--/#logo-->
+			</div><!--/.col-lg-2-->
+			
+			<nav class="col-lg-6 text-center">
+			
+				
+
+
+ 
+<ul id="nav" class="topnav v2_05-23-2012">
+	<li class="menuLI level0 menuDisplay li-46"><a class="menuA level0 menuDisplay" href="index.php" target="_self">Home</a></li>
+	<li class="menuLI level0 menuDisplay li-84"><a class="menuA level0 menuDisplay" href="about/index.php" target="_self">About</a></li>
+	<li class="menuLI level0 menuDisplay li-85 children"><a class="menuA level0 menuDisplay" href="community/index.php" target="_self">Community</a>
+		<ul class="menuUL level1 menuHidden ul-106">
+			<li class="menuLI level1 menuHidden li-106"><a class="menuA level1 menuHidden" href="community/public_notices.php" target="_self">Public Notices</a></li>
+			<li class="menuLI level1 menuHidden li-109"><a class="menuA level1 menuHidden" href="community/community_connection.php" target="_self">Community Connection</a></li>
+			<li class="menuLI level1 menuHidden li-368"><a class="menuA level1 menuHidden" href="community/new_resident_information.php" target="_self">New Resident Information</a></li>
+			<li class="menuLI level1 menuHidden li-369"><a class="menuA level1 menuHidden" href="community/businesses_in_lowry_crossing.php" target="_self">Businesses in Lowry Crossing</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-86 children"><a class="menuA level0 menuDisplay" href="services/index.php" target="_self">Services</a>
+		<ul class="menuUL level1 menuHidden ul-102">
+			<li class="menuLI level1 menuHidden li-102"><a class="menuA level1 menuHidden" href="services/permits.php" target="_self">Permits</a></li>
+			<li class="menuLI level1 menuHidden li-103"><a class="menuA level1 menuHidden" href="services/fee_schedule.php" target="_self">Fee Schedule</a></li>
+			<li class="menuLI level1 menuHidden li-104"><a class="menuA level1 menuHidden" href="services/forms.php" target="_self">Forms</a></li>
+			<li class="menuLI level1 menuHidden li-105"><a class="menuA level1 menuHidden" href="services/fire_ems.php" target="_self">Fire/EMS</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-87 children"><a class="menuA level0 menuDisplay" href="operations/index.php" target="_self">Operations</a>
+		<ul class="menuUL level1 menuHidden ul-92">
+			<li class="menuLI level1 menuHidden li-92"><a class="menuA level1 menuHidden" href="operations/city_council.php" target="_self">City Council</a></li>
+			<li class="menuLI level1 menuHidden li-93"><a class="menuA level1 menuHidden" href="operations/boards.php" target="_self">Boards</a></li>
+			<li class="menuLI level1 menuHidden li-96"><a class="menuA level1 menuHidden" href="operations/ordinances.php" target="_self">Ordinances</a></li>
+			<li class="menuLI level1 menuHidden li-97 children"><a class="menuA level1 menuHidden" href="operations/meetings_and_agendas/index.php" target="_self">Meetings and Agendas</a>
+				<ul class="menuUL level2 menuHidden ul-98">
+					<li class="menuLI level2 menuHidden li-98"><a class="menuA level2 menuHidden" href="operations/meetings_and_agendas/ma_archives.php" target="_self">Archives</a></li>
+				</ul>
+			</li>
+			<li class="menuLI level1 menuHidden li-99"><a class="menuA level1 menuHidden" href="operations/meeting_minutes/index.php" target="_self">Meeting Minutes</a></li>
+			<li class="menuLI level1 menuHidden li-101"><a class="menuA level1 menuHidden" href="operations/elections.php" target="_self">Elections</a></li>
+			<li class="menuLI level1 menuHidden li-342"><a class="menuA level1 menuHidden" href="operations/budget.php" target="_self">Budget</a></li>
+			<li class="menuLI level1 menuHidden li-528"><a class="menuA level1 menuHidden" href="operations/service_and_assessment_plans.php" target="_self">PID Service and Assessment Plans</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-546"><a class="menuA level0 menuDisplay" href="textmygov/index.php" target="_self">TextMyGov</a></li>
+	<li class="menuLI level0 menuDisplay li-88 children"><a class="menuA level0 menuDisplay" href="contact/index.php" target="_self">Contact</a>
+		<ul class="menuUL level1 menuHidden ul-89">
+			<li class="menuLI level1 menuHidden li-89"><a class="menuA level1 menuHidden" href="contact/_city_hall.php" target="_self">City Hall</a></li>
+			<li class="menuLI level1 menuHidden li-90"><a class="menuA level1 menuHidden" href="contact/report_a_concern.php" target="_self">Report a Concern</a></li>
+			<li class="menuLI level1 menuHidden li-91"><a class="menuA level1 menuHidden" href="contact/directions.php" target="_self">Directions (Map)</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-383"><a class="menuA level0 menuDisplay" href="edc/home.php" target="_self">EDC</a></li>
+	<li class="menuLI level0 menuDisplay li-384"><a class="menuA level0 menuDisplay" href="mdd/home.php" target="_self">MDD</a></li>
+</ul>
+
+
+
+<script>
+    (function(d){
+      var s = d.createElement("script");
+      /* uncomment the following line to override default position*/
+       s.setAttribute("data-position", 6);
+      /* uncomment the following line to override default size (values: small, large)*/
+       s.setAttribute("data-size", "large");
+      /* uncomment the following line to override default language (e.g., fr, de, es, he, nl, etc.)*/
+      /* s.setAttribute("data-language", "language");*/
+      /* uncomment the following line to override color set via widget (e.g., #053f67)*/
+      /* s.setAttribute("data-color", "#053e67");*/
+      /* uncomment the following line to override type set via widget (1=person, 2=chair, 3=eye, 4=text)*/
+      /* s.setAttribute("data-type", "1");*/
+      /* s.setAttribute("data-statement_text:", "Our Accessibility Statement");*/
+      /* s.setAttribute("data-statement_url", "http://www.example.com/accessibility")";*/
+      /* uncomment the following line to override support on mobile devices*/
+      /* s.setAttribute("data-mobile", true);*/
+      /* uncomment the following line to set custom trigger action for accessibility menu*/
+      /* s.setAttribute("data-trigger", "triggerId")*/
+      /* uncomment the following line to override widget's z-index property*/
+      /* s.setAttribute("data-z-index", 10001);*/
+      /* uncomment the following line to enable Live site translations (e.g., fr, de, es, he, nl, etc.)*/
+      /* s.setAttribute("data-site-language", "null");*/
+      s.setAttribute("data-widget_layout", "full")
+      s.setAttribute("data-account", "rezV66477w");
+      s.setAttribute("src", "https://cdn.userway.org/widget.js");
+      (d.body || d.head).appendChild(s);
+    })(document)
+    </script>
+    <noscript>Please ensure Javascript is enabled for purposes of <a href="https://userway.org">website accessibility</a></noscript>
+
+<script src="https://textmygov.com/widget-update/dist/app.js" data-key="20222807" data-position="right" defer></script>
+
+
+
+
+
+
+			
+			</nav><!--/.col-lg-6-->
+			<div class="col-lg-3">
+				<div id="search">
+					<form class="search-form" method="GET" action="search.php" role="search" aria-label="sitewide">
+						<input name="q" class="form-control search-input" placeholder="Search..." type="search" id="search-input">
+						<button><img src="_assets_/images/search.png" alt="search"></button>
+					</form>
+				</div><!-- /#search -->
+				<div id="google-translate" class="d-none">
+					<script>
+						function googleTranslateElementInit() {
+							new google.translate.TranslateElement({pagelanguage: 'en',
+								layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+								'google-translate');
+						}
+					</script>
+				</div><!--/#google-translate-->
+				<ul id="translation-links">
+					<li><button type="button" id="translate-button" aria-label="translate website" aria-haspopup="true" aria-expanded="false">Translate</button>
+						<ul class="clearfix" aria-labelledby="translate-button">
+							<li><a href="operations/elections.php#" class="Afrikaans" data-lang="Afrikaans">Afrikaans</a></li>
+							<li><a href="operations/elections.php#" class="Albanian" data-lang="Albanian">Albanian</a></li>
+							<li><a href="operations/elections.php#" class="Arabic" data-lang="Arabic">Arabic</a></li>
+							<li><a href="operations/elections.php#" class="Armenian" data-lang="Armenian">Armenian</a></li>
+							<li><a href="operations/elections.php#" class="Azerbaijani" data-lang="Azerbaijani">Azerbaijani</a></li>
+							<li><a href="operations/elections.php#" class="Basque" data-lang="Basque">Basque</a></li>
+							<li><a href="operations/elections.php#" class="Belarusian" data-lang="Belarusian">Belarusian</a></li>
+							<li><a href="operations/elections.php#" class="Bengali" data-lang="Bengali">Bengali</a></li>
+							<li><a href="operations/elections.php#" class="Bosnian" data-lang="Bosnian">Bosnian</a></li>
+							<li><a href="operations/elections.php#" class="Bulgarian" data-lang="Bulgarian">Bulgarian</a></li>
+							<li><a href="operations/elections.php#" class="Catalan" data-lang="Catalan">Catalan</a></li>
+							<li><a href="operations/elections.php#" class="Cebuano" data-lang="Cebuano">Cebuano</a></li>
+							<li><a href="operations/elections.php#" class="Chinese" data-lang="Chinese (Simplified)">Chinese (Simplified)</a></li>
+							<li><a href="operations/elections.php#" class="Chinese" data-lang="Chinese (Traditional)">Chinese (Traditional)</a></li>
+							<li><a href="operations/elections.php#" class="Croatian" data-lang="Croatian">Croatian</a></li>
+							<li><a href="operations/elections.php#" class="Czech" data-lang="Czech">Czech</a></li>
+							<li><a href="operations/elections.php#" class="Danish" data-lang="Danish">Danish</a></li>
+							<li><a href="operations/elections.php#" class="Dutch" data-lang="Dutch">Dutch</a></li>
+							<li><strong><a href="operations/elections.php#" class="English" data-lang="English">English</a></strong></li>
+							<li><a href="operations/elections.php#" class="Esperanto" data-lang="Esperanto">Esperanto</a></li>
+							<li><a href="operations/elections.php#" class="Estonian" data-lang="Estonian">Estonian</a></li>
+							<li><a href="operations/elections.php#" class="Filipino" data-lang="Filipino">Filipino</a></li>
+							<li><a href="operations/elections.php#" class="Finnish" data-lang="Finnish">Finnish</a></li>
+							<li><a href="operations/elections.php#" class="French" data-lang="French">French</a></li>
+							<li><a href="operations/elections.php#" class="Galician" data-lang="Galician">Galician</a></li>
+							<li><a href="operations/elections.php#" class="Georgian" data-lang="Georgian">Georgian</a></li>
+							<li><a href="operations/elections.php#" class="German" data-lang="German">German</a></li>
+							<li><a href="operations/elections.php#" class="Greek" data-lang="Greek">Greek</a></li>
+							<li><a href="operations/elections.php#" class="Gujarati" data-lang="Gujarati">Gujarati</a></li>
+							<li><a href="operations/elections.php#" class="Haitian Creole" data-lang="Haitian Creole">Haitian Creole</a></li>
+							<li><a href="operations/elections.php#" class="Hausa" data-lang="Hausa">Hausa</a></li>
+							<li><a href="operations/elections.php#" class="Hebrew" data-lang="Hebrew">Hebrew</a></li>
+							<li><a href="operations/elections.php#" class="Hindi" data-lang="">Hindi</a></li>
+							<li><a href="operations/elections.php#" class="Hmong" data-lang="Hmong">Hmong</a></li>
+							<li><a href="operations/elections.php#" class="Hungarian" data-lang="Hungarian">Hungarian</a></li>
+							<li><a href="operations/elections.php#" class="Icelandic" data-lang="Icelandic">Icelandic</a></li>
+							<li><a href="operations/elections.php#" class="Igbo" data-lang="Igbo">Igbo</a></li>
+							<li><a href="operations/elections.php#" class="Indonesian" data-lang="Indonesian">Indonesian</a></li>
+							<li><a href="operations/elections.php#" class="Irish" data-lang="Irish">Irish</a></li>
+							<li><a href="operations/elections.php#" class="Italian" data-lang="Italian">Italian</a></li>
+							<li><a href="operations/elections.php#" class="Japanese" data-lang="Japanese">Japanese</a></li>
+							<li><a href="operations/elections.php#" class="Javanese" data-lang="Javanese">Javanese</a></li>
+							<li><a href="operations/elections.php#" class="Kannada" data-lang="Kannada">Kannada</a></li>
+							<li><a href="operations/elections.php#" class="Khmer" data-lang="Khmer">Khmer</a></li>
+							<li><a href="operations/elections.php#" class="Korean" data-lang="Korean">Korean</a></li>
+							<li><a href="operations/elections.php#" class="Lao" data-lang="Lao">Lao</a></li>
+							<li><a href="operations/elections.php#" class="Latin" data-lang="Latin">Latin</a></li>
+							<li><a href="operations/elections.php#" class="Latvian" data-lang="Latvian">Latvian</a></li>
+							<li><a href="operations/elections.php#" class="Lithuanian" data-lang="Lithuanian">Lithuanian</a></li>
+							<li><a href="operations/elections.php#" class="Macedonian" data-lang="Macedonian">Macedonian</a></li>
+							<li><a href="operations/elections.php#" class="Malay" data-lang="Malay">Malay</a></li>
+							<li><a href="operations/elections.php#" class="Maltese" data-lang="Maltese">Maltese</a></li>
+							<li><a href="operations/elections.php#" class="Maori" data-lang="Maori">Maori</a></li>
+							<li><a href="operations/elections.php#" class="Marathi" data-lang="Marathi">Marathi</a></li>
+							<li><a href="operations/elections.php#" class="Mongolian" data-lang="Mongolian">Mongolian</a></li>
+							<li><a href="operations/elections.php#" class="Nepali" data-lang="Nepali">Nepali</a></li>
+							<li><a href="operations/elections.php#" class="Norwegian" data-lang="Norwegian">Norwegian</a></li>
+							<li><a href="operations/elections.php#" class="Persian" data-lang="Persian">Persian</a></li>
+							<li><a href="operations/elections.php#" class="Polish" data-lang="Polish">Polish</a></li>
+							<li><a href="operations/elections.php#" class="Portuguese" data-lang="Portuguese">Portuguese</a></li>
+							<li><a href="operations/elections.php#" class="Punjabi" data-lang="Punjabi">Punjabi</a></li>
+							<li><a href="operations/elections.php#" class="Romanian" data-lang="Romanian">Romanian</a></li>
+							<li><a href="operations/elections.php#" class="Russian" data-lang="Russian">Russian</a></li>
+							<li><a href="operations/elections.php#" class="Serbian" data-lang="Serbian">Serbian</a></li>
+							<li><a href="operations/elections.php#" class="Slovak" data-lang="Slovak">Slovak</a></li>
+							<li><a href="operations/elections.php#" class="Slovenian" data-lang="Slovenian">Slovenian</a></li>
+							<li><a href="operations/elections.php#" class="Somali" data-lang="Somali">Somali</a></li>
+							<li><a href="operations/elections.php#" class="Spanish" data-lang="Spanish">Spanish</a></li>
+							<li><a href="operations/elections.php#" class="Swahili" data-lang="Swahili">Swahili</a></li>
+							<li><a href="operations/elections.php#" class="Swedish" data-lang="Swedish">Swedish</a></li>
+							<li><a href="operations/elections.php#" class="Tamil" data-lang="Tamil">Tamil</a></li>
+							<li><a href="operations/elections.php#" class="Telugu" data-lang="Telugu">Telugu</a></li>
+							<li><a href="operations/elections.php#" class="Thai" data-lang="Thai">Thai</a></li>
+							<li><a href="operations/elections.php#" class="Turkish" data-lang="Turkish">Turkish</a></li>
+							<li><a href="operations/elections.php#" class="Ukrainian" data-lang="Ukrainian">Ukrainian</a></li>
+							<li><a href="operations/elections.php#" class="Urdu" data-lang="Urdu">Urdu</a></li>
+							<li><a href="operations/elections.php#" class="Vietnamese" data-lang="Vietnamese">Vietnamese</a></li>
+							<li><a href="operations/elections.php#" class="Welsh" data-lang="Welsh">Welsh</a></li>
+							<li><a href="operations/elections.php#" class="Yiddish" data-lang="Yiddish">Yiddish</a></li>
+							<li><a href="operations/elections.php#" class="Yoruba" data-lang="Yoruba">Yoruba</a></li>
+							<li><a href="operations/elections.php#" class="Zulu" data-lang="Zulu">Zulu</a></li>
+						</ul>
+					</li>
+				</ul><!--/#translation-links-->
+				
+
+
+
+
+
+
+
+			<div id="social-media-links">
+				
+							<a href="https://www.facebook.com/p/City-of-Lowry-Crossing-100064760648626/" target="_blank" class="social-media-link fa fa-facebook"></a>
+						
+			</div>
+			</div><!--/.col-lg-2-->
+		</div><!--/.row-->
+	</div><!--/.container-->
+	</div>
+</header>
+<div id="slider-wrap">
+	<section id="slider" class="tiny-slider-wrap">
+		<div class="rzEditWrap rzSliderBtns">
+			<script language="JavaScript" type="text/JavaScript">
+				RZ.module = 'slider';
+				RZ.nexturl = "/revize/webgen_includes/colorville/editforms/slider-editlist.jsp?pageid=87";
+				RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+				RZ.img = '<span class="rzBtn">Edit Slider</span>';
+				RZ.caption = '';
+				RZ.options = '';
+				if (typeof RZaction != 'undefined') RZaction('editlist');
+			</script>
+
+		</div><!--/.rzEditWrap-->
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlistbegin != 'undefined') RZlistbegin(1)
+</script>
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlinktemplate != 'undefined') RZlinktemplate('slider','','')
+if (typeof RZ.nextseq != 'undefined') RZ.nextseq.modules['slider_1']={field:'seq_no',seq:'1.00'};
+</script>
+
+		<ul class="tiny-slider">
+			<li class="tiny-item"><div class="tns-lazy-img tns-bg-slide" data-style="background:url('Horse5-1 KD Equestrian - Copy - Copy.jpg') center no-repeat;background-size:cover"></div></li>
+		</ul><!--/.tiny-slider-->
+	</section><!--/#slider-->
+	
+
+
+	<h1 id="page-title">November 3, 2026 Elections</h1>
+
+</div><!--/#slider-wrap-->
+<main id="main">
+	<div class="container">		<div class="row">
+			<div class="col-xl-1 col-lg-3">
+				<aside id="flyout-wrap" class="fillLeft">
+					<h2 id="flyout-header">Related Links</h2>
+					<div class="rzEditWrap">
+
+
+
+						<script language="JavaScript" type="text/JavaScript">
+							RZ.module = 'links';
+							RZ.nexturl = "/revize/plugins/menus/webspace_menu-editlist.jsp?pageid=links-101&"
+									 + "linksfilter=linkplacement=leftnav and linkparentid=87::linkplacement=leftnav and linkparentid=101 and linkparentid=101&"
+									 + "numberoflevels=2&"
+									 + "linkoptions=url,template,file&"
+									 + "linknewsection=*all*";
+							RZ.img = '<span class="rzBtn">Edit Links</span>';
+							RZ.caption = '';
+							RZ.set = "links.linkplacement=leftnav"
+							RZ.options = '';
+							if (typeof RZaction != 'undefined') RZaction('editlist');
+						</script>
+						<script language="JavaScript" type="text/JavaScript">
+							RZ.module = 'freeform';
+							RZ.recordid = '';
+							RZ.nexturl = "/revize/webgen_includes/colorville/editforms/leftnav-title-editform.jsp";
+							RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+							RZ.img = '<span class="rzBtn">Edit Links Title</span>';
+							RZ.set = 'pageid=links-101';
+							RZ.options = '';
+							if (typeof RZaction != 'undefined') RZaction('editform');
+						</script>
+					</div>
+					
+ <ul  id="flyout" class="v08-30-2012">
+	<li id="li-275" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/index.php" target="_self" >Operations</a></li>
+	<li id="li-163" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/boards.php" target="_self" >Boards</a></li>
+	<li id="li-339" class="menuLI level0 menuHidden children"><a class="menuA level0 menuHidden" href="operations/budget.php" target="_self" >Budget</a>
+		<ul id="ul-340" class="menuUL level1 menuHidden">
+			<li id="li-340" class="menuLI level1 menuHidden"><a class="menuA level1 menuHidden" href="operations/budget_archives.php" target="_self" >Budget Archives</a></li>
+		</ul>
+	</li>
+	<li id="li-162" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/city_council.php" target="_self" >City Council</a></li>
+	<li id="li-168" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/elections.php" target="_self" >Elections</a></li>
+	<li id="li-166" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/meetings_and_agendas/index.php" target="_self" >Meetings and Agendas</a></li>
+	<li id="li-167" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/meeting_minutes/index.php" target="_self" >Meeting Minutes</a></li>
+	<li id="li-165" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/ordinances.php" target="_self" >Ordinances</a></li>
+	<li id="li-524" class="menuLI level0 menuHidden"><a class="menuA level0 menuHidden" href="operations/pid_service_and_assessment_plans.php" target="_self" >PID Service and Assessment Plans</a></li>
+</ul>
+
+				</aside>
+			</div><!--/.col-xl-1-->			<div class="col-xl-8 offset-xl-2 col-lg-9 offset-lg-0">
+				<article id="entry">
+					 <nav id="breadcrumbs" aria-label="breadcrumb">
+	<ul>
+	
+		<li><a href="./">Home</a></li>
+							<li>&nbsp;<a href="operations/index.php">Operations</a> </li>
+							<li>&nbsp;Elections</li>
+	</ul>
+</nav>
+
+					<h2 id="post-title">November 3, 2026 Elections</h2>
+					<div id="post">
+							<div class="rzEditWrap">
+		<script language="JavaScript" type="text/JavaScript">
+			RZ.module = 'freeform';
+			RZ.recordid = '';
+			RZ.nexturl = "/revize/lowrycrossingtx/editforms/freeform-editform.jsp";
+			RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+			RZ.img = '<span class="rzBtn">Edit Page Content</span>';
+			RZ.set = 'freeform.pageid=links-101';
+			RZ.options = '';
+			if (typeof RZaction != 'undefined') RZaction('editform');
+		</script>
+	
+	<script language="JavaScript" type="text/JavaScript">
+		RZ.module = 'freeform';
+		RZ.recordid = '';
+		RZ.nexturl = "/revize/webgen_includes/colorville/editforms/metadata-editform.jsp";
+		RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+		RZ.img = '<span class="rzBtn">Edit Metadata</span>';
+		RZ.set = 'freeform.pageid=links-101';
+		RZ.options = '';
+		if (typeof RZaction != 'undefined') RZaction('editform');
+	</script>
+	<script language="JavaScript" type="text/JavaScript">
+		RZ.nexturl = '';
+		RZ.img = '<img src="images/edit/permissions.jpg" alt="Permissions" border="0" />';
+		RZ.options = '';
+		if (typeof RZaction != 'undefined') RZaction('permissions');
+	</script>
+</div>
+
+							
+
+<div class="clearfix">
+	<p>Early Voting begins October 19th.&nbsp;&nbsp;<br /><br /><br /><a href= "4 wards smaller.JPG?t=202609280940320"  target="_blank"  >Ward Map</a><br /><br /></p>
+</div>
+	<!--Photo Gallery Starts-->
+
+	<div class="photobtn">
+	  
+	
+	
+	<script language="JavaScript" type="text/JavaScript">
+	RZ.module = 'revize_photo_gallery';
+	RZ.nexturl = "/revize/plugins/revize_photo_gallery/revize_photo_gallery-editlist.jsp?placement=links-101";
+	RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+	RZ.img = '<span class="rzBtn">Edit Photos</span>';
+	RZ.set = "revize_photo_gallery.placement=links-101";
+	RZ.options = '';
+	if (typeof RZaction != 'undefined') RZaction('editlist');
+	</script>
+	
+	</div>
+
+
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlistbegin != 'undefined') RZlistbegin(6)
+</script>
+
+
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlinktemplate != 'undefined') RZlinktemplate('revize_photo_gallery','','')
+if (typeof RZ.nextseq != 'undefined') RZ.nextseq.modules['revize_photo_gallery_6']={field:'seq_no',seq:'1.00'};
+</script>
+
+
+<div id="photo-galley">
+	<div class="main-isotope clearfix">
+	  <div class="isotope-wrap">
+	    <div id="isotope-container" class="clearfix">
+	      
+	      </div><!-- end #isotope-container -->
+	    </div><!-- end isotope-wrap -->
+	  </div><!-- main -->
+</div><!-- photo gallery -->
+
+<!--Photo Gallery Ends-->
+
+
+					</div><!--/#post-->				</article><!--/#entry-->
+			</div><!--/.col-xl-10-->
+			</div><!--/.row-->
+	</div><!--/.container-->
+</main>
+<footer>
+	<section id="modal-section">
+		<button type="button" class="share-btn floating-share-btn" data-toggle="modal" data-target="#shareModal" >
+		<i class="fa fa-share-alt"></i>
+		<span>Share <span class="sr-only">this page</span></span>
+	</button>
+
+	<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModal">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title" id="myModalLabel">Share this page</h2>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="copylink">
+						<p>Copy and paste this code into your website.</p>
+						<pre class="py-3 px-4">&lt;a href="http://www.lowrycrossingtexas.org/operations/elections.php">Your Link Name&lt;/a&gt;</pre>
+					</div><!-- /.copylink -->
+					<div class="share-btns">
+						<p>Share this page on your favorite Social network</p>
+						<div class="row">
+							<div class="col-sm-4">
+								<a href="https://www.facebook.com/sharer/sharer.php?u=http://www.lowrycrossingtexas.org/operations/elections.php" class="btn-facebook" onclick="return !window.open(this.href, 'facebook ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-facebook"></i> Facebook
+								</a>
+							</div>
+							<div class="col-sm-4">
+								<a href="https://www.twitter.com/intent/tweet?url=http://www.lowrycrossingtexas.org/operations/elections.php" class="btn-twitter" onclick="return !window.open(this.href, 'twitter ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-twitter"></i> Twitter
+								</a>
+							</div>
+							<div class="col-sm-4">
+								<a href="https://www.reddit.com/submit?url=http://www.lowrycrossingtexas.org/operations/elections.php" class="btn-reddit" onclick="return !window.open(this.href, 'redit ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-reddit"></i> Reddit
+								</a>
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.share-btns -->
+					<button type="button" class="btn btn-success btn-lg" data-dismiss="modal">Close</button>
+				</div><!-- /.modal-body -->
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</section><!-- /#modal-section -->	
+
+	<div id="footer-top">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-2">
+					<nav class="footer-links">
+						<ul>
+							<li><a href="contact/directions.php" target="_self" class="footer-link">Directions (Map)</a></li><li><a href="services/fire_ems.php" target="_self" class="footer-link">Fire/EMS</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div class="col-lg-2">
+					<nav class="footer-links">
+						<ul>
+							<li><a href="services/forms.php" target="_self" class="footer-link">Forms</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div class="col-lg-5">					<div id="footer-text">
+						<p><span class="subheader"><span style="color: #ffffff;">City Hall</span></span><br />1405 S. Bridgefarmer Road<br />Lowry Crossing, TX 75069<br />972-542-8678<br />Find us here on&nbsp;<a href="../../../lowrycrossingtx/contact/directions.php">Google Maps</a><br /><br />City Administration Office<br />1420 S. Bridgefarmer Road<br />Lowry Crossing, TX 75069<br />972-542-8678<br /><span class="subheader" style="color: #ffffff;">City<br /></span>Monday thru Friday<br />8:00am &ndash; 1:00pm / 2:00pm &ndash; 5:00pm<br /><br /></p>
+					</div>
+				</div>
+				<div class="col">					<span>Follow Us</span> <br>
+		
+					<a href="https://www.facebook.com/people/City-of-Lowry-Crossing/100064760648626/" target="_blank" class="footer-social" style="background-color:#1e89ff"><i class="fa fa-facebook-f"></i></a>
+				
+					<a href="https://www.youtube.com/channel/UCkCSmmtBqLKr769AMG1sxvg" target="_blank" class="footer-social" style="background-color:#15b2ff"><i class="fa fa-youtube"></i></a>
+				      
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="copyright">
+		<div class="container text-center">
+			&copy; 2026 Lowry Crossing, TX Powered by <a id="revize-link" href="https://www.revize.com">revize.</a> Government website experts | <a id="revize-login" href="https://webgen1.revize.com/revize/security/index.jsp?webspace=lowrycrossingtx&filename=/operations/elections.php">Login</a>
+		</div><!--/.container.text-center-->
+	</div><!--/#copyright-->
+</footer>
+
+<script src="_assets_/plugins/modernizr/modernizr.custom.js"></script>
+<script src="_assets_/plugins/tiny-slider/dist/min/tiny-slider.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+    <script src="/revize/plugins/revize_photo_gallery/js/jquery.prettyPhoto.js"></script>
+    <script src="/revize/plugins/revize_photo_gallery/js/jquery.isotope.min.js"></script>
+    <script src="/revize/plugins/revize_photo_gallery/js/isotope-custom.js"></script>
+
+<script src="_assets_/js/scripts.js?t=1694447444589"></script>
+<script src="https://webgen1.revize.com/revize/plugins/ada/ada.js"></script>
+
+
+
+
+
+</body>
+</html>
+

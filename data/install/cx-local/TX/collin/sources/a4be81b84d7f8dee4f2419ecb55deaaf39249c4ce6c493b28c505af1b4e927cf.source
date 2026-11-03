@@ -1,0 +1,649 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html id="html" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="PageID" content="c01e2599-3d3e-48b0-a1bb-26096119ba32" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <title>Sample Ballots</title><meta property="og:title" content="Sample Ballots"><meta name="sf-page-nav" content="Elections"><link rel="canonical" href="https://www.collincountytx.gov/elections/sample-ballots" />
+
+    
+    
+        <link rel="stylesheet" href="/sfrenderer/Styles/bootstrap.min.css" />
+    
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/sfrenderer/styles/main.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/styles.css?v=yVlSPQf8g4QLluxNsRF0Vgd1XZAvpCg2aSry14-Ma2Y" />
+    <link rel="stylesheet" href="/styles/ccicons.css?v=44TWblVscfFtGzPonfbLQ3PYQ3tdFxu5t_pdVF20qRc" />
+    <link rel="stylesheet" href="/styles/ccFonts.css?v=JFSJAukhqh_sIP7fuDX1CpLwgG4PWiLPNtr0lhx1Uf8" />
+
+    <link rel="stylesheet" href="/styles/ccPageTemplate.css?v=RVvrKXVoJdVsppkEKxw-arJsUDba6dnqnjNJBkF-w6I" />
+    <link rel="stylesheet" href="/styles/ccResponsiveTemplate.css?v=3bm6R38X7RV3JgO2hAEqNJy_5kNF2WoOXDi6xaMaOcg" />
+
+    <link rel="stylesheet" href="/styles/ccSlidingNav.css?v=1BiJEOiTm0p2BRqgwoOM-mxVipovJhs4I48loTVOXBg" />
+    <link rel="stylesheet" href="/styles/ccHeaderMenu.css?v=bS1GgXj9ilgl2O4j7PIGLngRhVG1RvA1dyeaB6GWsN0" />
+    <link rel="stylesheet" href="/styles/ccLeftNav.css?v=uI4LUNSLDVNfjobMCiH_vl6rt0v3IHT7blt3q2Az5W0" />
+    <link rel="stylesheet" href="/styles/ccBreadcrumbs.css?v=MWxWaSg8NE4HgB7AZQ5RxFRBSHyXsb9YZy7HcsC3K4k" />
+    <link rel="stylesheet" href="/styles/ccNotices.css?v=6L9LKk7MbJd_gfnujnP48hSnN35EFdVJRxOIVs8Hpg8" />
+    <link rel="stylesheet" href="/styles/ccRightSidebar.css?v=OyRMe0XpFyI_EQlYUp_zyz6uNDE5i2kiAWVl26SvCCc" />
+    <link rel="stylesheet" href="/styles/ccFooter.css?v=enLlvw5YzhvUluqGlV9sQtOcFCHAl68yKdRq7Cxcolg" />
+    <link rel="stylesheet" href="/styles/ccModal.css?v=xhREw_kIJziVonASv5vCnK8lnS8VeYNsf2WDSJBRyY0" />
+    <link rel="stylesheet" href="/styles/ccAdvancedList.css?v=Ws_ZNbDgpDO9f_qrdMLpW_n8ghxowd-wMAmMypoiEKs" />
+    <link rel="stylesheet" href="/styles/ccFaqView.css?v=UxAhvVSIL0inGiH9IJ-w409HPYoQP96VOTgvRmnlTuQ" />
+    <link rel="stylesheet" href="/styles/ccDocumentList.css?v=HRyThqyTA6G7v5sUcQJlNXSS84D-2cPW7tHG2BNa-F0" />
+    <link rel="stylesheet" href="/styles/ccSearchPage.css?v=idR2zsXZoyw2FR4aM54_vdo4L2YJIi5EAtBxpV_hP9Y" />
+    <link rel="stylesheet" href="/styles/ccServicesList.css?v=4cUuDyFbMvXN7wbWOWYGwOz8KQiSCIqBXe_TGkyoSWY" />
+    <link rel="stylesheet" href="/styles/ccDirectoryList.css?v=tRPTzlGdnhMMiUvozPGLbFtTDAn4DtweHM0bIc-hhng" />
+
+
+
+    <script src="/scripts/jquery-3.7.1.min.js"></script>
+    <script src="/scripts/scripts.js?v=-AAyh6mb-HJRLklU-5C9gc1mAjUHTDlg__2Wqg2fwSg"></script>
+    <script src="/scripts/ccSlidingNav.js"></script>
+    <script src="/scripts/ccModal.js"></script>
+    <script src="/scripts/ccSearchModal.js"></script>
+    <script src="/scripts/ccTreeView.js"></script>
+    <script src="/scripts/ccSiteNotice.js"></script>
+
+    
+    <script src="https://siteimproveanalytics.com/js/siteanalyze_6293880.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBJF9K8X8B"></script>
+    <script nonce="DiOlobg4XR/X&#x2B;kM90mfiYQ==">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VBJF9K8X8B');
+    </script>
+<script type="text/javascript">!function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{
+src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js", // The SDK URL Source
+crossOrigin: "anonymous", 
+cfg: { // Application Insights Configuration
+    connectionString: 'InstrumentationKey=e1fec3e2-18d3-4ee6-8b79-10b3a2ad9dd3;IngestionEndpoint=https://northcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northcentralus.livediagnostics.monitor.azure.com/;ApplicationId=4f17d9f0-74d0-4a42-8f75-45e637176788'
+}});</script></head>
+
+
+<body class="container-fluid">
+    <a class="skip-link" href="#ccMainSection">Skip to Main Content</a>
+    <div id="slidingNav" role="navigation" aria-label="Sliding navigation">
+        
+
+
+
+<div class="aside-section aside-left ccGlass"></div>
+
+<nav class="aside-section aside-right" role="navigation" aria-label="Sliding menu">
+    <h2 class="menutitle">
+        Menu
+
+        <span class="toggleSpan closeMenuBtn">
+            <button type="button"
+                    class="menuToggleBtn"
+                    aria-label="Close menu"
+                    aria-controls="slidingNav"
+                    aria-expanded="true">
+                <span class="bar top"></span>
+                <span class="bar middle"></span>
+                <span class="bar bottom"></span>
+            </button>
+        </span>
+    </h2>
+    <section class="rightContent">
+        <div class="topRowMenu">
+            <a href="/contact/county-directory"><span class="icon-contacts"></span> Directory</a>
+            <a href="/contact/locations"><span class="icon-map"></span> Locations</a>
+            <a href="#" class="js-open-records" aria-haspopup="dialog">
+                <span class="icon-doc-text"></span> Open Records Request
+            </a>
+        </div>
+        <nav class="topMenu" id="mobileMidMenu" aria-label="Primary navigation">
+            <a href="/services" class="heroLink"><span class="linkTitle">Services</span></a>
+            <a href="/government" class="heroLink"><span class="linkTitle">Government</span></a>
+            <a href="/courts" class="heroLink"><span class="linkTitle">Public Safety &amp; Courts</span></a>
+            <a href="/business-and-living" class="heroLink"><span class="linkTitle">Business &amp; Living</span></a>
+            <a href="/public-information/news" class="heroLink"><span class="linkTitle">News</span></a>
+        </nav>
+        <h3>Quick Access</h3>
+        <ul>
+                    <li class="menuTsLink">
+                        <a href="https://apps2.collincountytx.gov/JudicialOnlineSearch2/global" target="_blank">
+                            Inmate Lookup
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="https://apps2.collincountytx.gov/JudicialOnlineSearch2/global" target="_blank">
+                            Active Warrants
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/sheriff">
+                            Sheriff/Jail
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/county-clerk">
+                            County Clerk
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/district-clerk">
+                            District Clerk
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/services/case-information">
+                            Court Case Search
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/tax-assessor">
+                            Tax Assessor
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/government/human-resources/careers">
+                            Jobs/Careers
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/elections">
+                            Elections
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/services/animal-services">
+                            Animal Services
+                        </a>
+                    </li>
+        </ul>
+            <section class="asideText">
+                <h3>What&#x27;s New</h3>
+                <div class="rightTextBlock">
+                    <p>Welcome to Collin County, Texas. Access county services such as property tax, health and human services, election information, passports, and a variety of court and judicial search tools. Find news, resources, and information for residents, businesses, and visitors&mdash;all in one convenient place." </p><hr /><p><strong>Collin County will be updating its Hazard Mitigation Action Plan in 2027</strong>, a critical effort aimed at reducing the impact of
+    natural disasters before they occur. As part of this process, we're seeking input from both employees and the public
+    - and your feedback matters.</p><p>A Hazard Mitigation Plan (HMP) is a FEMA-required, strategic document developed by state, local, and tribal
+    governments to identify long-term risks from natural hazards (e.g., floods, wildfires) and outline actions to reduce
+    vulnerability, protect life and property, and break the cycle of disaster damage.
+</p><p>Updated every five years, these plans focus resources on the greatest risks, fostering community resilience and
+    enabling eligibility for federal mitigation funding.</p><a href="https://www.collincountytx.gov/details?event=9f3551f0-5c69-44f3-8764-0fb64d80904f&amp;title=Collin-County-Hazard-Mitigation-Plan-Update" data-sf-ec-immutable="">Read More...</a>
+                </div>
+            </section>
+    </section>
+
+
+</nav>
+
+<script nonce="DiOlobg4XR/X&#x2B;kM90mfiYQ==">
+    document.addEventListener('click', function (e) {
+        const a = e.target.closest('.js-open-records');
+        if (!a) return;
+        e.preventDefault();
+
+        const title = `Open Records Request`;
+        const html = `<p>It can save a lot of time when you know where to request open records in county government, since we
+                        support a wide variety of elected and appointed offices in Collin County:
+                    </p><p><strong>Court Records:</strong> Please contact the clerks of the courts (<strong>
+ <a data-sf-ec-immutable="" href="/Courts/district-courts">District</a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="/Courts/County-Courts-at-Law">County Courts at Law</a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="/Courts/justices-peace">Justice Courts</a>
+ </strong>) for any and all court records
+                        (divorce records, criminal cases, Probate, traffic tickets, lawsuits of any kind.) You can also
+                        verify a case number and case status <strong>
+ <a data-sf-ec-immutable="" href="https://apps2.collincountytx.gov/JudicialOnlineSearch2" target="_blank">
+ online
+                                here
+                            </a>
+ </strong> to make it easier.
+                    </p><p><strong>Police Records:</strong> Contact the law enforcement agency that made or took the report: for
+                        example, <strong><a data-sf-ec-immutable="" href="/sheriff">County Sheriff</a></strong>, <strong>
+ <a data-sf-ec-immutable="" href="http://www.cityofallen.org/index.aspx?nid=904" target="_blank">
+ Allen
+                                Police
+                            </a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="http://www.friscotexas.gov/239/Police" target="_blank">Frisco Police</a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="https://www.mckinneytexas.org/index.aspx?NID=166" target="_blank">
+ McKinney
+                                Police
+                            </a>
+ </strong> and <strong>
+ <a data-sf-ec-immutable="" href="https://www.plano.gov/1061/Police" target="_blank">Plano Police</a>
+ </strong>. If you're seeking information on a current
+                        prisoner in the county jail, go here. This includes arrest or accident reports, jailings, 911 Calls,
+                        etc.)
+                    </p><p><strong>Land Records and more:</strong> Contact the <strong>
+ <a data-sf-ec-immutable="" href="/County-Clerk">
+ County
+                                Clerk
+                            </a>
+ </strong> for deeds, foreclosures, liens, public notices, marriage licenses, birth
+                        certificates and other vital records, beer &amp; wine applications, cattle brands, and business
+                        registrations (DBA's/Assumed Names). You can also look up many of these records online under
+                        <strong><a data-sf-ec-immutable="" href="https://collin.tx.publicsearch.us/" target="_blank">Deed Searches</a></strong> on
+                        the County Clerk's page.
+                    </p><p><strong>Taxes:</strong> For vehicle registration and property tax matters, contact the <strong>
+ <a data-sf-ec-immutable="" href="/Tax-Assessor">Tax Assessor-Collector</a>
+ </strong>. Please note that property tax
+                        appraisal records are maintained by the Central Appraisal District.
+                    </p><p><strong>City/Municipal Records:</strong> We do not have municipal records in our possession,
+                        including utility information. <strong><a data-sf-ec-immutable="" href="/Government/cities">Contact the cities</a></strong>.
+ </p><p class="ccButton"><strong>
+ <a data-sf-ec-immutable="" href="https://apps.collincountytx.gov/Forms/PublicInfoRequestProd" target="_blank">File a Public Information Request</a>
+ </strong>
+ </p><p><strong>File a Public Information Request</strong> for existing county government records on
+                        budgeting, spending, permits in unincorporated areas, engineering and maintenance on county (rural)
+                        roads, county government contracts and bids, audits, and all Commissioners Court records. If you're
+                        unsure, we'll do our best to steer you to the right place if we don't have the record you seek.
+                    </p><p>For more on the Public information Act and county government records, <strong>
+ <a data-sf-ec-immutable="" href="/public-information/public-records">please go here</a>
+ </strong>.
+ </p>`;
+
+        new ccModal({
+            title,
+            body: html,
+            tags: ["Public Information Office"]
+        });
+    }, { passive: false });
+</script>
+
+    </div>
+
+    <header id="headerMenuBlock" class="pinBlueBG stdPage" role="navigation" aria-label="Navigation bar">
+        
+<a id="leftMenu" class="topMenu logoCountyName" href="/" aria-label="Collin County home">
+    <img class="ccLogoImg" src="/images/collincounty-seal.png" alt="County Logo" />
+    <span>COLLIN COUNTY</span>
+</a>
+<span class="menuMgmt">
+    <div class="topMenu rightMenu" id="rightMenu">
+        <button class="icon-search-1 newSearch" aria-label="Search"></button>
+
+        <button type="button"
+                class="icon-phone contactLink"
+                id="contactBtn"
+                data-href="/contact"
+                aria-label="Go to County Contacts">
+            <span class="sr-only">County Contacts</span>
+        </button>
+
+        <button type="button"
+                id="menuToggleBtn"
+                class="hamMenu"
+                aria-controls="slidingNav"
+                aria-expanded="false"
+                aria-label="Open menu">
+            <span class="bar top"></span>
+            <span class="bar middle"></span>
+            <span class="bar bottom"></span>
+        </button>
+    </div>
+
+    <nav class="topMenu" id="midMenu" aria-label="Primary navigation">
+        <a href="/services" class="heroLink"><span class="linkTitle">Services</span></a>
+        <a href="/government" class="heroLink"><span class="linkTitle">Government</span></a>
+        <a href="/courts" class="heroLink"><span class="linkTitle">Public Safety & Courts</span></a>
+        <a href="/business-and-living" class="heroLink"><span class="linkTitle">Business & Living</span></a>
+        <a href="/news-hub" class="heroLink"><span class="linkTitle">News</span></a>
+    </nav>
+</span>
+
+    </header>
+
+    <article id="noticeDrawer" class="infoSection" role="region" aria-label="Site notices">
+        
+
+
+
+
+<script nonce="DiOlobg4XR/X&#x2B;kM90mfiYQ==" type="text/javascript">
+    window.ccEmerNotices = [];
+</script>
+
+
+
+    </article>
+
+    <main role="main">
+        
+        <div class="stdLayout colGrp">
+
+            <div class="stdLayout rowGrp">
+                <nav class="navbar" role="navigation" aria-label="Department navigation">
+                    
+
+
+
+
+    <ul class="mobileNavMenu">
+        <li class="nav-item mobile-level">
+            Page Navigation
+            <span class="icon-right-dir"></span>
+        </li>
+    </ul>
+    <h2 class="navMenuH2" aria-hidden="true">Menu</h2>
+    <ul class="sidebarlinks">
+        <li class="nav-item main-level">
+            <a href="/elections" class="nav-link ">Elections</a>
+        </li>
+
+                <li class="nav-item ">
+                        <a href="/elections/absentee-and-by-mail-voting" class="nav-link ">Absentee and By-Mail Voting</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/cad-board-election" class="nav-link ">CAD Board Election</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/details" class="nav-link ">Election Information</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/notices" class="nav-link ">Election Notices</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-results" class="nav-link ">Election Results</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-results-archive" class="nav-link ">Election Results Archive</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/rosters" class="nav-link ">Election Rosters</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/statistics" class="nav-link ">Election Statistics</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-store" class="nav-link ">Election Store</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-worker-recruitment" class="nav-link ">Election Worker Recruitment</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/FAQ" class="nav-link ">Frequently Asked Questions</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/officials-and-candidates" class="nav-link ">Officials and Candidates</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/polling-locations" class="nav-link ">Polling Locations</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/sample-ballots" class="nav-link  active ">Sample Ballots</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/volunteer-deputy-registrar" class="nav-link ">Volunteer Deputy Registrar</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/voter-registration-information" class="nav-link ">Voter Registration Information</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/voting-with-disabilities" class="nav-link ">Voting With Disabilities</a>
+
+                </li>
+
+
+    </ul>
+
+
+                </nav>
+
+                <div class="contentBody">
+
+
+                    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumbs">
+                        
+<ul class="breadcrumb" aria-label="Breadcrumb">
+                <li class="crumb"><a href="/elections">Elections</a></li>
+                <li class="crumb"><strong>Sample Ballots</strong></li>
+</ul>
+
+
+                    </nav>
+                    <span aria-hidden="true" class="menuInseam"></span>
+
+                    <section class="mainPgGrp">
+                        <h1 id="pageTitleHead">
+                            Elections: Sample Ballots
+                        </h1>
+                        
+
+<section>
+</section>
+                        <div class="mainPgContent">
+                            <section role="region" aria-label="Main page content" id="ccMainSection">
+
+
+
+<div class="">
+<p style="text-align: center">From here you can find your sample ballot by precinct number.</p><p style="text-align: center">If you do not know your designated precinct, refer to the voter registration card that you
+   received in the
+   mail
+   or lookup your Voter Registration Card online using the
+   <a data-sf-ec-immutable="" rel="noopener" target="_blank" href="https://apps.collincountytx.gov/ElectionsPublic/VoterRegSearch">Voter
+ Registration Search</a> application.
+</p><p style="text-align: center">Click here for <a href="https://apps2.collincountytx.gov/Elections2BallotAddressSearch" target="_blank" data-sf-ec-immutable="">Ballot Address Search</a></p><p style="text-align: center">Click here for <a target="_blank" href="/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5">All Race Ballot</a> </p><p>Elections sample ballots are
+   displayed here for current elections. Select the election
+   to view the relevant sample ballots.</p><p style="text-align: center"><strong>NOTE: Screen Reader Capable Sample Ballots available upon request</strong></p></div>
+
+<div class=" ccStdWidget">
+
+<script nonce="DiOlobg4XR/X+kM90mfiYQ==" src="/docs/default-source/default-document-library/style-library/js/ccelectionsampleballots.js?sfvrsn=eb6b374_6" id=""></script><link rel="stylesheet" href="/docs/default-source/default-document-library/style-library/css/ccelectionsampleballots.css">
+<div id="sampleText" class="ballotNotice"></div>
+<script nonce="DiOlobg4XR/X+kM90mfiYQ==">$(document).ready(setTimeout(function () {
+      ccElectionSampleBallots();
+   }, 150));</script>
+</div>
+
+</section>
+                            <aside id="rightsidebar" class="sideBar" role="complementary" aria-label="Right sidebar">
+                                
+
+    <aside class="contactBlock" aria-label="Contact Information">
+        <div class="contactOfficial">
+                <section class="contactSection contactOfficial" aria-labelledby="officialName">
+                        <div class="officialLook" style="background-image: url('/images/default-source/default-album/officials/elections-official.tmb-ccstand.jpg?Culture=en&amp;sfvrsn=5621bac9_2')" role="img" aria-label="Kaleb Breaux"></div>
+                        <div class="colGrp">
+                            <span id="officialName">Kaleb Breaux</span>
+                            <span class="subTitle">Elections Administrator</span>
+                        </div>
+
+                </section>
+        </div>
+
+        <div class="contactDetails" id="mainCon">
+
+            <section class="contactSection ccTopLink">
+                <a href="mailto:election@collincountytx.gov&#x200B;">
+                    <span class="icon-mail icoSpot" aria-hidden="true"></span>
+                    <span>Send an Email</span>
+                </a>
+            </section>
+                <section class="contactSection ccTopLink">
+                    <a href="https://apps.collincountytx.gov/Forms/PublicInfoRequestProd">
+                        <span class="icon-doc-text icoSpot" aria-hidden="true"></span>
+                        <span>Open Records Request</span>
+                    </a>
+                </section>
+
+            <div class="contactDetails">
+                <h2 class="locHead subTitle pinBlueBG">Location</h2>
+
+                <section class="accordion">
+                        <div class="accordion-section">
+                            <div class="accordion-header"><span class="accSecTitle">McKinney</span></div>
+                            <div class="accordion-content">
+                                    <div class="contactSection">
+                                        <span class="icon-phone icoSpot"></span>
+                                        <span class="contactData">
+                                                <h4>Contact</h4>
+                                                <div>Main: (972) 547-1990</div>
+                                                <div>Fax: (972) 547-1914</div>
+                                        </span>
+                                    </div>
+                                    <div class="contactSection">
+                                        <span class="icon-map icoSpot"></span>
+                                        <span class="contactData">
+                                            <h4>Location</h4>
+                                            <address>2010 Redbud Blvd., Suite 102, McKinney, Texas, 75069</address>
+                                            <div class="mapLinks">
+
+                                                    <a class="contactMap" href="https://maps.collincountytx.gov/main/?center=-96.6279846876,33.2197918705&amp;level=16&amp;_gl=1*1k33csq*_ga*MTM2ODg1MTI2OC4xNzMyMjA4MzMy*_ga_NL6BSNJSQK*czE3NTM5NzQ1MDAkbzMwJGcxJHQxNzUzOTc2NTk3JGo2MCRsMCRoMA.." target="_blank">
+                                                        View Map
+                                                    </a>
+                                            </div>
+                                            <div id="extraBranchDisplay-b2a8ce57-9c4f-4717-9701-c15a732b2594" style="display:none;"></div>
+                                        </span>
+
+                                    </div>
+
+                                    <div class="contactSection">
+                                        <span class="icon-clock-1 icoSpot"></span>
+                                        <div class="contactData">
+                                            <h4>Hours</h4>
+                                            <div class="contactBranchHours">
+                                                    <div>Mon. - Fri., 8:00 a.m. - 5 p.m.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+
+                </section>
+            </div>
+        </div>
+    </aside>
+
+
+                            </aside>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer role="contentinfo">
+        
+<section id="ccFooterTop" aria-label="Website footer menu">
+    <figure id="footerLogo">
+        <img class="ccLogoImg" src="/images/collincounty-seal.png" alt="County Logo" />
+        <figcaption class="footerText">
+            <span class="ccTitle">Collin County, Texas</span>
+            <address class="rowBlock">
+                <span class="icon-phone" aria-hidden="true"></span>
+                <span>
+                    <strong>McKinney:</strong> (972) 548-4100<br />
+                    <strong>Metro:</strong> (972) 424-1460
+                </span>
+            </address>
+        </figcaption>
+    </figure>
+
+    <section class="linkfooterText" aria-label="Quick Links">
+        <nav class="footerLinks" aria-label="About links">
+            <ul>
+                    <li><a href="/government" rel="noopener">About</a></li>
+                    <li><a href="/government/human-resources/careers" rel="noopener">Employment</a></li>
+                    <li><a href="/contact/locations" rel="noopener">Locations</a></li>
+                    <li><a href="https://webmail.co.collin.tx.us/owa/" rel="noopener">Webmail</a></li>
+            </ul>
+        </nav>
+
+        <nav class="footerLinks" aria-label="Transparency and feedback links">
+            <ul>
+                <li><a href="/Government/Open-Government">Transparency</a></li>
+                <li><a href="/Public-Information/open-records-requests">Open Records</a></li>
+                <li><a href="/privacy">Privacy &amp; Accessibility</a></li>
+
+                <li>
+                    <a href="#" class="js-footer-modal"
+                       aria-haspopup="dialog" data-modal-title="Website Feedback"
+                       data-modal-tag="Collin County Directory">Website Feedback</a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+</section>
+
+<section id="ccFooterBottom" aria-label="Copyright and social media">
+    <span>
+
+Copyright &copy; <time datetime="2026">2026</time> Collin County Texas &middot; All Rights Reserved    </span>
+    <div id="footerSocial" role="navigation" aria-label="Social media links">
+        <a aria-label="Facebook" target="_blank" rel="noopener" href="https://www.facebook.com/CollinGovt">
+            <span class="icon-facebook" aria-hidden="true"></span>
+        </a>
+        <a aria-label="Twitter" target="_blank" rel="noopener" href="https://twitter.com/collincountygov">
+            <span class="icon-xlogo" aria-hidden="true"></span>
+        </a>
+        <a aria-label="YouTube" target="_blank" rel="noopener" href="https://www.youtube.com/user/collincountygovt">
+            <span class="icon-youtube" aria-hidden="true"></span>
+        </a>
+    </div>
+</section>
+
+
+<script nonce="DiOlobg4XR/X&#x2B;kM90mfiYQ==">
+    window.ccFooterModals = {"Copyright":{"title":"Copyright","html":"Copyright \u0026copy; \u003Ctime datetime=\u0022{{year}}\u0022\u003E{{year}}\u003C/time\u003E Collin County Texas \u0026middot; All Rights Reserved"},"Website Feedback":{"title":"Website Feedback","html":"\u003Cp\u003EIf you are looking for a specific Department or Official please visit our \u003Ca href=\u0022/Contact\u0022 data-sf-ec-immutable=\u0022\u0022\u003E\u003Cstrong\u003EContact Site\u003C/strong\u003E\u003C/a\u003E for the relevant Directories.\u003C/p\u003E\u003Cp\u003EFor inquiries into court or jury matters: \u003Ca href=\u0022/District-Clerk/jury-services\u0022 data-sf-ec-immutable=\u0022\u0022\u003E\u003Cstrong\u003EJury\r\n Duty\u003C/strong\u003E\u003C/a\u003E | \u003Ca href=\u0022/Courts/case-lookup-and-court-schedules\u0022 data-sf-ec-immutable=\u0022\u0022\u003E\u003Cstrong\u003ECourt\r\n Cases\u003C/strong\u003E\u003C/a\u003E\u003C/p\u003E\u003Cp\u003E\u0026nbsp;\u003C/p\u003E\u003Cdiv style=\u0022text-align:center;\u0022\u003E\u003Cp\u003EIf you find any broken links or features on the site, or if you are having difficulty with the site,\r\n        please continue:\u003C/p\u003E\u003Cdiv class=\u0022ccButton\u0022\u003E\u003Ca href=\u0022mailto:webfeedback@collincountytx.gov\u0022\u003ESubmit Feedback\u003C/a\u003E\u003C/div\u003E\u003Cp\u003EPlease Note: Solicitations will \u003Cstrong\u003ENOT\u003C/strong\u003E receive responses.\u003C/p\u003E\u003C/div\u003E"}};
+
+    const norm = s => (s||'').replace(/\u00A0/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('.js-footer-modal');
+      if (!a) return;
+      e.preventDefault();
+
+      const keyRaw = a.getAttribute('data-modal-title') || a.textContent || '';
+      const blk = window.ccFooterModals[keyRaw.trim()] || window.ccFooterModals[norm(keyRaw)];
+      if (!blk) { console.warn('Footer modal block not found for:', keyRaw); return; }
+
+      // TEMP: no automatic tags. Optional explicit override:
+      const explicitTag = a.getAttribute('data-modal-tag'); // e.g., data-modal-tag="Website Feedback"
+      const tags = explicitTag ? [explicitTag] : [];
+      console.log('explicitTag =', explicitTag, ' blk.title =', blk?.title);
+
+      new ccModal({
+        title: blk.title || 'Info',
+        body:  blk.html,
+        tags: [explicitTag]
+      });
+    }, { passive:false });
+</script>
+
+
+
+
+
+    </footer>
+
+    
+
+
+<script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=1&cb=486194577" async nonce="DiOlobg4XR/X+kM90mfiYQ=="></script></body>
+
+
+</html>

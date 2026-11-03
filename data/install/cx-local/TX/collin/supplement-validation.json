@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-03T05:00:55.747229+00:00",
+  "allPrimaryAndSupplementalQuotes": 237,
+  "sourceQuoteReplay": "PASS",
+  "all80SampleVoteInstructionsAccountedFor": "PASS",
+  "localCandidateOffices": 49,
+  "localPrintedNames": 87,
+  "sharedFieldsPreservedWithoutDuplication": 13,
+  "sharedQuestionParity": "PASS",
+  "cancelledDistricts": 2,
+  "separatelyPreservedUnopposedDeclaredElectedNames": 4,
+  "noCancelledNamesInActiveChoices": "PASS",
+  "productionWrites": false
+}

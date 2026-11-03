@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:25:18.661289+00:00",
+  "preparedAt": "2026-11-03T05:25:23.527168+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -748,6 +748,36 @@
         "newThirdCourtWholeCountyMemberships": 24,
         "retainedExactElectoratePolygons": 12
       }
+    },
+    {
+      "state": "TX",
+      "county": "Collin County",
+      "populationRank": 33,
+      "manifest": "TX/collin/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 49,
+      "measureContests": 34,
+      "candidacies": 87,
+      "newContests": 65,
+      "refreshedContests": 18,
+      "sourceInputSha256": "78b843a3a9ac5676ac71dd21b7e19f425185cbf27761b9f4b29594c01984a5a6",
+      "coverage": {
+        "actualSampleBallotVerifiedContests": 83,
+        "localCandidateOfficeUnionInMasterSampleComplete": true,
+        "countyComplete": false,
+        "completeBallotParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "distinction": "Complete named local candidate union in the current county all-races master, preserving all named unopposed printed choices. Individualized style parity and district applicability remain installation work.",
+        "remaining": [
+          "River exact district/precinct/ward geometry and reader applicability for unmatched IDs.",
+          "Lavon MDD electorate is a portion of ETJ, not entire Lavon; election ordinance ExhibitA must govern.",
+          "Two current cancelled/unopposed-only district elections and four declared-elected names preserved separately; no cancelled name becomes an ordinary active ballot choice.",
+          "Generic state/federal write-in slots are not people; existing statewide declared write-in data stays untouched.",
+          "No personal voter lookup used; no full individualized style census claimed."
+        ],
+        "unmatchedReaderDivisionsAlreadyLinkedByHeldWholeCountyCourtMembership": 7,
+        "unmatchedReaderDivisionsWithoutHeldMembership": 16
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -773,17 +803,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 30,
-    "packetsPrepared": 31,
-    "candidateAndRetentionContests": 2020,
-    "measureContests": 75,
-    "candidacyEntries": 4610,
-    "newContestEntriesAgainstCheckedInBaseline": 1667,
-    "distinctPreparedContestIds": 2080,
-    "distinctPreparedCandidateIds": 4570,
-    "distinctNewContestsAgainstCheckedInBaseline": 1661,
+    "countiesPrepared": 31,
+    "packetsPrepared": 32,
+    "candidateAndRetentionContests": 2069,
+    "measureContests": 109,
+    "candidacyEntries": 4697,
+    "newContestEntriesAgainstCheckedInBaseline": 1732,
+    "distinctPreparedContestIds": 2163,
+    "distinctPreparedCandidateIds": 4657,
+    "distinctNewContestsAgainstCheckedInBaseline": 1726,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 31
+    "distinctCountyHandoffs": 32
   },
   "remainingWork": [
     {

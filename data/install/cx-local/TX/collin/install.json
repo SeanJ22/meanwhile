@@ -1,0 +1,951 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Collin County",
+  "countyFips": "48085",
+  "populationRank": 33,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "tx-ba01-2026-district-judge-219",
+      "title": "District Judge, 219th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:219",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-296",
+      "title": "District Judge, 296th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:296",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-366",
+      "title": "District Judge, 366th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:366",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-417",
+      "title": "District Judge, 417th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:417",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-429",
+      "title": "District Judge, 429th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:429",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-471",
+      "title": "District Judge, 471st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:471",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-494",
+      "title": "District Judge, 494th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:494",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-criminal_district_attorney_collin_county",
+      "title": "Criminal District Attorney Collin County",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-county_judge",
+      "title": "County Judge",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-judge_county_court_at_law_no_1",
+      "title": "Judge, County Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-judge_county_court_at_law_no_2",
+      "title": "Judge, County Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-judge_county_court_at_law_no_3",
+      "title": "Judge, County Court at Law No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-judge_county_court_at_law_no_4",
+      "title": "Judge, County Court at Law No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-judge_county_court_at_law_no_5",
+      "title": "Judge, County Court at Law No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-judge_county_court_at_law_no_6",
+      "title": "Judge, County Court at Law No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-judge_county_court_at_law_no_7",
+      "title": "Judge, County Court at Law No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-state-and-county-judge-county-probate-court",
+      "title": "Judge, County Probate Court",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-district_clerk",
+      "title": "District Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-ba01-2026-county-48085-county_clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-state-and-county-county-commissioner-precinct-no-2",
+      "title": "County Commissioner, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/commissioner_precinct:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-state-and-county-county-commissioner-precinct-no-4",
+      "title": "County Commissioner, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/commissioner_precinct:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-state-and-county-justice-of-the-peace-precinct-no-1",
+      "title": "Justice of the Peace, Precinct No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-state-and-county-justice-of-the-peace-precinct-no-2",
+      "title": "Justice of the Peace, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-state-and-county-justice-of-the-peace-precinct-no-3",
+      "title": "Justice of the Peace, Precinct No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-state-and-county-justice-of-the-peace-precinct-no-4",
+      "title": "Justice of the Peace, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-appraisal-district-collin-county-appraisal-district-board-of-directors-place-1",
+      "title": "Collin County Appraisal District \u2014 Collin County Appraisal District Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:collin_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-appraisal-district-collin-county-appraisal-district-board-of-directors-place-2",
+      "title": "Collin County Appraisal District \u2014 Collin County Appraisal District Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:collin_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-appraisal-district-collin-county-appraisal-district-board-of-directors-place-3",
+      "title": "Collin County Appraisal District \u2014 Collin County Appraisal District Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:collin_appraisal_district",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-josephine-texas-mayor",
+      "title": "City of Josephine, Texas \u2014 Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:josephine",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-josephine-texas-alderman-place-3",
+      "title": "City of Josephine, Texas \u2014 Alderman Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:josephine",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-josephine-texas-alderman-place-5",
+      "title": "City of Josephine, Texas \u2014 Alderman Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:josephine",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-lavon-texas-city-council-place-1",
+      "title": "City of Lavon, Texas \u2014 City Council, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:lavon",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-lavon-texas-city-council-place-3",
+      "title": "City of Lavon, Texas \u2014 City Council, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:lavon",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-lavon-texas-city-council-place-5",
+      "title": "City of Lavon, Texas \u2014 City Council, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:lavon",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-lowry-crossing-texas-city-council-ward-1",
+      "title": "City of Lowry Crossing, Texas \u2014 City Council, Ward 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-lowry-crossing-texas-city-council-ward-2",
+      "title": "City of Lowry Crossing, Texas \u2014 City Council, Ward 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-lowry-crossing-texas-city-council-ward-3",
+      "title": "City of Lowry Crossing, Texas \u2014 City Council, Ward 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-lowry-crossing-texas-city-council-ward-4",
+      "title": "City of Lowry Crossing, Texas \u2014 City Council, Ward 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-princeton-texas-councilmember-place-6",
+      "title": "City of Princeton, Texas \u2014 Councilmember, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:princeton",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "printedCandidates": 2,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-princeton-texas-councilmember-place-7",
+      "title": "City of Princeton, Texas \u2014 Councilmember, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/place:princeton",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-weston-texas-alderman",
+      "title": "City of Weston, Texas \u2014 Alderman",
+      "ocdId": "ocd-division/country:us/state:tx/place:weston",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "printedCandidates": 5,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-princeton-independent-school-district-school-trustees",
+      "title": "Princeton Independent School District \u2014 School Trustees",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:princeton_independent_school_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "printedCandidates": 4,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-wylie-independent-school-district-board-of-trustees-place-1",
+      "title": "Wylie Independent School District \u2014 Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:wylie_independent_school_district_4846530",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-wylie-independent-school-district-board-of-trustees-place-2",
+      "title": "Wylie Independent School District \u2014 Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:wylie_independent_school_district_4846530",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "printedCandidates": 5,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-wylie-independent-school-district-board-of-trustees-place-5",
+      "title": "Wylie Independent School District \u2014 Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:wylie_independent_school_district_4846530",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-wylie-independent-school-district-board-of-trustees-place-6",
+      "title": "Wylie Independent School District \u2014 Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:wylie_independent_school_district_4846530",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "printedCandidates": 1,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-directors",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "printedCandidates": 5,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-directors",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "printedCandidates": 5,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-the-preserve-municipal-utility-district-of-collin-county-directors",
+      "title": "The Preserve Municipal Utility District of Collin County \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "printedCandidates": 5,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-texas-proposition-a",
+      "title": "Collin County, Texas \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-texas-proposition-b",
+      "title": "Collin County, Texas \u2014 Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-texas-proposition-c",
+      "title": "Collin County, Texas \u2014 Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-texas-proposition-d",
+      "title": "Collin County, Texas \u2014 Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/county:collin",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-collin-county-community-college-district-proposition-a",
+      "title": "Collin County Community College District \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:collin_county_community_college_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-anna-texas-proposition-a",
+      "title": "City of Anna, Texas \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/place:anna",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-lavon-municipal-development-district-proposition-1",
+      "title": "Lavon Municipal Development District \u2014 Proposition 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lavon_municipal_development_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-city-of-plano-texas-proposition-a",
+      "title": "City of Plano, Texas \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/place:plano",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-bland-independent-school-district-proposition-a",
+      "title": "Bland Independent School District \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:bland_independent_school_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-mckinney-independent-school-district-proposition-a",
+      "title": "McKinney Independent School District \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mckinney_independent_school_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-mckinney-independent-school-district-proposition-b",
+      "title": "McKinney Independent School District \u2014 Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mckinney_independent_school_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-mckinney-independent-school-district-proposition-c",
+      "title": "McKinney Independent School District \u2014 Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mckinney_independent_school_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-mckinney-independent-school-district-proposition-d",
+      "title": "McKinney Independent School District \u2014 Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mckinney_independent_school_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-mckinney-independent-school-district-proposition-e",
+      "title": "McKinney Independent School District \u2014 Proposition E",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mckinney_independent_school_district",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-proposition-a",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-proposition-b",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-proposition-c",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-proposition-d",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-proposition-e",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Proposition E",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-proposition-f",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Proposition F",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-2-of-collin-county-proposition-g",
+      "title": "Blue Meadow Municipal Utility District No. 2 of Collin County \u2014 Proposition G",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-proposition-a",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-proposition-b",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-proposition-c",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-proposition-d",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-proposition-e",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Proposition E",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-proposition-f",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Proposition F",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-blue-meadow-municipal-utility-district-no-4-of-collin-county-proposition-g",
+      "title": "Blue Meadow Municipal Utility District No. 4 of Collin County \u2014 Proposition G",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-the-preserve-municipal-utility-district-of-collin-county-proposition-a",
+      "title": "The Preserve Municipal Utility District of Collin County \u2014 Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-the-preserve-municipal-utility-district-of-collin-county-proposition-b",
+      "title": "The Preserve Municipal Utility District of Collin County \u2014 Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-the-preserve-municipal-utility-district-of-collin-county-proposition-c",
+      "title": "The Preserve Municipal Utility District of Collin County \u2014 Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-the-preserve-municipal-utility-district-of-collin-county-proposition-d",
+      "title": "The Preserve Municipal Utility District of Collin County \u2014 Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-the-preserve-municipal-utility-district-of-collin-county-proposition-e",
+      "title": "The Preserve Municipal Utility District of Collin County \u2014 Proposition E",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    },
+    {
+      "id": "tx-cx-local-2026-collin-the-preserve-municipal-utility-district-of-collin-county-proposition-f",
+      "title": "The Preserve Municipal Utility District of Collin County \u2014 Proposition F",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "type": "MEASURE",
+      "candidates": 0,
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sampleVerified": true
+    }
+  ],
+  "sourceKind": "OFFICIAL_ALL_RACES_SAMPLE_BALLOT",
+  "operation": "Prepared data only. Refreshes 18 existing court/county contests preserving their20candidateIDs; adds31localcandidate offices and34localquestions. Six shared appellate contests andseven shared Dallas-area questions retain the original other-packet IDs and are not duplicated.",
+  "counts": {
+    "contests": 83,
+    "candidateOffices": 49,
+    "candidacies": 87,
+    "printedNamedCandidacies": 87,
+    "measures": 34,
+    "newContests": 65,
+    "refreshedContests": 18,
+    "preservedHeldCandidateIds": 20,
+    "sharedAppellateOfficesVerifiedNotDuplicated": 6,
+    "sharedQuestionsVerifiedNotDuplicated": 7,
+    "fullMasterLocalQuestions": 41,
+    "cancelledElectionsPreservedSeparately": 2,
+    "unopposedDeclaredElectedNamesPreservedSeparately": 4
+  },
+  "coverage": {
+    "actualSampleBallotVerifiedContests": 83,
+    "localCandidateOfficeUnionInMasterSampleComplete": true,
+    "countyComplete": false,
+    "completeBallotParity": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "distinction": "Complete named local candidate union in the current county all-races master, preserving all named unopposed printed choices. Individualized style parity and district applicability remain installation work.",
+    "remaining": [
+      "River exact district/precinct/ward geometry and reader applicability for unmatched IDs.",
+      "Lavon MDD electorate is a portion of ETJ, not entire Lavon; election ordinance ExhibitA must govern.",
+      "Two current cancelled/unopposed-only district elections and four declared-elected names preserved separately; no cancelled name becomes an ordinary active ballot choice.",
+      "Generic state/federal write-in slots are not people; existing statewide declared write-in data stays untouched.",
+      "No personal voter lookup used; no full individualized style census claimed."
+    ],
+    "unmatchedReaderDivisionsAlreadyLinkedByHeldWholeCountyCourtMembership": 7,
+    "unmatchedReaderDivisionsWithoutHeldMembership": 16
+  },
+  "unmatchedDivisions": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/commissioner_precinct:2",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/commissioner_precinct:4",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:1",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:2",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:3",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:4",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:219",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:296",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:366",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:417",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:429",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:471",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:494",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:1",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:2",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:3",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:4",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/school_district:collin_county_community_college_district",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:collin_appraisal_district",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:lavon_municipal_development_district",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+      "nextAction": "River:connect exact electoral geography; held judicial whole-county memberships remain intact."
+    }
+  ],
+  "validation": {
+    "sourceHashes": "PASS",
+    "savedSampleNamesAndExactFields": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "genericBallotProblems": "PASS",
+    "savedPrimaryQuotes": 204,
+    "savedPrimaryAndSupplementalQuotes": 237,
+    "unrelatedContestsPreserved": 1718,
+    "unrelatedCandidateCoreFieldsPreserved": 2146,
+    "sourceHashesAndQuotes": "PASS: 22 captured sources and 204 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "River:merge against current state, retain shared original IDs, install exact applicability, and live-check readers. No production writes performed."
+}

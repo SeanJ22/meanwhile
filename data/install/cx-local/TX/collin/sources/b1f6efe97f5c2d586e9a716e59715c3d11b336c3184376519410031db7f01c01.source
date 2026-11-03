@@ -1,0 +1,2399 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html id="html" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="PageID" content="664f50c9-1a89-4089-ae0b-fc1b41f5b206" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <title>Election Notices</title><meta property="og:title" content="Election Notices"><meta name="sf-page-nav" content="Elections"><link rel="canonical" href="https://www.collincountytx.gov/elections/notices" />
+
+    
+    
+        <link rel="stylesheet" href="/sfrenderer/Styles/bootstrap.min.css" />
+    
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/sfrenderer/styles/main.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/styles.css?v=yVlSPQf8g4QLluxNsRF0Vgd1XZAvpCg2aSry14-Ma2Y" />
+    <link rel="stylesheet" href="/styles/ccicons.css?v=44TWblVscfFtGzPonfbLQ3PYQ3tdFxu5t_pdVF20qRc" />
+    <link rel="stylesheet" href="/styles/ccFonts.css?v=JFSJAukhqh_sIP7fuDX1CpLwgG4PWiLPNtr0lhx1Uf8" />
+
+    <link rel="stylesheet" href="/styles/ccPageTemplate.css?v=RVvrKXVoJdVsppkEKxw-arJsUDba6dnqnjNJBkF-w6I" />
+    <link rel="stylesheet" href="/styles/ccResponsiveTemplate.css?v=3bm6R38X7RV3JgO2hAEqNJy_5kNF2WoOXDi6xaMaOcg" />
+
+    <link rel="stylesheet" href="/styles/ccSlidingNav.css?v=1BiJEOiTm0p2BRqgwoOM-mxVipovJhs4I48loTVOXBg" />
+    <link rel="stylesheet" href="/styles/ccHeaderMenu.css?v=bS1GgXj9ilgl2O4j7PIGLngRhVG1RvA1dyeaB6GWsN0" />
+    <link rel="stylesheet" href="/styles/ccLeftNav.css?v=uI4LUNSLDVNfjobMCiH_vl6rt0v3IHT7blt3q2Az5W0" />
+    <link rel="stylesheet" href="/styles/ccBreadcrumbs.css?v=MWxWaSg8NE4HgB7AZQ5RxFRBSHyXsb9YZy7HcsC3K4k" />
+    <link rel="stylesheet" href="/styles/ccNotices.css?v=6L9LKk7MbJd_gfnujnP48hSnN35EFdVJRxOIVs8Hpg8" />
+    <link rel="stylesheet" href="/styles/ccRightSidebar.css?v=OyRMe0XpFyI_EQlYUp_zyz6uNDE5i2kiAWVl26SvCCc" />
+    <link rel="stylesheet" href="/styles/ccFooter.css?v=enLlvw5YzhvUluqGlV9sQtOcFCHAl68yKdRq7Cxcolg" />
+    <link rel="stylesheet" href="/styles/ccModal.css?v=xhREw_kIJziVonASv5vCnK8lnS8VeYNsf2WDSJBRyY0" />
+    <link rel="stylesheet" href="/styles/ccAdvancedList.css?v=Ws_ZNbDgpDO9f_qrdMLpW_n8ghxowd-wMAmMypoiEKs" />
+    <link rel="stylesheet" href="/styles/ccFaqView.css?v=UxAhvVSIL0inGiH9IJ-w409HPYoQP96VOTgvRmnlTuQ" />
+    <link rel="stylesheet" href="/styles/ccDocumentList.css?v=HRyThqyTA6G7v5sUcQJlNXSS84D-2cPW7tHG2BNa-F0" />
+    <link rel="stylesheet" href="/styles/ccSearchPage.css?v=idR2zsXZoyw2FR4aM54_vdo4L2YJIi5EAtBxpV_hP9Y" />
+    <link rel="stylesheet" href="/styles/ccServicesList.css?v=4cUuDyFbMvXN7wbWOWYGwOz8KQiSCIqBXe_TGkyoSWY" />
+    <link rel="stylesheet" href="/styles/ccDirectoryList.css?v=tRPTzlGdnhMMiUvozPGLbFtTDAn4DtweHM0bIc-hhng" />
+
+
+
+    <script src="/scripts/jquery-3.7.1.min.js"></script>
+    <script src="/scripts/scripts.js?v=-AAyh6mb-HJRLklU-5C9gc1mAjUHTDlg__2Wqg2fwSg"></script>
+    <script src="/scripts/ccSlidingNav.js"></script>
+    <script src="/scripts/ccModal.js"></script>
+    <script src="/scripts/ccSearchModal.js"></script>
+    <script src="/scripts/ccTreeView.js"></script>
+    <script src="/scripts/ccSiteNotice.js"></script>
+
+    
+    <script src="https://siteimproveanalytics.com/js/siteanalyze_6293880.js"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBJF9K8X8B"></script>
+    <script nonce="JixJEIUkvF9BY5/T/5zSrw==">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VBJF9K8X8B');
+    </script>
+<script type="text/javascript">!function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{
+src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js", // The SDK URL Source
+crossOrigin: "anonymous", 
+cfg: { // Application Insights Configuration
+    connectionString: 'InstrumentationKey=e1fec3e2-18d3-4ee6-8b79-10b3a2ad9dd3;IngestionEndpoint=https://northcentralus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northcentralus.livediagnostics.monitor.azure.com/;ApplicationId=4f17d9f0-74d0-4a42-8f75-45e637176788'
+}});</script></head>
+
+
+<body class="container-fluid">
+    <a class="skip-link" href="#ccMainSection">Skip to Main Content</a>
+    <div id="slidingNav" role="navigation" aria-label="Sliding navigation">
+        
+
+
+
+<div class="aside-section aside-left ccGlass"></div>
+
+<nav class="aside-section aside-right" role="navigation" aria-label="Sliding menu">
+    <h2 class="menutitle">
+        Menu
+
+        <span class="toggleSpan closeMenuBtn">
+            <button type="button"
+                    class="menuToggleBtn"
+                    aria-label="Close menu"
+                    aria-controls="slidingNav"
+                    aria-expanded="true">
+                <span class="bar top"></span>
+                <span class="bar middle"></span>
+                <span class="bar bottom"></span>
+            </button>
+        </span>
+    </h2>
+    <section class="rightContent">
+        <div class="topRowMenu">
+            <a href="/contact/county-directory"><span class="icon-contacts"></span> Directory</a>
+            <a href="/contact/locations"><span class="icon-map"></span> Locations</a>
+            <a href="#" class="js-open-records" aria-haspopup="dialog">
+                <span class="icon-doc-text"></span> Open Records Request
+            </a>
+        </div>
+        <nav class="topMenu" id="mobileMidMenu" aria-label="Primary navigation">
+            <a href="/services" class="heroLink"><span class="linkTitle">Services</span></a>
+            <a href="/government" class="heroLink"><span class="linkTitle">Government</span></a>
+            <a href="/courts" class="heroLink"><span class="linkTitle">Public Safety &amp; Courts</span></a>
+            <a href="/business-and-living" class="heroLink"><span class="linkTitle">Business &amp; Living</span></a>
+            <a href="/public-information/news" class="heroLink"><span class="linkTitle">News</span></a>
+        </nav>
+        <h3>Quick Access</h3>
+        <ul>
+                    <li class="menuTsLink">
+                        <a href="https://apps2.collincountytx.gov/JudicialOnlineSearch2/global" target="_blank">
+                            Inmate Lookup
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="https://apps2.collincountytx.gov/JudicialOnlineSearch2/global" target="_blank">
+                            Active Warrants
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/sheriff">
+                            Sheriff/Jail
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/county-clerk">
+                            County Clerk
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/district-clerk">
+                            District Clerk
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/services/case-information">
+                            Court Case Search
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/tax-assessor">
+                            Tax Assessor
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/government/human-resources/careers">
+                            Jobs/Careers
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/elections">
+                            Elections
+                        </a>
+                    </li>
+                    <li class="menuTsLink">
+                        <a href="/services/animal-services">
+                            Animal Services
+                        </a>
+                    </li>
+        </ul>
+            <section class="asideText">
+                <h3>What&#x27;s New</h3>
+                <div class="rightTextBlock">
+                    <p>Welcome to Collin County, Texas. Access county services such as property tax, health and human services, election information, passports, and a variety of court and judicial search tools. Find news, resources, and information for residents, businesses, and visitors&mdash;all in one convenient place." </p><hr /><p><strong>Collin County will be updating its Hazard Mitigation Action Plan in 2027</strong>, a critical effort aimed at reducing the impact of
+    natural disasters before they occur. As part of this process, we're seeking input from both employees and the public
+    - and your feedback matters.</p><p>A Hazard Mitigation Plan (HMP) is a FEMA-required, strategic document developed by state, local, and tribal
+    governments to identify long-term risks from natural hazards (e.g., floods, wildfires) and outline actions to reduce
+    vulnerability, protect life and property, and break the cycle of disaster damage.
+</p><p>Updated every five years, these plans focus resources on the greatest risks, fostering community resilience and
+    enabling eligibility for federal mitigation funding.</p><a href="https://www.collincountytx.gov/details?event=9f3551f0-5c69-44f3-8764-0fb64d80904f&amp;title=Collin-County-Hazard-Mitigation-Plan-Update" data-sf-ec-immutable="">Read More...</a>
+                </div>
+            </section>
+    </section>
+
+
+</nav>
+
+<script nonce="JixJEIUkvF9BY5/T/5zSrw==">
+    document.addEventListener('click', function (e) {
+        const a = e.target.closest('.js-open-records');
+        if (!a) return;
+        e.preventDefault();
+
+        const title = `Open Records Request`;
+        const html = `<p>It can save a lot of time when you know where to request open records in county government, since we
+                        support a wide variety of elected and appointed offices in Collin County:
+                    </p><p><strong>Court Records:</strong> Please contact the clerks of the courts (<strong>
+ <a data-sf-ec-immutable="" href="/Courts/district-courts">District</a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="/Courts/County-Courts-at-Law">County Courts at Law</a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="/Courts/justices-peace">Justice Courts</a>
+ </strong>) for any and all court records
+                        (divorce records, criminal cases, Probate, traffic tickets, lawsuits of any kind.) You can also
+                        verify a case number and case status <strong>
+ <a data-sf-ec-immutable="" href="https://apps2.collincountytx.gov/JudicialOnlineSearch2" target="_blank">
+ online
+                                here
+                            </a>
+ </strong> to make it easier.
+                    </p><p><strong>Police Records:</strong> Contact the law enforcement agency that made or took the report: for
+                        example, <strong><a data-sf-ec-immutable="" href="/sheriff">County Sheriff</a></strong>, <strong>
+ <a data-sf-ec-immutable="" href="http://www.cityofallen.org/index.aspx?nid=904" target="_blank">
+ Allen
+                                Police
+                            </a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="http://www.friscotexas.gov/239/Police" target="_blank">Frisco Police</a>
+ </strong>, <strong>
+ <a data-sf-ec-immutable="" href="https://www.mckinneytexas.org/index.aspx?NID=166" target="_blank">
+ McKinney
+                                Police
+                            </a>
+ </strong> and <strong>
+ <a data-sf-ec-immutable="" href="https://www.plano.gov/1061/Police" target="_blank">Plano Police</a>
+ </strong>. If you're seeking information on a current
+                        prisoner in the county jail, go here. This includes arrest or accident reports, jailings, 911 Calls,
+                        etc.)
+                    </p><p><strong>Land Records and more:</strong> Contact the <strong>
+ <a data-sf-ec-immutable="" href="/County-Clerk">
+ County
+                                Clerk
+                            </a>
+ </strong> for deeds, foreclosures, liens, public notices, marriage licenses, birth
+                        certificates and other vital records, beer &amp; wine applications, cattle brands, and business
+                        registrations (DBA's/Assumed Names). You can also look up many of these records online under
+                        <strong><a data-sf-ec-immutable="" href="https://collin.tx.publicsearch.us/" target="_blank">Deed Searches</a></strong> on
+                        the County Clerk's page.
+                    </p><p><strong>Taxes:</strong> For vehicle registration and property tax matters, contact the <strong>
+ <a data-sf-ec-immutable="" href="/Tax-Assessor">Tax Assessor-Collector</a>
+ </strong>. Please note that property tax
+                        appraisal records are maintained by the Central Appraisal District.
+                    </p><p><strong>City/Municipal Records:</strong> We do not have municipal records in our possession,
+                        including utility information. <strong><a data-sf-ec-immutable="" href="/Government/cities">Contact the cities</a></strong>.
+ </p><p class="ccButton"><strong>
+ <a data-sf-ec-immutable="" href="https://apps.collincountytx.gov/Forms/PublicInfoRequestProd" target="_blank">File a Public Information Request</a>
+ </strong>
+ </p><p><strong>File a Public Information Request</strong> for existing county government records on
+                        budgeting, spending, permits in unincorporated areas, engineering and maintenance on county (rural)
+                        roads, county government contracts and bids, audits, and all Commissioners Court records. If you're
+                        unsure, we'll do our best to steer you to the right place if we don't have the record you seek.
+                    </p><p>For more on the Public information Act and county government records, <strong>
+ <a data-sf-ec-immutable="" href="/public-information/public-records">please go here</a>
+ </strong>.
+ </p>`;
+
+        new ccModal({
+            title,
+            body: html,
+            tags: ["Public Information Office"]
+        });
+    }, { passive: false });
+</script>
+
+    </div>
+
+    <header id="headerMenuBlock" class="pinBlueBG stdPage" role="navigation" aria-label="Navigation bar">
+        
+<a id="leftMenu" class="topMenu logoCountyName" href="/" aria-label="Collin County home">
+    <img class="ccLogoImg" src="/images/collincounty-seal.png" alt="County Logo" />
+    <span>COLLIN COUNTY</span>
+</a>
+<span class="menuMgmt">
+    <div class="topMenu rightMenu" id="rightMenu">
+        <button class="icon-search-1 newSearch" aria-label="Search"></button>
+
+        <button type="button"
+                class="icon-phone contactLink"
+                id="contactBtn"
+                data-href="/contact"
+                aria-label="Go to County Contacts">
+            <span class="sr-only">County Contacts</span>
+        </button>
+
+        <button type="button"
+                id="menuToggleBtn"
+                class="hamMenu"
+                aria-controls="slidingNav"
+                aria-expanded="false"
+                aria-label="Open menu">
+            <span class="bar top"></span>
+            <span class="bar middle"></span>
+            <span class="bar bottom"></span>
+        </button>
+    </div>
+
+    <nav class="topMenu" id="midMenu" aria-label="Primary navigation">
+        <a href="/services" class="heroLink"><span class="linkTitle">Services</span></a>
+        <a href="/government" class="heroLink"><span class="linkTitle">Government</span></a>
+        <a href="/courts" class="heroLink"><span class="linkTitle">Public Safety & Courts</span></a>
+        <a href="/business-and-living" class="heroLink"><span class="linkTitle">Business & Living</span></a>
+        <a href="/news-hub" class="heroLink"><span class="linkTitle">News</span></a>
+    </nav>
+</span>
+
+    </header>
+
+    <article id="noticeDrawer" class="infoSection" role="region" aria-label="Site notices">
+        
+
+
+
+
+<script nonce="JixJEIUkvF9BY5/T/5zSrw==" type="text/javascript">
+    window.ccEmerNotices = [];
+</script>
+
+
+
+    </article>
+
+    <main role="main">
+        
+        <div class="stdLayout colGrp">
+
+            <div class="stdLayout rowGrp">
+                <nav class="navbar" role="navigation" aria-label="Department navigation">
+                    
+
+
+
+
+    <ul class="mobileNavMenu">
+        <li class="nav-item mobile-level">
+            Page Navigation
+            <span class="icon-right-dir"></span>
+        </li>
+    </ul>
+    <h2 class="navMenuH2" aria-hidden="true">Menu</h2>
+    <ul class="sidebarlinks">
+        <li class="nav-item main-level">
+            <a href="/elections" class="nav-link ">Elections</a>
+        </li>
+
+                <li class="nav-item ">
+                        <a href="/elections/absentee-and-by-mail-voting" class="nav-link ">Absentee and By-Mail Voting</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/cad-board-election" class="nav-link ">CAD Board Election</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/details" class="nav-link ">Election Information</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/notices" class="nav-link  active ">Election Notices</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-results" class="nav-link ">Election Results</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-results-archive" class="nav-link ">Election Results Archive</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/rosters" class="nav-link ">Election Rosters</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/statistics" class="nav-link ">Election Statistics</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-store" class="nav-link ">Election Store</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/election-worker-recruitment" class="nav-link ">Election Worker Recruitment</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/FAQ" class="nav-link ">Frequently Asked Questions</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/officials-and-candidates" class="nav-link ">Officials and Candidates</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/polling-locations" class="nav-link ">Polling Locations</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/sample-ballots" class="nav-link ">Sample Ballots</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/volunteer-deputy-registrar" class="nav-link ">Volunteer Deputy Registrar</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/voter-registration-information" class="nav-link ">Voter Registration Information</a>
+
+                </li>
+                <li class="nav-item ">
+                        <a href="/elections/voting-with-disabilities" class="nav-link ">Voting With Disabilities</a>
+
+                </li>
+
+
+    </ul>
+
+
+                </nav>
+
+                <div class="contentBody">
+
+
+                    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumbs">
+                        
+<ul class="breadcrumb" aria-label="Breadcrumb">
+                <li class="crumb"><a href="/elections">Elections</a></li>
+                <li class="crumb"><strong>Notices</strong></li>
+</ul>
+
+
+                    </nav>
+                    <span aria-hidden="true" class="menuInseam"></span>
+
+                    <section class="mainPgGrp">
+                        <h1 id="pageTitleHead">
+                            Elections: Election Notices
+                        </h1>
+                        
+
+<section>
+</section>
+                        <div class="mainPgContent">
+                            <section role="region" aria-label="Main page content" id="ccMainSection">
+
+
+
+
+<div class=" ccStdWidget">
+
+            <div class="ccTreeView" data-tree role="tree" aria-label="Sections">
+
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>November 4, 2025 Election </h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+
+                <div class="ccTreeView" data-tree>
+
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>City Election (10)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-josephine-ordinance-unopposed-candidate-special-election.pdf?sfvrsn=fe76c91a_4" target="_blank">
+                                <span class="icon-file-pdf">City of Josephine Ordinance - Unopposed Candidate Special Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/town-of-prosper-ordinance-calling-november-4-2025-bond-election-english-and-spanish.pdf?sfvrsn=e910f3b9_4" target="_blank">
+                                <span class="icon-file-pdf">Town of Prosper Ordinance Calling November 4, 2025 Bond Election_English and Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/lowry-crossing-ordinance-385-11-4-25.pdf?sfvrsn=5dfa09dd_4" target="_blank">
+                                <span class="icon-file-pdf">Lowry  Crossing Ordinance 385 - 11-4-25</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-josephine-order-for-general-election.pdf?sfvrsn=a6a9691a_4" target="_blank">
+                                <span class="icon-file-pdf">City of Josephine Order for General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/town-of-prosper-bond-order-and-notice-of-election.pdf?sfvrsn=5f753a49_4" target="_blank">
+                                <span class="icon-file-pdf">Town of Prosper Bond Order and Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-josephine-notice-of-election.pdf?sfvrsn=c529da51_4" target="_blank">
+                                <span class="icon-file-pdf">City of Josephine Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-josephine-order-for-special-election.pdf?sfvrsn=e83517b1_4" target="_blank">
+                                <span class="icon-file-pdf">City of Josephine Order for Special Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/lowry-crossing-ordinance-384-11-4-25.pdf?sfvrsn=ce4aa4bd_4" target="_blank">
+                                <span class="icon-file-pdf">Lowry  Crossing Ordinance 384 -11-4-25</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-lavon-order-and-notice-calling-general-election.pdf?sfvrsn=fc2d7b1d_4" target="_blank">
+                                <span class="icon-file-pdf">City of Lavon Order and Notice Calling General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-anna-order-and-notice.pdf?sfvrsn=f279a86c_4" target="_blank">
+                                <span class="icon-file-pdf">City of Anna Order and Notice</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>General Election (17)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/election-board-meeting-notice-nov-2025-election.pdf?sfvrsn=c05116ee_4" target="_blank">
+                                <span class="icon-file-pdf">Election Board Meeting Notice - Nov 2025 Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/november-4-2025-cc-central-counting-station-plan.pdf?sfvrsn=22761e29_4" target="_blank">
+                                <span class="icon-file-pdf">November 4, 2025 - CC Central Counting Station Plan</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-canvass.pdf?sfvrsn=d8e60d8d_4" target="_blank">
+                                <span class="icon-file-pdf">Notice of Canvass</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-delivery-of-early-voting-balloting-materials-11725.pdf?sfvrsn=82643ba8_4" target="_blank">
+                                <span class="icon-file-pdf">Notice of Delivery of Early Voting Balloting Materials - 11725</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/proclamation-state-constitutional-amendments.pdf?sfvrsn=a3b59bd9_4" target="_blank">
+                                <span class="icon-file-pdf">Proclamation - State Constitutional Amendments</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-delivery-of-early-voting-balloting.pdf?sfvrsn=d802bb96_4" target="_blank">
+                                <span class="icon-file-pdf">Notice of Delivery of Early Voting Balloting</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/pollbook-equipment-l-a.pdf?sfvrsn=9484c8bc_4" target="_blank">
+                                <span class="icon-file-pdf">Pollbook Equipment L&amp;A</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/bb-signature-ver-comm-members.pdf?sfvrsn=ac487afb_4" target="_blank">
+                                <span class="icon-file-pdf">BB-Signature Ver Comm Members</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/certificate-to-copy-of-public-record-anna-tx.pdf?sfvrsn=6b65e3e1_4" target="_blank">
+                                <span class="icon-file-pdf">Certificate to Copy of Public Record - Anna, TX</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-post-election-hand-count-audit.pdf?sfvrsn=418204bf_4" target="_blank">
+                                <span class="icon-file-pdf">Notice of Post-Election Hand Count Audit</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/public-logic-and-accuracy-test-notice.pdf?sfvrsn=8144ec75_4" target="_blank">
+                                <span class="icon-file-pdf">Public Logic and Accuracy Test Notice</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/2025-59-o-canvassing-november-4-2025-special-election-results.pdf?sfvrsn=f40bbc2d_4" target="_blank">
+                                <span class="icon-file-pdf">2025-59 O - Canvassing November 4, 2025 Special Election Results</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-county-esd-order-of-election.pdf?sfvrsn=e234b8a8_4" target="_blank">
+                                <span class="icon-file-pdf">Collin County ESD Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/filed-notice-of-general-and-special-election.pdf?sfvrsn=c00c8806_4" target="_blank">
+                                <span class="icon-file-pdf">Filed Notice of General and Special Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-partial-manual-count-general.pdf?sfvrsn=d477b84d_4" target="_blank">
+                                <span class="icon-file-pdf">Notice of Partial Manual Count - General</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/november-4-2025-jurisdiction-contest-candidate-listing.pdf?sfvrsn=381c59c1_4" target="_blank">
+                                <span class="icon-file-pdf">November 4, 2025 Jurisdiction, Contest, Candidate Listing</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/2025-proposed-splits-kb-final-20250930.pdf?sfvrsn=f8b90d3d_4" target="_blank">
+                                <span class="icon-file-pdf">2025 Proposed Splits_KB_Final_20250930</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>School District Election (16)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-isd-notice-of-deadline-to-file.pdf?sfvrsn=3f3feb08_4" target="_blank">
+                                <span class="icon-file-pdf">Princeton ISD Notice of Deadline to File</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/van-alstyne-isd-notice-spanish.pdf?sfvrsn=8b68e0b0_4" target="_blank">
+                                <span class="icon-file-pdf">Van Alstyne ISD - notice - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/van-alstyne-isd-notice-english.pdf?sfvrsn=d7f78713_4" target="_blank">
+                                <span class="icon-file-pdf">Van Alstyne ISD - notice - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/van-alstyne-isd-order-english.pdf?sfvrsn=3f52df2a_4" target="_blank">
+                                <span class="icon-file-pdf">Van Alstyne ISD - Order - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/rockwall-isd-order-calling-for-bond-election.pdf?sfvrsn=18a06e65_4" target="_blank">
+                                <span class="icon-file-pdf">Rockwall ISD Order Calling for Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/rockwall-isd-nov-2025-vatre-final-notice-of-voter-approval-tax-rate-election-spanish.pdf?sfvrsn=339c6960_4" target="_blank">
+                                <span class="icon-file-pdf">ROCKWALL ISD NOV 2025 VATRE - Final Notice of Voter-Approval Tax Rate Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/rockwall-isd-nov-2025-vatre-final-notice-of-voter-approval-tax-rate-election.pdf?sfvrsn=2c0f7ad7_4" target="_blank">
+                                <span class="icon-file-pdf">ROCKWALL ISD NOV 2025 VATRE - Final Notice of Voter-Approval Tax Rate Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/bland-isd-vatre-notice-of-election-english-spanish.pdf?sfvrsn=5d606ddd_4" target="_blank">
+                                <span class="icon-file-pdf">Bland ISD VATRE--Notice of Election (English &amp; Spanish)</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/bland-isd-november-bond-election-notice-of-election-english-spanish.pdf?sfvrsn=3287c00c_4" target="_blank">
+                                <span class="icon-file-pdf">Bland ISD November bond election--Notice of Election (English &amp; Spanish)</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/van-alstyne-isd-order-calling-for-bond-election.pdf?sfvrsn=d3403e87_4" target="_blank">
+                                <span class="icon-file-pdf">Van Alstyne ISD Order Calling for Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-isd-notice-of-general-election.pdf?sfvrsn=f4b38585_4" target="_blank">
+                                <span class="icon-file-pdf">Princeton ISD Notice of General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/rockwall-isd-nov-2025-vatre-notice-of-voter-approval-tax-rate-election-english-and-spanish.pdf?sfvrsn=d4461648_4" target="_blank">
+                                <span class="icon-file-pdf">ROCKWALL ISD NOV 2025 VATRE -  Notice of Voter-Approval Tax Rate Election-English and Spanish .pdf</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/van-alstyne-isd-notice-english-and-spanish.pdf?sfvrsn=76d44670_4" target="_blank">
+                                <span class="icon-file-pdf">Van Alstyne ISD - Notice - English and Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/van-alstyne-isd-order-spanish.pdf?sfvrsn=26d45_4" target="_blank">
+                                <span class="icon-file-pdf">Van Alstyne ISD - Order - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/bland-isd-order-calling-a-bond-election.pdf?sfvrsn=ae0523db_4" target="_blank">
+                                <span class="icon-file-pdf">Bland ISD  Order Calling a Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-isd-notice-of-general-electionadc88db4e7334255bc43f55544762751.pdf?sfvrsn=bffbcfb0_6" target="_blank">
+                                <span class="icon-file-pdf">Princeton ISD - Notice of General Election</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>Utility District Election (6)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/tickey-creek-mud-order-calling-confirmation-directors-bond-tax-election-fe-w-spanish-8-8-25.pdf?sfvrsn=2be77a3f_4" target="_blank">
+                                <span class="icon-file-pdf">Tickey Creek MUD - Order Calling Confirmation, Directors, Bond, Tax Election - FE w Spanish (8.8.25)</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/verona-sud-ordinance-2025-002-to-cancel-election.pdf?sfvrsn=13bc277d_4" target="_blank">
+                                <span class="icon-file-pdf">Verona SUD Ordinance 2025-002 to Cancel Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/seven-springs-mud-english-notice-of-election-and-order-calling-confirmation-directors-utility-util-ref-road-road-ref-2025.pdf?sfvrsn=e8f9be12_4" target="_blank">
+                                <span class="icon-file-pdf">Seven Springs MUD (ENGLISH) - Notice of Election and Order Calling Confirmation, Directors, Utility, Util Ref, Road, Road Ref. 2025</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/verona-sud-order-of-cancellation.pdf?sfvrsn=59a203c7_4" target="_blank">
+                                <span class="icon-file-pdf">Verona SUD Order of Cancellation</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/verona-sud-certification-of-unopposed-candidates.pdf?sfvrsn=2aca85e6_4" target="_blank">
+                                <span class="icon-file-pdf">Verona SUD Certification of Unopposed Candidates</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/seven-springs-mud-spanish-notice-of-election-and-order-calling-confirmation-directors-utility-util-ref-road-road-ref-2025.pdf?sfvrsn=dba8b60a_4" target="_blank">
+                                <span class="icon-file-pdf">Seven Springs MUD  (SPANISH) - Notice of Election and Order Calling Confirmation Directors Utility Util Ref Road Road Ref 2025</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>                </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>November 3, 2026 General Election </h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+
+                <div class="ccTreeView" data-tree>
+
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>CAD Candidate Filing (4)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/november-3-2026-collin-cad-application-for-place-on-ballot---joe-corcoran.pdf?sfvrsn=b77b5884_3" target="_blank">
+                                <span class="icon-file-pdf">November 3, 2026 Collin CAD Application for Place on Ballot - Joe Corcoran</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/20261103_collin-cad-application-for-place-on-ballot_michael-g-smith_completed-20260806.pdf?sfvrsn=7945e0a1_3" target="_blank">
+                                <span class="icon-file-pdf">November 3, 2026 Collin CAD Application for Place on Ballot - Michael Smith</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/20261103_collin-cad-application-for-place-on-ballot_randall-shinn_completed-20260805.pdf?sfvrsn=2fa0bb27_5" target="_blank">
+                                <span class="icon-file-pdf">November 3, 2026 Collin CAD Application for Place on Ballot - Randal Shinn</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/20261103_collin-cad-application-for-place-on-ballot_andrew-cook_completed-20260805.pdf?sfvrsn=61bd9722_3" target="_blank">
+                                <span class="icon-file-pdf">November 3, 2026 Collin CAD Application for Place on Ballot - Andrew Cook</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>CAD Election (1)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-cad-notice-of-drawing-for-a-place-on-ballot-8-26-2026.pdf?sfvrsn=8df1bcba_3" target="_blank">
+                                <span class="icon-file-pdf">Collin CAD Notice of Drawing for a Place on Ballot 8.26.2026</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>City Election (30)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---final-notice-of-bond-election---spanish.pdf?sfvrsn=6774e05a_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Final Notice of Bond Election -  Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/anna-city-ordinance-calling-bond-election.pdf?sfvrsn=409f8315_3" target="_blank">
+                                <span class="icon-file-pdf">City of Anna Ordinance Calling Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/josphine-city-order-of-election.pdf?sfvrsn=9a04d8d6_3" target="_blank">
+                                <span class="icon-file-pdf">City of  Josephine Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-plano---notice---spanish.pdf?sfvrsn=35a48ef8_3" target="_blank">
+                                <span class="icon-file-pdf">City of Plano - notice - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-wylie---notice-of-bond-election---spanish.pdf?sfvrsn=84454fb3_3" target="_blank">
+                                <span class="icon-file-pdf">City of Wylie - Notice of Bond Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/plano-city-ordinance-for-venue-tax-election.pdf?sfvrsn=d908b63e_3" target="_blank">
+                                <span class="icon-file-pdf">City of Plano Ordinance for Venue Tax Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/josephine-city-notice-of-election.pdf?sfvrsn=419177ac_3" target="_blank">
+                                <span class="icon-file-pdf">Josephine City Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-notice-of-special-election.pdf?sfvrsn=fe82976b_3" target="_blank">
+                                <span class="icon-file-pdf">City of Garland Notice of Special Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---final-notice-of-bond-election.pdf?sfvrsn=70d5449_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Final Notice of Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-wylie---notice-of-bond-election.pdf?sfvrsn=2de35bd3_3" target="_blank">
+                                <span class="icon-file-pdf">City of Wylie - Notice of Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-ne-sud-ordinance-2026-002-ordering-2026-general-election.pdf?sfvrsn=36d178a9_5" target="_blank">
+                                <span class="icon-file-pdf">Wylie NE SUD-Ordinance 2026-002 Ordering 2026 General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-city-calling-general-election-place-6-and-7-english.pdf?sfvrsn=4c4c917c_3" target="_blank">
+                                <span class="icon-file-pdf">City of Princeton Calling General Election Place 6 and 7 English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---final-notice-of-voter-approval-tax-rate-election.pdf?sfvrsn=ffc0ddc0_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Final Notice of Voter-Approval Tax Rate Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---final-notice-of-voter-approval-tax-rate-election---spanish.pdf?sfvrsn=42850bbf_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Final Notice of Voter-Approval Tax Rate Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/weston-town-notice-of-deadline-to-file.pdf?sfvrsn=c44793a2_5" target="_blank">
+                                <span class="icon-file-pdf">City of Weston Notice of Deadline to File</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/dallas-city-ordinance-calling-bond-election.pdf?sfvrsn=f96b9840_5" target="_blank">
+                                <span class="icon-file-pdf">City of Dallas Ordinance Calling Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/weston-city-notice-of-drawing-for-a-place-on-the-ballot.pdf?sfvrsn=d3575202_3" target="_blank">
+                                <span class="icon-file-pdf">City of Weston Notice of Drawing for a Place on the Ballot</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-plano---notice---english.pdf?sfvrsn=5bc21930_3" target="_blank">
+                                <span class="icon-file-pdf">City of Plano - notice - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-city-calling-general-election-place-6-and-7-spanish.pdf?sfvrsn=914011c3_3" target="_blank">
+                                <span class="icon-file-pdf">City of Princeton Calling General Election Place 6 and 7-Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-wylie---notice-of-bond-election---vietnamese.pdf?sfvrsn=c6074e3b_3" target="_blank">
+                                <span class="icon-file-pdf">City of Wylie - Notice of Bond Election - Vietnamese</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-anna-notice-of-election---english.pdf?sfvrsn=c89677b9_3" target="_blank">
+                                <span class="icon-file-pdf">City of Anna Notice of Election - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/lavon-city-order-special-election-mdd-november-3-2026.pdf?sfvrsn=86cac112_3" target="_blank">
+                                <span class="icon-file-pdf">City of Lavon Order Special Election MDD November 3 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-nov-2026-election---final-notice-of-bond-election.pdf?sfvrsn=692b9b05_3" target="_blank">
+                                <span class="icon-file-pdf">WYLIE NOV 2026 ELECTION - Final Notice of Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-nov-2026-election---final-notice-of-bond-election---spanish.pdf?sfvrsn=38977319_3" target="_blank">
+                                <span class="icon-file-pdf">WYLIE NOV 2026 ELECTION -  Final Notice of Bond Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-anna-notice-of-election---spanish.pdf?sfvrsn=bd47d270_3" target="_blank">
+                                <span class="icon-file-pdf">City of Anna Notice of Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-ne-sud-order-of-election-2026.pdf?sfvrsn=6c6d8aa_5" target="_blank">
+                                <span class="icon-file-pdf">Wylie NE SUD-Order of Election 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-bond-election---city-of-dallas.pdf?sfvrsn=6a13da46_3" target="_blank">
+                                <span class="icon-file-pdf">Notice of Bond Election - City of Dallas</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/lavon-city-order-calling-general-election--november-3-2026.pdf?sfvrsn=2e07c58_3" target="_blank">
+                                <span class="icon-file-pdf">City of Lavon Order Calling General Election- November 3, 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-city-order-of-bond-election.pdf?sfvrsn=6503cd89_3" target="_blank">
+                                <span class="icon-file-pdf">City of Wylie Order of Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-city-notice-of-general-election.pdf?sfvrsn=91a6d1d2_3" target="_blank">
+                                <span class="icon-file-pdf">City of Princeton Notice of General Election</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>General Election (17)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-cad-order-of-general-election-5-22-2026-ccad-bod-signed.pdf?sfvrsn=60fd995b_3" target="_blank">
+                                <span class="icon-file-pdf">Collin CAD Order of General Election 5.22.2026-CCAD BOD SIGNED</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-canvass-nov-26-signed.pdf?sfvrsn=ec80d730_3" target="_blank">
+                                <span class="icon-file-pdf">Notice of Canvass-Nov 26-Signed</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-county-bond-sample-ballot.pdf?sfvrsn=71da8a6_3" target="_blank">
+                                <span class="icon-file-pdf">Collin County Bond Sample Ballot</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-post-election-hand-count-audit8a72b6a00ef4463b8d9f1994d041d6c1.pdf?sfvrsn=9d86f05a_3" target="_blank">
+                                <span class="icon-file-pdf">Notice of Post-Election Hand Count Audit</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-public-notice-of-public-logic-and-accuracy-test-pollbook-equip.pdf?sfvrsn=786baef3_3" target="_blank">
+                                <span class="icon-file-pdf">Signed Public Notice of Public Logic and Accuracy Test-Pollbook Equip</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/filed-notice-of-collin-county-bond-election.pdf?sfvrsn=99af27a7_3" target="_blank">
+                                <span class="icon-file-pdf">Filed Notice of Collin County Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-cad-notice-of-general-election-5-22-2026-ccad-bod-signed.pdf?sfvrsn=4035d884_3" target="_blank">
+                                <span class="icon-file-pdf">Collin CAD Notice of General Election 5.22.2026-CCAD BOD SIGNED</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-county-bond-voter-information-documents---english.pdf?sfvrsn=ace00f3f_3" target="_blank">
+                                <span class="icon-file-pdf">Collin County Bond Voter Information Documents - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-county-bond-notice-of-election.pdf?sfvrsn=23acc969_3" target="_blank">
+                                <span class="icon-file-pdf">Collin County Bond Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-public-notice-of-public-logic-and-accuracy-test-tabulating-equip.pdf?sfvrsn=eb247d5b_3" target="_blank">
+                                <span class="icon-file-pdf">Signed Public Notice of Public Logic and Accuracy Test-Tabulating Equip.</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-county-bond-voter-information-documents---spanish.pdf?sfvrsn=3701213f_3" target="_blank">
+                                <span class="icon-file-pdf">Collin County Bond Voter Information Documents - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-cad-notice-of-deadline-to-file-an-application-for-place-on-the-ballot.pdf?sfvrsn=c6f55aa2_3" target="_blank">
+                                <span class="icon-file-pdf">Collin CAD-Notice of Deadline to File an Application for Place on the Ballot</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/nov-26-central-counting-station-plan.pdf?sfvrsn=b5360389_5" target="_blank">
+                                <span class="icon-file-pdf">November 26 2026 Central Counting Station Plan</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/filed-order-and-notice-of-general-and-special-elections---nov-3-2026.pdf?sfvrsn=50d4d331_3" target="_blank">
+                                <span class="icon-file-pdf">Filed Order and Notice of General and Special Elections - Nov 3, 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-delivery-of-early-voting-balloting-materials---nov-26-election.pdf?sfvrsn=6c41659c_3" target="_blank">
+                                <span class="icon-file-pdf">Notice of Delivery of Early Voting Balloting Materials - Nov 26 Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-election-board-meeting.msg?sfvrsn=4c15e529_3&amp;download=true" target="_blank">
+                                <span class="icon-file-code">Notice of Election Board Meeting</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/updated-signed-notice-of-delivery-of-early-voting-balloting-materials.pdf?sfvrsn=16ad2d1e_3" target="_blank">
+                                <span class="icon-file-pdf">Updated Signed Notice of Delivery of Early Voting Balloting Materials</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>School District Election (13)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-call-to-order-special-vatre-election.pdf?sfvrsn=43025422_3" target="_blank">
+                                <span class="icon-file-pdf">McKinney ISD Call to Order Special VATRE Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-isd-order-of-general-election.pdf?sfvrsn=d754f648_3" target="_blank">
+                                <span class="icon-file-pdf">Princeton ISD-Order of General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---notice-of-voter-approval-tax-rate-election.pdf?sfvrsn=9a9d64e3_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Notice of Voter-Approval Tax Rate Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-call-to-order-bond-election.pdf?sfvrsn=26d3fc70_3" target="_blank">
+                                <span class="icon-file-pdf">McKinney ISD Call to Order Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-isd-notice-of-general-election-for-other-political-subdivisions.pdf?sfvrsn=a6c0a3ad_3" target="_blank">
+                                <span class="icon-file-pdf">Princeton ISD Notice of General Election for Other Political Subdivisions</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/bland-isd-november-2026-vatre---election-order-(english-and-spanish-9-3).pdf?sfvrsn=c9b68908_3" target="_blank">
+                                <span class="icon-file-pdf">Bland ISD November 2026 VATRE - Election Order (English and Spanish 9-3)</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-county-community-college-district-notice-english.pdf?sfvrsn=6443bce8_3" target="_blank">
+                                <span class="icon-file-pdf">Collin County Community College District-Notice-English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---notice-of-bond-election.pdf?sfvrsn=e94a0a20_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Notice of Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/princeton-isd_notice-of-deadline-to-file-an-application-for-place-on-the-ballot_20261103.pdf?sfvrsn=83a60b2e_3" target="_blank">
+                                <span class="icon-file-pdf">Princeton ISD Notice of Deadline To File An Application</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---notice-of-voter-approval-tax-rate-election---spanish.pdf?sfvrsn=4f5bd418_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Notice of Voter-Approval Tax Rate Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/collin-county-community-college-district-notice-spanish.pdf?sfvrsn=8890b242_3" target="_blank">
+                                <span class="icon-file-pdf">Collin County Community College District Notice-Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/mckinney-isd-nov-2026---notice-of-bond-election---spanish.pdf?sfvrsn=25c62290_3" target="_blank">
+                                <span class="icon-file-pdf">MCKINNEY ISD NOV 2026 - Notice of Bond Election -  Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/bland-isd-november-2026-vatre---notice-of-election-(english-and-spanish-9-3).pdf?sfvrsn=e9c3195c_3" target="_blank">
+                                <span class="icon-file-pdf">Bland ISD November 2026 VATRE - Notice of Election (English and Spanish 9-3)</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>Utility District Election (9)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/blue-meadow-mud-2-notice-of-election.pdf?sfvrsn=5f93afd7_3" target="_blank">
+                                <span class="icon-file-pdf">Blue Meadow MUD 2 Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/blue-meadow-mud-2-order-calling-full-election.pdf?sfvrsn=dbb8fd2_3" target="_blank">
+                                <span class="icon-file-pdf">Blue Meadow MUD 2 Order Calling Full Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/blue-meadow-mud-4-order-calling-full-election.pdf?sfvrsn=607e529f_3" target="_blank">
+                                <span class="icon-file-pdf">Blue Meadow MUD 4 Order Calling Full Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/verona-sud-certification-of-unopposed-candidates-and-cancellation-of-election.pdf?sfvrsn=b1d389ab_3" target="_blank">
+                                <span class="icon-file-pdf">Verona SUD Certification of Unopposed Candidates and Cancellation of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/the-preserve-mud-notice-of-election-spanish.pdf?sfvrsn=bc31438c_3" target="_blank">
+                                <span class="icon-file-pdf">The Preserve MUD Notice of Election-Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/the-preserve-mud-notice-of-election-english.pdf?sfvrsn=54709760_3" target="_blank">
+                                <span class="icon-file-pdf">The Preserve MUD Notice of Election-English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/blue-meadow-mud-4-notice-of-election.pdf?sfvrsn=ede3a8f5_3" target="_blank">
+                                <span class="icon-file-pdf">Blue Meadow MUD 4 Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-ne-sud-certified-unopposed-candidates.pdf?sfvrsn=e2434531_3" target="_blank">
+                                <span class="icon-file-pdf">Wylie NE SUD Certified Unopposed Candidates</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-ne-sud-order-of-cancellation.pdf?sfvrsn=2e46d485_3" target="_blank">
+                                <span class="icon-file-pdf">Wylie NE SUD Order of Cancellation</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>                </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>May 26, 2026 Election </h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+
+                <div class="ccTreeView" data-tree>
+
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>General Election (6)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-public-l-a-tabulating-equipment.pdf?sfvrsn=3a593ef_6" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Public Logic and Accuracy Tabulating Equipment</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-election.pdf?sfvrsn=5744a36_4" target="_blank">
+                                <span class="icon-file-pdf">Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/cc-central-counting-station-plan---march-26-2026-primary-runoff-election.pdf?sfvrsn=6a34570c_6" target="_blank">
+                                <span class="icon-file-pdf">CC Central Counting Station Plan - March 26, 2026 Primary Runoff Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-delivery-of-early-voting-balloting-material-for-primary-runoff-election.pdf?sfvrsn=df84c3c3_4" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Delivery of Early Voting Balloting Material for Primary Runoff Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-post-election-hand-count-audit.pdf?sfvrsn=e8ce3adc_6" target="_blank">
+                                <span class="icon-file-pdf">May 26, 2026  Signed Notice of Post-Election Hand Count Audit</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-public-l-a-electronic-pollbook-equipment.pdf?sfvrsn=5d45dd17_8" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Public Logic and Accuracy Electronic Pollbook Equipment</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>                </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>May 2, 2026 Election </h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+
+                <div class="ccTreeView" data-tree>
+
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>City Election (40)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-charter-amendment-election-w-exhibit-a-spanish.pdf?sfvrsn=1e2a121d_9" target="_blank">
+                                <span class="icon-file-pdf">Notice of Charter Amendment Election w Exhibit A Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-charter-amendment-election-w-exhibit-a-english.pdf?sfvrsn=a11215a2_9" target="_blank">
+                                <span class="icon-file-pdf">Notice of Charter Amendment Election w Exhibit A English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-ordinance-no-7646-ordering-the-general-election---english.pdf?sfvrsn=999fa8d4_7" target="_blank">
+                                <span class="icon-file-pdf">Garland City Ordinance No. 7646 Ordering the General Election - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/fairview-town-ordering-and-calling-the-2026-election.pdf?sfvrsn=552ec516_7" target="_blank">
+                                <span class="icon-file-pdf">Fairview Town Ordering and Calling the 2026 Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/frisco-city-order-of-election.pdf?sfvrsn=1f5bb97_7" target="_blank">
+                                <span class="icon-file-pdf">Frisco City-Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-ordinance-no-7648-ordering-the-special-election---english.pdf?sfvrsn=668edceb_7" target="_blank">
+                                <span class="icon-file-pdf">Garland City Ordinance No. 7648 Ordering the Special Election - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/parker-city-0203-ord907-2026--calling-an-election-and-order.pdf?sfvrsn=66aec91a_7" target="_blank">
+                                <span class="icon-file-pdf">Parker City 0203 Ord907 2026 -Calling an Election and Order</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/prosper-town-order-of-election_spanish.pdf?sfvrsn=b302e920_10" target="_blank">
+                                <span class="icon-file-pdf">Prosper Town Order of Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/celina-city-order-of-election.pdf?sfvrsn=3d8f81a2_8" target="_blank">
+                                <span class="icon-file-pdf">Celina City Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/allen-city-order-of-election.pdf?sfvrsn=1394ae74_7" target="_blank">
+                                <span class="icon-file-pdf">Allen City-Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/royse-city-isd-2026-election-order.pdf?sfvrsn=724ee960_7" target="_blank">
+                                <span class="icon-file-pdf">Royse City ISD 2026 Election Order</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/sachse-city-order-a-general-election-for-places-3-and-4-on-may-2-2026--english.pdf?sfvrsn=8c2a1315_7" target="_blank">
+                                <span class="icon-file-pdf">Sachse City Order a General Election for Places 3 and 4 on May 2, 2026 -English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-city-order-of-election.pdf?sfvrsn=9ac9ad12_7" target="_blank">
+                                <span class="icon-file-pdf">Wylie City Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/wylie-city-certification-of-unopposed-candidates.pdf?sfvrsn=590818ed_7" target="_blank">
+                                <span class="icon-file-pdf">Wylie City-Certification of Unopposed Candidates</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/sachse-city-order-a-general-election-for-places-3-and-4-on-may-2-2026-spanish.pdf?sfvrsn=5b458675_11" target="_blank">
+                                <span class="icon-file-pdf">Sachse City Order a General Election for Places 3 and 4 on May 2, 2026 -Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/prosper-town-order-of-election_english.pdf?sfvrsn=6f98f163_9" target="_blank">
+                                <span class="icon-file-pdf">Prosper Town Order of Election - English</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/celina-isd-2026-order-and-notice-of-election.pdf?sfvrsn=2666bef1_7" target="_blank">
+                                <span class="icon-file-pdf">Celina ISD 2026 Order and Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-richardson-may-2026-bond-election---notice-of-bond-election.pdf?sfvrsn=e5dcf688_7" target="_blank">
+                                <span class="icon-file-pdf">City of Richardson May 2026 Bond Election - Notice of Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-ordinance-no-7653-ordinance-cancelling-the-general-election-held-on-may-2-2026-for-districts-1-2-and-4.pdf?sfvrsn=1101d18d_7" target="_blank">
+                                <span class="icon-file-pdf">Garland City Ordinance No. 7653 Ordinance Cancelling the General Election held on May 2, 2026 for Districts 1, 2, and 4</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-richardson-may-2026-bond-election---notice-of-bond-election---vietnamese.pdf?sfvrsn=be8258e1_7" target="_blank">
+                                <span class="icon-file-pdf">City of Richardson May 2026 Bond Election - Notice of Bond Election - Vietnamese</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-ordinance-no-7654-ordinance-cancelling-the-special-election-held-on-may-2-2026.pdf?sfvrsn=1e445c48_11" target="_blank">
+                                <span class="icon-file-pdf">Garland City Ordinance No. 7654 Ordinance Cancelling the Special Election held on May 2 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-richardson-may-2026-bond-election---notice-of-bond-election---spanish.pdf?sfvrsn=516e867d_7" target="_blank">
+                                <span class="icon-file-pdf">City of Richardson May 2026 Bond Election - Notice of Bond Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/carrollton-city-general-election-ordinance-4302.pdf?sfvrsn=2dc0e074_11" target="_blank">
+                                <span class="icon-file-pdf">Carrollton City General Election - Ordinance 4302</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-carrollton-may-2026-bond-election---notice-of-bond-election-eng-span-viet.pdf?sfvrsn=cc720aef_5" target="_blank">
+                                <span class="icon-file-pdf">City of Carrollton May 2026 Bond Election - Notice of Bond Election Eng-Span-Viet</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-ordinance-no-7648-ordering-the-special-election---spanish.pdf?sfvrsn=c35cffe7_7" target="_blank">
+                                <span class="icon-file-pdf">Garland City Ordinance No. 7648 Ordering the Special Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-frisco-notice-of-general-election-may-2026.pdf?sfvrsn=7aea7ed3_7" target="_blank">
+                                <span class="icon-file-pdf">City of Frisco Notice of General Election May 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-carrollton-2026-election-notice-of-election.pdf?sfvrsn=81abe546_7" target="_blank">
+                                <span class="icon-file-pdf">City of Carrollton 2026 Election Notice of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/carrollton-city-bond-election-ordinance-4301.pdf?sfvrsn=4aca979a_11" target="_blank">
+                                <span class="icon-file-pdf">Carrollton City Bond Election - Ordinance 4301</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/lucas-city-ordering-the-may-2-2026-general-election.pdf?sfvrsn=6dd1964d_11" target="_blank">
+                                <span class="icon-file-pdf">Lucas City Ordering the May 2, 2026 General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/josephine-city-order-of-election.pdf?sfvrsn=243bf10c_7" target="_blank">
+                                <span class="icon-file-pdf">Josephine City Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/sachse-city-notice-of-general-election-may-2026.pdf?sfvrsn=c9dc26c3_7" target="_blank">
+                                <span class="icon-file-pdf">Sachse City Notice of General Election May 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-richardson-approvedcharter-election-order-ord-4569.pdf?sfvrsn=85ceb71d_5" target="_blank">
+                                <span class="icon-file-pdf">City of Richardson APPROVEDCHARTER ELECTION ORDER ORD 4569</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/prosper-town-certificate-of-unopposed-candidates.pdf?sfvrsn=b29c492a_7" target="_blank">
+                                <span class="icon-file-pdf">Prosper Town-Certificate of Unopposed Candidates</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-certificate-of-unopposed-candidates.pdf?sfvrsn=62a47418_8" target="_blank">
+                                <span class="icon-file-pdf">Garland City Certificate of Unopposed Candidates</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/nevada-city-order-of-cancellation-may-2026.pdf?sfvrsn=79c2f0ff_7" target="_blank">
+                                <span class="icon-file-pdf">Nevada City Order of Cancellation-May 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-celina-notice-of-election-5-2-26.pdf?sfvrsn=eea28801_7" target="_blank">
+                                <span class="icon-file-pdf">City of Celina Notice of Election-5-2-26</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/nevada-city-order-and-notice-of-general-election.pdf?sfvrsn=5d9ec4f0_7" target="_blank">
+                                <span class="icon-file-pdf">Nevada City Order and Notice of General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/garland-city-ordinance-no-7646-ordering-the-general-election---spanish.pdf?sfvrsn=978161fc_7" target="_blank">
+                                <span class="icon-file-pdf">Garland City Ordinance No. 7646 Ordering the General Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/murphy-city-general-election-ordinance.pdf?sfvrsn=6b4cf03_7" target="_blank">
+                                <span class="icon-file-pdf">Murphy City General Election Ordinance</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/new-hope-town-order-may-2-2026-general-election.pdf?sfvrsn=ae29f24f_7" target="_blank">
+                                <span class="icon-file-pdf">New Hope Town Order May 2, 2026 General Election</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>General Election (17)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/certificate-of-l-a-test-pollbook-joint-uniform---city-of-richardson.pdf?sfvrsn=55d457fc_11" target="_blank">
+                                <span class="icon-file-pdf">Certificate of L&amp;A Test Pollbook Joint Uniform &amp; City of Richardson</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-public-l-a-test-tabulation-equipd091ef59b3934b8f8a39709f697951b5.pdf?sfvrsn=1302a463_13" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice Public L&amp;A Test Tabulation Equip</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-public-l-a-test-pollbook-equip431c5a48ccbd4a658e4c7912c7aace1b.pdf?sfvrsn=f6a11036_11" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice Public L&amp;A Test Pollbook Equip</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-richardson-may-2026-bond-election-notice-of-bond-election-spanish3e2f2df9442f41c6a2c404a5cd6bbf2d.pdf?sfvrsn=7e006c12_15" target="_blank">
+                                <span class="icon-file-pdf">City of Richardson May 2026 Bond Election - Notice of Bond Election - Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/richardson-2026-bond-election-final-notice-of-bond-election-spanish.pdf?sfvrsn=7af60c53_13" target="_blank">
+                                <span class="icon-file-pdf">RICHARDSON 2026 BOND ELECTION - Final Notice of Bond Election- Spanish</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/richardson-2026-bond-election---final-notice-of-bond-election.pdf?sfvrsn=b48ceba1_9" target="_blank">
+                                <span class="icon-file-pdf">RICHARDSON 2026 BOND ELECTION - Final Notice of Bond Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-delivery-of-early-voting-balloting-city-of-richardson.pdf?sfvrsn=e1646b68_9" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Delivery Of Early Voting Balloting City of Richardson</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-public-l-a-test-pollbook-equip.pdf?sfvrsn=559adbe4_7" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice Public L&amp;A Test-Pollbook Equip</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-public-l-a-test-tabulation-equip.pdf?sfvrsn=4e8cdd48_7" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice Public L&amp;A Test-Tabulation Equip</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-delivery-of-early-voting-ballotting-materials-for-the-may-2-2026-elections.pdf?sfvrsn=7bd19b6a_9" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Delivery of Early Voting Balloting Materials for the May 2, 2026 Elections</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/central-counting-station-plan-5-2-26-elec.pdf?sfvrsn=ece4e4e3_15" target="_blank">
+                                <span class="icon-file-pdf">Central Counting Station Plan May 2 2026 Uniform Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/central-counting-station-plan-5-2-26-elec-(003).pdf?sfvrsn=3a55460_15" target="_blank">
+                                <span class="icon-file-pdf">Central Counting Station Plan May 2 2026 Richardson Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/joint-notice-of-election-5-2-26.pdf?sfvrsn=2031cb2e_7" target="_blank">
+                                <span class="icon-file-pdf">Joint Notice of Election-5-2-26</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-post-election-hand-count-audit-date-joint-uniform-elec.pdf?sfvrsn=e1040bc3_10" target="_blank">
+                                <span class="icon-file-pdf">Notice of Post-Election Hand Count Audit Date-Joint Uniform Elec</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-post-election-hand-count-audit-date-city-of-richardson-elec.pdf?sfvrsn=3dc70140_10" target="_blank">
+                                <span class="icon-file-pdf">Notice of Post-Election Hand Count Audit Date-City of Richardson Elec</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-joint-uniform-not-of-post-elec-hand-count-audit.pdf?sfvrsn=f5f7c172_20" target="_blank">
+                                <span class="icon-file-pdf">Signed Joint Uniform Notice of Post Election Hand Count Audit</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-city-of-richardson-not-of-post-elec-hand-count-audit.pdf?sfvrsn=b97b002e_17" target="_blank">
+                                <span class="icon-file-pdf">Signed City of Richardson Notice of Post Election Hand Count Audit</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>School District Election (16)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/community-isd-order-of-special-elections.pdf?sfvrsn=8d1fdfcf_7" target="_blank">
+                                <span class="icon-file-pdf">Community ISD Order of Special Elections</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/community-isd_notice_of_deadline_to_file_may_general_election.pdf?sfvrsn=b9f57aa1_5" target="_blank">
+                                <span class="icon-file-pdf">Community ISD Notice of Deadline to File May General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/trenton-isd-notice-of-general-election.pdf?sfvrsn=a7b3c724_7" target="_blank">
+                                <span class="icon-file-pdf">Trenton ISD Notice of General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/lovejoy-isd-order-of-general-election.pdf?sfvrsn=38cbf69b_7" target="_blank">
+                                <span class="icon-file-pdf">Lovejoy ISD-Order of General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/royse-city-isd-ballot-proof.pdf?sfvrsn=7e9e93e8_5" target="_blank">
+                                <span class="icon-file-pdf">Royse City ISD Ballot Proof</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/melissa-isd-order-of-election.pdf?sfvrsn=13e08cab_7" target="_blank">
+                                <span class="icon-file-pdf">Melissa ISD Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/anna-isd-cancellation-order.pdf?sfvrsn=8093819d_7" target="_blank">
+                                <span class="icon-file-pdf">Anna ISD Cancellation Order</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/community-isd-order-of-elections.pdf?sfvrsn=fb4db3e0_7" target="_blank">
+                                <span class="icon-file-pdf">Community ISD Order of Elections</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/community-isd-notice-of-special-election.pdf?sfvrsn=52d107e8_7" target="_blank">
+                                <span class="icon-file-pdf">Community ISD Notice of Special Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/allen-isd-board-order-of-trustee-election-01-20-26.pdf?sfvrsn=ece5584e_7" target="_blank">
+                                <span class="icon-file-pdf">Allen ISD Board Order of Trustee Election 01.20.26</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/van-alstyne-isd-order-to-call-election-for-may-2026.pdf?sfvrsn=3f2dd6d0_7" target="_blank">
+                                <span class="icon-file-pdf">Van Alstyne ISD Order to Call Election for May 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/community-isd-notice-of-general-election.pdf?sfvrsn=c1821f0f_7" target="_blank">
+                                <span class="icon-file-pdf">Community ISD Notice of General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/ord-no-2025-11-1-dart-election.pdf?sfvrsn=f0b0ca8b_9" target="_blank">
+                                <span class="icon-file-pdf">Order No. 2025-11-1 DART Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/royse-city-isd-election-notice.pdf?sfvrsn=979be04a_5" target="_blank">
+                                <span class="icon-file-pdf">Royse City ISD Election Notice</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/prosper_isd_signed_2026_order_of_election.pdf?sfvrsn=1a0c1698_5" target="_blank">
+                                <span class="icon-file-pdf">Prosper ISD Signed 2026 Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/whitewright-isd-certificate-of-unopposed-candidates.pdf?sfvrsn=a29ac455_7" target="_blank">
+                                <span class="icon-file-pdf">Whitewright ISD Certificate of Unopposed Candidates</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>Utility District Election (10)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/seis-lagos-utility-district-order-of-election.pdf?sfvrsn=c101953c_7" target="_blank">
+                                <span class="icon-file-pdf">Seis Lagos Utility District Order of Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/north-collin-sud-2026-order-of-general-election.pdf?sfvrsn=a22b5415_9" target="_blank">
+                                <span class="icon-file-pdf">North Collin SUD 2026 Order of General Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/seven-points-notice-of-confirmation.pdf?sfvrsn=88a6ce3_9" target="_blank">
+                                <span class="icon-file-pdf">Seven Points Notice of Confirmation</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/westminster-sud-notice-of-cancellation.pdf?sfvrsn=ef26350d_7" target="_blank">
+                                <span class="icon-file-pdf">Westminster SUD Notice of Cancellation</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/copeville-sud-resolution-to-cancel-may-2-2026-election.pdf?sfvrsn=f3da4fea_7" target="_blank">
+                                <span class="icon-file-pdf">Copeville SUD Resolution to Cancel May 2 2026 Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/north-collin-sud-2026-order-of-cancellation.pdf?sfvrsn=3ee100b7_9" target="_blank">
+                                <span class="icon-file-pdf">North Collin SUD 2026 Order of Cancellation</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/bainbridge-mud-notice-and-order-calling-confirmation-directors-bonds-and-maintenance-tax-election-5-2-26.pdf?sfvrsn=a6055c43_11" target="_blank">
+                                <span class="icon-file-pdf">Bainbridge MUD - Notice and Order Calling Confirmation, Directors, Bonds, and Maintenance Tax Election (5.2.26)</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/southeast-collin-county-mud-no-1-notice-and-order-calling-confirmation-directors-bonds-and-maintenance-tax-election-5-2-26.pdf?sfvrsn=157cc99d_9" target="_blank">
+                                <span class="icon-file-pdf">Southeast Collin County MUD No. 1 - Notice and Order Calling Confirmation, Directors, Bonds, and Maintenance Tax Election (5.2.26)</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/copeville-sud-certification-of-unopposed-candidates.pdf?sfvrsn=6864898a_7" target="_blank">
+                                <span class="icon-file-pdf">Copeville SUD Certification of Unopposed Candidates</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/golden-ranch-notice-of-confirmation.pdf?sfvrsn=8a664cfe_9" target="_blank">
+                                <span class="icon-file-pdf">Golden Ranch Notice of Confirmation</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>                </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>June 13, 2026 Uniform Runoff Election </h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+
+                <div class="ccTreeView" data-tree>
+
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>City Election (4)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/sachse-city-order-a-runoff-election-for-place-4-on-june-13-2026.pdf?sfvrsn=a9b2376f_10" target="_blank">
+                                <span class="icon-file-pdf">Sachse City-Order a Runoff Election for Place 4 on June 13, 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/sachse-city-notice-of-runoff-election-june-2026.pdf?sfvrsn=15e89790_6" target="_blank">
+                                <span class="icon-file-pdf">June 13, 2026 City of Sachse Notice of Runoff Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/frisco-city-notice-of-special-runoff-election-june-2026.pdf?sfvrsn=3e7f1d3d_10" target="_blank">
+                                <span class="icon-file-pdf">Frisco City-Notice of Special Runoff Election June 2026</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/frisco-city-ordinance-canvassing-the-may-2-2026-election-and-ordering-runoff-election.pdf?sfvrsn=6a534645_6" target="_blank">
+                                <span class="icon-file-pdf">Frisco City-ORDINANCE CANVASSING THE MAY 2, 2026 ELECTION AND ORDERING RUNOFF ELECTION</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>General Election (5)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-post-election-hand-count-auditb19a973ee21045118acf1e0f0e327f6a.pdf?sfvrsn=4d8ad245_4" target="_blank">
+                                <span class="icon-file-pdf">Notice of Post-Election Hand Count Audit</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/cc-central-counting-station-plan---june-13-2026-joint-uniform-runoff-election.pdf?sfvrsn=a0cb73a4_4" target="_blank">
+                                <span class="icon-file-pdf">CC Central Counting Station Plan - June 13, 2026 Joint Uniform Runoff Election</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-delivery-of-early-voting-balloting-materials948b1d61a23a4998841f7e523e315fa9.pdf?sfvrsn=48b15450_4" target="_blank">
+                                <span class="icon-file-pdf">June 13, 2026 Signed Notice of Delivery of Early Voting Balloting Materials</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-public-l-a-electronic-pollbook-equipmente50b91685fd14b2b98ba8f53af1e226c.pdf?sfvrsn=35dada2f_4" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Public L&amp;A-Electronic Pollbook Equipment</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-public-l-a-tabulating-equipment7b1007c64cf642b19543c532970fc9b5.pdf?sfvrsn=f2e645c2_4" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Public L&amp;A-Tabulating Equipment</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>                </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>January 31, 2026 Election </h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+
+                <div class="ccTreeView" data-tree>
+
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>City Election (2)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-frisco-ordinance-ordering-january-2026-special-election-to-fill-vacancy.pdf?sfvrsn=5a6f5aa9_4" target="_blank">
+                                <span class="icon-file-pdf">City of Frisco_ORDINANCE ORDERING JANUARY 2026 SPECIAL ELECTION TO FILL VACANCY</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/city-of-plano-ordinance-calling-a-special-election-to-fill-a-vacancy.pdf?sfvrsn=9debe1cd_4" target="_blank">
+                                <span class="icon-file-pdf">City of Plano_Ordinance Calling a Special Election to Fill a Vacancy</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="ccTreeViewSection ccStdWidget">
+
+    <div class="ccTreeViewHeading">
+        <section class="ccTreeViewToggle">
+            <span class="icon-right-dir" aria-hidden="true"></span>
+
+            <div class="ccTreeViewTitle">
+                <h3>General Election (5)</h3>
+            </div>
+        </section>
+    </div>
+
+    <div class="ccTreeViewPanel">
+
+        <div class="ccTreeViewPanelDetails">
+
+                <ul class="ccStdList" role="list">
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/signed-notice-of-delivery-of-early-voting-balloting-materials.pdf?sfvrsn=b2372ea6_10" target="_blank">
+                                <span class="icon-file-pdf">Signed Notice of Delivery of Early Voting Balloting Materials</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/public_notice_la_electronic_pollbook_equipment.pdf?sfvrsn=3b908865_9" target="_blank">
+                                <span class="icon-file-pdf">Public Notice of Logic and Accuracy Test of Electronic PollBook Equipment</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/central-counting-station-plan-1-31-26-elec-web.pdf?sfvrsn=7e94be1d_12" target="_blank">
+                                <span class="icon-file-pdf">Central Counting Station Plan 1-31-26</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/public_notice_la_tabulating_equipment.pdf?sfvrsn=1db11ad4_10" target="_blank">
+                                <span class="icon-file-pdf">Public Notice of Public Logic and Accuracy and First Test of Automatic Tabulating Equipment</span>
+                            </a>
+                        </li>
+                        <li class="documentRow" role="listitem">
+                            <a href="/docs/default-source/elections/election-notices/notice-of-special-election-january-2026-signed.pdf?sfvrsn=cb493fdd_6" target="_blank">
+                                <span class="icon-file-pdf">Notice of Special Election January 2026-Signed</span>
+                            </a>
+                        </li>
+                </ul>
+
+
+        </div>
+
+    </div>
+</div>                </div>
+
+        </div>
+
+    </div>
+</div>            </div>
+</div></section>
+                            <aside id="rightsidebar" class="sideBar" role="complementary" aria-label="Right sidebar">
+                                
+
+    <aside class="contactBlock" aria-label="Contact Information">
+        <div class="contactOfficial">
+                <section class="contactSection contactOfficial" aria-labelledby="officialName">
+                        <div class="officialLook" style="background-image: url('/images/default-source/default-album/officials/elections-official.tmb-ccstand.jpg?Culture=en&amp;sfvrsn=5621bac9_2')" role="img" aria-label="Kaleb Breaux"></div>
+                        <div class="colGrp">
+                            <span id="officialName">Kaleb Breaux</span>
+                            <span class="subTitle">Elections Administrator</span>
+                        </div>
+
+                </section>
+        </div>
+
+        <div class="contactDetails" id="mainCon">
+
+            <section class="contactSection ccTopLink">
+                <a href="mailto:election@collincountytx.gov&#x200B;">
+                    <span class="icon-mail icoSpot" aria-hidden="true"></span>
+                    <span>Send an Email</span>
+                </a>
+            </section>
+                <section class="contactSection ccTopLink">
+                    <a href="https://apps.collincountytx.gov/Forms/PublicInfoRequestProd">
+                        <span class="icon-doc-text icoSpot" aria-hidden="true"></span>
+                        <span>Open Records Request</span>
+                    </a>
+                </section>
+
+            <div class="contactDetails">
+                <h2 class="locHead subTitle pinBlueBG">Location</h2>
+
+                <section class="accordion">
+                        <div class="accordion-section">
+                            <div class="accordion-header"><span class="accSecTitle">McKinney</span></div>
+                            <div class="accordion-content">
+                                    <div class="contactSection">
+                                        <span class="icon-phone icoSpot"></span>
+                                        <span class="contactData">
+                                                <h4>Contact</h4>
+                                                <div>Main: (972) 547-1990</div>
+                                                <div>Fax: (972) 547-1914</div>
+                                        </span>
+                                    </div>
+                                    <div class="contactSection">
+                                        <span class="icon-map icoSpot"></span>
+                                        <span class="contactData">
+                                            <h4>Location</h4>
+                                            <address>2010 Redbud Blvd., Suite 102, McKinney, Texas, 75069</address>
+                                            <div class="mapLinks">
+
+                                                    <a class="contactMap" href="https://maps.collincountytx.gov/main/?center=-96.6279846876,33.2197918705&amp;level=16&amp;_gl=1*1k33csq*_ga*MTM2ODg1MTI2OC4xNzMyMjA4MzMy*_ga_NL6BSNJSQK*czE3NTM5NzQ1MDAkbzMwJGcxJHQxNzUzOTc2NTk3JGo2MCRsMCRoMA.." target="_blank">
+                                                        View Map
+                                                    </a>
+                                            </div>
+                                            <div id="extraBranchDisplay-b2a8ce57-9c4f-4717-9701-c15a732b2594" style="display:none;"></div>
+                                        </span>
+
+                                    </div>
+
+                                    <div class="contactSection">
+                                        <span class="icon-clock-1 icoSpot"></span>
+                                        <div class="contactData">
+                                            <h4>Hours</h4>
+                                            <div class="contactBranchHours">
+                                                    <div>Mon. - Fri., 8:00 a.m. - 5 p.m.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+
+                </section>
+            </div>
+        </div>
+    </aside>
+
+
+                            </aside>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer role="contentinfo">
+        
+<section id="ccFooterTop" aria-label="Website footer menu">
+    <figure id="footerLogo">
+        <img class="ccLogoImg" src="/images/collincounty-seal.png" alt="County Logo" />
+        <figcaption class="footerText">
+            <span class="ccTitle">Collin County, Texas</span>
+            <address class="rowBlock">
+                <span class="icon-phone" aria-hidden="true"></span>
+                <span>
+                    <strong>McKinney:</strong> (972) 548-4100<br />
+                    <strong>Metro:</strong> (972) 424-1460
+                </span>
+            </address>
+        </figcaption>
+    </figure>
+
+    <section class="linkfooterText" aria-label="Quick Links">
+        <nav class="footerLinks" aria-label="About links">
+            <ul>
+                    <li><a href="/government" rel="noopener">About</a></li>
+                    <li><a href="/government/human-resources/careers" rel="noopener">Employment</a></li>
+                    <li><a href="/contact/locations" rel="noopener">Locations</a></li>
+                    <li><a href="https://webmail.co.collin.tx.us/owa/" rel="noopener">Webmail</a></li>
+            </ul>
+        </nav>
+
+        <nav class="footerLinks" aria-label="Transparency and feedback links">
+            <ul>
+                <li><a href="/Government/Open-Government">Transparency</a></li>
+                <li><a href="/Public-Information/open-records-requests">Open Records</a></li>
+                <li><a href="/privacy">Privacy &amp; Accessibility</a></li>
+
+                <li>
+                    <a href="#" class="js-footer-modal"
+                       aria-haspopup="dialog" data-modal-title="Website Feedback"
+                       data-modal-tag="Collin County Directory">Website Feedback</a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+</section>
+
+<section id="ccFooterBottom" aria-label="Copyright and social media">
+    <span>
+
+Copyright &copy; <time datetime="2026">2026</time> Collin County Texas &middot; All Rights Reserved    </span>
+    <div id="footerSocial" role="navigation" aria-label="Social media links">
+        <a aria-label="Facebook" target="_blank" rel="noopener" href="https://www.facebook.com/CollinGovt">
+            <span class="icon-facebook" aria-hidden="true"></span>
+        </a>
+        <a aria-label="Twitter" target="_blank" rel="noopener" href="https://twitter.com/collincountygov">
+            <span class="icon-xlogo" aria-hidden="true"></span>
+        </a>
+        <a aria-label="YouTube" target="_blank" rel="noopener" href="https://www.youtube.com/user/collincountygovt">
+            <span class="icon-youtube" aria-hidden="true"></span>
+        </a>
+    </div>
+</section>
+
+
+<script nonce="JixJEIUkvF9BY5/T/5zSrw==">
+    window.ccFooterModals = {"Copyright":{"title":"Copyright","html":"Copyright \u0026copy; \u003Ctime datetime=\u0022{{year}}\u0022\u003E{{year}}\u003C/time\u003E Collin County Texas \u0026middot; All Rights Reserved"},"Website Feedback":{"title":"Website Feedback","html":"\u003Cp\u003EIf you are looking for a specific Department or Official please visit our \u003Ca href=\u0022/Contact\u0022 data-sf-ec-immutable=\u0022\u0022\u003E\u003Cstrong\u003EContact Site\u003C/strong\u003E\u003C/a\u003E for the relevant Directories.\u003C/p\u003E\u003Cp\u003EFor inquiries into court or jury matters: \u003Ca href=\u0022/District-Clerk/jury-services\u0022 data-sf-ec-immutable=\u0022\u0022\u003E\u003Cstrong\u003EJury\r\n Duty\u003C/strong\u003E\u003C/a\u003E | \u003Ca href=\u0022/Courts/case-lookup-and-court-schedules\u0022 data-sf-ec-immutable=\u0022\u0022\u003E\u003Cstrong\u003ECourt\r\n Cases\u003C/strong\u003E\u003C/a\u003E\u003C/p\u003E\u003Cp\u003E\u0026nbsp;\u003C/p\u003E\u003Cdiv style=\u0022text-align:center;\u0022\u003E\u003Cp\u003EIf you find any broken links or features on the site, or if you are having difficulty with the site,\r\n        please continue:\u003C/p\u003E\u003Cdiv class=\u0022ccButton\u0022\u003E\u003Ca href=\u0022mailto:webfeedback@collincountytx.gov\u0022\u003ESubmit Feedback\u003C/a\u003E\u003C/div\u003E\u003Cp\u003EPlease Note: Solicitations will \u003Cstrong\u003ENOT\u003C/strong\u003E receive responses.\u003C/p\u003E\u003C/div\u003E"}};
+
+    const norm = s => (s||'').replace(/\u00A0/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('.js-footer-modal');
+      if (!a) return;
+      e.preventDefault();
+
+      const keyRaw = a.getAttribute('data-modal-title') || a.textContent || '';
+      const blk = window.ccFooterModals[keyRaw.trim()] || window.ccFooterModals[norm(keyRaw)];
+      if (!blk) { console.warn('Footer modal block not found for:', keyRaw); return; }
+
+      // TEMP: no automatic tags. Optional explicit override:
+      const explicitTag = a.getAttribute('data-modal-tag'); // e.g., data-modal-tag="Website Feedback"
+      const tags = explicitTag ? [explicitTag] : [];
+      console.log('explicitTag =', explicitTag, ' blk.title =', blk?.title);
+
+      new ccModal({
+        title: blk.title || 'Info',
+        body:  blk.html,
+        tags: [explicitTag]
+      });
+    }, { passive:false });
+</script>
+
+
+
+
+
+    </footer>
+
+    
+
+
+<script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=2&cb=1306977962" async nonce="JixJEIUkvF9BY5/T/5zSrw=="></script></body>
+
+
+</html>

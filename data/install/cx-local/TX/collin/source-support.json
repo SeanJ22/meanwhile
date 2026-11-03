@@ -1,0 +1,239 @@
+[
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+    "sourceCheckedAt": "2026-11-03T04:52:48.461234+00:00",
+    "sha256": "37a8bd11b4c3aad7bc0d4c0a4bb9091a44f4902a261546a0219d5906c263ba42",
+    "sourceFile": "sources/37a8bd11b4c3aad7bc0d4c0a4bb9091a44f4902a261546a0219d5906c263ba42.source",
+    "excerptFile": "sources/0e2afa0593b76aa2fdee76f22628557b24ba99b4f692da2a20c94de29988800f.txt",
+    "excerptSha256": "0e2afa0593b76aa2fdee76f22628557b24ba99b4f692da2a20c94de29988800f",
+    "evidence": "Actual current county All Race Ballot, five pages, explicitly Joint General and Special Election, November 3, 2026. Replays 49 local candidate offices and all 87 named printed choices plus 41 local questions. Six shared appellate offices and seven Dallas-area shared measures are crosschecked to existing prepared packets and not duplicated.",
+    "sourceKind": "OFFICIAL_ALL_RACES_SAMPLE_BALLOT"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/elections/sample-ballots?electionID=75",
+    "finalUrl": "https://www.collincountytx.gov/elections/sample-ballots?electionID=75",
+    "sourceCheckedAt": "2026-11-03T04:50:52.377852+00:00",
+    "sha256": "a4be81b84d7f8dee4f2419ecb55deaaf39249c4ce6c493b28c505af1b4e927cf",
+    "sourceFile": "sources/a4be81b84d7f8dee4f2419ecb55deaaf39249c4ce6c493b28c505af1b4e927cf.source",
+    "excerptFile": "sources/48850e8c6230eba7333f9c7b73018b8084967536b02faf818d256adc6ebd4079.txt",
+    "excerptSha256": "48850e8c6230eba7333f9c7b73018b8084967536b02faf818d256adc6ebd4079",
+    "evidence": "Official county current Sample Ballots page directly links this exact All Race Ballot. Native PDF bytes agree with the same unversioned county PDF. No personal voter lookup was used."
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/elections/notices",
+    "finalUrl": "https://www.collincountytx.gov/elections/notices",
+    "sourceCheckedAt": "2026-11-03T04:50:52.884109+00:00",
+    "sha256": "b1f6efe97f5c2d586e9a716e59715c3d11b336c3184376519410031db7f01c01",
+    "sourceFile": "sources/b1f6efe97f5c2d586e9a716e59715c3d11b336c3184376519410031db7f01c01.source",
+    "excerptFile": "sources/276ca33382d5a1664918362458406484f625c75b36fdfc9c6be115e5d868dbc4.txt",
+    "excerptSha256": "276ca33382d5a1664918362458406484f625c75b36fdfc9c6be115e5d868dbc4",
+    "evidence": "Official county election notices archive distinguishes current November 2026 material from prior 2025 and May2026 elections. Linked current jurisdiction orders/cancellations acquired separately."
+  },
+  {
+    "sourceUrl": "https://collincad.org/district-information/board-of-directors/",
+    "finalUrl": "https://collincad.org/district-information/board-of-directors/",
+    "sourceCheckedAt": "2026-11-03T04:52:50.756525+00:00",
+    "sha256": "ab9bbb283b72209c054b2e2044e6570d9b6ce839763f88bb8130a07fded5eeb1",
+    "sourceFile": "sources/ab9bbb283b72209c054b2e2044e6570d9b6ce839763f88bb8130a07fded5eeb1.source",
+    "excerptFile": "sources/0707c50fb8780a43aad32ad0fdb24c328917cd9ef228c401bd02e848b66df197.txt",
+    "excerptSha256": "0707c50fb8780a43aad32ad0fdb24c328917cd9ef228c401bd02e848b66df197",
+    "evidence": "Official appraisal district Board of Directors page explicitly identifies elected At-Large Places1,2,3 and links November3,2026 election information. No geographic place subdistricts created."
+  },
+  {
+    "sourceUrl": "https://www.lowrycrossingtexas.org/operations/elections.php",
+    "finalUrl": "https://www.lowrycrossingtexas.org/operations/elections.php",
+    "sourceCheckedAt": "2026-11-03T04:52:48.662906+00:00",
+    "sha256": "1ade9878a60f70be00257f810330c474e6cc0b7382d472c96f6f93ee73bbb697",
+    "sourceFile": "sources/1ade9878a60f70be00257f810330c474e6cc0b7382d472c96f6f93ee73bbb697.source",
+    "excerptFile": "sources/04e2f6a456d29c5f498b20b586b8265fa67f959855b38114d8d5f049993de61a.txt",
+    "excerptSha256": "04e2f6a456d29c5f498b20b586b8265fa67f959855b38114d8d5f049993de61a",
+    "evidence": "Official city November3,2026 Elections page directly links its four-ward map. Source ward labels preserved; no entire-city fallback for ward offices."
+  },
+  {
+    "sourceUrl": "https://www.lowrycrossingtexas.org/operations/city_council.php",
+    "finalUrl": "https://www.lowrycrossingtexas.org/operations/city_council.php",
+    "sourceCheckedAt": "2026-11-03T04:53:07.731581+00:00",
+    "sha256": "210d54aa86c2f998cba8abd5708c05307207f21ccdc70e62596ddef507e3ce6e",
+    "sourceFile": "sources/210d54aa86c2f998cba8abd5708c05307207f21ccdc70e62596ddef507e3ce6e.source",
+    "excerptFile": "sources/e772f018cf11d9fb0789671e28f91c39fcc60450e444b5ae9edf1cc0f62a3bd1.txt",
+    "excerptSha256": "e772f018cf11d9fb0789671e28f91c39fcc60450e444b5ae9edf1cc0f62a3bd1",
+    "evidence": "Official city council page lists geographic Ward1,2,3,4 offices separately. Sample provides the complete November candidate field for each ward."
+  },
+  {
+    "sourceUrl": "https://www.wylieisd.net/board",
+    "finalUrl": "https://www.wylieisd.net/our-district/school-board",
+    "sourceCheckedAt": "2026-11-03T04:53:09.845054+00:00",
+    "sha256": "aad50cef97889a59b716063a71ab18fca5444474494fb244a5e468d829759c28",
+    "sourceFile": "sources/aad50cef97889a59b716063a71ab18fca5444474494fb244a5e468d829759c28.source",
+    "excerptFile": "sources/6302955a0097a835db12852f7796587ca3bbb0e635cf7aac0ea54a8f571da5eb.txt",
+    "excerptSha256": "6302955a0097a835db12852f7796587ca3bbb0e635cf7aac0ea54a8f571da5eb",
+    "evidence": "Official Wylie ISD school board page explicitly says members are elected at large to four-year terms. Numbered places are offices within the district, not geographic subdistricts."
+  },
+  {
+    "sourceUrl": "https://www.wylieisd.net/our-district/school-board/board-elections",
+    "finalUrl": "https://www.wylieisd.net/our-district/school-board/board-elections",
+    "sourceCheckedAt": "2026-11-03T04:53:39.138647+00:00",
+    "sha256": "722276af92be2423050693eb0ae5071128990d931bda1573c20133870ad36369",
+    "sourceFile": "sources/722276af92be2423050693eb0ae5071128990d931bda1573c20133870ad36369.source",
+    "excerptFile": "sources/a047ca95ddf8cb768d71b6414e26e11e5beb55cd22d449536fcfebc7c7f7fc9a.txt",
+    "excerptSha256": "a047ca95ddf8cb768d71b6414e26e11e5beb55cd22d449536fcfebc7c7f7fc9a",
+    "evidence": "Official current district election page schedules November3,2026 election and links current election order."
+  },
+  {
+    "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=4846530&Search=1",
+    "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=4846530&Search=1",
+    "sourceCheckedAt": "2026-11-03T04:53:38.530965+00:00",
+    "sha256": "c747f0cea3ec5ef31c2c9c506fcde6fa33b386fddb1a5ee4a024827f80224f61",
+    "sourceFile": "sources/c747f0cea3ec5ef31c2c9c506fcde6fa33b386fddb1a5ee4a024827f80224f61.source",
+    "excerptFile": "sources/aa33f7e4b74b2297240b3a142deca65b5b9d7780dc7fa2f1ed319472c8c0b23f.txt",
+    "excerptSha256": "aa33f7e4b74b2297240b3a142deca65b5b9d7780dc7fa2f1ed319472c8c0b23f",
+    "evidence": "Official NCES district directory resolves same-name Wylie ISDs: NCES4846530,StateTX-043914,CollinCounty,websitewylieisd.net. The TaylorCounty school district4846500 is not used."
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/lavon-city-order-special-election-mdd-november-3-2026.pdf?sfvrsn=86cac112_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/lavon-city-order-special-election-mdd-november-3-2026.pdf?sfvrsn=86cac112_3",
+    "sourceCheckedAt": "2026-11-03T04:52:12.471297+00:00",
+    "sha256": "af7c2197969c7ca583e4c5c451ea224b18ea8b2634d880e1948ec36bb2f75a4f",
+    "sourceFile": "sources/af7c2197969c7ca583e4c5c451ea224b18ea8b2634d880e1948ec36bb2f75a4f.source",
+    "excerptFile": "sources/04090252281337ab881ee6919f7899dc73b9e8fa82a00275cf6bb2e8537fc0b6.txt",
+    "excerptSha256": "04090252281337ab881ee6919f7899dc73b9e8fa82a00275cf6bb2e8537fc0b6",
+    "evidence": "Official City of Lavon ordinance2026-08-03 defines Lavon MDD as a portion of cityETJ shown in ExhibitA, not the city electorate. Exact district ID stays separate with boundary dependency."
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/collin-cad-order-of-general-election-5-22-2026-ccad-bod-signed.pdf?sfvrsn=60fd995b_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/collin-cad-order-of-general-election-5-22-2026-ccad-bod-signed.pdf?sfvrsn=60fd995b_3",
+    "sourceCheckedAt": "2026-11-03T04:52:11.719350+00:00",
+    "sha256": "8f4159118f5ab768e8e95bcec43998a84e15031e8f7bd00493d22bfcf75286db",
+    "sourceFile": "sources/8f4159118f5ab768e8e95bcec43998a84e15031e8f7bd00493d22bfcf75286db.source",
+    "excerptFile": "sources/1fce18dfbd6b764a2efd3c2e099f075c874f9e637e4b024880264522612ccc86.txt",
+    "excerptSha256": "1fce18dfbd6b764a2efd3c2e099f075c874f9e637e4b024880264522612ccc86",
+    "evidence": "Official current Collin CAD election order lists Places1,2,3 for November3,2026."
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/blue-meadow-mud-4-order-calling-full-election.pdf?sfvrsn=607e529f_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/blue-meadow-mud-4-order-calling-full-election.pdf?sfvrsn=607e529f_3",
+    "sourceCheckedAt": "2026-11-03T04:52:15.238040+00:00",
+    "sha256": "892de11de0964d6de90a1818e1d36498f33e8c5911c4027ea0d5ff62753f7b5f",
+    "sourceFile": "sources/892de11de0964d6de90a1818e1d36498f33e8c5911c4027ea0d5ff62753f7b5f.source",
+    "excerptFile": "sources/aa50a212a6b0eb230ea7eaace5bd5709fad7c9d914ff07dd28a44361037e43a7.txt",
+    "excerptSha256": "aa50a212a6b0eb230ea7eaace5bd5709fad7c9d914ff07dd28a44361037e43a7",
+    "evidence": "Official Blue Meadow MUD4 creation/director/bond/tax/fire-protection election order identifies district resident electorate and the three-way district division history. Source legal description/maps portable; no parent-district fallback."
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/the-preserve-mud-notice-of-election-english.pdf?sfvrsn=54709760_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/the-preserve-mud-notice-of-election-english.pdf?sfvrsn=54709760_3",
+    "sourceCheckedAt": "2026-11-03T04:52:15.396919+00:00",
+    "sha256": "da62e0137402e79af46ac34e9e71b87232ca4b183f253a026592e438f0d9142c",
+    "sourceFile": "sources/da62e0137402e79af46ac34e9e71b87232ca4b183f253a026592e438f0d9142c.source",
+    "excerptFile": "sources/8148f42381ad5140c85e6734c921114100180115753f591645662acd039084de.txt",
+    "excerptSha256": "8148f42381ad5140c85e6734c921114100180115753f591645662acd039084de",
+    "evidence": "Official The Preserve MUD confirmation/director/bond/tax notice and order identify November3,2026 and district-resident electorate; boundaries in ExhibitA. Printed sample says Jake Delancey, whereas temporary board listing says Jack Delancey; sampled name governs the imported choice."
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/princeton-city-calling-general-election-place-6-and-7-english.pdf?sfvrsn=4c4c917c_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/princeton-city-calling-general-election-place-6-and-7-english.pdf?sfvrsn=4c4c917c_3",
+    "sourceCheckedAt": "2026-11-03T04:52:12.131697+00:00",
+    "sha256": "cb4a814918ef198532897828dc39a77ba50ca3ac6df733cd5e10f10919c23764",
+    "sourceFile": "sources/cb4a814918ef198532897828dc39a77ba50ca3ac6df733cd5e10f10919c23764.source",
+    "excerptFile": "sources/0cf16ba2453937305baec7259b375259bcc0a3037986de901fa7949538c48f0d.txt",
+    "excerptSha256": "0cf16ba2453937305baec7259b375259bcc0a3037986de901fa7949538c48f0d",
+    "evidence": "Official current city order calls November3,2026 Places6/7 four-year terms; Section9 explicitly permits all qualified electors residing in the city.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_ELECTION_ORDER_OCR"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/lavon-city-order-calling-general-election--november-3-2026.pdf?sfvrsn=2e07c58_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/lavon-city-order-calling-general-election--november-3-2026.pdf?sfvrsn=2e07c58_3",
+    "sourceCheckedAt": "2026-11-03T04:52:11.968311+00:00",
+    "sha256": "275a65d6ef53665886fd426b5bedbae53d6538b71c930a17f41e0dd4b36bfb75",
+    "sourceFile": "sources/275a65d6ef53665886fd426b5bedbae53d6538b71c930a17f41e0dd4b36bfb75.source",
+    "excerptFile": "sources/a75d6840b21b48d153abdd9052403079d5f00bdc38f50abeff0e85be0b8ab196.txt",
+    "excerptSha256": "a75d6840b21b48d153abdd9052403079d5f00bdc38f50abeff0e85be0b8ab196",
+    "evidence": "Official current city order calls Places1/3/5 two-year terms and explicitly permits all resident qualified city electors. This differs from the separately scoped ETJ MDD creation vote.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_ELECTION_ORDER_OCR"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/josphine-city-order-of-election.pdf?sfvrsn=9a04d8d6_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/josphine-city-order-of-election.pdf?sfvrsn=9a04d8d6_3",
+    "sourceCheckedAt": "2026-11-03T04:52:12.108603+00:00",
+    "sha256": "f400dad99a80a06790f33a2950acd47fe85136a60687da1ef0edafcc17b66523",
+    "sourceFile": "sources/f400dad99a80a06790f33a2950acd47fe85136a60687da1ef0edafcc17b66523.source",
+    "excerptFile": "sources/b39f5cd62a1549adb310359b89be567e9cef0436057e026b3999dc6efde3f00f.txt",
+    "excerptSha256": "b39f5cd62a1549adb310359b89be567e9cef0436057e026b3999dc6efde3f00f",
+    "evidence": "Official current November3,2026 municipal election order calls mayor and Places3/5,each two-year terms.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_ELECTION_ORDER_OCR"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/princeton-isd-order-of-general-election.pdf?sfvrsn=d754f648_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/princeton-isd-order-of-general-election.pdf?sfvrsn=d754f648_3",
+    "sourceCheckedAt": "2026-11-03T04:52:14.114561+00:00",
+    "sha256": "200a96ccfc3b3942904c7fe3adc93e127cb27517e769586e226639fd1ae60c55",
+    "sourceFile": "sources/200a96ccfc3b3942904c7fe3adc93e127cb27517e769586e226639fd1ae60c55.source",
+    "excerptFile": "sources/cfd0b59e92a2d9088f06d92c406d42656a72964fd49b62f843234cdd7c65901e.txt",
+    "excerptSha256": "cfd0b59e92a2d9088f06d92c406d42656a72964fd49b62f843234cdd7c65901e",
+    "evidence": "Official current November3,2026 Princeton ISD trustee election order.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_ELECTION_ORDER_OCR"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/blue-meadow-mud-2-order-calling-full-election.pdf?sfvrsn=dbb8fd2_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/blue-meadow-mud-2-order-calling-full-election.pdf?sfvrsn=dbb8fd2_3",
+    "sourceCheckedAt": "2026-11-03T04:52:13.467618+00:00",
+    "sha256": "7b4b005208c7645216204b1f66b18df10f720b2ccd9d8078d5e9f15d9164eca1",
+    "sourceFile": "sources/7b4b005208c7645216204b1f66b18df10f720b2ccd9d8078d5e9f15d9164eca1.source",
+    "excerptFile": "sources/00cbeb4bc4f517ee75558db181326530438db5459ddeef99ad79d186678f08de.txt",
+    "excerptSha256": "00cbeb4bc4f517ee75558db181326530438db5459ddeef99ad79d186678f08de",
+    "evidence": "Official current Blue Meadow MUD2 district confirmation/director/bond/tax/fire-protection order,first3pages OCR establishes exact legal district identity and resident electorate; original entire PDF includes legal descriptions/maps.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_ELECTION_ORDER_FIRST3PAGES_OCR"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/verona-sud-certification-of-unopposed-candidates-and-cancellation-of-election.pdf?sfvrsn=b1d389ab_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/verona-sud-certification-of-unopposed-candidates-and-cancellation-of-election.pdf?sfvrsn=b1d389ab_3",
+    "sourceCheckedAt": "2026-11-03T04:52:14.015680+00:00",
+    "sha256": "e0c45e9244511a50ab306b7859a59540257d36b903073a6bcc33f7d460f18398",
+    "sourceFile": "sources/e0c45e9244511a50ab306b7859a59540257d36b903073a6bcc33f7d460f18398.source",
+    "excerptFile": "sources/6fa21eeaf22c871b63a6730226d77b52c543e09c8b37e60e07967a071f930397.txt",
+    "excerptSha256": "6fa21eeaf22c871b63a6730226d77b52c543e09c8b37e60e07967a071f930397",
+    "evidence": "Official November3,2026 Verona SUD unopposed certification and cancellation,August18,2026; NathanMcTee andGaryCantrell declared elected. First2pages OCR covers operative name/status records; full native4pagePDF preserved.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_UNOPPOSED_CANCELLATION_OCR"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/wylie-ne-sud-certified-unopposed-candidates.pdf?sfvrsn=e2434531_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/wylie-ne-sud-certified-unopposed-candidates.pdf?sfvrsn=e2434531_3",
+    "sourceCheckedAt": "2026-11-03T04:52:14.292500+00:00",
+    "sha256": "5a3b13f973414c0fb185fdabb51d633c92e77cc6e2d65121499ebfa9251a4539",
+    "sourceFile": "sources/5a3b13f973414c0fb185fdabb51d633c92e77cc6e2d65121499ebfa9251a4539.source",
+    "excerptFile": "sources/ef805e5a7ffa23a642ddcdc4447fbcd54eb3a56b1df38c59bccf33efa1dde263.txt",
+    "excerptSha256": "ef805e5a7ffa23a642ddcdc4447fbcd54eb3a56b1df38c59bccf33efa1dde263",
+    "evidence": "Official November3,2026 Wylie Northeast SUD unopposed certification names ChristianShamas andJasonWest. Scan names visually checked.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_UNOPPOSED_CERTIFICATION_OCR"
+  },
+  {
+    "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/wylie-ne-sud-order-of-cancellation.pdf?sfvrsn=2e46d485_3",
+    "finalUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/wylie-ne-sud-order-of-cancellation.pdf?sfvrsn=2e46d485_3",
+    "sourceCheckedAt": "2026-11-03T04:52:15.035827+00:00",
+    "sha256": "779d1a0f6a3153e5363d5a2a542e082d5fda3c408e3e3a3b75e0e7acd558682a",
+    "sourceFile": "sources/779d1a0f6a3153e5363d5a2a542e082d5fda3c408e3e3a3b75e0e7acd558682a.source",
+    "excerptFile": "sources/a9bfe40cf53b91bb67a75e32ac8f2dc338a0602946a32c6536a32942729076a5.txt",
+    "excerptSha256": "a9bfe40cf53b91bb67a75e32ac8f2dc338a0602946a32c6536a32942729076a5",
+    "evidence": "Official current Wylie Northeast SUD cancellation order datedSeptember14,2026 declares ChristianShamas andJasonWest elected. Cancelled-only offices stay separate from active printed sample choices.",
+    "extractionMethod": "Tesseract5 OCR of original native government PDF pages at2000pixels,OMP_THREAD_LIMIT1; source PDF preserved. Named unopposed filings visually checked to scan.",
+    "sourceKind": "OFFICIAL_UNOPPOSED_CANCELLATION_OCR"
+  },
+  {
+    "sourceUrl": "https://www.lowrycrossingtexas.org/4%20wards%20smaller.JPG?t=202609280940320",
+    "finalUrl": "https://webgen1files1.revize.com/lowrycrossingtx/4%20wards%20smaller.JPG?t=202609280940320",
+    "sourceCheckedAt": "2026-11-03T04:53:09.031504+00:00",
+    "sha256": "475757dcc7ce05d4d82a2ae7c4ace19252a3e3442e56fff8632841c85debf695",
+    "sourceFile": "sources/475757dcc7ce05d4d82a2ae7c4ace19252a3e3442e56fff8632841c85debf695.jpg",
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceKind": "OFFICIAL_WARD_BOUNDARY_MAP_IMAGE",
+    "evidence": "Native full-resolution city four-ward image directly linked currentNovember3,2026 elections page. Boundary extraction/applicability remains River work; no OCR or exact polygon registration is claimed."
+  }
+]

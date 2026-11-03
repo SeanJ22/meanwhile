@@ -1,0 +1,16 @@
+{
+  "ocdBase": "ocd-division/country:us/state:tx/place:lowry_crossing",
+  "sourcePage": "https://www.lowrycrossingtexas.org/operations/elections.php",
+  "mapUrl": "https://www.lowrycrossingtexas.org/4%20wards%20smaller.JPG?t=202609280940320",
+  "finalUrl": "https://webgen1files1.revize.com/lowrycrossingtx/4%20wards%20smaller.JPG?t=202609280940320",
+  "sourceCheckedAt": "2026-11-03T04:53:09.031504+00:00",
+  "sha256": "475757dcc7ce05d4d82a2ae7c4ace19252a3e3442e56fff8632841c85debf695",
+  "sourceFile": "sources/475757dcc7ce05d4d82a2ae7c4ace19252a3e3442e56fff8632841c85debf695.jpg",
+  "wards": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "nextAction": "River:register exact geographic ward polygons from official map; no entire-city ward fallback."
+}

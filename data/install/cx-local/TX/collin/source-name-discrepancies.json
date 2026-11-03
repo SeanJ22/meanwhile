@@ -1,0 +1,21 @@
+[
+  {
+    "contest": "The Preserve MUD directors",
+    "sampleName": "Jake Delancey",
+    "temporaryBoardOfficerName": "Jack Delancey",
+    "sampleProvenance": {
+      "sourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/sample-ballots/20261103_joint-general-and-special-election_all-race-sample-ballot_final.pdf?sfvrsn=e253de7b_5",
+      "sourceOrg": "Collin County Elections",
+      "collectedAt": "2026-11-03T04:52:48.461234+00:00",
+      "verifiedAt": "2026-11-03T04:52:48.461234+00:00",
+      "quote": "Jake Delancey"
+    },
+    "otherSourceUrl": "https://www.collincountytx.gov/docs/default-source/elections/election-notices/the-preserve-mud-notice-of-election-english.pdf?sfvrsn=54709760_3",
+    "rule": "Actual sampled candidate name governs; temporary officer and sampled candidate identity are not inferred to be identical."
+  },
+  {
+    "contest": "Princeton Place6",
+    "sampleName": "Sumbel ''Susan\" Zeb",
+    "rule": "Preserve the sample’s printed apostrophes and quotation mark exactly."
+  }
+]

@@ -1,0 +1,206 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:collin",
+    "sourceDistrictName": "Criminal District Attorney Collin County",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:collin/commissioner_precinct:2",
+    "sourceDistrictName": "County Commissioner, Precinct No. 2",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:collin/commissioner_precinct:4",
+    "sourceDistrictName": "County Commissioner, Precinct No. 4",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:1",
+    "sourceDistrictName": "Justice of the Peace, Precinct No. 1",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:2",
+    "sourceDistrictName": "Justice of the Peace, Precinct No. 2",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:3",
+    "sourceDistrictName": "Justice of the Peace, Precinct No. 3",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:collin/justice_precinct:4",
+    "sourceDistrictName": "Justice of the Peace, Precinct No. 4",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:219",
+    "sourceDistrictName": "District Judge, 219th Judicial District",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:296",
+    "sourceDistrictName": "District Judge, 296th Judicial District",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:366",
+    "sourceDistrictName": "District Judge, 366th Judicial District",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:417",
+    "sourceDistrictName": "District Judge, 417th Judicial District",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:429",
+    "sourceDistrictName": "District Judge, 429th Judicial District",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:471",
+    "sourceDistrictName": "District Judge, 471st Judicial District",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:494",
+    "sourceDistrictName": "District Judge, 494th Judicial District",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:anna",
+    "sourceDistrictName": "City of Anna, Texas — Proposition A",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:josephine",
+    "sourceDistrictName": "City of Josephine, Texas — Mayor",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:lavon",
+    "sourceDistrictName": "City of Lavon, Texas — City Council, Place 1",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:1",
+    "sourceDistrictName": "City of Lowry Crossing, Texas — City Council, Ward 1",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:2",
+    "sourceDistrictName": "City of Lowry Crossing, Texas — City Council, Ward 2",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:3",
+    "sourceDistrictName": "City of Lowry Crossing, Texas — City Council, Ward 3",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:lowry_crossing/council_ward:4",
+    "sourceDistrictName": "City of Lowry Crossing, Texas — City Council, Ward 4",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:plano",
+    "sourceDistrictName": "City of Plano, Texas — Proposition A",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:princeton",
+    "sourceDistrictName": "City of Princeton, Texas — Councilmember, Place 6",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:weston",
+    "sourceDistrictName": "City of Weston, Texas — Alderman",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:bland_independent_school_district",
+    "sourceDistrictName": "Bland Independent School District — Proposition A",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:collin_county_community_college_district",
+    "sourceDistrictName": "Collin County Community College District — Proposition A",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:mckinney_independent_school_district",
+    "sourceDistrictName": "McKinney Independent School District — Proposition A",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:princeton_independent_school_district",
+    "sourceDistrictName": "Princeton Independent School District — School Trustees",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/school_district:wylie_independent_school_district_4846530",
+    "sourceDistrictName": "Wylie Independent School District — Board of Trustees, Place 1",
+    "registryDivisionPresent": true,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_2_of_collin_county",
+    "sourceDistrictName": "Blue Meadow Municipal Utility District No. 2 of Collin County — Directors",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:blue_meadow_municipal_utility_district_no_4_of_collin_county",
+    "sourceDistrictName": "Blue Meadow Municipal Utility District No. 4 of Collin County — Directors",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:collin_appraisal_district",
+    "sourceDistrictName": "Collin County Appraisal District — Collin County Appraisal District Board of Directors, Place 1",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:lavon_municipal_development_district",
+    "sourceDistrictName": "Lavon Municipal Development District — Proposition 1",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/special_district:the_preserve_municipal_utility_district_of_collin_county",
+    "sourceDistrictName": "The Preserve Municipal Utility District of Collin County — Directors",
+    "registryDivisionPresent": false,
+    "nextAction": "River:register or verify exact electoral boundary applicability; no county/city fallback."
+  }
+]

@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "KS",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:KS",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ks-cx-2026-wyandotte-health-care-sales-tax",
+      "title": "Wyandotte County — Health-care sales tax",
+      "ocdId": "ocd-division/country:us/state:ks/county:wyandotte",
+      "sourceUrl": "https://wycovoteskck.gov/s/NOTICE-OF-SPECIAL-QUESTION-ELECTION-COUNTY-WIDE.pdf"
+    },
+    {
+      "id": "ks-cx-2026-kansas-city-parks-infrastructure-sales-tax",
+      "title": "Kansas City — Parks and infrastructure sales tax",
+      "ocdId": "ocd-division/country:us/state:ks/place:kansas_city",
+      "sourceUrl": "https://wycovoteskck.gov/s/NOTICE-OF-SPECIAL-QUESTION-ELECTION-KANSAS-CITY-KANSAS.pdf"
+    },
+    {
+      "id": "ks-cx-2026-lawrence-transit-sales-tax-replacement",
+      "title": "Lawrence — Transit sales tax replacement",
+      "ocdId": "ocd-division/country:us/state:ks/place:lawrence",
+      "sourceUrl": "https://www.dgcoks.gov/sites/default/files/2026-09/ca_notice_spec_ques_election.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "KS",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

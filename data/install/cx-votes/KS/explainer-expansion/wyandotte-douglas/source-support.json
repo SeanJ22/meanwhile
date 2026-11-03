@@ -1,0 +1,88 @@
+[
+  {
+    "contestId": "ks-cx-2026-wyandotte-health-care-sales-tax",
+    "sourceUrl": "https://wycovoteskck.gov/s/NOTICE-OF-SPECIAL-QUESTION-ELECTION-COUNTY-WIDE.pdf",
+    "rawHash": "20f6dd0c39ee5f4aaf725e57712c808152f3c458e07f676cd900db83587b37ad",
+    "sourceFile": "sources/20f6dd0c39ee5f4aaf725e57712c808152f3c458e07f676cd900db83587b37ad.source",
+    "sourceTextFile": "sources/cd2007d736ca96cbf0c658cae6fa9e63f3fdf719ae2be25fe10c4858791f2938.txt",
+    "excerpt": "Shall Wyandotte County, Kansas (the “County”), be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) for the purpose of financing the costs of providing health care services including, but not limited to, indigent care, behavioral health, substance abuse, preventive health care services, and the County Health Department, collection of such Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law, pursuant to the authority of K.S.A. 12-187 et seq., as amended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Wyandotte County, Kansas (the “County”), be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) for the purpose of financing the costs of providing health care services including, but not limited to, indigent care, behavioral health, substance abuse, preventive health care services, and the County Health Department, collection of such Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law, pursuant to the authority of K.S.A. 12-187 et seq., as amended?"
+      ],
+      "yesMeans": [
+        "Shall Wyandotte County, Kansas (the “County”), be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) for the purpose of financing the costs of providing health care services including, but not limited to, indigent care, behavioral health, substance abuse, preventive health care services, and the County Health Department, collection of such Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law, pursuant to the authority of K.S.A. 12-187 et seq., as amended?"
+      ],
+      "noMeans": [
+        "Shall Wyandotte County, Kansas (the “County”), be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) for the purpose of financing the costs of providing health care services including, but not limited to, indigent care, behavioral health, substance abuse, preventive health care services, and the County Health Department, collection of such Sales Tax to commence on April 1, 2027, or as soon thereafter as permitted by law, pursuant to the authority of K.S.A. 12-187 et seq., as amended?"
+      ]
+    },
+    "semanticConditions": [
+      "The listed health-care uses are not exclusive.",
+      "The question states neither an expiry date nor a guaranteed amount of revenue; no sunset or household tax estimate is invented."
+    ],
+    "textExtraction": {
+      "method": "pdftotext -layout from native publisher PDF; exact native bytes retained separately"
+    },
+    "inventoryScope": "Two current Wyandotte County/City notices and one Lawrence notice. Not an all-Kansas or independent local-election completeness claim.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-kansas-city-parks-infrastructure-sales-tax",
+    "sourceUrl": "https://wycovoteskck.gov/s/NOTICE-OF-SPECIAL-QUESTION-ELECTION-KANSAS-CITY-KANSAS.pdf",
+    "rawHash": "db5979f2da2e45b5d33160eac61c32445d4f58fd32b78ce4c8489b1f69466a28",
+    "sourceFile": "sources/db5979f2da2e45b5d33160eac61c32445d4f58fd32b78ce4c8489b1f69466a28.source",
+    "sourceTextFile": "sources/34d766e27163ee7f7897b241facd10fc6ec25f30ba1625863f7153d73794780b.txt",
+    "excerpt": "Shall the City of Kansas City, Kansas, be authorized to impose an additional three-eighths of one percent citywide retailers' sales tax the proceeds of which shall be used as follows: 1) approximately fifty percent (50%) for the purposes of financing park capital improvement projects, including parks, community centers and trails, and 2) approximately fifty percent (50%) for the purposes of financing infrastructure projects such as roads, bridges, and sidewalks, the collection of such Sales Tax commencing on April 1, 2027, or as soon thereafter as permitted by law, and terminating ten years after its commencement?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Kansas City, Kansas, be authorized to impose an additional three-eighths of one percent citywide retailers' sales tax the proceeds of which shall be used as follows: 1) approximately fifty percent (50%) for the purposes of financing park capital improvement projects, including parks, community centers and trails, and 2) approximately fifty percent (50%) for the purposes of financing infrastructure projects such as roads, bridges, and sidewalks, the collection of such Sales Tax commencing on April 1, 2027, or as soon thereafter as permitted by law, and terminating ten years after its commencement?"
+      ],
+      "yesMeans": [
+        "Shall the City of Kansas City, Kansas, be authorized to impose an additional three-eighths of one percent citywide retailers' sales tax the proceeds of which shall be used as follows: 1) approximately fifty percent (50%) for the purposes of financing park capital improvement projects, including parks, community centers and trails, and 2) approximately fifty percent (50%) for the purposes of financing infrastructure projects such as roads, bridges, and sidewalks, the collection of such Sales Tax commencing on April 1, 2027, or as soon thereafter as permitted by law, and terminating ten years after its commencement?"
+      ],
+      "noMeans": [
+        "Shall the City of Kansas City, Kansas, be authorized to impose an additional three-eighths of one percent citywide retailers' sales tax the proceeds of which shall be used as follows: 1) approximately fifty percent (50%) for the purposes of financing park capital improvement projects, including parks, community centers and trails, and 2) approximately fifty percent (50%) for the purposes of financing infrastructure projects such as roads, bridges, and sidewalks, the collection of such Sales Tax commencing on April 1, 2027, or as soon thereafter as permitted by law, and terminating ten years after its commencement?"
+      ]
+    },
+    "semanticConditions": [
+      "Three-eighths of one percent is0.375%, an additional tax rather than the total combined sales-tax rate.",
+      "The two allocations are approximately50% each; no exact guaranteed split is claimed.",
+      "The tax expires ten years after actual commencement, not necessarily a fixed2037date."
+    ],
+    "textExtraction": {
+      "method": "pdftotext -layout from native publisher PDF; exact native bytes retained separately"
+    },
+    "inventoryScope": "Two current Wyandotte County/City notices and one Lawrence notice. Not an all-Kansas or independent local-election completeness claim.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-lawrence-transit-sales-tax-replacement",
+    "sourceUrl": "https://www.dgcoks.gov/sites/default/files/2026-09/ca_notice_spec_ques_election.pdf",
+    "rawHash": "c069b9460528b299a0b50ffc4637b48b12685f043c8cf606de8e4673b25c65c8",
+    "sourceFile": "sources/c069b9460528b299a0b50ffc4637b48b12685f043c8cf606de8e4673b25c65c8.source",
+    "sourceTextFile": "sources/0bdcad4f274ac04773ef116d90d45491f9fdd1bc96f4cc44e4c29252dbb10c0d.txt",
+    "excerpt": "Shall the City of Lawrence, Kansas be authorized to repeal the 2019 Sales Tax in the amount of two tenths of one percent (0.2%) in the City of Lawrence, Kansas, and replace it with the levying of a new special purpose retailers’ sales tax in the amount of three tenths of one percent (0.3%) for the purposes of operating a City Public Transit System, including purchasing and maintaining buses and other transit vehicles, constructing and maintaining transit facilities, and purchasing and maintaining equipment and such other related Public Transit purposes as may be in the best interest of the City, with such special purpose retailers’ sale tax to take effect on the 1st day of April, 2027, if approved by a majority of the qualified electors voting thereon. The new special purpose retailers’ sales tax referenced herein, if approved by a majority of the qualified electors voting thereon, shall expire after ten (10) years from the date upon which such tax is first collected. [Note: In the event that the new special purpose retailers’ sales tax referenced herein is not approved by a majority of the qualified electors voting thereon at the November 3, 2026, general election, then the 2019 Sales Tax shall not be repealed and shall remain in full force and effect until it expires in accordance with the terms of Ordinance No. 9549.]",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Lawrence, Kansas be authorized to repeal the 2019 Sales Tax in the amount of two tenths of one percent (0.2%) in the City of Lawrence, Kansas, and replace it with the levying of a new special purpose retailers’ sales tax in the amount of three tenths of one percent (0.3%) for the purposes of operating a City Public Transit System, including purchasing and maintaining buses and other transit vehicles, constructing and maintaining transit facilities, and purchasing and maintaining equipment and such other related Public Transit purposes as may be in the best interest of the City, with such special purpose retailers’ sale tax to take effect on the 1st day of April, 2027, if approved by a majority of the qualified electors voting thereon. The new special purpose retailers’ sales tax referenced herein, if approved by a majority of the qualified electors voting thereon, shall expire after ten (10) years from the date upon which such tax is first collected. [Note: In the event that the new special purpose retailers’ sales tax referenced herein is not approved by a majority of the qualified electors voting thereon at the November 3, 2026, general election, then the 2019 Sales Tax shall not be repealed and shall remain in full force and effect until it expires in accordance with the terms of Ordinance No. 9549.]"
+      ],
+      "yesMeans": [
+        "Shall the City of Lawrence, Kansas be authorized to repeal the 2019 Sales Tax in the amount of two tenths of one percent (0.2%) in the City of Lawrence, Kansas, and replace it with the levying of a new special purpose retailers’ sales tax in the amount of three tenths of one percent (0.3%) for the purposes of operating a City Public Transit System, including purchasing and maintaining buses and other transit vehicles, constructing and maintaining transit facilities, and purchasing and maintaining equipment and such other related Public Transit purposes as may be in the best interest of the City, with such special purpose retailers’ sale tax to take effect on the 1st day of April, 2027, if approved by a majority of the qualified electors voting thereon. The new special purpose retailers’ sales tax referenced herein, if approved by a majority of the qualified electors voting thereon, shall expire after ten (10) years from the date upon which such tax is first collected. [Note: In the event that the new special purpose retailers’ sales tax referenced herein is not approved by a majority of the qualified electors voting thereon at the November 3, 2026, general election, then the 2019 Sales Tax shall not be repealed and shall remain in full force and effect until it expires in accordance with the terms of Ordinance No. 9549.]"
+      ],
+      "noMeans": [
+        "Shall the City of Lawrence, Kansas be authorized to repeal the 2019 Sales Tax in the amount of two tenths of one percent (0.2%) in the City of Lawrence, Kansas, and replace it with the levying of a new special purpose retailers’ sales tax in the amount of three tenths of one percent (0.3%) for the purposes of operating a City Public Transit System, including purchasing and maintaining buses and other transit vehicles, constructing and maintaining transit facilities, and purchasing and maintaining equipment and such other related Public Transit purposes as may be in the best interest of the City, with such special purpose retailers’ sale tax to take effect on the 1st day of April, 2027, if approved by a majority of the qualified electors voting thereon. The new special purpose retailers’ sales tax referenced herein, if approved by a majority of the qualified electors voting thereon, shall expire after ten (10) years from the date upon which such tax is first collected. [Note: In the event that the new special purpose retailers’ sales tax referenced herein is not approved by a majority of the qualified electors voting thereon at the November 3, 2026, general election, then the 2019 Sales Tax shall not be repealed and shall remain in full force and effect until it expires in accordance with the terms of Ordinance No. 9549.]"
+      ]
+    },
+    "semanticConditions": [
+      "Replacement, not an additional0.3% on top of existing0.2%; netincrease0.1percentagepoint.",
+      "Official explanatory Note is retained verbatim with the fullquestion; No does not repeal the existing tax.",
+      "No expiration date for the existing2019tax is inferred from this notice."
+    ],
+    "textExtraction": {
+      "method": "pdftotext -layout from native publisher PDF; exact native bytes retained separately"
+    },
+    "inventoryScope": "Two current Wyandotte County/City notices and one Lawrence notice. Not an all-Kansas or independent local-election completeness claim.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

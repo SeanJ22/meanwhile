@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ks-cx-2026-wyandotte-health-care-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/county:wyandotte",
+      "county",
+      "20209",
+      "Wyandotte County"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official current election notice submits the question to the entire exact named county or city, matched to the existing registered county/Census-place division. Kansas City city is distinct from all Wyandotte County. No ZIP or countywide replacement for a city."
+  },
+  {
+    "contestId": "ks-cx-2026-kansas-city-parks-infrastructure-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:kansas_city",
+      "place",
+      "2036000",
+      "Kansas City city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official current election notice submits the question to the entire exact named county or city, matched to the existing registered county/Census-place division. Kansas City city is distinct from all Wyandotte County. No ZIP or countywide replacement for a city."
+  },
+  {
+    "contestId": "ks-cx-2026-lawrence-transit-sales-tax-replacement",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:lawrence",
+      "place",
+      "2038900",
+      "Lawrence city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official current election notice submits the question to the entire exact named county or city, matched to the existing registered county/Census-place division. Kansas City city is distinct from all Wyandotte County. No ZIP or countywide replacement for a city."
+  }
+]

@@ -1,0 +1,81 @@
+{
+  "schoolBoard": {
+    "electorate": "Numbered board districts 2, 4 and 6, not all Duval County",
+    "currentOfficialMap": {
+      "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/987/Duval-County-Map-with-School-Board-Districts-PDF",
+      "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/987/Duval-County-Map-with-School-Board-Districts-PDF",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T05:25:15.518553+00:00",
+      "sha256": "2dce071cfc646fa5b8f4b37630877f085a9115264632b0bccc4bd19b70c39f83",
+      "contentType": "application/pdf",
+      "sourceFile": "/workspace/cx-local-work/duval/school-board-map.source"
+    },
+    "mapChecked": "Original official School Board Districts with Precincts map visually checked; printed map creation date 07/26. Map distinguishes all seven districts. Reader geometry join is still pending.",
+    "charterCorroboration": {
+      "source": {
+        "requestedUrl": "https://pub-capecoral.escribemeetings.com/FileStream.ashx?DocumentId=36461",
+        "finalUrl": "https://pub-capecoral.escribemeetings.com/FileStream.ashx?DocumentId=36461",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:34:32.261870+00:00",
+        "sha256": "a9b4c872e55719142144a2529f4022dc771499b548c78bac451e2b7c96985cbe",
+        "contentType": "application/pdf",
+        "sourceFile": "/workspace/cx-local-work/duval/charter-official-copy.source"
+      },
+      "physicalPage": 34,
+      "codificationVintage": "Created 2025-12-08, Supplement No. 5 Update 2; copied Jacksonville codification published in an official City of Cape Coral meeting attachment. This is corroboration of the district-election structure, not a claim to have acquired the latest live Jacksonville codification.",
+      "quote": "Section 13.01. Duval County Board of Public Instruction continued and renamed.\nThe Duval County Board of Public Instruction is renamed the Duval County School Board, a body corporate, \nhereinafter called \"school board.\" The school board shall consist of seven members elected in a nonpartisan \ndistrict election. The school board shall be responsible for the public school system in Duval County, and all general \nand special laws applicable thereto shall continue in full force and effect, except as herein expressly provided to \nthe contrary. \n(Ord. 84-1307-754, § 10; Laws of Fla., Ch. 92-341, § 1)\nSection 13.02. School board districts.\nMembers of the school board shall be elected from one of the seven school board districts hereby created \nand established. Each school board district shall be composed of two adjoining council districts as set forth in \nappendix 2 of this charter. \n(Ord. 84-1307-754, § 10; Laws of Fla., Ch. 92-341, § 1)"
+    },
+    "broadQualifyingSheetLanguage": "The current county qualifying sheet says Electorate—Registered voters of Duval County. That general line is retained as a source caution and does not expand numbered district fields. Exact live reader applicability still requires district geometry or a verified precise join."
+  },
+  "atlanticBeach": {
+    "electorate": "All Atlantic Beach city voters for both printed seats.",
+    "source": {
+      "requestedUrl": "https://www.coab.us/936/AB-Municipal-Election",
+      "finalUrl": "https://www.coab.us/936/AB-Municipal-Election",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T05:26:47.866979+00:00",
+      "sha256": "ccef064797a52aa1eea6787c73b8d8110343eb8b21e811def0a334e53118e991",
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": "/workspace/cx-local-work/duval/atlantic-beach-election.source"
+    },
+    "residencyDistrict": "Seat 4 District 1306 determines candidate residency only, explicitly confirmed by the current city clerk page."
+  },
+  "tolomato": {
+    "electorate": "One CDD spanning Duval and St. Johns portions; source-exact district scope retained.",
+    "officialCrossCountyNative": {
+      "requestedUrl": "https://floridaelectionwatch.gov/ContestResultsByCounty/786005",
+      "finalUrl": "https://floridaelectionwatch.gov/ContestResultsByCounty/786005",
+      "httpStatus": 403,
+      "retrievedAt": "2026-11-03T05:35:01.725640+00:00",
+      "sha256": "bf0e701b9fd2ccf5a09cbdc73a60b577518167622ed84e931cf73c8ac4a1583a",
+      "contentType": "text/html; charset=UTF-8",
+      "sourceFile": "/workspace/cx-local-work/duval/tolomato-cross-county.source"
+    },
+    "readerCapture": {
+      "requestedUrl": "https://r.jina.ai/https://floridaelectionwatch.gov/ContestResultsByCounty/786005",
+      "finalUrl": "https://r.jina.ai/https://floridaelectionwatch.gov/ContestResultsByCounty/786005",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T05:35:12.692847+00:00",
+      "sha256": "7eb3f8c4eb927e8300493318a8fac66af1e69ba477fbe840207daae5ab84d8d9",
+      "contentType": "text/plain; charset=utf-8",
+      "sourceFile": "/workspace/cx-local-work/duval/tolomato-cross-county-reader.source"
+    },
+    "captureNote": "Native official endpoint returned 403. Successful reader capture returned 200 text; these are distinct saved artifacts. Used to corroborate cross-county scope only; no vote counts or result status added to ballot data.",
+    "quote": "Tolomato Community Development District, Seat 5 \n\n**Nonpartisan**\n\n[Compare State to County](https://floridaelectionwatch.gov/CompareStateToCounty/786005)\n\n| County | Ronald Howland | Anthony Vetter |\n| --- | --- | --- |\n| Duval | 0 | 0 |\n| St. Johns | 0 | 0 |"
+  },
+  "publishedMasterClassification": {
+    "federalCandidateContestsExcluded": 3,
+    "statewideCandidateContestsExcluded": 4,
+    "stateLegislativeCandidateContestsExcluded": 4,
+    "stateSupremeRetentionExcluded": 1,
+    "regionalRetentionContests": 3,
+    "countyJudgeContests": 1,
+    "schoolBoardContests": 3,
+    "municipalCandidateContests": 2,
+    "communityDevelopmentDistrictCandidateContests": 7,
+    "statewideMeasuresPreservedWithoutRefresh": 3,
+    "newLocalSchoolMillageMeasure": 1,
+    "totalPrintedMasterContestBlocks": 32
+  },
+  "readerJoins": "No new speculative whole-member memberships. Eight registry-unmatched exact districts remain explicit dependencies; Fifth DCA already linked by held Duval membership."
+}

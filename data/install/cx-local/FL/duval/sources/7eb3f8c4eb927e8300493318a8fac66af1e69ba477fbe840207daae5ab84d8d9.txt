@@ -1,0 +1,197 @@
+Title: Florida Election Watch - Contest Results by County
+
+URL Source: https://floridaelectionwatch.gov/ContestResultsByCounty/786005
+
+Markdown Content:
+![Image 1: Florida Election Watch-Logo](https://floridaelectionwatch.gov/Images/Enight%20Logo%20-%20transparent.png)
+
+ 2026 General Election  
+ November 3, 2026   
+ Unofficial Election Night Results  
+
+[![Image 2: Division of Elections-Logo](https://floridaelectionwatch.gov/Images/Elections-Logo-Small.png)](https://dos.fl.gov/elections/ "Division of Elections")
+
+MENU
+
+*   [Home](https://floridaelectionwatch.gov/Home)
+*   [Election Day Turnout](https://floridaelectionwatch.gov/ElectionDayTurnout)
+
+* * *
+
+*   [County Reporting Status](https://floridaelectionwatch.gov/CountyReportingStatus)
+
+* * *
+
+*   [FAQs](https://floridaelectionwatch.gov/FAQs)
+
+* * *
+
+*   [Legislative Projections](https://floridaelectionwatch.gov/LegislativeProjection)
+
+* * *
+
+*   [Timeline](https://floridaelectionwatch.gov/Timeline)
+
+* * *
+
+*   Track By County 
+
+[Select County](https://floridaelectionwatch.gov/ContestResultsByCounty/786005#)
+    *   [AlachuaCounty](https://floridaelectionwatch.gov/TrackCounty/ALA)
+    *   [BakerCounty](https://floridaelectionwatch.gov/TrackCounty/BAK)
+    *   [BayCounty](https://floridaelectionwatch.gov/TrackCounty/BAY)
+    *   [BradfordCounty](https://floridaelectionwatch.gov/TrackCounty/BRA)
+    *   [BrevardCounty](https://floridaelectionwatch.gov/TrackCounty/BRE)
+    *   [BrowardCounty](https://floridaelectionwatch.gov/TrackCounty/BRO)
+    *   [CalhounCounty](https://floridaelectionwatch.gov/TrackCounty/CAL)
+    *   [CharlotteCounty](https://floridaelectionwatch.gov/TrackCounty/CHA)
+    *   [CitrusCounty](https://floridaelectionwatch.gov/TrackCounty/CIT)
+    *   [ClayCounty](https://floridaelectionwatch.gov/TrackCounty/CLA)
+    *   [CollierCounty](https://floridaelectionwatch.gov/TrackCounty/CLL)
+    *   [ColumbiaCounty](https://floridaelectionwatch.gov/TrackCounty/CLM)
+    *   [DesotoCounty](https://floridaelectionwatch.gov/TrackCounty/DES)
+    *   [DixieCounty](https://floridaelectionwatch.gov/TrackCounty/DIX)
+    *   [DuvalCounty](https://floridaelectionwatch.gov/TrackCounty/DUV)
+    *   [EscambiaCounty](https://floridaelectionwatch.gov/TrackCounty/ESC)
+    *   [FlaglerCounty](https://floridaelectionwatch.gov/TrackCounty/FLA)
+    *   [FranklinCounty](https://floridaelectionwatch.gov/TrackCounty/FRA)
+    *   [GadsdenCounty](https://floridaelectionwatch.gov/TrackCounty/GAD)
+    *   [GilchristCounty](https://floridaelectionwatch.gov/TrackCounty/GIL)
+    *   [GladesCounty](https://floridaelectionwatch.gov/TrackCounty/GLA)
+    *   [GulfCounty](https://floridaelectionwatch.gov/TrackCounty/GUL)
+    *   [HamiltonCounty](https://floridaelectionwatch.gov/TrackCounty/HAM)
+    *   [HardeeCounty](https://floridaelectionwatch.gov/TrackCounty/HAR)
+    *   [HendryCounty](https://floridaelectionwatch.gov/TrackCounty/HEN)
+    *   [HernandoCounty](https://floridaelectionwatch.gov/TrackCounty/HER)
+    *   [HighlandsCounty](https://floridaelectionwatch.gov/TrackCounty/HIG)
+    *   [HillsboroughCounty](https://floridaelectionwatch.gov/TrackCounty/HIL)
+    *   [HolmesCounty](https://floridaelectionwatch.gov/TrackCounty/HOL)
+    *   [Indian RiverCounty](https://floridaelectionwatch.gov/TrackCounty/IND)
+    *   [JacksonCounty](https://floridaelectionwatch.gov/TrackCounty/JAC)
+    *   [JeffersonCounty](https://floridaelectionwatch.gov/TrackCounty/JEF)
+    *   [LafayetteCounty](https://floridaelectionwatch.gov/TrackCounty/LAF)
+    *   [LakeCounty](https://floridaelectionwatch.gov/TrackCounty/LAK)
+    *   [LeeCounty](https://floridaelectionwatch.gov/TrackCounty/LEE)
+    *   [LeonCounty](https://floridaelectionwatch.gov/TrackCounty/LEO)
+    *   [LevyCounty](https://floridaelectionwatch.gov/TrackCounty/LEV)
+    *   [LibertyCounty](https://floridaelectionwatch.gov/TrackCounty/LIB)
+    *   [MadisonCounty](https://floridaelectionwatch.gov/TrackCounty/MAD)
+    *   [ManateeCounty](https://floridaelectionwatch.gov/TrackCounty/MAN)
+    *   [MarionCounty](https://floridaelectionwatch.gov/TrackCounty/MRN)
+    *   [MartinCounty](https://floridaelectionwatch.gov/TrackCounty/MRT)
+    *   [Miami-DadeCounty](https://floridaelectionwatch.gov/TrackCounty/DAD)
+    *   [MonroeCounty](https://floridaelectionwatch.gov/TrackCounty/MON)
+    *   [NassauCounty](https://floridaelectionwatch.gov/TrackCounty/NAS)
+    *   [OkaloosaCounty](https://floridaelectionwatch.gov/TrackCounty/OKA)
+    *   [OkeechobeeCounty](https://floridaelectionwatch.gov/TrackCounty/OKE)
+    *   [OrangeCounty](https://floridaelectionwatch.gov/TrackCounty/ORA)
+    *   [OsceolaCounty](https://floridaelectionwatch.gov/TrackCounty/OSC)
+    *   [Palm BeachCounty](https://floridaelectionwatch.gov/TrackCounty/PAL)
+    *   [PascoCounty](https://floridaelectionwatch.gov/TrackCounty/PAS)
+    *   [PinellasCounty](https://floridaelectionwatch.gov/TrackCounty/PIN)
+    *   [PolkCounty](https://floridaelectionwatch.gov/TrackCounty/POL)
+    *   [PutnamCounty](https://floridaelectionwatch.gov/TrackCounty/PUT)
+    *   [Santa RosaCounty](https://floridaelectionwatch.gov/TrackCounty/SAN)
+    *   [SarasotaCounty](https://floridaelectionwatch.gov/TrackCounty/SAR)
+    *   [SeminoleCounty](https://floridaelectionwatch.gov/TrackCounty/SEM)
+    *   [St. JohnsCounty](https://floridaelectionwatch.gov/TrackCounty/STJ)
+    *   [St. LucieCounty](https://floridaelectionwatch.gov/TrackCounty/STL)
+    *   [SumterCounty](https://floridaelectionwatch.gov/TrackCounty/SUM)
+    *   [SuwanneeCounty](https://floridaelectionwatch.gov/TrackCounty/SUW)
+    *   [TaylorCounty](https://floridaelectionwatch.gov/TrackCounty/TAY)
+    *   [UnionCounty](https://floridaelectionwatch.gov/TrackCounty/UNI)
+    *   [VolusiaCounty](https://floridaelectionwatch.gov/TrackCounty/VOL)
+    *   [WakullaCounty](https://floridaelectionwatch.gov/TrackCounty/WAK)
+    *   [WaltonCounty](https://floridaelectionwatch.gov/TrackCounty/WAL)
+    *   [WashingtonCounty](https://floridaelectionwatch.gov/TrackCounty/WAS)
+
+* * *
+
+*   [Federal Offices](https://floridaelectionwatch.gov/FederalOffices)
+*   [U.S. Senator](https://floridaelectionwatch.gov/FederalOffices/USSenator)
+
+* * *
+
+*   [U.S. Representative](https://floridaelectionwatch.gov/FederalOffices/USRepresentative)
+
+* * *
+
+*   [State Offices](https://floridaelectionwatch.gov/StateOffices)
+*   [Governor](https://floridaelectionwatch.gov/StateOffices/Governor)
+
+* * *
+
+*   [Attorney General](https://floridaelectionwatch.gov/StateOffices/AttorneyGeneral)
+
+* * *
+
+*   [Chief Financial Officer](https://floridaelectionwatch.gov/StateOffices/ChiefFinancialOfficer)
+
+* * *
+
+*   [Commissioner of Agriculture](https://floridaelectionwatch.gov/StateOffices/CommissionerOfAgriculture)
+
+* * *
+
+*   [Multi-County or District Offices](https://floridaelectionwatch.gov/DistrictOffices)
+*   [State Senate](https://floridaelectionwatch.gov/DistrictOffices/StateSenator)
+
+* * *
+
+*   [State Representative](https://floridaelectionwatch.gov/DistrictOffices/StateRepresentative)
+
+* * *
+
+*   [Special Districts](https://floridaelectionwatch.gov/DistrictOffices/SpecialDistricts)
+
+* * *
+
+*   [Judicial Offices](https://floridaelectionwatch.gov/JudicialOffices)
+*   [Supreme Court](https://floridaelectionwatch.gov/JudicialOffices/SupremeCourt)
+
+* * *
+
+*   [District Court of Appeal](https://floridaelectionwatch.gov/JudicialOffices/DistrictCourtOfAppeal)
+
+* * *
+
+*   [Circuit Court](https://floridaelectionwatch.gov/JudicialOffices/CircuitCourt)
+
+* * *
+
+*   [Amendments](https://floridaelectionwatch.gov/Amendments)
+*   [Downloads](https://floridaelectionwatch.gov/Downloads)
+
+  
+  
+  
+
+#### Contest Results by County
+
+ Tolomato Community Development District, Seat 5 
+
+**Nonpartisan**
+
+[Compare State to County](https://floridaelectionwatch.gov/CompareStateToCounty/786005)
+
+| County | Ronald Howland | Anthony Vetter |
+| --- | --- | --- |
+| Duval | 0 | 0 |
+| St. Johns | 0 | 0 |
+| **Total:** | **0** | **0** |
+
+  
+  
+
+![Image 3](https://floridaelectionwatch.gov/Images/Enightfooter.png)
+
+[Florida Department of State](https://dos.fl.gov/)
+
+[Division of Elections](https://dos.fl.gov/elections/)
+
+Room 316, R.A.Gray Building, 500 S.Bronough Street   
+ Tallahassee, FL 32399-0250   
+ 1.850.245.6200
+
+*   [Privacy Policy](https://dos.fl.gov/privacy-policy.aspx)
+*   [Contact Us](https://dos.fl.gov/elections/contacts/contact-us/)

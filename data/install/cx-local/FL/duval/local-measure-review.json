@@ -1,0 +1,21 @@
+{
+  "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+  "contestId": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+  "title": "Duval County School District Ad Valorem Millage Election",
+  "officialNumber": null,
+  "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
+  "physicalPage": 3,
+  "questionText": "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?",
+  "choices": [
+    "Yes, for continuation",
+    "No, against continuation"
+  ],
+  "provenance": {
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceOrg": "Duval County Supervisor of Elections",
+    "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+    "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+    "quote": "Duval County School District Ad \nValorem Millage Election   \n \nShall the Duval County School \nDistrict continue the current one (1) \nmill ad valorem millage for essential \noperating expenses, shared \nproportionately with charter schools, \nincluding compensating teachers, \nsecurity, and support staff; \npreserving academic programs, and \nprotecting arts, athletics, and student \nactivities beginning July 1, 2027, and \nending four (4) fiscal years later on \nJune 30, 2031, with annual reporting \nto ensure proper fiscal stewardship \nof these funds to the citizens of \nDuval County?  \n \nYes, for continuation \nNo, against continuation"
+  },
+  "duplicateCheck": "Absent from checked-in FL ballot data and all five current other FL CX-LOCAL inputs. Workspace search found no separate CX-VOTES FL preparation packet; root was asked for an external latest-preparation path. River must merge against its latest prepared/production state before installation. No already-held question is refreshed."
+}

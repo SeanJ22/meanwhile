@@ -1,0 +1,60 @@
+Name	party	office	status
+Latoya Williams Shelton	NOP	County Court Judge Group 1	Defeated
+Matt Lufrano	NOP	County Court Judge Group 1	Elected
+Rhonda Peoples-Waters	NOP	County Court Judge Group 6	Unopposed
+Marquita H. Green	NOP	County Court Judge Group 13	Defeated
+Melina Buncome	NOP	County Court Judge Group 13	Advanced
+Octavius A. Holliday, Jr.	NOP	County Court Judge Group 13	Advanced
+Gary Paul Flower	NOP	County Court Judge Group 14	Unopposed
+James G Nealis	NOP	County Court Judge Group 16	Unopposed
+Alfreda Denson Butler	NOP	School Board Dist 4	Defeated
+Clarence &#34;CJ&#34; James	NOP	School Board Dist 6	Advanced
+Donna Mae Westrich	NOP	School Board Dist 2	Advanced
+Donovan Bradley	NOP	School Board Dist 2	Advanced
+Gracie Bell Kearse-McCastler	WRI	School Board Dist 4	Qualified Write-In
+James &#34;Coach&#34; Jacobs	NOP	School Board Dist 4	Advanced
+Jordan  Wells	NOP	School Board Dist 4	Did not Qualify
+La&#39;Tina C. Willis	NOP	School Board Dist 4	Withdrawn
+Lindsey Denmark	NOP	School Board Dist 6	Advanced
+Michelle Petty	NOP	School Board Dist 6	Defeated
+Rhodesia &#34;Rho&#34; Butler	NOP	School Board Dist 4	Advanced
+Robert Stafford	NOP	School Board Dist 6	Defeated
+Tammyette Thomas	NOP	School Board Dist 6	Defeated
+Terence Lavele Myers	NOP	School Board Dist 2	Defeated
+Robert McKinnon	NOP	Soil & Water District 5	Unopposed
+Skylar McKnight	NOP	Soil & Water District 1	Unopposed
+Stanley McAllister	NOP	Soil & Water District 3	Did not Qualify
+William Russell Huff, II	NOP	Bainebridge CDD Seat 1	Unopposed
+Larry Hall	NOP	Bainebridge CDD Seat 5	Unopposed
+Lynda Anne Learn	NOP	Bartram Park CDD Seat 2	Did not Qualify
+Larry H. Lokey	NOP	Bartram Park CDD Seat 4	Unopposed
+Lacy Reynolds	NOP	Bartram Springs CDD Seat 4	Unopposed
+Juan Canelones	NOP	Beach CDD Seat 2	Qualified
+Walter Repak	NOP	Beach CDD Seat 2	Qualified
+Elena Korsakova	NOP	Beach CDD Seat 4	Qualified
+Karen Young	NOP	Beach CDD Seat 4	Qualified
+Pawel Szeszko	NOP	Beach CDD Seat 5	Qualified
+Raj Saralaya	NOP	Beach CDD Seat 5	Qualified
+Carol Springer	NOP	Cypress Bluff CDD Seat 2	Qualified
+William Cellar Jr.	NOP	Cypress Bluff CDD Seat 2	Qualified
+Joe Muhl	NOP	Cypress Bluff CDD Seat 3	Unopposed
+Wallace G. Lovely	NOP	Harbour Waterway SD Seat 2	Unopposed
+Michael L. Brande	NOP	Harbour Waterway SD Seat 4	Unopposed
+Bradford Radloff	NOP	Isle of Palms SD, Seat 2	Unopposed
+Joshua Reichert	NOP	Isle of Palms SD, Seat  4	Unopposed
+John Rowland	NOP	Millers Creek SD Seat 2	Unopposed
+Mark McKinney Mathews Jr.	NOP	Millers Creek SD Seat 4	Unopposed
+Michael Shannon	NOP	Millers Creek SD Seat 6	Unopposed
+Corey Maire	NOP	Tarpon Cove SD Seat 2	Unopposed
+Javier Brito	NOP	Tarpon Cove SD Seat 4	Unopposed
+Frank Shankland	NOP	Tarpon Cove SD Seat 5	Unopposed
+Michael Evans	NOP	Tisons Landing CDD Seat 2	Unopposed
+Monica Timmons	NOP	Tisons Landing CDD Seat 4	Unopposed
+Cedeila Alford	NOP	Tisons Landing CDD Seat 5	Unopposed
+Adesina Braxton	NOP	Trails CDD Seat 2	Qualified
+Corina K. Buck	NOP	Trails CDD Seat 2	Qualified
+Ashley Guioa	NOP	Trails CDD Seat 5	Qualified
+Terence Douglas	NOP	Trails CDD Seat 5	Qualified
+Cary Thomas	NOP	Villages of Westport CDD Seat 2	Unopposed
+Anina Guyton	NOP	Villages of Westport CDD Seat 3	Unopposed
+Carl Hawkins	NOP	Villages of Westport CDD Seat 4	Unopposed

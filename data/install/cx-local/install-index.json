@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:48:21.180888+00:00",
+  "preparedAt": "2026-11-03T05:48:26.765635+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -228,15 +228,15 @@
       "county": "Dallas",
       "populationRank": 8,
       "manifest": "TX/dallas/install.json",
-      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "status": "PREPARED_PENDING_WRITE_IN_RECLASSIFICATION_CHECKS",
       "candidateAndRetentionContests": 82,
       "measureContests": 14,
-      "candidacies": 101,
+      "candidacies": 100,
       "newContests": 51,
       "refreshedContests": 45,
-      "sourceInputSha256": "726bfeecedbcfcd5c3a15305240fed3ee7adf295164215c86aef2baa8dcb02f4",
+      "sourceInputSha256": "e64bc09bfbf27350990837bee56f4374f0f6e7c176c48a0a9fdaaa1567d936bf",
       "coverage": [
-        "All six pages of the dated county sample are saved. This local packet includes 82 judicial/county office fields and all 100 printed named candidates, plus the separately certified held Dallas District Attorney write-in Eric Reed (101 candidate rows), and every one of the 14 printed local propositions. Federal, statewide executive/Supreme/Criminal Appeals, State Board of Education and legislative fields remain outside this local install.",
+        "All six pages of the dated county sample are saved. This local packet includes 82 judicial/county office fields and all 100 printed named candidates, with 100 ordinary candidate rows; the separately certified qualified Dallas District Attorney write-in Eric Reed and his exact held identity are preserved only in declared-writeins.json pending a verified reader distinction, and every one of the 14 printed local propositions. Federal, statewide executive/Supreme/Criminal Appeals, State Board of Education and legislative fields remain outside this local install.",
         "Page4 has53uncontested offices in one Vote for All/Vote for None bloc. Each office and its named candidate are retained separately, with the source voting instruction; no independent vote selection rule is invented for a new bloc office.",
         "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified.",
         "Composite coverage concerns only the elections printed by Dallas County; it does not prove every independent jurisdiction touching the county contracted with the county or held an election. Precinct contests and the Fifth Court of Appeals retain their precise electorates. No commissioner, justice or constable precinct is widened to all Dallas County."
@@ -1142,6 +1142,20 @@
         "Declaredwriteins are separate from printed ordinary candidates. The current statewide/district certification contains no entry for either Second Appeals seat or the six Denton judicial districts; county/municipal/special named write-in inventories remain pending. No generic blank Write-in is treated as a person.",
         "The official SecondCourt county list supports12whole-county districtMemberships, one each for Archer,Clay,Cooke,Denton,Hood,Jack,Montague,Parker,Tarrant,Wichita,Wise,Young. The same two regional offices can therefore serve every included county; no per-county duplicate contest is minted. Actual reader delivery remains for parent/River to verify."
       ]
+    },
+    {
+      "state": "FL",
+      "county": "Duval",
+      "populationRank": 47,
+      "manifest": "FL/duval/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 16,
+      "measureContests": 1,
+      "candidacies": 29,
+      "newContests": 14,
+      "refreshedContests": 3,
+      "sourceInputSha256": "2f28d23a03f863fe6a370c7adcf4c8ecdb264e5d7d6574605cd45b5662e8b2d6",
+      "coverage": "See per-county manifest for exact source and reader scope."
     }
   ],
   "sourceReviewCounties": [
@@ -1167,17 +1181,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 44,
-    "packetsPrepared": 45,
-    "candidateAndRetentionContests": 2533,
-    "measureContests": 110,
-    "candidacyEntries": 5689,
-    "newContestEntriesAgainstCheckedInBaseline": 2044,
-    "distinctPreparedContestIds": 2622,
-    "distinctPreparedCandidateIds": 5628,
-    "distinctNewContestsAgainstCheckedInBaseline": 2033,
+    "countiesPrepared": 45,
+    "packetsPrepared": 46,
+    "candidateAndRetentionContests": 2549,
+    "measureContests": 111,
+    "candidacyEntries": 5717,
+    "newContestEntriesAgainstCheckedInBaseline": 2058,
+    "distinctPreparedContestIds": 2639,
+    "distinctPreparedCandidateIds": 5656,
+    "distinctNewContestsAgainstCheckedInBaseline": 2047,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 45
+    "distinctCountyHandoffs": 46
   },
   "remainingWork": [
     {

@@ -1,0 +1,259 @@
+[
+  {
+    "id": "fl-cx-local-2026-duval-county-court-judge-group-13",
+    "title": "County Court Judge Group 13",
+    "ocdId": "ocd-division/country:us/state:fl/county:duval",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Melina Buncome",
+      "Octavius A. Holliday Jr."
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "County Court Judge Group 13  \n(Vote for One)  \nMelina Buncome \nOctavius A. Holliday Jr."
+  },
+  {
+    "id": "fl-cx-local-2026-duval-school-board-district-2",
+    "title": "School Board District 2",
+    "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:2",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Donovan Bradley",
+      "Donna Mae Westrich"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "School Board District 2  \n(Vote for One)  \nDonovan Bradley \nDonna Mae Westrich"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-school-board-district-4",
+    "title": "School Board District 4",
+    "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:4",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Rhodesia “Rho” Butler",
+      "James “Coach” Jacobs"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": true,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "School Board District 4  \n(Vote for One) \nRhodesia “Rho” Butler \nJames “Coach” Jacobs \nWrite-In____________"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-school-board-district-6",
+    "title": "School Board District 6",
+    "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:6",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Lindsey Denmark",
+      "Clarence “CJ” James"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "School Board District 6  \n(Vote for One) \nLindsey Denmark \nClarence “CJ” James"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-atlantic-beach-mayor-commissioner-seat-1",
+    "title": "Atlantic Beach Mayor-Commissioner Seat 1",
+    "ocdId": "ocd-division/country:us/state:fl/place:atlantic_beach",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Curtis R. Ford",
+      "Nancy Staats"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Atlantic Beach Mayor-\nCommissioner Seat 1 \n(Vote for One) \nCurtis R. Ford \nNancy Staats"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-atlantic-beach-commissioner-seat-4",
+    "title": "Atlantic Beach Commissioner Seat 4",
+    "ocdId": "ocd-division/country:us/state:fl/place:atlantic_beach",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Lisa Herrold",
+      "Jennifer Lagner"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Atlantic Beach Commissioner  \nSeat 4  \n(Vote for One) \nLisa Herrold \nJennifer Lagner"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-beach-cdd-seat-2",
+    "title": "Beach Community Development District Seat 2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Juan Canelones",
+      "Walter Repak"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Beach Community Development \nDistrict Seat 2  \n(Vote for One) \nJuan Canelones \nWalter Repak"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-beach-cdd-seat-4",
+    "title": "Beach Community Development District Seat 4",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Elena Korsakova",
+      "Karen Young"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Beach Community Development \nDistrict Seat 4  \n(Vote for One) \nElena Korsakova \nKaren Young"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-beach-cdd-seat-5",
+    "title": "Beach Community Development District Seat 5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Raj Saralaya",
+      "Pawel Szeszko"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Beach Community Development \nDistrict Seat 5  \n(Vote for One) \nRaj Saralaya \nPawel Szeszko"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-cypress-bluff-cdd-seat-2",
+    "title": "Cypress Bluff Community Development District Seat 2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_bluff_community_development_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "William Cellar Jr.",
+      "Carol Springer"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Cypress Bluff Community \nDevelopment District Seat 2  \n(Vote for One) \nWilliam Cellar Jr. \nCarol Springer"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-tolomato-cdd-seat-5",
+    "title": "Tolomato Community Development District Seat 5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:tolomato_community_development_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Ronald Howland",
+      "Anthony Vetter"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Tolomato Community \nDevelopment District Seat 5 \n(Vote for One) \nRonald Howland \nAnthony Vetter"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-trails-cdd-seat-2",
+    "title": "Trails Community Development District Seat 2",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:trails_community_development_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Adesina Braxton",
+      "Corina K. Buck"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Trails Community Development \nDistrict Seat 2 \n(Vote for One) \nAdesina Braxton \nCorina K. Buck"
+  },
+  {
+    "id": "fl-cx-local-2026-duval-trails-cdd-seat-5",
+    "title": "Trails Community Development District Seat 5",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:trails_community_development_district",
+    "type": "CANDIDACY",
+    "voteFor": 1,
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Terence Douglas",
+      "Ashley Guioa"
+    ],
+    "printedPartyLabels": null,
+    "blankWriteInSlot": false,
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Trails Community Development \nDistrict Seat 5 \n(Vote for One) \nTerence Douglas \nAshley Guioa"
+  },
+  {
+    "id": "fl-doe-2026-general-dca-5-90363",
+    "title": "District Court of Appeal District 5 — John M. Harris",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+    "type": "RETENTION",
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "John M. Harris"
+    ],
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Shall Judge John M. Harris of the Fifth \nDistrict Court of Appeal be retained in \noffice? \nYes \nNo",
+    "reusedBaselineId": true
+  },
+  {
+    "id": "fl-doe-2026-general-dca-5-90326",
+    "title": "District Court of Appeal District 5 — Scott D. Makar",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+    "type": "RETENTION",
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "Scott D. Makar"
+    ],
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Shall Judge Scott D. Makar of the \nFifth District Court of Appeal be \nretained in office? \nYes \nNo",
+    "reusedBaselineId": true
+  },
+  {
+    "id": "fl-doe-2026-general-dca-5-90265",
+    "title": "District Court of Appeal District 5 — F. Rand Wallis",
+    "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+    "type": "RETENTION",
+    "physicalPage": 2,
+    "completePrintedNames": [
+      "F. Rand Wallis"
+    ],
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Shall Judge F. Rand Wallis of the Fifth \nDistrict Court of Appeal be retained in \noffice? \nYes \nNo",
+    "reusedBaselineId": true
+  },
+  {
+    "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+    "title": "Duval County School District Ad Valorem Millage Election",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
+    "type": "MEASURE",
+    "physicalPage": 3,
+    "completePrintedNames": [],
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "sourceBlock": "Duval County School District Ad \nValorem Millage Election   \n \nShall the Duval County School \nDistrict continue the current one (1) \nmill ad valorem millage for essential \noperating expenses, shared \nproportionately with charter schools, \nincluding compensating teachers, \nsecurity, and support staff; \npreserving academic programs, and \nprotecting arts, athletics, and student \nactivities beginning July 1, 2027, and \nending four (4) fiscal years later on \nJune 30, 2031, with annual reporting \nto ensure proper fiscal stewardship \nof these funds to the citizens of \nDuval County?  \n \nYes, for continuation \nNo, against continuation"
+  }
+]

@@ -1,0 +1,341 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Duval",
+  "countyFips": "12031",
+  "populationRank": 47,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only county packet; merge with latest held Florida and all current lane identities. All published master local named fields captured, exact reader geography joins pending. No production writes, installation or publication.",
+  "counts": {
+    "candidateContests": 13,
+    "printedCandidateNames": 26,
+    "retentionContests": 3,
+    "heldJudgeIdsReused": 3,
+    "totalCandidateRows": 29,
+    "declaredWriteInFilings": 1,
+    "countyStatusRows": 59,
+    "municipalStatusRows": 6,
+    "currentStatusRows": 65,
+    "allRacesSamplePages": 3,
+    "individualPrecinctStylesAcquired": 0,
+    "measureContests": 1,
+    "newContestsIncludingMeasure": 14,
+    "unmatchedReaderDivisions": 8
+  },
+  "subjects": [
+    {
+      "id": "fl-cx-local-2026-duval-county-court-judge-group-13",
+      "title": "County Court Judge Group 13",
+      "ocdId": "ocd-division/country:us/state:fl/county:duval",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Melina Buncome",
+        "Octavius A. Holliday Jr."
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-school-board-district-2",
+      "title": "School Board District 2",
+      "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:2",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Donovan Bradley",
+        "Donna Mae Westrich"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-school-board-district-4",
+      "title": "School Board District 4",
+      "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:4",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": true,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Rhodesia \u201cRho\u201d Butler",
+        "James \u201cCoach\u201d Jacobs"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-school-board-district-6",
+      "title": "School Board District 6",
+      "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:6",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Lindsey Denmark",
+        "Clarence \u201cCJ\u201d James"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-atlantic-beach-mayor-commissioner-seat-1",
+      "title": "Atlantic Beach Mayor-Commissioner Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:atlantic_beach",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Curtis R. Ford",
+        "Nancy Staats"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-atlantic-beach-commissioner-seat-4",
+      "title": "Atlantic Beach Commissioner Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:atlantic_beach",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Lisa Herrold",
+        "Jennifer Lagner"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-beach-cdd-seat-2",
+      "title": "Beach Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Juan Canelones",
+        "Walter Repak"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-beach-cdd-seat-4",
+      "title": "Beach Community Development District Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Elena Korsakova",
+        "Karen Young"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-beach-cdd-seat-5",
+      "title": "Beach Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Raj Saralaya",
+        "Pawel Szeszko"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-cypress-bluff-cdd-seat-2",
+      "title": "Cypress Bluff Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_bluff_community_development_district",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "William Cellar Jr.",
+        "Carol Springer"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-tolomato-cdd-seat-5",
+      "title": "Tolomato Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:tolomato_community_development_district",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Ronald Howland",
+        "Anthony Vetter"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-trails-cdd-seat-2",
+      "title": "Trails Community Development District Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:trails_community_development_district",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Adesina Braxton",
+        "Corina K. Buck"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-trails-cdd-seat-5",
+      "title": "Trails Community Development District Seat 5",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:trails_community_development_district",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "physicalPage": 2,
+      "printedPartyLabels": null,
+      "blankWriteInSlot": false,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": [
+        "Terence Douglas",
+        "Ashley Guioa"
+      ]
+    },
+    {
+      "id": "fl-doe-2026-general-dca-5-90363",
+      "title": "District Court of Appeal District 5 \u2014 John M. Harris",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+      "type": "RETENTION",
+      "physicalPage": 2,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "reusedBaselineId": true,
+      "printedNames": [
+        "John M. Harris"
+      ]
+    },
+    {
+      "id": "fl-doe-2026-general-dca-5-90326",
+      "title": "District Court of Appeal District 5 \u2014 Scott D. Makar",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+      "type": "RETENTION",
+      "physicalPage": 2,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "reusedBaselineId": true,
+      "printedNames": [
+        "Scott D. Makar"
+      ]
+    },
+    {
+      "id": "fl-doe-2026-general-dca-5-90265",
+      "title": "District Court of Appeal District 5 \u2014 F. Rand Wallis",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+      "type": "RETENTION",
+      "physicalPage": 2,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "reusedBaselineId": true,
+      "printedNames": [
+        "F. Rand Wallis"
+      ]
+    },
+    {
+      "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+      "title": "Duval County School District Ad Valorem Millage Election",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
+      "type": "MEASURE",
+      "physicalPage": 3,
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "printedNames": []
+    }
+  ],
+  "sourceScope": {
+    "primary": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "currentness": "Linked as 2026 General All Races for Duval County on the official current home page; printed November 3, 2026; native 200 exact PDF bytes captured.",
+    "allRaces": "All 13 complete local named candidacy fields and three Fifth DCA retention questions on physical page 2. Physical page 1 introductory countywide master warning; page 3 measures. Statewide retention, federal and state fields excluded.",
+    "precinctLimits": "All-races master is complete for its printed local candidate inventory, but not a ballot style for every voter. No private voter lookup or voter-specific sample is claimed.",
+    "municipalLimits": "Atlantic Beach seats only, both explicitly citywide per current city clerk. No Jacksonville or countywide fallback; no inferred beach-city or Jacksonville races absent from one style.",
+    "statusLimits": "59 county financial-report rows and six Atlantic Beach filed-candidate rows retained separately. Cross-county Tolomato status reports are outside the county financial list; the current county sample directly supplies its full two-person field.",
+    "sourceFailures": [
+      {
+        "label": "notice-general",
+        "url": "https://files.floridados.gov/media/710258/2026_nge_duv_english.pdf",
+        "httpStatus": 403
+      },
+      {
+        "label": "municode-client",
+        "url": "https://api.municode.com/Clients/name?clientName=Jacksonville&stateAbbr=FL",
+        "httpStatus": 403
+      },
+      {
+        "label": "jacksonville-charter",
+        "url": "https://library.municode.com/fl/jacksonville/codes/code_of_ordinances?nodeId=CHRELA",
+        "httpStatus": 403
+      },
+      {
+        "label": "tolomato-cross-county",
+        "url": "https://floridaelectionwatch.gov/ContestResultsByCounty/786005",
+        "httpStatus": 403
+      },
+      {
+        "label": "beach-info",
+        "url": "https://www.beachcdd.com/about-the-cdd",
+        "httpStatus": 503
+      }
+    ],
+    "sourceCautions": "Current county school qualifying sheet has broad county electorate language; source-exact numbered board districts remain narrow and reader joins open. Failed Municode response and successful reader loading shell are not legal-text evidence. Beach CDD native 503 versus reader 200 distinguished.",
+    "schoolScopeCorroboration": "Current official July 2026 school-board map and December 2025 charter codification copy support numbered district elections; see scope-review.json. The broad qualifying-sheet electorate line is recorded as a caution. No county fallback."
+  },
+  "identityPolicy": "All three held Fifth DCA contest/candidacy IDs preserved; held Duval\u2192DCA5 membership remains unchanged. No other held or current FL lane local office identity matches these fields. Tolomato is one cross-county CDD election and must reuse this same ID for St. Johns future coverage.",
+  "preservation": {
+    "preparedFederalStateLegislative": "Excluded and preserved by partial merge.",
+    "preparedMeasures": "All checked-in Florida measures and explanations preserved unchanged.",
+    "baselineMeasuresSha256": "71dee3651fbf57b8c79c56458c93d57409a7b751071f1f54abea0985c80788d0",
+    "newMillage": "One genuinely new local millage question, exact title and full text verified on physical page 3 and existing school district electorate retained. Absent from checked-in FL and current other FL lanes; no separate CX-VOTES FL packet was found in this workspace. River must still merge against its latest prepared/production state."
+  },
+  "readerDependencies": "Eight precise unmatched district IDs, including Fifth DCA linked by held whole-county membership, three school-board districts and four CDDs. See reader-dependencies.json. No speculative memberships or county fallback.",
+  "validation": {
+    "local": "PASS: 361 focused candidate-set, official-status, measure, scope, source and privacy checks",
+    "sourceHashes": "PASS: 31 captures and independently hashed extractions",
+    "savedProvenanceQuotes": 48,
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sharedCheckedAt": "2026-11-03T05:36:21.165Z",
+    "readerApplicability": "Eight unmatched exact districts documented; Fifth DCA already linked by held Duval membership. Remaining seven district geometry joins await River.",
+    "productionWrites": "NONE",
+    "publication": false,
+    "sourceHashesAndQuotes": "PASS: 31 captured sources and 48 exact saved-source quotes"
+  },
+  "artifacts": [
+    "ballot-input/fl.json",
+    "source-support.json",
+    "all-local-blocks.json",
+    "candidate-status-review.json",
+    "source-name-variations.json",
+    "reader-dependencies.json",
+    "local-measure-review.json",
+    "scope-review.json",
+    "validation-local.json",
+    "validation.json",
+    "review.md"
+  ]
+}

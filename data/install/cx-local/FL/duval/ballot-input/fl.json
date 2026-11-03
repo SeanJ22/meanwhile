@@ -1,0 +1,939 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-cx-local-2026-duval-county-court-judge-group-13",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:duval",
+          "divisionVintage": "2026",
+          "title": "County Court Judge Group 13",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "County Court Judge Group 13  \n(Vote for One)  \nMelina Buncome \nOctavius A. Holliday Jr."
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:2",
+          "divisionVintage": "2026",
+          "title": "School Board District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "School Board District 2  \n(Vote for One)  \nDonovan Bradley \nDonna Mae Westrich"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Source-exact numbered school board electorate retained. Current school board district map captured; exact reader geometry join remains open. No countywide fallback is used."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:4",
+          "divisionVintage": "2026",
+          "title": "School Board District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "School Board District 4  \n(Vote for One) \nRhodesia “Rho” Butler \nJames “Coach” Jacobs \nWrite-In____________"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Source-exact numbered school board electorate retained. Current school board district map captured; exact reader geometry join remains open. No countywide fallback is used."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-6",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:6",
+          "divisionVintage": "2026",
+          "title": "School Board District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "School Board District 6  \n(Vote for One) \nLindsey Denmark \nClarence “CJ” James"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Source-exact numbered school board electorate retained. Current school board district map captured; exact reader geometry join remains open. No countywide fallback is used."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-atlantic-beach-mayor-commissioner-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:atlantic_beach",
+          "divisionVintage": "2026",
+          "title": "Atlantic Beach Mayor-Commissioner Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Atlantic Beach Mayor-\nCommissioner Seat 1 \n(Vote for One) \nCurtis R. Ford \nNancy Staats"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Both Atlantic Beach seats are elected by all city voters. Seat 4 District 1306 is a candidate residency requirement, not a separate voting electorate; the current city election page explicitly confirms this.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.coab.us/936/AB-Municipal-Election",
+              "sourceOrg": "City of Atlantic Beach, City Clerk",
+              "collectedAt": "2026-11-03T05:26:47.866979+00:00",
+              "verifiedAt": "2026-11-03T05:26:47.866979+00:00",
+              "quote": "All Atlantic Beach Commission Offices are elected\nat\n-large\n.  AB registered voters can vote for candidates\nof all seats up for election\n, regardless of their district.  A seat’s district assignment relates to the residency requirements for candidates."
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-2026-duval-atlantic-beach-commissioner-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:atlantic_beach",
+          "divisionVintage": "2026",
+          "title": "Atlantic Beach Commissioner Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Atlantic Beach Commissioner  \nSeat 4  \n(Vote for One) \nLisa Herrold \nJennifer Lagner"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Both Atlantic Beach seats are elected by all city voters. Seat 4 District 1306 is a candidate residency requirement, not a separate voting electorate; the current city election page explicitly confirms this.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.coab.us/936/AB-Municipal-Election",
+              "sourceOrg": "City of Atlantic Beach, City Clerk",
+              "collectedAt": "2026-11-03T05:26:47.866979+00:00",
+              "verifiedAt": "2026-11-03T05:26:47.866979+00:00",
+              "quote": "All Atlantic Beach Commission Offices are elected\nat\n-large\n.  AB registered voters can vote for candidates\nof all seats up for election\n, regardless of their district.  A seat’s district assignment relates to the residency requirements for candidates."
+            }
+          ]
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Beach Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Beach Community Development \nDistrict Seat 2  \n(Vote for One) \nJuan Canelones \nWalter Repak"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Beach Community Development District Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Beach Community Development \nDistrict Seat 4  \n(Vote for One) \nElena Korsakova \nKaren Young"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Beach Community Development District Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Beach Community Development \nDistrict Seat 5  \n(Vote for One) \nRaj Saralaya \nPawel Szeszko"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-cypress-bluff-cdd-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_bluff_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Cypress Bluff Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Cypress Bluff Community \nDevelopment District Seat 2  \n(Vote for One) \nWilliam Cellar Jr. \nCarol Springer"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-tolomato-cdd-seat-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:tolomato_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Tolomato Community Development District Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Tolomato Community \nDevelopment District Seat 5 \n(Vote for One) \nRonald Howland \nAnthony Vetter"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field. Tolomato is one cross-county CDD, including Duval and St. Johns portions. Preserve this contest and whole district identity when adding St. Johns evidence; do not mint a second county-specific election or restrict the CDD to all Duval."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-trails-cdd-seat-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:trails_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Trails Community Development District Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Trails Community Development \nDistrict Seat 2 \n(Vote for One) \nAdesina Braxton \nCorina K. Buck"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field."
+        },
+        {
+          "id": "fl-cx-local-2026-duval-trails-cdd-seat-5",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:trails_community_development_district",
+          "divisionVintage": "2026",
+          "title": "Trails Community Development District Seat 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Trails Community Development \nDistrict Seat 5 \n(Vote for One) \nTerence Douglas \nAshley Guioa"
+          },
+          "scopeNote": "Complete named candidate block from the current official November 3, 2026 county all-races sample, physical page 2. The sample prints no party label for these candidates. Any blank Write-In space is not a person. This countywide master combines different electorates; only voters in this exact office electorate vote in the field."
+        },
+        {
+          "id": "fl-doe-2026-general-dca-5-90363",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 5 — John M. Harris",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County→Fifth Appellate District membership remains unchanged through partial merge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Shall Judge John M. Harris of the Fifth \nDistrict Court of Appeal be retained in \noffice? \nYes \nNo"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-5-90326",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 5 — Scott D. Makar",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County→Fifth Appellate District membership remains unchanged through partial merge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Shall Judge Scott D. Makar of the \nFifth District Court of Appeal be \nretained in office? \nYes \nNo"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-5-90265",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 5 — F. Rand Wallis",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Separate Yes/No retention question from the current official sample, physical page 2. Held Fifth District Court of Appeal contest/candidacy IDs and NOP nonpartisan code are preserved. The sample prints no party label. The checked-in whole Duval County→Fifth Appellate District membership remains unchanged through partial merge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Shall Judge F. Rand Wallis of the Fifth \nDistrict Court of Appeal be retained in \noffice? \nYes \nNo"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
+          "divisionVintage": "2026",
+          "title": "Duval County School District Ad Valorem Millage Election",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+          "scopeNote": "New local question, full title and question visually verified on physical page 3. The sample assigns no number. Exact existing Duval County School District electorate retained. All held Florida questions and analyses are preserved unchanged.",
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Duval County School District Ad \nValorem Millage Election   \n \nShall the Duval County School \nDistrict continue the current one (1) \nmill ad valorem millage for essential \noperating expenses, shared \nproportionately with charter schools, \nincluding compensating teachers, \nsecurity, and support staff; \npreserving academic programs, and \nprotecting arts, athletics, and student \nactivities beginning July 1, 2027, and \nending four (4) fiscal years later on \nJune 30, 2031, with annual reporting \nto ensure proper fiscal stewardship \nof these funds to the citizens of \nDuval County?  \n \nYes, for continuation \nNo, against continuation"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fl-cx-local-2026-duval-county-court-judge-group-13:melina-buncome",
+          "contestId": "fl-cx-local-2026-duval-county-court-judge-group-13",
+          "givenName": "",
+          "familyName": "Melina Buncome",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Melina Buncome"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-county-court-judge-group-13:octavius-a-holliday-jr",
+          "contestId": "fl-cx-local-2026-duval-county-court-judge-group-13",
+          "givenName": "",
+          "familyName": "Octavius A. Holliday Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Octavius A. Holliday Jr."
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-2:donovan-bradley",
+          "contestId": "fl-cx-local-2026-duval-school-board-district-2",
+          "givenName": "",
+          "familyName": "Donovan Bradley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Donovan Bradley"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-2:donna-mae-westrich",
+          "contestId": "fl-cx-local-2026-duval-school-board-district-2",
+          "givenName": "",
+          "familyName": "Donna Mae Westrich",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Donna Mae Westrich"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-4:rhodesia-rho-butler",
+          "contestId": "fl-cx-local-2026-duval-school-board-district-4",
+          "givenName": "",
+          "familyName": "Rhodesia “Rho” Butler",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Rhodesia “Rho” Butler"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-4:james-coach-jacobs",
+          "contestId": "fl-cx-local-2026-duval-school-board-district-4",
+          "givenName": "",
+          "familyName": "James “Coach” Jacobs",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "James “Coach” Jacobs"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-6:lindsey-denmark",
+          "contestId": "fl-cx-local-2026-duval-school-board-district-6",
+          "givenName": "",
+          "familyName": "Lindsey Denmark",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Lindsey Denmark"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-6:clarence-cj-james",
+          "contestId": "fl-cx-local-2026-duval-school-board-district-6",
+          "givenName": "",
+          "familyName": "Clarence “CJ” James",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Clarence “CJ” James"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-atlantic-beach-mayor-commissioner-seat-1:curtis-r-ford",
+          "contestId": "fl-cx-local-2026-duval-atlantic-beach-mayor-commissioner-seat-1",
+          "givenName": "",
+          "familyName": "Curtis R. Ford",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Curtis R. Ford"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-atlantic-beach-mayor-commissioner-seat-1:nancy-staats",
+          "contestId": "fl-cx-local-2026-duval-atlantic-beach-mayor-commissioner-seat-1",
+          "givenName": "",
+          "familyName": "Nancy Staats",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Nancy Staats"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-atlantic-beach-commissioner-seat-4:lisa-herrold",
+          "contestId": "fl-cx-local-2026-duval-atlantic-beach-commissioner-seat-4",
+          "givenName": "",
+          "familyName": "Lisa Herrold",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Lisa Herrold"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-atlantic-beach-commissioner-seat-4:jennifer-lagner",
+          "contestId": "fl-cx-local-2026-duval-atlantic-beach-commissioner-seat-4",
+          "givenName": "",
+          "familyName": "Jennifer Lagner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Jennifer Lagner"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-2:juan-canelones",
+          "contestId": "fl-cx-local-2026-duval-beach-cdd-seat-2",
+          "givenName": "",
+          "familyName": "Juan Canelones",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Juan Canelones"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-2:walter-repak",
+          "contestId": "fl-cx-local-2026-duval-beach-cdd-seat-2",
+          "givenName": "",
+          "familyName": "Walter Repak",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Walter Repak"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-4:elena-korsakova",
+          "contestId": "fl-cx-local-2026-duval-beach-cdd-seat-4",
+          "givenName": "",
+          "familyName": "Elena Korsakova",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Elena Korsakova"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-4:karen-young",
+          "contestId": "fl-cx-local-2026-duval-beach-cdd-seat-4",
+          "givenName": "",
+          "familyName": "Karen Young",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Karen Young"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-5:raj-saralaya",
+          "contestId": "fl-cx-local-2026-duval-beach-cdd-seat-5",
+          "givenName": "",
+          "familyName": "Raj Saralaya",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Raj Saralaya"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-beach-cdd-seat-5:pawel-szeszko",
+          "contestId": "fl-cx-local-2026-duval-beach-cdd-seat-5",
+          "givenName": "",
+          "familyName": "Pawel Szeszko",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Pawel Szeszko"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-cypress-bluff-cdd-seat-2:william-cellar-jr",
+          "contestId": "fl-cx-local-2026-duval-cypress-bluff-cdd-seat-2",
+          "givenName": "",
+          "familyName": "William Cellar Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "William Cellar Jr."
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-cypress-bluff-cdd-seat-2:carol-springer",
+          "contestId": "fl-cx-local-2026-duval-cypress-bluff-cdd-seat-2",
+          "givenName": "",
+          "familyName": "Carol Springer",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Carol Springer"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-tolomato-cdd-seat-5:ronald-howland",
+          "contestId": "fl-cx-local-2026-duval-tolomato-cdd-seat-5",
+          "givenName": "",
+          "familyName": "Ronald Howland",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Ronald Howland"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-tolomato-cdd-seat-5:anthony-vetter",
+          "contestId": "fl-cx-local-2026-duval-tolomato-cdd-seat-5",
+          "givenName": "",
+          "familyName": "Anthony Vetter",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Anthony Vetter"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-trails-cdd-seat-2:adesina-braxton",
+          "contestId": "fl-cx-local-2026-duval-trails-cdd-seat-2",
+          "givenName": "",
+          "familyName": "Adesina Braxton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Adesina Braxton"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-trails-cdd-seat-2:corina-k-buck",
+          "contestId": "fl-cx-local-2026-duval-trails-cdd-seat-2",
+          "givenName": "",
+          "familyName": "Corina K. Buck",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Corina K. Buck"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-trails-cdd-seat-5:terence-douglas",
+          "contestId": "fl-cx-local-2026-duval-trails-cdd-seat-5",
+          "givenName": "",
+          "familyName": "Terence Douglas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Terence Douglas"
+          }
+        },
+        {
+          "id": "fl-cx-local-2026-duval-trails-cdd-seat-5:ashley-guioa",
+          "contestId": "fl-cx-local-2026-duval-trails-cdd-seat-5",
+          "givenName": "",
+          "familyName": "Ashley Guioa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Ashley Guioa"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90363",
+          "contestId": "fl-doe-2026-general-dca-5-90363",
+          "familyName": "Harris",
+          "givenName": "John M.",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Shall Judge John M. Harris of the Fifth \nDistrict Court of Appeal be retained in \noffice?"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90326",
+          "contestId": "fl-doe-2026-general-dca-5-90326",
+          "familyName": "Makar",
+          "givenName": "Scott D.",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Shall Judge Scott D. Makar of the \nFifth District Court of Appeal be \nretained in office?"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90265",
+          "contestId": "fl-doe-2026-general-dca-5-90265",
+          "familyName": "Wallis",
+          "givenName": "F. Rand",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Shall Judge F. Rand Wallis of the Fifth \nDistrict Court of Appeal be retained in \noffice?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "fl-cx-local-2026-duval-school-district-ad-valorem-millage#question",
+          "contestId": "fl-cx-local-2026-duval-school-district-ad-valorem-millage",
+          "questionText": "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?",
+          "officialStatement": null,
+          "choices": [
+            "Yes, for continuation",
+            "No, against continuation"
+          ],
+          "provenance": {
+            "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.398927+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.398927+00:00",
+            "quote": "Duval County School District Ad \nValorem Millage Election   \n \nShall the Duval County School \nDistrict continue the current one (1) \nmill ad valorem millage for essential \noperating expenses, shared \nproportionately with charter schools, \nincluding compensating teachers, \nsecurity, and support staff; \npreserving academic programs, and \nprotecting arts, athletics, and student \nactivities beginning July 1, 2027, and \nending four (4) fiscal years later on \nJune 30, 2031, with annual reporting \nto ensure proper fiscal stewardship \nof these funds to the citizens of \nDuval County?  \n \nYes, for continuation \nNo, against continuation"
+          }
+        }
+      ],
+      "absences": [],
+      "heldContests": [],
+      "filingCandidacies": [
+        {
+          "id": "fl-cx-local-2026-duval-school-board-district-4:declared-write-in:gracie-bell-kearse-mccastler",
+          "contestId": "fl-cx-local-2026-duval-school-board-district-4",
+          "givenName": "",
+          "familyName": "Gracie Bell Kearse-McCastler",
+          "partyLabel": "WRI",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "filingStatus": "QUALIFIED_WRITE_IN",
+          "readerStatus": "DECLARED_WRITE_IN_NOT_PRINTED_NAME",
+          "provenance": {
+            "sourceUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Duval",
+            "sourceOrg": "Duval County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:25:14.399873+00:00",
+            "verifiedAt": "2026-11-03T05:25:14.399873+00:00",
+            "quote": "Gracie Bell Kearse-McCastler (WRI)\nstatus\n(Active-\nQualified Write-In\n)"
+          }
+        }
+      ],
+      "districtMemberships": [],
+      "scopedCoverageNotes": [
+        {
+          "id": "fl-cx-local-2026-duval-scope",
+          "note": "All named local candidate blocks and Fifth DCA retention questions in the published current all-races master sample have been acquired. The county warns that not all races appear on every ballot. No voter-specific precinct-style inventory was acquired. County, Atlantic Beach, school-board district and CDD electorates remain distinct; Jacksonville is not treated as all Duval. Named qualified write-in is filing-only; generic blank write-in lines are not people. State/federal/legislative fields and statewide retention are excluded; all held measures and analyses remain unchanged."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:36:17.647454+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "retrievedAt": "2026-11-03T05:25:14.398927+00:00",
+        "publisher": "Duval County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.duvalelections.gov/",
+        "reviewedEvidence": "Current source captured November 3. Official countywide all-races sample, three physical pages. All 13 local candidacy blocks and three regional retention questions are complete and visually verified on physical page 2; local millage on page 3 retained independently."
+      },
+      {
+        "requestedUrl": "https://www.coab.us/936/AB-Municipal-Election",
+        "finalUrl": "https://www.coab.us/936/AB-Municipal-Election",
+        "httpStatus": 200,
+        "rawHash": "ccef064797a52aa1eea6787c73b8d8110343eb8b21e811def0a334e53118e991",
+        "retrievedAt": "2026-11-03T05:26:47.866979+00:00",
+        "publisher": "City of Atlantic Beach, City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.coab.us/936/AB-Municipal-Election",
+        "reviewedEvidence": "Current source captured November 3. Current city election page confirms November 3 election, two-year mayor term, four-year commissioner term, and citywide voting for all seats despite residency districts."
+      },
+      {
+        "requestedUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Duval",
+        "finalUrl": "https://www.voterfocus.com/CampaignFinance/candidate_pr.php?c=Duval",
+        "httpStatus": 200,
+        "rawHash": "1627b0cae478a2779ee4e178c71bd04e983cf85e798558eadebc780d1b29cf8d",
+        "retrievedAt": "2026-11-03T05:25:14.399873+00:00",
+        "publisher": "Duval County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://www.duvalelections.gov/254/Active-Candidates-Committees",
+        "reviewedEvidence": "Current source captured November 3. Official county financial-report portal for reporting group 2026 General Election (11/3/2026). Named qualified write-in directly verified; full 59-row privacy-safe status inventory retained separately."
+      }
+    ]
+  }
+}

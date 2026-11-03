@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "checks": 361,
+  "masterSamplePages": 3,
+  "localCandidateFields": 13,
+  "printedNames": 26,
+  "heldCourtRetentionFields": 3,
+  "heldJudgeIds": 3,
+  "fullNewLocalQuestions": 1,
+  "namedWriteInFilings": 1,
+  "completeCountyStatusRows": 59,
+  "cityStatusRows": 6,
+  "exactSourceHashes": "PASS",
+  "readerGeometry": "Eight unmatched district IDs remain explicitly unresolved; one already has held Duval membership.",
+  "productionWrites": false
+}

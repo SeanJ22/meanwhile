@@ -1,0 +1,72 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:2",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": [],
+    "boundarySourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/987/Duval-County-Map-with-School-Board-Districts-PDF",
+    "boundaryEvidence": "Current official School Board Districts with Precincts map created 07/26. The numbered electorates are preserved; individual reader district join remains open.",
+    "sourceCaution": "The 2026 school-board qualifying information sheet uses a broad Electorate—Registered voters of Duval County line. That does not justify widening these numbered electoral districts. Precise map/charter or voter-style reconciliation is required for reader delivery."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:4",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": [],
+    "boundarySourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/987/Duval-County-Map-with-School-Board-Districts-PDF",
+    "boundaryEvidence": "Current official School Board Districts with Precincts map created 07/26. The numbered electorates are preserved; individual reader district join remains open.",
+    "sourceCaution": "The 2026 school-board qualifying information sheet uses a broad Electorate—Registered voters of Duval County line. That does not justify widening these numbered electoral districts. Precise map/charter or voter-style reconciliation is required for reader delivery."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/county:duval/school_board_district:6",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": [],
+    "boundarySourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/987/Duval-County-Map-with-School-Board-Districts-PDF",
+    "boundaryEvidence": "Current official School Board Districts with Precincts map created 07/26. The numbered electorates are preserved; individual reader district join remains open.",
+    "sourceCaution": "The 2026 school-board qualifying information sheet uses a broad Electorate—Registered voters of Duval County line. That does not justify widening these numbered electoral districts. Precise map/charter or voter-style reconciliation is required for reader delivery."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/district_court:5",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": [
+      {
+        "id": "fl-appellate-county-2026-42f8b76d3a47e1e2041c",
+        "memberOcdId": "ocd-division/country:us/state:fl/county:duval",
+        "districtOcdId": "ocd-division/country:us/state:fl/district_court:5",
+        "provenance": {
+          "sourceUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+          "sourceOrg": "Florida Legislature",
+          "collectedAt": "2026-10-20T23:49:15.305881+00:00",
+          "verifiedAt": "2026-10-20T23:49:15.305881+00:00",
+          "quote": "(4) The fourth circuit is composed of Clay, Duval, and Nassau Counties. | The Fifth Appellate District is composed of the Fourth, Fifth, Seventh, and Eighteenth Judicial Circuits. | Circuit county list: https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html"
+        }
+      }
+    ]
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:beach_community_development_district",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": []
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:cypress_bluff_community_development_district",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": []
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:tolomato_community_development_district",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": []
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:fl/special_district:trails_community_development_district",
+    "registryPresent": false,
+    "readerDependency": "Exact district geometry or already supported whole-member joins required before reader applicability. Never substitute all Duval County or all Jacksonville for this district.",
+    "heldWholeMemberMemberships": []
+  }
+]

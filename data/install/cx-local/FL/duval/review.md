@@ -1,0 +1,9 @@
+Duval County, Florida — November 3, 2026
+
+All 13 local named candidate fields (26 printed names) and three Fifth District Court of Appeal retention questions (three held judge identities) in the current official three-page all-races sample are retained. The full county master is not a voter-specific ballot: the county explicitly warns that not all races appear on each ballot. No individual precinct-style inventory is claimed.
+
+Atlantic Beach mayor and commissioner seats are elected citywide; the current city clerk explicitly distinguishes Seat 4 candidate residency District 1306 from the electorate. No other independent beach city is folded into Jacksonville. School districts 2/4/6 and the four CDDs retain exact narrow identities. Tolomato spans Duval and St. Johns and must stay one cross-county contest. Reader geography dependencies remain open where the registry lacks a precise district.
+
+One officially qualified school write-in is retained separately from printed choices. All 59 county and six Atlantic Beach status rows are retained as a privacy-safe ancillary review; withdrawn, defeated, unopposed and otherwise inactive filings are not turned into November printed choices. Candidate contact/address columns are excluded from reader quotes and JSON status records.
+
+One genuinely new Duval school millage question is installed from its exact title and full question on physical page 3, using the existing school district electorate. It is absent from the checked-in FL basis and all five other current FL lane inputs. No separate CX-VOTES FL packet was found in this workspace; River must merge against its latest prepared/production state to preserve any additional upstream identities. All held statewide and local measures/explanations remain unchanged. No production write, installation, publication or git operation performed.

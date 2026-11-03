@@ -1,0 +1,38 @@
+G:\13-102\13-102-19\GIS\Maps\MXD\location.mxd
+GENERAL
+LOCATION
+µ
+0
+6,000
+12,000
+3,000
+FEET
+NOVEMBER 2, 2017
+Source: ETM, Duval County 
+EXHIBIT 1
+Cypress Bluff CDD
+Baymeadows Rd 
+LEGEND
+Cypress Bluff 
+Community 
+Development District
+E Town Pkwy
+J Turner Butler Blvd
+Southside Blvd
+§¨¦
+95
+§¨¦
+95
+§¨¦
+295
+Greenland Rd
+Old St Augustine Rd
+Hood Rd
+Philips Hwy 
+Philips Hwy 
+Gate Pkwy
+!(
+9B
+R.G. Skinner Pkwy
+Atalantic Coast 
+High School

@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-03T05:47:50.973764+00:00",
+  "reference": "origin/stream/cx-votes",
+  "referenceCommit": "468bab5f4462604d9a6f6f9bbd262d84b0fcf644",
+  "comparison": "New Duval school millage absent from both held CX-VOTES Florida ballot inputs; all held measures remain outside incoming changed IDs.",
+  "inputs": [
+    {
+      "path": "data/install/cx-votes/FL/ballot-input/fl.json",
+      "sha256": "feed10b23c1e178e414e57ebcc93892d238a3d768b8254eb6a5e35e0b851cfc4",
+      "contestCount": 4
+    },
+    {
+      "path": "data/install/cx-votes/FL/explainer-expansion/ballot-input/fl.json",
+      "sha256": "b5ee222831f988502cbd83cd29c3ff25ceae205a6bf0373567bb6c2cf22ad731",
+      "contestCount": 8
+    }
+  ]
+}

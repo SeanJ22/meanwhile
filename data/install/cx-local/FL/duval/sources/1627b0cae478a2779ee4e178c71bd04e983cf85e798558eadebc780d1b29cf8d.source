@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="en" class="CandidateReports ReportingGroup">
+    <head>
+        <meta charset="Windows-1252">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Candidate Reports</title>
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css?cdv=257" media="all" type="text/css" rel="stylesheet" />
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css?cdv=257" media="all" type="text/css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="css/stylea.css">
+        <link rel="stylesheet" type="text/css" href="duval/images/CFStyle.css">
+        <script src="//vrcdn.electionsfl.org/common/js/jquery-3.7.1.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+        <script src="//vrcdn.electionsfl.org/common/js/googletranslate.js" type="text/javascript"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js?cdv=257" type="text/javascript"></script>
+
+        <style>
+            /* Standard VR Typography */
+            body {
+                color: #434242;
+                font-family: Verdana;
+                font-size: 14px;
+                line-height: 20px;
+            
+                padding-bottom: 40px;
+            }
+            h2 {
+                color: #042cba;
+                font-family: Verdana;
+                font-size: 30px;
+                font-weight: normal;
+            }
+            h3 {
+                color: #e62d3d;
+                font-size: 24px;
+                font-weight: normal;
+                margin-left: 15px;
+            }
+            h4 {
+                color: #434242;
+                font-size: 18px;
+                font-weight: normal;
+            }
+            p {
+                color: #434242;
+                font-family: Verdana;
+                font-size: 14px;
+                line-height: 20px;
+                margin: 0 0 10px;
+            }
+            .checkbox label, .radio label {
+                color: #434242;
+                cursor: pointer;
+                font-family: Verdana;
+                font-size: 14px;
+                font-weight: 400;
+                margin-bottom: 0;
+                min-height: 20px;
+                padding-bottom: 8px;
+                padding-left: 20px;
+            }
+            .btn.btn-primary {
+                background-image: linear-gradient(to bottom, #337ab7 0px, #265a88 100%);
+                background-color: #265a88;
+                border-color: #3a75c4;
+                color: white;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-success {
+                background-image: linear-gradient(to bottom, #75ad1f 0px, #578a0a 100%);
+                background-color: #578a0a;
+                border-color: #578a0a;
+                color: white;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-warning {
+                background-image: linear-gradient(to bottom, #f7edd4 0px, #d4c59f 100%);
+                background-color: #d4c59f;
+                border-color: #d4c59f;
+                color: black;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-default {
+                background-image: linear-gradient(to bottom, #fff 0px, #e0e0e0 100%);
+                background-color: #ffffff;
+                border-color: #d1d0d0;
+                color: black;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-danger {
+                color: #e62d3d;
+                background-image: linear-gradient(to bottom, #fff 0px, #e0e0e0 100%);
+                border-color: #e62d3d;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+            .btn.btn-danger:hover {
+                background-color: #d1d0d0;
+            }
+            .btn.btn-primary:hover, .btn.btn-primary:active {
+                background-color: #215cab;
+                border-color: #3a75c4;
+                color: white;
+            }
+            .btn.btn-default:hover, .btn.btn-default:active {
+                background-color: #d1d0d0;
+                border-color: #d1d0d0;
+                color: black;
+            }
+            .well {
+                background-image: none;
+                background-repeat: repeat;
+                border-color: #000000;
+                box-shadow: none;
+                background-color: #ffffff;
+                border: 1px solid black;
+                border-radius: 4px;
+            }
+            .no-gutter  {
+              padding-right: 0;
+              padding-left: 0;
+            }
+            @media print {
+            .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+              float: left;
+            }
+            .col-sm-12 {
+              width: 100%;
+            }
+            .col-sm-11 {
+              width: 91.66666666666666%;
+            }
+            .col-sm-10 {
+              width: 83.33333333333334%;
+            }
+            .col-sm-9 {
+              width: 75%;
+            }
+            .col-sm-8 {
+              width: 66.66666666666666%;
+            }
+            .col-sm-7 {
+              width: 58.333333333333336%;
+            }
+            .col-sm-6 {
+              width: 50%;
+            }
+            .col-sm-5 {
+              width: 41.66666666666667%;
+            }
+            .col-sm-4 {
+              width: 33.33333333333333%;
+             }
+             .col-sm-3 {
+               width: 25%;
+             }
+             .col-sm-2 {
+               width: 16.666666666666664%;
+             }
+             .col-sm-1 {
+              width: 8.333333333333332%;
+             }
+            }
+            
+            /* custom for this page */
+            .detailrow:nth-child(even) {
+                background-color: #eee;
+            }
+            .detailrow:nth-child(odd) {
+                background-color: white;
+            }
+            .bold {
+                font-weight: bold;
+            }
+            @media print {
+                .detailrow {
+                    border-bottom: solid 1px black;
+                }
+                .buttonrow, .printhide {
+                    display: none;
+                }
+              a[href]:after {
+                content: none !important;
+              }
+            }
+            
+            .section-header {
+                padding: 5px;
+            }
+            .officegroup {
+                font-size: 1.2em;
+            }
+            .officename {
+                padding: 10px;
+                text-align: center;
+                background-color: #ccc;
+            }
+            .candidate {
+                font-size: .83em;
+            }
+            .committee {
+            }
+            .candidate .rowlink,
+            .committee .rowlink {
+                display: block;
+                
+                padding: 5px 0;
+            
+                color: inherit;
+                text-decoration: none;
+            }
+            .clickme:hover {
+                cursor: pointer;
+                background-color: #b5d1ff;
+            }
+            .statustext {
+                font-size: 14px;
+                font-style: italic;
+                font-variant: small-caps;
+            }
+            .statustext-green {
+                color: #004100;
+            }
+            .statustext-red {
+                color: #a20000;
+            }
+            .statustext-blue {
+                color: #000041;
+            }
+            .statustext-strong {
+                font-weight: bold;
+            }
+            .cf_indent {
+                text-indent: -10px;
+                padding-left: 10px;
+            }
+            .for-screen-reader {
+                position: absolute;
+                left: -10000cm;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="google_translate_element"></div>
+
+        <div class="container">
+            <header class="PageHeader">
+                <div class="row text-center">
+                    <h1>Reporting Group (Election/Committees)</h1>
+                    <h2>2026 General Election  (11/3/2026)</h2>
+                </div>
+    
+                <nav class="row buttonrow">
+                    <div class="col-sm-2 col-sm-offset-8">
+                        <a href="javascript:window.print()" class="NavButton PrintButton btn btn-md btn-default btn-block"><span class="ButtonLabel">Print</span> <span class="ButtonIcon glyphicon glyphicon-print"></span></a>
+                    </div>
+                    <div class="col-sm-2" id="exportlink">
+                        <a href="export.php?op=candidates&county=duval&election=40" class="NavButton ExportButton btn btn-md btn-default btn-block"><span class="ButtonLabel">Export All</span> <span class="ButtonIcon glyphicon glyphicon-export"></span></a>
+                    </div>
+                </nav>
+    
+                <div class="row well" id="electionselect">
+                    <form action="/CampaignFinance/candidate_pr.php" method="GET">
+                        <div class="col-sm-12">
+                            <div class="hidden-xs text-right col-sm-6">
+                                <label for="ElectionSelect">Current reporting group (Election/Committees):</label>
+                            </div>
+                            <div class="visible-xs-block col-xs-12">
+                                <label for="ElectionSelect">Current reporting group (Election/Committees):</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <select name="el" id="ElectionSelect" style="width: 80%"><option value='41'>2027 General Election (5/18/2027)</option><option value='40' selected>2026 General Election (11/3/2026)</option><option value='44'>2026 Special Unitary Election Cycle (11/3/2026)</option><option value='42'>2026 - 2028 Political Executive Committees (1/1/2026)</option><option value='43'>2026-2028 Political Committees (1/1/2026)</option><option value='39'>2024 General Elections (PCs, PPEC, Candidates) (11/5/2024)</option><option value='35'>2023 Unitary Election Cycle (3/21/2023)</option><option value='36'>2022 Election Cycle (11/8/2022)</option><option value='38'>2022 Special Unitary Election Cycle (11/8/2022)</option><option value='37'>2022 Special General Election CC At-Large Group 3 (2/22/2022)</option><option value='33'>2020 General Election (11/3/2020)</option><option value='30'>2019 Pol Comm/ECOs/EIs (12/31/2019) (12/31/2019)</option><option value='28'>2019 Unitary General/Pol Party Executive Comm. (5/14/2019)</option><option value='31'>2018 Political Party Executive Committees (12/31/2018)</option><option value='21'>2018 General Election (11/6/2018)</option><option value='29'>2018 Political Comm/ECOs/IE (8/24/2017)</option><option value='27'>2016 Political Comm/ECOs/IEs (12/31/2016)</option><option value='26'>2016 Political Party Executive Committees (12/31/2016)</option><option value='24'>2016 General Election (11/8/2016)</option><option value='16'>2015 Political Committees /ECO/IE (12/31/2015)</option><option value='17'>2015 Political Party Executive Committees (12/31/2015)</option><option value='15'>2015 Unitary General (5/19/2015)</option></select><input type="submit" value="Go" style="margin-left: 3%"><input type="hidden" name="c" value="duval"></form>
+                            </div>
+                            <div class="col-xs-12 text-center">
+                                <p>(You can select another available reporting group from the above list.)</p>
+                                <p>This web site lists candidates for county and local offices and committees/PACs. Candidates for federal, state and multi-county offices are reported on the <a href="http://dos.myflorida.com/elections/candidates-committees/campaign-finance/" target="_blank">Division of Elections of the Department of State</a> Website.</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="Disclaimer">
+                            Information contained within the reports has been generated by and is the sole responsibility of the reporting entity
+                        </div>
+                        <div class="RowClickTooltip">
+                            NOTE: Each financial reporter row below can be "clicked" to see more details.
+                        </div>
+                    </div>
+                </div>
+            </header>
+                <section class="row well" id="candidates">
+    <header class="col-xs-12">
+    <h4>Candidates</h4>
+    </header>
+    <div role="grid">
+        <div class="col-xs-12 hidden-xs section-header bg-primary" role="row">
+            <div class="col-sm-6" role="columnheader">
+        Candidate Name
+            </div>
+            <div class="col-sm-6">
+                <div class="col-sm-4 text-right" role="columnheader">
+        Monetary Contributions
+                </div>
+                <div class="col-sm-4 text-right" role="columnheader">
+        In-Kind Contributions
+                </div>
+                <div class="col-sm-4 text-right" role="columnheader">
+        Total Expenditures & Distributions
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge Group 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1398&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Matt Lufrano (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-blue statustext-strong'>Elected</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$318,275.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$6,119.41
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$318,275.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1396&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Latoya Williams Shelton (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$137,340.13
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$5,656.84
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$123,962.30
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge Group 6</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1405&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Rhonda Peoples-Waters (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$15,710.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$15,710.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge Group 13</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1408&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Melina Buncome (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$18,000.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$3,112.38
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$15,619.04
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1448&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Marquita H. Green (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$18,117.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$6,056.50
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$16,707.35
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1399&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Octavius A. Holliday, Jr. (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$39,702.48
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$1,000.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$38,746.81
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge Group 14</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1388&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Gary Paul Flower (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$103,676.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$764.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$103,676.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: County Court Judge Group 16</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1383&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+James G Nealis (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$7,744.87
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$742.20
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$7,744.87
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: School Board Dist 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1433&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Donovan Bradley (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$111,968.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$106,181.70
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1421&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Terence Lavele Myers (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$2,861.78
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$2,689.33
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1401&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Donna Mae Westrich (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$31,189.14
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$537.56
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$26,133.89
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: School Board Dist 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1380&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Alfreda Denson Butler (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$13,677.50
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$2,404.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$13,677.50
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1379&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Rhodesia &#34;Rho&#34; Butler (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$40,256.08
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$130.14
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$36,071.80
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1253&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+James &#34;Coach&#34; Jacobs (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$21,938.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$18,714.40
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1457&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Gracie Bell Kearse-McCastler (WRI)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified Write-In</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$1,368.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$1,289.84
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1360&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Jordan  Wells (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1363&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+La&#39;Tina C. Willis (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Withdrawn</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: School Board Dist 6</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1403&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Lindsey Denmark (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$124,173.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$2,055.76
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$115,275.79
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1381&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Clarence &#34;CJ&#34; James (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green'>Advanced</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$119,622.21
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$90,590.63
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1386&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Michelle Petty (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$5,716.70
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$873.99
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$5,716.70
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1418&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Robert Stafford (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$6,880.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$6,501.47
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1471&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Tammyette Thomas (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-red'>Defeated</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$2,500.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$2,980.02
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Soil & Water District 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1477&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Skylar McKnight (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Soil & Water District 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1441&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Stanley McAllister (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Soil & Water District 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1467&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Robert McKinnon (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Bainebridge CDD Seat 1</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1493&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+William Russell Huff, II (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Bainebridge CDD Seat 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1480&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Larry Hall (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Bartram Park CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1460&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Lynda Anne Learn (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-red'>Did not qualify</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Bartram Park CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1459&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Larry H. Lokey (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Bartram Springs CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1479&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Lacy Reynolds (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Beach CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1495&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Juan Canelones (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1488&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Walter Repak (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Beach CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1501&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Elena Korsakova (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1492&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Karen Young (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Beach CDD Seat 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1507&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Raj Saralaya (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1503&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Pawel Szeszko (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Cypress Bluff CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1472&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+William Cellar Jr. (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1464&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Carol Springer (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Cypress Bluff CDD Seat 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1462&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Joe Muhl (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Harbour Waterway SD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1486&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Wallace G. Lovely (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Harbour Waterway SD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1487&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Michael L. Brande (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Isle of Palms SD, Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1474&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Bradford Radloff (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Isle of Palms SD, Seat  4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1497&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Joshua Reichert (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Millers Creek SD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1470&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+John Rowland (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Millers Creek SD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1475&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Mark McKinney Mathews Jr. (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Millers Creek SD Seat 6</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1476&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Michael Shannon (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Tarpon Cove SD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1489&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Corey Maire (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Tarpon Cove SD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1490&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Javier Brito (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Tarpon Cove SD Seat 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1491&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Frank Shankland (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Tisons Landing CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1484&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Michael Evans (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Tisons Landing CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1483&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Monica Timmons (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Tisons Landing CDD Seat 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1482&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Cedeila Alford (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Trails CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1502&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Adesina Braxton (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$400.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$396.59
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1504&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Corina K. Buck (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Trails CDD Seat 5</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1505&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Terence Douglas (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$200.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$99.75
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$159.75
+            </div>
+        </div>
+    </a>
+</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1506&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Ashley Guioa (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(Active-<span class='statustext statustext-green statustext-strong'>Qualified</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Villages of Westport CDD Seat 2</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1463&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Cary Thomas (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Villages of Westport CDD Seat 3</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1469&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Anina Guyton (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div><div class="col-xs-12 officegroup">
+<div class="col-xs-12 officename">Office: Villages of Westport CDD Seat 4</div><div class="col-xs-12 detailrow candidate clickme" role="row">
+    <a class="rowlink" href="/CampaignFinance/candidate_pr.php?op=cv&e=40&c=duval&ca=1494&rellevel=4&committee=N">
+        <div class="col-sm-6 no-gutter">
+            <div class="col-xs-12 no-gutter">
+                <div class="col-xs-7 no-gutter bold cf_indent" role="gridcell">
+Carl Hawkins (NOP)
+                </div>
+                <div class="col-sm-5 no-gutter" role="gridcell">
+                    <span class="for-screen-reader">status</span>
+(<span class='statustext statustext-red statustext-strong'>Inactive</span>-<span class='statustext statustext-green statustext-strong'>Unopposed</span>)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-xs-6 visible-xs-block">
+                Contributions
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">monetary</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                In-Kind
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">in-kind</span>
+$0.00
+            </div>
+            <div class="col-xs-6 visible-xs-block">
+                Expenditures
+            </div>
+            <div class="col-sm-4 no-gutter col-xs-6 text-right" role="gridcell">
+                <span class="for-screen-reader">expenditures</span>
+$0.00
+            </div>
+        </div>
+    </a>
+</div></div>
+    </div>
+</section>
+                
+        </div>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F28-Secaucus.pdf",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F28-Secaucus.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:22:22.625513+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "74607745ba3d93bbdebe0ab41cb79def51740ef0e5bc349da60430a4d9c40a5b",
+  "bytes": 5101,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-form-28.reader-text.txt",
+  "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+}

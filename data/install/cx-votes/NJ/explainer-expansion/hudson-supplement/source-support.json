@@ -1,0 +1,160 @@
+[
+  {
+    "id": "nj-hudson-2026:east-newark-school-board-size",
+    "contestId": "nj-hudson-2026:east-newark-school-board-size",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+    "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+    "sourceFile": "sources/53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3.txt",
+    "sourceHash": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+    "sourceHashKind": "HELD_TEXT",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextFile": "sources/53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3.txt",
+    "sourceTextSha256": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+    "excerptFile": "sources/96e2ac71069d507e50d6ca11870ca392c933903dba1f0a77e88f2d2c69e5ef9d.txt",
+    "excerptSha256": "96e2ac71069d507e50d6ca11870ca392c933903dba1f0a77e88f2d2c69e5ef9d",
+    "sourceCheckedAt": "2026-11-03T10:25:31.093523+00:00",
+    "questionText": "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?",
+        null
+      ],
+      "yesMeans": [
+        "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?",
+        null
+      ],
+      "noMeans": [
+        "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?",
+        null
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Reduces the East Newark Board of Education from nine members to seven.",
+        "quote": "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?\n\n"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve reducing the board to seven members.",
+        "quote": "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?\n\n"
+      },
+      {
+        "field": "noMeans",
+        "text": "Keep the board at nine members.",
+        "quote": "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?\n\n"
+      }
+    ],
+    "sourceExtraction": {
+      "method": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialClerkURL. CompleteEnglishquestion andfullsuppliedstatement retainedwhitespace-normalized,Spanish/YesNo/fullballotcontextinthecompletecapture. No nativePDFbytes/hash orvisualattestationclaimed;native403responsepreservedscratch.",
+      "currentIndexCapturePath": "sources/5ff6ade13257b9b44fea909d4ab058b5a488f3bbe8fc68dc9ca01c8f1df8548d.txt",
+      "currentIndexCaptureMetadataPath": "sources/4e78132de8ee7230e6a737f6bab02ef5c2a22fa6953a49acc961d49926874b71.json",
+      "recordHashFormula": "SHA256(exactquestion+newline+officialStatementOrEmpty)"
+    },
+    "additionalOfficialSupport": [
+      {
+        "sourceUrl": "https://www.eastnewarkschool.org/",
+        "sourceFile": "sources/5045eb096b03131a037607dee2cd7a7a7a4c6fcbf738ec0b896fee24a98da84a.txt",
+        "sourceHash": "5045eb096b03131a037607dee2cd7a7a7a4c6fcbf738ec0b896fee24a98da84a",
+        "sourceTextFile": "sources/5045eb096b03131a037607dee2cd7a7a7a4c6fcbf738ec0b896fee24a98da84a.txt",
+        "sourceTextSha256": "5045eb096b03131a037607dee2cd7a7a7a4c6fcbf738ec0b896fee24a98da84a",
+        "sourceFormat": "CAPTURED_SOURCE_TEXT",
+        "role": "Schooldistrictidentityonly",
+        "captureMetadata": {
+          "nativeMetadataPath": "sources/dd1e5e6e8e8cdfde440975db119e6a350d4bafaaafb8d8c7b59ae6d274b01fbd.json",
+          "nativeOriginalSha256": "b574652711d84f451639fa8d5a8fc8a3a72fbb4fd0ac1cab8bf79aa6f576b83b",
+          "nativeOriginalBytes": 111234,
+          "representation": "CompletecleantextfromnativeHTML;scripts/styles/tagsremoved.NativeHTMLhashisdistinct,nativeHTMLscratchonly."
+        }
+      }
+    ],
+    "semanticNotes": [
+      "Noeffectivedate,electiontransition,candidateinstructionorotherboardpowerchange statedinsource,noneinvented. Existingunboundgovernmentidentityprovedandbindingunchanged."
+    ],
+    "authorityEvidencePath": "authority.json",
+    "captureMetadata": {
+      "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+      "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:29.194553+00:00",
+      "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+      "sha256": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+      "bytes": 5563,
+      "file": "sources/53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3.txt",
+      "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+    },
+    "independentReviewStatus": "NOT_RUN_SELF_SOURCE_REVIEW_PASSED"
+  },
+  {
+    "id": "nj-hudson-2026:guttenberg-public-library",
+    "contestId": "nj-hudson-2026:guttenberg-public-library",
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:guttenberg_town",
+    "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+    "sourceFile": "sources/d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059.txt",
+    "sourceHash": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+    "sourceHashKind": "HELD_TEXT",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "sourceTextFile": "sources/d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059.txt",
+    "sourceTextSha256": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+    "excerptFile": "sources/031f794b23431925b90934c28bccf98015fc1858d1f29248a5852603794d7b02.txt",
+    "excerptSha256": "031f794b23431925b90934c28bccf98015fc1858d1f29248a5852603794d7b02",
+    "sourceCheckedAt": "2026-11-03T10:25:31.093523+00:00",
+    "questionText": "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?",
+    "officialStatement": "A “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library.",
+    "fields": {
+      "whatItDoes": [
+        "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?",
+        "A “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library."
+      ],
+      "yesMeans": [
+        "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?",
+        "A “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library."
+      ],
+      "noMeans": [
+        "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?",
+        "A “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library."
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Authorizes Guttenberg to establish, organize and operate a free municipal public library under New Jersey law.",
+        "quote": "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?\n\nA “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library."
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve establishing the municipal free public library.",
+        "quote": "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?\n\nA “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library."
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject establishing the municipal free public library.",
+        "quote": "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?\n\nA “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library."
+      }
+    ],
+    "sourceExtraction": {
+      "method": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialClerkURL. CompleteEnglishquestion andfullsuppliedstatement retainedwhitespace-normalized,Spanish/YesNo/fullballotcontextinthecompletecapture. No nativePDFbytes/hash orvisualattestationclaimed;native403responsepreservedscratch.",
+      "currentIndexCapturePath": "sources/5ff6ade13257b9b44fea909d4ab058b5a488f3bbe8fc68dc9ca01c8f1df8548d.txt",
+      "currentIndexCaptureMetadataPath": "sources/4e78132de8ee7230e6a737f6bab02ef5c2a22fa6953a49acc961d49926874b71.json",
+      "recordHashFormula": "SHA256(exactquestion+newline+officialStatementOrEmpty)"
+    },
+    "additionalOfficialSupport": [],
+    "semanticNotes": [
+      "Freepubliclibraryisofficialstatutorydescription; nozero-taxcostclaim,buildinglocation,openingdate,service/provider/taxamountpromise inferred."
+    ],
+    "authorityEvidencePath": "authority.json",
+    "captureMetadata": {
+      "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+      "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:33.772996+00:00",
+      "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+      "sha256": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+      "bytes": 6587,
+      "file": "sources/d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059.txt",
+      "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+    },
+    "independentReviewStatus": "NOT_RUN_SELF_SOURCE_REVIEW_PASSED"
+  }
+]

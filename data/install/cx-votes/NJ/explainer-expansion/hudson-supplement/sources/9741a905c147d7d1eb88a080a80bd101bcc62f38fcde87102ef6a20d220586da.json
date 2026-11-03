@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:20:29.194553+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+  "bytes": 5563,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-form-02.reader-text.txt",
+  "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+}

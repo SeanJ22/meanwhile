@@ -1,0 +1,409 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+      "rawPath": "sources/53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3.txt",
+      "rawHash": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "nj-hudson-2026:east-newark-school-board-size"
+      ],
+      "textPath": "sources/53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3.txt",
+      "textSha256": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+      "textRepresentation": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialURL. Exactcapturedsource-textSHA,notnativePDFbytes. Boundedverifiedquestion/statementexcerpt mappedseparatelyinsource-support."
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+      "rawPath": "sources/d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059.txt",
+      "rawHash": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "contestIds": [
+        "nj-hudson-2026:guttenberg-public-library"
+      ],
+      "textPath": "sources/d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059.txt",
+      "textSha256": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+      "textRepresentation": "Complete deterministicpublicreader direct-engine PDFtext capture from exactofficialURL. Exactcapturedsource-textSHA,notnativePDFbytes. Boundedverifiedquestion/statementexcerpt mappedseparatelyinsource-support."
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F01-Bayonne.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F01-Bayonne.pdf",
+      "rawPath": "sources/8e31914172a4ba734b4befc2d2a7f5c37d1c269f44dea718b1e265b8916cb2ed.txt",
+      "rawHash": "8e31914172a4ba734b4befc2d2a7f5c37d1c269f44dea718b1e265b8916cb2ed",
+      "textPath": "sources/8e31914172a4ba734b4befc2d2a7f5c37d1c269f44dea718b1e265b8916cb2ed.txt",
+      "textSha256": "8e31914172a4ba734b4befc2d2a7f5c37d1c269f44dea718b1e265b8916cb2ed",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/88b9b0ed019a1d0d9dbbaccb73dccb715ce98d81b8c7020a5b7f03610cc63642.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F04-Harrison.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F04-Harrison.pdf",
+      "rawPath": "sources/a6181f226c84a32acb935d749bf430f7a834bbbb88851c160272d1e36ff8a30d.txt",
+      "rawHash": "a6181f226c84a32acb935d749bf430f7a834bbbb88851c160272d1e36ff8a30d",
+      "textPath": "sources/a6181f226c84a32acb935d749bf430f7a834bbbb88851c160272d1e36ff8a30d.txt",
+      "textSha256": "a6181f226c84a32acb935d749bf430f7a834bbbb88851c160272d1e36ff8a30d",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/81f673fce26f5e3e987f364166865c2f07d9b3315384f13cc239f3ea0f395fcf.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F05-Harrison.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F05-Harrison.pdf",
+      "rawPath": "sources/92baac892ffe7f986109185b41fbdeaf8aaa54b8b39b20b112dffaf598fc11e2.txt",
+      "rawHash": "92baac892ffe7f986109185b41fbdeaf8aaa54b8b39b20b112dffaf598fc11e2",
+      "textPath": "sources/92baac892ffe7f986109185b41fbdeaf8aaa54b8b39b20b112dffaf598fc11e2.txt",
+      "textSha256": "92baac892ffe7f986109185b41fbdeaf8aaa54b8b39b20b112dffaf598fc11e2",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/62aa977929eed8e1a38e4246bdc11e3015d7661c20b75ab9bcbdef19fca91228.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F06-Harrison.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F06-Harrison.pdf",
+      "rawPath": "sources/976d6af4ffc07419b8710365252e29f612aa976369659e8f3f0ebeef4f108987.txt",
+      "rawHash": "976d6af4ffc07419b8710365252e29f612aa976369659e8f3f0ebeef4f108987",
+      "textPath": "sources/976d6af4ffc07419b8710365252e29f612aa976369659e8f3f0ebeef4f108987.txt",
+      "textSha256": "976d6af4ffc07419b8710365252e29f612aa976369659e8f3f0ebeef4f108987",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/0d3d9215c6c3f8f66e1d66fe4d27b02a8160fadded5c3fe756aa74a9969759ad.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F07-Harrison.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F07-Harrison.pdf",
+      "rawPath": "sources/3d2a7607cc0d2b1c054e90990db521812757f4d7a5bf700c6c23b2b19b255ede.txt",
+      "rawHash": "3d2a7607cc0d2b1c054e90990db521812757f4d7a5bf700c6c23b2b19b255ede",
+      "textPath": "sources/3d2a7607cc0d2b1c054e90990db521812757f4d7a5bf700c6c23b2b19b255ede.txt",
+      "textSha256": "3d2a7607cc0d2b1c054e90990db521812757f4d7a5bf700c6c23b2b19b255ede",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/8468c8e4c6707fa33ea3fd25dabaebc6f7b6deba76bca96ee3cfe43c7e414617.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F08-Hoboken.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F08-Hoboken.pdf",
+      "rawPath": "sources/c2c2e8c175358d38602f5a89b0ce746c9146252b19a8a6ca18e0c2e9a2384f2c.txt",
+      "rawHash": "c2c2e8c175358d38602f5a89b0ce746c9146252b19a8a6ca18e0c2e9a2384f2c",
+      "textPath": "sources/c2c2e8c175358d38602f5a89b0ce746c9146252b19a8a6ca18e0c2e9a2384f2c.txt",
+      "textSha256": "c2c2e8c175358d38602f5a89b0ce746c9146252b19a8a6ca18e0c2e9a2384f2c",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/e6009f2e874d754ada9c62273da977a1dabfcf0aca5ea5bfe648216a5fa0396a.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F09-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F09-JC.pdf",
+      "rawPath": "sources/53cb1e3113381d245a5dd33d2b371b94a2e1ab251d0d205c8480b77ab5fde939.txt",
+      "rawHash": "53cb1e3113381d245a5dd33d2b371b94a2e1ab251d0d205c8480b77ab5fde939",
+      "textPath": "sources/53cb1e3113381d245a5dd33d2b371b94a2e1ab251d0d205c8480b77ab5fde939.txt",
+      "textSha256": "53cb1e3113381d245a5dd33d2b371b94a2e1ab251d0d205c8480b77ab5fde939",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/a6de23b69edb49aeaad49f6241424e548e5e1b51a7911a9164e87822cc0f8d4d.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F10-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F10-JC.pdf",
+      "rawPath": "sources/27cc732741c9918cc25cb0acc2d693bf2ad0c453e576104a3f5000433d6f2592.txt",
+      "rawHash": "27cc732741c9918cc25cb0acc2d693bf2ad0c453e576104a3f5000433d6f2592",
+      "textPath": "sources/27cc732741c9918cc25cb0acc2d693bf2ad0c453e576104a3f5000433d6f2592.txt",
+      "textSha256": "27cc732741c9918cc25cb0acc2d693bf2ad0c453e576104a3f5000433d6f2592",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/1dad1971a0e8d693691544c14c86029ad611b7cb24204f532c274b9724e27256.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F11-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F11-JC.pdf",
+      "rawPath": "sources/a669761d75dab70e4686fb1355a582e80ae017e9ace7d097f3935e145ede1e1e.txt",
+      "rawHash": "a669761d75dab70e4686fb1355a582e80ae017e9ace7d097f3935e145ede1e1e",
+      "textPath": "sources/a669761d75dab70e4686fb1355a582e80ae017e9ace7d097f3935e145ede1e1e.txt",
+      "textSha256": "a669761d75dab70e4686fb1355a582e80ae017e9ace7d097f3935e145ede1e1e",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/41dacbe8fc046050c188ad750d00dfb230d8f8e433b9d2a64113a751af73b3fa.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F12-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F12-JC.pdf",
+      "rawPath": "sources/e7fd8ec9e24ee39b843c9c73d9bc280b6912790498b74d15ea254baa5db5e8cf.txt",
+      "rawHash": "e7fd8ec9e24ee39b843c9c73d9bc280b6912790498b74d15ea254baa5db5e8cf",
+      "textPath": "sources/e7fd8ec9e24ee39b843c9c73d9bc280b6912790498b74d15ea254baa5db5e8cf.txt",
+      "textSha256": "e7fd8ec9e24ee39b843c9c73d9bc280b6912790498b74d15ea254baa5db5e8cf",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/998beeb898ec00e55838b38b72eaa789bbd1ff975445bd65ca99e63595b39865.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F13-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F13-JC.pdf",
+      "rawPath": "sources/dbe030d50fe0ff124159f6f5f7d9e79a20da21c0d20d43d070430eaa990e1872.txt",
+      "rawHash": "dbe030d50fe0ff124159f6f5f7d9e79a20da21c0d20d43d070430eaa990e1872",
+      "textPath": "sources/dbe030d50fe0ff124159f6f5f7d9e79a20da21c0d20d43d070430eaa990e1872.txt",
+      "textSha256": "dbe030d50fe0ff124159f6f5f7d9e79a20da21c0d20d43d070430eaa990e1872",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/7d20419b0996ce14dbdcec64dd26a4a957bae8dcfc43825c679165dff8ef5617.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F14-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F14-JC.pdf",
+      "rawPath": "sources/4f1c2ad6bf42192efd6a1e5cf4f337eac09f819a8b6dda67e7b2ec084ecc6fbe.txt",
+      "rawHash": "4f1c2ad6bf42192efd6a1e5cf4f337eac09f819a8b6dda67e7b2ec084ecc6fbe",
+      "textPath": "sources/4f1c2ad6bf42192efd6a1e5cf4f337eac09f819a8b6dda67e7b2ec084ecc6fbe.txt",
+      "textSha256": "4f1c2ad6bf42192efd6a1e5cf4f337eac09f819a8b6dda67e7b2ec084ecc6fbe",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/4b5677260c4d094b926609ddb023280f5fe30a05373dfac2a367257b4735b6f6.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F15-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F15-JC.pdf",
+      "rawPath": "sources/9c6e6e44ef1d674c79a47fa9bfe935aee2f17ad3f76a1c4d377b1431460544e2.txt",
+      "rawHash": "9c6e6e44ef1d674c79a47fa9bfe935aee2f17ad3f76a1c4d377b1431460544e2",
+      "textPath": "sources/9c6e6e44ef1d674c79a47fa9bfe935aee2f17ad3f76a1c4d377b1431460544e2.txt",
+      "textSha256": "9c6e6e44ef1d674c79a47fa9bfe935aee2f17ad3f76a1c4d377b1431460544e2",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/caef2b9b18b2aa9308a46acb498a45c4ccb922bf46cd9715b33099cad3a0ca98.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F16-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F16-JC.pdf",
+      "rawPath": "sources/aa680cd0bd3ad93b45beeafe4ced29fc20a9b47dca680154e18d3e6ce1a7d0b4.txt",
+      "rawHash": "aa680cd0bd3ad93b45beeafe4ced29fc20a9b47dca680154e18d3e6ce1a7d0b4",
+      "textPath": "sources/aa680cd0bd3ad93b45beeafe4ced29fc20a9b47dca680154e18d3e6ce1a7d0b4.txt",
+      "textSha256": "aa680cd0bd3ad93b45beeafe4ced29fc20a9b47dca680154e18d3e6ce1a7d0b4",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/2aa638ed25f85a3fdeec8a86249b3f0e8c59f0a7147aba748201382b324f0fa7.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F17-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F17-JC.pdf",
+      "rawPath": "sources/9a69975bf89c3bc53efde0b1f6824d1ea0378d52f042439a13b69028c8680c45.txt",
+      "rawHash": "9a69975bf89c3bc53efde0b1f6824d1ea0378d52f042439a13b69028c8680c45",
+      "textPath": "sources/9a69975bf89c3bc53efde0b1f6824d1ea0378d52f042439a13b69028c8680c45.txt",
+      "textSha256": "9a69975bf89c3bc53efde0b1f6824d1ea0378d52f042439a13b69028c8680c45",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/b918f08a15433feb02774b60ecb978b76970ac81282d2b42785160d231e4265b.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F18-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F18-JC.pdf",
+      "rawPath": "sources/d2d2fb6ee5675f99089f0b90608727f7e40ccd1f858a97817d587a6820fb553d.txt",
+      "rawHash": "d2d2fb6ee5675f99089f0b90608727f7e40ccd1f858a97817d587a6820fb553d",
+      "textPath": "sources/d2d2fb6ee5675f99089f0b90608727f7e40ccd1f858a97817d587a6820fb553d.txt",
+      "textSha256": "d2d2fb6ee5675f99089f0b90608727f7e40ccd1f858a97817d587a6820fb553d",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/cfd0b38d78a48710b579427ac05152d4212302ef4066ac3c13cf42a86b54b9d3.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F19-JC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F19-JC.pdf",
+      "rawPath": "sources/1dfb5705019e1ebe9c086360bc3ec8065a1add81af9e4450cc5fe0cfcccd7805.txt",
+      "rawHash": "1dfb5705019e1ebe9c086360bc3ec8065a1add81af9e4450cc5fe0cfcccd7805",
+      "textPath": "sources/1dfb5705019e1ebe9c086360bc3ec8065a1add81af9e4450cc5fe0cfcccd7805.txt",
+      "textSha256": "1dfb5705019e1ebe9c086360bc3ec8065a1add81af9e4450cc5fe0cfcccd7805",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/2911646571c72f6783eb98e940a9db68783c0070a77b83cb8648850da560e396.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F20-Kearny.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F20-Kearny.pdf",
+      "rawPath": "sources/3e43d9eb3e2b577b2a018d661042aafdc095742677c32bac7780a224fff69409.txt",
+      "rawHash": "3e43d9eb3e2b577b2a018d661042aafdc095742677c32bac7780a224fff69409",
+      "textPath": "sources/3e43d9eb3e2b577b2a018d661042aafdc095742677c32bac7780a224fff69409.txt",
+      "textSha256": "3e43d9eb3e2b577b2a018d661042aafdc095742677c32bac7780a224fff69409",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/b399074b72284954c346f0bd83dc87016957ececfe3a20de464eaeff2802ae22.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F21-Kearny.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F21-Kearny.pdf",
+      "rawPath": "sources/b8e7c510cd7bdfcbeb1862bd5f572f54630c9ceb0fd4b699ec64be5b68bcbac6.txt",
+      "rawHash": "b8e7c510cd7bdfcbeb1862bd5f572f54630c9ceb0fd4b699ec64be5b68bcbac6",
+      "textPath": "sources/b8e7c510cd7bdfcbeb1862bd5f572f54630c9ceb0fd4b699ec64be5b68bcbac6.txt",
+      "textSha256": "b8e7c510cd7bdfcbeb1862bd5f572f54630c9ceb0fd4b699ec64be5b68bcbac6",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/b25258987a2b8386a116bce6c7792268a7712fd79d9131e4a8c93e45b3a5bc2a.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F22-Kearny.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F22-Kearny.pdf",
+      "rawPath": "sources/537437480d03c875f7ac1b48be6db6774380c3944f16285f771cbeb19973abd0.txt",
+      "rawHash": "537437480d03c875f7ac1b48be6db6774380c3944f16285f771cbeb19973abd0",
+      "textPath": "sources/537437480d03c875f7ac1b48be6db6774380c3944f16285f771cbeb19973abd0.txt",
+      "textSha256": "537437480d03c875f7ac1b48be6db6774380c3944f16285f771cbeb19973abd0",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/321af93342d860291a2967a6c6984d7984ae1c550d221e7bcddef577a59a30bc.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F23-Kearny.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F23-Kearny.pdf",
+      "rawPath": "sources/7d18900e54bb2667b285318f394f91c6fb6d9b8bd371996f4e4afb1f3ecc3f8b.txt",
+      "rawHash": "7d18900e54bb2667b285318f394f91c6fb6d9b8bd371996f4e4afb1f3ecc3f8b",
+      "textPath": "sources/7d18900e54bb2667b285318f394f91c6fb6d9b8bd371996f4e4afb1f3ecc3f8b.txt",
+      "textSha256": "7d18900e54bb2667b285318f394f91c6fb6d9b8bd371996f4e4afb1f3ecc3f8b",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/5f8cc9b7a8379de6f2c349129d9af3f3e1828e06769f3e1a523404953c15d176.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F24-Kearny.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F24-Kearny.pdf",
+      "rawPath": "sources/cc7c076ab7fab8e3e87c8308236fa7ca248599b360f6a2574fc6c86fb7a3f2d4.txt",
+      "rawHash": "cc7c076ab7fab8e3e87c8308236fa7ca248599b360f6a2574fc6c86fb7a3f2d4",
+      "textPath": "sources/cc7c076ab7fab8e3e87c8308236fa7ca248599b360f6a2574fc6c86fb7a3f2d4.txt",
+      "textSha256": "cc7c076ab7fab8e3e87c8308236fa7ca248599b360f6a2574fc6c86fb7a3f2d4",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/326f48c50df5c126286f82d076804bb8a3f1b60f8cd3321ce59bf610af58aa18.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F25-Kearny.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F25-Kearny.pdf",
+      "rawPath": "sources/11a577b1cc6449d67583bc8958e3f8cbf3a1c026e183d33d628b8f97a791e2e4.txt",
+      "rawHash": "11a577b1cc6449d67583bc8958e3f8cbf3a1c026e183d33d628b8f97a791e2e4",
+      "textPath": "sources/11a577b1cc6449d67583bc8958e3f8cbf3a1c026e183d33d628b8f97a791e2e4.txt",
+      "textSha256": "11a577b1cc6449d67583bc8958e3f8cbf3a1c026e183d33d628b8f97a791e2e4",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/80716aca4042f6c8c712d48b92a72cbf51567811b70c6db12e6f63916919eb4e.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F26-Kearny.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F26-Kearny.pdf",
+      "rawPath": "sources/f982fd2c2dee3be0c112e36d4a3e8044b234b8a5dd400f6ba5f8dc6266f9a2db.txt",
+      "rawHash": "f982fd2c2dee3be0c112e36d4a3e8044b234b8a5dd400f6ba5f8dc6266f9a2db",
+      "textPath": "sources/f982fd2c2dee3be0c112e36d4a3e8044b234b8a5dd400f6ba5f8dc6266f9a2db.txt",
+      "textSha256": "f982fd2c2dee3be0c112e36d4a3e8044b234b8a5dd400f6ba5f8dc6266f9a2db",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/a54e657772e716b963041ed0b5e870b3f2e7f32636c50e965ce8f0d512def959.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F27-North-Bergen.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F27-North-Bergen.pdf",
+      "rawPath": "sources/5143fe4f92398b6bc858aaf9a3bad6e755fe48dfd184bccd219067dcbb4c3f2e.txt",
+      "rawHash": "5143fe4f92398b6bc858aaf9a3bad6e755fe48dfd184bccd219067dcbb4c3f2e",
+      "textPath": "sources/5143fe4f92398b6bc858aaf9a3bad6e755fe48dfd184bccd219067dcbb4c3f2e.txt",
+      "textSha256": "5143fe4f92398b6bc858aaf9a3bad6e755fe48dfd184bccd219067dcbb4c3f2e",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/4f31492a550743438de52ca7d06bbe6cb581e95b4dda738cef9d0e19760b0473.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F28-Secaucus.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F28-Secaucus.pdf",
+      "rawPath": "sources/74607745ba3d93bbdebe0ab41cb79def51740ef0e5bc349da60430a4d9c40a5b.txt",
+      "rawHash": "74607745ba3d93bbdebe0ab41cb79def51740ef0e5bc349da60430a4d9c40a5b",
+      "textPath": "sources/74607745ba3d93bbdebe0ab41cb79def51740ef0e5bc349da60430a4d9c40a5b.txt",
+      "textSha256": "74607745ba3d93bbdebe0ab41cb79def51740ef0e5bc349da60430a4d9c40a5b",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/515ddbe117917af739586886c9e075bdbed19ead9936261c14667ee31fbd5d7f.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F29-Secaucus.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F29-Secaucus.pdf",
+      "rawPath": "sources/6f48a764a5f432d532fa6c7124228b35fd3df4d08df8e69df9d0eb07c8adee79.txt",
+      "rawHash": "6f48a764a5f432d532fa6c7124228b35fd3df4d08df8e69df9d0eb07c8adee79",
+      "textPath": "sources/6f48a764a5f432d532fa6c7124228b35fd3df4d08df8e69df9d0eb07c8adee79.txt",
+      "textSha256": "6f48a764a5f432d532fa6c7124228b35fd3df4d08df8e69df9d0eb07c8adee79",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/ed140df7422f690366bdaba51381e00948bf283996c4f89a13ad938b1657d202.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F30-Secaucus.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F30-Secaucus.pdf",
+      "rawPath": "sources/7c461ca09f5892400bf8d1481b5c0d8a71bf195ef36b9cc475fac55ea41c5e7c.txt",
+      "rawHash": "7c461ca09f5892400bf8d1481b5c0d8a71bf195ef36b9cc475fac55ea41c5e7c",
+      "textPath": "sources/7c461ca09f5892400bf8d1481b5c0d8a71bf195ef36b9cc475fac55ea41c5e7c.txt",
+      "textSha256": "7c461ca09f5892400bf8d1481b5c0d8a71bf195ef36b9cc475fac55ea41c5e7c",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/3c70d5069fb8f7331f760d72bb3b18877de40ac5f97e8334eed36b1dd9d1a083.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F31-Secaucus.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F31-Secaucus.pdf",
+      "rawPath": "sources/bd6b8a75ca33b8a6cc575ecc89f0147adddacb18b2b6ca91da827c5093acf71d.txt",
+      "rawHash": "bd6b8a75ca33b8a6cc575ecc89f0147adddacb18b2b6ca91da827c5093acf71d",
+      "textPath": "sources/bd6b8a75ca33b8a6cc575ecc89f0147adddacb18b2b6ca91da827c5093acf71d.txt",
+      "textSha256": "bd6b8a75ca33b8a6cc575ecc89f0147adddacb18b2b6ca91da827c5093acf71d",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/0c93b30e920e18f9efe3e0a219ee929718866fd83685dd05af6083675ecb4802.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F32-Secaucus.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F32-Secaucus.pdf",
+      "rawPath": "sources/f509031be45554daa93a18485ae157a6d396c0c5ecb6fae5ba2e2878ec595ac5.txt",
+      "rawHash": "f509031be45554daa93a18485ae157a6d396c0c5ecb6fae5ba2e2878ec595ac5",
+      "textPath": "sources/f509031be45554daa93a18485ae157a6d396c0c5ecb6fae5ba2e2878ec595ac5.txt",
+      "textSha256": "f509031be45554daa93a18485ae157a6d396c0c5ecb6fae5ba2e2878ec595ac5",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/6ec71ba87727b05ad62d63ef9c62adc62362322261e42b1e475fe171e8878822.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F33-Secaucus.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F33-Secaucus.pdf",
+      "rawPath": "sources/abcf333eb1f888c79b43df25da6ec74bdd94facac61e8ebe991e6740c7b0a371.txt",
+      "rawHash": "abcf333eb1f888c79b43df25da6ec74bdd94facac61e8ebe991e6740c7b0a371",
+      "textPath": "sources/abcf333eb1f888c79b43df25da6ec74bdd94facac61e8ebe991e6740c7b0a371.txt",
+      "textSha256": "abcf333eb1f888c79b43df25da6ec74bdd94facac61e8ebe991e6740c7b0a371",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/b6601f4cd8cb232c027aa0c4e1de69595968f71f63b2c021a8a100bbe15ab3cf.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F34-UC.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F34-UC.pdf",
+      "rawPath": "sources/93f0fb1be5d7b34e41b412aa8ad1c1fbee9eaf567ca01fbe1121b46ccf408bca.txt",
+      "rawHash": "93f0fb1be5d7b34e41b412aa8ad1c1fbee9eaf567ca01fbe1121b46ccf408bca",
+      "textPath": "sources/93f0fb1be5d7b34e41b412aa8ad1c1fbee9eaf567ca01fbe1121b46ccf408bca.txt",
+      "textSha256": "93f0fb1be5d7b34e41b412aa8ad1c1fbee9eaf567ca01fbe1121b46ccf408bca",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/ce79af09e5a63d6bee43d8a7a8bd22c6d3c7068d5b0554023d705f6e278b15dc.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F35-Weehawken.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F35-Weehawken.pdf",
+      "rawPath": "sources/a421af156f4321728225dc5158c165504a1c017c8171568a868fb9b93a65e745.txt",
+      "rawHash": "a421af156f4321728225dc5158c165504a1c017c8171568a868fb9b93a65e745",
+      "textPath": "sources/a421af156f4321728225dc5158c165504a1c017c8171568a868fb9b93a65e745.txt",
+      "textSha256": "a421af156f4321728225dc5158c165504a1c017c8171568a868fb9b93a65e745",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/64b3659fbbacef59578798684b6d44317ddffb6eb514338a2a89a64ac444ccb5.json"
+    },
+    {
+      "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F36-WNY.pdf",
+      "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F36-WNY.pdf",
+      "rawPath": "sources/c88b0a08b903867edffc44f83c55c58301b23866ca5c2e1bd7f7c50506bee374.txt",
+      "rawHash": "c88b0a08b903867edffc44f83c55c58301b23866ca5c2e1bd7f7c50506bee374",
+      "textPath": "sources/c88b0a08b903867edffc44f83c55c58301b23866ca5c2e1bd7f7c50506bee374.txt",
+      "textSha256": "c88b0a08b903867edffc44f83c55c58301b23866ca5c2e1bd7f7c50506bee374",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "role": "Completecurrentcountyballotinventory;fulloperativeballottext,notnativePDFbytes",
+      "captureMetadataPath": "sources/d58bcf64f1b0309ec35f310947a0ab6035bc4f5a12e68bab67f8b364ac069fa5.json"
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json",
+  "officialInventoryPath": "official-inventory.json"
+}

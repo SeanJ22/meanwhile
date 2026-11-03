@@ -1,0 +1,17 @@
+{
+  "scope": "Complete current Hudson County Clerk General Election directory:36forms/all12municipalities,all36completeofficialPDFtextcaptures Nov3,2026. Two distinct questions. Separateoffcycleelections excluded.",
+  "officialCurrentIndexUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+  "officialIndexCapturePath": "sources/5ff6ade13257b9b44fea909d4ab058b5a488f3bbe8fc68dc9ca01c8f1df8548d.txt",
+  "officialIndexCaptureMetadataPath": "sources/4e78132de8ee7230e6a737f6bab02ef5c2a22fa6953a49acc961d49926874b71.json",
+  "stateGovernmentDirectoryNativePath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "stateGovernmentDirectoryLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "authorityChain": [
+    "NativeNJ.govcountyofficialsdirectorydirectlylinksHudsonCountyClerk.orghost.",
+    "CurrentofficialClerkindexexpresslylabelsNov3,2026GeneralElection36versionsandlinkseach exactpublishedPDF.",
+    "CompletepublicdeterministicreaderPDFtextcapturesareSOURCE_TEXTonly,native403notmisrepresentedaspublishedcontent."
+  ],
+  "eastNewarkIdentityEvidencePath": "sources/5640cdf719541d694cf7e17c81955a381a83b8a32b3a8d2f16cff2eb3a4f703d.json",
+  "completeCountySourceInventoryPath": "official-inventory.json",
+  "uniqueCurrentQuestions": 2,
+  "electionDate": "November3,2026"
+}

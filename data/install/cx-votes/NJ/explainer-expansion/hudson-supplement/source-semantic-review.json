@@ -1,0 +1,14 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "d996eb35d724eaa1c3e54ec58021ab2ec37df98322d4e41349a486ee1aef256f",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Officialcurrentindex36forms/all12municipalities complete;all36exactofficialPDFsource-textcapturescontainNov3,2026headersandcompleteballotcontent. Twoquestionblocks completeEnglish/Spanish/YesSíNo, notsnippets. No originalPDFbytehashorvisualattestationclaim.",
+    "EastNewarkexactschoolquestiononly9to7;neutralwhat/yes/no inventnoeffective date,transition oradditionalpowers. Existingregistered3404200schooldivision matched nativecurrentdistrictsite andheldNCES/Censusdistrictidentity;legacygovernmentprimary-1unchanged.",
+    "Guttenbergauthorizationestablish/organize/operatemunicipalfreepubliclibraryunderNJlaw accurate. No taxamount,freeofcostguarantee,siteoropeningdate inferred.",
+    "Exactheldelectionkey,recordHELD_TEXTformula,fullSOURCE_TEXTreceipthashes,question/statementquotes andexistingnormalauthority/admission/manualProjection/actualreader checksPASS. Rootfullhelddatamerge requested."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F16-JC.pdf",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F16-JC.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:21:28.694858+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "aa680cd0bd3ad93b45beeafe4ced29fc20a9b47dca680154e18d3e6ce1a7d0b4",
+  "bytes": 5350,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-form-16.reader-text.txt",
+  "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+}

@@ -1,0 +1,159 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-hudson-2026:east-newark-school-board-size",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+          "divisionVintage": "2023",
+          "title": "East Newark School District — school board size",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+            "sourceOrg": "Hudson County Clerk — current2026 General Election official sample ballots",
+            "collectedAt": "2026-11-03T10:20:29.194553+00:00",
+            "verifiedAt": "2026-11-03T10:25:31.093523+00:00",
+            "quote": "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?"
+          }
+        },
+        {
+          "id": "nj-hudson-2026:guttenberg-public-library",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:guttenberg_town",
+          "divisionVintage": "2023",
+          "title": "Guttenberg — establish a municipal public library",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+            "sourceOrg": "Hudson County Clerk — current2026 General Election official sample ballots",
+            "collectedAt": "2026-11-03T10:20:33.772996+00:00",
+            "verifiedAt": "2026-11-03T10:25:31.093523+00:00",
+            "quote": "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-hudson-2026:east-newark-school-board-size#question",
+          "contestId": "nj-hudson-2026:east-newark-school-board-size",
+          "questionText": "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+            "sourceOrg": "Hudson County Clerk — current2026 General Election official sample ballots",
+            "collectedAt": "2026-11-03T10:20:29.194553+00:00",
+            "verifiedAt": "2026-11-03T10:25:31.093523+00:00",
+            "quote": "Do you approve of reducing the number of members of the East Newark Board of Education from nine (9) members to seven (7) members?"
+          }
+        },
+        {
+          "id": "nj-hudson-2026:guttenberg-public-library#question",
+          "contestId": "nj-hudson-2026:guttenberg-public-library",
+          "questionText": "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?",
+          "officialStatement": "A “Yes” vote authorizes the establishment of a free public library in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 et seq. If approved by the voters, the Town would be authorized to organize and operate a municipal free public library in accordance with New Jersey law. A “No” vote would reject the establishment of a municipal free public library.",
+          "provenance": {
+            "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+            "sourceOrg": "Hudson County Clerk — current2026 General Election official sample ballots",
+            "collectedAt": "2026-11-03T10:20:33.772996+00:00",
+            "verifiedAt": "2026-11-03T10:25:31.093523+00:00",
+            "quote": "Shall a free public library be established in the Town of Guttenberg pursuant to N.J.S.A. 40:54-1 through 40:54-29?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-hudson-2026:east-newark-school-board-size",
+          "whatItDoes": "Reduces the East Newark Board of Education from nine members to seven.",
+          "yesMeans": "Approve reducing the board to seven members.",
+          "noMeans": "Keep the board at nine members.",
+          "parts": [],
+          "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+          "sourceHash": "5f72acfc34b6d23cc4f5c02ed3bfb7d9ffa0d68f8e01da6df4c76a07b8a73a88",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:25:31.093523+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-hudson-2026:guttenberg-public-library",
+          "whatItDoes": "Authorizes Guttenberg to establish, organize and operate a free municipal public library under New Jersey law.",
+          "yesMeans": "Approve establishing the municipal free public library.",
+          "noMeans": "Reject establishing the municipal free public library.",
+          "parts": [],
+          "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+          "sourceHash": "42028ed404813f3bd4465c4f39d337cfc050dfc77d9469e168c34ba1d9a72b26",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T10:25:31.093523+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:25:31.093523+00:00",
+    "reviewedBy": "CX-VOTES exactofficial hudson current2026 questions, fullstatements, neutral effects and nativePDFvisual/sourcechecks",
+    "sources": [
+      {
+        "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+        "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+        "httpStatus": 200,
+        "rawHash": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+        "retrievedAt": "2026-11-03T10:20:29.194553+00:00",
+        "publisher": "Hudson County Clerk — current2026 General Election official sample ballots",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "reviewedEvidence": "FullofficialNov3,2026ballotsource-text capture,includingcompletequestion/statement/YesSíNo. ExactcapturedtextSHAonly,notoriginalPDFhash. Currentofficialdirectorylists36forms/all12municipalities;all36completecurrenttextcaptures audited, twoquestions. Noresultvaluesornewcandidatefacts extracted.",
+        "captureMetadata": {
+          "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+          "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T10:20:29.194553+00:00",
+          "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+          "sha256": "53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3",
+          "bytes": 5563,
+          "file": "sources/53bc1f3830996d5424779f9cde4da3b39757576b5d71123165286a676ee1aba3.txt",
+          "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+        }
+      },
+      {
+        "requestedUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+        "finalUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+        "httpStatus": 200,
+        "rawHash": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+        "retrievedAt": "2026-11-03T10:20:33.772996+00:00",
+        "publisher": "Hudson County Clerk — current2026 General Election official sample ballots",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "reviewedEvidence": "FullofficialNov3,2026ballotsource-text capture,includingcompletequestion/statement/YesSíNo. ExactcapturedtextSHAonly,notoriginalPDFhash. Currentofficialdirectorylists36forms/all12municipalities;all36completecurrenttextcaptures audited, twoquestions. Noresultvaluesornewcandidatefacts extracted.",
+        "captureMetadata": {
+          "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+          "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T10:20:33.772996+00:00",
+          "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+          "sha256": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+          "bytes": 6587,
+          "file": "sources/d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059.txt",
+          "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+        }
+      }
+    ]
+  }
+}

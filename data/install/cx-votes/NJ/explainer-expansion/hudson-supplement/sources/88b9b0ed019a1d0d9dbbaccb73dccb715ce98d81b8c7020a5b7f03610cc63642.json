@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F01-Bayonne.pdf",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F01-Bayonne.pdf",
+  "finalRetrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F01-Bayonne.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:19:47.650845+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "8e31914172a4ba734b4befc2d2a7f5c37d1c269f44dea718b1e265b8916cb2ed",
+  "bytes": 5305,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-form-01.reader-text.txt",
+  "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

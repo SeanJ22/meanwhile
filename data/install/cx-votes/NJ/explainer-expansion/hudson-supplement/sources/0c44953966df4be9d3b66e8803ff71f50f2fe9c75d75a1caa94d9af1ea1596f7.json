@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:20:33.772996+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "d8970215d3236b763d728991a39bd97bf10d5e7e55cf3509f528da2937de2059",
+  "bytes": 6587,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-form-03.reader-text.txt",
+  "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+}

@@ -1,0 +1,50 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "Complete current Hudson County Clerk General Election directory:36forms/all12municipalities,all36completeofficialPDFtextcaptures Nov3,2026. Two distinct questions. Separateoffcycleelections excluded."
+  },
+  "subjects": [
+    {
+      "id": "nj-hudson-2026:east-newark-school-board-size",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+      "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F02-East-Newark.pdf"
+    },
+    {
+      "id": "nj-hudson-2026:guttenberg-public-library",
+      "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:guttenberg_town",
+      "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F03-Guttenberg.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete retained official PDF conversion text is CAPTURED_SOURCE_TEXT; each record is HELD_TEXT of exact question plus newline and supplied statement. All 36 current official styles/all 12 municipalities inventoried, with two question blocks. Original PDF bytes and native visual attestation are not claimed.",
+  "reviewedScratchPacketSha256": "d996eb35d724eaa1c3e54ec58021ab2ec37df98322d4e41349a486ee1aef256f",
+  "canonicalInputSha256": "3212639590cce476878cd7fcd4dde3685ed3f6c38ab2275f6e370cac8c5e9e13",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

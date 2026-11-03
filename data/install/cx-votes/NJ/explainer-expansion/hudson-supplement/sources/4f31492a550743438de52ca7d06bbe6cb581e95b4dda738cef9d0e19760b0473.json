@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F27-North-Bergen.pdf",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F27-North-Bergen.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:22:18.308738+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "5143fe4f92398b6bc858aaf9a3bad6e755fe48dfd184bccd219067dcbb4c3f2e",
+  "bytes": 4608,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-form-27.reader-text.txt",
+  "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+}

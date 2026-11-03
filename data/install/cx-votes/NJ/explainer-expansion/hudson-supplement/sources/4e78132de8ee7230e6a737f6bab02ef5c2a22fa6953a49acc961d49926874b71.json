@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+  "finalRetrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/2026-general-election-sample-ballots/",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:19:27.996914+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "5ff6ade13257b9b44fea909d4ab058b5a488f3bbe8fc68dc9ca01c8f1df8548d",
+  "bytes": 9708,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-general-samples-current.reader-markdown.txt",
+  "method": "Deterministic public reader direct-engine text extraction; Default Markdown format preserves published links. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

@@ -1,0 +1,52 @@
+{
+  "state": "NJ",
+  "heldBallotIdentityMatches": true,
+  "contests": 2,
+  "questions": 2,
+  "measureRecords": 2,
+  "usableReaderRecords": 2,
+  "packetSha256": "d996eb35d724eaa1c3e54ec58021ab2ec37df98322d4e41349a486ee1aef256f",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "nj-hudson-2026:east-newark-school-board-size",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    },
+    {
+      "contestId": "nj-hudson-2026:guttenberg-public-library",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "d996eb35d724eaa1c3e54ec58021ab2ec37df98322d4e41349a486ee1aef256f",
+  "canonicalInputSha256": "3212639590cce476878cd7fcd4dde3685ed3f6c38ab2275f6e370cac8c5e9e13"
+}

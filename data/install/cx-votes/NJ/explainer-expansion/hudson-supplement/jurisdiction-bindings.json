@@ -1,0 +1,50 @@
+[
+  {
+    "contestId": "nj-hudson-2026:east-newark-school-board-size",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+    "registeredDivisionIndex": 1395,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:east_newark_borough_school_district",
+      "unsd",
+      "3404200",
+      "East Newark Borough School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "181307",
+      "nj:school:east-newark-sch-dist",
+      "EAST NEWARK SCH DIST",
+      "SCHOOL DISTRICT",
+      -1,
+      "SCHOOL_NAME_NOT_FOUND",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government.",
+    "identityEvidencePath": "sources/5640cdf719541d694cf7e17c81955a381a83b8a32b3a8d2f16cff2eb3a4f703d.json",
+    "governmentPrimaryDivisionBindingUnchanged": -1
+  },
+  {
+    "contestId": "nj-hudson-2026:guttenberg-public-library",
+    "ocdId": "ocd-division/country:us/state:nj/county:hudson/place:guttenberg_town",
+    "registeredDivisionIndex": 257,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:hudson/place:guttenberg_town",
+      "cousub",
+      "3401728650",
+      "Guttenberg town"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "170178",
+      "nj:city:town-of-guttenberg",
+      "TOWN OF GUTTENBERG",
+      "MUNICIPAL",
+      257,
+      "COUSUB_FIPS",
+      820
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  }
+]

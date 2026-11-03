@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F25-Kearny.pdf",
+  "retrievalUrl": "https://r.jina.ai/https://www.hudsoncountyclerk.org/wp-content/uploads/2026/09/2026-F25-Kearny.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T10:22:09.524671+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "11a577b1cc6449d67583bc8958e3f8cbf3a1c026e183d33d628b8f97a791e2e4",
+  "bytes": 5199,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-hudson-form-25.reader-text.txt",
+  "method": "Complete deterministic publicreader direct-engine PDFtext extraction, noReaderLM/modelcall. Hash exact capturedsource text,not originalPDFbytes."
+}

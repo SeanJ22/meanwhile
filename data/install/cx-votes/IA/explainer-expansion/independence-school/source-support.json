@@ -1,0 +1,31 @@
+[
+  {
+    "contestId": "ia-cx-2026-independence-school-bonds",
+    "sourceUrl": "https://elections.bentoncountyia.gov/files/public_notice/general_2026_election_98793.pdf",
+    "rawHash": "62bd4265789761b292f9cbeda71869aedda36355b99b258b32404d73ab40427f",
+    "sourceFile": "sources/62bd4265789761b292f9cbeda71869aedda36355b99b258b32404d73ab40427f.source",
+    "sourceTextFile": "sources/f2a53d29ff0256274a4413074a1ec76c4e7e532ff874f56c8fd86a1a49ca004b.txt",
+    "excerpt": "Shall the Board of Directors of the Independence Community School District in the Counties of Buchanan and\nBenton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in the amount not\nto exceed $24,990,000 to provide funds to build, furnish, and equip additions to East and West Elementary Schools;\nand to remodel, repair, improve, and equip East and West Elementary Schools and to improve the sites, including\nrelated demolition at West Elementary?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Independence Community School District in the Counties of Buchanan and\nBenton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in the amount not\nto exceed $24,990,000 to provide funds to build, furnish, and equip additions to East and West Elementary Schools;\nand to remodel, repair, improve, and equip East and West Elementary Schools and to improve the sites, including\nrelated demolition at West Elementary?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Independence Community School District in the Counties of Buchanan and\nBenton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in the amount not\nto exceed $24,990,000 to provide funds to build, furnish, and equip additions to East and West Elementary Schools;\nand to remodel, repair, improve, and equip East and West Elementary Schools and to improve the sites, including\nrelated demolition at West Elementary?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Independence Community School District in the Counties of Buchanan and\nBenton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in the amount not\nto exceed $24,990,000 to provide funds to build, furnish, and equip additions to East and West Elementary Schools;\nand to remodel, repair, improve, and equip East and West Elementary Schools and to improve the sites, including\nrelated demolition at West Elementary?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Native official Benton notice lists two local questions: shared Kirkwood NC held for taxing geography, and Independence CE prepared here. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "scope": "Complete bounded Independence CE question on final notice page."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

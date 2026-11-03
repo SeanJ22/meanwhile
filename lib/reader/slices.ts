@@ -188,16 +188,16 @@ export function unpackSlice<T>(stored: unknown): T {
   return (typeof d === "string" ? JSON.parse(inflateRawSync(Buffer.from(d, "base64"), { dictionary: SLICE_DICTIONARY }).toString("utf8")) : stored) as T;
 }
 
-/** The only writer of place_slice. Returns how many slices differed from what was held and were written. `inputs` are fingerprints of what cards were built from (by `place\tcard`), kept so a rebuild can tell nothing changed; `changed` collects the places written. */
+/** The only writer of place_slice. Returns how many slices differed from what was held and were written. A meetings card's fingerprint is `inputs` when given: what it was built from, so a rebuild can tell nothing changed. `changed` collects the places written. */
 export async function writeSlices(query: Query, built: ReadonlyMap<string, ReadonlyMap<SliceCard, unknown>>, inputs: ReadonlyMap<string, string> = new Map(), changed?: Set<string>): Promise<number> {
-  const places: string[] = [], cards: string[] = [], bodies: (string | null)[] = [], prints: string[] = [], held: string[] = [];
+  const places: string[] = [], cards: string[] = [], bodies: (string | null)[] = [], prints: string[] = [];
   for (const [place, slices] of built) for (const [card, body] of slices) {
-    places.push(place); cards.push(card); bodies.push(body === null ? null : JSON.stringify(packSlice(body))); prints.push(fingerprint(body)); held.push(inputs.get(`${place}\t${card}`) ?? "");
+    places.push(place); cards.push(card); bodies.push(body === null ? null : JSON.stringify(packSlice(body))); prints.push(inputs.get(`${place}\t${card}`) ?? fingerprint(body));
   }
   if (!places.length) return 0;
-  const written = await query(`INSERT INTO place_slice(place_id,card,body,fingerprint,inputs) SELECT place_id,card,body::jsonb,fingerprint,nullif(inputs,'') FROM unnest($1::text[],$2::text[],$3::text[],$4::text[],$5::text[]) AS s(place_id,card,body,fingerprint,inputs)
-    ON CONFLICT(place_id,card) DO UPDATE SET body=EXCLUDED.body,fingerprint=EXCLUDED.fingerprint,inputs=EXCLUDED.inputs,built_at=now()
-    WHERE place_slice.fingerprint IS DISTINCT FROM EXCLUDED.fingerprint OR place_slice.inputs IS DISTINCT FROM EXCLUDED.inputs RETURNING place_id`, [places, cards, bodies, prints, held]);
+  const written = await query(`INSERT INTO place_slice(place_id,card,body,fingerprint) SELECT place_id,card,body::jsonb,fingerprint FROM unnest($1::text[],$2::text[],$3::text[],$4::text[]) AS s(place_id,card,body,fingerprint)
+    ON CONFLICT(place_id,card) DO UPDATE SET body=EXCLUDED.body,fingerprint=EXCLUDED.fingerprint,built_at=now()
+    WHERE place_slice.fingerprint IS DISTINCT FROM EXCLUDED.fingerprint RETURNING place_id`, [places, cards, bodies, prints]);
   for (const row of written) changed?.add(String(row.place_id));
   return written.length;
 }

@@ -180,7 +180,6 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0081_spn01e_page_marks": { phase: "expand", why: "A place page carries its own rebuild mark, lease, priority and the entities it shows, so the rebuild queue and the dependency table can go once readers and writers use them.", lockFirst: ["place_page"] },
   "0082_spn01e4_slice_cards": { phase: "contract", why: "Widens the card names a slice may have to the meetings, history and agenda cards; the rule reads any change to a constraint as narrowing, though no row the live build writes is refused." },
   "SPN-01D_place_slice": { phase: "expand", why: "Adds the table that holds one small slice per card per place; nothing reads it until readers switch." },
-  "SPN-01E6_slice_inputs": { phase: "expand", why: "Adds the column that holds what a slice was built from, so a rebuild can skip unchanged ones; nothing reads it until the lane does." },
   "CP-01_source_status": { phase: "expand", why: "Adds source-attempt and current-readback counters maintained by existing writers before Admin reads the small rows.",
     lockFirst: CIVIC_DATA_STATUS_WRITE_TABLES, lockFirstMode: "SHARE ROW EXCLUSIVE" },
   "ZP-01_build_fingerprint": { phase: "expand", why: "ZIP builds compare selected-input fingerprints before transferring or copying an answer.", lockFirst: ["place_page"] },

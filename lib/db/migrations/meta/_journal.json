@@ -582,13 +582,6 @@
       "when": 1792834202302,
       "tag": "0082_spn01e4_slice_cards",
       "breakpoints": true
-    },
-    {
-      "idx": 83,
-      "version": "7",
-      "when": 1792834202501,
-      "tag": "SPN-01E6_slice_inputs",
-      "breakpoints": true
     }
   ]
 }

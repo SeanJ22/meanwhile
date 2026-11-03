@@ -56,8 +56,8 @@ let recoveredAt = 0;
 /** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
 async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: ReaderCachePurger): Promise<number> {
   const subjects = [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject), inputs = new Map<string, string>();
-  const [now, held] = await Promise.all([cardInputs(facts, subjects), facts("SELECT place_id||E'\\t'||card AS k,inputs FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
-  const same = new Map(held.map(row => [String(row.k), row.inputs]));
+  const [now, held] = await Promise.all([cardInputs(facts, subjects), facts("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
+  const same = new Map(held.map(row => [String(row.k), row.fingerprint]));
   for (const subject of subjects) for (const card of MEETING_CARDS) {
     const key = `${subject}\t${card}`;
     if (!wanted.get(subject)!.has(card)) continue;
@@ -77,9 +77,9 @@ async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, pu
   if (!rows.length) return NOTHING;
   const wanted = new Map<string, Set<SliceCard>>();
   for (const { subjectId, field } of rows) wanted.set(subjectId, (wanted.get(subjectId) ?? new Set<SliceCard>()).add(field as SliceCard));
-  const built = wanted.size, written = await untilEnd(end, make(facts, wanted, purge));
-  await list.finishTaken(owner);
-  return { claimed: rows.length, built, written, backfilled: 0 };
+  const built = wanted.size;
+  try { const written = await untilEnd(end, make(facts, wanted, purge)); await list.finishTaken(owner); return { claimed: rows.length, built, written, backfilled: 0 }; }
+  catch (error) { if (!end?.aborted) await list.laterTaken(owner, error instanceof Error ? error.message || "failed" : String(error)); throw error; }
 }
 
 /** Where the backfill is: the ZIP it has reached (most residents first), then, once every ZIP's places have slices, the rest of the places in id order. */

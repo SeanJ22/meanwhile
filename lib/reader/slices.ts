@@ -169,7 +169,7 @@ async function buildEntitySlices(query: Query, wanted: ReadonlyMap<string, Reado
 }
 
 /** A slice that reads the same is not written again: its fingerprint is that of what it holds. */
-const fingerprint = (body: unknown): string => createHash("sha256").update(body === null ? "" : JSON.stringify(body)).digest("hex");
+export const fingerprint = (body: unknown): string => createHash("sha256").update(body === null ? "" : JSON.stringify(body)).digest("hex");
 
 /**
  * What is stored for a slice: itself, or its JSON packed, whichever is shortest. `{ z }` is brotli, which wins on a large slice; `{ d }` is

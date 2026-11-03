@@ -3,20 +3,20 @@ import type { Query } from "../facts/publish.ts";
 import type { WorkList } from "../core/work.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 import { invalidateReaderCache, type ReaderCachePurger } from "./cache.ts";
-import { cardsAsBuilt } from "./slice-meetings.ts";
+import { cardInputs } from "./slice-meetings.ts";
 import { boardsToBuild, buildSlices, LAST_CARD, MEETING_CARDS, SLICE_CARDS, writeSlices, type SliceCard } from "./slices.ts";
 
 /** The lane's name on the read meter. Its bytes per hour are metered under it, so the breaker slows it alone if it ever reads far more than its own normal. */
 export const SLICE_JOB = { id: "slices", databaseBytesPerRun: 32_000_000 } as const;
 /** Slice rows taken in one go. A place's marked cards are built together, from one read of that place. */
-const CLAIM_LIMIT = 10;
+const CLAIM_LIMIT = 20;
 /** Places given their first slices in one go, taken from the most populated ZIPs down, and the least it rests after one. */
 const BACKFILL_PLACES = 100;
 const BACKFILL_ZIPS = 25;
 /** ZIP groups looked through in one go when their places already have slices. */
 const ZIP_LOOKS = 40;
 const BACKFILL_PAUSE_MS = 3_000;
-/** What the lane may move an hour, over both databases and everything it does: marked slices, calendars confirmed again, first slices, purges, claiming and finishing. Each go puts the time its bytes take to come due on a tab, kept across the lane's starts; nothing goes while the tab is owed, marked slices go before first slices, and marks the allowance cannot reach wait their turn. */
+/** What the lane may move an hour, over both databases and everything it does: marked slices, first slices, purges, claiming and finishing. Each go puts the time its bytes take to come due on a tab, kept across the lane's starts; nothing goes while the tab is owed, marked slices go before first slices, and marks the allowance cannot reach wait their turn. */
 export const SLICE_BYTES_PER_HOUR = 27_000_000;
 /** The wire carries about 2% more than the text, parameters and rows' JSON the lane counts; 5% is kept in hand. */
 const WIRE_FACTOR = 1.05;
@@ -52,26 +52,33 @@ const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T
 
 /** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
 async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: ReaderCachePurger): Promise<number> {
-  const { now, asBuilt } = await cardsAsBuilt(facts, [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject)), inputs = new Map<string, string>();
-  for (const [subject, cards] of wanted) {
-    for (const card of MEETING_CARDS) if (cards.has(card)) { const key = `${subject}\t${card}`; if (asBuilt.has(key)) cards.delete(card); else inputs.set(key, now.get(key)!); }
-    if (!cards.size) wanted.delete(subject);
+  const subjects = [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject), inputs = new Map<string, string>();
+  const [now, held] = await Promise.all([cardInputs(facts, subjects), facts("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
+  const same = new Map(held.map(row => [String(row.k), row.fingerprint]));
+  for (const subject of subjects) {
+    for (const card of MEETING_CARDS) if (wanted.get(subject)!.has(card)) { const key = `${subject}\t${card}`; if (same.get(key) === now.get(key)) wanted.get(subject)!.delete(card); else inputs.set(key, now.get(key)!); }
+    if (!wanted.get(subject)!.size) wanted.delete(subject);
   }
-  const built = await buildSlices(facts, wanted);
-  const changed = new Set<string>(), written = await writeSlices(facts, built, inputs, changed);
+  const changed = new Set<string>(), written = await writeSlices(facts, await buildSlices(facts, wanted), inputs, changed);
   if (changed.size) await invalidateReaderCache({ places: [...changed, ...(await facts("SELECT DISTINCT place_id FROM entity_place WHERE entity_id=ANY($1::text[])", [[...changed]])).map(row => String(row.place_id))] }, purge, null);
   return written;
 }
 
-/** Rebuilds the slices the Slide marked. The rows taken are finished together. */
+/** Rebuilds the slices the Slide marked. A slice that reads the same as the one held is not written. At the turn's end the marked slices go back to waiting. */
 async function rebuildMarked(list: WorkList, facts: Query, end?: AbortSignal, purge?: ReaderCachePurger): Promise<SliceTurn> {
-  const { owner, rows } = await list.take("slice", CLAIM_LIMIT);
-  if (!rows.length) return NOTHING;
+  const claims = await list.claim("slice", CLAIM_LIMIT);
+  if (!claims.length) return NOTHING;
   const wanted = new Map<string, Set<SliceCard>>();
-  for (const { subjectId, field } of rows) wanted.set(subjectId, (wanted.get(subjectId) ?? new Set<SliceCard>()).add(field as SliceCard));
+  for (const claim of claims) wanted.set(claim.subjectId!, (wanted.get(claim.subjectId!) ?? new Set<SliceCard>()).add(claim.field as SliceCard));
   const built = wanted.size;
-  try { const written = await untilEnd(end, make(facts, wanted, purge)); await list.finishTaken(owner); return { claimed: rows.length, built, written, backfilled: 0 }; }
-  catch (error) { if (!end?.aborted) await list.laterTaken(owner, error instanceof Error ? error.message || "failed" : String(error)); throw error; }
+  try {
+    const written = await untilEnd(end, make(facts, wanted, purge));
+    for (const claim of claims) await list.finish(claim);
+    return { claimed: claims.length, built, written, backfilled: 0 };
+  } catch (error) {
+    for (const claim of claims) await (end?.aborted ? list.release(claim) : list.later(claim, error instanceof Error ? error.message || "failed" : String(error)));
+    throw error;
+  }
 }
 
 /** Where the backfill is: the ZIP it has reached (most residents first), then, once every ZIP's places have slices, the rest of the places in id order. */
@@ -121,10 +128,10 @@ export async function sliceTurn(input: { readonly list: WorkList; readonly facts
   return { ...first, claimed: 0, idle: first.done };
 }
 
-/** The lane's turn: keeps looking until it is asked to stop, resting while the tab is owed so everything it does stays within its pace. `total.behind` is the marked slices still waiting after a go. */
+/** The lane's turn: keeps looking until it is asked to stop, resting while the tab is owed so everything it does stays within its pace. */
 export async function runSliceLane(input: { readonly list: WorkList; readonly facts: Query; readonly stopRequested: () => boolean; readonly turnEnd?: AbortSignal;
   readonly log: (line: string) => void; readonly sleep?: (ms: number) => Promise<void>; readonly clock?: () => number;
-  /** Counts as they happen, for the turn's minute line. */ readonly total?: { built: number; written: number; backfilled: number; behind?: number } }): Promise<{ readonly built: number; readonly written: number; readonly backfilled: number }> {
+  /** Counts as they happen, for the turn's minute line. */ readonly total?: { built: number; written: number; backfilled: number } }): Promise<{ readonly built: number; readonly written: number; readonly backfilled: number }> {
   const sleep = input.sleep ?? ((ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms)));
   const total = input.total ?? { built: 0, written: 0, backfilled: 0 };
   const clock = input.clock ?? Date.now;
@@ -142,8 +149,7 @@ export async function runSliceLane(input: { readonly list: WorkList; readonly fa
     tab.until = start + owedMs(sent - before);
     if (turn) {
       total.built += turn.built; total.written += turn.written; total.backfilled += turn.backfilled;
-      if (turn.claimed) total.behind = await input.list.due("slice");
-      if (turn.claimed || turn.backfilled) input.log(turn.backfilled ? `Slices: ${turn.backfilled} places given their first slices (${turn.written} written)` : `Slices: ${turn.claimed} marked slices rebuilt for ${turn.built} places (${turn.written} had changed), ${total.behind ?? 0} still waiting`);
+      if (turn.claimed || turn.backfilled) input.log(turn.backfilled ? `Slices: ${turn.backfilled} places given their first slices (${turn.written} written)` : `Slices: ${turn.claimed} marked slices rebuilt for ${turn.built} places (${turn.written} had changed)`);
     }
     if (!turn || turn.claimed || turn.backfilled) await writePassCursor(input.facts, TAB_CURSOR, String(tab.until)).catch(() => undefined);
     if (input.turnEnd?.aborted) break;

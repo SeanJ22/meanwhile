@@ -5,7 +5,7 @@ import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { forgetNationalShelf, refreshNationalShelf } from "../lib/reader/shelf.ts";
 import { placeRegistry, stateRegistry } from "../lib/reader/state-shelf.ts";
-import { owedMs, SLICE_BYTES_PER_HOUR, sliceTurn } from "../lib/reader/slice-lane.ts";
+import { sliceTurn } from "../lib/reader/slice-lane.ts";
 import type { AgendaBody, HistoryBody, MeetingsBody } from "../lib/reader/slice-meetings.ts";
 import { buildSlices, ENTITY_CARDS, MEETING_CARDS, packSlice, readSlices, SLICE_CARDS, unpackSlice, writeSlices, type SliceCard } from "../lib/reader/slices.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -101,15 +101,6 @@ test("a calendar, a confirmation, a history and a registration published mark th
       "a state's family reaches every board its rows name, under the name the board was folded into, and the place a row names without a board");
     assert.deepEqual(await marked({ recordClass: "REGISTRATION", scope: "US-AZ:registration:v1" }), ["place:bodies"]);
     assert.deepEqual(await marked({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: "US-AZ:reader-registry-runtime" }), [], "the registry is held on the shelf, whose version moves with the pointer");
-    // Once the board's cards are built, a calendar read again marks nothing; only a row that differs does, and only the card it is on.
-    const { cardInputs } = await import("../lib/reader/slice-meetings.ts");
-    await writeSlices(db.query, await buildSlices(db.query, new Map([[BODY, new Set<SliceCard>(MEETING_CARDS)]])), await cardInputs(db.query, [BODY]));
-    const later = (id: string, title: string, rawHash: string) => db.publish({ id, recordClass: "MEETING", scope: CURRENT, sourceId: "legistar", at: "2026-10-24T09:00:00.000Z",
-      value: { ...header, generatedAt: "2026-10-24T09:00:00.000Z", sources: [{ ...header.sources[0]!, acquisitions: [{ source: "legistar", rawHash }] }], meetings: [meeting("m1", { title })], agendaDocuments: [] } });
-    await later("cv-2", "m1", "b".repeat(64));
-    assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT }), [], "a calendar read again, with only the moments and bytes it was read at moved, marks nothing");
-    await later("cv-3", "Moved to 7 PM", "c".repeat(64));
-    assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT }), ["board:meetings"], "a row that differs marks the card it is on");
     const { slicesOf } = await import("../lib/core/slice-marks.ts");
     assert.deepEqual((await slicesOf(db.query, ["meeting:legistar:m1"])).map(mark => [mark.placeId, mark.card]), [[BODY, "meetings"]], "a sitting's facts reach the meetings of its board");
   } finally { await db.pg.close(); }
@@ -132,7 +123,6 @@ test("the backfill gives slices to the places of the most populated ZIPs first, 
     assert.deepEqual([...await built()].filter(place => !place!.startsWith("big")).sort(), ["small1", "small2", "small3", "small4", "small5"], "the rest of the big ZIP, then the next ZIP, and only then places no ZIP lays over");
     await sliceTurn({ list, facts: db.query });
     assert.ok((await built()).has("aaa"));
-    assert.equal(owedMs(0), 0); assert.equal(owedMs(SLICE_BYTES_PER_HOUR / 1.05), 3_600_000); assert.equal(owedMs(SLICE_BYTES_PER_HOUR / 4.2), 900_000);
   } finally { await db.pg.close(); }
 });
 

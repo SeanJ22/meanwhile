@@ -33,8 +33,7 @@ export async function fileEntityPlaces(query: Query, entityId: string, places: r
     SELECT $1,place_id,boundary_year,placement_basis FROM located
     WHERE (place_id<>'ocd-division/country:us' OR NOT EXISTS (SELECT 1 FROM located WHERE place_id<>'ocd-division/country:us'))
       AND (place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$'
-      OR NOT EXISTS (SELECT 1 FROM located WHERE place_id ~ '^ocd-division/country:us/(state|district|territory):[^/]+/')
-      AND NOT EXISTS (SELECT 1 FROM entity_place held WHERE held.entity_id=$1 AND held.place_id ~ '^ocd-division/country:us/(state|district|territory):[^/]+/'))
+      OR NOT EXISTS (SELECT 1 FROM located WHERE place_id ~ '^ocd-division/country:us/(state|district|territory):[^/]+/'))
     ON CONFLICT(entity_id,place_id,boundary_year) DO UPDATE SET placement_basis=EXCLUDED.placement_basis
       WHERE entity_place.placement_basis IS DISTINCT FROM EXCLUDED.placement_basis
         AND EXCLUDED.placement_basis='SERVICE_AREA' RETURNING place_id`,

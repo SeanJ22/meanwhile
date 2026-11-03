@@ -6,8 +6,8 @@ import { askOnRelease, laneEnds, laneTurn, slotOrLeave } from "../lib/ops/lane-t
 import { metered, runSliceLane, SLICE_JOB } from "../lib/reader/slice-lane.ts";
 
 const facts = readerFactDb(prepareProductionCivicDataWrite().connection).query;
-const total = { built: 0, written: 0, backfilled: 0, behind: 0 };
-const turn = laneTurn(() => `Slices: ${total.built} places read, ${total.written} slices written, ${total.backfilled} places given their first slices, ${total.behind} marked slices waiting`);
+const total = { built: 0, written: 0, backfilled: 0 };
+const turn = laneTurn(() => `Slices: ${total.built} places read, ${total.written} slices written, ${total.backfilled} places given their first slices`);
 askOnRelease(turn.ask);
 const { claimEnd, stopRequested, turnEnd } = laneEnds(turn);
 const release = await slotOrLeave(turn, "slice-lane.mts", claimEnd);

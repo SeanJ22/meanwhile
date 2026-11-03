@@ -1,6 +1,5 @@
-import type { FactDb, Query } from "../facts/publish.ts";
-import { cardsAsBuilt } from "../reader/slice-meetings.ts";
-import { cardsOfKind, MEETING_CARDS, SLICE_CARDS, type SliceCard } from "../reader/slices.ts";
+import type { Query } from "../facts/publish.ts";
+import { cardsOfKind, SLICE_CARDS, type SliceCard } from "../reader/slices.ts";
 import { controlPlaneQuery, workList, type WorkList } from "./work.ts";
 
 /** One slice of one place that a filed fact belongs to. */
@@ -20,19 +19,12 @@ export async function slicesOf(query: Query, entities: readonly string[], places
   return [...marks.values()];
 }
 
-/** Meetings cards whose inputs are those the held card was built from are not marked: a calendar read again or sittings checked again with nothing new changes nothing a card shows, and its checked time moves it at most once in six hours. */
-async function onlyChanged(query: Query, marks: readonly SliceMark[]): Promise<readonly SliceMark[]> {
-  const subjects = [...new Set(marks.filter(mark => (MEETING_CARDS as readonly string[]).includes(mark.card)).map(mark => mark.placeId))];
-  if (!subjects.length) return marks;
-  try { const { asBuilt } = await cardsAsBuilt(query, subjects); return marks.filter(mark => !asBuilt.has(`${mark.placeId}\t${mark.card}`)); } catch { return marks; }
-}
-
 const encodedBoard = /^source:[^:]+:body:([^:]+)/;
 
 /**
  * The slices a published calendar or registration reaches, read after its rows are in place. A calendar's partition reaches the meetings of
  * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places
- * its rows name without a board. A history partition reaches only the history; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does. Only the cards that now differ from those held are marked.
+ * its rows name without a board. A history partition reaches only the history; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
  * A registration reaches the bodies card of every place it names. A registry's runtime model is held on the shelf, whose version moves with the pointer.
  */
 async function slicesOfPublication(query: Query, input: { readonly recordClass: string; readonly scope: string }): Promise<readonly SliceMark[]> {
@@ -48,7 +40,7 @@ async function slicesOfPublication(query: Query, input: { readonly recordClass: 
   const subjects = [...new Set(rows.map(row => row.ocd ? String(row.ocd) : row.board ? String(row.board) : ""))].filter(Boolean);
   const canonical = subjects.length ? await query("SELECT s.id,coalesce(x.entity_id,s.id) AS canonical FROM unnest($1::text[]) s(id) LEFT JOIN entity_external_id x ON x.scheme='body-alias' AND x.value=s.id", [subjects]) : [];
   const cards: readonly SliceCard[] = input.scope.endsWith(":history") ? ["history"] : ["meetings", "agenda", "history"];
-  return onlyChanged(query, [...new Set(canonical.map(row => String(row.canonical)))].flatMap(subject => cards.map(card => ({ placeId: subject, card }))));
+  return [...new Set(canonical.map(row => String(row.canonical)))].flatMap(subject => cards.map(card => ({ placeId: subject, card })));
 }
 
 let list = (): WorkList => workList(controlPlaneQuery(), { owner: "slide" });
@@ -60,9 +52,9 @@ export function markSlicesOn(next: () => WorkList): void { list = next; unavaila
  * The marks go on the work list as `slice` rows, after the commit. A row already waiting is left as it is, so a burst of facts for one place
  * is one rebuild. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
  */
-export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>, rechecked?: FactDb): Promise<void> {
+export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>): Promise<void> {
   try {
-    const waiting = rechecked ? await rechecked.transaction(async query => onlyChanged(query, await marks)) : await marks;
+    const waiting = await marks;
     if (waiting.length) await list().touch(waiting.map(mark => ({ kind: "slice" as const, placeId: mark.placeId, subjectId: mark.placeId, field: mark.card,
       origin: { from: "loader" as const }, source: { source: "The Slide filed a fact here" } })));
   } catch (error) {

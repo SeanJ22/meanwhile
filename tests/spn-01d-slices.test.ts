@@ -113,24 +113,19 @@ test("a release drain lets the rebuild in hand finish, ends the lane without fai
   } finally { await db.pg.close(); }
 });
 
-test("a board marked again with its calendar and papers as they were reads none of its rows and purges nothing, and a new version with the same papers reads none of them", async () => {
+test("a board marked again with its calendar as it was reads none of its rows and purges nothing; a new version of it is read", async () => {
   const { db, list } = await open();
   try {
     const CURRENT = `source:legistar:body:${encodeURIComponent(BODY)}`, AT = "2026-10-24T08:00:00.000Z";
-    const header = { formatVersion: 1, generatedAt: AT, counts: { fresh: 1, total: 1 }, sources: [{ source: "legistar", ok: true, error: null, acquisitions: [] }] };
-    const publish = (id: string, title: string, text: string) => db.publish({ id, recordClass: "MEETING", scope: CURRENT, sourceId: "legistar", at: AT, value: { ...header,
-      meetings: [{ id: "m1", ocdId: PLACE, bodyId: BODY, title, startsAt: "2026-11-02T18:00:00-07:00", timeZone: "America/Phoenix" }], agendaDocuments: [{ id: "d1", meetingId: "m1", ocdId: PLACE, bodyId: BODY, text }] } });
+    const publish = (id: string, title: string) => db.publish({ id, recordClass: "MEETING", scope: CURRENT, sourceId: "legistar", at: AT, value: { formatVersion: 1, generatedAt: AT, counts: { fresh: 1, total: 1 },
+      sources: [{ source: "legistar", ok: true, error: null, acquisitions: [] }], meetings: [{ id: "m1", ocdId: PLACE, bodyId: BODY, title, startsAt: "2026-11-02T18:00:00-07:00", timeZone: "America/Phoenix" }], agendaDocuments: [] } });
     markSlicesOn(() => list);
     const purged: string[] = [], reads: string[] = [], facts = Object.assign(async (sql: string, params: readonly unknown[] = []) => { reads.push(sql); return db.query(sql, params); }, {});
     const turn = async () => { await db.query("DELETE FROM work"); await markPublicationSlices(db.query, { recordClass: "MEETING", scope: CURRENT }); await db.query("UPDATE work SET due_at=now()"); reads.length = 0; return sliceTurn({ list, facts, now, purge: async tags => { purged.push(...tags); return { purged: true }; } }); };
     const rowReads = () => reads.filter(sql => sql.includes("AS value") && sql.includes("civic_data_rows")).length;
-    await publish("cv-1", "First", "The agenda."); assert.equal((await turn()).claimed, 3); assert.equal(rowReads(), 2, "meetings rows and papers are read the first time");
+    await publish("cv-1", "First"); assert.equal((await turn()).claimed, 3); assert.equal(rowReads(), 2, "the rows are read the first time");
     assert.ok(purged.length > 0, "a board's new cards purge the places it is filed on");
-    const marked = async (...fields: string[]) => { await db.query("DELETE FROM work"); await list.touch(fields.map(field => ({ kind: "slice" as const, placeId: BODY, subjectId: BODY, field, origin: { from: "loader" as const }, source: { source: "test" } }))); await db.query("UPDATE work SET due_at=now()"); reads.length = 0; };
-    await markPublicationSlices(db.query, { recordClass: "MEETING", scope: CURRENT }); assert.equal((await db.query("SELECT 1 FROM work WHERE status='waiting'")).length, 0, "a calendar published again as it was marks nothing");
-    purged.length = 0; await marked("meetings", "agenda", "history"); await sliceTurn({ list, facts, now, purge: async tags => { purged.push(...tags); return { purged: true }; } }); assert.deepEqual([rowReads(), purged], [0, []], "nothing moved: no row is read and nothing is purged");
-    await marked("meetings"); assert.equal((await sliceTurn({ list, facts, now })).claimed, 1, "a board marked for its meetings alone, as they were, is left as it was");
-    await publish("cv-2", "Second", "The agenda."); await turn(); assert.equal(rowReads(), 1, "a new version with the same papers reads none of them");
-    await publish("cv-3", "Second", "The agenda, amended."); await turn(); assert.equal(rowReads(), 1, "only the papers that changed are read");
+    purged.length = 0; await turn(); assert.deepEqual([rowReads(), purged], [0, []], "nothing moved: no row is read and nothing is purged");
+    await publish("cv-2", "Second"); await turn(); assert.equal(rowReads(), 2, "a new version is read");
   } finally { await db.pg.close(); }
 });

@@ -1,0 +1,140 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-wec-2026-greenwood-school-district-advisory-non-binding-consolidation-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:greenwood_school_district",
+          "divisionVintage": "2026",
+          "title": "Greenwood School District — Advisory school consolidation question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Advisory/non-binding question. The official state source omits the response choices after Pleasechooseone; no Yes/No direction is assigned.",
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:35:56.374588+00:00",
+            "quote": "Advisory/Non-Binding Question: How should the School District of Greenwood, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Loyal, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+          }
+        },
+        {
+          "id": "wi-wec-2026-loyal-school-district-advisory-non-binding-consolidation-referendum",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:loyal_school_district",
+          "divisionVintage": "2026",
+          "title": "Loyal School District — Advisory school consolidation question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Advisory/non-binding question. The official state source omits the response choices after Pleasechooseone; no Yes/No direction is assigned.",
+          "measureTextUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:35:56.374588+00:00",
+            "quote": "Advisory/Non-Binding Question: How should the School District of Loyal, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Greenwood, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-wec-2026-greenwood-school-district-advisory-non-binding-consolidation-referendum:measure",
+          "contestId": "wi-wec-2026-greenwood-school-district-advisory-non-binding-consolidation-referendum",
+          "questionText": "Advisory/Non-Binding Question: How should the School District of Greenwood, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Loyal, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:35:56.374588+00:00",
+            "quote": "Advisory/Non-Binding Question: How should the School District of Greenwood, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Loyal, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+          }
+        },
+        {
+          "id": "wi-wec-2026-loyal-school-district-advisory-non-binding-consolidation-referendum:measure",
+          "contestId": "wi-wec-2026-loyal-school-district-advisory-non-binding-consolidation-referendum",
+          "questionText": "Advisory/Non-Binding Question: How should the School District of Loyal, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Greenwood, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+            "sourceOrg": "Wisconsin Elections Commission",
+            "collectedAt": "2026-11-03T07:22:34.321774+00:00",
+            "verifiedAt": "2026-11-03T07:35:56.374588+00:00",
+            "quote": "Advisory/Non-Binding Question: How should the School District of Loyal, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Greenwood, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-wec-2026-greenwood-school-district-advisory-non-binding-consolidation-referendum",
+          "whatItDoes": "Ask voters for nonbinding advice on how the Greenwood School District should proceed with a proposed consolidation with Loyal, which would form one combined school district. This advisory vote would not itself merge the districts.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:35:56.374588+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-wec-2026-loyal-school-district-advisory-non-binding-consolidation-referendum",
+          "whatItDoes": "Ask voters for nonbinding advice on how the Loyal School District should proceed with a proposed consolidation with Greenwood, which would form one combined school district. This advisory vote would not itself merge the districts.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "sourceHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:35:56.374588+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:WI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:35:56.374588+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "finalUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+        "publisher": "Wisconsin Elections Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:22:34.321774+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+        "reviewedEvidence": "Complete saved public deterministic-reader extraction of official WEC XLSX workbook, including all108table rows and exact SheboyganFalls actualquestion. rawHash identifies these exact59580UTF8source-text bytes, not original workbook bytes. HTTP200 records reader capture success; native government fetch returned403 and origin status is not claimed. Full canonical official URL, reader metadata and hashScope retained. Exact DPI Nov3,2026 row51 independently confirms election, school,65.7M and material purposes. No model or paid provider calls.",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+        "captureMetadata": {
+          "provider": "Jina public deterministic Reader (plain source extraction, no AI summarizer or paid model)",
+          "readerUrl": "https://r.jina.ai/https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "actualReaderHttpStatus": 200,
+          "originHttpStatus": null,
+          "nativeGovernmentFetchHttpStatus": 403,
+          "nativeGovernmentFetchCapturedAt": "2026-11-03T07:22:25.078705+00:00",
+          "reportedUrlSource": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+          "reportedNumberOfPages": 1,
+          "reportedPublishedTime": "2026-10-06T20:13:53Z",
+          "savedCompleteResponseBytes": 59580,
+          "sourceTableRows": 108,
+          "captureSuccessStatusDoesNotClaimOriginHttpStatus": true
+        }
+      }
+    ]
+  }
+}

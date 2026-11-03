@@ -1,0 +1,72 @@
+[
+  {
+    "contestId": "wi-wec-2026-greenwood-school-district-advisory-non-binding-consolidation-referendum",
+    "sourceRow": 20,
+    "reportedBallotPosition": "950005",
+    "reportedReferendumName": "Greenwood School District Advisory/Non-Binding Consolidation Referendum",
+    "reportedJurisdiction": "CLARK COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Advisory/Non-Binding Question: How should the School District of Greenwood, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Loyal, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:",
+    "excerptFile": "excerpts/c73d03ad2aadb12c8ba1d832b57854f5acb7cb40e79c12ee101e313371dd7030.txt",
+    "excerptSha256": "c73d03ad2aadb12c8ba1d832b57854f5acb7cb40e79c12ee101e313371dd7030",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Advisory/Non-Binding Question: How should the School District of Greenwood, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Loyal, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+      ],
+      "yesMeans": [
+        "Advisory/Non-Binding Question: How should the School District of Greenwood, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Loyal, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+      ],
+      "noMeans": [
+        "Advisory/Non-Binding Question: How should the School District of Greenwood, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Loyal, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Question expressly Advisory/NonBinding; not itself authorization to consolidate",
+      "Only named existing school electorate, not city/county or proposed combineddistrict",
+      "Official state file omits choices; no invented choice, tax saving, site closure, timetable or vote direction"
+    ],
+    "limitations": [
+      "WEC question ends Pleasechooseone: but omits response-choice text. whatItDoes explains the sourced advisory purpose; yesMeans/noMeans intentionally null. Actual response choices remain an acquisition gap."
+    ]
+  },
+  {
+    "contestId": "wi-wec-2026-loyal-school-district-advisory-non-binding-consolidation-referendum",
+    "sourceRow": 21,
+    "reportedBallotPosition": "950006",
+    "reportedReferendumName": "Loyal School District Advisory/Non-Binding Consolidation Referendum",
+    "reportedJurisdiction": "CLARK COUNTY",
+    "sourceUrl": "https://elections.wi.gov/sites/default/files/documents/Referendum%20Listing%2010.6.26..xlsx",
+    "sourceFile": "../../dpi-follow-up-south/batch-08-sheboygan-question/sources/1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93.source.txt",
+    "sourceTextSha256": "1b7f6a3c0fee9dd47c5eb1edd619103873705d88f17d7a62b78736acc7463e93",
+    "sourceFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "SHA256 identifies the complete saved deterministic public-reader official XLSX extraction text; not original workbook/HTTP origin bytes",
+    "exactQuestion": "Advisory/Non-Binding Question: How should the School District of Loyal, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Greenwood, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:",
+    "excerptFile": "excerpts/28f0826398512a593d144fa5606ad065bcfae99f7caff64350a471c84d6f3a53.txt",
+    "excerptSha256": "28f0826398512a593d144fa5606ad065bcfae99f7caff64350a471c84d6f3a53",
+    "extractionMethod": "Literal full question field from complete official WEC workbook source extraction; layout whitespace normalized only. This is a complete saved deterministic source-text response, not original XLSX bytes or an AI summary. Exact authority-authored question labels retained.",
+    "fields": {
+      "whatItDoes": [
+        "Advisory/Non-Binding Question: How should the School District of Loyal, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Greenwood, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+      ],
+      "yesMeans": [
+        "Advisory/Non-Binding Question: How should the School District of Loyal, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Greenwood, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+      ],
+      "noMeans": [
+        "Advisory/Non-Binding Question: How should the School District of Loyal, Clark County, Wisconsin proceed on the proposed consolidation with the School District of Greenwood, Clark County, Wisconsin, which would form one single, combined school district? Please choose one:"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Question expressly Advisory/NonBinding; not itself authorization to consolidate",
+      "Only named existing school electorate, not city/county or proposed combineddistrict",
+      "Official state file omits choices; no invented choice, tax saving, site closure, timetable or vote direction"
+    ],
+    "limitations": [
+      "WEC question ends Pleasechooseone: but omits response-choice text. whatItDoes explains the sourced advisory purpose; yesMeans/noMeans intentionally null. Actual response choices remain an acquisition gap."
+    ]
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "contestId": "wi-wec-2026-greenwood-school-district-advisory-non-binding-consolidation-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:greenwood_school_district",
+      "unsd",
+      "5505970",
+      "Greenwood School District"
+    ],
+    "officialNamedElectorate": "Greenwood School District Advisory/Non-Binding Consolidation Referendum",
+    "officialReportedJurisdiction": "CLARK COUNTY",
+    "basis": "Official WEC full question names exact existing SchoolDistrictofGreenwood,ClarkCounty,WI, and otherdistrict as proposed merger partner. NCES state_leaid WI-2394 maps to NCESLEAID 5505970, matching held registered school division GEOID; city/county divisions are not used.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:clark",
+      "ocd-division/country:us/state:wi/place:greenwood",
+      "ocd-division/country:us/state:wi/school_district:loyal_school_district"
+    ],
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2394",
+      "nces_leaid": "5505970",
+      "lea_name": "Greenwood School District"
+    }
+  },
+  {
+    "contestId": "wi-wec-2026-loyal-school-district-advisory-non-binding-consolidation-referendum",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:loyal_school_district",
+      "unsd",
+      "5508250",
+      "Loyal School District"
+    ],
+    "officialNamedElectorate": "Loyal School District Advisory/Non-Binding Consolidation Referendum",
+    "officialReportedJurisdiction": "CLARK COUNTY",
+    "basis": "Official WEC full question names exact existing SchoolDistrictofLoyal,ClarkCounty,WI, and otherdistrict as proposed merger partner. NCES state_leaid WI-3206 maps to NCESLEAID 5508250, matching held registered school division GEOID; city/county divisions are not used.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:wi",
+      "ocd-division/country:us/state:wi/county:clark",
+      "ocd-division/country:us/state:wi/place:loyal",
+      "ocd-division/country:us/state:wi/school_district:greenwood_school_district"
+    ],
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-3206",
+      "nces_leaid": "5508250",
+      "lea_name": "Loyal School District"
+    }
+  }
+]

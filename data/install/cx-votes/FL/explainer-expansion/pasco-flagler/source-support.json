@@ -1,0 +1,326 @@
+[
+  {
+    "contestId": "fl-2026-pasco-school-operating-tax-renewal",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:pasco_county_school_district",
+    "sourceUrl": "https://www.pascovotes.gov/Documents/News/GEN26-REF_2.pdf?t=202609251623260",
+    "rawPdfFile": "sources/85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810.pdf",
+    "rawPdfSha256": "85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810",
+    "nativeTextFile": "sources/5bc8447fe6bedb8183e655f0d3da5f5c1eacd2d90552dd8415956c85994cd00d.txt",
+    "boundedTextFile": "sources/d13c90925e1dcdf824d52f28c180842a6d022f5dd3785679e34ea2310fb482be.txt",
+    "textFilePerMeasure": "sources/6ff39250fa3544541a629a4dd32ec1dfb5a100cd0f25b1b3fbec6e4e2783baf1.txt",
+    "imageFile": "sources/bb06ab24bd8dbf48dd78ce6fb83e5d32e189eb1bcc47a62e02496936ae155304.png",
+    "sourcePage": 1,
+    "bbox": [
+      20,
+      45,
+      595,
+      350
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.pascovotes.gov/Documents/News/GEN26-REF_2.pdf?t=202609251623260",
+      "rawPdfFile": "sources/85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810.pdf",
+      "rawPdfSha256": "85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810",
+      "nativeTextFile": "sources/5bc8447fe6bedb8183e655f0d3da5f5c1eacd2d90552dd8415956c85994cd00d.txt",
+      "boundedTextFile": "sources/d13c90925e1dcdf824d52f28c180842a6d022f5dd3785679e34ea2310fb482be.txt",
+      "imageFile": "sources/bb06ab24bd8dbf48dd78ce6fb83e5d32e189eb1bcc47a62e02496936ae155304.png"
+    },
+    "fullAct": null,
+    "jurisdictionQuote": "All qualified electors residing in Pasco County shall be entitled and permitted to vote on the referendum.",
+    "fields": {
+      "whatItDoes": [
+        "To continue to recruit and retain high-quality teachers, bus drivers and non-administrator support employees, and to also enhance school safety, shall the School Board continue to levy an annual ad valorem operating millage of up to one mil beginning July 1, 2027, and ending June 30, 2031, sharing funds proportionately, as received, with those public schools within the district as described in and as required by F.S. 1011.71(9), with annual usage reporting to Pasco taxpayers?"
+      ],
+      "yesMeans": [
+        "To continue to recruit and retain high-quality teachers, bus drivers and non-administrator support employees, and to also enhance school safety, shall the School Board continue to levy an annual ad valorem operating millage of up to one mil beginning July 1, 2027, and ending June 30, 2031, sharing funds proportionately, as received, with those public schools within the district as described in and as required by F.S. 1011.71(9), with annual usage reporting to Pasco taxpayers?"
+      ],
+      "noMeans": [
+        "To continue to recruit and retain high-quality teachers, bus drivers and non-administrator support employees, and to also enhance school safety, shall the School Board continue to levy an annual ad valorem operating millage of up to one mil beginning July 1, 2027, and ending June 30, 2031, sharing funds proportionately, as received, with those public schools within the district as described in and as required by F.S. 1011.71(9), with annual usage reporting to Pasco taxpayers?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original official county election-source PDF bytes",
+    "sourceIdentityMatch": "Current official source names the question subject and expressly identifies its county/city electorate.",
+    "reviewNote": "All printed tax duration, proportional sharing, unanimity, repayment limits and CPI mechanics retained where applicable; no unprinted outcome inferred."
+  },
+  {
+    "contestId": "fl-2026-palm-coast-official-accountability",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_coast",
+    "sourceUrl": "https://copc-strapi-production.s3.amazonaws.com/Ordinance_2026_XX_Charter_Amendments_14_May_Clean_version_12d3743762.pdf",
+    "rawPdfFile": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+    "rawPdfSha256": "c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7",
+    "nativeTextFile": "sources/83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471.txt",
+    "boundedTextFile": "sources/ddfcabe62124cfe7f4958f8c8919c8e72feb7e976e21a240cd93b2d86691c444.txt",
+    "textFilePerMeasure": "sources/d5a22eeb162a043f03c1b22bf2067b0d635e5202fb85b6b2683932cc683fbd75.txt",
+    "imageFile": "sources/55aee9c428fd2a2cc0d5764a18c8deb6309d21b38a59253fa671585c451547b6.png",
+    "sourcePage": 1,
+    "bbox": [
+      340,
+      550,
+      770,
+      668
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.flaglerelections.gov/files/assets/elections/v/1/documents/election-notices/2026/2026-general-sample-ballot-mailing.pdf",
+      "rawPdfFile": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "rawPdfSha256": "fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c",
+      "nativeTextFile": "sources/21beca974d8d4008d2e571728b6856549b754d03c21f0ad76a804549700e1c19.txt",
+      "boundedTextFile": "sources/ddfcabe62124cfe7f4958f8c8919c8e72feb7e976e21a240cd93b2d86691c444.txt",
+      "imageFile": "sources/55aee9c428fd2a2cc0d5764a18c8deb6309d21b38a59253fa671585c451547b6.png"
+    },
+    "fullAct": {
+      "sourceUrl": "https://copc-strapi-production.s3.amazonaws.com/Ordinance_2026_XX_Charter_Amendments_14_May_Clean_version_12d3743762.pdf",
+      "rawPdfFile": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "rawPdfSha256": "c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7",
+      "nativeTextFile": "sources/83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471.txt",
+      "operativeTextFile": "sources/fb1f9efc2811f9c184848e94e7c6a504766e68978899d873bcd11321f550efe6.txt",
+      "pageImages": [
+        "sources/14fca0f3d460a93883c192e5c34d97e7080651d3526519d5ee8c59cc4210c74e.png",
+        "sources/cbb74acc78380bdbb4bfe4aa473e85bd034879644e6791b9e9c28aadaf0d8f92.png",
+        "sources/d2bccff87c9c6861e516f568cf6c5bb28c9a959cd2163fbf326158daa935b8ac.png"
+      ],
+      "sourcePages": [
+        3,
+        4,
+        7
+      ],
+      "markupResolutions": [
+        {
+          "removedOrResolved": "any standard of conduct or code of ethics established by law for public officials ",
+          "currentText": "Deleted former broad ethics wording; inserted Code of Ethics and Council standard wording retained after visual comparison."
+        }
+      ]
+    },
+    "jurisdictionQuote": "ONLY VOTERS WHO RESIDE IN THE CITY OF PALM COAST",
+    "fields": {
+      "whatItDoes": [
+        "Shall Article IV, Section (7) of the City Charter be amended to expand and clarify standards for forfeitures and suspension of the Mayor and City Council members by defining ethics violations under Florida law, establishing additional meeting attendance requirements, and authorizing the City Council, after three formal censures, to petition the Governor for suspension or removal of a City Council Member for neglect of duty or malfeasance.",
+        "Art. IV, (7) Vacancies; forfeiture of office; suspension; recall; filling of vacancies. (b) Forfeiture of office. The Mayor or any other Council member shall forfeit his/her office upon determination by the Council, acting as a body, that he/she: 1. Lacks at any time, or fails to maintain during his/her term of office, any qualification for the office prescribed by this Charter or otherwise required by law; 2. Is convicted of a felony, or enters a plea of guilty or nolo contendere to a crime punishable as a felony, even if adjudication of guilt has been withheld; 3. Is convicted of a first degree misdemeanor arising directly out of his/her official conduct or duties or enters a plea of guilty or nolo contendere thereto, even if adjudication of guilt has been withheld; 4. Is found to have violated the Code of Ethics for Public Officers and Employees, as set for in Part III, Chapter 112, Florida Statues by the Florida Commission of Ethics, or violated any adopted City Council standard of conduct and has been suspended from office by the Governor, unless subsequently reinstated as provided by law; or 5. Is absent from three (3) consecutive regular Council meetings, or from six meetings within a twelve (12) - month calendar year, without being excused by the Council. For purposes of this subsection “meetings” include City Council business meetings and City Council workshops. (c) Suspension from office. The Mayor or any other Council member shall be suspended from office by the Council acting as a body upon return of an indictment or issuance of an information charging the Council member or Mayor with any crime which is punishable as a felony or with any crime arising out of his/her official conduct or duties which is punishable as a misdemeanor. Pursuant thereto: 1. During the period of suspension, the Mayor or the Council member shall not perform any official act, duty, or function, or receive any allowance, emolument, or privilege of office. 2. If the Mayor or the Council member is subsequently found not guilty of the charge, or if the charge is otherwise dismissed or altered so that suspension would no longer be required as provided herein, the suspension shall be lifted by the Council, and the Council member or Mayor shall be entitled to receive full back allowances and such other emoluments or as he/she would have been entitled to had the suspension not occurred. (d) Request for Removal by Governor. The Council may, by a supermajority vote of its members, formalize a request to the Governor of the State of Florida to remove or suspend the Mayor or any other Council member from office. Such a request may be initiated for persistent misconduct or recurring violations of the public trust not otherwise specifically enumerated in subsections 7(b) or 7(c) of this Charter. The threshold for such a request shall be the issuance of three (3) formal censures against the official within a single calendar year. Each censure shall require approval by a majority vote of the Council members present and voting. Upon the issuance of the third censure within a calendar year, the Council may determine that the official's conduct constitutes \"neglect of duty\" or \"malfeasance\" under Florida law, justifying a formal petition to the Governor for suspension or removal.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ],
+      "yesMeans": [
+        "Shall Article IV, Section (7) of the City Charter be amended to expand and clarify standards for forfeitures and suspension of the Mayor and City Council members by defining ethics violations under Florida law, establishing additional meeting attendance requirements, and authorizing the City Council, after three formal censures, to petition the Governor for suspension or removal of a City Council Member for neglect of duty or malfeasance.",
+        "Art. IV, (7) Vacancies; forfeiture of office; suspension; recall; filling of vacancies. (b) Forfeiture of office. The Mayor or any other Council member shall forfeit his/her office upon determination by the Council, acting as a body, that he/she: 1. Lacks at any time, or fails to maintain during his/her term of office, any qualification for the office prescribed by this Charter or otherwise required by law; 2. Is convicted of a felony, or enters a plea of guilty or nolo contendere to a crime punishable as a felony, even if adjudication of guilt has been withheld; 3. Is convicted of a first degree misdemeanor arising directly out of his/her official conduct or duties or enters a plea of guilty or nolo contendere thereto, even if adjudication of guilt has been withheld; 4. Is found to have violated the Code of Ethics for Public Officers and Employees, as set for in Part III, Chapter 112, Florida Statues by the Florida Commission of Ethics, or violated any adopted City Council standard of conduct and has been suspended from office by the Governor, unless subsequently reinstated as provided by law; or 5. Is absent from three (3) consecutive regular Council meetings, or from six meetings within a twelve (12) - month calendar year, without being excused by the Council. For purposes of this subsection “meetings” include City Council business meetings and City Council workshops. (c) Suspension from office. The Mayor or any other Council member shall be suspended from office by the Council acting as a body upon return of an indictment or issuance of an information charging the Council member or Mayor with any crime which is punishable as a felony or with any crime arising out of his/her official conduct or duties which is punishable as a misdemeanor. Pursuant thereto: 1. During the period of suspension, the Mayor or the Council member shall not perform any official act, duty, or function, or receive any allowance, emolument, or privilege of office. 2. If the Mayor or the Council member is subsequently found not guilty of the charge, or if the charge is otherwise dismissed or altered so that suspension would no longer be required as provided herein, the suspension shall be lifted by the Council, and the Council member or Mayor shall be entitled to receive full back allowances and such other emoluments or as he/she would have been entitled to had the suspension not occurred. (d) Request for Removal by Governor. The Council may, by a supermajority vote of its members, formalize a request to the Governor of the State of Florida to remove or suspend the Mayor or any other Council member from office. Such a request may be initiated for persistent misconduct or recurring violations of the public trust not otherwise specifically enumerated in subsections 7(b) or 7(c) of this Charter. The threshold for such a request shall be the issuance of three (3) formal censures against the official within a single calendar year. Each censure shall require approval by a majority vote of the Council members present and voting. Upon the issuance of the third censure within a calendar year, the Council may determine that the official's conduct constitutes \"neglect of duty\" or \"malfeasance\" under Florida law, justifying a formal petition to the Governor for suspension or removal.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ],
+      "noMeans": [
+        "Shall Article IV, Section (7) of the City Charter be amended to expand and clarify standards for forfeitures and suspension of the Mayor and City Council members by defining ethics violations under Florida law, establishing additional meeting attendance requirements, and authorizing the City Council, after three formal censures, to petition the Governor for suspension or removal of a City Council Member for neglect of duty or malfeasance.",
+        "Art. IV, (7) Vacancies; forfeiture of office; suspension; recall; filling of vacancies. (b) Forfeiture of office. The Mayor or any other Council member shall forfeit his/her office upon determination by the Council, acting as a body, that he/she: 1. Lacks at any time, or fails to maintain during his/her term of office, any qualification for the office prescribed by this Charter or otherwise required by law; 2. Is convicted of a felony, or enters a plea of guilty or nolo contendere to a crime punishable as a felony, even if adjudication of guilt has been withheld; 3. Is convicted of a first degree misdemeanor arising directly out of his/her official conduct or duties or enters a plea of guilty or nolo contendere thereto, even if adjudication of guilt has been withheld; 4. Is found to have violated the Code of Ethics for Public Officers and Employees, as set for in Part III, Chapter 112, Florida Statues by the Florida Commission of Ethics, or violated any adopted City Council standard of conduct and has been suspended from office by the Governor, unless subsequently reinstated as provided by law; or 5. Is absent from three (3) consecutive regular Council meetings, or from six meetings within a twelve (12) - month calendar year, without being excused by the Council. For purposes of this subsection “meetings” include City Council business meetings and City Council workshops. (c) Suspension from office. The Mayor or any other Council member shall be suspended from office by the Council acting as a body upon return of an indictment or issuance of an information charging the Council member or Mayor with any crime which is punishable as a felony or with any crime arising out of his/her official conduct or duties which is punishable as a misdemeanor. Pursuant thereto: 1. During the period of suspension, the Mayor or the Council member shall not perform any official act, duty, or function, or receive any allowance, emolument, or privilege of office. 2. If the Mayor or the Council member is subsequently found not guilty of the charge, or if the charge is otherwise dismissed or altered so that suspension would no longer be required as provided herein, the suspension shall be lifted by the Council, and the Council member or Mayor shall be entitled to receive full back allowances and such other emoluments or as he/she would have been entitled to had the suspension not occurred. (d) Request for Removal by Governor. The Council may, by a supermajority vote of its members, formalize a request to the Governor of the State of Florida to remove or suspend the Mayor or any other Council member from office. Such a request may be initiated for persistent misconduct or recurring violations of the public trust not otherwise specifically enumerated in subsections 7(b) or 7(c) of this Charter. The threshold for such a request shall be the issuance of three (3) formal censures against the official within a single calendar year. Each censure shall require approval by a majority vote of the Council members present and voting. Upon the issuance of the third censure within a calendar year, the Council may determine that the official's conduct constitutes \"neglect of duty\" or \"malfeasance\" under Florida law, justifying a formal petition to the Governor for suspension or removal.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original full official posted charter-text PDF bytes",
+    "sourceIdentityMatch": "Current city .gov neutral page expressly links this full ordinance text and says the three proposed amendments are on November 3, 2026 ballot; current county sample has matching three questions.",
+    "reviewNote": "Council censure and supermajority thresholds are Council action rules, not voter-adoption thresholds. Governor suspension/reinstatement, meeting scope and same-calendar-year censure conditions retained.",
+    "officialLinkingPage": {
+      "url": "https://www.palmcoast.gov/council/charter-amendments",
+      "file": "sources/d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2.html",
+      "sha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "nativeCaptureSha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "retrievedAt": "2026-11-03T06:34:45.044090+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    }
+  },
+  {
+    "contestId": "fl-2026-palm-coast-vacancy-election-rules",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_coast",
+    "sourceUrl": "https://copc-strapi-production.s3.amazonaws.com/Ordinance_2026_XX_Charter_Amendments_14_May_Clean_version_12d3743762.pdf",
+    "rawPdfFile": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+    "rawPdfSha256": "c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7",
+    "nativeTextFile": "sources/83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471.txt",
+    "boundedTextFile": "sources/c94f38d9794a7a2d2f2b69748b9a3806d021bb419ff3bdd6f2229f4a4547a3b5.txt",
+    "textFilePerMeasure": "sources/dbf6b9a28243051e8160e306912c82194553c834b7b113b0ff633008c457ec7e.txt",
+    "imageFile": "sources/f3236daf10390045a32605dfa13859fbd93c97797d699aa7b8f0708f21649486.png",
+    "sourcePage": 1,
+    "bbox": [
+      340,
+      668,
+      770,
+      770
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.flaglerelections.gov/files/assets/elections/v/1/documents/election-notices/2026/2026-general-sample-ballot-mailing.pdf",
+      "rawPdfFile": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "rawPdfSha256": "fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c",
+      "nativeTextFile": "sources/21beca974d8d4008d2e571728b6856549b754d03c21f0ad76a804549700e1c19.txt",
+      "boundedTextFile": "sources/c94f38d9794a7a2d2f2b69748b9a3806d021bb419ff3bdd6f2229f4a4547a3b5.txt",
+      "imageFile": "sources/f3236daf10390045a32605dfa13859fbd93c97797d699aa7b8f0708f21649486.png"
+    },
+    "fullAct": {
+      "sourceUrl": "https://copc-strapi-production.s3.amazonaws.com/Ordinance_2026_XX_Charter_Amendments_14_May_Clean_version_12d3743762.pdf",
+      "rawPdfFile": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "rawPdfSha256": "c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7",
+      "nativeTextFile": "sources/83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471.txt",
+      "operativeTextFile": "sources/f3533e0bac86c6fd6df118ab2e1643bd9ec89ab9cd39dd98ddb89e91eb49c551.txt",
+      "pageImages": [
+        "sources/61eb3bf6f9473a24c00b1e699eb482f08704761b0c70e5cd6cc0cb2035da9775.png",
+        "sources/d2bccff87c9c6861e516f568cf6c5bb28c9a959cd2163fbf326158daa935b8ac.png"
+      ],
+      "sourcePages": [
+        5,
+        7
+      ],
+      "markupResolutions": []
+    },
+    "jurisdictionQuote": "ONLY VOTERS WHO RESIDE IN THE CITY OF PALM COAST",
+    "fields": {
+      "whatItDoes": [
+        "Shall Article IV(7)(e) of the City Charter be amended to revise vacancy procedures? If a vacancy occurs with over 18 months remaining in a term, a special election is required within 90 days. If a vacancy occurs ithin 60 days or less of a General Election, a special election must be called within 90 days following that General Election.",
+        "Article IV, (7)(e) Filling of vacancies. (1) If, for any reason other than recall or assuming the office of Mayor, a vacancy occurs in the office of any council seat within the first two years of a term the office shall be filled by appointment within 90 days following the occurrence of such vacancy by majority vote of the remaining Council members. If said vacancy occurs within six (6) months of the next regularly scheduled election, the remaining Council members may delay the appointment. Such appointments shall last until the next regularly scheduled election, at which time the seat shall be declared open and an election held for the remaining two years of the original term, thus continuing the original staggering of district seats. However, the following administrative and timing guardrails shall apply: (a) 18-Month Rule: Notwithstanding the above, if at the time the vacancy occurs there are more than eighteen (18) months remaining before the next regularly scheduled election, the Council shall call a special election within 30 days to fill the vacancy for the remainder of the unexpired term. Such special election shall be held as soon as practicable, but no later than ninety (90) days after the vacancy occurs, subject to the availability and scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes and the notice and certification requirements of Florida law. (b) Ballot Deadline Guardrail: In the event a vacancy occurs too late for the seat to be legally certified to the general election ballot under Florida law (including the 60-day certification deadline), the Council shall call for a special election within ninety (90) days after the general election to fill the seat for the remainder of the unexpired term, subject to the availability and scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes. 2. If, for any reason other than recall or assuming the office of Mayor, a vacancy occurs in the office of any Council seat within the last two years of a term, the office shall be filled by appointment within 90 days following the occurrence of such vacancy by majority vote of the remaining Council members. If said vacancy occurs within six (6) months of the next regularly scheduled election, the remaining Council members may delay the appointment. Such appointments shall last until the next regularly scheduled election, at which time the seat shall be declared open and an election held for the regular four-year term. However, if at the time the vacancy occurs there are more than eighteen (18) months remaining before the next regularly scheduled election, the Council shall call a special election to fill the vacancy for the remainder of the unexpired term. Such special election shall be held as soon as practicable, but no later than ninety (90) days after the vacancy occurs, and subject to the scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes and the notice and certification requirements of Florida law.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ],
+      "yesMeans": [
+        "Shall Article IV(7)(e) of the City Charter be amended to revise vacancy procedures? If a vacancy occurs with over 18 months remaining in a term, a special election is required within 90 days. If a vacancy occurs ithin 60 days or less of a General Election, a special election must be called within 90 days following that General Election.",
+        "Article IV, (7)(e) Filling of vacancies. (1) If, for any reason other than recall or assuming the office of Mayor, a vacancy occurs in the office of any council seat within the first two years of a term the office shall be filled by appointment within 90 days following the occurrence of such vacancy by majority vote of the remaining Council members. If said vacancy occurs within six (6) months of the next regularly scheduled election, the remaining Council members may delay the appointment. Such appointments shall last until the next regularly scheduled election, at which time the seat shall be declared open and an election held for the remaining two years of the original term, thus continuing the original staggering of district seats. However, the following administrative and timing guardrails shall apply: (a) 18-Month Rule: Notwithstanding the above, if at the time the vacancy occurs there are more than eighteen (18) months remaining before the next regularly scheduled election, the Council shall call a special election within 30 days to fill the vacancy for the remainder of the unexpired term. Such special election shall be held as soon as practicable, but no later than ninety (90) days after the vacancy occurs, subject to the availability and scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes and the notice and certification requirements of Florida law. (b) Ballot Deadline Guardrail: In the event a vacancy occurs too late for the seat to be legally certified to the general election ballot under Florida law (including the 60-day certification deadline), the Council shall call for a special election within ninety (90) days after the general election to fill the seat for the remainder of the unexpired term, subject to the availability and scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes. 2. If, for any reason other than recall or assuming the office of Mayor, a vacancy occurs in the office of any Council seat within the last two years of a term, the office shall be filled by appointment within 90 days following the occurrence of such vacancy by majority vote of the remaining Council members. If said vacancy occurs within six (6) months of the next regularly scheduled election, the remaining Council members may delay the appointment. Such appointments shall last until the next regularly scheduled election, at which time the seat shall be declared open and an election held for the regular four-year term. However, if at the time the vacancy occurs there are more than eighteen (18) months remaining before the next regularly scheduled election, the Council shall call a special election to fill the vacancy for the remainder of the unexpired term. Such special election shall be held as soon as practicable, but no later than ninety (90) days after the vacancy occurs, and subject to the scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes and the notice and certification requirements of Florida law.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ],
+      "noMeans": [
+        "Shall Article IV(7)(e) of the City Charter be amended to revise vacancy procedures? If a vacancy occurs with over 18 months remaining in a term, a special election is required within 90 days. If a vacancy occurs ithin 60 days or less of a General Election, a special election must be called within 90 days following that General Election.",
+        "Article IV, (7)(e) Filling of vacancies. (1) If, for any reason other than recall or assuming the office of Mayor, a vacancy occurs in the office of any council seat within the first two years of a term the office shall be filled by appointment within 90 days following the occurrence of such vacancy by majority vote of the remaining Council members. If said vacancy occurs within six (6) months of the next regularly scheduled election, the remaining Council members may delay the appointment. Such appointments shall last until the next regularly scheduled election, at which time the seat shall be declared open and an election held for the remaining two years of the original term, thus continuing the original staggering of district seats. However, the following administrative and timing guardrails shall apply: (a) 18-Month Rule: Notwithstanding the above, if at the time the vacancy occurs there are more than eighteen (18) months remaining before the next regularly scheduled election, the Council shall call a special election within 30 days to fill the vacancy for the remainder of the unexpired term. Such special election shall be held as soon as practicable, but no later than ninety (90) days after the vacancy occurs, subject to the availability and scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes and the notice and certification requirements of Florida law. (b) Ballot Deadline Guardrail: In the event a vacancy occurs too late for the seat to be legally certified to the general election ballot under Florida law (including the 60-day certification deadline), the Council shall call for a special election within ninety (90) days after the general election to fill the seat for the remainder of the unexpired term, subject to the availability and scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes. 2. If, for any reason other than recall or assuming the office of Mayor, a vacancy occurs in the office of any Council seat within the last two years of a term, the office shall be filled by appointment within 90 days following the occurrence of such vacancy by majority vote of the remaining Council members. If said vacancy occurs within six (6) months of the next regularly scheduled election, the remaining Council members may delay the appointment. Such appointments shall last until the next regularly scheduled election, at which time the seat shall be declared open and an election held for the regular four-year term. However, if at the time the vacancy occurs there are more than eighteen (18) months remaining before the next regularly scheduled election, the Council shall call a special election to fill the vacancy for the remainder of the unexpired term. Such special election shall be held as soon as practicable, but no later than ninety (90) days after the vacancy occurs, and subject to the scheduling capacity of the Supervisor of Elections in accordance with Section 100.151, Florida Statutes and the notice and certification requirements of Florida law.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original full official posted charter-text PDF bytes",
+    "sourceIdentityMatch": "Current city .gov neutral page expressly links this full ordinance text and says the three proposed amendments are on November 3, 2026 ballot; current county sample has matching three questions.",
+    "reviewNote": "The short ballot summary says 18 months remaining in a term. The current official city explanation and complete operative text measure the trigger to the next regularly scheduled election; the reader explanation follows that detailed operative rule, with scheduling/certification conditions. The exact printed question retains its source spelling ithin.",
+    "officialLinkingPage": {
+      "url": "https://www.palmcoast.gov/council/charter-amendments",
+      "file": "sources/d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2.html",
+      "sha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "nativeCaptureSha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "retrievedAt": "2026-11-03T06:34:45.044090+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    }
+  },
+  {
+    "contestId": "fl-2026-palm-coast-unfunded-contract-limits",
+    "ocdId": "ocd-division/country:us/state:fl/place:palm_coast",
+    "sourceUrl": "https://copc-strapi-production.s3.amazonaws.com/Ordinance_2026_XX_Charter_Amendments_14_May_Clean_version_12d3743762.pdf",
+    "rawPdfFile": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+    "rawPdfSha256": "c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7",
+    "nativeTextFile": "sources/83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471.txt",
+    "boundedTextFile": "sources/8f84dcce2e027f954a6922615bf83937cb31a6baa878f84fc1a6a75864ca361a.txt",
+    "textFilePerMeasure": "sources/e2bf98c8c27098bdca5cc47ea8928a7c0085eb69a7de286795ba182944c364cf.txt",
+    "imageFile": "sources/10db47d9c07e10cb07495b592c790364c62be05b6fb62ee603706c388f4b2498.png",
+    "sourcePage": 1,
+    "bbox": [
+      340,
+      770,
+      770,
+      885
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.flaglerelections.gov/files/assets/elections/v/1/documents/election-notices/2026/2026-general-sample-ballot-mailing.pdf",
+      "rawPdfFile": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "rawPdfSha256": "fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c",
+      "nativeTextFile": "sources/21beca974d8d4008d2e571728b6856549b754d03c21f0ad76a804549700e1c19.txt",
+      "boundedTextFile": "sources/8f84dcce2e027f954a6922615bf83937cb31a6baa878f84fc1a6a75864ca361a.txt",
+      "imageFile": "sources/10db47d9c07e10cb07495b592c790364c62be05b6fb62ee603706c388f4b2498.png"
+    },
+    "fullAct": {
+      "sourceUrl": "https://copc-strapi-production.s3.amazonaws.com/Ordinance_2026_XX_Charter_Amendments_14_May_Clean_version_12d3743762.pdf",
+      "rawPdfFile": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "rawPdfSha256": "c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7",
+      "nativeTextFile": "sources/83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471.txt",
+      "operativeTextFile": "sources/f40ffd96a406753c876e42eab98e8590711e0c37f6c702a4bdc430431e4a18ba.txt",
+      "pageImages": [
+        "sources/f7a821d9cd7480732542a3e2db77211f6c367c1702abe148c69d3fd0d4e9937c.png",
+        "sources/d2bccff87c9c6861e516f568cf6c5bb28c9a959cd2163fbf326158daa935b8ac.png"
+      ],
+      "sourcePages": [
+        6,
+        7
+      ],
+      "markupResolutions": [
+        {
+          "removedOrResolved": "36 30 months years",
+          "currentText": "30 years"
+        },
+        {
+          "removedOrResolved": "$15,000,000.00 $30,000,000.00",
+          "currentText": "$30,000,000.00"
+        }
+      ]
+    },
+    "jurisdictionQuote": "ONLY VOTERS WHO RESIDE IN THE CITY OF PALM COAST",
+    "fields": {
+      "whatItDoes": [
+        "Shall Art. VI (3) (e) of the City Charter be amended to increase the Council’s unfunded contracting authority from $15,000,000.00 to $30,000,000.00 and extend the term from 36 months to 30 years? Unfunded multi-year or lease- purchase contracts exceeding these limits shall require voter approval via referendum. The $30,000,000.00 threshold shall be adjusted annually for inflation (CPI), rounded to the nearest $1,000.00.",
+        "e) Limitations to Council's Contracting Authority. Unless authorized by the electors of the City at a duly held referendum election, the Council shall not enter into lease-purchase contracts, or any other unfunded multiyear contracts, the repayment of which: extend in excess of 30 years ; or exceeds $30,000,000.00. As of each October 1 thereafter, the amount of the “Contracting Limit” in effect shall be adjusted to reflect the percentage change in the Consumer Price Index (U.S. City Average All Workers) by using the most recent available information for the prior 12 month period. This adjustment shall be calculated using the most recent available data for the preceding 12-month period. The adjusted amount shall be rounded to the nearest $1,000 and shall serve as the effective Contracting Limit for the following fiscal year.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ],
+      "yesMeans": [
+        "Shall Art. VI (3) (e) of the City Charter be amended to increase the Council’s unfunded contracting authority from $15,000,000.00 to $30,000,000.00 and extend the term from 36 months to 30 years? Unfunded multi-year or lease- purchase contracts exceeding these limits shall require voter approval via referendum. The $30,000,000.00 threshold shall be adjusted annually for inflation (CPI), rounded to the nearest $1,000.00.",
+        "e) Limitations to Council's Contracting Authority. Unless authorized by the electors of the City at a duly held referendum election, the Council shall not enter into lease-purchase contracts, or any other unfunded multiyear contracts, the repayment of which: extend in excess of 30 years ; or exceeds $30,000,000.00. As of each October 1 thereafter, the amount of the “Contracting Limit” in effect shall be adjusted to reflect the percentage change in the Consumer Price Index (U.S. City Average All Workers) by using the most recent available information for the prior 12 month period. This adjustment shall be calculated using the most recent available data for the preceding 12-month period. The adjusted amount shall be rounded to the nearest $1,000 and shall serve as the effective Contracting Limit for the following fiscal year.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ],
+      "noMeans": [
+        "Shall Art. VI (3) (e) of the City Charter be amended to increase the Council’s unfunded contracting authority from $15,000,000.00 to $30,000,000.00 and extend the term from 36 months to 30 years? Unfunded multi-year or lease- purchase contracts exceeding these limits shall require voter approval via referendum. The $30,000,000.00 threshold shall be adjusted annually for inflation (CPI), rounded to the nearest $1,000.00.",
+        "e) Limitations to Council's Contracting Authority. Unless authorized by the electors of the City at a duly held referendum election, the Council shall not enter into lease-purchase contracts, or any other unfunded multiyear contracts, the repayment of which: extend in excess of 30 years ; or exceeds $30,000,000.00. As of each October 1 thereafter, the amount of the “Contracting Limit” in effect shall be adjusted to reflect the percentage change in the Consumer Price Index (U.S. City Average All Workers) by using the most recent available information for the prior 12 month period. This adjustment shall be calculated using the most recent available data for the preceding 12-month period. The adjusted amount shall be rounded to the nearest $1,000 and shall serve as the effective Contracting Limit for the following fiscal year.\n\nSECTION 7. EFFECTIVE DATE OF CHARTER AMENDMENTS. The revised Charter provisions proposed for approval in this Ordinance shall become effective upon their approval following election of the electors of the City of Palm Coast in accordance with Section 166.031, Florida Statutes, and Article IX of the City Charter. If the electors reject an amendment, the rejected amendment shall not take effect."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original full official posted charter-text PDF bytes",
+    "sourceIdentityMatch": "Current city .gov neutral page expressly links this full ordinance text and says the three proposed amendments are on November 3, 2026 ballot; current county sample has matching three questions.",
+    "reviewNote": "All printed tax duration, proportional sharing, unanimity, repayment limits and CPI mechanics retained where applicable; no unprinted outcome inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.palmcoast.gov/council/charter-amendments",
+      "file": "sources/d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2.html",
+      "sha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "nativeCaptureSha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "retrievedAt": "2026-11-03T06:34:45.044090+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    }
+  },
+  {
+    "contestId": "fl-2026-flagler-beach-golf-course-deed-restriction",
+    "ocdId": "ocd-division/country:us/state:fl/place:flagler_beach",
+    "sourceUrl": "https://www.flaglerelections.gov/files/assets/elections/v/1/documents/election-notices/2026/2026-general-sample-ballot-mailing.pdf",
+    "rawPdfFile": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+    "rawPdfSha256": "fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c",
+    "nativeTextFile": "sources/21beca974d8d4008d2e571728b6856549b754d03c21f0ad76a804549700e1c19.txt",
+    "boundedTextFile": "sources/fcfac402532da2e217be541edb6e6352eff58a3c1dea9a98c6b276ecd7ed7c53.txt",
+    "textFilePerMeasure": "sources/127fe3250af10b375564ebb706552e53da0d99cfee383a9e180dd858e6507c38.txt",
+    "imageFile": "sources/210de1ff2c63e227bc324bfa1e25cb4154a5314fec7783fa2b3bdebf95276568.png",
+    "sourcePage": 1,
+    "bbox": [
+      340,
+      925,
+      770,
+      1022
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.flaglerelections.gov/files/assets/elections/v/1/documents/election-notices/2026/2026-general-sample-ballot-mailing.pdf",
+      "rawPdfFile": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "rawPdfSha256": "fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c",
+      "nativeTextFile": "sources/21beca974d8d4008d2e571728b6856549b754d03c21f0ad76a804549700e1c19.txt",
+      "boundedTextFile": "sources/fcfac402532da2e217be541edb6e6352eff58a3c1dea9a98c6b276ecd7ed7c53.txt",
+      "imageFile": "sources/210de1ff2c63e227bc324bfa1e25cb4154a5314fec7783fa2b3bdebf95276568.png"
+    },
+    "fullAct": null,
+    "jurisdictionQuote": "ONLY VOTERS WHO RESIDE IN THE CITY OF FLAGLER BEACH",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Flagler Beach Charter be amended to provide that any termination or amendment of the deed restriction related to the sale of the property known as the Ocean Palm Golf Course shall require a unanimous vote of the City Commission?"
+      ],
+      "yesMeans": [
+        "Shall the Flagler Beach Charter be amended to provide that any termination or amendment of the deed restriction related to the sale of the property known as the Ocean Palm Golf Course shall require a unanimous vote of the City Commission?"
+      ],
+      "noMeans": [
+        "Shall the Flagler Beach Charter be amended to provide that any termination or amendment of the deed restriction related to the sale of the property known as the Ocean Palm Golf Course shall require a unanimous vote of the City Commission?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original official county election-source PDF bytes",
+    "sourceIdentityMatch": "Current official source names the question subject and expressly identifies its county/city electorate.",
+    "reviewNote": "All printed tax duration, proportional sharing, unanimity, repayment limits and CPI mechanics retained where applicable; no unprinted outcome inferred."
+  }
+]

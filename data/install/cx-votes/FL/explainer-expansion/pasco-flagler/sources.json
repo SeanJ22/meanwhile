@@ -1,0 +1,328 @@
+{
+  "preparedAt": "2026-11-03T06:40:41.326006+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "sha256": "c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7",
+      "bytes": 159800,
+      "kind": "ORIGINAL_OFFICIAL_POSTED_CHARTER_AMENDMENT_TEXT",
+      "sourceUrl": "https://copc-strapi-production.s3.amazonaws.com/Ordinance_2026_XX_Charter_Amendments_14_May_Clean_version_12d3743762.pdf",
+      "retrievedAt": "2026-11-03T06:35:29.062536+00:00"
+    },
+    {
+      "file": "sources/83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471.txt",
+      "sha256": "83a5e306d903eefebe92f8a39035f4649303a0f3a9b0684d59a784aa8cf5a471",
+      "bytes": 17651,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf"
+    },
+    {
+      "file": "sources/85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810.pdf",
+      "sha256": "85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810",
+      "bytes": 159067,
+      "kind": "ORIGINAL_OFFICIAL_ELECTION_SOURCE",
+      "sourceUrl": "https://www.pascovotes.gov/Documents/News/GEN26-REF_2.pdf?t=202609251623260",
+      "retrievedAt": "2026-11-03T06:09:36.389690+00:00"
+    },
+    {
+      "file": "sources/5bc8447fe6bedb8183e655f0d3da5f5c1eacd2d90552dd8415956c85994cd00d.txt",
+      "sha256": "5bc8447fe6bedb8183e655f0d3da5f5c1eacd2d90552dd8415956c85994cd00d",
+      "bytes": 3960,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810.pdf"
+    },
+    {
+      "file": "sources/d13c90925e1dcdf824d52f28c180842a6d022f5dd3785679e34ea2310fb482be.txt",
+      "sha256": "d13c90925e1dcdf824d52f28c180842a6d022f5dd3785679e34ea2310fb482be",
+      "bytes": 1502,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        20,
+        45,
+        595,
+        350
+      ]
+    },
+    {
+      "file": "sources/bb06ab24bd8dbf48dd78ce6fb83e5d32e189eb1bcc47a62e02496936ae155304.png",
+      "sha256": "bb06ab24bd8dbf48dd78ce6fb83e5d32e189eb1bcc47a62e02496936ae155304",
+      "bytes": 239101,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        20,
+        45,
+        595,
+        350
+      ]
+    },
+    {
+      "file": "sources/6ff39250fa3544541a629a4dd32ec1dfb5a100cd0f25b1b3fbec6e4e2783baf1.txt",
+      "sha256": "6ff39250fa3544541a629a4dd32ec1dfb5a100cd0f25b1b3fbec6e4e2783baf1",
+      "bytes": 481,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_OPERATIVE_TEXT",
+      "derivedFrom": [
+        "sources/85a0b2b666ec841c58fdfa2d8d329afe136516a3f86836761f33aeb7e1215810.pdf"
+      ]
+    },
+    {
+      "file": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sha256": "fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c",
+      "bytes": 805241,
+      "kind": "ORIGINAL_OFFICIAL_ELECTION_SOURCE",
+      "sourceUrl": "https://www.flaglerelections.gov/files/assets/elections/v/1/documents/election-notices/2026/2026-general-sample-ballot-mailing.pdf",
+      "retrievedAt": "2026-11-03T06:15:24.268793+00:00"
+    },
+    {
+      "file": "sources/21beca974d8d4008d2e571728b6856549b754d03c21f0ad76a804549700e1c19.txt",
+      "sha256": "21beca974d8d4008d2e571728b6856549b754d03c21f0ad76a804549700e1c19",
+      "bytes": 33143,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf"
+    },
+    {
+      "file": "sources/ddfcabe62124cfe7f4958f8c8919c8e72feb7e976e21a240cd93b2d86691c444.txt",
+      "sha256": "ddfcabe62124cfe7f4958f8c8919c8e72feb7e976e21a240cd93b2d86691c444",
+      "bytes": 588,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        550,
+        770,
+        668
+      ]
+    },
+    {
+      "file": "sources/55aee9c428fd2a2cc0d5764a18c8deb6309d21b38a59253fa671585c451547b6.png",
+      "sha256": "55aee9c428fd2a2cc0d5764a18c8deb6309d21b38a59253fa671585c451547b6",
+      "bytes": 68277,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        550,
+        770,
+        668
+      ]
+    },
+    {
+      "file": "sources/d5a22eeb162a043f03c1b22bf2067b0d635e5202fb85b6b2683932cc683fbd75.txt",
+      "sha256": "d5a22eeb162a043f03c1b22bf2067b0d635e5202fb85b6b2683932cc683fbd75",
+      "bytes": 4153,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_OPERATIVE_TEXT",
+      "derivedFrom": [
+        "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+        "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf"
+      ]
+    },
+    {
+      "file": "sources/fb1f9efc2811f9c184848e94e7c6a504766e68978899d873bcd11321f550efe6.txt",
+      "sha256": "fb1f9efc2811f9c184848e94e7c6a504766e68978899d873bcd11321f550efe6",
+      "bytes": 3709,
+      "kind": "VISUALLY_VERIFIED_CURRENT_OPERATIVE_TEXT",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "any standard of conduct or code of ethics established by law for public officials ",
+          "currentText": "Deleted former broad ethics wording; inserted Code of Ethics and Council standard wording retained after visual comparison."
+        }
+      ]
+    },
+    {
+      "file": "sources/14fca0f3d460a93883c192e5c34d97e7080651d3526519d5ee8c59cc4210c74e.png",
+      "sha256": "14fca0f3d460a93883c192e5c34d97e7080651d3526519d5ee8c59cc4210c74e",
+      "bytes": 191701,
+      "kind": "RENDERED_FULL_OFFICIAL_PROPOSED_TEXT_PAGE",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/cbb74acc78380bdbb4bfe4aa473e85bd034879644e6791b9e9c28aadaf0d8f92.png",
+      "sha256": "cbb74acc78380bdbb4bfe4aa473e85bd034879644e6791b9e9c28aadaf0d8f92",
+      "bytes": 150158,
+      "kind": "RENDERED_FULL_OFFICIAL_PROPOSED_TEXT_PAGE",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/d2bccff87c9c6861e516f568cf6c5bb28c9a959cd2163fbf326158daa935b8ac.png",
+      "sha256": "d2bccff87c9c6861e516f568cf6c5bb28c9a959cd2163fbf326158daa935b8ac",
+      "bytes": 143417,
+      "kind": "RENDERED_FULL_OFFICIAL_PROPOSED_TEXT_PAGE",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "sourcePage": 7
+    },
+    {
+      "file": "sources/c94f38d9794a7a2d2f2b69748b9a3806d021bb419ff3bdd6f2229f4a4547a3b5.txt",
+      "sha256": "c94f38d9794a7a2d2f2b69748b9a3806d021bb419ff3bdd6f2229f4a4547a3b5",
+      "bytes": 497,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        668,
+        770,
+        770
+      ]
+    },
+    {
+      "file": "sources/f3236daf10390045a32605dfa13859fbd93c97797d699aa7b8f0708f21649486.png",
+      "sha256": "f3236daf10390045a32605dfa13859fbd93c97797d699aa7b8f0708f21649486",
+      "bytes": 59156,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        668,
+        770,
+        770
+      ]
+    },
+    {
+      "file": "sources/dbf6b9a28243051e8160e306912c82194553c834b7b113b0ff633008c457ec7e.txt",
+      "sha256": "dbf6b9a28243051e8160e306912c82194553c834b7b113b0ff633008c457ec7e",
+      "bytes": 3842,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_OPERATIVE_TEXT",
+      "derivedFrom": [
+        "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+        "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf"
+      ]
+    },
+    {
+      "file": "sources/f3533e0bac86c6fd6df118ab2e1643bd9ec89ab9cd39dd98ddb89e91eb49c551.txt",
+      "sha256": "f3533e0bac86c6fd6df118ab2e1643bd9ec89ab9cd39dd98ddb89e91eb49c551",
+      "bytes": 3502,
+      "kind": "VISUALLY_VERIFIED_CURRENT_OPERATIVE_TEXT",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "markupResolutions": []
+    },
+    {
+      "file": "sources/61eb3bf6f9473a24c00b1e699eb482f08704761b0c70e5cd6cc0cb2035da9775.png",
+      "sha256": "61eb3bf6f9473a24c00b1e699eb482f08704761b0c70e5cd6cc0cb2035da9775",
+      "bytes": 229856,
+      "kind": "RENDERED_FULL_OFFICIAL_PROPOSED_TEXT_PAGE",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/8f84dcce2e027f954a6922615bf83937cb31a6baa878f84fc1a6a75864ca361a.txt",
+      "sha256": "8f84dcce2e027f954a6922615bf83937cb31a6baa878f84fc1a6a75864ca361a",
+      "bytes": 580,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        770,
+        770,
+        885
+      ]
+    },
+    {
+      "file": "sources/10db47d9c07e10cb07495b592c790364c62be05b6fb62ee603706c388f4b2498.png",
+      "sha256": "10db47d9c07e10cb07495b592c790364c62be05b6fb62ee603706c388f4b2498",
+      "bytes": 68772,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        770,
+        770,
+        885
+      ]
+    },
+    {
+      "file": "sources/e2bf98c8c27098bdca5cc47ea8928a7c0085eb69a7de286795ba182944c364cf.txt",
+      "sha256": "e2bf98c8c27098bdca5cc47ea8928a7c0085eb69a7de286795ba182944c364cf",
+      "bytes": 1665,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_OPERATIVE_TEXT",
+      "derivedFrom": [
+        "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+        "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf"
+      ]
+    },
+    {
+      "file": "sources/f40ffd96a406753c876e42eab98e8590711e0c37f6c702a4bdc430431e4a18ba.txt",
+      "sha256": "f40ffd96a406753c876e42eab98e8590711e0c37f6c702a4bdc430431e4a18ba",
+      "bytes": 1238,
+      "kind": "VISUALLY_VERIFIED_CURRENT_OPERATIVE_TEXT",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "36 30 months years",
+          "currentText": "30 years"
+        },
+        {
+          "removedOrResolved": "$15,000,000.00 $30,000,000.00",
+          "currentText": "$30,000,000.00"
+        }
+      ]
+    },
+    {
+      "file": "sources/f7a821d9cd7480732542a3e2db77211f6c367c1702abe148c69d3fd0d4e9937c.png",
+      "sha256": "f7a821d9cd7480732542a3e2db77211f6c367c1702abe148c69d3fd0d4e9937c",
+      "bytes": 155809,
+      "kind": "RENDERED_FULL_OFFICIAL_PROPOSED_TEXT_PAGE",
+      "derivedFrom": "sources/c6286e4a4949b6edb47843aa026ce075be9a81b9febf3d2acfafa60ee4e82ec7.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/fcfac402532da2e217be541edb6e6352eff58a3c1dea9a98c6b276ecd7ed7c53.txt",
+      "sha256": "fcfac402532da2e217be541edb6e6352eff58a3c1dea9a98c6b276ecd7ed7c53",
+      "bytes": 353,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        925,
+        770,
+        1022
+      ]
+    },
+    {
+      "file": "sources/210de1ff2c63e227bc324bfa1e25cb4154a5314fec7783fa2b3bdebf95276568.png",
+      "sha256": "210de1ff2c63e227bc324bfa1e25cb4154a5314fec7783fa2b3bdebf95276568",
+      "bytes": 43651,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        340,
+        925,
+        770,
+        1022
+      ]
+    },
+    {
+      "file": "sources/127fe3250af10b375564ebb706552e53da0d99cfee383a9e180dd858e6507c38.txt",
+      "sha256": "127fe3250af10b375564ebb706552e53da0d99cfee383a9e180dd858e6507c38",
+      "bytes": 239,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_OPERATIVE_TEXT",
+      "derivedFrom": [
+        "sources/fefd2eeae9679290531694c7971e9957a8d1013e3f546caf2826c25f0857d90c.pdf"
+      ]
+    },
+    {
+      "file": "sources/d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2.html",
+      "sha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "bytes": 259703,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.palmcoast.gov/council/charter-amendments",
+      "retrievedAt": "2026-11-03T06:34:45.044090+00:00",
+      "nativeCaptureSha256": "d76aa1ccb67a63e426609f53dbd5eefb5ef4535229f377709c6b09a7c00ce0f2",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official linking HTML; native original retained only in acquisition scratch. Stored hash identifies sanitized bytes, not a raw original."
+    }
+  ]
+}

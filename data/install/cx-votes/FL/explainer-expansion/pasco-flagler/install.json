@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T06:40:41.326006+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-pasco-school-operating-tax-renewal",
+      "title": "Pasco County School District — Continuation of school operating property tax",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:pasco_county_school_district"
+    },
+    {
+      "id": "fl-2026-palm-coast-official-accountability",
+      "title": "Palm Coast — Charter Amendment 1: Mayor and council accountability",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_coast"
+    },
+    {
+      "id": "fl-2026-palm-coast-vacancy-election-rules",
+      "title": "Palm Coast — Charter Amendment 2: Council vacancies and special elections",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_coast"
+    },
+    {
+      "id": "fl-2026-palm-coast-unfunded-contract-limits",
+      "title": "Palm Coast — Charter Amendment 3: Unfunded contract limits",
+      "ocdId": "ocd-division/country:us/state:fl/place:palm_coast"
+    },
+    {
+      "id": "fl-2026-flagler-beach-golf-course-deed-restriction",
+      "title": "Flagler Beach — Ocean Palm Golf Course deed restriction",
+      "ocdId": "ocd-division/country:us/state:fl/place:flagler_beach"
+    }
+  ],
+  "operation": "Merge five new school-district/city questions and full-source neutral explanations, preserving all prior candidate and measure facts.",
+  "coverageLimit": "Positive current official sources establish these five measures. The broader local inventory continues; this is not a statewide completeness claim.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T06:41:53.799Z",
+    "preparedRecords": 5,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all five official sample question regions and relevant full ordinance pages visually read; final redline text and embedded OCR resolved against renders",
+    "officialAuthority": "PASS; Palm Coast .gov current official page delegates the ordinance delivery host; saved HTML sanitized with native hash separate",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/pasco-flagler",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "3148261df07b8793911e5963402dcdf918e7c5e4259b53c38be85441c6c21e23",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

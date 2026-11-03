@@ -1,0 +1,98 @@
+[
+  {
+    "id": "co-arapahoe-vote-centers-2026",
+    "publisher": "Arapahoe County Clerk and Recorder",
+    "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "CO",
+      "ocdId": "ocd-division/country:us/state:co/county:arapahoe",
+      "name": "Arapahoe County",
+      "countyFips": "08005"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<div class=\"rz-business-block\"[^>]*>([\\s\\S]*?)</div><!--/\\.rz-business-block-->",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h2>([\\s\\S]*?)</h2>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<span class=\"sr-only\">Address</span>([\\s\\S]*?)</a>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<span class=\"rz-business-desc\">([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "phone": {
+            "pattern": "<span class=\"sr-only\">Phone Number</span>([\\s\\S]*?)</a>",
+            "group": 1
+          }
+        }
+      },
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "date": "November 3, 2026"
+      }
+    },
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:43:37.212599+00:00",
+      "detail": "Fresh official source captured and replayed through the existing voting reader. Scope remains the named county; Election Day dates and closed locations follow the published source."
+    }
+  },
+  {
+    "id": "cx-polls-co-statewide-election-day-2026",
+    "publisher": "Colorado Governor’s Office of Information Technology / Colorado Secretary of State",
+    "url": "https://gis.colorado.gov/viewer/",
+    "shape": "map-service",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "CO",
+      "ocdId": "ocd-division/country:us/state:co",
+      "name": "Colorado"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://gis.colorado.gov/viewer/",
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "dataUrl": "https://services3.arcgis.com/DgjqnJA1rgO92Soi/arcgis/rest/services/ColoradoPollingLocations/FeatureServer/0",
+      "kind": "ELECTION_DAY",
+      "where": "site_type = 'polling location'",
+      "columns": {
+        "id": "OBJECTID",
+        "name": "name",
+        "address": "geocoded_address",
+        "countyName": "county",
+        "hours": "site_info",
+        "days": "site_availability",
+        "date": "end_date",
+        "election": "end_date",
+        "locationNotes": "directions"
+      },
+      "filters": {
+        "site_type": "polling location",
+        "end_date": "2026-11-03"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:51:05.373916+00:00",
+      "detail": "Official Colorado viewer export names the 2026 General Election view; its configured current webmap links this layer. Complete object-ID acquisition contains 385 Election Day rows (384 distinct facilities) across all 64 counties, each explicitly dated 2026-11-03 and open 7:00AM-7:00PM Election Day. Early-only and drop-only rows are excluded."
+    }
+  }
+]

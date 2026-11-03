@@ -1,0 +1,40 @@
+{
+  "sourceReader": "PASS",
+  "sourceToAnswer": "PASS",
+  "productionWrites": false,
+  "existingReaderUsed": true,
+  "residentialAddressesAndCoordinatesExcluded": true,
+  "residentialSamples": [
+    {
+      "label": "Arapahoe residential sample",
+      "countyFips": "08005",
+      "sourceCensusMatch": true,
+      "electionDaySites": 34
+    }
+  ],
+  "allCountyCount": 64,
+  "completeObjectIdAcquisition": true,
+  "sourceElectionDayRows": 385,
+  "distinctElectionDayFacilities": 384,
+  "earlyAndDropOnlyRowsExcluded": true,
+  "countyResolver": "existing national_county_time_zones reference",
+  "blankCount": 0,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 2,
+  "savedCaptureHashAndLength": "PASS",
+  "sanitizedSavedSourceReplay": "PASS",
+  "doorChecks": [
+    {
+      "doorId": "co-arapahoe-vote-centers-2026",
+      "sites": 34,
+      "boundaries": 0,
+      "currentElectionSites": 34
+    },
+    {
+      "doorId": "cx-polls-co-statewide-election-day-2026",
+      "sites": 384,
+      "boundaries": 0,
+      "currentElectionSites": 384
+    }
+  ]
+}

@@ -1,0 +1,783 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Hidalgo County",
+  "countyFips": "48215",
+  "populationRank": 64,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "counts": {
+    "officialStyles": 64,
+    "physicalPages": 128,
+    "localCandidateFields": 75,
+    "ordinaryPrintedChoices": 141,
+    "refreshedContests": 16,
+    "newContests": 59,
+    "incomingRegionalCourtCountyMemberships": 20,
+    "unmatchedReaderDivisions": 12,
+    "reusedCandidateIds": 19,
+    "newCandidateIds": 122
+  },
+  "coverage": "ALL_64_CURRENT_OFFICIAL_SAMPLES_COMPLETE_LOCAL_NAMED_BLOCKS",
+  "subjects": [
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-mission-mayor",
+      "title": "City of Mission Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:mission",
+      "printedCandidates": 6,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-mission-council-place-1",
+      "title": "City of Mission Council Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:mission",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-mission-council-place-3",
+      "title": "City of Mission Council Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:mission",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-mission-council-place-2-unexpired-term",
+      "title": "City of Mission Council Place 2 \u2014 Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/place:mission",
+      "printedCandidates": 4,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-south-texas-isd-board-trustee-hidalgo-county-commissioner-precinct-2",
+      "title": "South Texas ISD Board Trustee, Hidalgo County Commissioner Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:2",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-hidalgo-county-appraisal-district-board-of-directors-place-1",
+      "title": "Hidalgo County Appraisal District Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-hidalgo-county-appraisal-district-board-of-directors-place-2",
+      "title": "Hidalgo County Appraisal District Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-hidalgo-county-appraisal-district-board-of-directors-place-3",
+      "title": "Hidalgo County Appraisal District Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-hidalgo-independent-school-district-board-of-trustees-place-3",
+      "title": "Hidalgo Independent School District Board of Trustees, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:hidalgo_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-02-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-hidalgo-independent-school-district-board-of-trustees-place-4",
+      "title": "Hidalgo Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:hidalgo_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-02-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-hidalgo-independent-school-district-board-of-trustees-place-5",
+      "title": "Hidalgo Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:hidalgo_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-02-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-la-joya-independent-school-district-board-of-trustees-place-1",
+      "title": "La Joya Independent School District Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:la_joya_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-03-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-la-joya-independent-school-district-board-of-trustees-place-2",
+      "title": "La Joya Independent School District Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:la_joya_independent_school_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-03-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-la-joya-independent-school-district-board-of-trustees-place-3",
+      "title": "La Joya Independent School District Board of Trustees, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:la_joya_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-03-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-progreso-mayor",
+      "title": "City of Progreso Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:progreso",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-08-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-progreso-council-member-place-4",
+      "title": "City of Progreso Council Member, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:progreso",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-08-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-progreso-council-member-place-5",
+      "title": "City of Progreso Council Member, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:progreso",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-08-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-progreso-council-member-place-6",
+      "title": "City of Progreso Council Member, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:progreso",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-08-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-weslaco-commissioner-at-large",
+      "title": "City of Weslaco Commissioner At-Large",
+      "ocdId": "ocd-division/country:us/state:tx/place:weslaco",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-09-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-weslaco-commissioner-district-4",
+      "title": "City of Weslaco Commissioner, District 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:weslaco/council_district:4",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-09-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-4",
+      "title": "Weslaco Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:weslaco_independent_school_district",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-09-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-5",
+      "title": "Weslaco Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:weslaco_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-09-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-6",
+      "title": "Weslaco Independent School District Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:weslaco_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-09-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-7",
+      "title": "Weslaco Independent School District Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:weslaco_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-09-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-city-of-edcouch-alderman-place-5",
+      "title": "City of Edcouch Alderman, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:edcouch",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-12-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-edcouch-elsa-independent-school-district-board-of-trustees-place-1",
+      "title": "Edcouch-Elsa Independent School District Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edcouch_elsa_independent_school_district",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-12-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-edcouch-elsa-independent-school-district-board-of-trustees-place-4",
+      "title": "Edcouch-Elsa Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edcouch_elsa_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-12-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-edcouch-elsa-independent-school-district-board-of-trustees-place-5",
+      "title": "Edcouch-Elsa Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edcouch_elsa_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-12-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-donna-independent-school-district-board-of-trustees-place-5",
+      "title": "Donna Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:donna_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-13-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-donna-independent-school-district-board-of-trustees-place-6",
+      "title": "Donna Independent School District Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:donna_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-13-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-donna-independent-school-district-board-of-trustees-place-7",
+      "title": "Donna Independent School District Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:donna_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-13-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-pharr-san-juan-alamo-independent-school-district-board-of-trustees-place-1",
+      "title": "Pharr-San Juan-Alamo Independent School District Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:pharr_san_juan_alamo_independent_school_district",
+      "printedCandidates": 4,
+      "sampleVerified": true,
+      "sourceWitness": "sample-17-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-pharr-san-juan-alamo-independent-school-district-board-of-trustees-place-2",
+      "title": "Pharr-San Juan-Alamo Independent School District Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:pharr_san_juan_alamo_independent_school_district",
+      "printedCandidates": 4,
+      "sampleVerified": true,
+      "sourceWitness": "sample-17-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-pharr-san-juan-alamo-independent-school-district-board-of-trustees-place-3",
+      "title": "Pharr-San Juan-Alamo Independent School District Board of Trustees, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:pharr_san_juan_alamo_independent_school_district",
+      "printedCandidates": 4,
+      "sampleVerified": true,
+      "sourceWitness": "sample-17-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-1",
+      "title": "Edinburg Consolidated Independent School District Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edinburg_consolidated_independent_school_district",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-30-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-2",
+      "title": "Edinburg Consolidated Independent School District Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edinburg_consolidated_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-30-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-3",
+      "title": "Edinburg Consolidated Independent School District Board of Trustees, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edinburg_consolidated_independent_school_district",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-30-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-5",
+      "title": "Edinburg Consolidated Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:edinburg_consolidated_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-30-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-la-villa-independent-school-district-board-of-trustees-place-5",
+      "title": "La Villa Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:la_villa_independent_school_district",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-40-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-la-villa-independent-school-district-board-of-trustees-place-6",
+      "title": "La Villa Independent School District Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:la_villa_independent_school_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-40-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-la-villa-independent-school-district-board-of-trustees-place-7",
+      "title": "La Villa Independent School District Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:la_villa_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-40-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-4",
+      "title": "Monte Alto Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:monte_alto_independent_school_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-41-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-5",
+      "title": "Monte Alto Independent School District Board of Trustees, Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:monte_alto_independent_school_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-41-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-6",
+      "title": "Monte Alto Independent School District Board of Trustees, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:monte_alto_independent_school_district",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-41-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-7",
+      "title": "Monte Alto Independent School District Board of Trustees, Place 7",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:monte_alto_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-41-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-1",
+      "title": "Mercedes Independent School District Board of Trustees, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mercedes_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-48-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-2",
+      "title": "Mercedes Independent School District Board of Trustees, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mercedes_independent_school_district",
+      "printedCandidates": 3,
+      "sampleVerified": true,
+      "sourceWitness": "sample-48-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-3",
+      "title": "Mercedes Independent School District Board of Trustees, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mercedes_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-48-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-4",
+      "title": "Mercedes Independent School District Board of Trustees, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mercedes_independent_school_district",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-48-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-court-of-appeals-13-place-6",
+      "title": "Justice, 13th Court of Appeals District, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:13",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-206",
+      "title": "DISTRICT JUDGE, 206TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:206",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-275",
+      "title": "DISTRICT JUDGE, 275TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:275",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-370",
+      "title": "DISTRICT JUDGE, 370TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:370",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-criminal_district_attorney_hidalgo_county",
+      "title": "CRIMINAL DISTRICT ATTORNEY HIDALGO COUNTY",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-county_judge",
+      "title": "COUNTY JUDGE",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_county_court_at_law_no_1",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_county_court_at_law_no_2",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_county_court_at_law_no_4",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_county_court_at_law_no_5",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_county_court_at_law_no_6",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_county_court_at_law_no_8",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 8",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_probate_court_no_1",
+      "title": "JUDGE, PROBATE COURT NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-judge_probate_court_no_2",
+      "title": "JUDGE, PROBATE COURT NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-district_clerk",
+      "title": "DISTRICT CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-county_clerk",
+      "title": "COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-ba01-2026-county-48215-county_treasurer",
+      "title": "COUNTY TREASURER",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-county-commissioner-precinct-2",
+      "title": "County Commissioner, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:2",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-1",
+      "title": "Justice of the Peace, Precinct 2, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:2",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-2",
+      "title": "Justice of the Peace, Precinct 2, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:2",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-01-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-3-place-2",
+      "title": "Justice of the Peace, Precinct 3, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:3",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-02-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-1-place-2",
+      "title": "Justice of the Peace, Precinct 1, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:1",
+      "printedCandidates": 2,
+      "sampleVerified": true,
+      "sourceWitness": "sample-08-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-5-place-1",
+      "title": "Justice of the Peace, Precinct 5, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:5",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-12-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-constable-precinct-5",
+      "title": "Constable, Precinct 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:5",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-12-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-county-commissioner-precinct-4",
+      "title": "County Commissioner, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:4",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-29-reader"
+    },
+    {
+      "id": "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-4-place-2",
+      "title": "Justice of the Peace, Precinct 4, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:4",
+      "printedCandidates": 1,
+      "sampleVerified": true,
+      "sourceWitness": "sample-29-reader"
+    }
+  ],
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:2",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-south-texas-isd-board-trustee-hidalgo-county-commissioner-precinct-2",
+        "tx-cx-local-2026-hidalgo-county-commissioner-precinct-2"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:4",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-county-commissioner-precinct-4"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:1",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-1-place-2"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:2",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-1",
+        "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-2"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:3",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-3-place-2"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:4",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-4-place-2"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:5",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-5-place-1",
+        "tx-cx-local-2026-hidalgo-constable-precinct-5"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:13",
+      "contestIds": [
+        "tx-cx-local-2026-court-of-appeals-13-place-6"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": true,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:206",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-206"
+      ],
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:275",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-275"
+      ],
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:370",
+      "contestIds": [
+        "tx-ba01-2026-district-judge-370"
+      ],
+      "heldWholeMemberMembership": true,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/place:weslaco/council_district:4",
+      "contestIds": [
+        "tx-cx-local-2026-hidalgo-city-of-weslaco-commissioner-district-4"
+      ],
+      "heldWholeMemberMembership": false,
+      "incomingWholeMemberMembership": false,
+      "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+      "wholeCountyFallback": false
+    }
+  ],
+  "proofFiles": [
+    "source-support.json",
+    "coverage-evidence.json",
+    "sample-style-index.json",
+    "identity-reuse-comparison.json",
+    "separate-status-records.json",
+    "declared-write-ins.json",
+    "ancillary-local-question.json",
+    "source-route-log.json",
+    "geography-source-notes.json",
+    "geography-source-polygons.geojson",
+    "sample-audit-validation.json",
+    "validation.json"
+  ],
+  "limits": [
+    "Reader captures preserve every complete current sample text; original native PDF bytes unavailable, no visual review claimed.",
+    "Numbered school places are districtwide: all places have identical style sets within every school district and county entity index. South Texas ISD Hidalgo seat uses county commissioner precinct 2, not three-county district-wide electorate.",
+    "Commissioner, justice/constable and Weslaco district reader shapes require exact joins; no whole-county fallback.",
+    "Independent local qualification/cancellation registers not exhaustive; available explicit cancellation and unopposed certification facts are separate.",
+    "All held statewide/legislative/congressional races, measures and explainers preserved. Parent/River owns install and live checks."
+  ],
+  "dataOnly": true,
+  "productionWrites": false,
+  "createdAt": "2026-11-03T06:46:06.467703+00:00",
+  "latestCxVotesRef": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 101 captured sources and 236 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

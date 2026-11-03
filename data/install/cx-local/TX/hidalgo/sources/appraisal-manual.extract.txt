@@ -1,0 +1,3993 @@
+2025
+Appraisal District 
+Director’s Manual
+DECEMBER 2025
+TEXAS COMPTROLLER OF PUBLIC ACCOUNTS
+
+
+Tax Code Section 5.05(a) authorizes the Comptroller’s office to prepare and issue publications relating to property appraisal 
+and tax administration as a public service. By publishing this manual, the Comptroller’s office is making available an 
+information resource of a general nature regarding the property appraisal and tax administration. This publication does not 
+address and is not intended to address all aspects of property appraisal, tax administration or property tax law. The 
+information contained in this publication neither constitutes nor serves as a substitute for legal advice. Pursuant to Tax 
+Code Section 5.041(f), the Comptroller’s office may not advise a property owner, a property owner’s agent or the appraisal 
+district on a protest matter. Questions regarding property appraisal, tax administration, the meaning or interpretation of 
+statutes, legal requirements and other similar matters should, as appropriate or necessary, be directed to an attorney or 
+other appropriate counsel.
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+i
+TABLE OF CONTENTS
+INTRODUCTION  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  1
+BOARD OF DIRECTORS IN LESS POPULOUS COUNTIES   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  2
+Composition of Board of Directors  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 2
+Eligibility  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 2
+Appointment by Taxing Units and Terms .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 4
+Recalling a Director   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  6
+Vacancy  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   7
+Disapproval of Board Actions  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  7
+BOARD OF DIRECTORS IN POPULOUS COUNTIES   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   8
+Composition of Board of Directors  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 8
+Eligibility  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 8
+Election of Members by the Public and Terms  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  9
+Appointment by Taxing Units and Terms .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   10
+Recalling an Appointed Director   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 11
+Vacancy  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 12
+Training Requirements  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   12
+GOVERNANCE, BOARD DUTIES, AUTHORITY AND POLICIES  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 14
+Acknowledgement of Duties   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 14
+Oath of Office   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   15
+Conflicts of Interest .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   15
+Ex Parte Communications  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   16
+Primary Duties   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 16
+Statutory Authority   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   17
+Policy Approval and Authority   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 18
+Meetings  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   18
+Written Policies  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   18
+Required Policies  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   19
+APPOINTING THE CHIEF APPRAISER  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 21
+Qualifications   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   21
+Duties and Authority  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  22
+Compensation .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  22
+Conflicts of Interest .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  22
+Ex Parte Communications  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  22
+Agricultural Appraisal Advisory Board  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  23
+Residential Property Owner Assistance   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  23
+APPRAISAL REVIEW BOARD (ARB)   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   25
+Eligibility  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  25
+Conflict of Interest  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   26
+Number and Term of Office   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  26
+Auxiliary and Temporary ARB Members  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  26
+Training   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   27
+
+
+ii  
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+Organization .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  28
+Personnel  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   28
+Ex Parte Communications with an ARB Member  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  29
+ARB Member Removal  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  30
+APPRAISAL DISTRICT FINANCIAL AFFAIRS .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   31
+Appraisal District Budget  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 31
+Public Notice of Budget Hearing   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  32
+Budget Adoption   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  32
+Allocating Costs of Appraisal District Operations  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 32
+Different Fiscal Year and Method of Financing  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  33
+Designation of District Depository   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  34
+Purchasing and Contracting   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   34
+Financial Audit  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   34
+Other Financial Affairs  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  35
+TAXPAYER ASSISTANCE  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   36
+Reasonable Access .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  36
+Other General Access Issues   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  36
+Complaint Process   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  36
+Taxpayer Liaison Officer   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  37
+PUBLIC INFORMATION ACT  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  39
+OPEN MEETINGS ACT  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   42
+APPRAISAL DISTRICT OPERATIONS  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  44
+Ownership or Lease of Real Property  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   44
+Technological Capabilities .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  44
+Records System .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  45
+Appraisal Records of All Property   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   45
+Appraisal Cards  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  46
+Maps  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  46
+Local Government Records Management  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  46
+APPRAISAL DISTRICT PERSONNEL  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 47
+Personnel Policy  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   47
+Professional Development .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  47
+ASSESSMENT AND COLLECTION FUNCTIONS  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  49
+Interlocal Contracts   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   49
+Consolidation Election  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  49
+Annual Collection Budget   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  50
+COMPTROLLER REVIEW OF APPRAISAL DISTRICTS  .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   . 51
+Methods and Assistance Program (MAP)   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   51
+School District Property Value Study (SDPVS)   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  52
+Targeted Appraisal Review Program (TARP)   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   53
+Performance Audits   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   53
+Appraisal District Ratio Study (ADRS)   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .  54
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+1
+Introduction
+Appraisal districts are responsible for appraising property 
+in the district for ad valorem tax purposes for each taxing 
+unit that imposes ad valorem taxes on property in the 
+district.1 An appraisal district is established in each 
+county and has the same boundaries as the county’s 
+boundaries.2 An appraisal district is a political subdivision 
+of the state that is governed by a board of directors.3
+The governance of the appraisal district and certain 
+functions performed by the board of directors of the 
+appraisal district are based on the population of the 
+county in which the appraisal district is established. A 
+county with a population of less than 75,000 is 
+considered a less populous county.4 A county with a 
+population of 75,000 or more is considered a populous 
+county.5
+1	 Tex. Tax Code §6.01(b)
+2	 Tex. Tax Code §§6.01(a) and 6.02(a)
+3	 Tex. Tax Code §§6.01(c) and 6.03(a-1)
+4	 Tex. Tax Code §6.03(a)
+5	 Tex. Tax Code §6.0301(a)
+This manual contains a chapter describing the 
+governance and functions of each type of appraisal 
+district. Information applicable to both types of appraisal 
+districts are included in separate chapters.
+Common abbreviations and terms used in this manual 
+are:
+ARB – appraisal review board
+TAC – tax assessor-collector
+TDLR – Texas Department of Licensing and Regulation
+TLO – taxpayer liaison officer
+Voting taxing units – taxing units that are entitled to vote 
+on the appointment of members to the board of directors.
+
+
+2  
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+Board of Directors in Less Populous 
+Counties
+Counties with a population of less than 75,000 are 
+considered less populous counties.6
+COMPOSITION OF BOARD OF DIRECTORS
+The board of directors is composed of five members.7 The 
+number of directors can be increased up to 13 by action 
+of the board of directors.8 However, in most cases, the 
+board of directors may not make this change if a voting 
+taxing unit adopts a resolution opposing the change.9
+Taxing units participating in the appraisal district may 
+increase the number of directors up to 13 members if 
+three-fourths of voting taxing units adopt resolutions.10 A 
+change is not valid if it reduces the voting entitlement of 
+one or more taxing units (unless the taxing unit adopts 
+one of two specified resolutions) or if it expands the types 
+of taxing units that are entitled to vote on the appointment 
+of directors.11
+The county TAC is a nonvoting director, if not appointed 
+as a voting director.12 If a county commissioners court 
+enters into a contract for assessment and collections 
+under Tax Code Section 6.24(b) or if the appraisal district 
+board of directors enters into a contract for appraisal 
+under Tax Code Section 6.05(b), then the county TAC is 
+ineligible to serve on the board of directors.13
+6	 Tex. Tax Code §6.03(a)
+7	 Tex. Tax Code §6.03(a) 
+8	 Tex. Tax Code §6.031(a)
+9	 Tex. Tax Code §6.031(a)
+10	 Tex. Tax Code §6.031(b)
+11	 Tex. Tax Code §6.031(b)
+12	 Tex. Tax Code §6.03(a)
+13	 Tex. Tax Code §6.03(a)
+Board members may not receive compensation for 
+service on the board but are entitled to reimbursement 
+for actual and necessary expenses incurred in the 
+performance of their duties.14 This reimbursement is as 
+provided by the budget adopted by the board of 
+directors.15
+ELIGIBILITY
+To be eligible to serve on a board of directors, an 
+individual must be a current resident of the appraisal 
+district having resided in the appraisal district for at least 
+two years immediately preceding the date of taking 
+office.16 This residency requirement does not apply to a 
+county TAC serving as a nonvoting director.17
+An employee of a taxing unit that participates in the 
+appraisal district is not eligible to serve on the board of 
+directors unless that individual also is a member of the 
+taxing unit governing body or an elected official of a 
+taxing unit.18 Membership on the taxing unit governing 
+body does not make an otherwise eligible individual 
+ineligible to serve on the board of directors.19
+•	
+Owing delinquent property taxes disqualifies a person 
+from serving on the board of directors.20 The person is 
+ineligible if he or she owns property on which 
+delinquent property taxes have been owed for more 
+14	 Tex. Tax Code §6.04(c)
+15	 Tex. Tax Code §6.04(c)
+16	 Tex. Tax Code §6.03(a) 
+17	 Tex. Tax Code §6.03(a)
+18	 Tex. Tax Code §6.03(a)
+19	 Tex. Tax Code §6.03(a)
+20	 Tex. Tax Code §6.035(a)(2)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+3
+than 60 days after the date the person knew or should 
+have known of the delinquency.21 This disqualification 
+does not apply if the person is paying the delinquent 
+taxes and any penalties and interest under an 
+installment payment agreement or has deferred or 
+abated a suit to collect the delinquent taxes.22
+•	
+A person is ineligible to serve on the board of directors 
+if the individual served as a member of the board of 
+directors for all or part of five terms, unless they were 
+a county assessor-collector at the time of service, or 
+the appraisal district is established in a county with a 
+population of less than 120,000.23
+A person who has appraised property for compensation 
+for use in proceedings, represented property owners for 
+compensation in proceedings in the appraisal district or 
+was an appraisal district employee at any time within the 
+preceding three years is ineligible to serve on the board 
+of directors.24
+21	 Tex. Tax Code §6.035(a)(2)
+22	 Tex. Tax Code §6.035(a)(2)
+23	 Tex. Tax Code §6.035(a-1)
+24	 Tex. Tax Code §6.035(a-1)
+A person is ineligible to serve on the board of directors if 
+the individual is related within the second degree of 
+consanguinity (blood) or affinity (marriage) to the 
+following:
+•	
+an appraiser who appraises property for use in a 
+proceeding under the Tax Code; or
+•	
+a person who represents property owners for 
+compensation in proceedings under the Tax Code in 
+the appraisal district.25
+A director who continues to hold office knowing he or she 
+is related in this manner to the above-named persons 
+commits a Class B misdemeanor offense.26
+Degrees of Consanguinity and Affinity
+First Degree
+Second Degree
+Third Degree
+By Consanguinity
+•	 Parents
+•	 Children
+By Affinity
+•	 Spouses of relatives listed under 
+first degree consanguinity
+•	 Spouse
+•	 Spouse’s parents
+•	 Spouse’s children
+•	 Stepparents
+•	 Stepchildren
+By Consanguinity
+•	 Grandparents
+•	 Grandchildren
+•	 Brothers and sisters
+By Affinity
+•	 Spouses of relatives listed by 
+second degree consanguinity
+•	 Spouse’s grandparents
+•	 Spouse’s grandchildren
+•	 Spouse’s brothers and sisters
+By Consanguinity
+•	 Great grandparents
+•	 Great grandchildren
+•	 Nieces and nephews
+•	 Aunts and uncles
+By Affinity
+•	 No prohibitions
+25	 Tex. Tax Code §6.035(a)(1)
+26	 Tex. Tax Code §6.035(b)
+1stst
+DEGREE
+DEGREE
+2nd
+nd
+DEGREE
+DEGREE
+3rd
+rd
+DEGREE
+DEGREE
+
+
+4 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+An individual is not eligible to be a candidate for, to be 
+appointed to, or to serve on the board of directors if the 
+individual has a substantial interest in a business entity 
+that is party to a contract or the individual is a party to a 
+contract with the appraisal district.27 This prohibition also 
+applies to contracts with a taxing unit that participates in 
+the appraisal district if the contract relates to the 
+performance of an activity governed by the Tax Code.28 
+An appraisal district may not enter into a contract with a 
+board member or with a business entity in which a board 
+member has a substantial interest.29 A taxing unit may not 
+enter into a contract relating to the performance of an 
+activity governed by the Tax Code with a board member 
+in which the taxing unit participates or with a business 
+entity in which a board member has a substantial 
+interest.30
+An individual has substantial interest in a business entity if:
+•	
+the combined ownership of the director and the 
+director’s spouse is at least 10 percent of the voting 
+stock or shares of the business entity; or
+•	
+the director or director’s spouse is a partner, limited 
+partner or officer of the business entity.31
+APPOINTMENT BY TAXING UNITS 
+AND TERMS
+Taxing units — counties, cities/towns, school districts, 
+junior colleges and certain conservation and reclamation 
+districts — nominate candidates and vote on the board of 
+directors in odd-numbered years.32 Conservation and 
+reclamation districts may participate in this process if at 
+least one conservation and reclamation district in the 
+appraisal district delivers to the chief appraiser a written 
+request to nominate and vote on the board of directors by 
+27	 Tex. Tax Code §6.036(a)
+28	 Tex. Tax Code §6.036(a)
+29	 Tex. Tax Code §6.036(b)
+30	 Tex. Tax Code §6.036(c)
+31	 Tex. Tax Code §6.036(d)
+32	 Tex. Tax Code §6.03(c)
+June 1 of each odd-numbered year.33 On request, the chief 
+appraiser must certify all eligible conservation and 
+reclamation districts that are imposing taxes and that 
+participate in the appraisal district by June 15.34
+The board of directors is selected by appointment; it is 
+not an election governed by the Texas Election Code.35 
+The method or procedure for appointing members can be 
+changed by the board of directors or by three-fourths of 
+the voting taxing units acting through resolutions.36
+The voting entitlement of a taxing unit is determined by a 
+calculation that takes into account a taxing unit’s share of 
+the total dollar amount of property taxes imposed in the 
+appraisal district.37 The chief appraiser makes this 
+calculation for each taxing unit (other than conservation 
+and reclamation districts) and delivers written notice 
+before Oct. 1 of each odd-numbered year of the number of 
+votes to which each taxing unit is entitled.38 Each taxing 
+unit (other than a conservation and reclamation district) 
+that is entitled to vote may submit to the chief appraiser 
+one nominee for each position to be filled before Oct. 15.39
+The chief appraiser also must calculate the number of 
+votes that an eligible conservation and reclamation 
+district is entitled to and must deliver before July 1 of each 
+odd-numbered year, a written notice to the district of its 
+voting entitlement and right to nominate one candidate 
+for director.40 All eligible conservation and reclamation 
+districts must submit the name of the district’s nominee 
+to the chief appraiser before July 15 of each odd-
+numbered year.41 Before Aug. 1, the chief appraiser must 
+prepare a nominating ballot listing all the nominees of 
+conservation and reclamation districts and deliver a 
+ballot to the presiding officer of the board of directors of 
+33	 Tex. Tax Code §6.03(c)
+34	 Tex. Tax Code §6.03(c)
+35	 Tex. Att’y Gen. Op. JM 166 (1984)
+36	 Tex. Tax Code §6.031(a) and (b)
+37	 Tex. Tax Code §6.03(d)
+38	 Tex. Tax Code §6.03(e)
+39	 Tex. Tax Code §6.03(g)
+40	 Tex. Tax Code §6.03(f) and (h)
+41	 Tex. Tax Code §6.03(h)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+5
+each district.42 The board of directors of each district must 
+submit its vote for the nominee of conservation and 
+reclamation districts before Aug. 15.43 The winning 
+nominee of the conservation and reclamation districts in 
+the appraisal district becomes a nominee for appraisal 
+district director.44
+The chief appraiser must prepare a ballot before Oct. 30 
+with candidates whose names were timely submitted, 
+including the nominee of conservation and reclamation 
+districts, if applicable.45 Each taxing unit entitled to vote 
+must determine its vote by resolution and submit it to the 
+chief appraiser before Dec. 15.46 The five candidates who 
+receive the largest cumulative vote totals become the 
+board of directors.47 The chief appraiser announces the 
+new directors before Dec. 31.48 Ties must be resolved by 
+the chief appraiser by any method of chance.49
+In counties with a population of 120,000 or more, a taxing 
+unit entitled to cast at least five percent of the total votes 
+is required to determine its vote by resolution adopted at 
+the first or second meeting held after the chief appraiser 
+delivers the ballot. The taxing unit must submit its vote 
+not later than the third day following the date the 
+resolution is adopted.50
+Both the board of directors and taxing units may propose 
+to change the method or procedure for appointing 
+directors.51 If the board of directors makes the proposal, a 
+voting taxing unit may veto the proposal by adopting a 
+resolution opposing the change before Sept. 1.52 If a 
+participating taxing unit proposes a change, the change is 
+adopted if three-fourths of the voting taxing units adopt 
+42	 Tex. Tax Code §6.03(h)
+43	 Tex. Tax Code §6.03(h)
+44	 Tex. Tax Code §6.03(h)
+45	 Tex. Tax Code §6.03(j)
+46	 Tex. Tax Code §6.03(k)
+47	 Tex. Tax Code §6.03(k)
+48	 Tex. Tax Code §6.03(k)
+49	 Tex. Tax Code §6.03(k)
+50	 Tex. Tax Code §6.03(k-1)
+51	 Tex. Tax Code §6.031(a) and (b)
+52	 Tex. Tax Code §6.031(a)
+resolutions providing for the change.53 A resolution to 
+change the method or procedure for appointing directors 
+must be filed with the chief appraiser after June 30 and 
+before Oct. 1 of a year in which members are appointed, 
+or the resolution is ineffective.54
+Throughout the selection process, the Tax Code specifies 
+dates for action by the chief appraiser and the taxing 
+units. The dates provided in Tax Code Section 6.03(f) and 
+(g) are directory and not mandatory.55 However, the 
+advice of legal counsel should be obtained in such 
+situations.
+Appraisal district directors serve two-year terms 
+beginning on Jan. 1 of an even-numbered year.56 The two-
+year term of office does not apply to the county TAC who 
+serves as a nonvoting director.57
+Voting taxing units may adopt staggered one- and two-
+year terms.58 To adopt staggered terms, taxing units must 
+take two actions.59 First, at least three-fourths of the 
+voting taxing units are required to adopt resolutions for 
+staggered terms.60 Second, the voting taxing units must 
+have changed the method for appointing members to end 
+cumulative voting (casting all or part of the votes to which 
+the taxing unit is entitled). These two actions may be 
+proposed concurrently.61
+A resolution proposing staggered terms must be filed 
+with the chief appraiser after June 30 and before Oct. 1.62 
+If the chief appraiser determines that enough taxing units 
+filed valid resolutions, he or she must notify all taxing 
+units of the change before Oct. 10.63 Staggered terms take 
+effect on Jan. 1 of the next even-numbered year.64 To start 
+53	 Tex. Tax Code §6.031(b)
+54	 Tex. Tax Code §6.031(c)
+55	 Tex. Att’y Gen. Op. JM-166 (1984)
+56	 Tex. Tax Code §6.03(b)
+57	 Tex. Tax Code §6.03(b)
+58	 Tex. Tax Code §6.034(a)
+59	 Tex. Tax Code §6.034(a)
+60	 Tex. Tax Code §6.034(a)
+61	 Tex. Tax Code §6.034(a)
+62	 Tex. Tax Code §6.034(b)
+63	 Tex. Tax Code §6.034(c)
+64	 Tex. Tax Code §6.034(d)
+
+
+6 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+staggering terms, all members are appointed for that year 
+without regard to staggered terms.65 At the earliest 
+practical date after Jan. 1, the board determines by lot 
+which of its members will serve one- and two-year 
+terms.66
+Boards with an even number of members divide the one- 
+and two-year terms in half. Boards with an odd number of 
+members must have one more member with a two-year 
+term than members with one-year terms.67 For example, a 
+six-member board would choose three members to serve 
+one-year terms. A five-member board would choose two.
+For each director’s term that expires on Jan. 1, the 
+appraisal district must annually appoint directors for a 
+term that begins on that Jan. 1.68
+Staggered terms may be rescinded by resolution of a 
+majority of voting taxing units.69 The resolution must be 
+adopted and filed with the chief appraiser after June 30 
+and before Oct. 1 of odd-numbered years.70 After a valid 
+rescission, the terms of all current members expire on the 
+next Jan. 1, even if a member will have only served one 
+year of a two-year term.71 The entire board will be 
+appointed for two-year terms on that date.72 Staggered 
+terms are automatically rescinded if the appraisal district 
+makes a change in the method of appointing board 
+members that results in a method of using cumulative 
+voting.73
+RECALLING A DIRECTOR
+A taxing unit may ask for the recall of an appointed 
+director the taxing unit voted for in the appointment 
+process.74 A recall starts when a taxing unit files a 
+65	 Tex. Tax Code §6.034(d)
+66	 Tex. Tax Code §6.034(d)
+67	 Tex. Tax Code §6.034(d)
+68	 Tex. Tax Code §6.034(e)
+69	 Tex. Tax Code §6.034(g)
+70	 Tex. Tax Code §6.034(g)
+71	 Tex. Tax Code §6.034(g)
+72	 Tex. Tax Code §6.034(g)
+73	 Tex. Tax Code §6.034(h)
+74	 Tex. Tax Code §6.033(a)
+resolution with the chief appraiser stating that the taxing 
+unit is calling for the recall of a named member.75 Within 
+10 days after a taxing unit files a recall resolution, the 
+chief appraiser must give written notice of the resolution’s 
+filing to the presiding officer of each voting taxing unit.76
+Only the taxing units that voted for the member may 
+vote.77 A recall-voting taxing unit has the same number of 
+votes in the recall that it cast in appointing the board 
+member.78 A taxing unit votes by submitting a resolution 
+to the chief appraiser on or before the 30th day after the 
+recall resolution’s filing.79
+Not later than the 10th day after the last day for voting in 
+favor of the recall, the chief appraiser must count the 
+votes cast.80 A director is recalled if the number of votes 
+cast in favor of recall equals or exceeds a majority of the 
+votes cast appointing the board member.81 The chief 
+appraiser must immediately notify in writing the presiding 
+officer of the board of directors and the governing body of 
+each recall-voting taxing unit of the results.82 If the chair is 
+the subject of the recall, the board secretary must also be 
+notified.83
+After a recall, the director’s vacancy is filled by the recall-
+voting taxing units appointing a new board member.84 
+Each recall-voting taxing unit may nominate by resolution 
+one candidate and is entitled to the same number of 
+votes it originally cast to appoint the recalled member.85
+On or before the 15th day after the last day nominations 
+must be submitted, the chief appraiser must prepare a 
+ballot and deliver a copy of the ballot to the presiding 
+officer of each taxing unit’s governing body that is entitled 
+75	 Tex. Tax Code §6.033(a)
+76	 Tex. Tax Code §6.033(a)
+77	 Tex. Tax Code §6.033(b)
+78	 Tex. Tax Code §6.033(b)
+79	 Tex. Tax Code §6.033(b)
+80	 Tex. Tax Code §6.033(c)
+81	 Tex. Tax Code §6.033(c)
+82	 Tex. Tax Code §6.033(c)
+83	 Tex. Tax Code §6.033(c)
+84	 Tex. Tax Code §6.033(d)
+85	 Tex. Tax Code §6.033(d)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+7
+to vote to fill the vacancy.86 A taxing unit determines its 
+vote by resolution and submits it to the chief appraiser.87 
+The chief appraiser counts the votes on or before the 15th 
+day after the last day on which a taxing unit may vote, 
+declares the winner who received the largest vote total 
+and notifies the chair of the board of directors, each 
+taxing unit and the candidates.88 The chief appraiser must 
+resolve a tie vote by any method of chance.89
+If the board of directors is appointed by another method 
+or procedure adopted under Tax Code Section 6.031, the 
+taxing units that voted for or participated in the director’s 
+appointment may recall him or her and appoint a new 
+director by any method adopted by resolution of a 
+majority of recall-voting taxing units.90 If the appointment 
+was by election, the method of recall and appointing a 
+new director to the vacancy is not valid unless it provides 
+that each taxing unit is entitled to the same number of 
+votes it cast for the member being recalled.91
+VACANCY
+If a vacancy occurs on the board, each voting taxing unit 
+nominates by resolution a candidate to fill the vacancy.92 
+Within 45 days after receiving notice from the board of 
+directors that a vacancy exists, a taxing unit must submit 
+the nomination to the chief appraiser.93 The chief 
+appraiser delivers a list of the nominees to the directors 
+within the next five days.94 Directors select by majority 
+vote one of the nominees to fill the vacancy.95 If a vacancy 
+occurs for a board with staggered terms, the vacancy is 
+filled by appointment of the voting taxing unit that 
+86	 Tex. Tax Code §6.033(d)
+87	 Tex. Tax Code §6.033(d)
+88	 Tex. Tax Code §6.033(d)
+89	 Tex. Tax Code §6.033(d)
+90	 Tex. Tax Code §6.033(e)
+91	 Tex. Tax Code §6.033(e)
+92	 Tex. Tax Code §6.03(l)
+93	 Tex. Tax Code §6.03(l)
+94	 Tex. Tax Code §6.03(l)
+95	 Tex. Tax Code §6.03(l)
+nominated the person whose departure caused the 
+vacancy.96
+DISAPPROVAL OF BOARD ACTIONS
+At times, the board of directors may take an action with 
+which the majority of voting taxing units may disagree. 
+Under Tax Code Section 6.10, a majority of voting taxing 
+units may veto any action by the board of directors.97 This 
+disapproval power under Tax Code Section 6.10 does not 
+apply to the adoption of the budget by the board.98
+To veto a board action other than the budget, the 
+governing bodies of a majority of voting taxing units must 
+adopt resolutions disapproving the action.99 The voting 
+taxing units must file the resolutions with the board’s 
+secretary within 15 days after the action is taken.100 The 
+board action is revoked effective the day after the day on 
+which the required number of resolutions is filed.101
+For voting taxing units to disapprove the appraisal district 
+budget, a majority of the taxing units must file a resolution 
+with the board’s secretary within 30 days after the budget 
+is adopted.102
+96	 Tex. Tax Code §6.034(i)
+97	 Tex. Tax Code §6.10
+98	 Tex. Tax Code §6.10
+99	 Tex. Tax Code §6.10
+100	Tex. Tax Code §6.10
+101	 Tex. Tax Code §6.10
+102	Tex. Tax Code §6.06(b)
+
+
+8  
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+Board of Directors In Populous Counties 
+COMPOSITION OF BOARD OF DIRECTORS
+Counties with a population of 75,000 or more are 
+considered populous counties.103 The board of directors is 
+composed of nine members.104 Five members are 
+appointed by the taxing units that participate in the 
+district; three members are elected by a majority vote at 
+the general election for state and county officers by the 
+voters of the county in which the appraisal district is 
+established; and the TAC serves as an ex officio director.105
+The board of directors or taxing units participating in the 
+district may not increase the number of members on the 
+board, change the method by which directors are 
+selected, or alter the terms of office.106
+Board members may not receive compensation for 
+service on the board but are entitled to reimbursement 
+for actual and necessary expenses incurred in the 
+performance of their duties.107 This reimbursement is as 
+provided by the budget adopted the board of directors.108
+ELIGIBILITY
+To be eligible to serve on a board of directors, an 
+individual must be a resident of the appraisal district and 
+must have resided in the appraisal district for at least two 
+years immediately preceding the date of taking office.109 
+This residency requirement does not apply to a county 
+TAC serving as a nonvoting director.110
+103	Tex. Tax Code §6.0301
+104	Tex. Tax Code §6.0301(c) 
+105	Tex. Tax Code §6.0301(c) 
+106	Tex. Tax Code §6.0301(b) 
+107	Tex. Tax Code §6.04(c)
+108	Tex. Tax Code §6.04(c)
+109	Tex. Tax Code §6.0301(d) 
+110	 Tex. Tax Code §6.0301(d) 
+An employee of a taxing unit that participates in the 
+appraisal district is not eligible to serve on the board of 
+directors, unless that individual also is a member of the 
+governing body of the taxing unit or an elected official of 
+a taxing unit.111 Membership on the governing body of a 
+taxing unit does not make an otherwise eligible individual 
+ineligible to serve on the board of directors.112
+Owing delinquent property taxes disqualifies a person 
+from serving on the appraisal district board of directors.113 
+The person is ineligible if he or she owns property on 
+which delinquent property taxes have been owed for 
+more than 60 days after the date the person knew or 
+should have known of the delinquency.114 This 
+disqualification does not apply if the person is paying the 
+delinquent taxes and any penalties and interest under an 
+installment payment agreement or has deferred or abated 
+a suit to collect the delinquent taxes.115
+A person is ineligible to serve on an appraisal district’s 
+board of directors if the individual served as a member of 
+the board of directors for all or part of five terms, unless 
+they were a county assessor-collector at the time of 
+service.116
+A person who has appraised property for compensation 
+for use in proceedings, represented property owners for 
+compensation in proceedings in the appraisal district or 
+was an appraisal district employee at any time within the 
+preceding three years is ineligible to serve on the board 
+of directors.117
+111	 Tex. Tax Code §6.0301(d) 
+112	 Tex. Tax Code §6.0301(d) 
+113	 Tex. Tax Code §6.035(a)(2)
+114	 Tex. Tax Code §6.035(a)(2)
+115	 Tex. Tax Code §6.035(a)(2)
+116	 Tex. Tax Code §6.035(a-1)
+117	 Tex. Tax Code §6.035(a-1)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+9
+A person is ineligible to serve on the board of directors if 
+the individual is related within the second degree of 
+consanguinity (blood) or affinity (marriage) to the 
+following:
+•	
+an appraiser who appraises property for use in a 
+proceeding under the Tax Code; or
+•	
+a person who represents property owners for 
+compensation in proceedings under the Tax Code in 
+the appraisal district.118
+A director who continues to hold office knowing he or she 
+is related in this manner to the above-named persons 
+commits a Class B misdemeanor offense.119
+An individual is not eligible to be appointed to or to serve 
+on the board of directors if an individual has a substantial 
+interest in a business entity that is party to a contract or 
+the individual is a party to a contract with the appraisal 
+district.120 This prohibition also applies to contracts with a 
+taxing unit that participates in the appraisal district if the 
+contract relates to the performance of an activity 
+governed by the Tax Code.121 An appraisal district may not 
+enter into a contract with a board member or with a 
+business entity in which a board member has a 
+substantial interest.122 A taxing unit may not enter into a 
+contract relating to the performance of an activity 
+governed by the Tax Code with a board member in which 
+the taxing unit participates or with a business entity in 
+which a board member has a substantial interest.123
+An individual has substantial interest in a business entity if:
+•	
+the combined ownership of the director and the 
+director’s spouse is at least 10 percent of the voting 
+stock or shares of the business entity; or
+118	 Tex. Tax Code §6.035(a)(1)
+119	 Tex. Tax Code §6.035(b)
+120	Tex. Tax Code §6.036(a)
+121	 Tex. Tax Code §6.036(a)
+122	Tex. Tax Code §6.036(b)
+123	Tex. Tax Code §6.036(c)
+•	
+the director or director’s spouse is a partner, limited 
+partner or officer of the business entity.124
+ELECTION OF MEMBERS BY THE PUBLIC 
+AND TERMS
+Three members of the board of directors are elected by a 
+majority vote at the general election for state and county 
+officers by the voters of the county in which the appraisal 
+district is established.125 Election Code Chapter 144 
+applies to a candidate for an elective position on the 
+board of directors.126 The election is governed by the 
+Election Code.
+A candidate for an elective position on the board of 
+directors must file an application for a place on the ballot 
+with the county clerk or, if applicable, the county elections 
+administrator in the county in which the appraisal district 
+is established.127 The application must be accompanied by 
+a filing fee or a petition in lieu of a filing fee.128 A filing fee 
+received with an application is deposited in the county 
+treasury to the credit of the county general fund.129
+The filing fee varies depending on the population of the 
+county. For a county with a population of 200,000 or 
+more, the filing fee is $400. For a county with a population 
+of less than 200,000, the filing fee is $200.130 A petition 
+submitted in lieu of a filing fee must include a minimum of 
+the lesser of 500 signatures or two percent of the total 
+vote received in the county by all the candidates for 
+governor in the most recent gubernatorial general 
+election.131 If the minimum number of signatures 
+determined using the vote count in the most recent 
+gubernatorial general election is less than 50, the number 
+124	Tex. Tax Code §6.036(d)
+125	Tex. Tax Code §6.0301(c) 
+126	Tex. Tax Code §6.032(a) and Tex. Elec. Code §252.005
+127	Tex. Tax Code §6.032(b) 
+128	Tex. Tax Code §6.032(b) 
+129	Tex. Tax Code §6.032(e) 
+130	Tex. Tax Code §6.032(c)(1) and (2)
+131	 Tex. Tax Code §6.032(d)(1) and (2) 
+
+
+10 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+of signatures required is the lesser of 50 or 20 percent of 
+that total vote.132
+Elected directors serve staggered four-year terms.133 Each 
+term begins on Jan. 1 of an odd-numbered year.134
+The first election for appraisal district directors was the 
+uniform election date in May 2024. The directors elected 
+at that time assumed office on July 1, 2024, and will serve 
+a term that expires on Dec. 31, 2026. Following the initial 
+election, directors will be elected beginning with the 
+general election conducted in November 2026. Directors 
+elected at that time take office on Jan. 1, 2027.135
+At the first meeting of the board of directors following the 
+November 2026 general election, the elected directors 
+will draw lots to determine which director will serve a 
+two-year term and which two directors will serve a four-
+year term. After the November 2028 general election, all 
+elected directors will serve four-year terms.136
+APPOINTMENT BY TAXING UNITS 
+AND TERMS
+The taxing units participating in the appraisal district 
+appoint five members to the board of directors; the 
+appointment process is not governed by the Texas 
+Election Code.137
+Taxing units — counties, cities/towns, school districts, 
+junior colleges and certain conservation and reclamation 
+districts — select five appointed directors in the fall of 
+each odd-numbered year.138 Conservation and 
+reclamation districts may participate in this process if at 
+least one conservation and reclamation district in the 
+appraisal district delivers to the chief appraiser a written 
+132	Tex. Tax Code §6.032(d)(2) 
+133	Tex. Tax Code §6.0301(e) 
+134	Tex. Tax Code §6.0301(e) 
+135	Acts 2023, 88th Leg., 2nd C.S., ch. 1 (S.B. 2), Sec. 5.13, effective October 
+12, 2023
+136	Acts 2023, 88th Leg., 2nd C.S., ch. 1 (S.B. 2), Sec. 5.13, effective October 
+12, 2023
+137	Tex. Att’y Gen. Op. JM-166 (1984)
+138	Tex. Tax Code §§6.03 and 6.0301(c) 
+request to nominate and vote on the board of directors by 
+June 1 of each odd-numbered year.139 On request, the chief 
+appraiser must certify all eligible conservation and 
+reclamation districts that are imposing taxes and that 
+participate in the appraisal district by June 15.140
+The voting entitlement of a taxing unit is determined by a 
+calculation that takes into account a taxing unit’s share of 
+the total dollar amount of property taxes imposed in the 
+appraisal district.141 The chief appraiser makes this 
+calculation for each taxing unit (other than conservation 
+and reclamation districts) and delivers written notice 
+before Oct. 1 of each odd-numbered year of the number of 
+votes to which each taxing unit is entitled.142 Each taxing 
+unit (other than a conservation and reclamation district) 
+that is entitled to vote may submit to the chief appraiser 
+one nominee for each position to be filled before Oct. 
+15.143
+The chief appraiser also must calculate the number of 
+votes that an eligible conservation and reclamation 
+district is entitled to and must deliver before July 1 of each 
+odd-numbered year, a written notice to the district of its 
+voting entitlement and right to nominate one candidate 
+for director.144 All eligible conservation and reclamation 
+districts must submit the name of the district’s nominee 
+to the chief appraiser before July 15 of each odd-
+numbered year.145 Before Aug. 1, the chief appraiser must 
+prepare a nominating ballot listing all the nominees of 
+conservation and reclamation districts and deliver a 
+ballot to the presiding officer of the board of directors of 
+each district.146 The board of directors of each district 
+must submit its vote for the nominee of conservation and 
+reclamation districts before Aug. 15.147 The winning 
+nominee of the conservation and reclamation districts in 
+139	Tex. Tax Code §6.03(c)
+140	Tex. Tax Code §6.03(c)
+141	 Tex. Tax Code §6.03(d)
+142	Tex. Tax Code §6.03(e)
+143	Tex. Tax Code §6.03(g)
+144	Tex. Tax Code §6.03(f) and (h)
+145	Tex. Tax Code §6.03(h)
+146	Tex. Tax Code §6.03(h)
+147	Tex. Tax Code §6.03(h)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+11
+the appraisal district becomes a nominee for appraisal 
+district director.148
+The chief appraiser must prepare a ballot before Oct. 30 
+with candidates whose names were timely submitted, 
+including the nominee of conservation and reclamation 
+districts, if applicable.149 Each taxing unit entitled to vote 
+must determine its vote by resolution and submit it to the 
+chief appraiser before Dec. 15.150 In counties with a 
+population of 120,000 or more, a taxing unit entitled to 
+cast at least five percent of the total votes is required to 
+determine its vote by resolution adopted at the first or 
+second meeting held after the chief appraiser delivers the 
+ballot. The
+taxing unit must submit its vote not later than the third 
+day following the date the resolution is adopted.151
+The five candidates who receive the largest cumulative 
+vote totals become the board of directors.152 The chief 
+appraiser announces the new directors before Dec. 31.153 
+Ties must be resolved by the chief appraiser by any 
+method of chance.154
+Throughout the selection process, the Tax Code specifies 
+dates for action by the chief appraiser and the taxing 
+units. The dates provided in Tax Code Section 6.03(f) and 
+(g) are directory and not mandatory.155 However, the 
+advice of legal counsel should be obtained in such 
+situations.
+Appointed directors serve staggered four-year terms.156 
+Each term begins on Jan. 1 of an even-numbered year.157
+148	Tex. Tax Code §6.03(h)
+149	Tex. Tax Code §6.03(j)
+150	Tex. Tax Code §6.03(k)
+151	 Tex. Tax Code §6.03(k-1)
+152	Tex. Tax Code §6.03(k)
+153	Tex. Tax Code §6.03(k)
+154	Tex. Tax Code §6.03(k)
+155	Tex. Att’y Gen. Op. JM-166 (1984)
+156	Tex. Tax Code §6.0301(e) 
+157	Tex. Tax Code §6.0301(e) 
+RECALLING AN APPOINTED DIRECTOR
+A taxing unit may ask for the recall of an appointed 
+director the taxing unit voted for in the appointment 
+process.158 A recall starts when a taxing unit files a 
+resolution with the chief appraiser stating that the taxing 
+unit is calling for the recall of a named member.159 Within 
+10 days after a taxing unit files a recall resolution, the 
+chief appraiser must give written notice of the resolution’s 
+filing to the presiding officer of each voting taxing unit.160
+Only the taxing units that voted to appoint the member 
+may vote.161 A recall-voting taxing unit has the same 
+number of votes in the recall that it cast in appointing the 
+board member.162 A taxing unit votes by submitting a 
+resolution to the chief appraiser on or before the 30th day 
+after the recall resolution’s filing.163
+Not later than the 10th day after the last day for voting in 
+favor of the recall, the chief appraiser must count the 
+votes cast.164 A director is recalled if the number of votes 
+cast in favor of recall equals or exceeds a majority of the 
+votes cast appointing the board member.165 The chief 
+appraiser must immediately notify in writing the presiding 
+officer of the board of directors and the governing body of 
+each recall-voting taxing unit of the results.166 If the chair 
+is the subject of the recall, the board secretary must also 
+be notified.167
+After a recall, the director’s vacancy is filled by the recall-
+voting taxing units appointing a new board member.168 
+Each recall-voting taxing unit may nominate by resolution 
+one candidate and is entitled to the same number of 
+votes it originally cast to appoint the recalled member.169
+158	Tex. Tax Code §6.033(a)
+159	Tex. Tax Code §6.033(a)
+160	Tex. Tax Code §6.033(a)
+161	 Tex. Tax Code §6.033(b)
+162	Tex. Tax Code §6.033(b)
+163	Tex. Tax Code §6.033(b)
+164	Tex. Tax Code §6.033(c)
+165	Tex. Tax Code §6.033(c)
+166	Tex. Tax Code §6.033(c)
+167	Tex. Tax Code §6.033(c)
+168	Tex. Tax Code §6.033(d)
+169	Tex. Tax Code §6.033(d)
+
+
+12 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+On or before the 15th day after the last day nominations 
+must be submitted, the chief appraiser must prepare a 
+ballot and deliver a copy of the ballot to the presiding 
+officer of the governing body of each taxing unit that is 
+entitled to vote to fill the vacancy.170 A taxing unit 
+determines its vote by resolution and submits it to the 
+chief appraiser.171 The chief appraiser counts the votes on 
+or before the 15th day after the last day on which a taxing 
+unit may vote, declares the winner who received the 
+largest vote total and notifies the chair of the board of 
+directors, each taxing unit and the candidates.172 The chief 
+appraiser must resolve a tie vote by any method of 
+chance.173
+If the board of directors is appointed by another method 
+or procedure adopted under Tax Code Section 6.031, the 
+taxing units that voted for or participated in the 
+appointment of the director may recall him or her and 
+appoint a new director by any method adopted by 
+resolution of a majority of recall-voting taxing units.174 If 
+the appointment was by election, the method of recall 
+and appointing a new director to the vacancy is not valid 
+unless it provides that each taxing unit is entitled to the 
+same number of votes it cast for the member being 
+recalled.175
+VACANCY
+If a vacancy occurs in an elective position, the board of 
+directors must appoint a person to fill the vacancy by a 
+majority vote of its members. A person appointed to fill 
+the vacancy of an elective position must meet the 
+qualifications required of a director elected at the general 
+election.176
+170	Tex. Tax Code §6.033(d)
+171	 Tex. Tax Code §6.033(d)
+172	Tex. Tax Code §6.033(d)
+173	Tex. Tax Code §6.033(d)
+174	Tex. Tax Code §6.033(e)
+175	Tex. Tax Code §6.033(e)
+176	Tex. Tax Code §6.0301(g) 
+If a vacancy occurs in an appointive position, each voting 
+taxing unit nominates by resolution a candidate to fill the 
+vacancy.177 Within 45 days after receiving notice from the 
+board of directors that a vacancy exists, a taxing unit 
+must submit the nomination to the chief appraiser.178 The 
+chief appraiser delivers a list of the nominees to the 
+directors within the next five days.179 Directors select by 
+majority vote one of the nominees to fill the vacancy.180
+TRAINING REQUIREMENTS
+Boards of directors in populous counties whose terms 
+begin on or after Jan. 1, 2026, must complete a mandatory 
+training program by the anniversary of the date the board 
+member takes office. The training program must provide 
+information regarding:
+•	
+chief appraiser, board of director, ARB and TLO roles 
+and functions;
+•	
+the Comptroller’s role and functions regarding the 
+property tax system;
+•	
+the importance of maintaining an appraisal office’s 
+independence from political pressure;
+•	
+the importance of prompt, courteous and fair 
+treatment of the public;
+•	
+appraisal district finance and budgeting requirements, 
+including appropriate controls to ensure that 
+expenditures are proper;
+•	
+appraisal district procurement and contracting 
+requirements, including appropriate controls to ensure 
+there are no conflicts of interest;
+•	
+Government Code Chapter 551 Open Meetings 
+requirements;
+177	 Tex. Tax Code §6.0301(f) 
+178	Tex. Tax Code §6.0301(f) 
+179	Tex. Tax Code §6.0301(f) 
+180	Tex. Tax Code §6.0301(f) 
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+13
+•	
+Government Code Chapter 552 Public Information 
+requirements;
+•	
+Government Code Chapter 2001 Administrative 
+Procedure requirements;
+•	
+other laws relating to public officials, including 
+conflict-of-interest laws;
+•	
+the Uniform Standards of Professional Appraisal 
+Practice ethics standards; and
+•	
+the professions regulated under Occupations Code 
+Chapter 1151.
+An appraisal district that has contracted to perform duties 
+relating to tax assessment or collection must also 
+complete at least eight hours of instruction on laws 
+relating to those functions.
+The training must be provided by an accredited institution 
+of higher education and may be part of or associated with 
+an accredited institution. The institution must provide a 
+certificate of completion to each board member who has 
+completed the training.
+Board members must file certificates of completion with 
+the appraisal district. The appraisal district must provide 
+all filed training certificates to the Comptroller as part of 
+each Methods and Assistance Program (MAP) review 
+conducted under Tax Code Section 5.102.
+Board members may be subject to removal for failure to 
+timely complete the required training.181
+181	  Tex. Tax Code §5.044
+
+
+14 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+Governance, Board Duties, Authority 
+and Policies
+A board of directors has required duties and authority 
+under the Tax Code. Other additional duties and authority 
+are provided for in other law. Consult an attorney 
+regarding all legal duties and authority.
+ACKNOWLEDGEMENT OF DUTIES
+An individual may not be appointed to or file an 
+application for a place on the ballot for an elective 
+position on the board of directors unless the individual 
+has signed a statement in the following form and 
+submitted it to the chief appraiser.
+ACKNOWLEDGEMENT OF DUTIES OF MEMBER OF APPRAISAL DISTRICT BOARD OF DIRECTORS
+I hereby acknowledge that I have read and understand the duties of a member of the board of directors of an appraisal district. I 
+understand that the statutory responsibilities include;
+1.	
+establishing the appraisal district office;
+2.	 hiring a chief appraiser;
+3.	 adopting the appraisal district’s annual operating budget after filing notice and holding a public hearing;
+4.	 adopting a new budget if voting taxing units disapprove of the initial budget;
+5.	 determining whether to remove members of the appraisal review board if the board of directors of the appraisal district is 
+the appointing authority and potential grounds for removal arise;
+6.	 notifying voting taxing units of any vacancy in an appointive position on the board and electing a replacement from 
+submitted nominees;
+7.	
+appointing a person to fill a vacancy in an elective position on the board;
+8.	 electing a chairman and a secretary of the board at the first meeting each year;
+9.	 holding board meetings at least quarterly;
+10.	 developing and implementing policies regarding reasonable access to the board;
+11.	 preparing information describing the board’s functions and complaint procedures and making that information available 
+to the public and to participating taxing units;
+12.	 notifying parties to a complaint filed with the board of the status of the complaint unless otherwise provided;
+13.	 in populous counties, appointing a taxpayer liaison officer and deputy taxpayer liaison officers;
+14.	 annually evaluating the performance of the taxpayer liaison officer and any deputy taxpayer liaison officers, including 
+reviewing the timeliness of complaint resolution;
+15.	 referring matters investigated by a taxpayer liaison officer relating to the appraisal review board’s conduct to the local 
+administrative district judge with a recommendation;
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+15
+16.	 developing a biennial written plan for the periodic reappraisal of all property in the appraisal district, filing notice and 
+holding a public hearing on the plan, approving the plan, and distributing copies of the plan to participating taxing units 
+and the comptroller;
+17.	 making agreements with newly formed taxing units on an estimated budget allocation for that taxing unit;
+18.	 having an annual financial audit prepared by an independent certified public accountant, delivering a copy of the audit to 
+each voting taxing unit, and making the audit available for inspection at the appraisal district office;
+19.	 designating the appraisal district depository biennially;
+20.	 receiving resolutions from voting taxing units disapproving of board actions;
+21.	 adhering to Local Government Code requirements for purchasing and entering into contracts;
+22.	 providing advice and consent to the chief appraiser concerning the appointment of an agricultural appraisal advisory 
+board and determining the number of members of that advisory board;
+23.	 adhering to laws concerning the preservation, microfilming, destruction or other disposition of records; and
+24.	 adopting and implementing a policy for the temporary replacement of a member of an appraisal review board who violates 
+ex parte communication requirements.
+Furthermore, I recognize that the board does not appraise property or review the value of individual properties. I acknowledge 
+that tax rates and tax burdens are determined by applicable taxing jurisdictions, not the appraisal district board of directors.182
+182	 Tex. Tax Code §6.0302
+OATH OF OFFICE
+The Texas Constitution requires all elected and appointed 
+officers to sign an anti-bribery statement and take an 
+oath of office before beginning the duties of the office.183
+The constitutionally prescribed anti-bribery statement is 
+located on the secretary of state’s website as Form 2201 
+at sos.state.tx.us/statdoc/forms/2201.pdf. A director 
+signs this statement before the oath of office is 
+administered.184 Directors should retain the statement in 
+the appraisal district’s official records.185
+The official oath of office is found on the secretary of 
+state’s website as Form 2204 at 
+sos.state.tx.us/statdoc/forms/2204.pdf.
+183	Tex. Const. art. XVI §1(a) and (b)
+184	Tex. Const. art. XVI §1
+185	Tex. Const. art. XVI §1(c)
+CONFLICTS OF INTEREST
+Board members are subject to conflict of interest 
+provisions in law, including Tax Code Section 6.036 which 
+excludes certain individuals from serving on the board of 
+directors. Local Government Code Chapter 171 applies to 
+all local officials, including appraisal district boards of 
+directors. Local Government Code Chapter 176 applies to 
+officers of political subdivisions of the state.186
+For more information, see the Texas Ethics Commission’s 
+conflict of interest forms at ethics.state.tx.us/forms/
+conflict/.
+186	Tex. Local Gov’t Code §§171.001(1) and 176.001(3) and (4)
+
+
+16 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+EX PARTE COMMUNICATIONS
+A board member commits a Class C misdemeanor 
+offense if the member directly or indirectly communicates 
+with the chief appraiser on any matter relating to property 
+appraisal by the appraisal district.187 However, this type of 
+communication is allowed in:
+•	
+an open meeting of the appraisal district board of 
+directors or another public forum; or
+•	
+a closed meeting of the board of directors held to 
+consult with its attorney about pending litigation, at 
+which the chief appraiser’s presence is necessary for 
+full communication between the board and its 
+attorney.188
+These ex parte communication provisions do not apply to 
+a routine communication between the chief appraiser 
+and the county TAC relating to appraisal roll 
+administration, including a communication made in 
+connection with the certification, correction or collection 
+of an account.189 This exception applies regardless of 
+whether the county TAC was appointed to the board of 
+directors or serves as a nonvoting director.190
+These ex parte communication provisions do not prohibit 
+an appraisal district board member from transmitting in 
+writing to a chief appraiser, without comment, a 
+complaint by a property owner or taxing unit about a 
+specific property’s appraisal.191
+A board member, officer or employee of a taxing unit 
+commits a Class A misdemeanor offense if they directly or 
+indirectly communicate with the chief appraiser or 
+another appraisal district employee for the purpose of 
+influencing an appraised property value, unless they own 
+or lease the property themselves.192
+187	Tex. Tax Code §6.15(a) and (d)
+188	Tex. Tax Code §6.15(a)
+189	Tex. Tax Code §6.15(c)
+190	Tex. Tax Code §6.15(c)
+191	 Tex. Tax Code §6.15(c)
+192	Tex. Tax Code §6.155
+PRIMARY DUTIES
+The following is a nonexclusive list of the board of 
+directors’ primary responsibilities under the Tax Code:
+•	 Establish the appraisal district office;193
+•	 Hire a chief appraiser;194
+•	 Adopt the appraisal district’s annual operating budget 
+before Sept. 15 after fulfilling notice requirements and 
+holding a public hearing;195
+•	 Adopt a new budget within 30 days after a budget is 
+disapproved by voting taxing units;196
+•	 Determine whether to remove ARB members appointed 
+by the board after learning of a potential ground for 
+removal;197
+•	 Notify taxing units of any board vacancy and elect by 
+majority vote of members one of the submitted 
+nominees;198
+•	 Elect from members a chair and secretary at the first 
+meeting of the calendar year;199
+•	 Have board meetings at least once each calendar 
+quarter;200
+•	 Develop and implement policies regarding reasonable 
+access to the board;201
+•	 Prepare information describing the board’s functions 
+and complaint procedures; the information must be 
+made available to the public and the appropriate taxing 
+units;202
+•	 Notify parties to a complaint filed with the board of the 
+status of the complaint unless otherwise provided;203
+•	 Appoint a TLO and one or more deputy TLOs in counties 
+having a population of over 120,000;204
+193	Tex. Tax Code §6.05(a)
+194	Tex. Tax Code §6.05(c)
+195	Tex. Tax Code §6.06(b)
+196	Tex. Tax Code §6.06(b)
+197	Tex. Tax Code §6.41(f) 
+198	Tex. Tax Code §6.03(l)
+199	Tex. Tax Code §6.04(a)
+200	Tex. Tax Code §6.04(b)
+201	Tex. Tax Code §6.04(d) and (e)
+202	Tex. Tax Code §6.04(f)
+203	Tex. Tax Code §6.04(g)
+204	Tex. Tax Code §6.052(a)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+17
+•	 Annually evaluate the performance of the TLO and each 
+deputy TLO, if applicable, including a review of the 
+timeliness of complaint resolution;205
+•	 Refer matters relating to the ARB’s conduct investigated 
+by the TLO to the local administrative district judge with 
+a recommendation;206
+•	 Biennially develop a written plan for the periodic 
+reappraisal of all property in the appraisal district’s 
+boundaries, hold a public hearing with the required notice, 
+approve a plan by Sept. 15 of each even-numbered year 
+and distribute copies to participating taxing units and to 
+the Comptroller’s office as required;207
+•	 Make an agreement with newly formed taxing unit’s 
+governing body on an estimated budget allocation for 
+the new taxing unit;208
+•	 Have prepared an annual financial audit conducted by an 
+independent certified public accountant and deliver a 
+copy of the audit to each voting taxing unit and make 
+available for inspection at the appraisal district office;209
+•	 Designate the appraisal district depository at least once 
+every two years;210
+•	 Receive taxing units’ resolutions disapproving board 
+actions;211
+•	 Adhere to requirements regarding purchasing and 
+contracting under Local Government Code Chapter 252;212
+•	 Provide advice and consent to the chief appraiser 
+concerning the appointment of an agricultural appraisal 
+advisory board and determine the number of members 
+on that advisory board;213
+•	 Adhere to laws concerning the preservation, microfilming, 
+destruction or other disposition of records; and214
+•	 Adopt and implement a policy for the temporary 
+replacement of an ARB member who violates ex parte 
+communication requirements.215
+205	Tex. Tax Code §6.052
+206	Tex. Tax Code §41.66(q)
+207	Tex. Tax Code §6.05(i)
+208	Tex. Tax Code §6.06(h)
+209	Tex. Tax Code §6.063(a) and (b)
+210	Tex. Tax Code §6.09
+211	 Tex. Tax Code §6.10
+212	Tex. Tax Code §6.11
+213	Tex. Tax Code §6.12(a)
+214	Tex. Tax Code §6.13
+215	Tex. Tax Code §41.66(g)
+STATUTORY AUTHORITY
+Tax Code Chapter 6 contains much of the statutory 
+authority for boards of directors. The following is a non-
+exclusive list of boards’ authority:
+•	 Provide for the operation of a consolidated appraisal 
+district by interlocal contract between two or more 
+adjoining appraisal districts;216
+•	 Change the number of directors or method of selecting 
+directors, or both, unless any of the voting taxing units 
+oppose the change;217
+•	 Have board meetings at any time at the call of the chair 
+or as provided by board rule;218
+•	 Contract with another appraisal district or with a taxing 
+unit in the appraisal district to perform the duties of the 
+appraisal district office;219
+•	 Prescribe, by resolution, specified actions of the chief 
+appraiser relating to appraisal district finances or 
+administration that are subject to board approval;220
+•	 Employ a general counsel to the appraisal district to 
+serve at the will of the board;221
+•	 Purchase or lease real property and construct 
+improvements necessary to establish and operate an 
+appraisal district office or branch office;222
+•	 Convey real property owned by the appraisal district;223
+•	 Amend the approved operating budget after giving 
+notice to participating taxing units not later than the 
+30th day before the date the board acts on the proposed 
+amendment;224
+•	 Authorize the chief appraiser to disburse appraisal 
+district funds;225
+216	Tex. Tax Code §6.02
+217	Tex. Tax Code §6.031(a)
+218	Tex. Tax Code §6.04(b)
+219	Tex. Tax Code §6.05(b)
+220	Tex. Tax Code §6.05(h)
+221	Tex. Tax Code §6.05(j)
+222	Tex. Tax Code §6.051(a)
+223	Tex. Tax Code §6.051(c)
+224	Tex. Tax Code §6.06(c)
+225	Tex. Tax Code §6.06(f)
+
+
+18 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+•	 Change the appraisal district’s method of financing 
+unless any participating taxing unit opposes the 
+change;226
+•	 Contract with the governing body of a taxing unit or 
+county to assess and collect taxes through the Interlocal 
+Cooperation Act;227
+•	 Change the number of ARB members; and228
+•	 Appoint auxiliary ARB members and select the number of 
+auxiliary members by resolution, except in certain 
+counties.229
+The Tax Code also provides certain statutory authority to 
+the board of directors outside of Chapter 6, including 
+authorizing a board of directors to approve the chief 
+appraiser to contract with private appraisal firms to 
+perform appraisal services under Tax Code Section 
+25.01(b). On the board of directors’ written approval, a 
+chief appraiser is entitled to appeal certain ARB orders to 
+district court as provided by Tax Code Section 42.02.
+POLICY APPROVAL AND AUTHORITY
+The board does not appraise property or review values on 
+individual properties. The law assigns these tasks to the 
+chief appraiser and the ARB, respectively. The board of 
+directors does have the authority to give written approval 
+for a chief appraiser to appeal certain ARB orders in 
+court.230
+The board has authority over appraisal policy through the 
+following duties and authority:
+•	
+duty to develop biennially a written plan for periodic 
+reappraisal;231
+226	Tex. Tax Code §6.061(a)
+227	Tex. Tax Code §6.24(a) and (b)
+228	Tex. Tax Code §6.41(b-1)
+229	Tex. Tax Code §6.414
+230	Tex. Tax Code §42.02(a) and (c)
+231	Tex. Tax Code §6.05(i)
+•	
+duty to adopt an operating budget to reflect the 
+board’s decisions on handling appraisals;232
+•	
+authority to contract with another appraisal district or 
+with a taxing unit in the appraisal district to perform 
+the duties of the appraisal district’s office; and233
+•	
+authority to approve the chief appraiser to contract 
+with private appraisal firms to perform appraisal 
+services.234
+MEETINGS
+At the board of directors’ first meeting each calendar year, 
+the board must elect from its members a chair and a 
+secretary.235 A nonvoting TAC may serve as chair or 
+secretary.236 A majority of the appraisal district board of 
+directors constitutes a quorum.237 A TAC who is a 
+nonvoting member is counted in determining the 
+presence of a quorum.238
+The board may meet at any time at the call of the chair or 
+as provided by board rule.239 However, the board must 
+meet at least once each calendar quarter.240
+The board must provide reasonable time at meetings for 
+public comment on appraisal district and ARB policies 
+and procedures and allow a reasonable amount of time 
+for a TLO’s report, if applicable.241
+WRITTEN POLICIES
+Through its policies, the board determines the appraisal 
+district’s goals and operates as the decision-making body 
+of the appraisal district. While the Tax Code requires 
+232	Tex. Tax Code §6.06(b)
+233	Tex. Tax Code §6.05(b)
+234	Tex. Tax Code §25.01(b)
+235	Tex. Tax Code §6.04(a)
+236	Tex. Att’y Gen. Op. JC-0580 (2002)
+237	Tex. Tax Code §6.04(a)
+238	Tex. Att’y Gen. Op. JC-0580 (2002)
+239	Tex. Tax Code §6.04(b)
+240	Tex. Tax Code §6.04(b)
+241	Tex. Tax Code §6.04(d)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+19
+boards of directors to develop written policies on certain 
+issues, a written policy covering all operational aspects of 
+appraisal district operations should be considered.
+Written procedures and policies are good management 
+tools. A policy manual allows the board to make important 
+decisions carefully and in advance, rather than in 
+response to crisis situations. They permit the appraisal 
+district’s operations to continue uninterrupted if key 
+employees leave. A policy manual also helps educate the 
+public and others about appraisal district operations.
+Examples of policies of boards of directors can be found 
+at comptroller.texas.gov/taxes/property-tax/
+board-policies.
+REQUIRED POLICIES
+State law requires the board to have written policies on 
+specific issues. The board must:
+•	
+develop and implement policies that provide the 
+public with reasonable opportunity to appear before 
+the board to speak on any issue under the board’s 
+jurisdiction;242
+•	
+prepare and maintain a written plan that describes 
+how a non-English speaking person or a person who 
+has a physical, mental or developmental disability may 
+be provided reasonable access to the board; and243
+•	
+prepare information of public interest describing the 
+board’s functions and procedures to file complaints 
+and how complaints are resolved by the board.244
+The board must biennially develop a written reappraisal 
+plan for the periodic reappraisal of all property in the 
+appraisal district’s boundaries by Sept. 15 of each even-
+numbered year.245 The plan must comply with Tax Code 
+Section 25.18.246 The biennial reappraisal plan may not 
+242	Tex. Tax Code §6.04(d)
+243	Tex. Tax Code §6.04(e)
+244	Tex. Tax Code §6.04(f)
+245	Tex. Tax Code §6.05(i)
+246	Tex. Tax Code §6.05(i)
+include a standard or timeline that prevents the chief 
+appraiser from appraising property as necessary to 
+comply with Tax Code Section 23.01(a), which requires all 
+taxable property to be appraised at its market value as of 
+Jan. 1 each year.247 Certain activities must be conducted in 
+the reappraisal of all real and personal property located 
+in the appraisal district at least once every three years.248 
+In summary, those activities are the following:
+•	
+identifying properties by physical inspection or other 
+reliable means of identification (such as deeds or 
+other legal documentation, aerial or land-based 
+photographs, surveys, maps and sketches);
+•	
+identifying and updating property characteristics;
+•	
+defining market areas;
+•	
+identifying property characteristics affecting value in 
+market areas (such as property location and market 
+area, physical attributes, legal and economic attributes 
+and legal restrictions);
+•	
+developing an appraisal model that reflects the 
+relationship among property characteristics affecting 
+value in each market area and determines the 
+contribution of individual property characteristics;
+•	
+applying the conclusions from the model to the 
+characteristics of individual properties; and
+•	
+reviewing the appraisal results to determine value.249
+Tax Code Section 23.01(b) provides that if an appraisal 
+district determines a property’s appraised value using 
+mass appraisal standards, those standards must comply 
+with the Uniform Standards of Professional Appraisal 
+Practice.
+The board of directors must hold a public hearing to 
+consider the proposed plan and provide written notice to 
+each participating taxing unit of the hearing not later than 
+247	Tex. Tax Code §25.18
+248	Tex. Tax Code §25.18(b)
+249	Tex. Tax Code §25.18(b)
+
+
+20 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+the 10th day before the hearing.250 After holding the public 
+hearing and approving a plan by Sept. 15 of each even-
+numbered year, the board of directors must distribute 
+copies of the plan to the participating taxing units and to 
+the Comptroller’s office within 60 days of the approval 
+date.251
+The board of directors may include language in the 
+reappraisal plan to give the chief appraiser discretion to 
+make limited changes, especially as they relate to the 
+work plan or schedule of appraisal activities, without the 
+need for additional board approval or plan amendment. 
+This limited authority would allow the chief appraiser to 
+make timeline adjustments to meet staffing needs or to 
+address other management issues.
+In order to ensure timely compliance with the reappraisal 
+plan, the board of directors should consider conducting 
+an annual review of plan implementation. Attention to 
+completion of tasks according to the appraisal work plan 
+or schedule should be given, along with completion of 
+reappraisal activities for all identified market areas.
+250	Tex. Tax Code §6.05(i)
+251	Tex. Tax Code §6.05(i)
+If the plan requires revision because of staff reductions, 
+changes in market areas, unexpected circumstances, or 
+any other reason deemed appropriate by the board of 
+directors, it may be amended by official action, without 
+the board of directors conducting another public hearing. 
+Copies of the amended reappraisal plan should be 
+distributed to the participating taxing units and the 
+Comptroller’s office.
+The board of directors also must adopt and implement a 
+policy for the temporary replacement of an ARB member 
+who has communicated with another person in violation 
+of ex parte communication provisions.252 An ARB member 
+may not communicate with another person concerning 
+the evidence, argument, facts, merits or any other matters 
+related to an owner’s protest, except during the protest 
+hearing.253 An ARB member also may not communicate 
+with another person concerning a property that is the 
+subject of the protest, except during a hearing on another 
+protest or other proceeding before the board at which the 
+property is compared to other property or used in a 
+sample of properties.254
+252	Tex. Tax Code §41.66(g)
+253	Tex. Tax Code §41.66(f)
+254	Tex. Tax Code §41.66(f)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+21
+Appointing the Chief Appraiser
+The chief appraiser is the appraisal district’s chief 
+administrator.255 The chief appraiser is generally 
+appointed by and serves at the pleasure of the appraisal 
+district board of directors;256 however, the Comptroller’s 
+office may appoint a chief appraiser in certain 
+circumstances. If a taxing unit performs the duties of the 
+appraisal district pursuant to a contract, the assessor for 
+the taxing unit is the chief appraiser.257
+QUALIFICATIONS
+To be eligible to serve as a chief appraiser, a person must 
+hold one of the following professional designations:
+•	
+Registered Professional Appraiser (RPA) from TDLR;
+•	
+MAI from the Appraisal Institute;
+•	
+Assessment Administration Specialist from the 
+International Association of Assessing Officers (IAAO);
+•	
+Certified Assessment Evaluator from IAAO; or
+•	
+Residential Evaluation Specialist from IAAO.258
+A chief appraiser with a professional designation other 
+than an RPA, must become certified with TDLR as an RPA 
+within five years of appointment as chief appraiser.259
+A person may not serve as a chief appraiser unless the 
+person has completed the chief appraiser training program 
+prescribed by Occupations Code Section 1151.164.260 This 
+does not apply to a county TAC who serves as a chief 
+255	Tex. Tax Code §6.05(c)
+256	Tex. Tax Code §6.05(c)
+257	Tex. Tax Code §6.05(c)
+258	Tex. Tax Code §6.05(c)
+259	Tex. Tax Code §6.05(c)
+260	Tex. Tax Code §5.042(a)
+appraiser.261 It applies only to a chief appraiser appointed on 
+or after July 1, 2006.262 A person may serve in a temporary, 
+provisional or interim capacity as chief appraiser for up to 
+one year without completing this training.263
+Owing delinquent property taxes disqualifies a person 
+from serving as chief appraiser.264 A person is ineligible 
+for employment as a chief appraiser if he or she owns 
+property on which delinquent property taxes have been 
+owed for more than 60 days after the date the person 
+knew or should have known of the delinquency.265 This 
+disqualification does not apply if the person is paying the 
+delinquent taxes and any penalties and interest under an 
+installment payment agreement or has deferred or abated 
+a suit to collect the delinquent taxes.266
+A person is also disqualified from employment as the chief 
+appraiser if the person is related within the second degree 
+by consanguinity or affinity to a person who appraises 
+property for compensation for use in proceedings under the 
+Tax Code or to a person who represents property owners 
+for compensation in such proceedings in the appraisal 
+district.267 A chief appraiser who remains employed knowing 
+he or she is related to an appraiser or tax representative as 
+prohibited commits a Class B misdemeanor offense.268
+An individual may not be employed by an appraisal 
+district if the individual is an officer or employee of a 
+taxing unit that participates in the appraisal district or has 
+served as an ARB member at any time during the 
+preceding two years.269
+261	Tex. Tax Code §5.042(c)
+262	Acts 2005, 79th Leg., R.S. Ch. 1111, Sec. 3
+263	Tex. Tax Code §5.042(b)
+264	Tex. Tax Code §6.035(a)
+265	Tex. Tax Code §6.035(a)
+266	Tex. Tax Code §6.035(a)
+267	Tex. Tax Code §6.035(a)
+268	Tex. Tax Code §6.035(b)
+269	Tex. Tax Code §6.054
+
+
+22 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+A chief appraiser who is not eligible to serve cannot 
+perform any action required by law for chief appraisers, 
+including the preparation, certification or submission of 
+any part of the appraisal roll.270 A chief appraiser must 
+give written notice of eligibility to serve as chief appraiser 
+to the Comptroller’s office no later than Jan. 1 each year.271 
+The Comptroller’s office will appoint an eligible person to 
+perform the duties of chief appraiser for an appraisal 
+district whose chief appraiser is ineligible to serve.272
+DUTIES AND AUTHORITY
+The appraisal district board of directors by resolution may 
+prescribe that specified actions of the chief appraiser 
+relating to the finances or administration of the appraisal 
+district are subject to board approval.273 The chief 
+appraiser may employ and compensate professional, 
+clerical and other personnel as provided by the appraisal 
+district budget, with the exception of a general counsel to 
+the appraisal district.274 The chief appraiser may delegate 
+authority to his or her employees.275 The chief appraiser’s 
+primary duty is to discover, list, review and appraise all 
+taxable property in the appraisal district using generally 
+accepted appraisal techniques.
+COMPENSATION
+The chief appraiser is entitled to compensation as 
+provided by the budget adopted by the board of 
+directors.276 The chief appraiser’s compensation may not 
+be directly or indirectly linked to an increase in the total 
+market, appraised or taxable value of property in the 
+appraisal district.277
+270	Tex. Tax Code §6.05(c)
+271	Tex. Tax Code §6.05(c)
+272	Tex. Tax Code §6.0501(a)
+273	Tex. Tax Code §6.05(h)
+274	Tex. Tax Code §6.05(d)
+275	Tex. Tax Code §6.05(e)
+276	Tex. Tax Code §6.05(d)
+277	Tex. Tax Code §6.05(d)
+CONFLICTS OF INTEREST
+The chief appraiser is an officer of the appraisal district 
+for purposes of the nepotism law in Government Code 
+Chapter 573.278 An appraisal district may not employ or 
+contract with an individual or the spouse of an individual 
+who is related to the chief appraiser within the first 
+degree by consanguinity or affinity, as determined under 
+Government Code Chapter 573.279
+An appraisal performed by a chief appraiser in a private 
+capacity or by an individual related within the second 
+degree by consanguinity or affinity (as determined 
+under Government Code Chapter 573) to the chief 
+appraiser may not be used as evidence in a protest or 
+challenge under Tax Code Chapter 41 or an appeal under 
+Tax Code Chapter 42 concerning property that is taxable 
+in the appraisal district in which the chief appraiser is 
+employed.280
+A chief appraiser commits a Class B misdemeanor 
+offense if the chief appraiser refers a person, whether 
+gratuitously or for compensation, to another person for 
+the purpose of obtaining a property appraisal, whether or 
+not the appraisal is for ad valorem tax purposes.281
+EX PARTE COMMUNICATIONS
+A chief appraiser commits a Class C misdemeanor 
+offense if the chief appraiser directly or indirectly 
+communicates with a member of the board of directors 
+on any matter relating to property appraisal by the 
+appraisal district.282 This type of communication is 
+allowed in:
+•	
+an open meeting of the board of directors or another 
+public forum; or
+278	Tex. Tax Code §6.05(g)
+279	Tex. Tax Code §6.05(g)
+280	Tex. Tax Code §6.035(d)
+281	Tex. Tax Code §6.035(c)
+282	Tex. Tax Code §6.15(b) and (d)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+23
+•	
+a closed meeting of the board of directors held to 
+consult with the board’s attorney about pending 
+litigation, at which the chief appraiser’s presence is 
+necessary for full communication between the board 
+and the board’s attorney.283
+These ex parte communication provisions do not include 
+a routine communication between the chief appraiser 
+and the county TAC relating to appraisal roll 
+administration.284 This applies regardless of whether the 
+county TAC is a nonvoting member of the board of 
+directors or was appointed.285
+These ex parte communication provisions do not prohibit 
+an appraisal district board member from transmitting in 
+writing to a chief appraiser, without comment, a 
+complaint by a property owner or taxing unit about a 
+specific property’s appraisal.286
+AGRICULTURAL APPRAISAL 
+ADVISORY BOARD
+With the advice and consent of the board of directors, the 
+chief appraiser appoints an agricultural advisory board 
+composed of three or more members as determined by 
+the board.287 Members must have been appraisal district 
+residents for at least five years and be landowners of the 
+appraisal district whose land qualifies for special 
+appraisal of agricultural use, open-space agricultural land 
+or timberland.288
+RESIDENTIAL PROPERTY OWNER 
+ASSISTANCE
+A chief appraiser may maintain a list of individuals who 
+have designated themselves to provide free assistance to 
+residential property owners.289
+283	Tex. Tax Code §6.15(b)
+284	Tex. Tax Code §6.15(c)
+285	Tex. Tax Code §6.15(c)
+286	Tex. Tax Code §6.15(c)
+287	Tex. Tax Code §6.12(a)
+288	Tex. Tax Code §6.12(b)
+289	Tex. Tax Code §6.16(a)
+Upon owner request a chief appraiser must provide to the 
+owner a copy of the list organized by county; make the 
+list available on the appraisal district’s internet website, if 
+the appraisal district maintains a website; and provide the 
+name, contact information, and job title of each individual 
+who will provide free assistance.290
+A person must designate himself or herself as an 
+individual who will provide free assistance by completing 
+a form prescribed by the chief appraiser and submitting it 
+to the chief appraiser.291
+If an appraisal district maintains an internet website, the 
+chief appraiser must prominently post on the appraisal 
+district’s homepage:
+•	
+a public notice of the availability on the internet of 
+property tax-related information;292
+•	
+the name, contact information and a description of the 
+duties of the TLO;293 and
+•	
+a publicly available and searchable internet database 
+that contains ARB protest hearing information.294
+290	Tex. Tax Code §6.16(c)
+291	Tex. Tax Code §6.16(d)
+292	Tex. Tax Code §26.04(e-2)
+293	Tex. Tax Code §6.052(h)
+294	Tex. Tax Code §41.13(a)
+
+
+24  
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+The chief appraiser has authority and duties including, but not limited to, the following:
+Column 1
+Column 2
+Column 3
+Appraisal
+Appraise all taxable property at market value, except as otherwise provided by law 
+Chapter 23
+Determine eligibility for special appraisal and establish both a market and special appraised value on 
+qualified property 
+Chapter 23
+Determine whether property qualified for agricultural or timber appraisal has undergone a change of 
+use and send a change of use notice to the owner 
+Chapter 23
+Determine exemption eligibility 
+Section 11.45
+Create procedures for equitable and uniform inventory taxation 
+Section 23.12(b)
+Administration of rendition laws 
+Chapter 22
+Create appraisal records 
+Section 25.01(a) and Comptroller 
+Rule 9.3004
+Contract, with the approval of the board of directors, with private appraisal firms, if appropriate 
+Section 25.01(b)
+Certify appraisal roll and other listings to each taxing unit participating in the appraisal district
+Section 26.01
+Send notices of appraised value 
+Section 25.19
+Discover omitted property and adjust the appraisal roll 
+Section 25.21
+Maintain a list of real estate brokers, sales agents, real estate appraisers or property tax consultants 
+who have designated themselves as an individual who will provide free assistance to an owner for 
+residential property that is occupied by the owner as their principal residence
+Sections 6.16(b) and 6.16(c)(1), 
+(2) and (3)
+ARB
+Submit complete appraisal records of all property to the ARB 
+Section 25.22
+Present supplemental records and other items for ARB consideration 
+Section 25.23
+Correct records and make reappraisals as ordered by the ARB 
+Section 41.08
+Administration
+Prepare the appraisal district budget 
+Section 6.06(a)
+Give notice of public hearing on the appraisal district budget 
+Section 6.062
+Appoint agricultural advisory board, with the advice and consent of the board of directors 
+Section 6.12(a)
+Certify a list by June 15 of all eligible conservation and reclamation districts that are imposing taxes 
+and that participate in the appraisal district on the chief appraiser’s receipt of a request by a district 
+to nominate and vote on the board of directors 
+Section 6.03(c)
+Calculate the number of votes each taxing unit has in appointing the board of directors and provide 
+notice as required 
+Section 6.03(e) and (f)
+Create the ballot with the candidates for the board of directors, counting the votes, declaring the 
+winners and resolving any ties 
+Section 6.03(h), (i), (j), (k) and (l)
+Act as the appraisal district’s public information officer 
+Gov’t Code Section 552.201
+Issue permits for going out of business sales and send notices of such sales to other entities 
+Business and Commerce Code 
+Sections 17.835 and 17.84
+Serve as the appraisal district’s chief administrator with responsibility to employ and compensate 
+professional, clerical and other personnel as provided by the budget except for a general counsel to 
+the appraisal district
+Section 6.05(c) and (d)
+Notify voting taxing units of any proposed property transactions 
+Section 6.051(b)
+Proportionally credit excess amounts to the following fiscal year if payments by taxing units to the 
+appraisal district budget exceed the amount spent or obligated to be spent during the fiscal year. If a 
+taxing unit has paid its allocated amount but is not allocated part of the appraisal district budget for 
+the following fiscal year, the chief appraiser must refund the proportionate share of the excess funds 
+not later than the 150th day after the end of the fiscal year that payments were made. 
+Section 6.06(j)
+Determine whether a sufficient number of eligible taxing units have valid resolutions when a change 
+in the appraisal district financing method has been proposed and notify each taxing unit of each 
+adopted change 
+Section 6.061(d)
+Publicize certain Tax Code provisions to residents, including, but not limited to, the availability of 
+electronic communications; the availability of exemption applications; rendering requirements; special 
+appraisal of agricultural land, open-space land, timberland and restricted-use timberland; the deferred 
+tax collection on residence homesteads of the elderly, disabled or those qualified for the disabled veteran 
+exemption; deferred tax collection on appreciating residence homesteads; and the right to protest 
+Sections 1.085, 11.44, 22.21, 23.43, 
+23.54, 23.75, 23.9804, 33.06, 
+33.065 and 41.41
+Produce requested materials in the form and manner prescribed by the Comptroller’s office 
+Section 5.16(b)
+Other Duties
+Duties required by contract
+Legal responsibilities or duties assigned by the board of directors
+*Tax Code citations, unless otherwise noted.
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+25
+Appraisal Review Board (ARB)
+In this section: the applicable appointing authority is 
+either the local administrative district judge for a county 
+with a population less than 75,000 or the board of 
+directors for a county with a population of 75,000 or 
+more.295
+The applicable appointing authority in each county 
+appoints ARB members.296 The board of directors may 
+remove an ARB member appointed by the board under 
+certain circumstances.297
+The ARB is a board of citizens that hears taxpayer 
+protests and taxing unit challenges, corrects clerical 
+errors in the appraisal records and appraisal rolls, acts on 
+motions to correct the appraisal roll, determines whether 
+exemptions and special valuations were improperly 
+granted and takes any other action or makes any other 
+determination as authorized or required under the Tax 
+Code.298
+There is an ARB for each appraisal district although the 
+board of directors may provide for the operation of a 
+consolidated ARB by interlocal contract. Members of a 
+consolidated ARB are appointed jointly by the applicable 
+appointing authorities in the counties that are parties to 
+the contract.299 Although an appraisal district provides 
+staff to the ARB for clerical assistance, the ARB maintains 
+independence from the board of directors and appraisal 
+district staff, including the chief appraiser.300
+Appraisal districts are allowed to obtain criminal history 
+records of applicant ARB members from the Texas 
+Department of Public Safety and provide that information 
+295	Tex. Tax Code §6.41(d)
+296	Tex. Tax Code §6.41(d)
+297	Tex. Tax Code §6.41(f)
+298	Tex. Tax Code §41.01(a)
+299	Tex. Tax Code §6.41(a), (g) and (h)
+300	Tex. Tax Code §§5.041(e-1)(5), 6.41 and 6.43
+to the local administrative district judge or ARB members 
+appointed by that judge.301
+ELIGIBILITY
+To be eligible to serve on the ARB, an individual must be 
+an appraisal district resident and must have resided in 
+the appraisal district for at least two years.302 In counties 
+with a population of more than 120,000, a person is 
+ineligible to serve on the ARB if the person has done the 
+following:
+•	
+served formerly as an appraisal district board member, 
+officer or employee;
+•	
+served as a member of a governing body or an officer 
+of a taxing unit until the fourth anniversary of the date 
+the person ceases to be a member or officer;
+•	
+appeared before the ARB for compensation during the 
+two-year period preceding the date of appointment; or
+•	
+served for all or part of three previous terms as an ARB 
+member or auxiliary member.303
+A person may not serve on an ARB if he or she owns 
+property on which delinquent property taxes have been 
+owed for more than 60 days after the date the person 
+knew or should have known of the delinquency.304 This 
+restriction does not apply if the person is paying the 
+delinquent taxes and any penalty and interest under an 
+installment payment agreement or has deferred or abated 
+a suit to collect delinquent taxes.305
+301	Tex. Gov’t Code §411.1296
+302	Tex. Tax Code §6.41(c)
+303	Tex. Tax Code §6.412(d)
+304	Tex. Tax Code §6.412(a)(2)
+305	Tex. Tax Code §6.412(a)(2)
+
+
+26 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+CONFLICT OF INTEREST
+An individual is not eligible to serve on an ARB if the 
+individual is related within the second degree by 
+consanguinity or affinity to an individual who is engaged 
+in the business of appraising property for compensation 
+for use in proceedings under the Tax Code or to an 
+individual who represents property owners for 
+compensation in proceedings under the Tax Code in the 
+appraisal district for which the ARB is established.306 An 
+ARB member commits a Class B misdemeanor offense if 
+the ARB member continues to hold office knowing of a 
+violation.307
+A person is ineligible to serve on an ARB if the individual 
+is related within the third degree of consanguinity or 
+within the second degree of affinity to a member of the 
+appraisal district board of directors or the ARB.308 A 
+person is also ineligible to serve on the ARB if the person 
+is an appraisal district director, an appraisal district officer 
+or employee, a Comptroller employee or a member of the 
+governing body, officer or employee of a taxing unit.309
+Additional information regarding conflicts of interest for 
+ARB members, including Tax Code Section 41.69, may be 
+found in the Appraisal Review Board Training Manual 
+published by the Comptroller’s office.
+A person is not eligible to be appointed or to serve on an 
+ARB if the individual contracts with the appraisal district 
+or a taxing unit that participates in the appraisal district.310 
+A person who has a substantial interest in a business that 
+has either type of contract is also barred.311 Substantial 
+interest is defined as either of the following: combined 
+ownership of the individual and the individual’s spouse is 
+at least 10 percent of the voting stock or shares of the 
+306	Tex. Tax Code §6.412(a)
+307	Tex. Tax Code §6.412(b)
+308	Tex. Tax Code §6.412(a)(3)(A) and (B)
+309	Tex. Tax Code §6.412(c)
+310	Tex. Tax Code §6.413(a)
+311	 Tex. Tax Code §6.413(a)
+business, or the individual or the individual’s spouse is a 
+partner, limited partner or officer in the business entity.312
+An appraisal district and a taxing unit participating in that 
+appraisal district may not enter into a contract with a 
+current ARB member established for that appraisal 
+district or with a business entity in which an ARB member 
+has a substantial interest.313
+NUMBER AND TERM OF OFFICE
+The ARB consists of three members, but the board of 
+directors by resolution may increase the size of the ARB 
+to a number the board considers appropriate.314 The 
+board of directors for a district in a county with a 
+population of 1.2 million or more by resolution of a 
+majority of members must increase the size of the ARB to 
+a number considered appropriate to manage the ARB 
+duties, including to perform the duties of a special 
+panel.315
+ARB members serve two-year terms beginning Jan. 1.316 
+The board of directors by resolution must provide for 
+staggered terms so that the terms of approximately half 
+the ARB members expire each year.317 In making the initial 
+or subsequent appointments, the applicable appointing 
+authority must designate those members who serve one-
+year terms.318
+AUXILIARY AND TEMPORARY 
+ARB MEMBERS
+The board of directors by resolution of a majority of the 
+members may provide for auxiliary ARB members to hear 
+taxpayer protests before the ARB and to assist the ARB in 
+its duties.319 The applicable appointing authority may 
+312	Tex. Tax Code §6.413(d)
+313	Tex. Tax Code §6.413(b) and (c)
+314	Tex. Tax Code §6.41(b)
+315	Tex. Tax Code §6.41(b-2)
+316	Tex. Tax Code §6.41(e)
+317	Tex. Tax Code §6.41(e)
+318	Tex. Tax Code §6.41(e)
+319	Tex. Tax Code §6.414(a)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+27
+appoint the number of auxiliary members considered 
+appropriate.320 An auxiliary member is appointed in the 
+same manner and for the same term as an ARB member 
+under Tax Code Section 6.41 and is subject to the same 
+eligibility requirements and restrictions under Tax Code 
+Sections 6.41, 6.411, 6.412 and 6.413.321
+An auxiliary member may attend ARB meetings but may 
+not vote in an ARB determination or serve as ARB chair or 
+secretary.322 An auxiliary member is not included in 
+determining what constitutes a quorum of the board or 
+whether a quorum is present at any ARB meeting.323 An 
+auxiliary member may hear taxpayer protests before the 
+ARB.324 If an auxiliary member sits on a panel to conduct a 
+protest hearing, the number of non-auxiliary ARB members 
+required to constitute the panel is reduced by the number 
+of auxiliary board members.325 An auxiliary member sitting 
+on a panel is considered a regular board member for all 
+purposes related to the conduct of the hearing.326 An 
+auxiliary member is entitled to make a recommendation to 
+the ARB regarding a protest heard by the member but is 
+not entitled to vote on the determination.327
+An auxiliary member is entitled to compensation as 
+provided by the appraisal district budget, but is not 
+entitled to a per diem or reimbursement of expenses.328
+The appraisal district board of directors must adopt and 
+implement a policy for the temporary replacement of an 
+ARB member.329 A temporary ARB member replaces an 
+ARB member who may not participate in a protest 
+hearing because that ARB member communicated with 
+another person(s) about a protest outside an ARB hearing 
+in violation of Tax Code Section 41.66(f).330
+320	Tex. Tax Code §§6.41(d) and 6.414(a) and (b)
+321	Tex. Tax Code §6.414(b)
+322	Tex. Tax Code §6.414(c)
+323	Tex. Tax Code §6.414(c)
+324	Tex. Tax Code §6.414(d)
+325	Tex. Tax Code §6.414(d)
+326	Tex. Tax Code §6.414(d)
+327	Tex. Tax Code §6.414(e)
+328	Tex. Tax Code §6.414(f)
+329	Tex. Tax Code §41.66(g)
+330	Tex. Tax Code §41.66(g)
+TRAINING
+The Comptroller’s office must approve curricula, provide 
+materials and supervise ARB member training.331 ARB 
+members are not allowed to participate in hearings until 
+they complete the Comptroller’s training course and a 
+statement agreeing to comply with Tax Code 
+requirements during hearings.332 A new ARB member 
+appointed after a course offering may continue to serve 
+until the completion of a subsequent course offering.333
+During the second year of an ARB member’s term, the ARB 
+member must complete the Comptroller’s continuing 
+education training course and complete a statement 
+agreeing to comply with Tax Code requirements during 
+hearings.334 An ARB member who fails to timely complete 
+the course is not eligible to participate in hearings, vote on 
+determinations of protest or be reappointed to an 
+additional term.335
+ARB members must complete the Comptroller’s 
+continuing education training course and complete a 
+statement agreeing to comply with Tax Code 
+requirements in each year they serve.336 The appraisal 
+district board should provide for budgeting ARB training 
+as part of the appraisal district’s annual budget.337
+The Comptroller’s office may assess a fee, not to exceed 
+$50 per trainee, to recover a portion of the costs incurred 
+for the training course.338
+Except during a hearing or other ARB proceeding, a 
+member of the appraisal district board of directors for 
+which the ARB is established, along with other specified 
+individuals, may not communicate with an ARB member 
+331	Tex. Tax Code §5.041
+332	Tex. Tax Code §5.041(b) and (b-1)
+333	Tex. Tax Code §5.041(e)
+334	Tex. Tax Code §5.041(e-2)
+335	Tex. Tax Code §5.041(e-2)
+336	Tex. Tax Code §5.041(e-2)
+337	Tex. Tax Code §§5.041(e-3) and 6.42(c)
+338	Tex. Tax Code §5.041(c) and (e-3)
+
+
+28 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+about these training courses or any matter presented or 
+discussed during the courses.339
+The Comptroller’s office may not advise a chief appraiser, 
+appraisal district employee, property owner or his or her 
+agent on a matter known to be the subject of an ARB 
+protest. The Comptroller’s office may communicate with 
+ARB members regarding:
+•	
+technical questions relating to ARB duties and 
+appraisal issues;
+•	
+the model ARB procedures; and
+•	
+the ARB survey provided to taxpayers.
+The Comptroller’s office may also communicate with the 
+ARB chair concerning complaints filed against the ARB.340 
+The phone number maintained by the Comptroller’s office 
+for ARB members is 800-252-7551.341
+ORGANIZATION
+The applicable appointing authority selects a chair and 
+secretary from among the ARB members.342 The 
+applicable appointing authority is encouraged to select 
+an ARB chair who has a background in law and property 
+appraisal.343 The ARB meets at any time at the chair’s call 
+or as provided for by ARB rule.344 The ARB must meet to 
+examine the appraisal records within 10 days after the 
+date the chief appraiser submits the records.345
+The ARB must adopt its procedures for hearings.346 The 
+ARB must hold a public hearing to consider the proposed 
+procedures and adopt the procedures by resolution no 
+later than May 15 each year.347 The ARB must incorporate 
+the Comptroller’s model hearing procedures into its 
+339	Tex. Tax Code §5.041(g)
+340	Tex. Tax Code §5.041(a) and (f)
+341	Tex. Tax Code §5.041(a)(4)
+342	Tex. Tax Code §6.42(a)
+343	Tex. Tax Code §6.42(a)
+344	Tex. Tax Code §6.42(b)
+345	Tex. Tax Code §6.42(b)
+346	Tex. Tax Code §41.01(c)
+347	Tex. Tax Code §41.01(c)
+adopted procedures and submit them to the Comptroller’s 
+office for review.348
+ARB members are entitled to a per diem for each day the 
+board meets as provided in the appraisal district 
+budget.349 ARB members are also entitled to 
+reimbursement for actual and necessary expenses 
+incurred in the performance of their duties as provided in 
+the appraisal district budget.350 Auxiliary ARB members 
+are entitled to compensation as provided by the appraisal 
+district budget, but not per diem or reimbursement of 
+expenses.351
+PERSONNEL
+An appraisal district may provide clerical assistance to 
+the ARB, including assisting the ARB with scheduling and 
+arranging hearings.352
+The ARB may employ legal counsel as provided by the 
+appraisal district budget or use the services of the county 
+attorney.353 An attorney may not serve as ARB legal 
+counsel if within the last year the attorney or a member of 
+the attorney’s law firm represented a property owner in 
+the appraisal district, a participating taxing unit, or the 
+appraisal district in certain matters.354 The prohibition on 
+representing a participating taxing unit or appraisal 
+district does not apply to a county attorney or an 
+assistant to the county attorney.355 An appraisal district 
+may specify in its budget whether the ARB may employ 
+legal counsel or must use the county attorney’s 
+services.356 An appraisal district may not require the ARB 
+to employ a specific attorney.357 If the budget authorizes 
+an ARB attorney, the budget must provide for reasonable 
+348	Tex. Tax Code §5.103(d) and (e)
+349	Tex. Tax Code §6.42(c)
+350	Tex. Tax Code §6.42(c)
+351	Tex. Tax Code §6.414(f)
+352	Tex. Tax Code §6.43(f)
+353	Tex. Tax Code §6.43(a)
+354	Tex. Tax Code §6.43(b)
+355	Tex. Tax Code §6.43(c)
+356	Tex. Tax Code §6.43(e)
+357	Tex. Tax Code §6.43(e)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+29
+compensation.358 ARB attorneys may not act as advocates 
+in a hearing or proceeding conducted by the ARB; may 
+provide advice to the ARB or ARB panel during a hearing 
+or proceeding; and are required to make certain 
+disclosures regarding relevant legal authority in the 
+controlling jurisdiction known to the attorney and not 
+disclosed by the parties and regarding a material fact that 
+may assist the ARB or panel in making an informed 
+decision regardless of whether the fact is adverse to the 
+position of a party.359
+An ARB may retain an appraiser certified by the Texas 
+Appraiser Licensing and Certification Board to instruct 
+ARB members on valuation methodology if the appraisal 
+district provides for the instruction in the appraisal district 
+budget.360
+EX PARTE COMMUNICATIONS 
+WITH AN ARB MEMBER
+An ARB member commits a Class A misdemeanor offense 
+if the member communicates with the chief appraiser, an 
+appraisal district employee or a member of the appraisal 
+district board of directors for which the ARB is 
+established in violation of Tax Code Section 41.66(f).361
+A chief appraiser or another appraisal district employee, a 
+member of a board of directors, a property tax consultant 
+or attorney representing a party to an ARB proceeding 
+commits a Class A misdemeanor offense if the person 
+communicates with an ARB member established for the 
+appraisal district with the intent to influence a decision by 
+an ARB member in the member’s capacity as an ARB 
+member.362
+These ex parte communication provisions do not apply to 
+communications between an ARB and its legal counsel.363 
+The provisions also do not apply to communications 
+358	Tex. Tax Code §6.43(e)
+359	Tex. Tax Code §6.43(d)
+360	Tex. Tax Code §5.041(h)
+361	Tex. Tax Code §6.411(a) and (d)
+362	Tex. Tax Code §6.411(b)
+363	Tex. Tax Code §6.411(c)
+between an ARB member and the chief appraiser, an 
+appraisal district employee, a member of the board of 
+directors, a property tax consultant or an attorney 
+representing a party to a proceeding before the ARB:
+•	
+during a protest hearing or other ARB proceeding;
+•	
+that constitute social conversation;
+•	
+that are specifically limited to and involve 
+administrative, clerical or logistical matters related to 
+the scheduling and operation of hearings, the 
+processing of documents, the issuance of orders, 
+notices and subpoenas and the operation, 
+appointment, composition or attendance at training of 
+the ARB; or
+•	
+that are necessary and appropriate to enable the 
+appraisal district board of directors to determine 
+whether to appoint, reappoint or remove a person as 
+an ARB member, chair or secretary.364
+A chief appraiser, an appraisal district employee, member 
+of the board of directors, property tax consultant or agent 
+of a property owner commits a Class A misdemeanor 
+offense if the person communicates with the local 
+administrative district judge regarding the appointment of 
+ARB members.
+This provision does not apply to communications with the 
+applicable appointing authority by:
+•	
+an ARB member regarding the member’s 
+reappointment to the ARB;
+•	
+a TLO in the course of performing the officer’s clerical 
+duties;
+•	
+a chief appraiser, an appraisal district employee, ARB 
+member or member of the board of directors 
+regarding applications and appointment information, 
+including criminal histories, and removal of an ARB 
+member; or
+364	Tex. Tax Code §6.411(c-1)
+
+
+30 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+•	
+a TLO regarding communications with a consultant, 
+property owner or agent regarding ARB member 
+removal.365
+ARB MEMBER REMOVAL
+A member may be removed from the ARB by the 
+applicable appointing authority or the judge’s designee, if 
+the appointing authority is the judge.366 Grounds for 
+removal include a violation of:
+•	
+Tax Code Section 6.412 (restrictions on eligibility of 
+ARB member);
+•	
+Tax Code Section 6.413 (interest in certain contracts 
+prohibited);
+•	
+Tax Code Section 41.66(f) (communication outside a 
+hearing or proceeding); or
+•	
+Tax Code Section 41.69 (conflict of interest in taxpayer 
+protest).367
+An ARB member may also be removed for good cause 
+relating to failure to attend ARB meetings or for evidence 
+of repeated bias or misconduct.368
+365	Tex. Tax Code §6.41(i)
+366	Tex. Tax Code §6.41(f)
+367	Tex. Tax Code §6.41(f)
+368	Tex. Tax Code §6.41(f)
+After learning of a potential ground for removal, the board 
+of directors, local administrative district judge or the 
+judge’s designee that appointed the member has 90 days 
+to remove the ARB member or find by official action that 
+the ARB member should not be removed.369
+A property owner or chief appraiser may file a complaint 
+with the TLO for the appraisal district alleging that the 
+ARB has adopted or is implementing hearing procedures 
+that are not in compliance with the Comptroller’s model 
+hearing procedures or is not complying with procedural 
+requirements of Tax Code Chapter 41. The TLO must 
+investigate the complaint and report the findings to the 
+appraisal district board of directors. If the board of 
+directors determine the allegations are true, it must direct 
+the ARB chair to take remedial action. The board may 
+remove the ARB member from the chair position if it 
+determines the chair has failed to take the actions 
+necessary to bring the ARB into compliance.370
+369	Tex. Tax Code §6.41(f) 
+370	Tex. Tax Code §41.66(q)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+31
+Appraisal District Financial Affairs
+Participating taxing units pay for appraisal district 
+operations.371 The board of directors’ financial 
+responsibilities include adopting an annual operating 
+budget; selecting a district depository; purchasing and 
+contracting; transferring, constructing and renovating real 
+property; and providing for an independent audit.372
+APPRAISAL DISTRICT BUDGET
+The board of directors is responsible for adopting the 
+appraisal district budget.373
+Before June 15 each year, the chief appraiser must 
+prepare a proposed budget for appraisal district 
+operations for the following tax year and submit it to each 
+participating taxing unit and to the board of directors.374 
+The budget must list:
+•	
+each proposed position, including each position’s:
+a.	 proposed salary;
+b.	 all proposed benefits;
+•	
+each proposed capital expenditure; and
+•	
+an estimate of the budget amount that will be 
+allocated to each taxing unit.375
+Other items commonly included in the budget are:
+•	
+contract payments for services;
+•	
+reimbursement for reasonable and necessary 
+appraisal district board expenses;
+371	Tex. Tax Code §6.062(c)
+372	Tex. Tax Code §§6.06(b), 6.09(b), 6.051(a) and 6.063(a)
+373	Tex. Tax Code §6.06(b)
+374	Tex. Tax Code §6.06(a)
+375	Tex. Tax Code §6.06(a)
+•	
+per diem and actual expense reimbursement for ARB 
+members;
+•	
+compensation for general counsel to the board of 
+directors or ARB legal counsel, or both;
+•	
+reimbursement of appraisal district office staff for 
+reasonable and necessary expenses;
+•	
+payment of tuition and fees incurred for courses or 
+educational programs;
+•	
+funds for ARB proceedings and operations; and
+•	
+other items necessary for appraisal district 
+operations.376
+An appraisal district is required to reimburse an appraisal 
+district employee for all actual and necessary expenses, 
+tuition and other fees and costs of materials incurred in 
+attending, with approval of the chief appraiser, a course 
+or training program sponsored or approved by TDLR.377
+If an appraisal district performs collection or assessment 
+services, the Interlocal Cooperation Act requires an 
+interlocal payment be in an amount that fairly 
+compensates the performing party for the services or 
+functions performed under the contract.378 A 2003 
+attorney general opinion concludes that an appraisal 
+district budget may only allocate the costs of operating 
+the appraisal district for its appraisal purposes; the costs 
+of tax assessment or collection are paid for by the taxing 
+unit that has contracted with the district for these 
+services and are not allocated to all taxing units within 
+the district regardless of whether the unit contracted with 
+the district for assessment or collection services.379
+376	Tex. Tax Code §§6.42(c) and 6.43(a)
+377	Tex. Tax Code §5.04(b)
+378	Tex. Gov’t Code §791.011(e)
+379	Tex. Att’y Gen. Op. GA-0030 (2003)
+
+
+32 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+PUBLIC NOTICE OF BUDGET HEARING
+The board of directors must hold a public hearing to 
+consider the budget.380 Not later than the 10th day before 
+the hearing, the board of director’s secretary must deliver 
+a written notice of the date, time and place of the hearing 
+to each participating taxing unit in the appraisal district.381
+Within the same timeframe, the chief appraiser is required 
+to publish a notice of the public hearing in a newspaper 
+having general circulation in the county.382 The 
+newspaper notice may not be smaller than one-quarter 
+page of a standard-size or tabloid-size newspaper and 
+may not be published in the part of the paper in which 
+legal notices and classified advertisements appear.383 This 
+notice must have the time, date and place of the public 
+hearing; specified summary of the proposed budget; 
+notice that the appraisal district is supported solely from 
+local taxing units; and a prescribed notice that the budget 
+will automatically take effect unless disapproved by 
+certain taxing units and a copy of the budget is available 
+for public inspection at these taxing units.384 In addition to 
+the statutorily required items in the notice, Comptroller 
+Rule 9.3048 requires the notice to provide the number of 
+employees compensated in the budget in terms of full-
+time equivalent employees and that the notice contains 
+the name, address and telephone number of the appraisal 
+district.
+BUDGET ADOPTION
+The board of directors must approve a budget before 
+Sept. 15.385
+If a majority of the voting taxing units adopt and file 
+resolutions disapproving a budget within 30 days after its 
+380	Tex. Tax Code §6.06(b)
+381	Tex. Tax Code §6.06(b)
+382	Tex. Tax Code §6.062(a)
+383	Tex. Tax Code §6.062(a)
+384	Tex. Tax Code §6.062(b) and (c)
+385	Tex. Tax Code §6.06(b)
+adoption, the budget does not take effect.386 The board 
+must adopt a new budget within 30 days of disapproval.387
+The board may amend the approved budget at any 
+time.388 The board secretary must deliver a written copy of 
+a proposed amendment to each participating taxing unit 
+not later than the 30th day before the date the board acts 
+on it.389
+ALLOCATING COSTS OF APPRAISAL 
+DISTRICT OPERATIONS
+Each participating taxing unit pays a share of the 
+appraisal district budget.390 The share is based on the 
+proportion of property taxes imposed by the taxing unit to 
+the sum of property taxes imposed by each participating 
+taxing unit in the appraisal district.391 The resulting 
+fraction is multiplied by the total dollar amount of the 
+budget.
+Taxing Unit’s Tax Levy	  = 	 Taxing Unit’s Fractional Share
+392
+Total Tax Levy of All	
+	
+
+Taxing Units
+If a taxing unit participates in two or more appraisal 
+districts, only the taxes imposed in an appraisal district is 
+used to calculate the taxing unit’s cost allocations in that 
+appraisal district.393 Tax Code Section 6.06(d) limits the 
+share of the cost of the budget for a taxing unit that has a 
+large tax levy but a smaller number of parcels. This limit 
+applies to a taxing unit that has less than 5 percent of the 
+total number of real property parcels in the appraisal 
+district while imposing over 25 percent of the total 
+amount of property taxes in the appraisal district for the 
+year. In this case, a taxing unit’s allocation may not 
+exceed three times the taxing unit’s percentage of the 
+386	Tex. Tax Code §6.06(b)
+387	Tex. Tax Code §6.06(b)
+388	Tex. Tax Code §6.06(c)
+389	Tex. Tax Code §6.06(c)
+390	Tex. Tax Code §6.06(d)
+391	Tex. Tax Code §6.06(d)
+392	Tex. Tax Code §6.06(d)
+393	Tex. Tax Code §6.06(d)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+33
+total number of parcels appraised by the appraisal 
+district.394 For example, a taxing unit has 4 percent of the 
+appraisal district’s parcels but imposes 30 percent of the 
+taxes. The budget share may not exceed three times 4 
+percent, or 12 percent. If there was no limitation, the 
+budget share would be 30 percent.
+For a newly formed taxing unit or a taxing unit that did not 
+impose taxes in the preceding year, the taxing unit is 
+allocated a portion of the budget and the amount of taxes 
+the taxing unit imposes in the current year is used to 
+calculate its allocation.395 The board of directors and the 
+taxing unit may agree to an estimate of the amount of 
+taxes that will be imposed for the current year.396 After the 
+amount of taxes to be imposed is known, payments are 
+adjusted to reflect the imposed amount.397
+Each taxing unit must pay its allocation in four equal 
+payments at the end of each calendar quarter unless a 
+taxing unit’s governing body and the chief appraiser 
+agree on a different payment method.398 The first payment 
+must be made before Jan. 1 of the year in which the 
+budget takes effect.399 If a payment is not paid on the due 
+date, it incurs a 5 percent penalty and an annual interest 
+rate of 10 percent.400 For good cause shown, the board of 
+directors may waive the penalty and interest on a 
+delinquent payment.401
+DIFFERENT FISCAL YEAR 
+AND METHOD OF FINANCING
+An appraisal district’s fiscal year is the calendar year.402 A 
+different fiscal year may be designated by three-fourths of 
+voting taxing units adopting resolutions.403 If the fiscal 
+394	Tex. Tax Code §6.06(d)
+395	Tex. Tax Code §6.06(h)
+396	Tex. Tax Code §6.06(h)
+397	Tex. Tax Code §6.06(h)
+398	Tex. Tax Code §6.06(e)
+399	Tex. Tax Code §6.06(e)
+400	Tex. Tax Code §6.06(e)
+401	Tex. Tax Code §6.06(k)
+402	Tex. Tax Code §6.06(i)
+403	Tex. Tax Code §6.06(i)
+year is changed, the deadlines for the chief appraiser 
+proposing and the board of directors adopting the budget 
+and the deadline for the first allocation payment are 
+specified deadlines before the first day of the changed 
+fiscal year.404 The budget allocation is based on the 
+amount of property taxes imposed by each participating 
+taxing unit in the most recent tax year preceding the 
+changed fiscal year.405
+The board of directors or the taxing units participating in 
+the appraisal district may prescribe a different method 
+of allocating the costs of operating the appraisal 
+district.406
+To change the method of financing, the board of 
+directors must adopt a resolution and deliver it to each 
+taxing unit participating in the appraisal district after 
+June 15 and before Aug. 15.407 The financing does not 
+change if the governing body of any participating taxing 
+unit adopts a resolution opposing the different method, 
+and files it with the board of directors before Sept. 1.408 If 
+a board proposal is rejected, the board must provide 
+written notification to each participating taxing unit 
+before Sept. 15.409
+The participating taxing units in an appraisal district may 
+adopt a different allocation method if three-fourths of the 
+voting taxing units adopt resolutions providing for the 
+other method.410 This adoption is not valid if it requires any 
+taxing unit to pay a greater proportion of the appraisal 
+district’s costs than the taxing unit would pay otherwise 
+without the consent of that taxing unit.411
+A resolution changing the allocation method is ineffective 
+if an official copy is not filed with the chief appraiser after 
+April 30 and before May 15.412 A change in allocation 
+404	Tex. Tax Code §6.06(i)
+405	Tex. Tax Code §6.06(i)
+406	Tex. Tax Code §6.061(a) and (b)
+407	Tex. Tax Code §6.061(a)
+408	Tex. Tax Code §6.061(a)
+409	Tex. Tax Code §6.061(a)
+410	Tex. Tax Code §6.061(b)
+411	 Tex. Tax Code §6.061(b)
+412	Tex. Tax Code §6.061(c)
+
+
+34 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+remains in effect until changed or rescinded by resolution 
+of a majority of the governing bodies of voting taxing 
+units.413
+DESIGNATION OF DISTRICT DEPOSITORY
+The board of directors must designate a depository for 
+payments to be deposited.414 An appraisal district 
+depository must be a banking corporation incorporated 
+under Texas law or the United States or a Texas savings 
+and loan association whose deposits are insured by the 
+Federal Savings and Loan Insurance Corporation 
+(FSLIC).415 To the extent that funds in the depository are 
+not insured by the Federal Deposit Insurance Corporation 
+or the FSLIC, the funds must be secured in the manner 
+provided by law for the security of funds of counties.416
+The board of directors must designate as the district 
+depository the financial institution or institutions that offer 
+the most favorable terms and conditions for the handling 
+of the appraisal district’s funds.417 The board must solicit 
+bids to be designated as depository for the appraisal 
+district.418 After a depository is designated, the depository 
+must serve for a term of two years and until its successor 
+is designated and has qualified.419 The board and the 
+depository may agree to extend a depository contract for 
+one additional two-year period.420
+Consult legal counsel regarding the applicability of Local 
+Government Code Chapter 116 concerning county 
+depositories.
+413	Tex. Tax Code §6.061(e)
+414	Tex. Tax Code §6.06(f)
+415	Tex. Tax Code §6.09(a)
+416	Tex. Tax Code §6.09(d)
+417	Tex. Tax Code §6.09(b)
+418	Tex. Tax Code §6.09(c)
+419	Tex. Tax Code §6.09(c)
+420	Tex. Tax Code §6.09(c)
+District’s funds may be disbursed only by a written check, 
+draft or order signed by the board chair and secretary of 
+the board.421 The board by resolution may authorize the 
+chief appraiser to disburse funds.422
+PURCHASING AND CONTRACTING
+An appraisal district is subject to the same requirements 
+and has the same purchasing and contracting authority 
+as a municipality under Local Government Code Chapter 
+252.423 Local Government Code Section 252.061 provides 
+for an injunction if a contract is made without complying 
+with Local Government Code Chapter 252 and any 
+resident of the appraisal district may seek an injunction 
+under that section.424
+Local Government Code Sections 252.062 and 252.063 
+provide for criminal penalties for municipal officers and 
+employees violating competitive bidding requirements 
+and the removal of those individuals. These provisions 
+apply to an appraisal district officer or employee in the 
+same manner those sections apply to a municipal officer 
+or employee.425
+The Public Property Finance Act (Local Government Code 
+Chapter 271) and the Interlocal Cooperation Act 
+(Government Code Chapter 791) should also be reviewed. 
+Consult with an attorney about bidding procedures, 
+purchasing and contracts.
+FINANCIAL AUDIT
+At least once each year, the board of directors must have 
+an audit prepared by an independent certified public 
+accountant or a firm of independent certified public 
+accountants.426 A copy of the report must be delivered to 
+421	Tex. Tax Code §6.06(f)
+422	Tex. Tax Code §6.06(f)
+423	Tex. Tax Code §6.11(a)
+424	Tex. Tax Code §6.11(b)
+425	Tex. Tax Code §6.11(b)
+426	Tex. Tax Code §6.063(a)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+35
+each voting taxing unit.427 A reasonable number of copies 
+of the report must be available for inspection at the 
+appraisal district office and the report is a public 
+record.428
+OTHER FINANCIAL AFFAIRS
+The board of directors and the chief appraiser also handle 
+other financial details. Issues to discuss with an attorney 
+include the application of the Public Funds Investment 
+Act in Government Code Chapter 2256 to local 
+governments, including political subdivisions; the 
+application of Government Code Chapter 2253 to 
+governmental entities in regard to public work contracts; 
+sales tax; reporting to the Internal Revenue Service; 
+purchase of insurance; retirement program participation, 
+etc.
+427	Tex. Tax Code §6.063(b)
+428	Tex. Tax Code §6.063(b)
+
+
+36 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+Taxpayer Assistance
+The IAAO’s publication Standard on Communications and 
+Outreach provides that the Standard examines the need 
+for a well-planned, strategic communications program 
+that provides practical recommendations for successfully 
+implementing and maintaining information and 
+communication with the public through proven marketing 
+techniques and tools.429 Some of the topics in these 
+standards include developing a well-planned, strategic 
+communications program (including having a 
+spokesperson) that establishes clear guidelines for the 
+assessing office’s internal and external communications 
+identifying stakeholder groups, ensuring all channels of 
+communication reach all community members, 
+developing a crisis plan and ensuring all internal and 
+external communications reported from the assessing 
+office are accurate, transparent and based on fact(s).430
+REASONABLE ACCESS
+One of the board’s required taxpayer assistance duties is 
+to develop and implement policies that provide the public 
+with reasonable opportunity to appear before the board 
+to speak on any issue under the board’s jurisdiction.431 
+Reasonable time must be provided at each board of 
+directors meeting for public comment on appraisal 
+district and ARB policies and procedures and a report 
+from the TLO if required.432
+429	IAAO, Standard on Communications and Outreach, (July 2023) p. 1. 
+www.iaao.org/wp-content/uploads/Standard_Comunication_
+and_Outreach.pdf
+430	This is only a selection of some of the topics covered in the standards. 
+For the full text of the standards please see the IAAO’s Standard on 
+Communications and Outreach at www.iaao.org/wp-content/up­
+loads/Standard_Comunication_and_Outreach.pdf
+431	Tex. Tax Code §6.04(d)
+432	Tex. Tax Code §6.04(d)
+The board must prepare and maintain a written plan that 
+describes how a non-English speaker or an individual 
+with a physical, mental or developmental disability may 
+be provided reasonable access to the board.433
+OTHER GENERAL ACCESS ISSUES
+Issues the board should or may address, depending on 
+factors such as whether legal requirements exist, include:
+•	
+evaluation of buildings for accessibility to those 
+individuals who are physically impaired as required by 
+state or federal law;
+•	
+parking accommodations for persons with disabilities;
+•	
+allowance for attendant animals in offices;
+•	
+providing information in different types of media;
+•	
+providing a sign-language interpreter;
+•	
+providing translator services; and
+•	
+providing information in different languages. Certain 
+Spanish resources can be found on the Comptroller’s 
+website at comptroller.texas.gov/taxes/
+property-tax/.
+COMPLAINT PROCESS
+The board of directors must prepare a description of the 
+board’s functions and the board’s procedures for filing 
+and resolving complaints.434 The board must make this 
+information available to the public and the appropriate 
+taxing jurisdictions.435 If a written complaint is filed with 
+433	Tex. Tax Code §6.04(e)
+434	Tex. Tax Code §6.04(f)
+435	Tex. Tax Code §6.04(f)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+37
+the board and the board has authority to resolve it, the 
+board must provide notice of the complaint status to the 
+parties to the complaint unless this notice would 
+jeopardize an undercover investigation.436 The notice 
+must be provided at least quarterly and until final 
+disposition of the complaint.437 In certain counties, the 
+TLO must report at each board of directors meeting on 
+the status of all comments and suggestions received and 
+all complaints filed with the board of directors.438
+TAXPAYER LIAISON OFFICER
+In counties with a population of 120,000 or more, the 
+board of directors must appoint a TLO and may appoint 
+one or more deputy TLOs.439 The TLO serves at the 
+pleasure of the board of directors and is primarily 
+responsible for providing assistance to taxpayers for the 
+district.440
+The TLO is responsible for:
+•	
+administering public access functions;
+•	
+providing information and materials to the public 
+designed to assist property owners in understanding 
+the appraisal process, protest procedures, the 
+procedure for filing ARB comments, complaints, and 
+suggestions or a request for limited binding 
+arbitration;
+•	
+resolving disputes that do not involve matters that 
+may be protested under Tax Code Section 41.41;
+•	
+receiving, compiling and forwarding complaints, 
+comments and suggestions concerning ARB matters 
+to the Comptroller’s office not later than Dec. 31 each 
+year;
+•	
+reporting to the board of directors at each meeting the 
+status of all comments, complaints and suggestions;
+436	Tex. Tax Code §6.04(g)
+437	Tex. Tax Code §6.04(g)
+438	Tex. Tax Code §6.052(c)
+439	Tex. Tax Code §6.052(a)
+440	Tex. Tax Code §6.052(a)
+•	
+investigating, referring and/or recommending an 
+appropriate course in resolving a complaint;
+•	
+dismissing a complaint related to a property’s 
+appraised value or appraisal methodology and a 
+complaint that is repetitive or fails to state a legitimate 
+concern;
+•	
+notifying a property owner of a complaint resolution 
+not later than the 90th day after the complaint was 
+filed;
+•	
+completing the required training; and
+•	
+providing clerical assistance to the applicable 
+appointing authority in the selection of ARB members, 
+for publicizing the availability of ARB positions and 
+delivering ARB applications.441
+The chief appraiser or any other person who performs 
+legal or appraisal services for the appraisal district for 
+compensation is not eligible to be the TLO or a deputy 
+TLO.442 The TLO or a deputy TLO is entitled to 
+compensation as provided by the budget adopted by the 
+board of directors.443
+The TLO must administer the public access functions 
+required by Tax Code Sections 6.04(d), (e) and (f) which 
+include allowing the public to speak before the board of 
+directors; preparing and maintaining a written plan on 
+reasonable access to the board for those who do not 
+speak English or who have physical, mental or 
+developmental disabilities; and preparing information 
+describing board functions and the complaint process.444
+The TLO provides information and materials designed to 
+assist property owners in understanding the appraisal 
+process, protest procedures, procedures for filing 
+comments, suggestions or complaints and related 
+matters.445 At each meeting of the board of directors, the 
+441	Tex. Tax Code §6.052(a), (b), (c) and (f)
+442	Tex. Tax Code §6.052(e)
+443	Tex. Tax Code §6.052(d)
+444	Tex. Tax Code §§6.04(d), (e) and (f) and 6.052(a)
+445	Tex. Tax Code §6.052(b)
+
+
+38 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+TLO is required to report on the status of all comments, 
+complaints and suggestions filed with the officer relating 
+to ARB hearing procedures, matters related to the 
+fairness and efficiency of the ARB and complaints filed 
+with the board of directors that the board has the 
+authority to resolve.446
+The TLO is required to provide complaints, comments and 
+suggestions related to ARB hearing procedures and other 
+matters related to the fairness and efficiency of the ARB 
+to the Comptroller’s office by Dec. 31 each year.447
+446	Tex. Tax Code §§6.04(g) and 6.52(c)
+447	Tex. Tax Code §6.052(b)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+39
+Public Information Act
+Public information is information that is written, 
+produced, collected, assembled or maintained by or for 
+a governmental entity in connection with the transaction 
+of official business, including electronic communications 
+related to official business, that are created, transmitted, 
+received or maintained on any device.448 Public 
+information is available to the public at a minimum 
+during the normal business hours of the governmental 
+body.449 By Oct. 1 each year, all governmental bodies 
+must notify the attorney general of the current mailing 
+and email address for receiving written public 
+information requests. These addresses will be available 
+on the attorney general’s website.450 Certain information 
+is excepted from public information requirements 
+including information considered to be confidential by 
+law, either constitutional or statutory, or by judicial 
+decision.451
+One example of confidential information specifically 
+related to appraisal districts is information relating to real 
+property sales prices, descriptions, characteristics and 
+other related information received from a private entity by 
+the Comptroller’s office or the chief appraiser of an 
+appraisal district under Tax Code Chapter 6.452 This 
+information is confidential, may only be requested by 
+certain people in specified circumstances, remains 
+confidential by persons who obtain it and may not be 
+disclosed except as provided.453
+After receiving a request for public information, the public 
+information officer must promptly produce public 
+448	Tex. Gov’t Code §552.002(a-2)
+449	Tex. Gov’t Code §552.021
+450	Tex. Gov’t Code §552.234(e) and (f)
+451	Tex. Gov’t Code §552.101
+452	Tex. Gov’t Code §552.149(a)
+453	Tex. Gov’t Code §552.149
+information for inspection, duplication, or both.454 The 
+public information officer must provide the public 
+information for inspection or duplication in the offices of 
+the governmental body or send copies if the person 
+requesting the information requests copies and pays the 
+postage and any other applicable charges.455 If the 
+information is unavailable because it is in active use or 
+storage, the public information officer must certify this 
+fact in writing to the requestor and set a date and hour 
+within a reasonable time when the information will be 
+available for inspection or duplication.456 If a 
+governmental body closes its physical office but requires 
+staff to work, the governmental body is required to make 
+a good faith effort to continue responding to public 
+information requests to the extent staff have access to the 
+information.457
+The charge for providing a copy of public information 
+must be an amount that reasonably includes all related 
+costs to reproducing the information.458 If a request is for 
+50 pages or less, the charge may not include materials, 
+labor or overhead costs.459 Charges for these requests 
+must be limited to a charge for each page unless the 
+pages to be photocopied are located in two or more 
+separate buildings that are not physically connected with 
+each other or located in a remote storage facility.460
+The Office of the Attorney General must adopt rules that 
+determine what governmental bodies charge for 
+providing copies of public information.461 Each 
+454	Tex. Gov’t Code §552.221(a)
+455	Tex. Gov’t Code §552.221(b)
+456	Tex. Gov’t Code §552.221(c)
+457	Tex. Gov’t Code §552.2211(a)
+458	Tex. Gov’t Code §552.261(a)
+459	Tex. Gov’t Code §552.261(a)
+460	Tex. Gov’t Code §552.261(a)
+461	Tex. Gov’t Code §552.262(a)
+
+
+40 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+governmental body must use these rules to determine 
+charges for providing copies of public information and to 
+determine the charge, deposit or bond required for 
+making public information that exists in a paper record 
+available for inspection, except to the extent as provided 
+otherwise by law.462 Attorney general rules regarding 
+charges for public information and other related 
+information can be found at texasattorneygeneral.gov/
+open-government/governmental-bodies/
+charges-public-information.
+If an officer for public information cannot produce public 
+information for inspection or duplication within 10 
+business days after the request, the officer must certify 
+that fact in writing to the requestor and set a date and 
+hour within a reasonable time when the information will 
+be available.463
+If a governmental body wishes to withhold information 
+from public disclosure, it must ask for an attorney 
+general’s decision within 10 business days after the day of 
+receiving the open records request.464 A decision is not 
+required if there has been a previous determination that 
+addresses the exact information.465 Within a reasonable 
+time but not later than the 10th business day after the 
+date of receiving the written request, a governmental 
+body that asks for a decision must provide the requestor 
+with a written statement that the governmental body 
+wishes to withhold the requested information and has 
+asked for an attorney general’s decision and a copy of the 
+governmental body’s written communication to the 
+attorney general as required.466
+A public information officer will notify the requester in 
+writing and identify the specific previous determination to 
+withhold the requested information by the 10th business 
+day after receiving the request.467
+462	Tex. Gov’t Code §552.262(a)
+463	Tex. Gov’t Code §552.221(d)
+464	Tex. Gov’t Code §552.301(a) and (b)
+465	Tex. Gov’t Code §552.301(a)
+466	Tex. Gov’t Code §552.301(d)
+467	Tex. Gov’t Code §552.221(f)
+An officer for public information must prominently display 
+an attorney general prescribed sign that contains basic 
+information about the rights of a requestor, the 
+responsibilities of a governmental body and the 
+procedures for inspecting or obtaining a copy of public 
+information.468 The sign must be displayed at one or more 
+places in the governmental body’s administrative offices 
+where it is plainly visible to members of the public and 
+employees of the governmental body whose duties 
+include receiving or responding to requests.469
+Public officials must complete a one- to two-hour training 
+course on the responsibilities of the governmental body 
+with which the official serves and its officers and 
+employees under the Public Information Act.470 The 
+training must be completed not later than the 90th day 
+after the date the public official takes the oath of office or 
+otherwise assumes the duties as a public official.471 A 
+public official may designate a public information 
+coordinator to satisfy the training requirements for the 
+public official if the public information coordinator is 
+primarily responsible for administering the responsibilities 
+of the public official or governmental body under the 
+Public Information Act.472
+If a governmental body fails to respond to a written public 
+information request, the requester can send a written 
+complaint to the attorney general. The complaint must 
+include the original information request and any 
+correspondence received from the governmental body in 
+response to the request. If the attorney general 
+determines that the governmental body failed to comply 
+with Government Code Section 552.221 requirements, the 
+attorney general will notify the governmental body in 
+writing and require the public information officer or 
+designee to complete open records training no later than 
+six months after receiving the notification.
+468	Tex. Gov’t Code §552.205(a)
+469	Tex. Gov’t Code §552.205(a)
+470	Tex. Gov’t Code §552.012(b)
+471	Tex. Gov’t Code §552.012(b)
+472	Tex. Gov’t Code §552.012(c)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+41
+The governmental body may not assess a cost to the 
+requester for producing information in response to the 
+request.
+If the governmental body seeks to withhold information in 
+response to the request, they must request an attorney 
+general decision no later than five business days after 
+receiving the notification. The governmental body must 
+release the requested information unless there is a 
+compelling reason to withhold the information.473
+A requestor or the attorney general’s office may file suit to 
+compel a governmental body to make information 
+available for public inspection.474 A person who claims to 
+be a victim of a violation of the Public Information Act can 
+file a complaint with the district or county attorney of the 
+county in which the governmental body is located.475 
+Before the 31st day after the date a complaint is filed, the 
+district or county attorney must determine whether the 
+violation alleged in the complaint was committed, 
+whether to bring an action against the governmental 
+body and notify the complainant of those 
+determinations.476 A claimant is entitled to file a complaint 
+with the attorney general’s office on or after the 90th day 
+after filing it with the district or county attorney.477 An 
+official may only file an action if the governmental body 
+does not cure the violation after three days of an official 
+providing written notification to the governmental body 
+that the alleged violation of the Act was committed.478
+473	Tex. Gov’t Code §552.328
+474	Tex. Gov’t Code §552.321
+475	Tex. Gov’t Code §552.3215(e)
+476	Tex. Gov’t Code §552.3215(g)
+477	Tex. Gov’t Code §552.3215(i)
+478	Tex. Gov’t Code §552.3215(j)
+The Public Information Act has three types of violations 
+that carry criminal penalties. The failure to give access to 
+public information is a misdemeanor with a fine of up to 
+$1,000, six months in jail or both; this is also considered 
+official misconduct and a public official can be removed 
+from office.479 These same penalties apply to the 
+distribution of information that is confidential under the 
+Act.480 The third violation is if a person willfully destroys, 
+mutilates, removes without permission or alters public 
+information.481 This misdemeanor offense is punishable by 
+a fine of not less than $25 or more than $4,000, county jail 
+time from three days to not more than three months or 
+both.482
+Questions regarding the applicability or interpretation of 
+the Public Information Act should be directed to legal 
+counsel.
+For more information on the Public Information Act, call 
+the Office of the Attorney General’s Open Government 
+Hotline at 877-673-6839 or see the Office of the Attorney 
+General’s Public Information Act Handbook at 
+texasattorneygeneral.gov/publicinfo_hb.pdf.
+479	Tex. Gov’t Code §552.353
+480	Tex. Gov’t Code §552.352
+481	Tex. Gov’t Code §552.351
+482	Tex. Gov’t Code §552.351
+
+
+42 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+Open Meetings Act
+The Open Meetings Act requires every regular, special or 
+called meeting of a governmental body to be open to the 
+public, except as provided.483 The Open Meetings Act 
+applies any time a quorum of a governmental body meets 
+as provided under Government Code Section 
+551.001(4).484 Members may attend social occasions, 
+workshops, ceremonial events, press conferences and 
+candidate forums, appearances or debates without 
+violating the law, provided formal action is not taken and 
+any discussion of public business is incidental.485
+If a governmental body takes an action in violation of the 
+Open Meetings Act, then that action is voidable.486 
+Violation of the Open Meetings Act is a misdemeanor 
+offense.487 A member commits a misdemeanor offense if 
+the member or group of members knowingly conspires to 
+circumvent the Open Meetings Act by meeting in 
+numbers less than a quorum for the purpose of secret 
+deliberations in violation of the Open Meetings Act.488
+A governmental body must give written notice of the date, 
+hour, place and subject of each meeting.489 The 
+governmental body must concurrently post the notice of 
+a meeting and the agenda for the meeting on the internet 
+website.490 The Open Meetings Act requires the posting of 
+notices within certain time periods.491 It provides for 
+posting meeting notices or adding agenda items for an 
+already posted meeting when there is an emergency or 
+when there is an urgent public necessity.492 The Open 
+483	Tex. Gov’t Code §551.002
+484	Tex. Gov’t Code §551.001(4)
+485	Tex. Gov’t Code §551.001(4)
+486	Tex. Gov’t Code §551.141
+487	Tex. Gov’t Code Chapter 551
+488	Tex. Gov’t Code §551.143(a)
+489	Tex. Gov’t Code §551.041
+490	Tex. Gov’t Code §551.056(b)
+491	Tex. Gov’t Code Chapter 551, Subchapter C
+492	Tex. Gov’t Code §551.045
+Meetings Act should be consulted regarding the place, 
+content and the deadlines of postings.
+For each meeting, a governmental body must prepare 
+and keep minutes or make a recording.493 The minutes 
+must state the subject of each deliberation and indicate 
+each vote, order, decision or other action taken.494 These 
+minutes and recordings of an open meeting are public 
+records and must be available for public inspection and 
+copying on request.495
+In an open meeting, a person in attendance may make an 
+audio or visual recording of all or any part of the 
+governmental body meeting.496 A governmental body may 
+adopt reasonable rules to maintain order at a meeting, 
+but the rules may not prevent or unreasonably impair a 
+person from exercising the right to record the meeting.497 
+These rules may relate to the location of recording 
+equipment and the manner in which the recording is 
+conducted.498
+The Open Meetings Act provides exceptions to the 
+requirement that meetings of a governmental body be 
+open to the public and sets forth procedures relating to 
+closed meetings.499 If there is a closed meeting, a 
+governmental body must first convene in an open 
+meeting with a quorum and follow certain procedures.500 
+A governmental body may not vote, make a decision or 
+take a final action in a closed meeting.501 For each closed 
+meeting, a governmental body must keep either a 
+493	Tex. Gov’t Code §551.021(a)
+494	Tex. Gov’t Code §551.021(b)
+495	Tex. Gov’t Code §551.022
+496	Tex. Gov’t Code §551.023
+497	Tex. Gov’t Code §551.023
+498	Tex. Gov’t Code §551.023
+499	Tex. Gov’t Code Chapter 551, Subchapters D and E
+500	Tex. Gov’t Code §551.101
+501	Tex. Gov’t Code §551.102
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+43
+certified agenda or make a recording of the meeting, 
+except for private consultations with the governmental 
+body’s attorney.502 The closed meeting’s certified agenda 
+or recording must be preserved for at least two years 
+after the meeting date or during any period in which 
+litigation is pending regarding that meeting.503 A district 
+court may order that a certified agenda or recording of a 
+closed meeting be available for public inspection.504
+In part, some of the exceptions in the Open Meetings Act 
+include certain meetings with the governmental body’s 
+attorney and meetings regarding personnel matters or 
+real property deliberations. A governmental body may 
+hold a closed meeting to seek the advice of its attorney 
+about pending or contemplated litigation, a settlement 
+offer or on a matter which requires the attorney to meet 
+in a closed session to comply with the Texas Disciplinary 
+Rules of Professional Conduct of the State Bar of Texas.505 
+Otherwise, a governmental body may not conduct a 
+private consultation with its attorney.506 A closed meeting 
+may be held to deliberate the purchase, exchange, lease 
+or value of real property if an open meeting deliberation 
+would have a detrimental effect on negotiations for the 
+governmental body.507 The Open Meetings Act does not 
+require an open meeting to deliberate on certain 
+personnel matters of a public officer or employee, 
+including the deliberation of the appointment, 
+employment, evaluation, reassignment, duties, discipline 
+or dismissal; or to hear a complaint or charge against an 
+officer or employee.508
+502	Tex. Gov’t Code §551.103
+503	Tex. Gov’t Code §551.104(a)
+504	Tex. Gov’t Code §551.104(b) and (c)
+505	Tex. Gov’t Code §551.071
+506	Tex. Gov’t Code §551.071
+507	Tex. Gov’t Code §551.072
+508	Tex. Gov’t Code §551.074(a)
+Each elected or appointed public official of a 
+governmental body subject to the Open Meetings Act 
+must complete a training course.509 The official is required 
+to complete a training course not later than the 90th day 
+after taking the oath of office or otherwise assumes the 
+duties as a public official.510 The Office of the Attorney 
+General must ensure that the training is available.511 For 
+more information regarding training by the Office of the 
+Attorney General, please see texasattorneygeneral.gov/
+og/open-government-training.
+A governmental body must maintain and make available 
+for public inspection the record of its members’ 
+completion of the training.512 The failure of one or more 
+members of a governmental body to complete the 
+required training does not affect the validity of an action 
+taken by the governmental body.513
+Boards of directors should seek legal advice regarding 
+the applicability of the Open Meetings Act to board 
+meetings. For more information on the Open Meetings 
+Act, call the Office of the Attorney General’s Open 
+Government Hotline at 877-673-6839 or see the Office of 
+the Attorney General’s Open Meetings Act Handbook at 
+texasattorneygeneral.gov/sites/default/files/files/
+divisions/open-government/openmeetings_hb.pdf.
+509	Tex. Gov’t Code §551.005(a)
+510	Tex. Gov’t Code §551.005(a)
+511	 Tex. Gov’t Code §551.005(b)
+512	Tex. Gov’t Code §551.005(c)
+513	Tex. Gov’t Code §551.005(f)
+
+
+44 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+Appraisal District Operations
+Each appraisal district must establish an office located in 
+the county for which the appraisal district is established; 
+an appraisal district may establish branch offices outside 
+the county.514 The board of directors may contract with 
+another appraisal district or with a taxing unit within the 
+district to perform its appraisal district duties.515
+OWNERSHIP OR LEASE OF REAL 
+PROPERTY
+The board of directors may purchase, finance the 
+purchase of, or lease real property and may construct or 
+finance the construction of improvements as necessary to 
+establish and operate the appraisal district office or a 
+branch office.516
+For an appraisal district to acquire or convey real 
+property or construct or renovate a building or other 
+improvement, three-fourths of the voting taxing units 
+must approve. The financing of the acquisition of real 
+property or the financing of the construction or 
+renovation of a building or other improvement does not 
+require approval by the taxing units.517 The board of 
+directors by resolution may propose a property 
+transaction or other action that requires approval of the 
+taxing units.518 The chief appraiser must notify each taxing 
+unit entitled to vote on the proposal by delivering a copy 
+of the board’s resolution, together with information 
+showing the costs of other available alternatives to the 
+proposal.519 On or before the 30th day after the date a 
+taxing unit receives notice of a proposal, the governing 
+514	Tex. Tax Code §6.05(a)
+515	Tex. Tax Code §6.05(b)
+516	Tex. Tax Code §6.051(a)
+517	Tex. Tax Code §6.051(b)
+518	Tex. Tax Code §6.051(b)
+519	Tex. Tax Code §6.051(b)
+body of the taxing unit by resolution may approve or 
+disapprove the proposal.520 If a governing body fails to act 
+by that time or fails to file its resolution with the chief 
+appraiser on or before the 10th day after that 30th day, 
+the proposal is treated as if it were approved by the 
+governing body.521
+If a conveyance of real property owned by the appraisal 
+district is approved, the board of directors may convey 
+the real property and the proceeds are credited to each 
+participating taxing unit in proportion to the taxing unit’s 
+allocation of the budget in the year in which the 
+transaction occurs.522
+TECHNOLOGICAL CAPABILITIES
+The Tax Code requires appraisal districts to electronically 
+furnish certain material or communicate electronically in 
+specific circumstances; appraisal districts need to have 
+the technological capabilities to fulfill these requirements.
+When the Tax Code requires a property owner to use a 
+form, the office or agency with which the form is filed 
+must make printed and electronic versions of the forms 
+readily and timely available and must furnish a property 
+owner a form without charge.523
+If a property owner or designated agent elects for the 
+exchange of electronic communication, a tax official is 
+required to deliver electronically any notice, rendition, 
+application form, completed application or information 
+requested.524
+520	Tex. Tax Code §6.051(b)
+521	Tex. Tax Code §6.051(b)
+522	Tex. Tax Code §6.051(c)
+523	Tex. Tax Code §1.09
+524	Tex. Tax Code §1.085(a-1)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+45
+The tax official is required to establish a procedure that 
+allows a property owner or designated agent to make the 
+election for the exchange of electronic communication, to 
+specify the manner in which communications will be 
+exchanged and the method used to confirm the delivery 
+of information without charge.525
+A property owner or designated agent’s election for 
+electronic communication with a tax official remains in 
+effect until rescinded in writing by the property owner or 
+designated agent.526
+Appraisal districts in a county with a population of 
+500,000 or more must implement a system that allows 
+the designation of a property tax agent to be signed and 
+filed electronically.527
+Appraisal districts must implement a system that allows a 
+residence homestead owner to electronically:
+•	
+file a notice of protest with the ARB regarding the 
+determination of appraised value or unequal appraisal;
+•	
+receive and review comparable sales data and other 
+evidence that the chief appraiser intends to use at the 
+protest hearing before the ARB;
+•	
+receive, as applicable, a notice from the appraisal 
+district that a settlement offer will not be made or 
+receive a settlement offer from the appraisal district to 
+correct the appraisal records by changing the 
+property’s market value and, if applicable, the 
+appraised value to the value as redetermined by the 
+appraisal district; or
+•	
+accept or reject an appraisal district settlement 
+offer.528
+This requirement applies to counties that maintain 
+internet websites and is mandatory for counties with 
+populations of 500,000 or more.529
+525	Tex. Tax Code §1.085(a-2) and (a-4)
+526	Tex. Tax Code §1.085(a-3)
+527	Tex. Tax Code §1.111(b)
+528	Tex. Tax Code §41.415(b)
+529	Tex. Tax Code §41.415(a)
+Appraisal districts should work with the Comptroller’s 
+office to ensure internet compatibility.
+RECORDS SYSTEM
+Tax Code Section 5.07 and Comptroller Rule 9.3003 require 
+offices appraising property to develop and maintain a tax 
+records system. Any of the required information may be 
+maintained electronically rather than in physical 
+documents. Such a system must include the following:
+•	
+appraisal cards;
+•	
+maps;
+•	
+rendition forms;
+•	
+report of decreased value forms;
+•	
+appraisal records of all property;
+•	
+tax roll of any taxing unit for whom the appraisal 
+district assesses or collects;
+•	
+delinquent tax roll of any taxing unit for whom the 
+office collects;
+•	
+alphabetical index;
+•	
+partial exemption lists;
+•	
+absolute exemption lists; and
+•	
+lists of properties receiving appraisal as open-space 
+land; agricultural use; timber use; recreational, park 
+and scenic land; and public access airports.
+APPRAISAL RECORDS OF ALL PROPERTY
+Provisions in Tax Code Chapter 25 and Comptroller Rule 
+9.3004 requires all appraisal district offices to develop and 
+maintain appraisal records of all property. These records 
+must be two lists: one for real property and one list for 
+personal property and must contain specified information 
+as applicable. Any required information may be maintained 
+electronically rather than physical documents.
+
+
+46 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+APPRAISAL CARDS
+Comptroller Rule 9.3001 requires that all appraisal district 
+offices that appraise property must develop and maintain 
+a system of appraisal cards for all parcels of real estate 
+which each office is required to appraise. A separate 
+appraisal card must be developed and maintained for 
+each parcel of residential or commercial real estate with 
+specified items of information related to the land and 
+improvements on the parcel. Many of these items of 
+information, plus additional specified information, must 
+be on the appraisal card for each parcel of rural or 
+acreage real estate. The appraisal cards may be 
+maintained electronically rather than in physical 
+documents.
+MAPS
+In meeting the chief appraiser’s principal responsibility to 
+locate, record and appraise all property in the appraisal 
+district, a complete set of maps is indispensable. Maps 
+enable appraisers to locate each real property parcel, 
+identify its size and shape and determine its relationship 
+to factors that affect its value. Maps also serve to display 
+market and statistical data, appraisal comparisons and 
+land appraisals.
+Comptroller Rule 9.3002 requires all appraisal districts 
+and tax offices appraising property to establish and 
+maintain a system of tax maps covering the entire area of 
+the taxing units for whom each office appraises property. 
+The tax map system must be annually updated to 
+incorporate any new subdivisions or property transfers as 
+indicated by the filing of subdivision plats or deeds with 
+the county clerk’s office of the county or counties in 
+which the taxing units for whom each office appraises 
+property are located. Any of the information may be 
+maintained electronically rather than physical documents.
+LOCAL GOVERNMENT RECORDS 
+MANAGEMENT
+Appraisal districts are subject to the preservation, 
+microfilming, destruction and other records disposition 
+provisions of Local Government Code Chapter 203.530 For 
+additional information about records management and 
+retention, see the Texas State Library and Archives 
+Commission at www.tsl.texas.gov.
+530	Tex. Tax Code §6.13
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+47
+Appraisal District Personnel
+The appraisal district board of directors may employ a 
+general counsel for the appraisal district to serve at the 
+will of the board.531 The general counsel must provide 
+counsel directly to the board and perform other duties 
+and responsibilities as determined by the board.532 The 
+general counsel is entitled to compensation as provided 
+by the budget adopted by the board.533
+Through adopting the budget, the board of directors may 
+direct the size and qualifications of staff, as well as set the 
+goals and objectives of the appraisal district through its 
+personnel. The chief appraiser may employ and 
+compensate professional, clerical and other personnel as 
+provided by the budget, with the exception of a general 
+counsel to the appraisal district.534
+A chief appraiser may not employ persons who are 
+related to directors within the second degree by affinity or 
+within the third degree by consanguinity as determined 
+under Government Code Chapter 573.535 A person 
+commits an offense if the person intentionally or 
+knowingly violates this prohibition; the offense is a 
+misdemeanor punishable by a fine of at least $100 and up 
+to $1,000.536
+PERSONNEL POLICY
+IAAO’s Assessment Administration provides general 
+guidance on personnel management, including selection 
+of employees, employee development, compensation, 
+531	Tex. Tax Code §6.05(j)
+532	Tex. Tax Code §6.05(j)
+533	Tex. Tax Code §6.05(j)
+534	Tex. Tax Code §6.05(d)
+535	Tex. Tax Code §6.05(f)
+536	Tex. Tax Code §6.05(f)
+internal communication, motivation and leadership and 
+system issues in management.537
+Personnel manuals can inform employees about the 
+appraisal district’s goals and objectives, policies, 
+procedures and guidelines to follow in the course of their 
+duties. Manuals should be reviewed and updated on a 
+regular basis. Examples of appraisal district personnel 
+manuals are at comptroller.texas.gov/taxes/property-
+tax/personnel-policies/index.php.
+Consult legal counsel for advice in preparing personnel 
+policy manuals or handbooks.
+PROFESSIONAL DEVELOPMENT
+According to IAAO’s Standard on Professional 
+Development, “in-service training and continuing 
+education of assessment personnel are essential parts of 
+an effective program . . . .”538
+Certain appraisal district employees register with and 
+attain certification from TDLR. Registrants must pass one 
+or more examinations to be certified and must participate 
+to the extent required by TDLR in continuing education 
+programs to maintain registration.539 An individual may 
+not serve as a chief appraiser unless the individual has 
+completed chief appraiser training pursuant to 
+Occupations Code Section 1151.164 and Tax Code Section 
+5.042.540 This prohibition does not apply to a county TAC 
+who serves as chief appraiser under Tax Code Section 
+537	IAAO, Assessment Administration, (2003), pp. 137-170
+538	IAAO, Standard on Professional Development, (April 2022), p.1. 
+https://www.iaao.org/wp-content/uploads/Standard_on_
+Professional_Development.pdf
+539	Tex. Occ. Code §§1151.161 and 1151.1581
+540	Tex. Tax Code §5.042(a)
+
+
+48 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+6.05(c).541 It applies only to a chief appraiser appointed on 
+or after July 1, 2006.542 Also, a person may serve in a 
+temporary, provisional or interim capacity as chief 
+appraiser for up to one year without completing the 
+required training.543
+Chief appraisers are required to complete at least half of 
+their required continuing education hours in programs 
+devoted to one or more of the topics listed in Occupations 
+Code Section 1151.164(b) and at least two of the hours in 
+ethics specific to maintaining the independence of an 
+appraisal office from political pressure.544
+541	Tex. Tax Code §5.042(c)
+542	Acts 2005, 79th Leg., R.S. Ch. 1111, Sec. 3
+543	Tex. Tax Code §5.042(b)
+544	Tex. Occ. Code §1151.1581
+An appraisal district should budget funds to cover 
+necessary training and education expenses. An appraisal 
+district is required to reimburse an appraisal district 
+employee for all actual and necessary expenses, tuition 
+and other fees and costs of materials incurred in 
+attending, with approval of the chief appraiser, a course 
+or training program sponsored or approved by TDLR.545
+545	Tex. Tax Code §5.04(b)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+49
+Assessment and Collection Functions
+A taxing unit and a commissioner’s court may contract 
+with another taxing unit to perform their assessment and 
+collection functions.546 The Tax Code provides procedures 
+for taxing units to follow to consolidate assessment, 
+collection or assessment and collection functions with an 
+appraisal district.547 The appraisal district may be 
+responsible for these functions for one or more of the 
+appraisal district’s taxing units.
+If an appraisal district does assess, collect or assess and 
+collect, please see Tax Code Subtitle E, Chapters 31 
+through 35, regarding collections and delinquency.
+INTERLOCAL CONTRACTS
+The board of directors may enter a contract with a taxing 
+unit or a commissioner’s court to collect and assess taxes 
+for that taxing unit or county (with county TAC approval).548 
+These contracts are subject to the Interlocal Cooperation 
+Act.549 The contract may provide for the collecting entity to 
+contract with an attorney to collect delinquent taxes.550
+If a county contracts to have its taxes assessed and 
+collected by another entity, the contract must require the 
+assessment and collection of all the taxes the county is 
+required to assess and collect except for special inventory 
+taxes assessed and collected under specified 
+provisions.551 The Attorney General has held that Tax Code 
+Section 6.24 is construed as authorizing a contract to 
+obtain assistance for the county TAC, as opposed to 
+supplanting the TAC.552
+546	Tex. Tax Code §6.24(a) and (b)
+547	Tex. Tax Code §6.26
+548	Tex. Tax Code §6.24(a) and (b)
+549	Tex. Tax Code §6.24(a) and (b)
+550	Tex. Tax Code §6.24(d)
+551	Tex. Tax Code §6.24(b) and (c)
+552	Tex. Att’y Gen. Op. JM-833 (1987)
+CONSOLIDATION ELECTION
+Pursuant to Tax Code Section 6.26, qualified voters may 
+petition to consolidate the assessment and collection of 
+property taxes. The attorney general has held that Tax 
+Code Section 6.26 is unconstitutional insofar as it 
+contravenes Texas Constitution, Article VIII, Section 14 
+and that the Legislature may not authorize the electorate 
+to divest the county TAC of the assessment and collection 
+duties, other than appraisal functions.553
+Qualified voters residing in an appraisal district may 
+petition to require an election to determine whether to 
+require the appraisal district, county TAC or a specified 
+taxing unit within the appraisal district to assess, collect 
+or assess and collect property taxes on property 
+appraised by the appraisal district for all taxing units.554
+If a taxing unit assesses, collects or assesses and collects 
+its own property taxes, the qualified voters of that taxing 
+unit may submit a petition to the governing body of the 
+taxing unit to require an election to determine whether to 
+require the appraisal district, the county TAC or another 
+taxing unit to assess, collect or assess and collect the 
+taxing unit’s property taxes.555
+For a petition to be valid, it must make certain statements 
+and be signed by a specified amount or percentage of 
+certain qualified voters.556
+The petition may require the appraisal district, the county 
+TAC or a specified taxing unit within the appraisal district 
+to perform the consolidated functions.557 Neither an 
+appraisal district nor a taxing unit may be required by an 
+553	Tex. Att’y Gen. Op. JM-833 (1987)
+554	Tex. Tax Code §6.26(a)
+555	Tex. Tax Code §6.26(b)
+556	Tex. Tax Code §6.26(c)
+557	Tex. Tax Code §6.26(a)
+
+
+50 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+election to assess, collect or assess and collect taxes on 
+property outside the appraisal district’s boundaries.558
+If the commissioner’s court or the taxing unit’s governing 
+body finds that a petition is valid, it must order an election 
+in the appraisal district or taxing unit on the next uniform 
+election date prescribed by the Election Code that is 
+more than 60 days after the last day on which it could 
+have acted on the petition.559
+If a majority of the qualified voters who voted in the 
+election favor the proposition, the appraisal district, 
+county TAC or specified taxing unit named on the ballot 
+must perform the functions specified by the ballot 
+beginning with the next time property taxes are assessed 
+or collected, as applicable, that is more than 90 days after 
+the date of the election. When the performance of a 
+function begins before that time period, a function may be 
+consolidated if the governing bodies agree, including the 
+appraisal district board of directors if the appraisal district 
+is involved.560
+A consolidation may not be terminated within two years 
+after the consolidation date.561
+A taxing unit must pay the actual cost of the consolidated 
+functions to the office or entity that performs the 
+functions pursuant to an election.562 Actual costs have 
+been defined by the attorney general as those costs that 
+the collecting taxing unit or appraisal district incurs over 
+and above those it would incur if it were not collecting for 
+another taxing unit.563
+558	Tex. Tax Code §6.26(j)
+559	Tex. Tax Code §6.26(e)
+560	Tex. Tax Code §6.26(f)
+561	Tex. Tax Code §6.26(i)
+562	Tex. Tax Code §6.26(g)
+563	Tex. Att’y Gen. Op. JM-996 (1988)
+A taxing unit may require a bond when an appraisal 
+district collects for the taxing unit.564 The taxing unit must 
+pay the premium for the bond from its general fund or as 
+provided by intergovernmental contract.565
+ANNUAL COLLECTION BUDGET
+If an appraisal district is assessing and collecting, the 
+district should outline the costs in a separate budget.566 If 
+the appraisal district performs assessment and collection 
+functions under contract, the budget should be based on 
+the contract. If the appraisal district collects under an 
+election, the budget should be based on actual costs 
+among the taxing units served.567 The appraisal district 
+must allocate costs only to those taxing units for which it 
+performs assessment and collection functions.568
+Special items in the annual collection budget could 
+include required bonds, services of a delinquent tax 
+attorney and court fees (if the appraisal district is 
+handling delinquent collections).
+564	Tex. Tax Code §6.29(b)
+565	Tex. Tax Code §6.29(c)
+566	Tex. Att’y Gen. Op. GA-0030 (2003)
+567	Tex. Att’y Gen. Op. JM-996 (1988)
+568	Tex. Att’y Gen. Op. GA-0030 (2003)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+51
+Comptroller Review of Appraisal Districts
+The Comptroller’s office provides technical assistance to 
+local taxing units and taxpayers on property tax issues, 
+but it cannot intervene in local tax matters. The 
+Comptroller’s office is required to adopt rules establishing 
+minimum standards for appraisal district administration 
+and operations and is also required to conduct reviews of 
+appraisal district operations.569
+METHODS AND ASSISTANCE PROGRAM 
+(MAP)
+At least once every two years, PTAD must review each 
+appraisal district’s governance, taxpayer assistance and 
+the operating and appraisal standards, procedures and 
+methodology to determine compliance with generally 
+accepted standards, procedures and methodology.570 
+After consultation with the Property Tax Administration 
+Advisory Board, the Comptroller’s office by rule may 
+establish procedures and standards for conducting and 
+scoring the review.571
+In conducting the review, the Comptroller’s office is 
+entitled to access to all appraisal district records and 
+reports, to copy or print these materials and to the 
+assistance of the appraisal district’s officers and 
+employees.572
+At the conclusion of the review, the Comptroller’s office 
+must, in writing, notify the appraisal district of its 
+performance in the review.573 If there is a finding of non-
+compliance with generally accepted standards, 
+procedures and methodology, or certain Comptroller-
+issued manuals, the Comptroller’s office must deliver a 
+569	Tex. Tax Code §§5.03, 5.10, 5.102, 5.12 and Tex. Gov’t Code §403.302
+570	Tex. Tax Code §5.102(a)
+571	Tex. Tax Code §5.102(a-2)
+572	Tex. Tax Code §5.102(b)
+573	Tex. Tax Code §5.102(c)
+report that details the findings and recommendations for 
+improvement to the following:
+•	
+the appraisal district’s chief appraiser and board of 
+directors; and
+•	
+the superintendent and board of trustees of each 
+school district participating in the appraisal district.574
+If an appraisal district fails to comply with the report’s 
+recommendations and the Comptroller’s office finds that 
+the appraisal district board of directors failed to take 
+remedial action reasonably designed to ensure 
+substantial compliance with each report recommendation 
+before the first anniversary of the date the report was 
+issued, the Comptroller’s office must notify TDLR.575 TDLR 
+must take action necessary to ensure that the 
+recommendations in the report are implemented as soon 
+as practicable.576 If TDLR takes action, then before Feb. 1 
+of the year following the year in which action is taken, 
+TDLR must, with the assistance of the Comptroller’s 
+office, determine whether the recommendations in the 
+most recent report have been substantially 
+implemented.577 TDLR must notify the appraisal district’s 
+chief appraiser and the board of directors in writing of the 
+determination.578
+Comptroller Rule 9.301 provides procedures and 
+standards for the reviews and additional MAP information 
+is available at comptroller.texas.gov/taxes/property-
+tax/map/index.php.
+574	Tex. Tax Code §5.102(c)
+575	Tex. Tax Code §5.102(d)
+576	Tex. Tax Code §5.102(d)
+577	Tex. Tax Code §5.102(e)
+578	Tex. Tax Code §5.102(e)
+
+
+52 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+SCHOOL DISTRICT PROPERTY VALUE 
+STUDY (SDPVS)
+Government Code Section 403.302 requires the 
+Comptroller’s office to conduct a study to determine the 
+total taxable value of all property in each school district at 
+least once every two years. This study is referred to as the 
+School District Property Value Study (SDPVS).
+The purpose of the SDPVS is to help ensure equitable 
+distribution of state funding for public education. Texas 
+funds public education through state and local funds. 
+Local funding comes from property taxes.579 The chief 
+appraiser of each appraisal district determines local 
+property values and school districts set tax rates that 
+determine the amount of local tax revenue. Texas bases 
+state funding, in part, on the total taxable property value 
+within each school district, as determined by the SDPVS.
+By law, taxable value equals the market value of all 
+taxable property in a district, minus certain exemptions 
+and deductions such as state-mandated homestead and 
+disabled veteran exemptions as well as value 
+limitations.580 Deductions are made for reinvestment 
+zones, freeport exemptions, productivity appraisal of 
+qualified agricultural lands, the school tax ceiling for 
+homeowners age 65 and older or disabled and other 
+state-mandated exemptions.581
+To estimate a school district’s taxable value, the 
+Government Code requires the Comptroller’s office to do 
+the following:
+•	
+use generally accepted sampling, standard valuation, 
+statistical compilation and analysis techniques;
+•	
+ensure that different levels of appraisal on sold and 
+unsold property do not adversely affect the accuracy 
+of the study and that different levels of appraisal 
+resulting from protests to the ARB on the grounds of 
+market or appraised value or unequal appraisal (Tax 
+579	Tex. Gov’t Code §403.301
+580	Tex. Gov’t Code §403.302(d)
+581	Tex. Gov’t Code §403.302(d)
+Code Sections 41.41(a)(1) or (2)) are appropriately 
+adjusted in the study; and
+•	
+test the validity of taxable values and presume that 
+appraisal roll values represent taxable value when 
+local value is determined to be valid.582
+The Comptroller’s office tests the taxable values the 
+appraisal district assigns to each property category by 
+constructing a statistical margin of error around the 
+estimate of value for selected property categories in each 
+school district.583 The Comptroller’s office considers 
+values valid, or acceptable, when they are within the 
+margin of error.584 The Comptroller’s office considers 
+values outside this margin of error invalid.585 If, in the 
+preliminary certification of the SDPVS, a school district’s 
+local value as determined by the appraisal district is 
+invalid, the commissioner of education is required to send 
+notification to the school district. The notice must include 
+an estimate of the impact that a final invalid finding would 
+have on the school district’s finances and any right of 
+recourse available to the school district. 
+The commissioner, with the assistance of the 
+Comptroller’s office, provides copies of the notice to the 
+board of directors of each applicable appraisal district.586
+If a school district’s locally appraised value (local value) is 
+valid, the Comptroller’s office certifies the local value to 
+the commissioner of education.587 If the local value is 
+invalid, the Comptroller’s office certifies the state value, 
+unless the school district’s value is higher than the 
+acceptable range or the school district is eligible for a 
+grace period (a period during which state law allows local 
+value to be used even though the school district’s 
+property values are not at market value).588
+582	Tex. Gov’t Code §403.302(b) and (c)
+583	Tex. Gov’t Code §403.302(c)
+584	Tex. Gov’t Code §403.302(c)
+585	Tex. Gov’t Code §403.302(c)
+586	Tex. Educ. Code §48.014(b) and (d)
+587	Tex. Gov’t Code §403.302(c)
+588	Tex. Gov’t Code §§403.302(c) and 403.3011(2)
+
+
+P R O P E R T Y  T A X  A S S I S T A N C E  D I V I S I O N 
+53
+If, in the final certification of the SDPVS, a school district’s 
+local value as determined by the appraisal district is 
+invalid, the Comptroller’s office is required to send a 
+notification to the board of directors. The board of 
+directors is required to hold a public meeting to discuss 
+the notification.589
+The Education Code provides how the commissioner of 
+education uses the findings of the SDPVS to determine 
+state aid in school funding.
+Additional information regarding the SDPVS is available 
+at: comptroller.texas.gov/taxes/property-tax/pvs/
+index.php.
+TARGETED APPRAISAL REVIEW 
+PROGRAM (TARP)
+If the Comptroller’s office determines a school district’s 
+local values to be invalid for three consecutive years, the 
+Government Code requires the Comptroller’s office to 
+perform an additional review of the appraisal district. The 
+additional review is targeted and requires the 
+Comptroller’s office to provide recommendations to the 
+appraisal district regarding appraisal standards, 
+procedures, and methodologies.
+If an appraisal district fails to comply with the report’s 
+recommendations and the Comptroller’s office finds that 
+the appraisal district board of directors failed to take 
+remedial action reasonably designed to ensure 
+substantial compliance with each recommendation 
+before the first anniversary of the date the 
+recommendations were made, the Comptroller’s office 
+must notify TDLR. TDLR must take action necessary to 
+ensure that the recommendations in the report are 
+implemented as soon as practicable. Before Feb. 1 of the 
+year following the year in which TDLR takes action, TDLR 
+must, with the assistance of the Comptroller’s office, 
+determine whether the recommendations have been 
+substantially implemented. If it is determined that the 
+recommendations have not been substantially 
+589	Tex. Gov’t Code §403.302(k)
+implemented, the board of directors is required to 
+consider whether the failure to implement the 
+recommendations was under the chief appraiser’s control 
+and whether the chief appraiser is able to adequately 
+perform his or her duties.590
+PERFORMANCE AUDITS
+The Comptroller’s office must perform performance 
+audits of appraisal districts that fail to meet specified 
+standards for two consecutive studies conducted by the 
+Comptroller’s office under Tax Code Section 5.10.591 
+Existence of any one of the following conditions for two 
+consecutive years triggers an audit:
+•	
+the overall median level of appraisal for all properties 
+in the appraisal district is less than 0.75 as determined 
+in the Comptroller’s study;
+•	
+the coefficient of dispersion around the median of the 
+overall property sample is greater than 0.30; or
+•	
+the difference between median levels of appraisal for 
+any two property classes is greater than 0.45.592
+Under certain circumstances, the Comptroller’s office 
+must also complete an audit if a majority of participating 
+taxing units or a majority of voting taxing units submit a 
+written request to the Comptroller’s office for a 
+performance audit or an audit of only one or more 
+particular matters.593
+Additionally, owners of at least 10 percent of accounts or 
+parcels of property in a single class can petition for a 
+performance audit (but only if the class makes up at least 
+5 percent of the total property value in the district).594 
+Further, on written request, property owners may request 
+an audit if the owners represent not less than 10 percent 
+of the appraised value of all the property in the appraisal 
+590	Tex. Gov’t Code §403.302(k-1)
+591	Tex. Tax Code §5.12(a)
+592	Tex. Tax Code §5.12(a)
+593	Tex. Tax Code §5.12(b)
+594	Tex. Tax Code §5.12(c)
+
+
+54 
+T E X A S  C O M P T R O L L E R  O F  P U B L I C  A C C O U N T S
+district belonging to a single class of property if that 
+property class makes up at least 5 percent of the 
+appraisal district’s total property value.595
+Taxing units and property owners may not request an 
+audit if, for the last two SDPVS under Tax Code Section 
+5.10:
+•	
+the overall median of appraisal for all of the appraisal 
+district’s property is more than 0.90 and less than 1.10;
+•	
+the coefficient of dispersion for the overall property 
+sample in the study is less than 0.15; and
+•	
+the difference between the highest and lowest median 
+appraisal levels for the various property classes is less 
+than 0.20.596
+A request for an appraisal district performance audit may 
+not be made:
+•	
+during the two years immediately following the 
+publication of the second of two consecutive studies 
+according to which the Comptroller’s office is required 
+to conduct an audit of the appraisal district;
+•	
+during the year immediately following the date the 
+results of an audit of the appraisal district conducted 
+by the Comptroller’s office are reported to the chief 
+appraiser of the appraisal district; or
+•	
+during a year in which the Comptroller’s office is 
+conducting a MAP review of the appraisal district 
+under Tax Code Section 5.102.597
+Appraisal districts must bear the cost of audits triggered 
+by study results or triggered by a taxing unit request for 
+an audit.598 The cost of a taxpayer-requested audit is 
+borne by the requesting taxpayers.599 However, the 
+appraisal district must reimburse the cost of a taxpayer-
+requested audit if the audit’s results show that the median 
+595	Tex. Tax Code §5.12(c)
+596	Tex. Tax Code §5.12(d)
+597	Tex. Tax Code §5.12(e)
+598	Tex. Tax Code §5.13(g)
+599	Tex. Tax Code §5.13(g)
+level of appraisal for a class of property exceeds 1.10 or 
+the median level of appraisal for one property class varies 
+by at least 10 percent from the overall median level of 
+property in the appraisal district.600
+The Comptroller’s office must report the results of the 
+audit in writing to the governing body of each 
+participating taxing unit, the chief appraiser and to the 
+presiding officer of the appraisal district board of 
+directors.601 If it is a taxpayer-requested audit, the 
+Comptroller’s office must also provide a report to a 
+representative of the property owners who requested the 
+audit.602
+APPRAISAL DISTRICT RATIO STUDY 
+(ADRS)
+Tax Code Section 5.10 requires the Comptroller’s office to 
+conduct a ratio study to measure the performance of 
+each appraisal district in Texas at least once every two 
+years and to publish the results. The purpose of the 
+Appraisal District Ratio Study (ADRS) is to measure the 
+uniformity and median level of appraisals performed by 
+an appraisal district within each major property category. 
+To conduct the ADRS, the Comptroller’s office applies 
+appropriate standard statistical analysis techniques to 
+data collected through the SDPVS required by 
+Government Code Section 403.302. The level of appraisal 
+shows whether the appraisal district has appraised 
+properties at 100 percent of the legally required level — 
+normally the market value. The uniformity of appraisal 
+indicates how much the market value percentage varies 
+from property to property.
+600	Tex. Tax Code §5.13(g)
+601	Tex. Tax Code §5.13(f)
+602	Tex. Tax Code §5.13(f)
+
+
+For more information, visit our website:
+comptroller.texas.gov/taxes/property-tax
+In compliance with the Americans with Disabilities Act, this document may be 
+requested in alternative formats by calling toll free 800-252-5555.
+Sign up to receive email updates on the Comptroller topics of your choice at:
+comptroller.texas.gov/subscribe
+TEXAS COMPTROLLER OF PUBLIC ACCOUNTS
+PUBLICATION #96-96-301
+DECEMBER 2025

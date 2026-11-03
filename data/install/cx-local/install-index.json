@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:04:16.644097+00:00",
+  "preparedAt": "2026-11-03T07:04:27.889234+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1605,6 +1605,20 @@
       }
     },
     {
+      "state": "TX",
+      "county": "Hidalgo County",
+      "populationRank": 64,
+      "manifest": "TX/hidalgo/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 75,
+      "measureContests": 0,
+      "candidacies": 141,
+      "newContests": 59,
+      "refreshedContests": 16,
+      "sourceInputSha256": "0361cf349e6d27faf19f768681ba8573e71b4dc27a910adf7b4e203ba4c4ce72",
+      "coverage": "ALL_64_CURRENT_OFFICIAL_SAMPLES_COMPLETE_LOCAL_NAMED_BLOCKS"
+    },
+    {
       "state": "TN",
       "county": "Shelby",
       "populationRank": 65,
@@ -1650,17 +1664,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 62,
-    "packetsPrepared": 63,
-    "candidateAndRetentionContests": 3285,
+    "countiesPrepared": 63,
+    "packetsPrepared": 64,
+    "candidateAndRetentionContests": 3360,
     "measureContests": 112,
-    "candidacyEntries": 7312,
-    "newContestEntriesAgainstCheckedInBaseline": 2738,
-    "distinctPreparedContestIds": 3351,
-    "distinctPreparedCandidateIds": 7215,
-    "distinctNewContestsAgainstCheckedInBaseline": 2713,
+    "candidacyEntries": 7453,
+    "newContestEntriesAgainstCheckedInBaseline": 2797,
+    "distinctPreparedContestIds": 3426,
+    "distinctPreparedCandidateIds": 7356,
+    "distinctNewContestsAgainstCheckedInBaseline": 2772,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 63
+    "distinctCountyHandoffs": 64
   },
   "remainingWork": [
     {

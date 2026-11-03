@@ -1,0 +1,2020 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246/Ballot-Style-1?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:56.201184+00:00",
+    "sha256": "6120e53e810abd6cb7f7b7db1be352afd84f0fe65f275274808a1147a3a12233",
+    "sourceFile": "sources/sample-01-reader.txt",
+    "excerptFile": "sources/sample-01-reader.txt",
+    "excerptSha256": "6120e53e810abd6cb7f7b7db1be352afd84f0fe65f275274808a1147a3a12233",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 1, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": 403,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73246",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73247",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73247/Ballot-Style-2?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:56.434841+00:00",
+    "sha256": "2bc1ccf5eda86a95718e434fba441f72f0a0a98305ca3898305a30f16ce57160",
+    "sourceFile": "sources/sample-02-reader.txt",
+    "excerptFile": "sources/sample-02-reader.txt",
+    "excerptSha256": "2bc1ccf5eda86a95718e434fba441f72f0a0a98305ca3898305a30f16ce57160",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 2, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73247",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73248",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73248/Ballot-Style-3?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:56.335513+00:00",
+    "sha256": "cf3cebf1cdc9cb05a78b73acacf536788155d1cca5e4173e70c42d4b8fe1225e",
+    "sourceFile": "sources/sample-03-reader.txt",
+    "excerptFile": "sources/sample-03-reader.txt",
+    "excerptSha256": "cf3cebf1cdc9cb05a78b73acacf536788155d1cca5e4173e70c42d4b8fe1225e",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 3, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73248",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73249",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73249/Ballot-Style-4?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:56.994654+00:00",
+    "sha256": "daea412ea4732060ed606f6713754926308209e3d5d0971606f97d6b0f113fec",
+    "sourceFile": "sources/sample-04-reader.txt",
+    "excerptFile": "sources/sample-04-reader.txt",
+    "excerptSha256": "daea412ea4732060ed606f6713754926308209e3d5d0971606f97d6b0f113fec",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 4, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73249",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73250",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73250/Ballot-Style-5?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:56.593476+00:00",
+    "sha256": "a091e7b5f89669584a0c8d3eb6dcc4393c100bf0cc08495243bcf10e5183e404",
+    "sourceFile": "sources/sample-05-reader.txt",
+    "excerptFile": "sources/sample-05-reader.txt",
+    "excerptSha256": "a091e7b5f89669584a0c8d3eb6dcc4393c100bf0cc08495243bcf10e5183e404",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 5, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73250",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73251",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73251/Ballot-Style-6?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:58.238424+00:00",
+    "sha256": "10d6fe065fed5e56cf869f6a94437314878a4eac5e730312fff5c2deeb8fd199",
+    "sourceFile": "sources/sample-06-reader.txt",
+    "excerptFile": "sources/sample-06-reader.txt",
+    "excerptSha256": "10d6fe065fed5e56cf869f6a94437314878a4eac5e730312fff5c2deeb8fd199",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 6, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73251",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73252",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73252/Ballot-Style-7?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:58.063322+00:00",
+    "sha256": "1089a148a6c91f9f99421552940b00bbbb89fdf582b736a44b413426a31e5aa2",
+    "sourceFile": "sources/sample-07-reader.txt",
+    "excerptFile": "sources/sample-07-reader.txt",
+    "excerptSha256": "1089a148a6c91f9f99421552940b00bbbb89fdf582b736a44b413426a31e5aa2",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 7, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73252",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73253",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73253/Ballot-Style-8?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:58.838659+00:00",
+    "sha256": "a35a1c31a5d355a559dfb592efdf0fd75665b48f9836e8c6533ee1206d52ed2e",
+    "sourceFile": "sources/sample-08-reader.txt",
+    "excerptFile": "sources/sample-08-reader.txt",
+    "excerptSha256": "a35a1c31a5d355a559dfb592efdf0fd75665b48f9836e8c6533ee1206d52ed2e",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 8, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73253",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73254",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73254/Ballot-Style-9?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:58.332996+00:00",
+    "sha256": "d8df8b358aec6a4bbbbf30a501ce2b9cb7f667de5656831a1fd0212d3cd2266d",
+    "sourceFile": "sources/sample-09-reader.txt",
+    "excerptFile": "sources/sample-09-reader.txt",
+    "excerptSha256": "d8df8b358aec6a4bbbbf30a501ce2b9cb7f667de5656831a1fd0212d3cd2266d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 9, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73254",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73255",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73255/Ballot-Style-10?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:58.880809+00:00",
+    "sha256": "dce054140c32fdc5ed0a6fe6b1bbbad76d3747da6c5becdf7dec7e96798a600b",
+    "sourceFile": "sources/sample-10-reader.txt",
+    "excerptFile": "sources/sample-10-reader.txt",
+    "excerptSha256": "dce054140c32fdc5ed0a6fe6b1bbbad76d3747da6c5becdf7dec7e96798a600b",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 10, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73255",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73256",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73256/Ballot-Style-11?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:59.938071+00:00",
+    "sha256": "2d9064471d21d3bc68783b9f302f9d125c5314eca3b6cd95e9a955f3f11193f3",
+    "sourceFile": "sources/sample-11-reader.txt",
+    "excerptFile": "sources/sample-11-reader.txt",
+    "excerptSha256": "2d9064471d21d3bc68783b9f302f9d125c5314eca3b6cd95e9a955f3f11193f3",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 11, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73256",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73257",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73257/Ballot-Style-12?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:00.120737+00:00",
+    "sha256": "1dd817b20939541ee036a181f890c0a0b44159f65994c9e8c8dd6ffdd4bcca48",
+    "sourceFile": "sources/sample-12-reader.txt",
+    "excerptFile": "sources/sample-12-reader.txt",
+    "excerptSha256": "1dd817b20939541ee036a181f890c0a0b44159f65994c9e8c8dd6ffdd4bcca48",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 12, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73257",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73258",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73258/Ballot-Style-13?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:05.126385+00:00",
+    "sha256": "81999141d2b136afb102675970a7d646e27385d3fb77f1cc73938682c82c85b9",
+    "sourceFile": "sources/sample-13-reader.txt",
+    "excerptFile": "sources/sample-13-reader.txt",
+    "excerptSha256": "81999141d2b136afb102675970a7d646e27385d3fb77f1cc73938682c82c85b9",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 13, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73258",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73259",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73259/Ballot-Style-14?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:00.860068+00:00",
+    "sha256": "c0dcc13ad6ce4e2e2933bbd5776c07ad8fd66eff382b618715dbaaf871d61e70",
+    "sourceFile": "sources/sample-14-reader.txt",
+    "excerptFile": "sources/sample-14-reader.txt",
+    "excerptSha256": "c0dcc13ad6ce4e2e2933bbd5776c07ad8fd66eff382b618715dbaaf871d61e70",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 14, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73259",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73260",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73260/Ballot-Style-15?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:00.831218+00:00",
+    "sha256": "ac106bcf119de33ea2726aae0d2aef7ba14ac3770e82de631fe658ace5cfff9c",
+    "sourceFile": "sources/sample-15-reader.txt",
+    "excerptFile": "sources/sample-15-reader.txt",
+    "excerptSha256": "ac106bcf119de33ea2726aae0d2aef7ba14ac3770e82de631fe658ace5cfff9c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 15, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73260",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73261",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73261/Ballot-Style-16?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:01.785976+00:00",
+    "sha256": "e0d1ed2c1603349036b368603ab6aae18cc5fe5e1dd22da97f628b01a85f4817",
+    "sourceFile": "sources/sample-16-reader.txt",
+    "excerptFile": "sources/sample-16-reader.txt",
+    "excerptSha256": "e0d1ed2c1603349036b368603ab6aae18cc5fe5e1dd22da97f628b01a85f4817",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 16, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73261",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73262",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73262/Ballot-Style-17?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:02.276200+00:00",
+    "sha256": "5b98eba1c9a987ae0e6a89d101d670f9d1fb06cf54f06f2d0ef3b3aeacd0b4b1",
+    "sourceFile": "sources/sample-17-reader.txt",
+    "excerptFile": "sources/sample-17-reader.txt",
+    "excerptSha256": "5b98eba1c9a987ae0e6a89d101d670f9d1fb06cf54f06f2d0ef3b3aeacd0b4b1",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 17, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73262",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73263",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73263/Ballot-Style-18?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:02.819404+00:00",
+    "sha256": "0b5955f2b36d957a054d5c1213765af665c0555eabcba25f1a428b1b016ffef5",
+    "sourceFile": "sources/sample-18-reader.txt",
+    "excerptFile": "sources/sample-18-reader.txt",
+    "excerptSha256": "0b5955f2b36d957a054d5c1213765af665c0555eabcba25f1a428b1b016ffef5",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 18, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73263",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73264",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73264/Ballot-Style-19?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:03.065522+00:00",
+    "sha256": "66ea43d3f75687df79c9d68451562f04aa2d75cefe2ae1cec01de6ed5c109dc7",
+    "sourceFile": "sources/sample-19-reader.txt",
+    "excerptFile": "sources/sample-19-reader.txt",
+    "excerptSha256": "66ea43d3f75687df79c9d68451562f04aa2d75cefe2ae1cec01de6ed5c109dc7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 19, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73264",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73265",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73265/Ballot-Style-20?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:03.823200+00:00",
+    "sha256": "d5c8506bc394862a04e828b786350593fd432379140baeece0ce20ba2a481fa5",
+    "sourceFile": "sources/sample-20-reader.txt",
+    "excerptFile": "sources/sample-20-reader.txt",
+    "excerptSha256": "d5c8506bc394862a04e828b786350593fd432379140baeece0ce20ba2a481fa5",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 20, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73265",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73266",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73266/Ballot-Style-21?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:04.285894+00:00",
+    "sha256": "924e7718540984a99f41280d8217f47a5e302158fc94a1e90165835b386339b7",
+    "sourceFile": "sources/sample-21-reader.txt",
+    "excerptFile": "sources/sample-21-reader.txt",
+    "excerptSha256": "924e7718540984a99f41280d8217f47a5e302158fc94a1e90165835b386339b7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 21, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73266",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73267",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73267/Ballot-Style-22?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:04.724026+00:00",
+    "sha256": "493a71573cb48ec33e388f83df9dfa5f24797943e849767dc1abfd9386110634",
+    "sourceFile": "sources/sample-22-reader.txt",
+    "excerptFile": "sources/sample-22-reader.txt",
+    "excerptSha256": "493a71573cb48ec33e388f83df9dfa5f24797943e849767dc1abfd9386110634",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 22, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73267",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73268",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73268/Ballot-Style-23?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:08.535080+00:00",
+    "sha256": "fcf4b7a384281df418935a224505df0634575a83aac51a5f160a34b26965a295",
+    "sourceFile": "sources/sample-23-reader.txt",
+    "excerptFile": "sources/sample-23-reader.txt",
+    "excerptSha256": "fcf4b7a384281df418935a224505df0634575a83aac51a5f160a34b26965a295",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 23, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73268",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73269",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73269/Ballot-Style-24?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:13.655502+00:00",
+    "sha256": "381fb0ead73d5e8949d3d26e14dcf3b8547098711051305a7c5d9312ad448be5",
+    "sourceFile": "sources/sample-24-reader.txt",
+    "excerptFile": "sources/sample-24-reader.txt",
+    "excerptSha256": "381fb0ead73d5e8949d3d26e14dcf3b8547098711051305a7c5d9312ad448be5",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 24, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73269",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73270",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73270/Ballot-Style-25?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:32:05.320943+00:00",
+    "sha256": "936dc63bd6659ba6468fbd9d03cbecc90fcbcb87542a080c0918bd12f2bb6471",
+    "sourceFile": "sources/sample-25-reader.txt",
+    "excerptFile": "sources/sample-25-reader.txt",
+    "excerptSha256": "936dc63bd6659ba6468fbd9d03cbecc90fcbcb87542a080c0918bd12f2bb6471",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 25, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73270",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73271",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73271/Ballot-Style-26?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:18.735727+00:00",
+    "sha256": "3b9643b291d830f6e3123d6b7c2a824b2176a4f0f6b4f4a7515d72a8bdb1ddb6",
+    "sourceFile": "sources/sample-26-reader.txt",
+    "excerptFile": "sources/sample-26-reader.txt",
+    "excerptSha256": "3b9643b291d830f6e3123d6b7c2a824b2176a4f0f6b4f4a7515d72a8bdb1ddb6",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 26, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73271",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73272",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73272/Ballot-Style-27?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:23.773684+00:00",
+    "sha256": "8f8aabb350870850c69850f5ab945deff4a1aab207f1adad4b4a3d4aa8cf712c",
+    "sourceFile": "sources/sample-27-reader.txt",
+    "excerptFile": "sources/sample-27-reader.txt",
+    "excerptSha256": "8f8aabb350870850c69850f5ab945deff4a1aab207f1adad4b4a3d4aa8cf712c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 27, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73272",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73273",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73273/Ballot-Style-28?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:28.649841+00:00",
+    "sha256": "845af3653c29f04dc53fccef04750bc0e7e399d9abcd36e2bacbb948ab9ffc8a",
+    "sourceFile": "sources/sample-28-reader.txt",
+    "excerptFile": "sources/sample-28-reader.txt",
+    "excerptSha256": "845af3653c29f04dc53fccef04750bc0e7e399d9abcd36e2bacbb948ab9ffc8a",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 28, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73273",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73274",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73274/Ballot-Style-29?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:33.463650+00:00",
+    "sha256": "c0a7bcbd419cdbf3497a64ec9c037a8487f7ff364ca1e50ec0b13bb802fb746d",
+    "sourceFile": "sources/sample-29-reader.txt",
+    "excerptFile": "sources/sample-29-reader.txt",
+    "excerptSha256": "c0a7bcbd419cdbf3497a64ec9c037a8487f7ff364ca1e50ec0b13bb802fb746d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 29, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73274",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73275",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73275/Ballot-Style-30?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:38.496620+00:00",
+    "sha256": "e727a9ae8b9566fc75bd564adfd39bc5bce906bb63f0730c6fb44fbb91054a81",
+    "sourceFile": "sources/sample-30-reader.txt",
+    "excerptFile": "sources/sample-30-reader.txt",
+    "excerptSha256": "e727a9ae8b9566fc75bd564adfd39bc5bce906bb63f0730c6fb44fbb91054a81",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 30, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73275",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73276",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73276/Ballot-Style-31?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:43.957933+00:00",
+    "sha256": "aa5ea135a49dae13875558a20b9e65f71c305dfb643ca7b74c96248c02a178c4",
+    "sourceFile": "sources/sample-31-reader.txt",
+    "excerptFile": "sources/sample-31-reader.txt",
+    "excerptSha256": "aa5ea135a49dae13875558a20b9e65f71c305dfb643ca7b74c96248c02a178c4",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 31, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73276",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73277",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73277/Ballot-Style-32?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:48.920949+00:00",
+    "sha256": "139c64171ace076131b4948ad0326b8be6146f0b49cf0bc3ec8009d45ac349ec",
+    "sourceFile": "sources/sample-32-reader.txt",
+    "excerptFile": "sources/sample-32-reader.txt",
+    "excerptSha256": "139c64171ace076131b4948ad0326b8be6146f0b49cf0bc3ec8009d45ac349ec",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 32, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73277",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73278",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73278/Ballot-Style-33?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:54.357846+00:00",
+    "sha256": "e40eba25be2f4e01a68436a751e041608786f3f01ebe13c2b0244ac52b517ef7",
+    "sourceFile": "sources/sample-33-reader.txt",
+    "excerptFile": "sources/sample-33-reader.txt",
+    "excerptSha256": "e40eba25be2f4e01a68436a751e041608786f3f01ebe13c2b0244ac52b517ef7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 33, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73278",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73279",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73279/Ballot-Style-34?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:33:59.299763+00:00",
+    "sha256": "9b77d4e1d8ffd955abcdbe8371d5b385cfb4e8005aef20edd629ac233dae4ec7",
+    "sourceFile": "sources/sample-34-reader.txt",
+    "excerptFile": "sources/sample-34-reader.txt",
+    "excerptSha256": "9b77d4e1d8ffd955abcdbe8371d5b385cfb4e8005aef20edd629ac233dae4ec7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 34, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73279",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73280",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73280/Ballot-Style-35?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:04.283969+00:00",
+    "sha256": "0460b60f8e380256a02f755c7322397634100188934bdf9a867b397431138c45",
+    "sourceFile": "sources/sample-35-reader.txt",
+    "excerptFile": "sources/sample-35-reader.txt",
+    "excerptSha256": "0460b60f8e380256a02f755c7322397634100188934bdf9a867b397431138c45",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 35, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73280",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73281",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73281/Ballot-Style-36?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:10.915000+00:00",
+    "sha256": "5e8104ef222240fd4e104f432db8e533629870ee33dfe23c12b1b0897529b85d",
+    "sourceFile": "sources/sample-36-reader.txt",
+    "excerptFile": "sources/sample-36-reader.txt",
+    "excerptSha256": "5e8104ef222240fd4e104f432db8e533629870ee33dfe23c12b1b0897529b85d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 36, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73281",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73282",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73282/Ballot-Style-37?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:16.108650+00:00",
+    "sha256": "9552bf812e00d183e76077ace3767ebd6eeeb94f186097bed9544a9670f6d169",
+    "sourceFile": "sources/sample-37-reader.txt",
+    "excerptFile": "sources/sample-37-reader.txt",
+    "excerptSha256": "9552bf812e00d183e76077ace3767ebd6eeeb94f186097bed9544a9670f6d169",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 37, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73282",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73283",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73283/Ballot-Style-38?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:21.148834+00:00",
+    "sha256": "e6060bcf3150283a6a5ae3acc13c5d263ab248373f3216d2e1ad1856a530bd6d",
+    "sourceFile": "sources/sample-38-reader.txt",
+    "excerptFile": "sources/sample-38-reader.txt",
+    "excerptSha256": "e6060bcf3150283a6a5ae3acc13c5d263ab248373f3216d2e1ad1856a530bd6d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 38, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73283",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73284",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73284/Ballot-Style-39?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:26.186236+00:00",
+    "sha256": "b329aeb53cd334a8b1486804b0f5d3fa071f4fc431c6e204567a94ab63365158",
+    "sourceFile": "sources/sample-39-reader.txt",
+    "excerptFile": "sources/sample-39-reader.txt",
+    "excerptSha256": "b329aeb53cd334a8b1486804b0f5d3fa071f4fc431c6e204567a94ab63365158",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 39, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73284",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73285",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73285/Ballot-Style-40?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:31.831965+00:00",
+    "sha256": "7c22c166f522a92fb75f79fef092cec3958993c1124d6d09937023ff5095c183",
+    "sourceFile": "sources/sample-40-reader.txt",
+    "excerptFile": "sources/sample-40-reader.txt",
+    "excerptSha256": "7c22c166f522a92fb75f79fef092cec3958993c1124d6d09937023ff5095c183",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 40, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73285",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73286",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73286/Ballot-Style-41?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:37.032384+00:00",
+    "sha256": "4ad1516e44f218bcfe15562a6132a24d2caf54fbb884b71744b243f6a0ff4cee",
+    "sourceFile": "sources/sample-41-reader.txt",
+    "excerptFile": "sources/sample-41-reader.txt",
+    "excerptSha256": "4ad1516e44f218bcfe15562a6132a24d2caf54fbb884b71744b243f6a0ff4cee",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 41, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73286",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73287",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73287/Ballot-Style-42?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:42.032721+00:00",
+    "sha256": "c399d99821b4af2328a2c7c29814b295f247d5c7b43a317846f41c2cbdf3256b",
+    "sourceFile": "sources/sample-42-reader.txt",
+    "excerptFile": "sources/sample-42-reader.txt",
+    "excerptSha256": "c399d99821b4af2328a2c7c29814b295f247d5c7b43a317846f41c2cbdf3256b",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 42, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73287",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73288",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73288/Ballot-Style-43?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:50.376009+00:00",
+    "sha256": "086e486b4203050ca25d694afa92969a22d124a8ec9fd4f3d70b6f50760d9612",
+    "sourceFile": "sources/sample-43-reader.txt",
+    "excerptFile": "sources/sample-43-reader.txt",
+    "excerptSha256": "086e486b4203050ca25d694afa92969a22d124a8ec9fd4f3d70b6f50760d9612",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 43, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73288",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73289",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73289/Ballot-Style-44?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:55.586776+00:00",
+    "sha256": "3d3710f435d202dc92ba86600dea434431e851805ae706afc9f8056a0b08943c",
+    "sourceFile": "sources/sample-44-reader.txt",
+    "excerptFile": "sources/sample-44-reader.txt",
+    "excerptSha256": "3d3710f435d202dc92ba86600dea434431e851805ae706afc9f8056a0b08943c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 44, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73289",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73290",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73290/Ballot-Style-45?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:00.461879+00:00",
+    "sha256": "95c08a5e3cc4bf5df0eb81f879e256da165303fb63fb014e508bb1e5b56c1ddd",
+    "sourceFile": "sources/sample-45-reader.txt",
+    "excerptFile": "sources/sample-45-reader.txt",
+    "excerptSha256": "95c08a5e3cc4bf5df0eb81f879e256da165303fb63fb014e508bb1e5b56c1ddd",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 45, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73290",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73291",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73291/Ballot-Style-46?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:05.934454+00:00",
+    "sha256": "96277d600138f6b9baa16d87c3478d59e49a9d2c72ba2d90092e6bcc0550453c",
+    "sourceFile": "sources/sample-46-reader.txt",
+    "excerptFile": "sources/sample-46-reader.txt",
+    "excerptSha256": "96277d600138f6b9baa16d87c3478d59e49a9d2c72ba2d90092e6bcc0550453c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 46, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73291",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73292",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73292/Ballot-Style-47?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:11.060374+00:00",
+    "sha256": "e775d751aeb588ca185c4699f6fd8cfda74079d58404d8ef68152610a79b67f7",
+    "sourceFile": "sources/sample-47-reader.txt",
+    "excerptFile": "sources/sample-47-reader.txt",
+    "excerptSha256": "e775d751aeb588ca185c4699f6fd8cfda74079d58404d8ef68152610a79b67f7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 47, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73292",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73293",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73293/Ballot-Style-48?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:16.798798+00:00",
+    "sha256": "8c7eb1a7d046d22e028d914200bf6b436005369918e88772b85ef136c5050c97",
+    "sourceFile": "sources/sample-48-reader.txt",
+    "excerptFile": "sources/sample-48-reader.txt",
+    "excerptSha256": "8c7eb1a7d046d22e028d914200bf6b436005369918e88772b85ef136c5050c97",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 48, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73293",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73294",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73294/Ballot-Style-49?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:22.302745+00:00",
+    "sha256": "321c93512d94405626f34a4e126197f05b344185db5211e60c2dbbbad261876c",
+    "sourceFile": "sources/sample-49-reader.txt",
+    "excerptFile": "sources/sample-49-reader.txt",
+    "excerptSha256": "321c93512d94405626f34a4e126197f05b344185db5211e60c2dbbbad261876c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 49, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73294",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73295",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73295/Ballot-Style-50?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:27.347883+00:00",
+    "sha256": "cb125006696d103a9e38025f205b257ceb0ba8d07466b134a8f411faafa375d3",
+    "sourceFile": "sources/sample-50-reader.txt",
+    "excerptFile": "sources/sample-50-reader.txt",
+    "excerptSha256": "cb125006696d103a9e38025f205b257ceb0ba8d07466b134a8f411faafa375d3",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 50, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73295",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73296",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73296/Ballot-Style-51?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:32.325381+00:00",
+    "sha256": "a17097c2d7b1648f0c92878a4d1d3edddabd849100fbfaac676e3e179f6cbd35",
+    "sourceFile": "sources/sample-51-reader.txt",
+    "excerptFile": "sources/sample-51-reader.txt",
+    "excerptSha256": "a17097c2d7b1648f0c92878a4d1d3edddabd849100fbfaac676e3e179f6cbd35",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 51, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73296",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73233",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73233/Ballot-Style-52?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:48.799521+00:00",
+    "sha256": "9a7403dcfec4c8add066e79c999a64d88eef7ca2e250487562f3c8b7deecaadc",
+    "sourceFile": "sources/sample-52-reader.txt",
+    "excerptFile": "sources/sample-52-reader.txt",
+    "excerptSha256": "9a7403dcfec4c8add066e79c999a64d88eef7ca2e250487562f3c8b7deecaadc",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 52, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73233",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73234",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73234/Ballot-Style-53?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:53.720783+00:00",
+    "sha256": "608652528137a741ce8e4d563a0d35c23ee5377c4b0afc4c89a299a8241ca0c1",
+    "sourceFile": "sources/sample-53-reader.txt",
+    "excerptFile": "sources/sample-53-reader.txt",
+    "excerptSha256": "608652528137a741ce8e4d563a0d35c23ee5377c4b0afc4c89a299a8241ca0c1",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 53, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73234",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73235",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73235/Ballot-Style-54?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:59.092701+00:00",
+    "sha256": "1c6b75f62ede8b9ce2a7a8625a0c32f482334e3d931f7c2f5bf88d9069e3d0f4",
+    "sourceFile": "sources/sample-54-reader.txt",
+    "excerptFile": "sources/sample-54-reader.txt",
+    "excerptSha256": "1c6b75f62ede8b9ce2a7a8625a0c32f482334e3d931f7c2f5bf88d9069e3d0f4",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 54, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73235",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73236",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73236/Ballot-Style-55?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:04.232634+00:00",
+    "sha256": "2f9afdece3d479531c86a5dba92947e6f3d3d3ac576c8519e213e72e36529c4b",
+    "sourceFile": "sources/sample-55-reader.txt",
+    "excerptFile": "sources/sample-55-reader.txt",
+    "excerptSha256": "2f9afdece3d479531c86a5dba92947e6f3d3d3ac576c8519e213e72e36529c4b",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 55, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73236",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73237",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73237/Ballot-Style-56?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:09.223407+00:00",
+    "sha256": "878f0bceec23e0c340885ca60f94ccc2a399a7564c3ac5b6002918e74b871113",
+    "sourceFile": "sources/sample-56-reader.txt",
+    "excerptFile": "sources/sample-56-reader.txt",
+    "excerptSha256": "878f0bceec23e0c340885ca60f94ccc2a399a7564c3ac5b6002918e74b871113",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 56, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73237",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73238",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73238/Ballot-Style-57?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:14.153321+00:00",
+    "sha256": "5f7963c4e0897fff108d02954efc742ceedcf78d25f8351592dc51078bc80526",
+    "sourceFile": "sources/sample-57-reader.txt",
+    "excerptFile": "sources/sample-57-reader.txt",
+    "excerptSha256": "5f7963c4e0897fff108d02954efc742ceedcf78d25f8351592dc51078bc80526",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 57, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73238",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73239",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73239/Ballot-Style-58?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:19.132036+00:00",
+    "sha256": "c7de5ecb786025de1f2a0b8a978c0454e7e26020b8a6d88890ec94e3e7c12f9e",
+    "sourceFile": "sources/sample-58-reader.txt",
+    "excerptFile": "sources/sample-58-reader.txt",
+    "excerptSha256": "c7de5ecb786025de1f2a0b8a978c0454e7e26020b8a6d88890ec94e3e7c12f9e",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 58, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73239",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73240",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73240/Ballot-Style-59?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:24.058496+00:00",
+    "sha256": "f1717939ae5b93f90e797e9e987e85a96545717be936c0ebfc317df9d4d3f075",
+    "sourceFile": "sources/sample-59-reader.txt",
+    "excerptFile": "sources/sample-59-reader.txt",
+    "excerptSha256": "f1717939ae5b93f90e797e9e987e85a96545717be936c0ebfc317df9d4d3f075",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 59, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73240",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73241",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73241/Ballot-Style-60?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:28.948268+00:00",
+    "sha256": "ebc3d5b84a6f0bea01d6c0103ee854af7bcf003ff34ca8b562bd79c586278ad5",
+    "sourceFile": "sources/sample-60-reader.txt",
+    "excerptFile": "sources/sample-60-reader.txt",
+    "excerptSha256": "ebc3d5b84a6f0bea01d6c0103ee854af7bcf003ff34ca8b562bd79c586278ad5",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 60, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73241",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73242",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73242/Ballot-Style-61?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:34.681309+00:00",
+    "sha256": "b5f5735657345c8eb59c62dff3b17ab4112ec73c1fe0b912a7f569d04b5f14b9",
+    "sourceFile": "sources/sample-61-reader.txt",
+    "excerptFile": "sources/sample-61-reader.txt",
+    "excerptSha256": "b5f5735657345c8eb59c62dff3b17ab4112ec73c1fe0b912a7f569d04b5f14b9",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 61, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73242",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73243",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73243/Ballot-Style-62?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:39.933811+00:00",
+    "sha256": "b08a628aefcb7094339aa69493fadd8ddb05391a4c8b8fc31c803a7899bcfe94",
+    "sourceFile": "sources/sample-62-reader.txt",
+    "excerptFile": "sources/sample-62-reader.txt",
+    "excerptSha256": "b08a628aefcb7094339aa69493fadd8ddb05391a4c8b8fc31c803a7899bcfe94",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 62, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73243",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73244",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73244/Ballot-Style-63?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:44.728728+00:00",
+    "sha256": "a69b876d38a1d73f573706d642b7636e53ee699038f09f825426eb49644587d7",
+    "sourceFile": "sources/sample-63-reader.txt",
+    "excerptFile": "sources/sample-63-reader.txt",
+    "excerptSha256": "a69b876d38a1d73f573706d642b7636e53ee699038f09f825426eb49644587d7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 63, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73244",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73245",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73245/Ballot-Style-64?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:49.877852+00:00",
+    "sha256": "74aaeb631abb85186b37b746bfbf438cd678d84156bc7d0546489b52780cb537",
+    "sourceFile": "sources/sample-64-reader.txt",
+    "excerptFile": "sources/sample-64-reader.txt",
+    "excerptSha256": "74aaeb631abb85186b37b746bfbf438cd678d84156bc7d0546489b52780cb537",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Complete current official Hidalgo County November 3, 2026 sample PDF style 64, 2 pages, captured through public reader. Every complete local printed office block compared across all 64 supplied styles; no variants. Original native PDF route was inaccessible; exact complete reader capture and its hash retained, not asserted as original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73245",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.hidalgocounty.us/3522/Sample-Ballots-2026-General-Election?x=1",
+    "finalUrl": "https://www.hidalgocounty.us/3522/Sample-Ballots-2026-General-Election?x=1",
+    "sourceCheckedAt": "2026-11-03T06:31:17.258242+00:00",
+    "sha256": "d5b89210fcf842aa3fe0d9e762be4a693bd836ea9cc44c7bda6d95f34c5b9263",
+    "sourceFile": "sources/sample-index-reader.txt",
+    "excerptFile": "sources/sample-index-reader.txt",
+    "excerptSha256": "d5b89210fcf842aa3fe0d9e762be4a693bd836ea9cc44c7bda6d95f34c5b9263",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Current official sample style/precinct index; all 64 links acquired. Precincts are split, so election precinct numbers are not widened to county or city.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/3522/Sample-Ballots-2026-General-Election?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73360",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73360/Ballot-Style-Sheet-November-3-2026?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:31:30.425652+00:00",
+    "sha256": "5bf084cafef6bebdc57af94e96327a41e236b83a5069ae261dcfc4d101ef9dfe",
+    "sourceFile": "sources/legend-reader.txt",
+    "excerptFile": "sources/legend-reader.txt",
+    "excerptSha256": "5bf084cafef6bebdc57af94e96327a41e236b83a5069ae261dcfc4d101ef9dfe",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Current official sample style/precinct index; all 64 links acquired. Precincts are split, so election precinct numbers are not widened to county or city.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73360",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.hidalgocounty.us/3500/November-3-2026-General-Elections?x=1",
+    "finalUrl": "https://www.hidalgocounty.us/3500/November-3-2026-General-Elections?x=1",
+    "sourceCheckedAt": "2026-11-03T06:31:43.890407+00:00",
+    "sha256": "66d95b6fab37eedd5b9ca877cbae15fb76ee7fbd6e3faf3904afa61b97777de5",
+    "sourceFile": "sources/election-reader.txt",
+    "excerptFile": "sources/election-reader.txt",
+    "excerptSha256": "66d95b6fab37eedd5b9ca877cbae15fb76ee7fbd6e3faf3904afa61b97777de5",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Current November 3 general/local authority linking page. Separately links unopposed certifications and explicit cancellation orders.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/3500/November-3-2026-General-Elections?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73141",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73141/HTML-Certification-of-Unopposed-Declared-Elected-Candidates?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:34:57.572061+00:00",
+    "sha256": "8b399853b7548fb15347bb079643f795f77763927af2c8d95ea1183f8df075d0",
+    "sourceFile": "sources/order-73141-reader.txt",
+    "excerptFile": "sources/order-73141-reader.txt",
+    "excerptSha256": "8b399853b7548fb15347bb079643f795f77763927af2c8d95ea1183f8df075d0",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73141",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73066",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73066/HTML-CERTIFICATION-OF-UNOPPOSED-CANDIDATES-2026?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:03.798727+00:00",
+    "sha256": "95c4994dcf20a9ea7d9cd90c43faa88b918667b09c85892ab8f7eebd89d85d3d",
+    "sourceFile": "sources/order-73066-reader.txt",
+    "excerptFile": "sources/order-73066-reader.txt",
+    "excerptSha256": "95c4994dcf20a9ea7d9cd90c43faa88b918667b09c85892ab8f7eebd89d85d3d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73066",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72986",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72986/HTML-CITY-OF-MISSION-Order-Calling-the-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:10.935347+00:00",
+    "sha256": "f7c6647e3d8e6a7dbe6df12d54e95875b0b65457cedc37aad2dd9358a245242d",
+    "sourceFile": "sources/order-72986-reader.txt",
+    "excerptFile": "sources/order-72986-reader.txt",
+    "excerptSha256": "f7c6647e3d8e6a7dbe6df12d54e95875b0b65457cedc37aad2dd9358a245242d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72986",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72988",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72988/HTML-CITY-OF-MISSION-Order-Calling-the-Special-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:17.635529+00:00",
+    "sha256": "8b3aa2dbc831f23ee2813f06108427ef9e07996297f99b28c2fbf25df67f3b0d",
+    "sourceFile": "sources/order-72988-reader.txt",
+    "excerptFile": "sources/order-72988-reader.txt",
+    "excerptSha256": "8b3aa2dbc831f23ee2813f06108427ef9e07996297f99b28c2fbf25df67f3b0d",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72988",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73012",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73012/HTML-City-of-Weslaco-Order-Calling-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:24.125525+00:00",
+    "sha256": "683a176b06f54af6ed4713ba2f38e6f4e04491bd84ce3c23d75c2493e6da453a",
+    "sourceFile": "sources/order-73012-reader.txt",
+    "excerptFile": "sources/order-73012-reader.txt",
+    "excerptSha256": "683a176b06f54af6ed4713ba2f38e6f4e04491bd84ce3c23d75c2493e6da453a",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73012",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72949",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72949/HTML-Order-Calling-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:30.520761+00:00",
+    "sha256": "bac45bf3f7ad0d1c2d50794ae73ab65049da261501e7db0c46615f19eded40f7",
+    "sourceFile": "sources/order-72949-reader.txt",
+    "excerptFile": "sources/order-72949-reader.txt",
+    "excerptSha256": "bac45bf3f7ad0d1c2d50794ae73ab65049da261501e7db0c46615f19eded40f7",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72949",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72940",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72940/HTML-Order-Calling-Election-Signed?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:44.033854+00:00",
+    "sha256": "f00d455a9b0d0180b218282adb56b3a2bf4af8bc828ada4f0b50c857773c5073",
+    "sourceFile": "sources/order-72940-reader.txt",
+    "excerptFile": "sources/order-72940-reader.txt",
+    "excerptSha256": "f00d455a9b0d0180b218282adb56b3a2bf4af8bc828ada4f0b50c857773c5073",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72940",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72971",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72971/La-Joya-ISD-Order-Calling-Election-Signed?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:35:59.673805+00:00",
+    "sha256": "76fb856ab2c791acab0ecdb007836f75b24869a20f955da54876b3657616f186",
+    "sourceFile": "sources/order-72971-reader.txt",
+    "excerptFile": "sources/order-72971-reader.txt",
+    "excerptSha256": "76fb856ab2c791acab0ecdb007836f75b24869a20f955da54876b3657616f186",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72971",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73118",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73118/HTML-Unopposed-Candidate-Place-2?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:05.996787+00:00",
+    "sha256": "4d136528970c1fdef9aec3356816785bd8963fc0e6dd7caf409f823176ac2906",
+    "sourceFile": "sources/order-73118-reader.txt",
+    "excerptFile": "sources/order-73118-reader.txt",
+    "excerptSha256": "4d136528970c1fdef9aec3356816785bd8963fc0e6dd7caf409f823176ac2906",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73118",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73015",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73015/La-Villa-ISD-Order-Calling-General-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:14.151898+00:00",
+    "sha256": "301aca702f75f0cc4cb2d1872700e7056ced7c4a61628d9d2672d21087aa782c",
+    "sourceFile": "sources/order-73015-reader.txt",
+    "excerptFile": "sources/order-73015-reader.txt",
+    "excerptSha256": "301aca702f75f0cc4cb2d1872700e7056ced7c4a61628d9d2672d21087aa782c",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73015",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72972",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72972/Mercedes-ISD-Order-Calling-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:23.396697+00:00",
+    "sha256": "928711279029e0c7dfd91e17b6ccb7106212e1a0639c8ee7956889f6b5451b78",
+    "sourceFile": "sources/order-72972-reader.txt",
+    "excerptFile": "sources/order-72972-reader.txt",
+    "excerptSha256": "928711279029e0c7dfd91e17b6ccb7106212e1a0639c8ee7956889f6b5451b78",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72972",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73014",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73014/HTML-Monte-Alto-ISD-Order-Calling-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:30.039791+00:00",
+    "sha256": "b786eb91395d7c6323a83e756192aeebd6ce31c38de882bb6a9d3dfd910e3826",
+    "sourceFile": "sources/order-73014-reader.txt",
+    "excerptFile": "sources/order-73014-reader.txt",
+    "excerptSha256": "b786eb91395d7c6323a83e756192aeebd6ce31c38de882bb6a9d3dfd910e3826",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73014",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73024",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73024/Order-Calling-Election-Signed?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:45.772526+00:00",
+    "sha256": "aec7b02590c1c00983aec80bbeb5e2115a628b56f18f3c9989127e003620aa67",
+    "sourceFile": "sources/order-73024-reader.txt",
+    "excerptFile": "sources/order-73024-reader.txt",
+    "excerptSha256": "aec7b02590c1c00983aec80bbeb5e2115a628b56f18f3c9989127e003620aa67",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73024",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73079",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73079/Resolution-of-Unopposed-Declared-Elected-Candidates?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:36:53.820789+00:00",
+    "sha256": "271647cd56b7409420a3279f0d749dea99e8e54459ed47333975b053afd3727e",
+    "sourceFile": "sources/order-73079-reader.txt",
+    "excerptFile": "sources/order-73079-reader.txt",
+    "excerptSha256": "271647cd56b7409420a3279f0d749dea99e8e54459ed47333975b053afd3727e",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73079",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73188",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73188/HTML-Valley-View-ISD-Order-of-Cancellation?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:37:00.151637+00:00",
+    "sha256": "8be414d37973f02b0dc85e2f05131ef87c371043d93516ad4af1575717cf9226",
+    "sourceFile": "sources/order-73188-reader.txt",
+    "excerptFile": "sources/order-73188-reader.txt",
+    "excerptSha256": "8be414d37973f02b0dc85e2f05131ef87c371043d93516ad4af1575717cf9226",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73188",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73187",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73187/HTML-Certification-of-Unopposed-Declared-Elected-Valley-View-ISD?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:37:06.489569+00:00",
+    "sha256": "9e9f6279164103f0fe4ca2cc4cd6c3797c148cb8db8e44961d4aca98465c30a9",
+    "sourceFile": "sources/order-73187-reader.txt",
+    "excerptFile": "sources/order-73187-reader.txt",
+    "excerptSha256": "9e9f6279164103f0fe4ca2cc4cd6c3797c148cb8db8e44961d4aca98465c30a9",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73187",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72992",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/72992/Weslaco-ISD-Order-Calling-the-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:37:13.077741+00:00",
+    "sha256": "c6d07677440e06be8c41bfc8fec6016a10b224b02079641be48aed20665ca085",
+    "sourceFile": "sources/order-72992-reader.txt",
+    "excerptFile": "sources/order-72992-reader.txt",
+    "excerptSha256": "c6d07677440e06be8c41bfc8fec6016a10b224b02079641be48aed20665ca085",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72992",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73070",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73070/HTML-Auga-Sud-Order-Cancelling-Election?bidId=",
+    "sourceCheckedAt": "2026-11-03T06:37:19.530489+00:00",
+    "sha256": "5df2ad87f9cd78e65775994682ee9c3ce2b50302e740457988bd8ad8f3159314",
+    "sourceFile": "sources/order-73070-reader.txt",
+    "excerptFile": "sources/order-73070-reader.txt",
+    "excerptSha256": "5df2ad87f9cd78e65775994682ee9c3ce2b50302e740457988bd8ad8f3159314",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Actual Agua SUD cancellation order, four candidates declared elected; no ordinary ballot field imported. County separate certification HTML link 73071 mis-serves Edcouch content and is excluded as authority for Agua.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73070",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.stisd.net/community/board-of-directors/board-elections",
+    "finalUrl": "https://www.stisd.net/community/board-of-directors/board-elections",
+    "sourceCheckedAt": "2026-11-03T06:36:22.457512+00:00",
+    "sha256": "612d730b8bda1f51e9248881486422a740d73fc67c7dce738674e4a0d437aa53",
+    "sourceFile": "sources/stisd-election-reader.txt",
+    "excerptFile": "sources/stisd-election-reader.txt",
+    "excerptSha256": "612d730b8bda1f51e9248881486422a740d73fc67c7dce738674e4a0d437aa53",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.stisd.net/community/board-of-directors/board-elections",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.missiontexas.us/160/City-Council",
+    "finalUrl": "https://www.missiontexas.us/160/City-Council",
+    "sourceCheckedAt": "2026-11-03T06:37:26.538969+00:00",
+    "sha256": "deaa0cea997f1e8747493198a9c1b26af60d25460404c0e0fe67b123cc1d8546",
+    "sourceFile": "sources/mission-council.html",
+    "excerptFile": "sources/mission-council.extract.txt",
+    "excerptSha256": "2a089289534f8f98386a5aebdb3f4837669f5ce8d033e610a1a2d9c358fad5f4",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://comptroller.texas.gov/taxes/property-tax/board-of-directors/",
+    "finalUrl": "https://comptroller.texas.gov/taxes/property-tax/board-of-directors/",
+    "sourceCheckedAt": "2026-11-03T06:38:37.003713+00:00",
+    "sha256": "30448ef7e67f940ad156731c1a4510228ca136947a69a8fb2fe5126925c846b9",
+    "sourceFile": "sources/appraisal-scope.html",
+    "excerptFile": "sources/appraisal-scope.extract.txt",
+    "excerptSha256": "2d549a3003e04d42acbf04c4fc5f3ec8d9a7677ff49a256ae97e1855b8d53d9c",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://comptroller.texas.gov/taxes/property-tax/docs/96-301.pdf",
+    "finalUrl": "https://comptroller.texas.gov/taxes/property-tax/docs/96-301.pdf",
+    "sourceCheckedAt": "2026-11-03T06:38:38.952620+00:00",
+    "sha256": "8f2ff4cf5d46918f104d4e4b3d9ed65e0d8d21605bb4fabe8841154429662ac8",
+    "sourceFile": "sources/appraisal-manual.pdf",
+    "excerptFile": "sources/appraisal-manual.extract.txt",
+    "excerptSha256": "7a423dee431b83f8a701e8ad3492aa57d41ee9878ac659aeaa6b06f00cb6372e",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=False)"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/487/Maps?x=1",
+    "finalUrl": "https://www.hidalgocounty.us/487/Maps?x=1",
+    "sourceCheckedAt": "2026-11-03T06:35:43.505895+00:00",
+    "sha256": "e2a6c2a42a00b516bd5d4188b0f3ece434135fca0377918569bb14aad5c400b5",
+    "sourceFile": "sources/county-maps-reader.txt",
+    "excerptFile": "sources/county-maps-reader.txt",
+    "excerptSha256": "e2a6c2a42a00b516bd5d4188b0f3ece434135fca0377918569bb14aad5c400b5",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Complete exact reader capture HTTP bytes, not original origin PDF/HTML bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/487/Maps?x=1",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact complete saved reader text; PDF glyph spaces retained"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.rgv911.org/gis-data",
+    "finalUrl": "https://www.rgv911.org/gis-data",
+    "sourceCheckedAt": "2026-11-03T06:37:26.217534+00:00",
+    "sha256": "072713a36770dec5526b44cfa7f8bfd5c9a360a902a1844eb2016bcf212cc6e3",
+    "sourceFile": "sources/rgv-gis.html",
+    "excerptFile": "sources/rgv-gis.extract.txt",
+    "excerptSha256": "618885cfca44e69e0c6dacf8deda14d23337cef8010eba87af3cf914622a4e4a",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:40:00.570144+00:00",
+    "sha256": "f341a3d20eb9cf5f2350c3dc3b132f7539883d196d9c537787f87cba69bf44cc",
+    "sourceFile": "sources/rgv-precinct-item.json",
+    "excerptFile": "sources/rgv-precinct-item.json",
+    "excerptSha256": "f341a3d20eb9cf5f2350c3dc3b132f7539883d196d9c537787f87cba69bf44cc",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:40:01.106321+00:00",
+    "sha256": "5a2bcbb78f39ca7d87e754ce25b2984f448653e1b14e3bfc036f9f415c93888e",
+    "sourceFile": "sources/rgv-precinct-experience.json",
+    "excerptFile": "sources/rgv-precinct-experience.json",
+    "excerptSha256": "5a2bcbb78f39ca7d87e754ce25b2984f448653e1b14e3bfc036f9f415c93888e",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:41:11.053687+00:00",
+    "sha256": "44beea0832c3f65ec6168decbc115ae365ea757acaa87929cda54aaba58b0427",
+    "sourceFile": "sources/rgv-precinct-webmap.json",
+    "excerptFile": "sources/rgv-precinct-webmap.json",
+    "excerptSha256": "44beea0832c3f65ec6168decbc115ae365ea757acaa87929cda54aaba58b0427",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:41:10.413982+00:00",
+    "sha256": "a06ada6619530b3919ab798deddb7e7bbf5d9b3917cfc6680627d10e954b76ff",
+    "sourceFile": "sources/rgv-precinct-webmap-item.json",
+    "excerptFile": "sources/rgv-precinct-webmap-item.json",
+    "excerptSha256": "a06ada6619530b3919ab798deddb7e7bbf5d9b3917cfc6680627d10e954b76ff",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer?f=pjson",
+    "finalUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:43:54.532886+00:00",
+    "sha256": "ef0dbd2d9e4c6653d482f1e761aa9e523ccac402a17def93300577c0a4f0d397",
+    "sourceFile": "sources/rgv-mapserver.json",
+    "excerptFile": "sources/rgv-mapserver.json",
+    "excerptSha256": "ef0dbd2d9e4c6653d482f1e761aa9e523ccac402a17def93300577c0a4f0d397",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131?f=pjson",
+    "finalUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131?f=pjson",
+    "sourceCheckedAt": "2026-11-03T06:44:21.969263+00:00",
+    "sha256": "445457b678c9d4e13045ae5acfe5cdf7f0722eb9c175c7271a7c86f78d93cb84",
+    "sourceFile": "sources/rgv-hprecincts-meta.json",
+    "excerptFile": "sources/rgv-hprecincts-meta.json",
+    "excerptSha256": "445457b678c9d4e13045ae5acfe5cdf7f0722eb9c175c7271a7c86f78d93cb84",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T06:44:21.692480+00:00",
+    "sha256": "3e9f06c68d9d60fcd2c7ae41a13af3327e81a38099d8b4af7102f89f49f0c22d",
+    "sourceFile": "sources/rgv-hprecincts.json",
+    "excerptFile": "sources/rgv-hprecincts.json",
+    "excerptSha256": "3e9f06c68d9d60fcd2c7ae41a13af3327e81a38099d8b4af7102f89f49f0c22d",
+    "captureFormat": "NATIVE_PUBLIC_JSON",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Original JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+    "finalUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+    "sourceCheckedAt": "2026-11-03T06:36:23.262359+00:00",
+    "sha256": "b3f78d947f068c3cc9c82ff175fb5912f9f84d1123cb3c42e0272283f4524218",
+    "sourceFile": "sources/judicial-directory.pdf",
+    "excerptFile": "sources/judicial-directory.extract.txt",
+    "excerptSha256": "6c77160df9b844bab4154ab7820110712a51f57d71190adf4a53806add43e443",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Ancillary official election rule, scope, order or qualification evidence; not an ordinary candidate source.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF get_text(sort=False)"
+    }
+  },
+  {
+    "role": "GEOGRAPHY_AUTHORITY",
+    "sourceUrl": "https://www.txcourts.gov/13thcoa/",
+    "finalUrl": "https://www.txcourts.gov/13thcoa/",
+    "sourceCheckedAt": "2026-11-03T06:34:58.107486+00:00",
+    "sha256": "bf25d0516211c02c092d8b820b853a04756926f708133e4a4e8543b1ff62e9e5",
+    "sourceFile": "sources/coa13.html",
+    "excerptFile": "sources/coa13.extract.txt",
+    "excerptSha256": "41aa99a292b875c535f5219ad0d377c716298c4f0d62b3a11a705630a5d83cef",
+    "captureFormat": "NATIVE_HTML",
+    "hashScope": "Complete exact original HTTP response bytes",
+    "evidence": "Current official 13th Court of Appeals page states all twenty counties served; exact whole-county memberships for the regional electorate.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "HTML text_content after removal of script/style/svg"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73071",
+    "sourceCheckedAt": "2026-11-03T06:37:25.924841+00:00",
+    "sha256": "42cfa9e94103fb74e25d26bf757e14eac050872062ec4843f8fdbede9f504a98",
+    "sourceFile": "sources/order-73071-reader.txt",
+    "excerptFile": "sources/order-73071-reader.txt",
+    "excerptSha256": "42cfa9e94103fb74e25d26bf757e14eac050872062ec4843f8fdbede9f504a98",
+    "captureFormat": "JINA_READER_CAPTURE",
+    "hashScope": "Exact complete reader response, not origin HTML bytes",
+    "evidence": "Source mismatch retained: county election page labels this Agua SUD certification link, but returned text is Edcouch Form 13-1. Do not apply its candidate names to Agua. Actual Agua cancellation order 73070 independently supplies the four declared-elected names.",
+    "captureMetadata": {
+      "provider": "Jina Reader public capture",
+      "readerUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73071",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null
+    }
+  }
+]

@@ -1,0 +1,382 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "serviceDescription": "",
+ "mapName": "Hidalgo County ESD Map",
+ "description": "",
+ "copyrightText": "",
+ "supportsDynamicLayers": true,
+ "layers": [
+  {
+   "id": 130,
+   "name": "Site Addresses",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 8000,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPoint",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 11,
+   "name": "Streets",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 6998.168026560227,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolyline",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 23,
+   "name": "Roads",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": [
+    83,
+    44,
+    126,
+    42,
+    85
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 83,
+   "name": "Reference Markers",
+   "parentLayerId": 23,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPoint",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 44,
+   "name": "TXDot Hidalgo/Willacy",
+   "parentLayerId": 23,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolyline",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 126,
+   "name": "TXDot Cameron",
+   "parentLayerId": 23,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolyline",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 42,
+   "name": "Streets Mid",
+   "parentLayerId": 23,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 50000,
+   "maxScale": 6998.168026560227,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolyline",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 85,
+   "name": "OSM_Service_Roads",
+   "parentLayerId": 23,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 10000,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolyline",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 129,
+   "name": "BuildingFootprints",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 5000,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 67,
+   "name": "Parcels",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": [
+    46,
+    48
+   ],
+   "minScale": 5000,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 46,
+   "name": "Hidalgo Parcels Outline",
+   "parentLayerId": 67,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 48,
+   "name": "Willacy Parcels Outline",
+   "parentLayerId": 67,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 21,
+   "name": "Texas_Railroads",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolyline",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 19,
+   "name": "MSAG_COMMUNITY",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 50000,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 109,
+   "name": "INC_MUNI",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 119,
+   "name": "CITY LIMITS",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 0,
+   "name": "COUNTY_BOUNDARIES",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 131,
+   "name": "H_PRECINCTS",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 3,
+   "name": "ESD",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  }
+ ],
+ "tables": [],
+ "spatialReference": {
+  "wkid": 102100,
+  "latestWkid": 3857,
+  "xyTolerance": 0.001,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -20037700,
+  "falseY": -30241100,
+  "xyUnits": 10000,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "singleFusedMapCache": false,
+ "initialExtent": {
+  "xmin": -1.1024752733397262E7,
+  "ymin": 2998983.5692394986,
+  "xmax": -1.0778681725291299E7,
+  "ymax": 3099278.4736475456,
+  "spatialReference": {
+   "wkid": 102100,
+   "latestWkid": 3857,
+   "xyTolerance": 0.001,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -20037700,
+   "falseY": -30241100,
+   "xyUnits": 10000,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "fullExtent": {
+  "xmin": -1.097465231707588E7,
+  "ymin": 2981527.948422807,
+  "xmax": -1.0809843134235071E7,
+  "ymax": 3149737.621452381,
+  "zmin": 0,
+  "zmax": 1.0000000474974513E-4,
+  "mmin": 0,
+  "mmax": 820.2970000000059,
+  "spatialReference": {
+   "wkid": 102100,
+   "latestWkid": 3857,
+   "xyTolerance": 0.001,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -20037700,
+   "falseY": -30241100,
+   "xyUnits": 10000,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "datesInUnknownTimezone": false,
+ "minScale": 0,
+ "maxScale": 0,
+ "units": "esriMeters",
+ "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+ "documentInfo": {
+  "Title": "Map1",
+  "Author": "",
+  "Comments": "",
+  "Subject": "",
+  "Category": "",
+  "Version": "3.6.0",
+  "AntialiasingMode": "Fast",
+  "TextAntialiasingMode": "Force",
+  "Keywords": "Hidalgo_County_Emergency_Service_District_Map_MIL1,Hidalgo County ESD"
+ },
+ "supportsQueryDomains": true,
+ "capabilities": "Map,Query,Data",
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "exportTilesAllowed": false,
+ "referenceScale": 0.0,
+ "datumTransformations": [
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": true,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": false,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": true,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108190,
+     "latestWkid": 108190,
+     "transformForward": false,
+     "name": "WGS_1984_(ITRF00)_To_NAD_1983"
+    }
+   ]
+  }
+ ],
+ "supportsDatumTransformation": true,
+ "archivingInfo": {"supportsHistoricMoment": false},
+ "supportsClipping": true,
+ "supportsSpatialFilter": true,
+ "supportsTimeRelation": true,
+ "supportsQueryDataElements": true,
+ "mapUnits": {"uwkid": 9001},
+ "maxSelectionCount": 2000,
+ "maxRecordCount": 2000,
+ "maxImageHeight": 4096,
+ "maxImageWidth": 4096,
+ "supportedExtensions": "",
+ "serviceItemId": "3c670c8416d04109a6f116bd7114ab5d"
+}

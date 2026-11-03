@@ -1,0 +1,91 @@
+{
+  "ordinaryPrintedUnopposedLabels": [
+    {
+      "office": "Weslaco Commissioner District 4",
+      "name": "Adrian Farias",
+      "officialStatus": "UNOPPOSED_CANDIDATE_PRINTED_ON_CURRENT_SAMPLE",
+      "sourceKey": "sample-09-reader"
+    }
+  ],
+  "certifiedUnopposedButStillPrinted": [
+    {
+      "office": "Hidalgo CAD Place 1",
+      "sampleName": "Erica Canales",
+      "certificationName": "Erica E. Canales",
+      "sourceKey": "order-73141-reader"
+    },
+    {
+      "office": "Hidalgo CAD Place 2",
+      "sampleName": "Veronica 'Ronnie' Ontiveros",
+      "sourceKey": "order-73141-reader"
+    },
+    {
+      "office": "La Joya ISD Place 2",
+      "sampleName": "Servando Ramirez",
+      "sourceKey": "order-73118-reader"
+    }
+  ],
+  "notPrintedCertifiedUnopposed": [
+    {
+      "office": "Edcouch Alderman Place 1",
+      "name": "Joel Medina Jr.",
+      "sourceKey": "order-73066-reader"
+    },
+    {
+      "office": "Edcouch Alderman Place 2",
+      "name": "Daniel Angel Guzman",
+      "sourceKey": "order-73066-reader"
+    }
+  ],
+  "cancelledDeclaredElected": [
+    {
+      "office": "Valley View ISD Place 1",
+      "name": "Omar Garcia",
+      "sourceKey": "order-73188-reader"
+    },
+    {
+      "office": "Valley View ISD Place 2",
+      "name": "Efrain Perez",
+      "sourceKey": "order-73188-reader"
+    },
+    {
+      "office": "Valley View ISD Place 3",
+      "name": "Claudia Coronado",
+      "sourceKey": "order-73188-reader"
+    },
+    {
+      "office": "Agua SUD Director District 4",
+      "name": "Jose Luis Ochoa, Jr.",
+      "sourceKey": "order-73070-reader"
+    },
+    {
+      "office": "Agua SUD Director District 5",
+      "name": "Gerardo Alaniz",
+      "sourceKey": "order-73070-reader"
+    },
+    {
+      "office": "Agua SUD Director District 6",
+      "name": "Ricardo Perez",
+      "sourceKey": "order-73070-reader"
+    },
+    {
+      "office": "Agua SUD Director District 7",
+      "name": "Adriana Flores-Villarreal",
+      "sourceKey": "order-73070-reader"
+    },
+    {
+      "office": "South Texas ISD Hidalgo Commissioner Precinct 4",
+      "name": "Rodolfo Rudy Ramirez",
+      "sourceKey": "order-73079-reader"
+    }
+  ],
+  "sourceMislink": [
+    {
+      "countyLink": "https://www.hidalgocounty.us/DocumentCenter/View/73071",
+      "expected": "Agua SUD certification",
+      "actual": "Edcouch certification text",
+      "action": "Do not use for Agua facts; actual Agua cancellation order 73070 supplies exact candidates."
+    }
+  ],
+  "note": "A certification of unopposed candidates does not by itself establish cancellation. Actual current printed ordinary fields remain in the input, separately tagged here. Explicit cancellation orders create no ordinary choices."
+}

@@ -1,0 +1,158 @@
+{
+  "reviewedAt": "2026-11-03T06:46:06.467703+00:00",
+  "latestCxVotesRef": "92b249b5e",
+  "inputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "sha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a",
+      "contestsRead": 1736
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/bexar/ballot-input/tx.json",
+      "sha256": "43da78b5eee2f422dcb97711b87da2770651dc701f096f5094b332d5b3904ad4",
+      "contestsRead": 67
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/collin/ballot-input/tx.json",
+      "sha256": "78b843a3a9ac5676ac71dd21b7e19f425185cbf27761b9f4b29594c01984a5a6",
+      "contestsRead": 83
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/dallas/ballot-input/tx.json",
+      "sha256": "e64bc09bfbf27350990837bee56f4374f0f6e7c176c48a0a9fdaaa1567d936bf",
+      "contestsRead": 96
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/denton/ballot-input/tx.json",
+      "sha256": "a6635582f3e44c631ba70d14ef988ef97c97d3ecff43690a3c578b273e5d9719",
+      "contestsRead": 32
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "sha256": "559e74a7a419ed451385c583156905bb9fc212f9354001fedbc9ea62c72da56a",
+      "contestsRead": 175
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/tarrant/ballot-input/tx.json",
+      "sha256": "d135b3d797500603c3205e62fcb04928f1c7a9a622b3b47c491dcb641916a5aa",
+      "contestsRead": 77
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "sha256": "3c4aa4665587c521c985ead211df30de6f3349e12ad6582622beb394c45d6f33",
+      "contestsRead": 90
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-92b249b5e/explainer-expansion__austin-final__ballot-input__tx.json",
+      "sha256": "91d48cabb1a415b09c94350ae3e206fabb4115326ab4a81d426ea67749c7a465",
+      "contestsRead": 2
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-92b249b5e/explainer-expansion__travis__ballot-input__tx.json",
+      "sha256": "aae7dbb1e813b068b989d6763c1aee6670102be035d337b5d564dacfd402b984",
+      "contestsRead": 25
+    }
+  ],
+  "reusedOfficeIds": [
+    "tx-ba01-2026-district-judge-206",
+    "tx-ba01-2026-district-judge-275",
+    "tx-ba01-2026-district-judge-370",
+    "tx-ba01-2026-county-48215-criminal_district_attorney_hidalgo_county",
+    "tx-ba01-2026-county-48215-county_judge",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_1",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_2",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_4",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_5",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_6",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_8",
+    "tx-ba01-2026-county-48215-judge_probate_court_no_1",
+    "tx-ba01-2026-county-48215-judge_probate_court_no_2",
+    "tx-ba01-2026-county-48215-district_clerk",
+    "tx-ba01-2026-county-48215-county_clerk",
+    "tx-ba01-2026-county-48215-county_treasurer"
+  ],
+  "reusedCandidateIds": [
+    "tx-ba01-2026-district-judge-206:juan_zamora",
+    "tx-ba01-2026-district-judge-275:marla_cuellar",
+    "tx-ba01-2026-district-judge-370:noe_gonzalez",
+    "tx-ba01-2026-county-48215-criminal_district_attorney_hidalgo_county:lydia_elizondo",
+    "tx-ba01-2026-county-48215-criminal_district_attorney_hidalgo_county:toribio_terry_palacios",
+    "tx-ba01-2026-county-48215-county_judge:richard_cortez",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_1:rodolfo_rudy_gonz_lez",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_2:jaime_jay_palacios",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_4:katherine_garc_a_p_rez",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_5:arnoldo_cant_jr",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_6:albert_garc_a",
+    "tx-ba01-2026-county-48215-judge_county_court_at_law_no_8:omar_maldonado",
+    "tx-ba01-2026-county-48215-judge_probate_court_no_1:joanne_garc_a",
+    "tx-ba01-2026-county-48215-judge_probate_court_no_2:aissa_garza",
+    "tx-ba01-2026-county-48215-district_clerk:maricela_mari_de_leon",
+    "tx-ba01-2026-county-48215-district_clerk:laura_hinojosa",
+    "tx-ba01-2026-county-48215-county_clerk:arturo_guajardo_jr",
+    "tx-ba01-2026-county-48215-county_treasurer:princess_anne_pena",
+    "tx-ba01-2026-county-48215-county_treasurer:lita_leo"
+  ],
+  "newOfficeIds": [
+    "tx-cx-local-2026-hidalgo-city-of-mission-mayor",
+    "tx-cx-local-2026-hidalgo-city-of-mission-council-place-1",
+    "tx-cx-local-2026-hidalgo-city-of-mission-council-place-3",
+    "tx-cx-local-2026-hidalgo-city-of-mission-council-place-2-unexpired-term",
+    "tx-cx-local-2026-hidalgo-south-texas-isd-board-trustee-hidalgo-county-commissioner-precinct-2",
+    "tx-cx-local-2026-hidalgo-hidalgo-county-appraisal-district-board-of-directors-place-1",
+    "tx-cx-local-2026-hidalgo-hidalgo-county-appraisal-district-board-of-directors-place-2",
+    "tx-cx-local-2026-hidalgo-hidalgo-county-appraisal-district-board-of-directors-place-3",
+    "tx-cx-local-2026-hidalgo-hidalgo-independent-school-district-board-of-trustees-place-3",
+    "tx-cx-local-2026-hidalgo-hidalgo-independent-school-district-board-of-trustees-place-4",
+    "tx-cx-local-2026-hidalgo-hidalgo-independent-school-district-board-of-trustees-place-5",
+    "tx-cx-local-2026-hidalgo-la-joya-independent-school-district-board-of-trustees-place-1",
+    "tx-cx-local-2026-hidalgo-la-joya-independent-school-district-board-of-trustees-place-2",
+    "tx-cx-local-2026-hidalgo-la-joya-independent-school-district-board-of-trustees-place-3",
+    "tx-cx-local-2026-hidalgo-city-of-progreso-mayor",
+    "tx-cx-local-2026-hidalgo-city-of-progreso-council-member-place-4",
+    "tx-cx-local-2026-hidalgo-city-of-progreso-council-member-place-5",
+    "tx-cx-local-2026-hidalgo-city-of-progreso-council-member-place-6",
+    "tx-cx-local-2026-hidalgo-city-of-weslaco-commissioner-at-large",
+    "tx-cx-local-2026-hidalgo-city-of-weslaco-commissioner-district-4",
+    "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-4",
+    "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-5",
+    "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-6",
+    "tx-cx-local-2026-hidalgo-weslaco-independent-school-district-board-of-trustees-place-7",
+    "tx-cx-local-2026-hidalgo-city-of-edcouch-alderman-place-5",
+    "tx-cx-local-2026-hidalgo-edcouch-elsa-independent-school-district-board-of-trustees-place-1",
+    "tx-cx-local-2026-hidalgo-edcouch-elsa-independent-school-district-board-of-trustees-place-4",
+    "tx-cx-local-2026-hidalgo-edcouch-elsa-independent-school-district-board-of-trustees-place-5",
+    "tx-cx-local-2026-hidalgo-donna-independent-school-district-board-of-trustees-place-5",
+    "tx-cx-local-2026-hidalgo-donna-independent-school-district-board-of-trustees-place-6",
+    "tx-cx-local-2026-hidalgo-donna-independent-school-district-board-of-trustees-place-7",
+    "tx-cx-local-2026-hidalgo-pharr-san-juan-alamo-independent-school-district-board-of-trustees-place-1",
+    "tx-cx-local-2026-hidalgo-pharr-san-juan-alamo-independent-school-district-board-of-trustees-place-2",
+    "tx-cx-local-2026-hidalgo-pharr-san-juan-alamo-independent-school-district-board-of-trustees-place-3",
+    "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-1",
+    "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-2",
+    "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-3",
+    "tx-cx-local-2026-hidalgo-edinburg-consolidated-independent-school-district-board-of-trustees-place-5",
+    "tx-cx-local-2026-hidalgo-la-villa-independent-school-district-board-of-trustees-place-5",
+    "tx-cx-local-2026-hidalgo-la-villa-independent-school-district-board-of-trustees-place-6",
+    "tx-cx-local-2026-hidalgo-la-villa-independent-school-district-board-of-trustees-place-7",
+    "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-4",
+    "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-5",
+    "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-6",
+    "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-7",
+    "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-1",
+    "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-2",
+    "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-3",
+    "tx-cx-local-2026-hidalgo-mercedes-independent-school-district-board-of-trustees-place-4",
+    "tx-cx-local-2026-court-of-appeals-13-place-6",
+    "tx-cx-local-2026-hidalgo-county-commissioner-precinct-2",
+    "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-1",
+    "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-2",
+    "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-3-place-2",
+    "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-1-place-2",
+    "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-5-place-1",
+    "tx-cx-local-2026-hidalgo-constable-precinct-5",
+    "tx-cx-local-2026-hidalgo-county-commissioner-precinct-4",
+    "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-4-place-2"
+  ],
+  "crossCountyCourt13Identity": "tx-cx-local-2026-court-of-appeals-13-place-6",
+  "newCourtMemberships": 20
+}

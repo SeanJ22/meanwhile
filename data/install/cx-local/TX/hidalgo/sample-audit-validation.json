@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-03T06:46:57.066166+00:00",
+  "completeSamples": 64,
+  "samplePages": 128,
+  "allCaptureHashesElectionHeadersAndStyleNumbers": "PASS",
+  "localFields": 75,
+  "printedNames": 141,
+  "exactCompleteOfficeOccurrences": 1606,
+  "punctuationAndPartyAwareAllStyleChoiceParity": "PASS",
+  "allTenSchoolDistrictPlaceStyleParity": "PASS",
+  "southTexasHidalgo2CommissionerPrecinct2Parity": "PASS",
+  "exactRegionalCourtWholeCountyMemberships": 20,
+  "regionalCourtMembersMatchHeldRegistry": "PASS",
+  "whitespaceOnlyPdfCandidateDisplayNormalizations": [
+    "tx-cx-local-2026-hidalgo-hidalgo-county-appraisal-district-board-of-directors-place-2:veronica-ronnie-ontiveros",
+    "tx-cx-local-2026-hidalgo-la-villa-independent-school-district-board-of-trustees-place-5:jose-t-rex-ramirez",
+    "tx-cx-local-2026-hidalgo-monte-alto-independent-school-district-board-of-trustees-place-4:ester-cardoza-wade",
+    "tx-ba01-2026-county-48215-criminal_district_attorney_hidalgo_county:toribio_terry_palacios"
+  ],
+  "genericLocalWriteInNames": 0,
+  "homeMailingAddressesInInputQuotes": 0,
+  "originalPdfBytesAcquired": false,
+  "readerCaptureBytesPortable": true,
+  "productionWrites": false
+}

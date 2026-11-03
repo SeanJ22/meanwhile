@@ -1,0 +1,28 @@
+{
+  "sourceKey": "rgv-hprecincts",
+  "authorityChain": [
+    "rgv-gis",
+    "rgv-precinct-item",
+    "rgv-precinct-experience",
+    "rgv-precinct-webmap",
+    "rgv-mapserver",
+    "rgv-hprecincts-meta",
+    "rgv-hprecincts"
+  ],
+  "features": [
+    {
+      "originalDistrict": "2",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:2"
+    },
+    {
+      "originalDistrict": "4",
+      "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:4"
+    }
+  ],
+  "scope": "Original public RGV911 governmental Emergency Communication District linked native layer has exactly four named county precinct polygons. Staged as commissioner-precinct boundary evidence for River reconciliation; not used as justice/constable precinct geometry or claimed current voter visibility.",
+  "missingShapes": [
+    "Justice/Constable Precincts 1–5",
+    "City of Weslaco Council District 4"
+  ],
+  "schoolScope": "South Texas ISD Hidalgo Pct. 2 has the exact commissioner precinct electorate; no full-district substitution."
+}

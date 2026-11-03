@@ -1,0 +1,1103 @@
+[
+  {
+    "requestedUrl": "https://comptroller.texas.gov/taxes/property-tax/docs/96-301.pdf",
+    "finalUrl": "https://comptroller.texas.gov/taxes/property-tax/docs/96-301.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:38:38.952620+00:00",
+    "sha256": "8f2ff4cf5d46918f104d4e4b3d9ed65e0d8d21605bb4fabe8841154429662ac8",
+    "contentType": "application/octet-stream",
+    "key": "appraisal-manual"
+  },
+  {
+    "requestedUrl": "https://comptroller.texas.gov/taxes/property-tax/board-of-directors/",
+    "finalUrl": "https://comptroller.texas.gov/taxes/property-tax/board-of-directors/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:38:37.003713+00:00",
+    "sha256": "30448ef7e67f940ad156731c1a4510228ca136947a69a8fb2fe5126925c846b9",
+    "contentType": "text/html; charset=UTF-8",
+    "key": "appraisal-scope"
+  },
+  {
+    "requestedUrl": "https://www.txcourts.gov/13thcoa/",
+    "finalUrl": "https://www.txcourts.gov/13thcoa/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:58.107486+00:00",
+    "sha256": "bf25d0516211c02c092d8b820b853a04756926f708133e4a4e8543b1ff62e9e5",
+    "contentType": "text/html; charset=utf-8",
+    "key": "coa13"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/65071/PCT_2_07-24-2023",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/65071/PCT_2_07-24-2023",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:20.059296+00:00",
+    "sha256": "39f768a48d3920f15c2f87652d4ea3ac660e404ad67a7327f585cef02927544c",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "county-commission2-reader",
+    "portableResponseFile": "sources/failed-routes/county-commission2-reader.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/65073/PCT_4_07-24-2023",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/65073/PCT_4_07-24-2023",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:19.536380+00:00",
+    "sha256": "e2b9edd631229d4cf478e600bcc84f5d83e586a29ab1ab79a15f33b8f15d3ca0",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "county-commission4-reader",
+    "portableResponseFile": "sources/failed-routes/county-commission4-reader.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/487/Maps?x=1",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/487/Maps?x=1",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:43.505895+00:00",
+    "sha256": "e2a6c2a42a00b516bd5d4188b0f3ece434135fca0377918569bb14aad5c400b5",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "county-maps-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/3500/November-3-2026-General-Elections?x=1",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/3500/November-3-2026-General-Elections?x=1",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:43.890407+00:00",
+    "sha256": "66d95b6fab37eedd5b9ca877cbae15fb76ee7fbd6e3faf3904afa61b97777de5",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "election-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/105/Elections-Department?x=1",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/105/Elections-Department?x=1",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:17.071034+00:00",
+    "sha256": "39866c67f7ea8468d259ef0f6854edc7107678b18fa0f187d4dfa55383a7b584",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "home-reader"
+  },
+  {
+    "requestedUrl": "https://www.hidalgocounty.us/105/Elections-Department",
+    "finalUrl": "https://www.hidalgocounty.us/105/Elections-Department",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:30:53.864055+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "home",
+    "portableResponseFile": "sources/failed-routes/home.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+    "finalUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:23.262359+00:00",
+    "sha256": "b3f78d947f068c3cc9c82ff175fb5912f9f84d1123cb3c42e0272283f4524218",
+    "contentType": "application/pdf",
+    "key": "judicial-directory"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73360",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73360",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:30.425652+00:00",
+    "sha256": "5bf084cafef6bebdc57af94e96327a41e236b83a5069ae261dcfc4d101ef9dfe",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "legend-reader"
+  },
+  {
+    "requestedUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73360",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73360",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:31:27.895451+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "legend",
+    "portableResponseFile": "sources/failed-routes/legend.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://www.missiontexas.us/160/City-Council",
+    "finalUrl": "https://www.missiontexas.us/160/City-Council",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:26.538969+00:00",
+    "sha256": "deaa0cea997f1e8747493198a9c1b26af60d25460404c0e0fe67b123cc1d8546",
+    "contentType": "text/html; charset=utf-8",
+    "key": "mission-council"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72940",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72940",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:44.033854+00:00",
+    "sha256": "f00d455a9b0d0180b218282adb56b3a2bf4af8bc828ada4f0b50c857773c5073",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72940-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72949",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72949",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:30.520761+00:00",
+    "sha256": "bac45bf3f7ad0d1c2d50794ae73ab65049da261501e7db0c46615f19eded40f7",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72949-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72969",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72969",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:37.455756+00:00",
+    "sha256": "9fdb14ea3a7361bf7b6f21d7046662a9d017d7ad510b2d4770c6b43ff2eb8d3a",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72969-reader",
+    "portableResponseFile": "sources/failed-routes/order-72969-reader.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72970",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72970",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:50.194597+00:00",
+    "sha256": "2282936e3832f7f992ebd70c4f4348024a5cf9616f99100306add93acfe8123f",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72970-reader",
+    "portableResponseFile": "sources/failed-routes/order-72970-reader.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72971",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72971",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:59.673805+00:00",
+    "sha256": "76fb856ab2c791acab0ecdb007836f75b24869a20f955da54876b3657616f186",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72971-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72972",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72972",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:23.396697+00:00",
+    "sha256": "928711279029e0c7dfd91e17b6ccb7106212e1a0639c8ee7956889f6b5451b78",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72972-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72986",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72986",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:10.935347+00:00",
+    "sha256": "f7c6647e3d8e6a7dbe6df12d54e95875b0b65457cedc37aad2dd9358a245242d",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72986-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72988",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72988",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:17.635529+00:00",
+    "sha256": "8b3aa2dbc831f23ee2813f06108427ef9e07996297f99b28c2fbf25df67f3b0d",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72988-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72991",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72991",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:38.097298+00:00",
+    "sha256": "f6a1673319a6134a739cf782195d4bc63ed0a114044016aa29491ebffd95023b",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72991-reader",
+    "portableResponseFile": "sources/failed-routes/order-72991-reader.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72992",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/72992",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:13.077741+00:00",
+    "sha256": "c6d07677440e06be8c41bfc8fec6016a10b224b02079641be48aed20665ca085",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-72992-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73012",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73012",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:24.125525+00:00",
+    "sha256": "683a176b06f54af6ed4713ba2f38e6f4e04491bd84ce3c23d75c2493e6da453a",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73012-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73014",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73014",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:30.039791+00:00",
+    "sha256": "b786eb91395d7c6323a83e756192aeebd6ce31c38de882bb6a9d3dfd910e3826",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73014-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73015",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73015",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:14.151898+00:00",
+    "sha256": "301aca702f75f0cc4cb2d1872700e7056ced7c4a61628d9d2672d21087aa782c",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73015-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73024",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73024",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:45.772526+00:00",
+    "sha256": "aec7b02590c1c00983aec80bbeb5e2115a628b56f18f3c9989127e003620aa67",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73024-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73066",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73066",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:03.798727+00:00",
+    "sha256": "95c4994dcf20a9ea7d9cd90c43faa88b918667b09c85892ab8f7eebd89d85d3d",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73066-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73070",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73070",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:19.530489+00:00",
+    "sha256": "5df2ad87f9cd78e65775994682ee9c3ce2b50302e740457988bd8ad8f3159314",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73070-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73071",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73071",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:25.924841+00:00",
+    "sha256": "42cfa9e94103fb74e25d26bf757e14eac050872062ec4843f8fdbede9f504a98",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73071-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73079",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73079",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:53.820789+00:00",
+    "sha256": "271647cd56b7409420a3279f0d749dea99e8e54459ed47333975b053afd3727e",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73079-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73118",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73118",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:05.996787+00:00",
+    "sha256": "4d136528970c1fdef9aec3356816785bd8963fc0e6dd7caf409f823176ac2906",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73118-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73141",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73141",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:57.572061+00:00",
+    "sha256": "8b399853b7548fb15347bb079643f795f77763927af2c8d95ea1183f8df075d0",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73141-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73187",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73187",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:06.489569+00:00",
+    "sha256": "9e9f6279164103f0fe4ca2cc4cd6c3797c148cb8db8e44961d4aca98465c30a9",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73187-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73188",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73188",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:00.151637+00:00",
+    "sha256": "8be414d37973f02b0dc85e2f05131ef87c371043d93516ad4af1575717cf9226",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "order-73188-reader"
+  },
+  {
+    "requestedUrl": "https://www.rgv911.org/gis-data",
+    "finalUrl": "https://www.rgv911.org/gis-data",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:26.217534+00:00",
+    "sha256": "072713a36770dec5526b44cfa7f8bfd5c9a360a902a1844eb2016bcf212cc6e3",
+    "contentType": "text/html; charset=utf-8",
+    "key": "rgv-gis"
+  },
+  {
+    "requestedUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131?f=pjson",
+    "finalUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:44:21.969263+00:00",
+    "sha256": "445457b678c9d4e13045ae5acfe5cdf7f0722eb9c175c7271a7c86f78d93cb84",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "rgv-hprecincts-meta"
+  },
+  {
+    "requestedUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer/131/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:44:21.692480+00:00",
+    "sha256": "3e9f06c68d9d60fcd2c7ae41a13af3327e81a38099d8b4af7102f89f49f0c22d",
+    "contentType": "application/geo+json; charset=UTF-8",
+    "key": "rgv-hprecincts"
+  },
+  {
+    "requestedUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer?f=pjson",
+    "finalUrl": "https://gis.rgv911.org/server/rest/services/Hidalgo_County_Emergency_Service_District_Map_MIL1/MapServer?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:43:54.532886+00:00",
+    "sha256": "ef0dbd2d9e4c6653d482f1e761aa9e523ccac402a17def93300577c0a4f0d397",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "rgv-mapserver"
+  },
+  {
+    "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc/data?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:40:01.106321+00:00",
+    "sha256": "5a2bcbb78f39ca7d87e754ce25b2984f448653e1b14e3bfc036f9f415c93888e",
+    "contentType": "text/plain;charset=utf-8",
+    "key": "rgv-precinct-experience"
+  },
+  {
+    "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/b38d12fb41f541c08cccaf93e62e33fc?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:40:00.570144+00:00",
+    "sha256": "f341a3d20eb9cf5f2350c3dc3b132f7539883d196d9c537787f87cba69bf44cc",
+    "contentType": "text/plain;charset=utf-8",
+    "key": "rgv-precinct-item"
+  },
+  {
+    "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:41:10.413982+00:00",
+    "sha256": "a06ada6619530b3919ab798deddb7e7bbf5d9b3917cfc6680627d10e954b76ff",
+    "contentType": "text/plain;charset=utf-8",
+    "key": "rgv-precinct-webmap-item"
+  },
+  {
+    "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/8aa37c0722b24639b4bbddfcaf412915/data?f=pjson",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:41:11.053687+00:00",
+    "sha256": "44beea0832c3f65ec6168decbc115ae365ea757acaa87929cda54aaba58b0427",
+    "contentType": "text/plain;charset=utf-8",
+    "key": "rgv-precinct-webmap"
+  },
+  {
+    "requestedUrl": "https://www.hidalgocounty.us/DocumentCenter/Download/73246",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/Download/73246",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:33:07.875308+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "sample-01-download",
+    "portableResponseFile": "sources/failed-routes/sample-01-download.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246?isPublished=True",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246?isPublished=True",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:33:08.153291+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "sample-01-embed",
+    "portableResponseFile": "sources/failed-routes/sample-01-embed.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://hidalgocounty.us/DocumentCenter/View/73246",
+    "finalUrl": "https://hidalgocounty.us/DocumentCenter/View/73246",
+    "httpStatus": 503,
+    "retrievedAt": "2026-11-03T06:33:13.084936+00:00",
+    "sha256": "2f85832e31ca57711e6107af6b142363351ae516adb71c69afc643fac26be7f6",
+    "contentType": "text/plain",
+    "key": "sample-01-nowww",
+    "portableResponseFile": "sources/failed-routes/sample-01-nowww.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246/Ballot-Style-1?bidId=",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246/Ballot-Style-1?bidId=",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:33:07.874285+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "sample-01-pdf",
+    "portableResponseFile": "sources/failed-routes/sample-01-pdf.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73246",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73246",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:56.201184+00:00",
+    "sha256": "6120e53e810abd6cb7f7b7db1be352afd84f0fe65f275274808a1147a3a12233",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-01-reader"
+  },
+  {
+    "requestedUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246",
+    "finalUrl": "https://www.hidalgocounty.us/DocumentCenter/View/73246",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:31:27.585780+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "sample-01",
+    "portableResponseFile": "sources/failed-routes/sample-01.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73247",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73247",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:56.434841+00:00",
+    "sha256": "2bc1ccf5eda86a95718e434fba441f72f0a0a98305ca3898305a30f16ce57160",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-02-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73248",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73248",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:56.335513+00:00",
+    "sha256": "cf3cebf1cdc9cb05a78b73acacf536788155d1cca5e4173e70c42d4b8fe1225e",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-03-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73249",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73249",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:56.994654+00:00",
+    "sha256": "daea412ea4732060ed606f6713754926308209e3d5d0971606f97d6b0f113fec",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-04-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73250",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73250",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:56.593476+00:00",
+    "sha256": "a091e7b5f89669584a0c8d3eb6dcc4393c100bf0cc08495243bcf10e5183e404",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-05-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73251",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73251",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:58.238424+00:00",
+    "sha256": "10d6fe065fed5e56cf869f6a94437314878a4eac5e730312fff5c2deeb8fd199",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-06-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73252",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73252",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:58.063322+00:00",
+    "sha256": "1089a148a6c91f9f99421552940b00bbbb89fdf582b736a44b413426a31e5aa2",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-07-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73253",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73253",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:58.838659+00:00",
+    "sha256": "a35a1c31a5d355a559dfb592efdf0fd75665b48f9836e8c6533ee1206d52ed2e",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-08-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73254",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73254",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:58.332996+00:00",
+    "sha256": "d8df8b358aec6a4bbbbf30a501ce2b9cb7f667de5656831a1fd0212d3cd2266d",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-09-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73255",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73255",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:58.880809+00:00",
+    "sha256": "dce054140c32fdc5ed0a6fe6b1bbbad76d3747da6c5becdf7dec7e96798a600b",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-10-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73256",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73256",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:59.938071+00:00",
+    "sha256": "2d9064471d21d3bc68783b9f302f9d125c5314eca3b6cd95e9a955f3f11193f3",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-11-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73257",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73257",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:00.120737+00:00",
+    "sha256": "1dd817b20939541ee036a181f890c0a0b44159f65994c9e8c8dd6ffdd4bcca48",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-12-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73258",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73258",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:05.126385+00:00",
+    "sha256": "81999141d2b136afb102675970a7d646e27385d3fb77f1cc73938682c82c85b9",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-13-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73259",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73259",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:00.860068+00:00",
+    "sha256": "c0dcc13ad6ce4e2e2933bbd5776c07ad8fd66eff382b618715dbaaf871d61e70",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-14-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73260",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73260",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:00.831218+00:00",
+    "sha256": "ac106bcf119de33ea2726aae0d2aef7ba14ac3770e82de631fe658ace5cfff9c",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-15-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73261",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73261",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:01.785976+00:00",
+    "sha256": "e0d1ed2c1603349036b368603ab6aae18cc5fe5e1dd22da97f628b01a85f4817",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-16-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73262",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73262",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:02.276200+00:00",
+    "sha256": "5b98eba1c9a987ae0e6a89d101d670f9d1fb06cf54f06f2d0ef3b3aeacd0b4b1",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-17-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73263",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73263",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:02.819404+00:00",
+    "sha256": "0b5955f2b36d957a054d5c1213765af665c0555eabcba25f1a428b1b016ffef5",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-18-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73264",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73264",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:03.065522+00:00",
+    "sha256": "66ea43d3f75687df79c9d68451562f04aa2d75cefe2ae1cec01de6ed5c109dc7",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-19-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73265",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73265",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:03.823200+00:00",
+    "sha256": "d5c8506bc394862a04e828b786350593fd432379140baeece0ce20ba2a481fa5",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-20-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73266",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73266",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:04.285894+00:00",
+    "sha256": "924e7718540984a99f41280d8217f47a5e302158fc94a1e90165835b386339b7",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-21-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73267",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73267",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:04.724026+00:00",
+    "sha256": "493a71573cb48ec33e388f83df9dfa5f24797943e849767dc1abfd9386110634",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-22-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73268",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73268",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:08.535080+00:00",
+    "sha256": "fcf4b7a384281df418935a224505df0634575a83aac51a5f160a34b26965a295",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-23-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73269",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73269",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:13.655502+00:00",
+    "sha256": "381fb0ead73d5e8949d3d26e14dcf3b8547098711051305a7c5d9312ad448be5",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-24-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73270",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73270",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:32:05.320943+00:00",
+    "sha256": "936dc63bd6659ba6468fbd9d03cbecc90fcbcb87542a080c0918bd12f2bb6471",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-25-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73271",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73271",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:18.735727+00:00",
+    "sha256": "3b9643b291d830f6e3123d6b7c2a824b2176a4f0f6b4f4a7515d72a8bdb1ddb6",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-26-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73272",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73272",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:23.773684+00:00",
+    "sha256": "8f8aabb350870850c69850f5ab945deff4a1aab207f1adad4b4a3d4aa8cf712c",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-27-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73273",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73273",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:28.649841+00:00",
+    "sha256": "845af3653c29f04dc53fccef04750bc0e7e399d9abcd36e2bacbb948ab9ffc8a",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-28-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73274",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73274",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:33.463650+00:00",
+    "sha256": "c0a7bcbd419cdbf3497a64ec9c037a8487f7ff364ca1e50ec0b13bb802fb746d",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-29-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73275",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73275",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:38.496620+00:00",
+    "sha256": "e727a9ae8b9566fc75bd564adfd39bc5bce906bb63f0730c6fb44fbb91054a81",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-30-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73276",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73276",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:43.957933+00:00",
+    "sha256": "aa5ea135a49dae13875558a20b9e65f71c305dfb643ca7b74c96248c02a178c4",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-31-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73277",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73277",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:48.920949+00:00",
+    "sha256": "139c64171ace076131b4948ad0326b8be6146f0b49cf0bc3ec8009d45ac349ec",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-32-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73278",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73278",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:54.357846+00:00",
+    "sha256": "e40eba25be2f4e01a68436a751e041608786f3f01ebe13c2b0244ac52b517ef7",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-33-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73279",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73279",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:33:59.299763+00:00",
+    "sha256": "9b77d4e1d8ffd955abcdbe8371d5b385cfb4e8005aef20edd629ac233dae4ec7",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-34-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73280",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73280",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:04.283969+00:00",
+    "sha256": "0460b60f8e380256a02f755c7322397634100188934bdf9a867b397431138c45",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-35-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73281",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73281",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:10.915000+00:00",
+    "sha256": "5e8104ef222240fd4e104f432db8e533629870ee33dfe23c12b1b0897529b85d",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-36-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73282",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73282",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:16.108650+00:00",
+    "sha256": "9552bf812e00d183e76077ace3767ebd6eeeb94f186097bed9544a9670f6d169",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-37-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73283",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73283",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:21.148834+00:00",
+    "sha256": "e6060bcf3150283a6a5ae3acc13c5d263ab248373f3216d2e1ad1856a530bd6d",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-38-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73284",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73284",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:26.186236+00:00",
+    "sha256": "b329aeb53cd334a8b1486804b0f5d3fa071f4fc431c6e204567a94ab63365158",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-39-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73285",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73285",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:31.831965+00:00",
+    "sha256": "7c22c166f522a92fb75f79fef092cec3958993c1124d6d09937023ff5095c183",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-40-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73286",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73286",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:37.032384+00:00",
+    "sha256": "4ad1516e44f218bcfe15562a6132a24d2caf54fbb884b71744b243f6a0ff4cee",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-41-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73287",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73287",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:42.032721+00:00",
+    "sha256": "c399d99821b4af2328a2c7c29814b295f247d5c7b43a317846f41c2cbdf3256b",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-42-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73288",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73288",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:50.376009+00:00",
+    "sha256": "086e486b4203050ca25d694afa92969a22d124a8ec9fd4f3d70b6f50760d9612",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-43-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73289",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73289",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:55.586776+00:00",
+    "sha256": "3d3710f435d202dc92ba86600dea434431e851805ae706afc9f8056a0b08943c",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-44-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73290",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73290",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:00.461879+00:00",
+    "sha256": "95c08a5e3cc4bf5df0eb81f879e256da165303fb63fb014e508bb1e5b56c1ddd",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-45-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73291",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73291",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:05.934454+00:00",
+    "sha256": "96277d600138f6b9baa16d87c3478d59e49a9d2c72ba2d90092e6bcc0550453c",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-46-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73292",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73292",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:11.060374+00:00",
+    "sha256": "e775d751aeb588ca185c4699f6fd8cfda74079d58404d8ef68152610a79b67f7",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-47-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73293",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73293",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:16.798798+00:00",
+    "sha256": "8c7eb1a7d046d22e028d914200bf6b436005369918e88772b85ef136c5050c97",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-48-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73294",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73294",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:22.302745+00:00",
+    "sha256": "321c93512d94405626f34a4e126197f05b344185db5211e60c2dbbbad261876c",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-49-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73295",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73295",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:27.347883+00:00",
+    "sha256": "cb125006696d103a9e38025f205b257ceb0ba8d07466b134a8f411faafa375d3",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-50-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73296",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73296",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:32.325381+00:00",
+    "sha256": "a17097c2d7b1648f0c92878a4d1d3edddabd849100fbfaac676e3e179f6cbd35",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-51-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73233",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73233",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:48.799521+00:00",
+    "sha256": "9a7403dcfec4c8add066e79c999a64d88eef7ca2e250487562f3c8b7deecaadc",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-52-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73234",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73234",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:53.720783+00:00",
+    "sha256": "608652528137a741ce8e4d563a0d35c23ee5377c4b0afc4c89a299a8241ca0c1",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-53-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73235",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73235",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:35:59.092701+00:00",
+    "sha256": "1c6b75f62ede8b9ce2a7a8625a0c32f482334e3d931f7c2f5bf88d9069e3d0f4",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-54-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73236",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73236",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:04.232634+00:00",
+    "sha256": "2f9afdece3d479531c86a5dba92947e6f3d3d3ac576c8519e213e72e36529c4b",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-55-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73237",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73237",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:09.223407+00:00",
+    "sha256": "878f0bceec23e0c340885ca60f94ccc2a399a7564c3ac5b6002918e74b871113",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-56-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73238",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73238",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:14.153321+00:00",
+    "sha256": "5f7963c4e0897fff108d02954efc742ceedcf78d25f8351592dc51078bc80526",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-57-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73239",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73239",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:19.132036+00:00",
+    "sha256": "c7de5ecb786025de1f2a0b8a978c0454e7e26020b8a6d88890ec94e3e7c12f9e",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-58-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73240",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73240",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:24.058496+00:00",
+    "sha256": "f1717939ae5b93f90e797e9e987e85a96545717be936c0ebfc317df9d4d3f075",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-59-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73241",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73241",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:28.948268+00:00",
+    "sha256": "ebc3d5b84a6f0bea01d6c0103ee854af7bcf003ff34ca8b562bd79c586278ad5",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-60-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73242",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73242",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:34.681309+00:00",
+    "sha256": "b5f5735657345c8eb59c62dff3b17ab4112ec73c1fe0b912a7f569d04b5f14b9",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-61-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73243",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73243",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:39.933811+00:00",
+    "sha256": "b08a628aefcb7094339aa69493fadd8ddb05391a4c8b8fc31c803a7899bcfe94",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-62-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73244",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73244",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:44.728728+00:00",
+    "sha256": "a69b876d38a1d73f573706d642b7636e53ee699038f09f825426eb49644587d7",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-63-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73245",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/DocumentCenter/View/73245",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:49.877852+00:00",
+    "sha256": "74aaeb631abb85186b37b746bfbf438cd678d84156bc7d0546489b52780cb537",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-64-reader"
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.hidalgocounty.us/3522/Sample-Ballots-2026-General-Election?x=1",
+    "finalUrl": "https://r.jina.ai/https://www.hidalgocounty.us/3522/Sample-Ballots-2026-General-Election?x=1",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:31:17.258242+00:00",
+    "sha256": "d5b89210fcf842aa3fe0d9e762be4a693bd836ea9cc44c7bda6d95f34c5b9263",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "sample-index-reader"
+  },
+  {
+    "requestedUrl": "https://www.hidalgocounty.us/3522/Sample-Ballots-2026-General-Election",
+    "finalUrl": "https://www.hidalgocounty.us/3522/Sample-Ballots-2026-General-Election",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:30:53.524385+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "sample-index",
+    "portableResponseFile": "sources/failed-routes/sample-index.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.stisd.net/fs/resource-manager/view/358613c6-4444-461a-827c-c0268be8c2dc",
+    "finalUrl": "https://r.jina.ai/https://www.stisd.net/fs/resource-manager/view/358613c6-4444-461a-827c-c0268be8c2dc",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:37:27.961905+00:00",
+    "sha256": "74ca17bd6fe2e52b5106c7413c61e4ecd22aeb012057b1414b7bb69bf07633e9",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "stisd-cert-reader",
+    "portableResponseFile": "sources/failed-routes/stisd-cert-reader.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://r.jina.ai/https://www.stisd.net/community/board-of-directors/board-elections",
+    "finalUrl": "https://r.jina.ai/https://www.stisd.net/community/board-of-directors/board-elections",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:36:22.457512+00:00",
+    "sha256": "612d730b8bda1f51e9248881486422a740d73fc67c7dce738674e4a0d437aa53",
+    "contentType": "text/plain; charset=utf-8",
+    "key": "stisd-election-reader"
+  },
+  {
+    "requestedUrl": "https://www.stisd.net/community/board-of-directors/board-elections",
+    "finalUrl": "https://www.stisd.net/community/board-of-directors/board-elections",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T06:35:40.236190+00:00",
+    "sha256": "2938e9f1284180959e33ab1718d0793a72ff6e4cdb8108c34dcd14e69446de5c",
+    "contentType": "text/plain; charset=UTF-8",
+    "key": "stisd-election",
+    "portableResponseFile": "sources/failed-routes/stisd-election.response",
+    "notCandidateEvidence": true
+  },
+  {
+    "requestedUrl": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.22.htm",
+    "finalUrl": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.22.htm",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:58.103946+00:00",
+    "sha256": "dbfba8a96dc3cd584157ca66aaafdf67e0ed15dd5a0c8a58f3d4bd0f109fc646",
+    "contentType": "text/html",
+    "key": "tx-gov-code22"
+  },
+  {
+    "requestedUrl": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.24.htm",
+    "finalUrl": "https://statutes.capitol.texas.gov/Docs/GV/htm/GV.24.htm",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:34:58.217191+00:00",
+    "sha256": "dbfba8a96dc3cd584157ca66aaafdf67e0ed15dd5a0c8a58f3d4bd0f109fc646",
+    "contentType": "text/html",
+    "key": "tx-gov-code24"
+  }
+]

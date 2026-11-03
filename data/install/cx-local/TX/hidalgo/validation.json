@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-11-03T07:04:26.261Z",
+  "state": "TX",
+  "sources": 101,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 236,
+  "newContests": 59,
+  "refreshedContests": 16,
+  "candidacies": 141,
+  "pdfNameWhitespaceNormalizations": 4,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 1720,
+  "unrelatedCandidateCoreFieldsPreserved": 2147,
+  "unrelatedCandidateAliasEnrichments": 2147,
+  "unmatchedReaderDivisionCount": 12,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:5",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:13",
+    "ocd-division/country:us/state:tx/judicial_district:206",
+    "ocd-division/country:us/state:tx/judicial_district:275",
+    "ocd-division/country:us/state:tx/judicial_district:370",
+    "ocd-division/country:us/state:tx/place:weslaco/council_district:4"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:tx/judicial_district:206",
+    "ocd-division/country:us/state:tx/judicial_district:275",
+    "ocd-division/country:us/state:tx/judicial_district:370"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:5",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:13",
+    "ocd-division/country:us/state:tx/place:weslaco/council_district:4"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

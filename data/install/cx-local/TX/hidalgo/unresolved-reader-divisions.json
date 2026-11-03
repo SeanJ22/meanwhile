@@ -1,0 +1,125 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:2",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-south-texas-isd-board-trustee-hidalgo-county-commissioner-precinct-2",
+      "tx-cx-local-2026-hidalgo-county-commissioner-precinct-2"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/commissioner_precinct:4",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-county-commissioner-precinct-4"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:1",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-1-place-2"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:2",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-1",
+      "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-2-place-2"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:3",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-3-place-2"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:4",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-4-place-2"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/county:hidalgo/justice_precinct:5",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-justice-of-the-peace-precinct-5-place-1",
+      "tx-cx-local-2026-hidalgo-constable-precinct-5"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:13",
+    "contestIds": [
+      "tx-cx-local-2026-court-of-appeals-13-place-6"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": true,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:206",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-206"
+    ],
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:275",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-275"
+    ],
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:370",
+    "contestIds": [
+      "tx-ba01-2026-district-judge-370"
+    ],
+    "heldWholeMemberMembership": true,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:tx/place:weslaco/council_district:4",
+    "contestIds": [
+      "tx-cx-local-2026-hidalgo-city-of-weslaco-commissioner-district-4"
+    ],
+    "heldWholeMemberMembership": false,
+    "incomingWholeMemberMembership": false,
+    "readerStatus": "PENDING_RIVER_DIVISION_JOIN_AND_LIVE_CHECK",
+    "wholeCountyFallback": false
+  }
+]

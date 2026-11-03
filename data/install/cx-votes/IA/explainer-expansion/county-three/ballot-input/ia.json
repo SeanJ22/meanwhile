@@ -1,0 +1,250 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-sac-county-jail-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:sac",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sac County — Measure A: County jail bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.saccountyiowa.gov/files/public_notice/2026_general_election_73194.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.saccountyiowa.gov/files/public_notice/2026_general_election_73194.pdf",
+            "sourceOrg": "Sac County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:43:14.667416+00:00",
+            "verifiedAt": "2026-11-03T07:46:40.148447+00:00",
+            "quote": "Shall the County of Sac, State of Iowa, enter into a loan agreement and issue its general obligation bonds in a principal amount not exceeding $10,000,000 for the purpose of\npaying the costs, to that extent, of constructing, furnishing and equipping a new County Jail?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-wapello-jail-financing",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:wapello",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Wapello County — Measure A: Jail expansion financing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+            "sourceOrg": "Wapello County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:42:59.065219+00:00",
+            "verifiedAt": "2026-11-03T07:46:40.148447+00:00",
+            "quote": "Shall the county of Wapello, state of\nIowa, issue its general obligation\nbonds or capital loan notes in an\namount not exceeding the amount of\n$45,000,000 for the purpose of\ndesigning, erecting, reconstructing,\nextending, equipping, and furnishing\nof the existing jail facility including\nexpansion of the existing jail facility\nand related grounds and site\nimprovements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-tama-supervisor-count",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:tama",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Tama County — Measure TX: Reduce county supervisors",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.tamacounty.iowa.gov/files/sample_ballots/1202_sample_ballot_57956.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.tamacounty.iowa.gov/files/sample_ballots/1202_sample_ballot_57956.pdf",
+            "sourceOrg": "Tama County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:42:59.319708+00:00",
+            "verifiedAt": "2026-11-03T07:46:40.148447+00:00",
+            "quote": "Shall the Following Public Measure be\nadopted?\nPublic Measure TX\nThe number of Tama County\nSupervisors shall be decreased from\nfive members to three members."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-sac-county-jail-bonds:measure",
+          "contestId": "ia-cx-2026-sac-county-jail-bonds",
+          "officialNumber": "A",
+          "questionText": "Shall the County of Sac, State of Iowa, enter into a loan agreement and issue its general obligation bonds in a principal amount not exceeding $10,000,000 for the purpose of\npaying the costs, to that extent, of constructing, furnishing and equipping a new County Jail?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.saccountyiowa.gov/files/public_notice/2026_general_election_73194.pdf",
+            "sourceOrg": "Sac County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:43:14.667416+00:00",
+            "verifiedAt": "2026-11-03T07:46:40.148447+00:00",
+            "quote": "Shall the County of Sac, State of Iowa, enter into a loan agreement and issue its general obligation bonds in a principal amount not exceeding $10,000,000 for the purpose of\npaying the costs, to that extent, of constructing, furnishing and equipping a new County Jail?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-wapello-jail-financing:measure",
+          "contestId": "ia-cx-2026-wapello-jail-financing",
+          "officialNumber": "A",
+          "questionText": "Shall the county of Wapello, state of\nIowa, issue its general obligation\nbonds or capital loan notes in an\namount not exceeding the amount of\n$45,000,000 for the purpose of\ndesigning, erecting, reconstructing,\nextending, equipping, and furnishing\nof the existing jail facility including\nexpansion of the existing jail facility\nand related grounds and site\nimprovements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+            "sourceOrg": "Wapello County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:42:59.065219+00:00",
+            "verifiedAt": "2026-11-03T07:46:40.148447+00:00",
+            "quote": "Shall the county of Wapello, state of\nIowa, issue its general obligation\nbonds or capital loan notes in an\namount not exceeding the amount of\n$45,000,000 for the purpose of\ndesigning, erecting, reconstructing,\nextending, equipping, and furnishing\nof the existing jail facility including\nexpansion of the existing jail facility\nand related grounds and site\nimprovements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-tama-supervisor-count:measure",
+          "contestId": "ia-cx-2026-tama-supervisor-count",
+          "officialNumber": "TX",
+          "questionText": "Shall the Following Public Measure be\nadopted?\nPublic Measure TX\nThe number of Tama County\nSupervisors shall be decreased from\nfive members to three members.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.tamacounty.iowa.gov/files/sample_ballots/1202_sample_ballot_57956.pdf",
+            "sourceOrg": "Tama County Iowa Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:42:59.319708+00:00",
+            "verifiedAt": "2026-11-03T07:46:40.148447+00:00",
+            "quote": "Shall the Following Public Measure be\nadopted?\nPublic Measure TX\nThe number of Tama County\nSupervisors shall be decreased from\nfive members to three members."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-sac-county-jail-bonds",
+          "whatItDoes": "Authorizes a loan agreement and up to $10 million in general-obligation bonds to construct, furnish and equip a new county jail.",
+          "yesMeans": "Authorize the project borrowing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.saccountyiowa.gov/files/public_notice/2026_general_election_73194.pdf",
+          "sourceHash": "0123ba8619b894091ffdc07ee7a96dea0c89856e36fafdeda26084cd5a4fb89e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:46:40.148447+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-wapello-jail-financing",
+          "whatItDoes": "Authorizes up to $45 million in general-obligation bonds or capital loan notes to design, build, rebuild, expand, equip and furnish the existing jail, with related grounds and site improvements.",
+          "yesMeans": "Authorize the project borrowing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+          "sourceHash": "7d912011197809778b4fa45873ddd6821f152cdb7f3dbeb0de02c031f60d07ff",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:46:40.148447+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-tama-supervisor-count",
+          "whatItDoes": "Reduces the Tama County board of supervisors from five members to three.",
+          "yesMeans": "Reduce the board to three supervisors.",
+          "noMeans": "Keep the board at five supervisors.",
+          "parts": [],
+          "sourceUrl": "https://www.tamacounty.iowa.gov/files/sample_ballots/1202_sample_ballot_57956.pdf",
+          "sourceHash": "843e648f847d2bbcabd486bf87a175690c54de560817a17236bc24d441029947",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:46:40.148447+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:46:40.148447+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://www.saccountyiowa.gov/files/public_notice/2026_general_election_73194.pdf",
+        "finalUrl": "https://www.saccountyiowa.gov/files/public_notice/2026_general_election_73194.pdf",
+        "httpStatus": 200,
+        "rawHash": "7274d583dcf27fe1594d598f235b9c40ee990a1f45ad7c5eab30994192fc01e6",
+        "retrievedAt": "2026-11-03T07:43:14.667416+00:00",
+        "publisher": "Sac County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official November3,2026 public notice/sample-ballot source linked by current official county election page; complete bounded countywide question retained."
+      },
+      {
+        "requestedUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+        "finalUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+        "httpStatus": 200,
+        "rawHash": "3e001ec8096c5a136b8b19894ffe826c42b17c434be3f5ca4345f35f9be37236",
+        "retrievedAt": "2026-11-03T07:42:59.065219+00:00",
+        "publisher": "Wapello County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official November3,2026 public notice/sample-ballot source linked by current official county election page; complete bounded countywide question retained."
+      },
+      {
+        "requestedUrl": "https://www.tamacounty.iowa.gov/files/sample_ballots/1202_sample_ballot_57956.pdf",
+        "finalUrl": "https://www.tamacounty.iowa.gov/files/sample_ballots/1202_sample_ballot_57956.pdf",
+        "httpStatus": 200,
+        "rawHash": "67f3fda2c1deebe10a162731e6546e6b887d3444cc33f91c1acce0b45adcba6f",
+        "retrievedAt": "2026-11-03T07:42:59.319708+00:00",
+        "publisher": "Tama County Iowa Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official November3,2026 public notice/sample-ballot source linked by current official county election page; complete bounded countywide question retained."
+      }
+    ]
+  }
+}

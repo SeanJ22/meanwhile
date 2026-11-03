@@ -1,0 +1,109 @@
+[
+  {
+    "contestId": "ia-cx-2026-sac-county-jail-bonds",
+    "sourceUrl": "https://www.saccountyiowa.gov/files/public_notice/2026_general_election_73194.pdf",
+    "rawHash": "7274d583dcf27fe1594d598f235b9c40ee990a1f45ad7c5eab30994192fc01e6",
+    "sourceFile": "sources/7274d583dcf27fe1594d598f235b9c40ee990a1f45ad7c5eab30994192fc01e6.source",
+    "sourceTextFile": "sources/604e24b673ea9dfb3f75c74405fdfda8dffd4f662cab5ecae117d72bc9831ab7.txt",
+    "excerpt": "Shall the County of Sac, State of Iowa, enter into a loan agreement and issue its general obligation bonds in a principal amount not exceeding $10,000,000 for the purpose of\npaying the costs, to that extent, of constructing, furnishing and equipping a new County Jail?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the County of Sac, State of Iowa, enter into a loan agreement and issue its general obligation bonds in a principal amount not exceeding $10,000,000 for the purpose of\npaying the costs, to that extent, of constructing, furnishing and equipping a new County Jail?"
+      ],
+      "yesMeans": [
+        "Shall the County of Sac, State of Iowa, enter into a loan agreement and issue its general obligation bonds in a principal amount not exceeding $10,000,000 for the purpose of\npaying the costs, to that extent, of constructing, furnishing and equipping a new County Jail?"
+      ],
+      "noMeans": [
+        "Shall the County of Sac, State of Iowa, enter into a loan agreement and issue its general obligation bonds in a principal amount not exceeding $10,000,000 for the purpose of\npaying the costs, to that extent, of constructing, furnishing and equipping a new County Jail?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Current official Sac notice lists county jail A plus Jackson Township appointment B. Only countywide A prepared; Jackson Census township includes Sac City territory, so its rural appointment electorate stays unresolved. No Iowa all-local completeness assertion.",
+    "textExtraction": {
+      "tool": "pdftotext -layout",
+      "scope": "Complete contiguous county Measure A question in native official notice."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-wapello-jail-financing",
+    "sourceUrl": "https://www.wapellocounty.iowa.gov/files/sample_ballots/1238_general_34567.pdf",
+    "rawHash": "3e001ec8096c5a136b8b19894ffe826c42b17c434be3f5ca4345f35f9be37236",
+    "sourceFile": "sources/3e001ec8096c5a136b8b19894ffe826c42b17c434be3f5ca4345f35f9be37236.source",
+    "sourceTextFile": "sources/78ee183403522cb5d142eab2eb8b366402bcc66ce6c961e58a211d8cb8611eac.txt",
+    "excerpt": "Shall the county of Wapello, state of\nIowa, issue its general obligation\nbonds or capital loan notes in an\namount not exceeding the amount of\n$45,000,000 for the purpose of\ndesigning, erecting, reconstructing,\nextending, equipping, and furnishing\nof the existing jail facility including\nexpansion of the existing jail facility\nand related grounds and site\nimprovements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the county of Wapello, state of\nIowa, issue its general obligation\nbonds or capital loan notes in an\namount not exceeding the amount of\n$45,000,000 for the purpose of\ndesigning, erecting, reconstructing,\nextending, equipping, and furnishing\nof the existing jail facility including\nexpansion of the existing jail facility\nand related grounds and site\nimprovements?"
+      ],
+      "yesMeans": [
+        "Shall the county of Wapello, state of\nIowa, issue its general obligation\nbonds or capital loan notes in an\namount not exceeding the amount of\n$45,000,000 for the purpose of\ndesigning, erecting, reconstructing,\nextending, equipping, and furnishing\nof the existing jail facility including\nexpansion of the existing jail facility\nand related grounds and site\nimprovements?"
+      ],
+      "noMeans": [
+        "Shall the county of Wapello, state of\nIowa, issue its general obligation\nbonds or capital loan notes in an\namount not exceeding the amount of\n$45,000,000 for the purpose of\ndesigning, erecting, reconstructing,\nextending, equipping, and furnishing\nof the existing jail facility including\nexpansion of the existing jail facility\nand related grounds and site\nimprovements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred.",
+      "One aggregate45million ceiling for bonds OR capital loan notes, not separate caps."
+    ],
+    "inventoryScope": "One source-checked countywide question from current official74page public composite. Separate school questions in overlapping district styles remain independent work; no county/all-Iowa completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF",
+      "page1Based": 2,
+      "questionBBoxPoints": [
+        240.47714233398438,
+        459.83148193359375,
+        403.8699035644531,
+        571.0091552734375
+      ],
+      "method": "Select native single text block containing Shall the county of Wapello; complete question through final question mark.",
+      "scope": "Complete native question; separate watermark and neighbouring columns excluded."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-tama-supervisor-count",
+    "sourceUrl": "https://www.tamacounty.iowa.gov/files/sample_ballots/1202_sample_ballot_57956.pdf",
+    "rawHash": "67f3fda2c1deebe10a162731e6546e6b887d3444cc33f91c1acce0b45adcba6f",
+    "sourceFile": "sources/67f3fda2c1deebe10a162731e6546e6b887d3444cc33f91c1acce0b45adcba6f.source",
+    "sourceTextFile": "sources/95809ff2e478f15a105e8dfadd7b6c0856306f41b0957eab2d446dd7c678eb62.txt",
+    "excerpt": "Shall the Following Public Measure be\nadopted?\nPublic Measure TX\nThe number of Tama County\nSupervisors shall be decreased from\nfive members to three members.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Following Public Measure be\nadopted?\nPublic Measure TX\nThe number of Tama County\nSupervisors shall be decreased from\nfive members to three members."
+      ],
+      "yesMeans": [
+        "Shall the Following Public Measure be\nadopted?\nPublic Measure TX\nThe number of Tama County\nSupervisors shall be decreased from\nfive members to three members."
+      ],
+      "noMeans": [
+        "Shall the Following Public Measure be\nadopted?\nPublic Measure TX\nThe number of Tama County\nSupervisors shall be decreased from\nfive members to three members."
+      ]
+    },
+    "semanticConditions": [
+      "No implementation date, election method, term or cost inferred.",
+      "Full printed prompt plus intervening official label and operative count change retained, rather than stopping at the generic prompt question mark."
+    ],
+    "inventoryScope": "One source-checked countywide question from current official88page public composite. Shared Kirkwood college question not joined to whole county. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF native clip text",
+      "page1Based": 2,
+      "pageSizePoints": [
+        545.7554321289062,
+        920.2425537109375
+      ],
+      "cropBoxPoints": [
+        360,
+        20,
+        540,
+        180
+      ],
+      "scope": "Entire county supervisor-count field; canonical question retains prompt, official measure label and full operative statement, excluding YES/NO ovals and preceding generic proposition caption."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

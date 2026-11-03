@@ -1,0 +1,34 @@
+{
+  "sources": [
+    {
+      "sourceUrl": "https://www.saccountyiowa.gov/elections/2026_general_election_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:41:52.568277+00:00",
+      "sourceFile": "sources/613ca0c9265d7ded22c66055f6dee62542c1ac92199783326d56ee6d4cd589b9.official-index.html",
+      "originalSha256": "613ca0c9265d7ded22c66055f6dee62542c1ac92199783326d56ee6d4cd589b9",
+      "archivedSha256": "613ca0c9265d7ded22c66055f6dee62542c1ac92199783326d56ee6d4cd589b9"
+    },
+    {
+      "sourceUrl": "https://www.tamacounty.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:41:53.297392+00:00",
+      "sourceFile": "sources/6aeef7e96c07ba76303c362113ea5ab0da1327637a91d4ed829607b6e9687f30.official-index.html",
+      "originalSha256": "6aeef7e96c07ba76303c362113ea5ab0da1327637a91d4ed829607b6e9687f30",
+      "archivedSha256": "6aeef7e96c07ba76303c362113ea5ab0da1327637a91d4ed829607b6e9687f30"
+    },
+    {
+      "sourceUrl": "https://www.wapellocounty.iowa.gov/elections/info/general_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:41:52.582717+00:00",
+      "sourceFile": "sources/72407ea746945f0cf67c0bd027fd111a3441ec4f4760e89cb348e7a118987895.official-index.html",
+      "originalSha256": "72407ea746945f0cf67c0bd027fd111a3441ec4f4760e89cb348e7a118987895",
+      "archivedSha256": "72407ea746945f0cf67c0bd027fd111a3441ec4f4760e89cb348e7a118987895"
+    }
+  ],
+  "sourceScope": {
+    "Sac": "Native official dated notice lists county jailA and JacksonTownship appointmentB. County jailA prepared; JacksonTownship contains SacCity territory in Census2025, so rural appointment geography held.",
+    "Tama": "Native official88page public composite, county MeasureTX five-to-three supervisors; no effective date or electionmethod invented. SharedKirkwood college electorate unresolved.",
+    "Wapello": "Native official74page public composite, aggregate45million bonds-or-capital-notes county jailquestion. Remaining school fields independent acquisition."
+  },
+  "scopeLimitation": "Only three source-checked whole-county fields prepared here. No Iowa all-local completeness assertion."
+}

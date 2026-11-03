@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ia-cx-2026-sac-county-jail-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:sac",
+      "county",
+      "19161",
+      "Sac County"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole county named in official question; no city or township substitution."
+  },
+  {
+    "contestId": "ia-cx-2026-wapello-jail-financing",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:wapello",
+      "county",
+      "19179",
+      "Wapello County"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole county named in official question; no city or township substitution."
+  },
+  {
+    "contestId": "ia-cx-2026-tama-supervisor-count",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:tama",
+      "county",
+      "19171",
+      "Tama County"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole county named in official question; no city or township substitution."
+  }
+]

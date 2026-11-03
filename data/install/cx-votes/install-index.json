@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-02T23:37:13.417778+00:00",
+  "preparedAt": "2026-11-03T05:29:31.944152+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -16,7 +16,7 @@
     "newOfficialMeasuresWithExplanations": 7,
     "totalPreparedExplanationsOrAttachmentRepairs": 107,
     "changedJurisdictions": 18,
-    "description": "17 states plus DC; the nationwide baseline contains 56 state/territory scopes. This describes held ballot measures and seven newly acquired official questions, not every unacquired local measure."
+    "description": "Earlier held-measure baseline before the expanded nationwide local acquisition. Current committed packets are listed in currentExplainerPreparation and states."
   },
   "newRaceData": {
     "byState": {
@@ -51,7 +51,42 @@
       "distinctLegislativeCandidates": 758
     }
   },
-  "states": [
+  "remainingWork": [
+    {
+      "scope": "Live installation and reader checks",
+      "owner": "River",
+      "status": "Install the ready packets as data through their existing publication functions, then verify affected ballots, official links and voting sites live. No live installation or under-three-second result is claimed here."
+    },
+    {
+      "scope": "Voting locations",
+      "owner": "River",
+      "status": "Install prepared CA/MA/MN/NH doors and source data. AL/IL/MS/NE/RI residential checks already worked; their packets preserve discovery sources only. Coverage is explicitly local, not statewide."
+    },
+    {
+      "scope": "Additional write-in eligibility",
+      "owner": "River",
+      "status": "WI official later registered-write-in names are separate source-review data. Their parties/running mates are unknown; the current reader has no verified registered-write-in display distinction. No ordinary printed-nominee rows are invented."
+    },
+    {
+      "scope": "Coverage beyond held and acquired sources",
+      "owner": "Existing source acquisition",
+      "status": "The dated 56-scope source review does not certify every local ballot. Guam is an additional territory acquisition gap; it is not represented as having no election."
+    },
+    {
+      "scope": "Application code freeze",
+      "owner": "River after Nov 4 ET",
+      "status": "UT84033 election geography and certified candidates are correct. The scope API uses representation geography; no code correction or geography overwrite is prepared."
+    }
+  ],
+  "costScope": "Uses existing stored-data publication and reader paths. No application query or paid provider call was added. Source captures distinguish native bytes from labeled deterministic source-text extractions.",
+  "nextOwner": "River installs each READY explainer packet as data and verifies the live measure, explanation and source link. This lane continues local official-source acquisition.",
+  "verification": {
+    "pnpmGates": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
+    "dataChecks": "Official source hashes and quotations; existing publication admission; explainer reader attachments; legislative district and candidate reconciliation; voting-source parsers and official-boundary assignment replay.",
+    "readerPublication": "Not performed. River installs these packets as data and checks the live pages.",
+    "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained."
+  },
+  "earlierPreparedPackets": [
     {
       "state": "AL",
       "heldMeasureReaderGapsPrepared": 3,
@@ -630,39 +665,476 @@
       ]
     }
   ],
-  "remainingWork": [
+  "activeFocus": "EXPLAINERS_ONLY",
+  "explainersPreparedThroughCommit": "67b944f5b1bb38b2199245375ac1cd4855c08f33",
+  "states": [
     {
-      "scope": "Live installation and reader checks",
-      "owner": "River",
-      "status": "Install the ready packets as data through their existing publication functions, then verify affected ballots, official links and voting sites live. No live installation or under-three-second result is claimed here."
+      "state": "AK",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 2,
+      "dataInstalls": [
+        {
+          "manifest": "AK/explainer-expansion/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:AK",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
     },
     {
-      "scope": "Voting locations",
-      "owner": "River",
-      "status": "Install prepared CA/MA/MN/NH doors and source data. AL/IL/MS/NE/RI residential checks already worked; their packets preserve discovery sources only. Coverage is explicitly local, not statewide."
+      "state": "AL",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 41,
+      "dataInstalls": [
+        {
+          "manifest": "AL/explainer-expansion/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:AL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "AL/explainer-expansion/local-amendments/install.json",
+          "preparedExplainers": 32,
+          "contractId": "ballot-contests:AL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "AL/explainer-expansion/tax-questions/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:AL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
     },
     {
-      "scope": "Additional write-in eligibility",
-      "owner": "River",
-      "status": "WI official later registered-write-in names are separate source-review data. Their parties/running mates are unknown; the current reader has no verified registered-write-in display distinction. No ordinary printed-nominee rows are invented."
+      "state": "AR",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 8,
+      "dataInstalls": [
+        {
+          "manifest": "AR/install.json",
+          "preparedExplainers": 8,
+          "contractId": "ballot-contests:AR",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
     },
     {
-      "scope": "Coverage beyond held and acquired sources",
-      "owner": "Existing source acquisition",
-      "status": "The dated 56-scope source review does not certify every local ballot. Guam is an additional territory acquisition gap; it is not represented as having no election."
+      "state": "AZ",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 6,
+      "dataInstalls": [
+        {
+          "manifest": "AZ/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:AZ",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
     },
     {
-      "scope": "Application code freeze",
-      "owner": "River after Nov 4 ET",
-      "status": "UT84033 election geography and certified candidates are correct. The scope API uses representation geography; no code correction or geography overwrite is prepared."
+      "state": "CA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "dataInstalls": [
+        {
+          "manifest": "CA/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "CO",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 29,
+      "dataInstalls": [
+        {
+          "manifest": "CO/explainer-expansion/install.json",
+          "preparedExplainers": 10,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/install.json",
+          "preparedExplainers": 19,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "CT",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 42,
+      "dataInstalls": [
+        {
+          "manifest": "CT/explainer-expansion/install.json",
+          "preparedExplainers": 42,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "DC",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "dataInstalls": [
+        {
+          "manifest": "DC/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:DC",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "FL",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 12,
+      "dataInstalls": [
+        {
+          "manifest": "FL/explainer-expansion/install.json",
+          "preparedExplainers": 8,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "ID",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 2,
+      "dataInstalls": [
+        {
+          "manifest": "ID/explainer-expansion/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:ID",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "IN",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "dataInstalls": [
+        {
+          "manifest": "IN/explainer-expansion/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:IN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "MA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 33,
+      "dataInstalls": [
+        {
+          "manifest": "MA/explainer-expansion/county-school-library/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:MA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MA/explainer-expansion/leicester-haverhill/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:MA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MA/explainer-expansion/nonbinding-districts/install.json",
+          "preparedExplainers": 14,
+          "contractId": "ballot-contests:MA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MA/explainer-expansion/reading-north-reading/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:MA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MA/install.json",
+          "preparedExplainers": 8,
+          "contractId": "plain-english-translations",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "MD",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 6,
+      "dataInstalls": [
+        {
+          "manifest": "MD/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:MD",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "MN",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 153,
+      "dataInstalls": [
+        {
+          "manifest": "MN/explainer-expansion/clearwater/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:MN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MN/explainer-expansion/install.json",
+          "preparedExplainers": 68,
+          "contractId": "ballot-contests:MN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MN/explainer-expansion/lowry/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:MN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MN/explainer-expansion/school-increases/install.json",
+          "preparedExplainers": 33,
+          "contractId": "ballot-contests:MN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MN/explainer-expansion/school-remaining/install.json",
+          "preparedExplainers": 50,
+          "contractId": "ballot-contests:MN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "MO",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 6,
+      "dataInstalls": [
+        {
+          "manifest": "MO/explainer-expansion/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:MO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MO/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:MO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "NC",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 50,
+      "dataInstalls": [
+        {
+          "manifest": "NC/explainer-expansion/install.json",
+          "preparedExplainers": 47,
+          "contractId": "ballot-contests:NC",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NC/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:NC",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "NH",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 287,
+      "dataInstalls": [
+        {
+          "manifest": "NH/explainer-expansion/install.json",
+          "preparedExplainers": 271,
+          "contractId": "ballot-contests:NH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "NH/install.json",
+          "preparedExplainers": 16,
+          "contractId": "ballot-contests:NH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "NM",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "dataInstalls": [
+        {
+          "manifest": "NM/explainer-expansion/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:NM",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "NY",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 5,
+      "dataInstalls": [
+        {
+          "manifest": "NY/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:NY",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "OH",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 4,
+      "dataInstalls": [
+        {
+          "manifest": "OH/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:OH",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "OK",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "dataInstalls": [
+        {
+          "manifest": "OK/explainer-expansion/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:OK",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "OR",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 3,
+      "dataInstalls": [
+        {
+          "manifest": "OR/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:OR",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "PA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 8,
+      "dataInstalls": [
+        {
+          "manifest": "PA/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:PA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "PA/lehigh-measures/install.json",
+          "preparedExplainers": 7,
+          "contractId": "ballot-contests:PA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "SC",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 36,
+      "dataInstalls": [
+        {
+          "manifest": "SC/explainer-expansion/install.json",
+          "preparedExplainers": 36,
+          "contractId": "ballot-contests:SC",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "TN",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 2,
+      "dataInstalls": [
+        {
+          "manifest": "TN/explainer-expansion/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:TN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "TN/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:TN",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "VA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 14,
+      "dataInstalls": [
+        {
+          "manifest": "VA/explainer-expansion/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:VA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "VA/install.json",
+          "preparedExplainers": 9,
+          "contractId": "ballot-contests:VA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "WA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 12,
+      "dataInstalls": [
+        {
+          "manifest": "WA/explainer-expansion/install.json",
+          "preparedExplainers": 12,
+          "contractId": "ballot-contests:WA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "WI",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 2,
+      "dataInstalls": [
+        {
+          "manifest": "WI/explainer-expansion/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "WY",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 1,
+      "dataInstalls": [
+        {
+          "manifest": "WY/explainer-expansion/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:WY",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
     }
   ],
-  "costScope": "Uses existing stored-data publication and reader paths. No application query or paid provider call was added. Source captures distinguish native bytes from labeled deterministic source-text extractions.",
-  "nextOwner": "River: install as data and verify live. Each state has its own pushed READY commit and nested install manifest.",
-  "verification": {
-    "pnpmGates": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
-    "dataChecks": "Official source hashes and quotations; existing publication admission; explainer reader attachments; legislative district and candidate reconciliation; voting-source parsers and official-boundary assignment replay.",
-    "readerPublication": "Not performed. River installs these packets as data and checks the live pages.",
-    "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained."
+  "currentExplainerPreparation": {
+    "uniquePreparedExplanationsOrAttachmentRepairs": 769,
+    "statesAndDCWithPreparedChanges": 29,
+    "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
+    "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",
+    "knownBoundedInventoriesPrepared": {
+      "MN": "154/154 questions in current official master list",
+      "NH": "299/299 held plus acquired official questions; further municipal/school source sweep continues",
+      "VA": "67/67 current official master-list measures"
+    },
+    "activeWork": "Continue official local-measure inventories in every state and prepare each missing source-linked neutral explainer."
   }
 }

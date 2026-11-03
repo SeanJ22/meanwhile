@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:chatham-school-homestead-base-cap",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:chatham_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Savannah–Chatham schools — homestead base-value cap",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+          "provenance": {
+            "sourceUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+            "sourceOrg": "Chatham County Board of Elections",
+            "collectedAt": "2026-11-03T06:47:07.586890+00:00",
+            "verifiedAt": "2026-11-03T07:14:45.573061+00:00",
+            "quote": "Shall the Act amending the adjusted base year assessed value homestead exemption from Chatham County and City of Savannah School District ad valorem taxes for educational purposes be approved so as to prevent any future increases in the adjusted base year assessed value of a homestead above the assessed value of such homestead in tax year 2025?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:chatham-school-homestead-base-cap#question",
+          "contestId": "ga-local-2026:chatham-school-homestead-base-cap",
+          "questionText": "Shall the Act amending the adjusted base year assessed value homestead exemption from Chatham County and City of Savannah School District ad valorem taxes for educational purposes be approved so as to prevent any future increases in the adjusted base year assessed value of a homestead above the assessed value of such homestead in tax year 2025?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+            "sourceOrg": "Chatham County Board of Elections",
+            "collectedAt": "2026-11-03T06:47:07.586890+00:00",
+            "verifiedAt": "2026-11-03T07:14:45.573061+00:00",
+            "quote": "Shall the Act amending the adjusted base year assessed value homestead exemption from Chatham County and City of Savannah School District ad valorem taxes for educational purposes be approved so as to prevent any future increases in the adjusted base year assessed value of a homestead above the assessed value of such homestead in tax year 2025?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:chatham-school-homestead-base-cap",
+          "whatItDoes": "Limits the baseline home value used to calculate the existing Savannah–Chatham school-tax homestead exemption. For tax years after 2026, that adjusted base value could not exceed the home’s adjusted base value for tax year 2025. The formula would include inflation increases in the original base-year assessment only through 2025, using the Consumer Price Index for All Urban Consumers. If the current assessment is at or below the original base-year assessment, the formula would use the current assessment.",
+          "yesMeans": "Approve the 2025 cap on the adjusted base value used for this school-tax homestead exemption.",
+          "noMeans": "Reject the proposed change to the adjusted-base-value exemption.",
+          "parts": [],
+          "sourceUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+          "sourceHash": "612a7ccf1e4b85a602754947ef4e8ac2af98b65dc852e0e2a0727ce4d8ea5b2c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:14:45.573061+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:14:45.573061+00:00",
+    "reviewedBy": "CX-VOTES exactofficialGeorgia countyquestions, signedActconditionsandregistereddistrictidentities",
+    "sources": [
+      {
+        "requestedUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+        "finalUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+        "httpStatus": 200,
+        "rawHash": "612a7ccf1e4b85a602754947ef4e8ac2af98b65dc852e0e2a0727ce4d8ea5b2c",
+        "retrievedAt": "2026-11-03T06:47:07.586890+00:00",
+        "publisher": "Chatham County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "ExactcurrentNovember3,2026officialmeasuretextinoriginalPDFbytes. DeKalbcompositeexpresslycontainsALLcontestsforcountyelection; twoverifiedlocalquestionsprepared, Tuckerannexationheldforscope. Chathamcurrentofficialelectionnoticelinks exacttaxquestion; notclaimedcompleteallChathamlocalquestions."
+      }
+    ]
+  }
+}

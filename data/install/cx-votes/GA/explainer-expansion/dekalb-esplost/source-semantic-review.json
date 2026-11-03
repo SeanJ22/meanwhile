@@ -1,0 +1,16 @@
+{
+  "state": "GA",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "780d252e5043d71ac1cc542b386ad4b7fa1194b1b3f042b248db3ca097d9f740",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "CompleteoriginalofficialDeKalbcompositeballotcontainsall3localquestions; full4,160characterESPLOSTquestionretainedafteronlywatermarkremoval.",
+    "Tax1%,startJuly1,2027,up-to20quarters,countycap1,046,154,324and3school-systemprojectcaps/purposesexact.",
+    "500millionisprincipalconditionalonmajorityWITHINDeKalbCountySchoolDistrictandfinancespartoflistedprojects, notextraunqualifiedcountydebt.",
+    "Alloutputsentenceshaveliteralofficialsourcequotes; exactoriginalPDF/completebackgroundsource-texthashes, existingjurisdictionandfreshheldelectionidentitypass.",
+    "Ordinarymanualmerge/authority/admissionandactualreaderpassusingalready-heldGAbaselinenativesourcereceipts, notafictitiousemptypriorreceipt; noadditionalproductionread.",
+    "Fullcandidate-retentionreplayremainsrootowned; thisinputisonequestiononly."
+  ]
+}

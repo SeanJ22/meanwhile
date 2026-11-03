@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+      "finalUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0",
+      "rawPath": "sources/612a7ccf1e4b85a602754947ef4e8ac2af98b65dc852e0e2a0727ce4d8ea5b2c.source",
+      "rawHash": "612a7ccf1e4b85a602754947ef4e8ac2af98b65dc852e0e2a0727ce4d8ea5b2c",
+      "textPath": "sources/687d7530a04da470e312bbb5d234628351e1453ed3eb4d18be3a432ca8ca36f2.txt",
+      "textSha256": "687d7530a04da470e312bbb5d234628351e1453ed3eb4d18be3a432ca8ca36f2",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:chatham-school-homestead-base-cap"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

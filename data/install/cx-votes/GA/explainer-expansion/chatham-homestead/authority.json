@@ -1,0 +1,22 @@
+{
+  "scope": "ThreeverifiednewlocalGeorgiaquestions: DeKalbESPLOST,Brookhavenspecialhomestead,Chathamschoolhomesteadcap. Notall159countiescomplete.",
+  "dekalbOfficialCurrentIndexUrl": "https://dekalbcountyga.gov/departments/voter-registration-and-elections",
+  "dekalbCompositeScopeQuote": "This composite sample ballot contains all contests for the election in DeKalb County, including some contests that you may not be eligible to vote on.",
+  "dekalbUniverse": {
+    "stateQuestions": 3,
+    "localQuestions": 3,
+    "newVerifiedExplained": 2,
+    "scopeGap": "Tuckerannexationonlyaffected-areaelectors; exactregisteredareaidentitynotyetproven, excludedratherthanwidened."
+  },
+  "chathamOfficialCurrentIndexUrl": "https://elections.chathamcountyga.gov/",
+  "chathamQuestionQualificationQuote": "A SPECIAL ELECTION WILL BE HELD WITH THE GENERAL ELECTION ON NOVEMBER 3, 2026",
+  "chathamFullLocalUniverseEstablished": false,
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "chathamIdentityProofPath": "chatham-school-identity-proof.json",
+  "chathamNcesIdentityTextPath": "sources/2c7155bd00eb85e41798eed7beff187361bc17b604331e859b58bc2d4d17b61e.txt",
+  "chathamCensusIdentityTextPath": "sources/942f46f57156b1c772ef555c7066db433d2b6fdd1f73da93652ae5d96434a1c8.txt",
+  "chathamSchedulePrecision": "SignedHB1200electionsectionreferences2026primary/July1effective, whilecurrentofficialnoticecallsNov3. This schedulingdiscrepancyisretained, notsilentlyrewritten; proseassertsoperativeformulaandtaxyearsafter2026 only, no inventedcourtorder oractualeffectiveelectiondate.",
+  "noElectionOutcomesUsed": true,
+  "packetSubject": "ga-local-2026:chatham-school-homestead-base-cap",
+  "packetCoverage": "One new question/explanation; the other two independent prepared measures are not included in this input."
+}

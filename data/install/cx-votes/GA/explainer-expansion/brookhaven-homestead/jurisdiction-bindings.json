@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ga-local-2026:brookhaven-senior-disabled-exemption",
+    "ocdId": "ocd-division/country:us/state:ga/place:brookhaven",
+    "registeredDivisionIndex": 824,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ga/place:brookhaven",
+      "place",
+      "1310944",
+      "Brookhaven city"
+    ],
+    "registryPath": "data/derived/registration/ga.json",
+    "registrySha256": "bd1db4a62ae32bbf870e70d68d5a483f6da6cd6c8e58171615dcf30cdd0f4d0e",
+    "government": [
+      "240468",
+      "ga:city:city-of-brookhaven",
+      "CITY OF BROOKHAVEN",
+      "MUNICIPAL",
+      824,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exactexistingregisteredgovernmentprimarydivision."
+  }
+]

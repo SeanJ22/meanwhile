@@ -1,0 +1,19 @@
+{
+  "scope": "ThreeverifiednewlocalGeorgiaquestions: DeKalbESPLOST,Brookhavenspecialhomestead,Chathamschoolhomesteadcap. Notall159countiescomplete.",
+  "dekalbOfficialCurrentIndexUrl": "https://dekalbcountyga.gov/departments/voter-registration-and-elections",
+  "dekalbCompositeScopeQuote": "This composite sample ballot contains all contests for the election in DeKalb County, including some contests that you may not be eligible to vote on.",
+  "dekalbUniverse": {
+    "stateQuestions": 3,
+    "localQuestions": 3,
+    "newVerifiedExplained": 2,
+    "scopeGap": "Tuckerannexationonlyaffected-areaelectors; exactregisteredareaidentitynotyetproven, excludedratherthanwidened."
+  },
+  "chathamOfficialCurrentIndexUrl": "https://elections.chathamcountyga.gov/",
+  "chathamQuestionQualificationQuote": "A SPECIAL ELECTION WILL BE HELD WITH THE GENERAL ELECTION ON NOVEMBER 3, 2026",
+  "chathamFullLocalUniverseEstablished": false,
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "chathamSchedulePrecision": "SignedHB1200electionsectionreferences2026primary/July1effective, whilecurrentofficialnoticecallsNov3. This schedulingdiscrepancyisretained, notsilentlyrewritten; proseassertsoperativeformulaandtaxyearsafter2026 only, no inventedcourtorder oractualeffectiveelectiondate.",
+  "noElectionOutcomesUsed": true,
+  "packetSubject": "ga-local-2026:brookhaven-senior-disabled-exemption",
+  "packetCoverage": "One new question/explanation; the other two independent prepared measures are not included in this input."
+}

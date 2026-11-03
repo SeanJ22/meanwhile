@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+      "finalUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+      "rawPath": "sources/6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52.source",
+      "rawHash": "6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52",
+      "textPath": "sources/b3824d19e7961dfd47701efdffc942edeca9be7fafec000a65455610bfbee3b9.txt",
+      "textSha256": "b3824d19e7961dfd47701efdffc942edeca9be7fafec000a65455610bfbee3b9",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:brookhaven-senior-disabled-exemption"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

@@ -1,0 +1,49 @@
+{
+  "governmentName": "SAVANNAH-CHATHAM COUNTY PUBLIC SCHOOL SYSTEM",
+  "savedGovernmentBindingIndex": -1,
+  "existingRegisteredDivisionIndex": 1451,
+  "existingRegisteredDivision": [
+    "ocd-division/country:us/state:ga/school_district:chatham_county_school_district",
+    "unsd",
+    "1301020",
+    "Chatham County School District"
+  ],
+  "crosswalkKey": "1301020",
+  "sources": [
+    {
+      "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1301020",
+      "sourceFile": "sources/2c7155bd00eb85e41798eed7beff187361bc17b604331e859b58bc2d4d17b61e.txt",
+      "sourceHash": "2c7155bd00eb85e41798eed7beff187361bc17b604331e859b58bc2d4d17b61e",
+      "sourceTextFile": "sources/2c7155bd00eb85e41798eed7beff187361bc17b604331e859b58bc2d4d17b61e.txt",
+      "sourceTextSha256": "2c7155bd00eb85e41798eed7beff187361bc17b604331e859b58bc2d4d17b61e",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1301020",
+        "originalNativeHtmlSha256": "5ea8dff122ecf64b08866b9583465b1c7643279d847eed55f3af643e2594507d",
+        "originalNativeByteLength": 24079,
+        "originalNativeHttpStatus": 200,
+        "retrievedAt": "2026-11-03T07:05:47.511329+00:00",
+        "representation": "COMPLETE_NATIVE_HTML_EXTRACTED_TEXT",
+        "method": "Full native government HTML text, script/style blocks excluded and whitespace normalized. Exact extracted text hash; not source HTML byte hash. Original native response retained in scratch only."
+      }
+    },
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/tigerwebmain/Files/acs26/tigerweb_acs26_sduni_ga.html",
+      "sourceFile": "sources/942f46f57156b1c772ef555c7066db433d2b6fdd1f73da93652ae5d96434a1c8.txt",
+      "sourceHash": "942f46f57156b1c772ef555c7066db433d2b6fdd1f73da93652ae5d96434a1c8",
+      "sourceTextFile": "sources/942f46f57156b1c772ef555c7066db433d2b6fdd1f73da93652ae5d96434a1c8.txt",
+      "sourceTextSha256": "942f46f57156b1c772ef555c7066db433d2b6fdd1f73da93652ae5d96434a1c8",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "sourceUrl": "https://tigerweb.geo.census.gov/tigerwebmain/Files/acs26/tigerweb_acs26_sduni_ga.html",
+        "originalNativeHtmlSha256": "6eacf1edcb5ae12d92f64d6cebd76c8966017a658ad44e258684ee9a4d963d1c",
+        "originalNativeByteLength": 140110,
+        "originalNativeHttpStatus": 200,
+        "retrievedAt": "2026-11-03T07:06:27.155228+00:00",
+        "representation": "COMPLETE_NATIVE_HTML_EXTRACTED_TEXT",
+        "method": "Full native government HTML text, script/style blocks excluded and whitespace normalized. Exact extracted text hash; not source HTML byte hash. Original native response retained in scratch only."
+      }
+    }
+  ],
+  "proof": "OfficialNCES2025-2026districtdirectory namesSavannah-ChathamCounty, NCESDistrictID1301020, StateDistrictIDGA-625, open. OfficialCensusACS26unifiedschooldirectorynamesChathamCountySchoolDistrictwithGEOID1301020. TheseattesttheexistingOCDschooldivisionwithoutguessing, wideningorappregistrymodification."
+}

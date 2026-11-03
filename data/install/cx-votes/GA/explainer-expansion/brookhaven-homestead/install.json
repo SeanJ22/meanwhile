@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "Georgia159-county/localuniverseincomplete; DeKalbmaster3localquestions, Tuckerannexationscopeexcluded."
+  },
+  "subjects": [
+    {
+      "id": "ga-local-2026:brookhaven-senior-disabled-exemption",
+      "ocdId": "ocd-division/country:us/state:ga/place:brookhaven",
+      "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Originalcurrentofficialcountyballot/noticePDFbytes with exactcompletequestion; supplementarynativeGovernor-signedActPDFs and explicitlylabeledcompleteofficialbackgroundHTMLextractedtext whereapplicable.",
+  "reviewedScratchPacketSha256": "7d8679da3aaf1938ad051954893a328bf67b9c33799419aafe598348041385f8",
+  "canonicalInputSha256": "cfc9f2a2bd129a23c6bc55c31288d828c2074d8c40151db7220e1e4abf490d05",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": "Merge this independentone-questionpacket into exactheldGA:ga-2026-11-03; preserve priorstate/Fulton/PalmettofactsandallothernewGApackets. Noorderdependencyamongthethree.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

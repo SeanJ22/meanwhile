@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:brookhaven-senior-disabled-exemption",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:brookhaven",
+          "divisionVintage": "2023",
+          "title": "Brookhaven — senior and disabled homestead exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Voter Registration and Elections",
+            "collectedAt": "2026-11-03T06:47:07.471517+00:00",
+            "verifiedAt": "2026-11-03T07:14:45.573061+00:00",
+            "quote": "Shall the Act to incorporate the City of Brookhaven be amended so as to increase the current homestead exemption for senior citizens and disabled persons from $160,000.00 to $200,000.00?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:brookhaven-senior-disabled-exemption#question",
+          "contestId": "ga-local-2026:brookhaven-senior-disabled-exemption",
+          "questionText": "Shall the Act to incorporate the City of Brookhaven be amended so as to increase the current homestead exemption for senior citizens and disabled persons from $160,000.00 to $200,000.00?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+            "sourceOrg": "DeKalb County Voter Registration and Elections",
+            "collectedAt": "2026-11-03T06:47:07.471517+00:00",
+            "verifiedAt": "2026-11-03T07:14:45.573061+00:00",
+            "quote": "Shall the Act to incorporate the City of Brookhaven be amended so as to increase the current homestead exemption for senior citizens and disabled persons from $160,000.00 to $200,000.00?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:brookhaven-senior-disabled-exemption",
+          "whatItDoes": "Raises Brookhaven’s special homestead exemption for qualifying senior and disabled residents from $160,000 to $200,000 of assessed home value for city property taxes. It applies to a Brookhaven resident’s homestead when the resident is disabled or qualifies as a senior; the city’s current eligibility guidance identifies seniors as age 65 or older. The existing income rule requires the resident’s income plus that of a spouse who also lives at the homestead to total no more than $15,000 for the preceding year. Assessed value above the exemption remains taxable. If voters approve, the increased exemption takes effect January 1, 2027.",
+          "yesMeans": "Approve the $200,000 special city-tax homestead exemption, effective January 1, 2027.",
+          "noMeans": "Reject the increase and retain the existing $160,000 special exemption.",
+          "parts": [],
+          "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+          "sourceHash": "6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:14:45.573061+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:14:45.573061+00:00",
+    "reviewedBy": "CX-VOTES exactofficialGeorgia countyquestions, signedActconditionsandregistereddistrictidentities",
+    "sources": [
+      {
+        "requestedUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+        "finalUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+        "httpStatus": 200,
+        "rawHash": "6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52",
+        "retrievedAt": "2026-11-03T06:47:07.471517+00:00",
+        "publisher": "DeKalb County Voter Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "ExactcurrentNovember3,2026officialmeasuretextinoriginalPDFbytes. DeKalbcompositeexpresslycontainsALLcontestsforcountyelection; twoverifiedlocalquestionsprepared, Tuckerannexationheldforscope. Chathamcurrentofficialelectionnoticelinks exacttaxquestion; notclaimedcompleteallChathamlocalquestions."
+      }
+    ]
+  }
+}

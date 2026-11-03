@@ -1,0 +1,17 @@
+{
+  "state": "GA",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "d63d43abe6a32d7de9183c700f73613e67ad3531516009bbae0bfb34a3bec932",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "CurrentofficialNov3electionnoticeandnativeGovernor-signedHB1200containexactsameoperativequestion.",
+    "Operativeformulaforafter2026taxyearsretains2025ADJUSTEDbasecap,CPI-Uthrough2025andlower/currentassessmentcondition.",
+    "Election-sectionprimary/July1timingvscurrentNov3noticediscrepancydocumented; noactivationdate,courtorderoractualtaxbillforecastinvented.",
+    "Schoolidentityisactualexistingdivision1301020withdirectNCES2025-26Savannah-ChathamCountyID1301020andcurrentCensusChathamCountySchoolDistrictGEOID1301020; unboundgovernmentrowleftunchanged.",
+    "Alloutputsentenceshaveliteralofficialsourcequotes; exactoriginalPDF/completebackgroundsource-texthashes, existingjurisdictionandfreshheldelectionidentitypass.",
+    "Ordinarymanualmerge/authority/admissionandactualreaderpassusingalready-heldGAbaselinenativesourcereceipts, notafictitiousemptypriorreceipt; noadditionalproductionread.",
+    "Fullcandidate-retentionreplayremainsrootowned; thisinputisonequestiononly."
+  ]
+}

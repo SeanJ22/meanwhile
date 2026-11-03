@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "Georgia159-county/localuniverseincomplete; DeKalbmaster3localquestions, Tuckerannexationscopeexcluded."
+  },
+  "subjects": [
+    {
+      "id": "ga-local-2026:chatham-school-homestead-base-cap",
+      "ocdId": "ocd-division/country:us/state:ga/school_district:chatham_county_school_district",
+      "sourceUrl": "https://cms.chathamcountyga.gov/api/assets/elections-website/64985a67-cce4-4146-a8dd-52587318e5f2/call-for-election-tax-referendum-11-3-2026.pdf?version=0"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Originalcurrentofficialcountyballot/noticePDFbytes with exactcompletequestion; supplementarynativeGovernor-signedActPDFs and explicitlylabeledcompleteofficialbackgroundHTMLextractedtext whereapplicable.",
+  "reviewedScratchPacketSha256": "d63d43abe6a32d7de9183c700f73613e67ad3531516009bbae0bfb34a3bec932",
+  "canonicalInputSha256": "e2a490851b5aabb126af49edd28f82664be6d49ca1d59b4f11e7e9c1562986b9",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": "Merge this independentone-questionpacket into exactheldGA:ga-2026-11-03; preserve priorstate/Fulton/PalmettofactsandallothernewGApackets. Noorderdependencyamongthethree.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

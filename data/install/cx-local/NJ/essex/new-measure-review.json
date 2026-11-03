@@ -45,7 +45,9 @@
       "Mid-\ndle",
       "con-\nstruction",
       "Educa-\ntion"
-    ]
+    ],
+    "disposition": "SOURCE_CONFIRMATION_ONLY_OUTSIDE_CHANGED_INPUT",
+    "upstreamPreparedContestId": "nj-essex-2026:west-essex-bond-1"
   },
   {
     "id": "nj-cx-local-2026-essex-west-essex-bond-question-2",
@@ -95,7 +97,9 @@
       "Educa-\ntion",
       "eligi-\nble",
       "proj-\nects"
-    ]
+    ],
+    "disposition": "SOURCE_CONFIRMATION_ONLY_OUTSIDE_CHANGED_INPUT",
+    "upstreamPreparedContestId": "nj-essex-2026:west-essex-bond-2"
   },
   {
     "id": "nj-cx-local-2026-essex-fairfield-open-space-trust-fund",
@@ -108,6 +112,8 @@
     "sourceQuestionQuote": "Municipal Public Question\nShall the Mayor and Council of the Township of Fairfield, within 90 days of the passing of\nthis municipal question, adopt an ordinance increasing the funding of the Open Space trust\nFund which shall have the following provisions:\nA. The Open Space Trust Fund shall be increased through the collection of local property\ntaxes in the amount of two (2) cents per hundred dollars of assessed value and the funds\nshall be designated solely for the purchase and development of property or easements\nwithin the Township of Fairfield for active and passive recreation, for conservation pur-\nposes, and for maintenance and replacement of active and passive recreation. No other\nprovision of the Open Space Trust Fund will be altered by this amendment.",
     "lineWrapWords": [
       "pur-\nposes"
-    ]
+    ],
+    "disposition": "SOURCE_CONFIRMATION_ONLY_OUTSIDE_CHANGED_INPUT",
+    "upstreamPreparedContestId": "nj-essex-2026:fairfield-open-space"
   }
 ]

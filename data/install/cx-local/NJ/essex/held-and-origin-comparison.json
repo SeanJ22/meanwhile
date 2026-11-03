@@ -50,5 +50,25 @@
   "localLanePaths": [
     "/workspace/meanwhile/data/install/cx-local/NJ/bergen/ballot-input/nj.json"
   ],
-  "conclusion": "No Essex local candidate or measure identities/equivalent question found in held NJ, pinned latest CX-VOTES NJ ballot/prepared input or Bergen local lane. All eight prepared NJ questions/explainers (six base Bergen plus nested ParkRidge/Warren) and the Bergen local packet stay unchanged outside incomingIDs. Shared exact school-district/geographic registry IDs reused."
+  "conclusion": "No Essex local candidate or measure identities/equivalent question found in held NJ, pinned latest CX-VOTES NJ ballot/prepared input or Bergen local lane. All eight prepared NJ questions/explainers (six base Bergen plus nested ParkRidge/Warren) and the Bergen local packet stay unchanged outside incomingIDs. Shared exact school-district/geographic registry IDs reused.",
+  "laterRecursivePreparedQuestionComparison": {
+    "checkedAt": "2026-11-03T10:04:31.658936+00:00",
+    "referenceCommit": "28ca70907d3df0d4a2541193061b53aeec2a850f",
+    "upstreamBallotInputFiles": 333,
+    "questionMappings": [
+      {
+        "supersededId": "nj-cx-local-2026-essex-west-essex-bond-question-1",
+        "upstreamId": "nj-essex-2026:west-essex-bond-1"
+      },
+      {
+        "supersededId": "nj-cx-local-2026-essex-west-essex-bond-question-2",
+        "upstreamId": "nj-essex-2026:west-essex-bond-2"
+      },
+      {
+        "supersededId": "nj-cx-local-2026-essex-fairfield-open-space-trust-fund",
+        "upstreamId": "nj-essex-2026:fairfield-open-space"
+      }
+    ],
+    "disposition": "Older source comparison above was valid at its capture; current exact questions retained only as source confirmation."
+  }
 }

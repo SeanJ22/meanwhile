@@ -70,7 +70,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:belleville_town_school_district",
           "divisionVintage": "2026",
-          "title": "Belleville Town School District — Board of Education",
+          "title": "Belleville Town School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -89,7 +89,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:belleville_township/ward:2",
           "divisionVintage": "2026",
-          "title": "Belleville — Township Council 2nd Ward",
+          "title": "Belleville \u2014 Township Council 2nd Ward",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -108,7 +108,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:bloomfield_township/ward:1",
           "divisionVintage": "2026",
-          "title": "Bloomfield — Township Council 1st Ward",
+          "title": "Bloomfield \u2014 Township Council 1st Ward",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -127,7 +127,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:bloomfield_township_school_district",
           "divisionVintage": "2026",
-          "title": "Bloomfield Township School District — Board of Education",
+          "title": "Bloomfield Township School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": null,
@@ -146,7 +146,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:bloomfield_township/ward:2",
           "divisionVintage": "2026",
-          "title": "Bloomfield — Township Council 2nd Ward",
+          "title": "Bloomfield \u2014 Township Council 2nd Ward",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -165,7 +165,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:bloomfield_township/ward:3",
           "divisionVintage": "2026",
-          "title": "Bloomfield — Township Council 3rd Ward",
+          "title": "Bloomfield \u2014 Township Council 3rd Ward",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -203,7 +203,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:caldwell_borough",
           "divisionVintage": "2026",
-          "title": "Caldwell — Mayor",
+          "title": "Caldwell \u2014 Mayor",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -222,7 +222,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:caldwell_borough",
           "divisionVintage": "2026",
-          "title": "Caldwell — Borough Council",
+          "title": "Caldwell \u2014 Borough Council",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -241,7 +241,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:caldwell_west_caldwell_school_district",
           "divisionVintage": "2026",
-          "title": "Caldwell-West Caldwell School District — Board of Education",
+          "title": "Caldwell-West Caldwell School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -253,14 +253,14 @@
             "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
             "quote": "Borough of Caldwell\nBoard of Education\nVote for One\nNomination by Petition\nMarisa\nLANDOLFI-\nJEFFERSON\nOur Kids First"
           },
-          "scopeNote": "Complete actual November3,2026 local office block from the official29-page county sample inventory. Every printed named candidate is retained with exact source spelling, party-column association, designation and voting limit. Nomination by Petition is not a political party. Blank Personal Choice, No Nomination Made and No Petition Filed spaces are not people. Exact existing school-district ID. Identical office/candidate/vote-limit block appears on both member municipalities’ samples; one shared districtwide contest is retained."
+          "scopeNote": "Complete actual November3,2026 local office block from the official29-page county sample inventory. Every printed named candidate is retained with exact source spelling, party-column association, designation and voting limit. Nomination by Petition is not a political party. Blank Personal Choice, No Nomination Made and No Petition Filed spaces are not people. Exact existing school-district ID. Identical office/candidate/vote-limit block appears on both member municipalities\u2019 samples; one shared districtwide contest is retained."
         },
         {
           "id": "nj-cx-local-2026-essex-cedar-grove-board-of-education",
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:cedar_grove_township_school_district",
           "divisionVintage": "2026",
-          "title": "Cedar Grove Township School District — Board of Education",
+          "title": "Cedar Grove Township School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -298,7 +298,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:essex_fells_borough",
           "divisionVintage": "2026",
-          "title": "Essex Fells — Borough Council",
+          "title": "Essex Fells \u2014 Borough Council",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -317,7 +317,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
           "divisionVintage": "2026",
-          "title": "Fairfield — Township Council",
+          "title": "Fairfield \u2014 Township Council",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -336,7 +336,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
           "divisionVintage": "2026",
-          "title": "West Essex Regional Board of Education — Fairfield constituency",
+          "title": "West Essex Regional Board of Education \u2014 Fairfield constituency",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -355,7 +355,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:fairfield_township_school_district",
           "divisionVintage": "2026",
-          "title": "Fairfield Township School District — Board of Education",
+          "title": "Fairfield Township School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -374,7 +374,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:glen_ridge_borough",
           "divisionVintage": "2026",
-          "title": "Glen Ridge — Borough Council",
+          "title": "Glen Ridge \u2014 Borough Council",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -393,7 +393,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:glen_ridge_borough_school_district",
           "divisionVintage": "2026",
-          "title": "Glen Ridge Borough School District — Board of Education",
+          "title": "Glen Ridge Borough School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": null,
@@ -431,7 +431,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:livingston_township",
           "divisionVintage": "2026",
-          "title": "Livingston — Township Council",
+          "title": "Livingston \u2014 Township Council",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": null,
@@ -450,7 +450,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:livingston_township_school_district",
           "divisionVintage": "2026",
-          "title": "Livingston Township School District — Board of Education",
+          "title": "Livingston Township School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -469,7 +469,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:maplewood_township",
           "divisionVintage": "2026",
-          "title": "Maplewood — Township Committee",
+          "title": "Maplewood \u2014 Township Committee",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -488,7 +488,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:south_orange_maplewood_school_district",
           "divisionVintage": "2026",
-          "title": "South Orange-Maplewood School District — Board of Education",
+          "title": "South Orange-Maplewood School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": 3,
@@ -500,14 +500,14 @@
             "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
             "quote": "Township of Maplewood\nBoard of Education\nVote for no more than Three\nNomination by Petition\nKevin\nDIAZ\nEmpathy.Equity.\nAccountability,\nElizabeth\nCALLAHAN\nKeep Growing\nTogether\nWilliam\nMEYER\nKeep Growing\nTogether\nTrish\nAZEEZ"
           },
-          "scopeNote": "Complete actual November3,2026 local office block from the official29-page county sample inventory. Every printed named candidate is retained with exact source spelling, party-column association, designation and voting limit. Nomination by Petition is not a political party. Blank Personal Choice, No Nomination Made and No Petition Filed spaces are not people. Exact existing school-district ID. Identical office/candidate/vote-limit block appears on both member municipalities’ samples; one shared districtwide contest is retained.",
+          "scopeNote": "Complete actual November3,2026 local office block from the official29-page county sample inventory. Every printed named candidate is retained with exact source spelling, party-column association, designation and voting limit. Nomination by Petition is not a political party. Blank Personal Choice, No Nomination Made and No Petition Filed spaces are not people. Exact existing school-district ID. Identical office/candidate/vote-limit block appears on both member municipalities\u2019 samples; one shared districtwide contest is retained.",
           "sources": [
             {
               "sourceUrl": "https://www.somsd.k12.nj.us/board-of-education/board-of-education-overview/",
               "sourceOrg": "South Orange-Maplewood School District",
               "collectedAt": "2026-11-03T06:44:28.400885+00:00",
               "verifiedAt": "2026-11-03T06:44:28.400885+00:00",
-              "quote": "The South Orange & Maplewood School District is guided by a dedicated Board of Education, made up of nine community members elected by voters in South Orange Village and Maplewood Township. These individuals bring their passion and perspective to three-year terms, with elections held each year to welcome new or returning members. Together, they shape the future of our schools through thoughtful policymaking and stewardship."
+              "quote": "The South Orange & Maplewood School District is guided by a dedicated Board of Education, made up of nine community members elected by voters in South Orange Village\u00a0and Maplewood Township. These individuals bring their passion and perspective to three-year terms, with elections held each year to welcome new or returning members. Together, they shape the future of our schools through thoughtful policymaking and stewardship."
             }
           ]
         },
@@ -516,7 +516,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:millburn_township",
           "divisionVintage": "2026",
-          "title": "Millburn — Township Committee",
+          "title": "Millburn \u2014 Township Committee",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -535,7 +535,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:millburn_township_school_district",
           "divisionVintage": "2026",
-          "title": "Millburn Township School District — Board of Education",
+          "title": "Millburn Township School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": null,
@@ -554,7 +554,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:montclair_township",
           "divisionVintage": "2026",
-          "title": "Montclair — Councilmember At Large",
+          "title": "Montclair \u2014 Councilmember At Large",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -573,7 +573,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:montclair_town_school_district",
           "divisionVintage": "2026",
-          "title": "Montclair Town School District — Board of Education",
+          "title": "Montclair Town School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": null,
@@ -611,7 +611,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:north_caldwell_borough",
           "divisionVintage": "2026",
-          "title": "North Caldwell — Mayor",
+          "title": "North Caldwell \u2014 Mayor",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -630,7 +630,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:north_caldwell_borough",
           "divisionVintage": "2026",
-          "title": "North Caldwell — Borough Council",
+          "title": "North Caldwell \u2014 Borough Council",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -649,7 +649,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:north_caldwell_borough_school_district",
           "divisionVintage": "2026",
-          "title": "North Caldwell Borough School District — Board of Education",
+          "title": "North Caldwell Borough School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -668,7 +668,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:nutley_town_school_district",
           "divisionVintage": "2026",
-          "title": "Nutley Town School District — Board of Education",
+          "title": "Nutley Town School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": null,
@@ -687,7 +687,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:orange_city_township_school_district",
           "divisionVintage": "2026",
-          "title": "Orange City Township School District — Board of Education",
+          "title": "Orange City Township School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 3,
           "termYears": null,
@@ -706,7 +706,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
           "divisionVintage": "2026",
-          "title": "Roseland — Mayor",
+          "title": "Roseland \u2014 Mayor",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -725,7 +725,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
           "divisionVintage": "2026",
-          "title": "Roseland — Borough Council",
+          "title": "Roseland \u2014 Borough Council",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -744,7 +744,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:roseland_borough",
           "divisionVintage": "2026",
-          "title": "West Essex Regional Board of Education — Roseland constituency",
+          "title": "West Essex Regional Board of Education \u2014 Roseland constituency",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -763,7 +763,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:roseland_borough_school_district",
           "divisionVintage": "2026",
-          "title": "Roseland Borough School District — Board of Education",
+          "title": "Roseland Borough School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -782,7 +782,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:verona_township",
           "divisionVintage": "2026",
-          "title": "Verona — Township Council",
+          "title": "Verona \u2014 Township Council",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -801,7 +801,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
           "divisionVintage": "2026",
-          "title": "Verona Borough School District — Board of Education — Three Year Term",
+          "title": "Verona Borough School District \u2014 Board of Education \u2014 Three Year Term",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 3,
@@ -820,7 +820,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:verona_borough_school_district",
           "divisionVintage": "2026",
-          "title": "Verona Borough School District — Board of Education — Unexpired Term",
+          "title": "Verona Borough School District \u2014 Board of Education \u2014 Unexpired Term",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -839,7 +839,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_caldwell_township",
           "divisionVintage": "2026",
-          "title": "West Caldwell — Mayor",
+          "title": "West Caldwell \u2014 Mayor",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -858,7 +858,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_caldwell_township",
           "divisionVintage": "2026",
-          "title": "West Caldwell — Township Council",
+          "title": "West Caldwell \u2014 Township Council",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -877,7 +877,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_orange_township",
           "divisionVintage": "2026",
-          "title": "West Orange — Mayor",
+          "title": "West Orange \u2014 Mayor",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -896,7 +896,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:west_orange_town_school_district",
           "divisionVintage": "2026",
-          "title": "West Orange Town School District — Board of Education",
+          "title": "West Orange Town School District \u2014 Board of Education",
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
@@ -915,7 +915,7 @@
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_orange_township",
           "divisionVintage": "2026",
-          "title": "West Orange — Councilmembers At-Large",
+          "title": "West Orange \u2014 Councilmembers At-Large",
           "type": "CANDIDACY",
           "voteFor": 2,
           "termYears": null,
@@ -928,81 +928,6 @@
             "quote": "Township of West Orange\nCouncilmembers At-Large\nVote for no more than Two\nNomination by Petition\nMatthew\nDVORIN\nWorking for West\nOrange\nJackie\nHENDY\nLeadership that\nListens\nJustin\nGOLDSMAN\nNew Energy,\nReal Solutions!\nKenneth\nGIBBONS\nElect an Auditor not\nan Insider\nMicaela\nBENNETT\nTruth.Action.Service"
           },
           "scopeNote": "Complete actual November3,2026 local office block from the official29-page county sample inventory. Every printed named candidate is retained with exact source spelling, party-column association, designation and voting limit. Nomination by Petition is not a political party. Blank Personal Choice, No Nomination Made and No Petition Filed spaces are not people. Whole named municipality electorate, not all Essex County."
-        },
-        {
-          "id": "nj-cx-local-2026-essex-west-essex-bond-question-1",
-          "electionId": "nj-2026-11-03",
-          "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
-          "divisionVintage": "2026",
-          "title": "Bond Proposal Question 1",
-          "type": "MEASURE",
-          "voteFor": 1,
-          "termYears": null,
-          "measureTextUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-          "provenance": {
-            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-            "sourceOrg": "Essex County Clerk, Election Division",
-            "collectedAt": "2026-11-03T06:35:16.500972+00:00",
-            "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
-            "quote": "Bond Proposal Question 1\nThe Board of Education of the West\nEssex Regional School District in\nthe County of Essex, New Jersey\n(the \"Board\") is authorized to (a)\nundertake various improvements,\nrenovations, and upgrades at West\nEssex High School, including but\nnot limited to the construction of a\ntwo-story addition and a new secu-\nrity vestibule, renovations to the\nMedia Center, partial window\nreplacement, structural upgrades,\nand \nvarious \nHVAC upgrades,\nincluding acquisition and installa-\ntion of fixtures, equipment, and any\nsite work; (b) undertake various\nimprovements, renovations, and\nupgrades at West Essex Middle\nSchool, including but not limited to\na new security vestibule, the\nremoval of an existing concrete\ntrellis, various renovations to the\ncafeteria courtyard, the installation\nof a turf field, upgrades to the ath-\nletic \nfield, \nathletic \nlighting\nupgrades, and drainage improve-\nments, various renovations to the\nauditorium, and various HVAC\nupgrades, including acquisition\nand installation of fixtures, equip-\nment, and any site work; (c) appro-\npriate $41,926,384 for such\nimprovements; and (d) issue bonds\nin an amount not to exceed\n$41,926,384.\nThe final eligible costs for the proj-\nects approved by the New Jersey\nCommissioner of Education are\n$24,312,507 \n(consisting \nof\n$12,477,217 for West Essex High\nSchool and $11,835,290 for West\nEssex Middle School). The projects\ninclude $17,623,877 (consisting of\n$17,623,877 for West Essex High\nSchool and $0 for West Essex Mid-\ndle School) for school facility con-\nstruction elements in addition to\nthe facilities efficiency standards\ndeveloped by the Commissioner of\nEducation or not otherwise eligible\nfor State support pursuant to\nN.J.S.A. 18A:7G-5(g). The State\ndebt service aid percentage is 40%\nof the annual debt service due with\nrespect to the final eligible costs of\nthe projects. The Board of Educa-\ntion is authorized to transfer funds\namong the projects approved at\nthis election.\nDo you approve this Bond\nProposal Question No. 1?"
-          },
-          "sources": [
-            {
-              "sourceUrl": "https://www.westex.org/about/referendum",
-              "sourceOrg": "West Essex Regional School District",
-              "collectedAt": "2026-11-03T06:40:18.443867+00:00",
-              "verifiedAt": "2026-11-03T06:40:18.443867+00:00",
-              "quote": "four of our sending communities to vote.\nWhether you reside in Essex Fells, Fairfield, North Caldwell, or Roseland, your vote impacts the future of West Essex. If both ballot questions are approved the district will unlock $9.3 million in state aid to help offset the costs and reduce the tax impact."
-            }
-          ],
-          "scopeNote": "Exact numbered West Essex Regional School District bond question on allfour constituent municipal samples (physical pages9,10,22,25). Whole regional district electorate, not a single constituent municipality or all Essex County. Full shared official explanatory statement retained. English line-wrap hyphens are removed only where they split a word; original native text and exact quotation remain saved. Question2 expressly depends on approval of Question1. The printed Question2 typo (the :Board\") is retained verbatim. No existing NJ measure/explanation is refreshed."
-        },
-        {
-          "id": "nj-cx-local-2026-essex-west-essex-bond-question-2",
-          "electionId": "nj-2026-11-03",
-          "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
-          "divisionVintage": "2026",
-          "title": "Bond Proposal Question 2",
-          "type": "MEASURE",
-          "voteFor": 1,
-          "termYears": null,
-          "measureTextUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-          "provenance": {
-            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-            "sourceOrg": "Essex County Clerk, Election Division",
-            "collectedAt": "2026-11-03T06:35:16.500972+00:00",
-            "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
-            "quote": "Bond Proposal Question 2\n(Bond Proposal Question No.\n2 will only go into effect if\nBond Proposal Question No.\n1 is also approved by the\nvoters at this election.)\nThe Board of Education of the\nWest Essex Regional School Dis-\ntrict in the County of Essex, New\nJersey (the :Board\") is authorized\nto (a) undertake various improve-\nments, \nrenovations, \nand\nupgrades at West Essex High\nSchool, including but not limited\nto \nHVAC \nand \nmechanical\nupgrades, upgrades to the ath-\nletic field, upgrades to the exist-\ning football field bleachers and\npress box, and the replacement\nof select interior and exterior\ndoors and door hardware, includ-\ning acquisition and installation of\nfixtures, equipment, and any site\nwork; (b) undertake various\nimprovements, renovations, and\nupgrades at West Essex Middle\nSchool, including but not limited\nto renovations to various office\nspaces, and upgrades to the ath-\nletic field, and the replacement of\nselect interior and exterior doors\nand door hardware, including\nacquisition and installation of fix-\ntures, equipment, and any site\nwork; (c) appropriate $7,493,250\nfor such improvements; and (d)\nissue bonds in an amount not to\nexceed $7,493,250.\nThe final eligible costs for the\nprojects approved by the New\nJersey Commissioner of Educa-\ntion are $2,993,250 (consisting\nof $1,716,000 for West Essex\nHigh School and $1,277,250 for\nWest Essex Middle School). The\nprojects \ninclude \n$4,500,000\n(consisting of $4,500,000 for\nWest Essex High School and $0\nfor West Essex Middle School) for\nschool facility construction ele-\nments in addition to the facilities\nefficiency standards developed\nby the Commissioner of Educa-\ntion or not otherwise eligible for\nState \nsupport \npursuant \nto\nN.J.S.A. 18A:7G-5(g). The State\ndebt service aid percentage is\n40% of the annual debt service\ndue with respect to the final eligi-\nble costs of the projects. The\nBoard of Education is authorized\nto transfer funds among the proj-\nects approved at this election.\nDo you approve this Bond\nProposal Question No. 2?"
-          },
-          "sources": [
-            {
-              "sourceUrl": "https://www.westex.org/about/referendum",
-              "sourceOrg": "West Essex Regional School District",
-              "collectedAt": "2026-11-03T06:40:18.443867+00:00",
-              "verifiedAt": "2026-11-03T06:40:18.443867+00:00",
-              "quote": "four of our sending communities to vote.\nWhether you reside in Essex Fells, Fairfield, North Caldwell, or Roseland, your vote impacts the future of West Essex. If both ballot questions are approved the district will unlock $9.3 million in state aid to help offset the costs and reduce the tax impact."
-            }
-          ],
-          "scopeNote": "Exact numbered West Essex Regional School District bond question on allfour constituent municipal samples (physical pages9,10,22,25). Whole regional district electorate, not a single constituent municipality or all Essex County. Full shared official explanatory statement retained. English line-wrap hyphens are removed only where they split a word; original native text and exact quotation remain saved. Question2 expressly depends on approval of Question1. The printed Question2 typo (the :Board\") is retained verbatim. No existing NJ measure/explanation is refreshed."
-        },
-        {
-          "id": "nj-cx-local-2026-essex-fairfield-open-space-trust-fund",
-          "electionId": "nj-2026-11-03",
-          "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
-          "divisionVintage": "2026",
-          "title": "Municipal Public Question",
-          "type": "MEASURE",
-          "voteFor": 1,
-          "termYears": null,
-          "measureTextUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-          "provenance": {
-            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-            "sourceOrg": "Essex County Clerk, Election Division",
-            "collectedAt": "2026-11-03T06:35:16.500972+00:00",
-            "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
-            "quote": "Municipal Public Question\nShall the Mayor and Council of the Township of Fairfield, within 90 days of the passing of\nthis municipal question, adopt an ordinance increasing the funding of the Open Space trust\nFund which shall have the following provisions:\nA. The Open Space Trust Fund shall be increased through the collection of local property\ntaxes in the amount of two (2) cents per hundred dollars of assessed value and the funds\nshall be designated solely for the purchase and development of property or easements\nwithin the Township of Fairfield for active and passive recreation, for conservation pur-\nposes, and for maintenance and replacement of active and passive recreation. No other\nprovision of the Open Space Trust Fund will be altered by this amendment."
-          },
-          "scopeNote": "Exact sole unnumbered Fairfield municipal public question on physical page10, with full official explanatory statement. Whole Township of Fairfield, Essex County electorate only; not the regional school electorate or all county voters. Only midword typographic line-wrap hyphens removed in readable transcription; raw native text/quote retained. This genuinely new question is absent from all compared NJ held/prepared/local inputs."
         }
       ],
       "candidacies": [
@@ -3336,65 +3261,13 @@
           }
         }
       ],
-      "measures": [
-        {
-          "id": "nj-cx-local-2026-essex-west-essex-bond-question-1#question",
-          "contestId": "nj-cx-local-2026-essex-west-essex-bond-question-1",
-          "questionText": "The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the \"Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, and various HVAC upgrades, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $41,926,384 for such improvements; and (d) issue bonds in an amount not to exceed $41,926,384. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $24,312,507 (consisting of $12,477,217 for West Essex High School and $11,835,290 for West Essex Middle School). The projects include $17,623,877 (consisting of $17,623,877 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 1?",
-          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, various HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; and (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, various HVAC upgrades, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work. The total cost for the projects will be $49,419,634, and the Board of Education will be authorized to issue bonds in an amount not to exceed $49,419,634. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $27,305,757 (consisting of $14,193,217 for West Essex High School and $13,112,540 for West Essex Middle School). The projects include $22,123,877 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election.",
-          "choices": [
-            "Yes",
-            "No"
-          ],
-          "provenance": {
-            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-            "sourceOrg": "Essex County Clerk, Election Division",
-            "collectedAt": "2026-11-03T06:35:16.500972+00:00",
-            "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
-            "quote": "Bond Proposal Question 1\nThe Board of Education of the West\nEssex Regional School District in\nthe County of Essex, New Jersey\n(the \"Board\") is authorized to (a)\nundertake various improvements,\nrenovations, and upgrades at West\nEssex High School, including but\nnot limited to the construction of a\ntwo-story addition and a new secu-\nrity vestibule, renovations to the\nMedia Center, partial window\nreplacement, structural upgrades,\nand \nvarious \nHVAC upgrades,\nincluding acquisition and installa-\ntion of fixtures, equipment, and any\nsite work; (b) undertake various\nimprovements, renovations, and\nupgrades at West Essex Middle\nSchool, including but not limited to\na new security vestibule, the\nremoval of an existing concrete\ntrellis, various renovations to the\ncafeteria courtyard, the installation\nof a turf field, upgrades to the ath-\nletic \nfield, \nathletic \nlighting\nupgrades, and drainage improve-\nments, various renovations to the\nauditorium, and various HVAC\nupgrades, including acquisition\nand installation of fixtures, equip-\nment, and any site work; (c) appro-\npriate $41,926,384 for such\nimprovements; and (d) issue bonds\nin an amount not to exceed\n$41,926,384.\nThe final eligible costs for the proj-\nects approved by the New Jersey\nCommissioner of Education are\n$24,312,507 \n(consisting \nof\n$12,477,217 for West Essex High\nSchool and $11,835,290 for West\nEssex Middle School). The projects\ninclude $17,623,877 (consisting of\n$17,623,877 for West Essex High\nSchool and $0 for West Essex Mid-\ndle School) for school facility con-\nstruction elements in addition to\nthe facilities efficiency standards\ndeveloped by the Commissioner of\nEducation or not otherwise eligible\nfor State support pursuant to\nN.J.S.A. 18A:7G-5(g). The State\ndebt service aid percentage is 40%\nof the annual debt service due with\nrespect to the final eligible costs of\nthe projects. The Board of Educa-\ntion is authorized to transfer funds\namong the projects approved at\nthis election.\nDo you approve this Bond\nProposal Question No. 1?"
-          }
-        },
-        {
-          "id": "nj-cx-local-2026-essex-west-essex-bond-question-2#question",
-          "contestId": "nj-cx-local-2026-essex-west-essex-bond-question-2",
-          "questionText": "(Bond Proposal Question No. 2 will only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election.) The Board of Education of the West Essex Regional School District in the County of Essex, New Jersey (the :Board\") is authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to renovations to various office spaces, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; (c) appropriate $7,493,250 for such improvements; and (d) issue bonds in an amount not to exceed $7,493,250. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,993,250 (consisting of $1,716,000 for West Essex High School and $1,277,250 for West Essex Middle School). The projects include $4,500,000 (consisting of $4,500,000 for West Essex High School and $0 for West Essex Middle School) for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question No. 2?",
-          "officialStatement": "At this election, the voters of the school district are being asked to consider Bond Proposal Questions No. 1 and No. 2. As set forth above, Bond Proposal Question No. 2 can only go into effect if Bond Proposal Question No. 1 is also approved by the voters at this election. If Bond Proposal Questions No. 1 and No. 2 are approved by the voters at this election, the Board of Education will be authorized to (a) undertake various improvements, renovations, and upgrades at West Essex High School, including but not limited to the construction of a two-story addition and a new security vestibule, renovations to the Media Center, partial window replacement, structural upgrades, various HVAC and mechanical upgrades, upgrades to the athletic field, upgrades to the existing football field bleachers and press box, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work; and (b) undertake various improvements, renovations, and upgrades at West Essex Middle School, including but not limited to a new security vestibule, the removal of an existing concrete trellis, various renovations to the cafeteria courtyard, the installation of a turf field, upgrades to the athletic field, athletic lighting upgrades, and drainage improvements, various renovations to the auditorium, various HVAC upgrades, and upgrades to the athletic field, and the replacement of select interior and exterior doors and door hardware, including acquisition and installation of fixtures, equipment, and any site work. The total cost for the projects will be $49,419,634, and the Board of Education will be authorized to issue bonds in an amount not to exceed $49,419,634. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $27,305,757 (consisting of $14,193,217 for West Essex High School and $13,112,540 for West Essex Middle School). The projects include $22,123,877 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election.",
-          "choices": [
-            "Yes",
-            "No"
-          ],
-          "provenance": {
-            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-            "sourceOrg": "Essex County Clerk, Election Division",
-            "collectedAt": "2026-11-03T06:35:16.500972+00:00",
-            "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
-            "quote": "Bond Proposal Question 2\n(Bond Proposal Question No.\n2 will only go into effect if\nBond Proposal Question No.\n1 is also approved by the\nvoters at this election.)\nThe Board of Education of the\nWest Essex Regional School Dis-\ntrict in the County of Essex, New\nJersey (the :Board\") is authorized\nto (a) undertake various improve-\nments, \nrenovations, \nand\nupgrades at West Essex High\nSchool, including but not limited\nto \nHVAC \nand \nmechanical\nupgrades, upgrades to the ath-\nletic field, upgrades to the exist-\ning football field bleachers and\npress box, and the replacement\nof select interior and exterior\ndoors and door hardware, includ-\ning acquisition and installation of\nfixtures, equipment, and any site\nwork; (b) undertake various\nimprovements, renovations, and\nupgrades at West Essex Middle\nSchool, including but not limited\nto renovations to various office\nspaces, and upgrades to the ath-\nletic field, and the replacement of\nselect interior and exterior doors\nand door hardware, including\nacquisition and installation of fix-\ntures, equipment, and any site\nwork; (c) appropriate $7,493,250\nfor such improvements; and (d)\nissue bonds in an amount not to\nexceed $7,493,250.\nThe final eligible costs for the\nprojects approved by the New\nJersey Commissioner of Educa-\ntion are $2,993,250 (consisting\nof $1,716,000 for West Essex\nHigh School and $1,277,250 for\nWest Essex Middle School). The\nprojects \ninclude \n$4,500,000\n(consisting of $4,500,000 for\nWest Essex High School and $0\nfor West Essex Middle School) for\nschool facility construction ele-\nments in addition to the facilities\nefficiency standards developed\nby the Commissioner of Educa-\ntion or not otherwise eligible for\nState \nsupport \npursuant \nto\nN.J.S.A. 18A:7G-5(g). The State\ndebt service aid percentage is\n40% of the annual debt service\ndue with respect to the final eligi-\nble costs of the projects. The\nBoard of Education is authorized\nto transfer funds among the proj-\nects approved at this election.\nDo you approve this Bond\nProposal Question No. 2?"
-          }
-        },
-        {
-          "id": "nj-cx-local-2026-essex-fairfield-open-space-trust-fund#question",
-          "contestId": "nj-cx-local-2026-essex-fairfield-open-space-trust-fund",
-          "questionText": "Shall the Mayor and Council of the Township of Fairfield, within 90 days of the passing of this municipal question, adopt an ordinance increasing the funding of the Open Space trust Fund which shall have the following provisions: A. The Open Space Trust Fund shall be increased through the collection of local property taxes in the amount of two (2) cents per hundred dollars of assessed value and the funds shall be designated solely for the purchase and development of property or easements within the Township of Fairfield for active and passive recreation, for conservation purposes, and for maintenance and replacement of active and passive recreation. No other provision of the Open Space Trust Fund will be altered by this amendment.",
-          "officialStatement": "The proposed increase in funding of the Open Space Trust Fund will be used to purchase property or easements within the Township of Fairfield for active and passive recreation, for conservation purposes, to develop the property for active and passive recreation, and for the maintenance and replacement of active and passive recreation. The additional annual tax levy for purposes of this fund would amount to $106.28 on the average property in the Township being assessed at $531,420.00.",
-          "choices": [
-            "Yes",
-            "No"
-          ],
-          "provenance": {
-            "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
-            "sourceOrg": "Essex County Clerk, Election Division",
-            "collectedAt": "2026-11-03T06:35:16.500972+00:00",
-            "verifiedAt": "2026-11-03T06:35:16.500972+00:00",
-            "quote": "Municipal Public Question\nShall the Mayor and Council of the Township of Fairfield, within 90 days of the passing of\nthis municipal question, adopt an ordinance increasing the funding of the Open Space trust\nFund which shall have the following provisions:\nA. The Open Space Trust Fund shall be increased through the collection of local property\ntaxes in the amount of two (2) cents per hundred dollars of assessed value and the funds\nshall be designated solely for the purchase and development of property or easements\nwithin the Township of Fairfield for active and passive recreation, for conservation pur-\nposes, and for maintenance and replacement of active and passive recreation. No other\nprovision of the Open Space Trust Fund will be altered by this amendment."
-          }
-        }
-      ],
+      "measures": [],
       "heldContests": [
         {
           "id": "nj-cx-local-2026-essex-essex-fells-board-of-education",
           "electionId": "nj-2026-11-03",
           "ocdId": "ocd-division/country:us/state:nj/school_district:essex_fells_borough_school_district",
-          "title": "Essex Fells Borough School District — Board of Education",
+          "title": "Essex Fells Borough School District \u2014 Board of Education",
           "voteFor": 1,
           "provenance": {
             "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf",
@@ -3418,7 +3291,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 2 – (108 Districts) Newark: Parts of South & Central Wards; Irvington, Maplewood"
+            "quote": "District 2 \u2013 (108 Districts) Newark: Parts of South & Central Wards; Irvington, Maplewood"
           },
           "sources": [
             {
@@ -3440,7 +3313,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 2 – (108 Districts) Newark: Parts of South & Central Wards; Irvington, Maplewood"
+            "quote": "District 2 \u2013 (108 Districts) Newark: Parts of South & Central Wards; Irvington, Maplewood"
           },
           "sources": [
             {
@@ -3462,7 +3335,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 3 – (108 Districts) Newark: Part of West Ward; East Orange, Orange, South Orange"
+            "quote": "District 3 \u2013 (108 Districts) Newark: Part of West Ward; East Orange, Orange, South Orange"
           },
           "sources": [
             {
@@ -3484,7 +3357,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 3 – (108 Districts) Newark: Part of West Ward; East Orange, Orange, South Orange"
+            "quote": "District 3 \u2013 (108 Districts) Newark: Part of West Ward; East Orange, Orange, South Orange"
           },
           "sources": [
             {
@@ -3506,7 +3379,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 3 – (108 Districts) Newark: Part of West Ward; East Orange, Orange, South Orange"
+            "quote": "District 3 \u2013 (108 Districts) Newark: Part of West Ward; East Orange, Orange, South Orange"
           },
           "sources": [
             {
@@ -3528,7 +3401,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3550,7 +3423,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3572,7 +3445,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3594,7 +3467,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3616,7 +3489,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3638,7 +3511,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3660,7 +3533,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3682,7 +3555,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3704,7 +3577,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3726,7 +3599,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3748,7 +3621,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 4 – (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
+            "quote": "District 4 \u2013 (133 Districts) Caldwell, Cedar Grove, Essex Fells, Fairfield, Livingston, Millburn, N. Caldwell, Roseland, Verona, W. Caldwell and W. Orange"
           },
           "sources": [
             {
@@ -3770,7 +3643,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 5 – (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
+            "quote": "District 5 \u2013 (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
           },
           "sources": [
             {
@@ -3792,7 +3665,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 5 – (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
+            "quote": "District 5 \u2013 (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
           },
           "sources": [
             {
@@ -3814,7 +3687,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 5 – (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
+            "quote": "District 5 \u2013 (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
           },
           "sources": [
             {
@@ -3836,7 +3709,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 5 – (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
+            "quote": "District 5 \u2013 (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
           },
           "sources": [
             {
@@ -3858,7 +3731,7 @@
             "sourceOrg": "Essex County Board of County Commissioners",
             "collectedAt": "2026-11-03T06:40:18.442270+00:00",
             "verifiedAt": "2026-11-03T06:40:18.442270+00:00",
-            "quote": "District 5 – (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
+            "quote": "District 5 \u2013 (123 Districts) Belleville, Bloomfield, Glen Ridge, Montclair, Nutley"
           },
           "sources": [
             {
@@ -3932,7 +3805,7 @@
             "sourceOrg": "South Orange-Maplewood School District",
             "collectedAt": "2026-11-03T06:44:28.400885+00:00",
             "verifiedAt": "2026-11-03T06:44:28.400885+00:00",
-            "quote": "The South Orange & Maplewood School District is guided by a dedicated Board of Education, made up of nine community members elected by voters in South Orange Village and Maplewood Township. These individuals bring their passion and perspective to three-year terms, with elections held each year to welcome new or returning members. Together, they shape the future of our schools through thoughtful policymaking and stewardship."
+            "quote": "The South Orange & Maplewood School District is guided by a dedicated Board of Education, made up of nine community members elected by voters in South Orange Village\u00a0and Maplewood Township. These individuals bring their passion and perspective to three-year terms, with elections held each year to welcome new or returning members. Together, they shape the future of our schools through thoughtful policymaking and stewardship."
           },
           "scopeNote": "Whole constituent municipality in the exact existing shared school district; complete current samples print identical candidates and voting limits in both constituent municipalities. Canonical school geometry is already held."
         },
@@ -3945,7 +3818,7 @@
             "sourceOrg": "South Orange-Maplewood School District",
             "collectedAt": "2026-11-03T06:44:28.400885+00:00",
             "verifiedAt": "2026-11-03T06:44:28.400885+00:00",
-            "quote": "The South Orange & Maplewood School District is guided by a dedicated Board of Education, made up of nine community members elected by voters in South Orange Village and Maplewood Township. These individuals bring their passion and perspective to three-year terms, with elections held each year to welcome new or returning members. Together, they shape the future of our schools through thoughtful policymaking and stewardship."
+            "quote": "The South Orange & Maplewood School District is guided by a dedicated Board of Education, made up of nine community members elected by voters in South Orange Village\u00a0and Maplewood Township. These individuals bring their passion and perspective to three-year terms, with elections held each year to welcome new or returning members. Together, they shape the future of our schools through thoughtful policymaking and stewardship."
           },
           "scopeNote": "Whole constituent municipality in the exact existing shared school district; complete current samples print identical candidates and voting limits in both constituent municipalities. Canonical school geometry is already held."
         },

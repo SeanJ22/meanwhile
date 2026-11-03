@@ -8,7 +8,7 @@
   "status": "READY_FOR_RIVER_DATA_INSTALL",
   "contractId": "ballot-contests:NJ",
   "inputDirectory": "ballot-input",
-  "operation": "Data-only partial NJ merge retaining every actual local named office field in the complete29-page current official county sample inventory; one empty-named school field held. Three exact genuinely new local questions. Existing state/federal/legislative and prepared measure/explanation facts remain unchanged. No production writes, installation, publication or git operations.",
+  "operation": "Data-only partial NJ merge:48complete named candidate fields/137candidacies; allthree exact official questions retained only as source confirmation outside changed IDs to preserve latest held identities and explanations. River owns installation; no production writes.",
   "counts": {
     "publishedSamples": 29,
     "samplePhysicalPages": 29,
@@ -22,14 +22,15 @@
     "regionalConstituentFields": 2,
     "namedCandidates": 137,
     "heldNoNamedFields": 1,
-    "newMeasureFields": 3,
-    "newContests": 51,
+    "newMeasureFields": 0,
+    "newContests": 48,
     "refreshedContests": 0,
     "wholeCommissionerMunicipalityMemberships": 21,
     "wholeSchoolMunicipalityMemberships": 8,
     "preciseUnmatchedDistrictIds": 9,
     "namedWriteInsEstablished": 0,
-    "unassignedCandidateFontSpans": 0
+    "unassignedCandidateFontSpans": 0,
+    "unchangedPreparedMeasureConfirmations": 3
   },
   "subjects": [
     {
@@ -367,27 +368,6 @@
       "type": "CANDIDACY",
       "ocdId": "ocd-division/country:us/state:nj/county:essex/place:west_orange_township",
       "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
-    },
-    {
-      "id": "nj-cx-local-2026-essex-west-essex-bond-question-1",
-      "title": "Bond Proposal Question 1",
-      "type": "MEASURE",
-      "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
-      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
-    },
-    {
-      "id": "nj-cx-local-2026-essex-west-essex-bond-question-2",
-      "title": "Bond Proposal Question 2",
-      "type": "MEASURE",
-      "ocdId": "ocd-division/country:us/state:nj/school_district:west_essex_regional_school_district",
-      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
-    },
-    {
-      "id": "nj-cx-local-2026-essex-fairfield-open-space-trust-fund",
-      "title": "Municipal Public Question",
-      "type": "MEASURE",
-      "ocdId": "ocd-division/country:us/state:nj/county:essex/place:fairfield_township",
-      "sourceUrl": "https://www.essexclerk.com/_Content/pdf/Essex-2026-Sample-Ballots.pdf"
     }
   ],
   "coverage": {
@@ -395,17 +375,17 @@
     "candidateFields": "136 actual local candidate-field occurrences mapped to48 unique complete named contests/137 names and1held no-named EssexFellsBOE field. Atlarge commissioners vote4 with9 named candidates including one petition candidate; countywide fields checked across all29 styles.",
     "schools": "Exact existing local school IDs, including FairfieldEssex geoid3405010 rather than same-name Cumberlanddistrict3405040. Shared CWC/SOM fields deduplicated across member municipalities. WestEssexFairfield/Roseland regional-board seats stay constituent-municipality fields, while bond questions stay whole district.",
     "geography": "21 whole-municipality commissioner memberships verified from current samples plus official breakdown; no Newark whole-city link. Eight exact whole-municipality school memberships connect the three shared districts. Fivecommissiondistrict IDs andBellevilleWard2/BloomfieldWards1\u20133 require precise registry/reader joins; never widen.",
-    "measures": "Two exact numbered WestEssex districtwide bond questions, full common explanatory statement and conditionalQ2 dependency; one exact unnumbered FairfieldOpenSpace question and full statement. None present in compared held/remote/prepared/Bergen inputs. All existing questions/explanations unchanged.",
+    "measures": "All three exact current questions and full original statements remain in held-question-confirmation.json as source confirmation outside changed input; latest CX-VOTES now prepares the same election/electorates/questions. Preserve any existing held identity and its explanation. Candidate fields/names and precise school/municipal scopes unchanged.",
     "status": "Empty NoPetitionFiled field held. Generic PersonalChoice/NoNominationMade blanks excluded. Final named-write-in certification and cancelled-office census not acquired; no zero or countywide absence claim.",
     "sourceReview": "NativePDF raw hashes, full native text and geometric reading-order extraction independently fingerprinted. All49 unique local office blocks visually checked; zero unassigned candidate-font spans. Original question linewraps retained with an explicitly labelled readable dehyphenation transcription."
   },
   "preservation": {
     "heldNJ": "All109 held contests and304 candidate core rows preserved outside incomingIDs.",
-    "cxVotes": "All eight prepared NJ question/explainer rows unchanged outside incomingIDs; latest branch head and every recursive nested NJ input compared.",
+    "cxVotes": "All333 recursive upstream inputs compared at 28ca70907d3df0d4a2541193061b53aeec2a850f. The three new Essex-supplement questions now match exactly; source confirmations/mappings are outside incoming IDs and all latest explanations remain untouched.",
     "otherLocal": "Bergen lane retained with existing identities; no exactly equivalent Essex candidate/measure field there."
   },
   "validation": {
-    "sourceHashesAndQuotes": "PASS: 11 captured sources and 221 exact saved-source quotes",
+    "sourceHashesAndQuotes": "PASS: 11 captured sources and 215 exact saved-source quotes",
     "focusedChecks": "PASS:1030 checks including all136 complete source fields, all49 distinct local office blocks visually checked, all29published pages/22municipalities and every recursive nested CX-VOTES NJ input",
     "genericBallotProblems": "PASS",
     "BallotContestMerge": "PASS",
@@ -414,7 +394,7 @@
     "focusedCheckedAt": "2026-11-03T06:58:23.413679+00:00",
     "unrelatedHeldContestsPreserved": 109,
     "unrelatedHeldCandidateCoreFieldsPreserved": 304,
-    "latestCxVotesCommit": "92b249b5ed11d6a9d39a227ca5cbc0b569860005",
+    "latestCxVotesCommit": "28ca70907d3df0d4a2541193061b53aeec2a850f",
     "preparedQuestionIdsUnchanged": 8,
     "productionWrites": "NONE",
     "publication": false
@@ -435,6 +415,10 @@
     "validation-local.json",
     "validation.json",
     "review.md",
-    "cx-votes-nj-recursive-inventory.json"
-  ]
+    "cx-votes-nj-recursive-inventory.json",
+    "held-question-confirmation.json",
+    "reference/cx-votes-question-comparison-1.json"
+  ],
+  "sourceInputSha256": "03defe91f7772589cda564c94fb5103515ce598abe20a923d851ca6debc4cac5",
+  "existingCxVotesQuestionConfirmation": "held-question-confirmation.json"
 }

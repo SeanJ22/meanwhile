@@ -1,0 +1,156 @@
+[
+  {
+    "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+    "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+    "sourceCheckedAt": "2026-11-03T03:43:54.152429+00:00",
+    "sha256": "49d603c7b3efd8445b0b4f019e94a69e308762a704950185435dfa3e0b656de8",
+    "sourceFile": "sources/49d603c7b3efd8445b0b4f019e94a69e308762a704950185435dfa3e0b656de8.source",
+    "excerptFile": "sources/aca68263c2f6d0579433cb7cb82acf75ebf0baa667336d44b7e5452b39abfada.txt",
+    "excerptSha256": "aca68263c2f6d0579433cb7cb82acf75ebf0baa667336d44b7e5452b39abfada",
+    "captureFormat": "ORIGINAL_PUBLISHED_IMAGE",
+    "evidence": "Original Cook County Clerk official November 3, 2026 specimen ballot public notice, published October22 in Daily Herald, Township of Schaumburg. Complete unmodified original 2848×5976 JPEG bytes retained; every imported candidate block and retention name/Yes-No choice visually checked against the image. Bounded English-field transcription retained; original-image OCR retained separately. Names and party labels preserved exactly; generic blank write-in slots are not people. Only displayed complete office blocks imported; the page says continued on next page, so full county and judicial inventory is not asserted.",
+    "officialLinkingPage": {
+      "url": "https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28L6Fi2997DB",
+      "publisher": "Daily Herald publication of Cook County Clerk official notice",
+      "publishedAt": "2026-10-22",
+      "linkAcquisition": "web open/click original image URL from notice page",
+      "file": "sources/7706eb466ebb79f87661a89118e8bcab66bf019ea6add253732247a1bf0b6cd0.source",
+      "sha256": "7706eb466ebb79f87661a89118e8bcab66bf019ea6add253732247a1bf0b6cd0",
+      "sourceCheckedAt": "2026-11-03T03:43:07.740726+00:00",
+      "captureFormat": "CAPTURED_SOURCE_TEXT",
+      "hashScope": "Complete deterministic reader capture, not native HTML bytes"
+    },
+    "textExtractionMethod": "Visual transcription of complete English office fields from unmodified original image; corroborated by OCR and October27 Chicago Board list where Chicago scope includes the office.",
+    "ocrArtifacts": [
+      {
+        "file": "sources/c1ffe272523bc62adfbca058c3e0bb3bade930a073107d9285ef9cb3a60dad33.ocr.txt",
+        "sha256": "c1ffe272523bc62adfbca058c3e0bb3bade930a073107d9285ef9cb3a60dad33",
+        "sourceRegion": "cook-notice-original.txt"
+      },
+      {
+        "file": "sources/d3f821e5e315a061132db0e33b1e97f0a291c672374ba4786cd7c378d2485ef1.ocr.txt",
+        "sha256": "d3f821e5e315a061132db0e33b1e97f0a291c672374ba4786cd7c378d2485ef1",
+        "sourceRegion": "county.txt"
+      },
+      {
+        "file": "sources/44ccd69213738931659d6dd432678b1f067273d6cdead1d984c67ad79f42096e.ocr.txt",
+        "sha256": "44ccd69213738931659d6dd432678b1f067273d6cdead1d984c67ad79f42096e",
+        "sourceRegion": "mwr.txt"
+      },
+      {
+        "file": "sources/491d3fd15eccaae5236d1c276fcf7665f24cc6ff7ec2852e0e86a4475e44de03.ocr.txt",
+        "sha256": "491d3fd15eccaae5236d1c276fcf7665f24cc6ff7ec2852e0e86a4475e44de03",
+        "sourceRegion": "judges.txt"
+      },
+      {
+        "file": "sources/3efe648179ad639b21df7a69da24b878c982195a56431f4b4b7cf2b38a263dbb.ocr.txt",
+        "sha256": "3efe648179ad639b21df7a69da24b878c982195a56431f4b4b7cf2b38a263dbb",
+        "sourceRegion": "subcircuit.txt"
+      },
+      {
+        "file": "sources/ff1ac186d4f00beb35b271c27d957f5aa8e230d6d18b3cd18867c0d350c14bb2.ocr.txt",
+        "sha256": "ff1ac186d4f00beb35b271c27d957f5aa8e230d6d18b3cd18867c0d350c14bb2",
+        "sourceRegion": "retention.txt"
+      }
+    ],
+    "hashScope": "Original unmodified published JPEG bytes; excerptSha256 separately fingerprints the saved visually verified English-field extraction.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_IMAGE",
+      "reviewedBy": "CX-LOCAL",
+      "method": "Viewed full original image and office-column crops; matched every named candidate, party, vote-for limit and retention Yes/No block. Original images unchanged. English extraction is a separate text artifact."
+    }
+  },
+  {
+    "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+    "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+    "sourceCheckedAt": "2026-11-03T03:45:53.148305+00:00",
+    "sha256": "f3e4e1980990a58ffc41f0dbc7993648a118dacad6e775e75a22ad4f2afb021f",
+    "sourceFile": "sources/f3e4e1980990a58ffc41f0dbc7993648a118dacad6e775e75a22ad4f2afb021f.source",
+    "excerptFile": "sources/91d16ea60460f51de7a8736bf60dff81aa197d5f5cbb58b6248a3124c8952d03.txt",
+    "excerptSha256": "91d16ea60460f51de7a8736bf60dff81aa197d5f5cbb58b6248a3124c8952d03",
+    "captureFormat": "ORIGINAL_PUBLISHED_IMAGE",
+    "evidence": "Original Cook County Clerk official November 3, 2026 specimen ballot public notice, published October22 in Daily Herald, Township of Wheeling. Complete unmodified original 2848×5976 JPEG bytes retained; every imported candidate block and retention name/Yes-No choice visually checked against the image. Bounded English-field transcription retained; original-image OCR retained separately. Names and party labels preserved exactly; generic blank write-in slots are not people. Only displayed complete office blocks imported; the page says continued on next page, so full county and judicial inventory is not asserted.",
+    "officialLinkingPage": {
+      "url": "https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28JHtNCEDF0E",
+      "publisher": "Daily Herald publication of Cook County Clerk official notice",
+      "publishedAt": "2026-10-22",
+      "linkAcquisition": "web open/click original image URL from notice page",
+      "file": "sources/f541e6ddb312df4b6d0e350ffae7a9a44bb6471c1e6387f9b8ee62097a71788f.source",
+      "sha256": "f541e6ddb312df4b6d0e350ffae7a9a44bb6471c1e6387f9b8ee62097a71788f",
+      "sourceCheckedAt": "2026-11-03T03:43:18.918968+00:00",
+      "captureFormat": "CAPTURED_SOURCE_TEXT",
+      "hashScope": "Complete deterministic reader capture, not native HTML bytes"
+    },
+    "textExtractionMethod": "Visual transcription of complete English office fields from unmodified original image; corroborated by OCR and October27 Chicago Board list where Chicago scope includes the office.",
+    "visualCheckCrops": [
+      {
+        "file": "sources/91474decb7b0aabc645bc0efc469a0fe965b130f90a126ba6cdd4bbe619174b1.png",
+        "sha256": "91474decb7b0aabc645bc0efc469a0fe965b130f90a126ba6cdd4bbe619174b1",
+        "region": "wheeling-districts"
+      },
+      {
+        "file": "sources/07090a5a25f3dc2328d32b2f6b1fa91dfdb929809ca3c9dc944c28a20dee845a.png",
+        "sha256": "07090a5a25f3dc2328d32b2f6b1fa91dfdb929809ca3c9dc944c28a20dee845a",
+        "region": "wheeling-subcircuits"
+      }
+    ],
+    "hashScope": "Original unmodified published JPEG bytes; excerptSha256 separately fingerprints the saved visually verified English-field extraction.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_IMAGE",
+      "reviewedBy": "CX-LOCAL",
+      "method": "Viewed full original image and office-column crops; matched every named candidate, party, vote-for limit and retention Yes/No block. Original images unchanged. English extraction is a separate text artifact."
+    }
+  },
+  {
+    "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+    "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+    "sourceCheckedAt": "2026-11-03T03:45:53.021850+00:00",
+    "sha256": "4198d44c9f5117a469e10d560cef3af776f292d8d47e3270792afd2909f27b8e",
+    "sourceFile": "sources/4198d44c9f5117a469e10d560cef3af776f292d8d47e3270792afd2909f27b8e.source",
+    "excerptFile": "sources/77f0eaf588a6168ca58fbdcacbca377a07dd09084d87051c030b7e227101bfb5.txt",
+    "excerptSha256": "77f0eaf588a6168ca58fbdcacbca377a07dd09084d87051c030b7e227101bfb5",
+    "captureFormat": "ORIGINAL_PUBLISHED_IMAGE",
+    "evidence": "Original Cook County Clerk official November 3, 2026 specimen ballot public notice, published October22 in Daily Herald, Township of Hanover. Complete unmodified original 2848×5976 JPEG bytes retained; every imported candidate block and retention name/Yes-No choice visually checked against the image. Bounded English-field transcription retained; original-image OCR retained separately. Names and party labels preserved exactly; generic blank write-in slots are not people. Only displayed complete office blocks imported; the page says continued on next page, so full county and judicial inventory is not asserted.",
+    "officialLinkingPage": {
+      "url": "https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28B1H8B75DC2",
+      "publisher": "Daily Herald publication of Cook County Clerk official notice",
+      "publishedAt": "2026-10-22",
+      "linkAcquisition": "web open/click original image URL from notice page",
+      "file": "sources/ee5c1ebbff1b2283ebcd15d4784697dbfef612cbd3223bd1bc5a21445868f278.source",
+      "sha256": "ee5c1ebbff1b2283ebcd15d4784697dbfef612cbd3223bd1bc5a21445868f278",
+      "sourceCheckedAt": "2026-11-03T03:49:57.755241+00:00",
+      "captureFormat": "CAPTURED_SOURCE_TEXT",
+      "hashScope": "Complete deterministic reader capture, not native HTML bytes"
+    },
+    "textExtractionMethod": "Visual transcription of complete English office fields from unmodified original image; corroborated by OCR and October27 Chicago Board list where Chicago scope includes the office.",
+    "visualCheckCrops": [
+      {
+        "file": "sources/3a02075300d34363e5a7b6a39552477d22c4e08f8954105d2fdd61778b0966a8.png",
+        "sha256": "3a02075300d34363e5a7b6a39552477d22c4e08f8954105d2fdd61778b0966a8",
+        "region": "hanover-retention"
+      }
+    ],
+    "hashScope": "Original unmodified published JPEG bytes; excerptSha256 separately fingerprints the saved visually verified English-field extraction.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_IMAGE",
+      "reviewedBy": "CX-LOCAL",
+      "method": "Viewed full original image and office-column crops; matched every named candidate, party, vote-for limit and retention Yes/No block. Original images unchanged. English extraction is a separate text artifact."
+    }
+  },
+  {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+    "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+    "sourceCheckedAt": "2026-11-03T03:43:05.511897+00:00",
+    "sha256": "5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5",
+    "sourceFile": "sources/5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5.source",
+    "excerptFile": "sources/bee4b602602227227f0bef38e2d0e12593f27bfd992025c351dbed6f24b31682.txt",
+    "excerptSha256": "bee4b602602227227f0bef38e2d0e12593f27bfd992025c351dbed6f24b31682",
+    "evidence": "Latest Chicago Board of Election Commissioners candidate inventory linked by its current candidates page; status October27 2026 at4:10:15PM. Official government-authored document labels itself an unofficial candidate list. Saved as corroboration and lead; it does not alone support any imported specimen-ballot claim. Covers districts including some part of Chicago, not all suburban Cook. Generic Write-in N/A slots are not named declared write-ins.",
+    "officialLinkingPage": {
+      "url": "https://chicagoelections.gov/getting-ballot/candidates",
+      "file": "sources/chicago-current-candidates-page.source",
+      "sourceCheckedAt": "2026-11-03T03:42:43.884476+00:00"
+    },
+    "role": "PENDING_COVERAGE_ONLY"
+  }
+]

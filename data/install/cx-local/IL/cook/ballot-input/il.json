@@ -1,0 +1,2268 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "IL:il-2026-11-03": {
+      "election": {
+        "id": "il-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IL"
+      },
+      "contests": [
+        {
+          "id": "il-cx-local-2026-cook-president-county-board",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "President of County Board",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "President of County Board\nVote for One\n62 Toni Preckwinkle\nDemocratic\n63 Michael Murphy\nLibertarian\nwrite-in"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-clerk",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "County Clerk\nVote for One\n64 Monica Gordon\nDemocratic\nwrite-in"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-sheriff",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "County Sheriff\nVote for One\n65 Thomas J. Dart\nDemocratic\n66 Brad Sandefur\nLibertarian"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-treasurer",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "County Treasurer\nVote for One\n67 Maria Pappas\nDemocratic\nwrite-in"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-assessor",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "County Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "County Assessor\nVote for One\n68 Pat Hynes\nDemocratic\n69 Nico Tsatsoulis\nLibertarian\nwrite-in"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:metropolitan_water_reclamation_district_of_greater_chicago",
+          "divisionVintage": "2026",
+          "title": "Metropolitan Water Reclamation District Commissioners — Full 6-Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": 6,
+          "scopeNote": "Metropolitan Water Reclamation District of Greater Chicago; district geography must be matched before address-specific delivery.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Metropolitan Water Reclamation District Commissioners\nFull 6-Year Term\nVote for not more than Three\n51 Michelle Pennington\nRepublican\n52 Timothy E. Rueckert\nRepublican\n53 Jill B. Shestokas\nRepublican\n54 Precious Brady-Davis\nDemocratic\n55 Eira Lizeth Corral Sepúlveda\nDemocratic\n56 Beth McElroy Kirkwood\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-unexpired-two-year-term",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:metropolitan_water_reclamation_district_of_greater_chicago",
+          "divisionVintage": "2026",
+          "title": "Metropolitan Water Reclamation District Commissioners — Unexpired 2-Year Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": "Metropolitan Water Reclamation District of Greater Chicago; district geography must be matched before address-specific delivery.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Metropolitan Water Reclamation District Commissioners\nUnexpired 2-Year Term\nVote for One\n57 Cameron \"Cam\" Davis\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-15",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:15",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 15th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "County Commissioner, 15th District\nVote for One\n71 Daniel Lee\nRepublican\n72 Ted Mason\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-17",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:17",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 17th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "County Commissioner, 17th District\nVote for One\n71 Elizabeth \"Liz\" Doody Gorman\nRepublican\n72 Elyse Hoffenberg\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-9",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:9",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 9th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "County Commissioner, 9th District\nVote for One\n71 Jon Luers\nRepublican\n72 Maggie Trevor\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-14",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:14",
+          "divisionVintage": "2026",
+          "title": "County Commissioner, 14th District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "County Commissioner, 14th District\nVote for One\n72 Scott R. Britton\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-board-of-review-1",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/board_of_review_district:1",
+          "divisionVintage": "2026",
+          "title": "Board of Review, 1st District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Board of Review, 1st District\nVote for One\n82 George A. Cardenas\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-board-of-review-2",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/board_of_review_district:2",
+          "divisionVintage": "2026",
+          "title": "Board of Review, 2nd District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "Board of Review, 2nd District\nVote for One\n82 Elizabeth \"Liz\" Nicholson\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-appellate-hoffman",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/judicial_district:1",
+          "divisionVintage": "2026",
+          "title": "Judge of the Appellate Court (Vacancy of Hoffman)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Illinois Appellate Court, First Judicial District (Cook County), as named by the specimen ballot retention section.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge of the Appellate Court\n(Vacancy of Hoffman)\nVote for One\n102 Judith C. Rice\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-burke",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court (Vacancy of Burke)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Cook County Judicial Circuit; countywide vacancy.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge of the Circuit Court\n(Vacancy of Burke)\nVote for One\n103 Steven Q. McKenzie\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-cobbs",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court (Vacancy of Cobbs)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Cook County Judicial Circuit; countywide vacancy.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge of the Circuit Court\n(Vacancy of Cobbs)\nVote for One\n104 Luz Maria Toledo\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-coghlan",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court (Vacancy of Coghlan)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Cook County Judicial Circuit; countywide vacancy.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge of the Circuit Court\n(Vacancy of Coghlan)\nVote for One\n105 Ashonta C. Rice\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-hooks",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court (Vacancy of Hooks)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Cook County Judicial Circuit; countywide vacancy.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge of the Circuit Court\n(Vacancy of Hooks)\nVote for One\n106 Ava George Stewart\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-karkula",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court (Vacancy of Karkula)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Cook County Judicial Circuit; countywide vacancy.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge of the Circuit Court\n(Vacancy of Karkula)\nVote for One\n107 D'Anthony \"Tony\" Thedford\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-curry-jr",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+          "divisionVintage": "2026",
+          "title": "Judge, 13th Subcircuit (Vacancy of Curry, Jr.)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge, 13th Subcircuit\n(Vacancy of Curry, Jr.)\nVote for One\n112 Robert \"Bob\" Groebner\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-m-kelley",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+          "divisionVintage": "2026",
+          "title": "Judge, 13th Subcircuit (Vacancy of M. Kelley)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge, 13th Subcircuit\n(Vacancy of M. Kelley)\nVote for One\n114 Brittany Michelle Pedersen\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-t-kelley",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+          "divisionVintage": "2026",
+          "title": "Judge, 13th Subcircuit (Vacancy of T. Kelley)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge, 13th Subcircuit\n(Vacancy of T. Kelley)\nVote for One\n116 William F. Kelley\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-o-malley",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+          "divisionVintage": "2026",
+          "title": "Judge, 13th Subcircuit (Vacancy of O'Malley)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judge, 13th Subcircuit\n(Vacancy of O'Malley)\nVote for One\n118 Dan Naranjo\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-18-andreou",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:18",
+          "divisionVintage": "2026",
+          "title": "Judge, 18th Subcircuit (Converted from Associate Judgeship of Andreou)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "Judge, 18th Subcircuit\n(Converted from Associate Judgeship of Andreou)\nVote for One\n112 Sam Bae\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-18-chrones",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:18",
+          "divisionVintage": "2026",
+          "title": "Judge, 18th Subcircuit (Converted from Associate Judgeship of Chrones)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "Judge, 18th Subcircuit\n(Converted from Associate Judgeship of Chrones)\nVote for One\n114 Juan Ponce de Leon\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-201",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/judicial_district:1",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Bertina E. Lampkin — Appellate Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Appellate Court, First Judicial District?\"\nBertina E. Lampkin\n201 Yes/Sí\n202 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-203",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Lewis Nixon — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nLewis Nixon\n203 Yes/Sí\n204 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-205",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Kerry M. Kennedy — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nKerry M. Kennedy\n205 Yes/Sí\n206 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-207",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Joan E. Powell — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nJoan E. Powell\n207 Yes/Sí\n208 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-209",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Maureen Ward Kirby — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nMaureen Ward Kirby\n209 Yes/Sí\n210 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-211",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Edward A. Arce — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nEdward A. Arce\n211 Yes/Sí\n212 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-213",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Thomas J. Byrne — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nThomas J. Byrne\n213 Yes/Sí\n214 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-215",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Diana L. Kenworthy — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nDiana L. Kenworthy\n215 Yes/Sí\n216 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-217",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Kristyna Colleen Ryan — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nKristyna Colleen Ryan\n217 Yes/Sí\n218 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-219",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Ursula Walowski — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nUrsula Walowski\n219 Yes/Sí\n220 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-221",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Anthony C. \"Tony\" Kyriakopoulos — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nAnthony C. \"Tony\" Kyriakopoulos\n221 Yes/Sí\n222 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-223",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Caroline Kate Moreland — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nCaroline Kate Moreland\n223 Yes/Sí\n224 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-225",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Thomas J. Carroll — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nThomas J. Carroll\n225 Yes/Sí\n226 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-227",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Andrea M. Buford — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nAndrea M. Buford\n227 Yes/Sí\n228 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-229",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — John Michael Allegretti — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nJohn Michael Allegretti\n229 Yes/Sí\n230 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-231",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Kristal R. Rivers — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nKristal R. Rivers\n231 Yes/Sí\n232 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-233",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Steven G. Watkins — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nSteven G. Watkins\n233 Yes/Sí\n234 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-235",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Abbey Fishman Romanek — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nAbbey Fishman Romanek\n235 Yes/Sí\n236 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-237",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Judith C. Rice — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nJudith C. Rice\n237 Yes/Sí\n238 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-239",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Patrick Kevin Coughlin — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nPatrick Kevin Coughlin\n239 Yes/Sí\n240 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-241",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Megan Elizabeth Goldish — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nMegan Elizabeth Goldish\n241 Yes/Sí\n242 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-243",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Anjana M.J. Hansen — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nAnjana M.J. Hansen\n243 Yes/Sí\n244 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-245",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Robert D. Kuzas — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nRobert D. Kuzas\n245 Yes/Sí\n246 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-249",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Maritza Martinez — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nMaritza Martinez\n249 Yes/Sí\n250 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-251",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Terrence J. McGuire — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nTerrence J. McGuire\n251 Yes/Sí\n252 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-253",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Bridget Anne Mitchell — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nBridget Anne Mitchell\n253 Yes/Sí\n254 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-255",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — James P. Pieczonka — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nJames P. Pieczonka\n255 Yes/Sí\n256 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-257",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Patricia O'Brien Sheahan — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nPatricia O'Brien Sheahan\n257 Yes/Sí\n258 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-259",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Michael A. Forti — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nMichael A. Forti\n259 Yes/Sí\n260 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-261",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Nichole C. Patton — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nNichole C. Patton\n261 Yes/Sí\n262 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-263",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:cook",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Sondra N. Denmark — Circuit Court",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "A separate Yes/No retention question; this judge is not running against any other judge.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "\"Shall each of the persons listed be retained in office as Judge of the Circuit Court, Cook County Judicial Circuit?\"\nSondra N. Denmark\n263 Yes/Sí\n264 No/No"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "il-cx-local-2026-cook-president-county-board:toni-preckwinkle",
+          "contestId": "il-cx-local-2026-cook-president-county-board",
+          "givenName": "Toni",
+          "familyName": "Preckwinkle",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "62 Toni Preckwinkle\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-president-county-board:michael-murphy",
+          "contestId": "il-cx-local-2026-cook-president-county-board",
+          "givenName": "Michael",
+          "familyName": "Murphy",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "63 Michael Murphy\nLibertarian"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-clerk:monica-gordon",
+          "contestId": "il-cx-local-2026-cook-county-clerk",
+          "givenName": "Monica",
+          "familyName": "Gordon",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "64 Monica Gordon\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-sheriff:thomas-j-dart",
+          "contestId": "il-cx-local-2026-cook-county-sheriff",
+          "givenName": "Thomas J.",
+          "familyName": "Dart",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "65 Thomas J. Dart\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-sheriff:brad-sandefur",
+          "contestId": "il-cx-local-2026-cook-county-sheriff",
+          "givenName": "Brad",
+          "familyName": "Sandefur",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "66 Brad Sandefur\nLibertarian"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-treasurer:maria-pappas",
+          "contestId": "il-cx-local-2026-cook-county-treasurer",
+          "givenName": "Maria",
+          "familyName": "Pappas",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "67 Maria Pappas\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-assessor:pat-hynes",
+          "contestId": "il-cx-local-2026-cook-county-assessor",
+          "givenName": "Pat",
+          "familyName": "Hynes",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "68 Pat Hynes\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-assessor:nico-tsatsoulis",
+          "contestId": "il-cx-local-2026-cook-county-assessor",
+          "givenName": "Nico",
+          "familyName": "Tsatsoulis",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "69 Nico Tsatsoulis\nLibertarian"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-full-six-year-term:michelle-pennington",
+          "contestId": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+          "givenName": "Michelle",
+          "familyName": "Pennington",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "51 Michelle Pennington\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-full-six-year-term:timothy-e-rueckert",
+          "contestId": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+          "givenName": "Timothy E.",
+          "familyName": "Rueckert",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "52 Timothy E. Rueckert\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-full-six-year-term:jill-b-shestokas",
+          "contestId": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+          "givenName": "Jill B.",
+          "familyName": "Shestokas",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "53 Jill B. Shestokas\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-full-six-year-term:precious-brady-davis",
+          "contestId": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+          "givenName": "Precious",
+          "familyName": "Brady-Davis",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "54 Precious Brady-Davis\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-full-six-year-term:eira-lizeth-corral-sepulveda",
+          "contestId": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+          "givenName": "Eira Lizeth",
+          "familyName": "Corral Sepúlveda",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "55 Eira Lizeth Corral Sepúlveda\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-full-six-year-term:beth-mcelroy-kirkwood",
+          "contestId": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+          "givenName": "Beth McElroy",
+          "familyName": "Kirkwood",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "56 Beth McElroy Kirkwood\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-mwrd-unexpired-two-year-term:cameron-cam-davis",
+          "contestId": "il-cx-local-2026-cook-mwrd-unexpired-two-year-term",
+          "givenName": "Cameron \"Cam\"",
+          "familyName": "Davis",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "57 Cameron \"Cam\" Davis\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-15:daniel-lee",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-15",
+          "givenName": "Daniel",
+          "familyName": "Lee",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "71 Daniel Lee\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-15:ted-mason",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-15",
+          "givenName": "Ted",
+          "familyName": "Mason",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "72 Ted Mason\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-17:elizabeth-liz-doody-gorman",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-17",
+          "givenName": "Elizabeth \"Liz\"",
+          "familyName": "Doody Gorman",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "71 Elizabeth \"Liz\" Doody Gorman\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-17:elyse-hoffenberg",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-17",
+          "givenName": "Elyse",
+          "familyName": "Hoffenberg",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "72 Elyse Hoffenberg\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-9:jon-luers",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-9",
+          "givenName": "Jon",
+          "familyName": "Luers",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "71 Jon Luers\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-9:maggie-trevor",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-9",
+          "givenName": "Maggie",
+          "familyName": "Trevor",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "72 Maggie Trevor\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-county-commissioner-14:scott-r-britton",
+          "contestId": "il-cx-local-2026-cook-county-commissioner-14",
+          "givenName": "Scott R.",
+          "familyName": "Britton",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "72 Scott R. Britton\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-board-of-review-1:george-a-cardenas",
+          "contestId": "il-cx-local-2026-cook-board-of-review-1",
+          "givenName": "George A.",
+          "familyName": "Cardenas",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "82 George A. Cardenas\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-board-of-review-2:elizabeth-liz-nicholson",
+          "contestId": "il-cx-local-2026-cook-board-of-review-2",
+          "givenName": "Elizabeth \"Liz\"",
+          "familyName": "Nicholson",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "82 Elizabeth \"Liz\" Nicholson\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-appellate-hoffman:judith-c-rice",
+          "contestId": "il-cx-local-2026-cook-appellate-hoffman",
+          "givenName": "Judith C.",
+          "familyName": "Rice",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "102 Judith C. Rice\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-burke:steven-q-mckenzie",
+          "contestId": "il-cx-local-2026-cook-circuit-burke",
+          "givenName": "Steven Q.",
+          "familyName": "McKenzie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "103 Steven Q. McKenzie\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-cobbs:luz-maria-toledo",
+          "contestId": "il-cx-local-2026-cook-circuit-cobbs",
+          "givenName": "Luz Maria",
+          "familyName": "Toledo",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "104 Luz Maria Toledo\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-coghlan:ashonta-c-rice",
+          "contestId": "il-cx-local-2026-cook-circuit-coghlan",
+          "givenName": "Ashonta C.",
+          "familyName": "Rice",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "105 Ashonta C. Rice\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-hooks:ava-george-stewart",
+          "contestId": "il-cx-local-2026-cook-circuit-hooks",
+          "givenName": "Ava George",
+          "familyName": "Stewart",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "106 Ava George Stewart\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-circuit-karkula:d-anthony-tony-thedford",
+          "contestId": "il-cx-local-2026-cook-circuit-karkula",
+          "givenName": "D'Anthony \"Tony\"",
+          "familyName": "Thedford",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "107 D'Anthony \"Tony\" Thedford\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-curry-jr:robert-bob-groebner",
+          "contestId": "il-cx-local-2026-cook-subcircuit-13-curry-jr",
+          "givenName": "Robert \"Bob\"",
+          "familyName": "Groebner",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "112 Robert \"Bob\" Groebner\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-m-kelley:brittany-michelle-pedersen",
+          "contestId": "il-cx-local-2026-cook-subcircuit-13-m-kelley",
+          "givenName": "Brittany Michelle",
+          "familyName": "Pedersen",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "114 Brittany Michelle Pedersen\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-t-kelley:william-f-kelley",
+          "contestId": "il-cx-local-2026-cook-subcircuit-13-t-kelley",
+          "givenName": "William F.",
+          "familyName": "Kelley",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "116 William F. Kelley\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-13-o-malley:dan-naranjo",
+          "contestId": "il-cx-local-2026-cook-subcircuit-13-o-malley",
+          "givenName": "Dan",
+          "familyName": "Naranjo",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "118 Dan Naranjo\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-18-andreou:sam-bae",
+          "contestId": "il-cx-local-2026-cook-subcircuit-18-andreou",
+          "givenName": "Sam",
+          "familyName": "Bae",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "112 Sam Bae\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-subcircuit-18-chrones:juan-ponce-de-leon",
+          "contestId": "il-cx-local-2026-cook-subcircuit-18-chrones",
+          "givenName": "Juan",
+          "familyName": "Ponce de Leon",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "114 Juan Ponce de Leon\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-201:bertina-e-lampkin",
+          "contestId": "il-cx-local-2026-cook-retention-201",
+          "givenName": "Bertina E.",
+          "familyName": "Lampkin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Bertina E. Lampkin\n201 Yes/Sí\n202 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-203:lewis-nixon",
+          "contestId": "il-cx-local-2026-cook-retention-203",
+          "givenName": "Lewis",
+          "familyName": "Nixon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Lewis Nixon\n203 Yes/Sí\n204 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-205:kerry-m-kennedy",
+          "contestId": "il-cx-local-2026-cook-retention-205",
+          "givenName": "Kerry M.",
+          "familyName": "Kennedy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Kerry M. Kennedy\n205 Yes/Sí\n206 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-207:joan-e-powell",
+          "contestId": "il-cx-local-2026-cook-retention-207",
+          "givenName": "Joan E.",
+          "familyName": "Powell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Joan E. Powell\n207 Yes/Sí\n208 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-209:maureen-ward-kirby",
+          "contestId": "il-cx-local-2026-cook-retention-209",
+          "givenName": "Maureen Ward",
+          "familyName": "Kirby",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Maureen Ward Kirby\n209 Yes/Sí\n210 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-211:edward-a-arce",
+          "contestId": "il-cx-local-2026-cook-retention-211",
+          "givenName": "Edward A.",
+          "familyName": "Arce",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Edward A. Arce\n211 Yes/Sí\n212 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-213:thomas-j-byrne",
+          "contestId": "il-cx-local-2026-cook-retention-213",
+          "givenName": "Thomas J.",
+          "familyName": "Byrne",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Thomas J. Byrne\n213 Yes/Sí\n214 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-215:diana-l-kenworthy",
+          "contestId": "il-cx-local-2026-cook-retention-215",
+          "givenName": "Diana L.",
+          "familyName": "Kenworthy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Diana L. Kenworthy\n215 Yes/Sí\n216 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-217:kristyna-colleen-ryan",
+          "contestId": "il-cx-local-2026-cook-retention-217",
+          "givenName": "Kristyna Colleen",
+          "familyName": "Ryan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Kristyna Colleen Ryan\n217 Yes/Sí\n218 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-219:ursula-walowski",
+          "contestId": "il-cx-local-2026-cook-retention-219",
+          "givenName": "Ursula",
+          "familyName": "Walowski",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Ursula Walowski\n219 Yes/Sí\n220 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-221:anthony-c-tony-kyriakopoulos",
+          "contestId": "il-cx-local-2026-cook-retention-221",
+          "givenName": "Anthony C. \"Tony\"",
+          "familyName": "Kyriakopoulos",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Anthony C. \"Tony\" Kyriakopoulos\n221 Yes/Sí\n222 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-223:caroline-kate-moreland",
+          "contestId": "il-cx-local-2026-cook-retention-223",
+          "givenName": "Caroline Kate",
+          "familyName": "Moreland",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Caroline Kate Moreland\n223 Yes/Sí\n224 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-225:thomas-j-carroll",
+          "contestId": "il-cx-local-2026-cook-retention-225",
+          "givenName": "Thomas J.",
+          "familyName": "Carroll",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Thomas J. Carroll\n225 Yes/Sí\n226 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-227:andrea-m-buford",
+          "contestId": "il-cx-local-2026-cook-retention-227",
+          "givenName": "Andrea M.",
+          "familyName": "Buford",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Andrea M. Buford\n227 Yes/Sí\n228 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-229:john-michael-allegretti",
+          "contestId": "il-cx-local-2026-cook-retention-229",
+          "givenName": "John Michael",
+          "familyName": "Allegretti",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "John Michael Allegretti\n229 Yes/Sí\n230 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-231:kristal-r-rivers",
+          "contestId": "il-cx-local-2026-cook-retention-231",
+          "givenName": "Kristal R.",
+          "familyName": "Rivers",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Kristal R. Rivers\n231 Yes/Sí\n232 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-233:steven-g-watkins",
+          "contestId": "il-cx-local-2026-cook-retention-233",
+          "givenName": "Steven G.",
+          "familyName": "Watkins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Steven G. Watkins\n233 Yes/Sí\n234 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-235:abbey-fishman-romanek",
+          "contestId": "il-cx-local-2026-cook-retention-235",
+          "givenName": "Abbey Fishman",
+          "familyName": "Romanek",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Abbey Fishman Romanek\n235 Yes/Sí\n236 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-237:judith-c-rice",
+          "contestId": "il-cx-local-2026-cook-retention-237",
+          "givenName": "Judith C.",
+          "familyName": "Rice",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Judith C. Rice\n237 Yes/Sí\n238 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-239:patrick-kevin-coughlin",
+          "contestId": "il-cx-local-2026-cook-retention-239",
+          "givenName": "Patrick Kevin",
+          "familyName": "Coughlin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Patrick Kevin Coughlin\n239 Yes/Sí\n240 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-241:megan-elizabeth-goldish",
+          "contestId": "il-cx-local-2026-cook-retention-241",
+          "givenName": "Megan Elizabeth",
+          "familyName": "Goldish",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Megan Elizabeth Goldish\n241 Yes/Sí\n242 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-243:anjana-m-j-hansen",
+          "contestId": "il-cx-local-2026-cook-retention-243",
+          "givenName": "Anjana M.J.",
+          "familyName": "Hansen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Anjana M.J. Hansen\n243 Yes/Sí\n244 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-245:robert-d-kuzas",
+          "contestId": "il-cx-local-2026-cook-retention-245",
+          "givenName": "Robert D.",
+          "familyName": "Kuzas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:43:54.152429+00:00",
+            "verifiedAt": "2026-11-03T03:43:54.152429+00:00",
+            "quote": "Robert D. Kuzas\n245 Yes/Sí\n246 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-249:maritza-martinez",
+          "contestId": "il-cx-local-2026-cook-retention-249",
+          "givenName": "Maritza",
+          "familyName": "Martinez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "Maritza Martinez\n249 Yes/Sí\n250 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-251:terrence-j-mcguire",
+          "contestId": "il-cx-local-2026-cook-retention-251",
+          "givenName": "Terrence J.",
+          "familyName": "McGuire",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "Terrence J. McGuire\n251 Yes/Sí\n252 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-253:bridget-anne-mitchell",
+          "contestId": "il-cx-local-2026-cook-retention-253",
+          "givenName": "Bridget Anne",
+          "familyName": "Mitchell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.148305+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.148305+00:00",
+            "quote": "Bridget Anne Mitchell\n253 Yes/Sí\n254 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-255:james-p-pieczonka",
+          "contestId": "il-cx-local-2026-cook-retention-255",
+          "givenName": "James P.",
+          "familyName": "Pieczonka",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "James P. Pieczonka\n255 Yes/Sí\n256 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-257:patricia-o-brien-sheahan",
+          "contestId": "il-cx-local-2026-cook-retention-257",
+          "givenName": "Patricia O'Brien",
+          "familyName": "Sheahan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "Patricia O'Brien Sheahan\n257 Yes/Sí\n258 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-259:michael-a-forti",
+          "contestId": "il-cx-local-2026-cook-retention-259",
+          "givenName": "Michael A.",
+          "familyName": "Forti",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "Michael A. Forti\n259 Yes/Sí\n260 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-261:nichole-c-patton",
+          "contestId": "il-cx-local-2026-cook-retention-261",
+          "givenName": "Nichole C.",
+          "familyName": "Patton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "Nichole C. Patton\n261 Yes/Sí\n262 No/No"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-cook-retention-263:sondra-n-denmark",
+          "contestId": "il-cx-local-2026-cook-retention-263",
+          "givenName": "Sondra N.",
+          "familyName": "Denmark",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+            "sourceOrg": "Cook County Clerk",
+            "collectedAt": "2026-11-03T03:45:53.021850+00:00",
+            "verifiedAt": "2026-11-03T03:45:53.021850+00:00",
+            "quote": "Sondra N. Denmark\n263 Yes/Sí\n264 No/No"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "coverageNotes": [
+        "Cook County partial official specimen-ballot coverage: countywide offices, Metropolitan Water Reclamation District full and unexpired terms, commissioner districts9/14/15/17, Board of Review districts1/2, countywide judicial vacancies, subcircuits13/18 and31 individual retention questions. Other Cook contests and remaining retention questions remain under acquisition.",
+        "Chicago is a separate election authority. Its current October27 candidate inventory is preserved as a lead; Chicago school president and20 school subdistrict specimen ballots are not yet acquired. No conclusion about the absence of any Chicago, municipal, school or special-district race is made.",
+        "District contests retain their precise district division keys. Commissioner, Board of Review, judicial subcircuit and MWRD keys are not yet in the held Illinois registry and need exact geographic joins for address-specific reader delivery. Countywide facts can serve Chicago and suburban Cook where the office electorate is countywide.",
+        "Declared write-in candidates are separate coverage work. Blank write-in slots printed on these ballots are not candidates; no named declared write-in certification was acquired."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:49:05.036213+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+        "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg",
+        "httpStatus": 200,
+        "rawHash": "49d603c7b3efd8445b0b4f019e94a69e308762a704950185435dfa3e0b656de8",
+        "retrievedAt": "2026-11-03T03:43:54.152429+00:00",
+        "publisher": "Monica Gordon, Cook County Clerk (official notice published by Daily Herald)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28L6Fi2997DB",
+        "reviewedEvidence": "Original Cook County Clerk official November 3, 2026 specimen ballot public notice, published October22 in Daily Herald, Township of Schaumburg. Complete unmodified original 2848×5976 JPEG bytes retained; every imported candidate block and retention name/Yes-No choice visually checked against the image. Bounded English-field transcription retained; original-image OCR retained separately. Names and party labels preserved exactly; generic blank write-in slots are not people. Only displayed complete office blocks imported; the page says continued on next page, so full county and judicial inventory is not asserted."
+      },
+      {
+        "requestedUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+        "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg",
+        "httpStatus": 200,
+        "rawHash": "f3e4e1980990a58ffc41f0dbc7993648a118dacad6e775e75a22ad4f2afb021f",
+        "retrievedAt": "2026-11-03T03:45:53.148305+00:00",
+        "publisher": "Monica Gordon, Cook County Clerk (official notice published by Daily Herald)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28JHtNCEDF0E",
+        "reviewedEvidence": "Original Cook County Clerk official November 3, 2026 specimen ballot public notice, published October22 in Daily Herald, Township of Wheeling. Complete unmodified original 2848×5976 JPEG bytes retained; every imported candidate block and retention name/Yes-No choice visually checked against the image. Bounded English-field transcription retained; original-image OCR retained separately. Names and party labels preserved exactly; generic blank write-in slots are not people. Only displayed complete office blocks imported; the page says continued on next page, so full county and judicial inventory is not asserted."
+      },
+      {
+        "requestedUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+        "finalUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg",
+        "httpStatus": 200,
+        "rawHash": "4198d44c9f5117a469e10d560cef3af776f292d8d47e3270792afd2909f27b8e",
+        "retrievedAt": "2026-11-03T03:45:53.021850+00:00",
+        "publisher": "Monica Gordon, Cook County Clerk (official notice published by Daily Herald)",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "sourceUiUrl": "https://marketplace.dailyherald.com/chicago/legals-public-notices/legal-notice/AC1E04BF18eee35C28B1H8B75DC2",
+        "reviewedEvidence": "Original Cook County Clerk official November 3, 2026 specimen ballot public notice, published October22 in Daily Herald, Township of Hanover. Complete unmodified original 2848×5976 JPEG bytes retained; every imported candidate block and retention name/Yes-No choice visually checked against the image. Bounded English-field transcription retained; original-image OCR retained separately. Names and party labels preserved exactly; generic blank write-in slots are not people. Only displayed complete office blocks imported; the page says continued on next page, so full county and judicial inventory is not asserted."
+      }
+    ]
+  }
+}

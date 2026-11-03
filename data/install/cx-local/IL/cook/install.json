@@ -1,0 +1,582 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "IL",
+  "county": "Cook",
+  "countyFips": "17031",
+  "populationRank": 2,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "il-cx-local-2026-cook-president-county-board",
+      "title": "President of County Board",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-sheriff",
+      "title": "County Sheriff",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-treasurer",
+      "title": "County Treasurer",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-assessor",
+      "title": "County Assessor",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-mwrd-full-six-year-term",
+      "title": "Metropolitan Water Reclamation District Commissioners \u2014 Full 6-Year Term",
+      "ocdId": "ocd-division/country:us/state:il/special_district:metropolitan_water_reclamation_district_of_greater_chicago",
+      "type": "CANDIDACY",
+      "candidates": 6,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-mwrd-unexpired-two-year-term",
+      "title": "Metropolitan Water Reclamation District Commissioners \u2014 Unexpired 2-Year Term",
+      "ocdId": "ocd-division/country:us/state:il/special_district:metropolitan_water_reclamation_district_of_greater_chicago",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-15",
+      "title": "County Commissioner, 15th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:15",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-17",
+      "title": "County Commissioner, 17th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:17",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-9",
+      "title": "County Commissioner, 9th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:9",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-county-commissioner-14",
+      "title": "County Commissioner, 14th District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:14",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-board-of-review-1",
+      "title": "Board of Review, 1st District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/board_of_review_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-board-of-review-2",
+      "title": "Board of Review, 2nd District",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/board_of_review_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-appellate-hoffman",
+      "title": "Judge of the Appellate Court (Vacancy of Hoffman)",
+      "ocdId": "ocd-division/country:us/state:il/judicial_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-circuit-burke",
+      "title": "Judge of the Circuit Court (Vacancy of Burke)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-circuit-cobbs",
+      "title": "Judge of the Circuit Court (Vacancy of Cobbs)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-circuit-coghlan",
+      "title": "Judge of the Circuit Court (Vacancy of Coghlan)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-circuit-hooks",
+      "title": "Judge of the Circuit Court (Vacancy of Hooks)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-circuit-karkula",
+      "title": "Judge of the Circuit Court (Vacancy of Karkula)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-13-curry-jr",
+      "title": "Judge, 13th Subcircuit (Vacancy of Curry, Jr.)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-13-m-kelley",
+      "title": "Judge, 13th Subcircuit (Vacancy of M. Kelley)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-13-t-kelley",
+      "title": "Judge, 13th Subcircuit (Vacancy of T. Kelley)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-13-o-malley",
+      "title": "Judge, 13th Subcircuit (Vacancy of O'Malley)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-18-andreou",
+      "title": "Judge, 18th Subcircuit (Converted from Associate Judgeship of Andreou)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:18",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-subcircuit-18-chrones",
+      "title": "Judge, 18th Subcircuit (Converted from Associate Judgeship of Chrones)",
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:18",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-201",
+      "title": "Judicial Retention \u2014 Bertina E. Lampkin \u2014 Appellate Court",
+      "ocdId": "ocd-division/country:us/state:il/judicial_district:1",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-203",
+      "title": "Judicial Retention \u2014 Lewis Nixon \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-205",
+      "title": "Judicial Retention \u2014 Kerry M. Kennedy \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-207",
+      "title": "Judicial Retention \u2014 Joan E. Powell \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-209",
+      "title": "Judicial Retention \u2014 Maureen Ward Kirby \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-211",
+      "title": "Judicial Retention \u2014 Edward A. Arce \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-213",
+      "title": "Judicial Retention \u2014 Thomas J. Byrne \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-215",
+      "title": "Judicial Retention \u2014 Diana L. Kenworthy \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-217",
+      "title": "Judicial Retention \u2014 Kristyna Colleen Ryan \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-219",
+      "title": "Judicial Retention \u2014 Ursula Walowski \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-221",
+      "title": "Judicial Retention \u2014 Anthony C. \"Tony\" Kyriakopoulos \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-223",
+      "title": "Judicial Retention \u2014 Caroline Kate Moreland \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-225",
+      "title": "Judicial Retention \u2014 Thomas J. Carroll \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-227",
+      "title": "Judicial Retention \u2014 Andrea M. Buford \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-229",
+      "title": "Judicial Retention \u2014 John Michael Allegretti \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-231",
+      "title": "Judicial Retention \u2014 Kristal R. Rivers \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-233",
+      "title": "Judicial Retention \u2014 Steven G. Watkins \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-235",
+      "title": "Judicial Retention \u2014 Abbey Fishman Romanek \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-237",
+      "title": "Judicial Retention \u2014 Judith C. Rice \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-239",
+      "title": "Judicial Retention \u2014 Patrick Kevin Coughlin \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-241",
+      "title": "Judicial Retention \u2014 Megan Elizabeth Goldish \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-243",
+      "title": "Judicial Retention \u2014 Anjana M.J. Hansen \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-245",
+      "title": "Judicial Retention \u2014 Robert D. Kuzas \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28L6Fi2997DB/img/6899afa872fbe57b461644f98160e437.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-249",
+      "title": "Judicial Retention \u2014 Maritza Martinez \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-251",
+      "title": "Judicial Retention \u2014 Terrence J. McGuire \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-253",
+      "title": "Judicial Retention \u2014 Bridget Anne Mitchell \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28JHtNCEDF0E/img/79e27b1fb7834555307f61f756c1d507.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-255",
+      "title": "Judicial Retention \u2014 James P. Pieczonka \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-257",
+      "title": "Judicial Retention \u2014 Patricia O'Brien Sheahan \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-259",
+      "title": "Judicial Retention \u2014 Michael A. Forti \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-261",
+      "title": "Judicial Retention \u2014 Nichole C. Patton \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg"
+    },
+    {
+      "id": "il-cx-local-2026-cook-retention-263",
+      "title": "Judicial Retention \u2014 Sondra N. Denmark \u2014 Circuit Court",
+      "ocdId": "ocd-division/country:us/state:il/county:cook",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://adas-oregon-cas.s3.amazonaws.com/AC1E028C0a67a1AE17jNB7AF8E75/AC1E04BF18eee35C28B1H8B75DC2/img/be6ac4d3abe4f30949c7f97042775789.jpg"
+    }
+  ],
+  "operation": "Merge as partial state ballot data through existing BallotContestMerge/runBallotPublication; preserve unrelated existing Illinois contests, candidacies, explainers, sources and held-contest identities. No production write performed.",
+  "resolvedHeldContests": [],
+  "identityReuse": "Checked existing data/ballot/2026-general/il.json: no matching Cook local offices, retained candidates or held contests exist; all IDs newly minted for these exact offices.",
+  "coverage": [
+    "Cook County partial official specimen-ballot coverage: countywide offices, Metropolitan Water Reclamation District full and unexpired terms, commissioner districts9/14/15/17, Board of Review districts1/2, countywide judicial vacancies, subcircuits13/18 and31 individual retention questions. Other Cook contests and remaining retention questions remain under acquisition.",
+    "Chicago is a separate election authority. Its current October27 candidate inventory is preserved as a lead; Chicago school president and20 school subdistrict specimen ballots are not yet acquired. No conclusion about the absence of any Chicago, municipal, school or special-district race is made.",
+    "District contests retain their precise district division keys. Commissioner, Board of Review, judicial subcircuit and MWRD keys are not yet in the held Illinois registry and need exact geographic joins for address-specific reader delivery. Countywide facts can serve Chicago and suburban Cook where the office electorate is countywide.",
+    "Declared write-in candidates are separate coverage work. Blank write-in slots printed on these ballots are not candidates; no named declared write-in certification was acquired."
+  ],
+  "coverageStatus": "PARTIAL_COUNTY_OFFICIAL_SAMPLE_BALLOT",
+  "counts": {
+    "contests": 56,
+    "candidateContests": 25,
+    "retentionQuestions": 31,
+    "candidacies": 67,
+    "distinctNamedPeople": 66
+  },
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS: 4 raw sources and 123 exact saved-source quotes",
+    "completeOfficialNamedCandidateBlocks": "PASS_VISUAL_REVIEW_ORIGINAL_SPECIMEN_IMAGES",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PENDING_PARENT_SHARED_OFFLINE_VALIDATION",
+    "unrelatedCandidateAliasEnrichments": 266,
+    "productionWrites": "NONE"
+  },
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/board_of_review_district:1",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/board_of_review_district:2",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:14",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:15",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:17",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/council_district:9",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:13",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/county:cook/judicial_subcircuit:18",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/judicial_district:1",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:il/special_district:metropolitan_water_reclamation_district_of_greater_chicago",
+      "status": "EXACT_PRINTED_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join this precise election district to an official boundary and reader division; do not widen to Cook County or Chicago."
+    }
+  ],
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Acquire remaining suburban Cook township specimen pages, Chicago Board official sample ballots (including school president and20 subdistricts), remaining county commissioner and judicial subcircuits, and separate named declared write-in certifications."
+    },
+    {
+      "owner": "River/registry",
+      "next": "Resolve exact reader geography for all unmatched district keys listed here."
+    },
+    {
+      "owner": "River",
+      "next": "Run existing merge/manual projection checks offline; install eligible data only under user authorization and verify source-to-reader delivery."
+    }
+  ],
+  "sourceFailures": [
+    {
+      "url": "https://www.cookcountyclerkil.gov/elections/sample-ballots",
+      "status": 403,
+      "evidenceFile": "/workspace/cx-local-work/cook/cook-sample.source"
+    },
+    {
+      "url": "https://www.cookcountyclerkil.gov/elections/candidate-information/candidate-listings",
+      "status": 403,
+      "evidenceFile": "/workspace/cx-local-work/cook/cook-candidates.source"
+    },
+    {
+      "url": "https://chicagoelections.gov/elections/2026-general-election",
+      "status": 403,
+      "evidenceFile": "/workspace/cx-local-work/cook/chicago.source"
+    }
+  ],
+  "nextOwner": "Parent: offline validation; River: data installation and exact geography joins. No publication performed."
+}

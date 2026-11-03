@@ -1,0 +1,55 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "CompletecurrentMorris46nativePDFstyles/all39municipalities; all46operativepanelslocallyOCRed,3uniquequestions fullyvisuallychecked. Separateoffcycleexcluded."
+  },
+  "subjects": [
+    {
+      "id": "nj-morris-2026:boonton-township-school-bond",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:boonton_township_school_district",
+      "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf"
+    },
+    {
+      "id": "nj-morris-2026:mount-olive-school-bond",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:mount_olive_township_school_district",
+      "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf"
+    },
+    {
+      "id": "nj-morris-2026:pequannock-trust-uses",
+      "ocdId": "ocd-division/country:us/state:nj/county:morris/place:pequannock_township",
+      "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "CompleteoriginalofficialPDFbytes; actualoperativepanels are embeddedimages. Fullquestion/statement/YesNo verifiedvisually afterlocalOCR; boundedtranscripts archived, no instruction-onlytextusedasballotcoverage. All46originals andOCRtext mapped.",
+  "reviewedScratchPacketSha256": "98b17fa947db21961c0b8847b181fc1359330e083ff9f7fbfda0075223c9df41",
+  "canonicalInputSha256": "bcc5236869e24f5035fbb8563bae9ac39a81d65341fe4ce7719e2755dc39978a",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

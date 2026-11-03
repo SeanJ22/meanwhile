@@ -1,0 +1,24 @@
+{
+  "scope": "Complete currentMorrisCountyClerk46publishedsamplePDFstyles/all39municipalities. Threeuniquequestions:BoontonTownshipschoolbond,MountOliveschoolbond,Pequannocktrustuses. Separateoffcycleelections excluded.",
+  "officialSampleIndexUrl": "https://www.morriscountyclerk.org/Elections/Sample-Ballots",
+  "captureMetadataPaths": {
+    "sampleIndex": {
+      "extractedTextPath": "sources/5513c1484d28f32ee04f2155031e507edbaefcab643699ed43e40af81580f85f.txt",
+      "extractedTextSha256": "5513c1484d28f32ee04f2155031e507edbaefcab643699ed43e40af81580f85f",
+      "nativeMetadataPath": "sources/c5710bbcc762f984d4441d3f80e7889b06f000cc13d9b091198dca8971900757.json",
+      "publishedLinksPath": "sources/6a5dbd371008e99dafdcbd421440e5a84487dbe50c615e644ffedad21e86a0bd.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    }
+  },
+  "stateGovernmentDirectoryNativePath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "stateGovernmentDirectoryLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "authorityChain": [
+    "NativeNJ.govcountyofficialsdirectory links exactMorrisCountyClerk.org publisher.",
+    "NativecurrentClerkindex directlylinks all46current2026samplePDFs."
+  ],
+  "nativeInstructionOnlyTextNotCountedAsBallotCoverage": true,
+  "inventoryPath": "official-inventory.json",
+  "panelOcrInventoryPath": "panel-ocr-inventory.json",
+  "uniqueCurrentQuestions": 3,
+  "electionDate": "November3,2026"
+}

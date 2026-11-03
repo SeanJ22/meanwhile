@@ -1,0 +1,890 @@
+[
+  {
+    "publishedLabel": "Boonton - Ward 1(PDF, 621KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-ward-1.pdf",
+    "sourcePdf": "sources/9c2fe14922829dd82e14065ecbdbbec1678e55f36508a83e4a5533cd63ed063f.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      46.89799880981445,
+      490.5369873046875,
+      1755.5198974609375,
+      749.927001953125
+    ],
+    "imageSha256": "a57a9ba158a52698758c866e04a77545f7e9cd740f6f23667c518b74add0e547",
+    "ocrPath": "sources/6d4bc8bce5e63567f0d1af5e17548c5558ecf075475cf7855bb5dfa1be5e3b5b.txt",
+    "ocrSha256": "6d4bc8bce5e63567f0d1af5e17548c5558ecf075475cf7855bb5dfa1be5e3b5b",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Boonton - Ward 2(PDF, 620KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-ward-2.pdf",
+    "sourcePdf": "sources/f439b275698f46dd9908921e1549c6e7cf8b8996c76dbcf8ec8cd57f67ce01a9.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      46.22800064086914,
+      499.9169921875,
+      1755.5789794921875,
+      759.3070068359375
+    ],
+    "imageSha256": "4adc4929e2232e1fd32e885340df40b64418d2061dfbbd8c34650704ae44fef2",
+    "ocrPath": "sources/46defb05e3de4d0ca1dd3569510911cd47575fe63379ca8a2145025e8b03238e.txt",
+    "ocrSha256": "46defb05e3de4d0ca1dd3569510911cd47575fe63379ca8a2145025e8b03238e",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Boonton - Ward 3(PDF, 618KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-ward-3.pdf",
+    "sourcePdf": "sources/1617c72e93e75ed6982eef98e403a3f5ecaf004f1347e6eb3d7fd7bb22a65f53.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      47.56800079345703,
+      495.22796630859375,
+      1756.18994140625,
+      753.8889770507812
+    ],
+    "imageSha256": "8ac6a3886df01d95aaeea8c3be592b60ec91b93f8aa363d1f86ff8120b34dd84",
+    "ocrPath": "sources/f63734d2057db974ea9d696e22e1d9af8ffe5a6cf4815fef73e7c9e321acb83a.txt",
+    "ocrSha256": "f63734d2057db974ea9d696e22e1d9af8ffe5a6cf4815fef73e7c9e321acb83a",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Boonton - Ward 4(PDF, 622KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-ward-4.pdf",
+    "sourcePdf": "sources/5e884cd2d4ebce6b1be0ee2063534f4a0da3ccc12aa365afa3a1d4bd032b815a.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      44.88800048828125,
+      491.2080078125,
+      1755.696044921875,
+      750.5980224609375
+    ],
+    "imageSha256": "e690a454ef255c169b428373daf3d55b51330c78544f2ff3cc3f323800c21fe2",
+    "ocrPath": "sources/eb18d6e37dea4067a7c53160b906d9d8cb0a7527afbf84a0b73ab32f5f541c45.txt",
+    "ocrSha256": "eb18d6e37dea4067a7c53160b906d9d8cb0a7527afbf84a0b73ab32f5f541c45",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Boonton Township(PDF, 882KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+    "sourcePdf": "sources/ca7a54c6d9235ffcbb342ed662aab14a1059ab7580594fe2cd12de7a308b1871.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      105.43900299072266,
+      455.69805908203125,
+      1696.218017578125,
+      1096.758056640625
+    ],
+    "imageSha256": "cc6c5c14a1e7f6e73a07cfd833a2c5be210445388849c6c26251c6c685cfa67e",
+    "ocrPath": "sources/35d3eb050b23e3bb9569a7c0a8235bf6c5fa169123ea63ebc653406d8cc02ea5.txt",
+    "ocrSha256": "35d3eb050b23e3bb9569a7c0a8235bf6c5fa169123ea63ebc653406d8cc02ea5",
+    "keywordLines": [
+      "BOND PROPOSAL QUESTION",
+      "projects described in this Bond Proposal Question.",
+      "Do you approve this Bond Proposal Question?"
+    ],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Butler Borough(PDF, 657KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-butler.pdf",
+    "sourcePdf": "sources/f7155cf73214599d512bc3bd090880f277cae49fabb68e6ae0af51ac6d42d4de.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      44.21799850463867,
+      455.697021484375,
+      1753.5689697265625,
+      811.9940185546875
+    ],
+    "imageSha256": "ba32e2ffde16a4f2d62fb58e368fc869b21a2bbe34b67c7e8db132dd996d03a4",
+    "ocrPath": "sources/d8d82078c1c01307db104b9e6dcbc7699265442369dc0840b90ead8c42049ece.txt",
+    "ocrSha256": "d8d82078c1c01307db104b9e6dcbc7699265442369dc0840b90ead8c42049ece",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Chatham Borough(PDF, 627KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-chatham-borough.pdf",
+    "sourcePdf": "sources/b3f71b76fd59a0075e178b0cef95e2ad5cf1f8ec0739abaa51ec4f3492bdda4f.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      50.917999267578125,
+      455.6979675292969,
+      1760.2689208984375,
+      764.6339721679688
+    ],
+    "imageSha256": "aa35941a84d98994319950ce66a6742ee8cfddff222deb647e8e1f3bf5373c5b",
+    "ocrPath": "sources/6ecee33dde21a176f29ba68d4e7a707491412e9519d3b968989c27a866bac695.txt",
+    "ocrSha256": "6ecee33dde21a176f29ba68d4e7a707491412e9519d3b968989c27a866bac695",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Chatham Township(PDF, 618KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-chatham-township.pdf",
+    "sourcePdf": "sources/aba585925c65c7a50ca1df85b59bfb14d099e4ec0cf1f2967826f71a59fad4ab.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      46.22800064086914,
+      455.697998046875,
+      1754.8499755859375,
+      763.177001953125
+    ],
+    "imageSha256": "2b419a561c6bddaf1c0c7cf435602e4aca3e672a8b33b05e6f88b5b6d2f51bf3",
+    "ocrPath": "sources/0f8c03f4513b2268be75a1fddcfc29c7674c5827e5ebeba93bbb7c8c71709a1a.txt",
+    "ocrSha256": "0f8c03f4513b2268be75a1fddcfc29c7674c5827e5ebeba93bbb7c8c71709a1a",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Chester Borough(PDF, 683KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-chester-borough.pdf",
+    "sourcePdf": "sources/b2849f099586ea3ce81fa5d1dd6d5ae3b3b192905afab65f7752bef94500f8ca.source",
+    "page": 1,
+    "imageXref": 30,
+    "imageRect": [
+      41.06800079345703,
+      475.0459899902344,
+      1750.4189453125,
+      942.093994140625
+    ],
+    "imageSha256": "c96cf42721b1b3805a027fe7defcea61773fea002466b0575f949b84f02a87e9",
+    "ocrPath": "sources/cba79fdabd8adf26a76d43b1a9a673db02f351a5d693fa117afc5587fdbf7103.txt",
+    "ocrSha256": "cba79fdabd8adf26a76d43b1a9a673db02f351a5d693fa117afc5587fdbf7103",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Chester Township(PDF, 745KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-chester-township.pdf",
+    "sourcePdf": "sources/d1421cf6b16d2cc57e2cf0fe14b44f5e238bbff672c83fa6833c360c2747bce1.source",
+    "page": 1,
+    "imageXref": 31,
+    "imageRect": [
+      39.183998107910156,
+      461.072021484375,
+      1749.991943359375,
+      929.5770263671875
+    ],
+    "imageSha256": "6634abf767fc1d55d8b1799dc187f939dee4ebf1ecf3bb92bc38cd789cc49700",
+    "ocrPath": "sources/4bbb5d16da1f7f77175ceb760fb8d5adf3578d8076565e52f951ee4d9bbb238f.txt",
+    "ocrSha256": "4bbb5d16da1f7f77175ceb760fb8d5adf3578d8076565e52f951ee4d9bbb238f",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Denville Township(PDF, 668KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-denville.pdf",
+    "sourcePdf": "sources/841598b45982cb2850bb39514ce25c181a7a029eb33444e4296493bb7025c031.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      48.237998962402344,
+      455.697021484375,
+      1756.8599853515625,
+      969.3770141601562
+    ],
+    "imageSha256": "b63a776989e905e4f6773abfb1ad72e6c6fca69d06a7f142a4c1cfbae6db968a",
+    "ocrPath": "sources/88d0e80927201ad171d41698b25e5b3fa7ed53f85f23a8350ca50162ed2b67b3.txt",
+    "ocrSha256": "88d0e80927201ad171d41698b25e5b3fa7ed53f85f23a8350ca50162ed2b67b3",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Dover - Ward 1(PDF, 886KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-dover-ward-1.pdf",
+    "sourcePdf": "sources/36bf5b4b5157cb8f8f028015af8e99fe97af1f1e054059142f234029c3848ade.source",
+    "page": 1,
+    "imageXref": 30,
+    "imageRect": [
+      567.02001953125,
+      585.2149658203125,
+      1746.3880615234375,
+      764.10498046875
+    ],
+    "imageSha256": "b42aca5fe9e5b965d8841a8630314da4723bbbd0b3ab2fa67e6015d9ded7082d",
+    "ocrPath": "sources/401262c930ff0387fd14c129f53b040ce539ffa57231206fd3130f10d1dc6fcd.txt",
+    "ocrSha256": "401262c930ff0387fd14c129f53b040ce539ffa57231206fd3130f10d1dc6fcd",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Dover - Ward 2(PDF, 887KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-dover-ward-2.pdf",
+    "sourcePdf": "sources/0c11941366c5ac32fa404713b122d31e93fc6674300cd25f5f978b6a53c9b79c.source",
+    "page": 1,
+    "imageXref": 31,
+    "imageRect": [
+      566.260986328125,
+      574.9569702148438,
+      1744.1209716796875,
+      754.8519897460938
+    ],
+    "imageSha256": "ef72d4c6e9887ec676c740a80b88bd3ce93d83f2e3b730b26eeb8551d6a0bf2f",
+    "ocrPath": "sources/401f806cf06f4075670211df094040d063578cc7fb760597a7f982a0801871e1.txt",
+    "ocrSha256": "401f806cf06f4075670211df094040d063578cc7fb760597a7f982a0801871e1",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Dover - Ward 3(PDF, 890KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-dover-ward-3.pdf",
+    "sourcePdf": "sources/4158d1d21282b8cb144b9ede8c0d592566334105acb0518a00f58806ebba196b.source",
+    "page": 1,
+    "imageXref": 31,
+    "imageRect": [
+      560.68798828125,
+      586.2909545898438,
+      1739.552978515625,
+      766.1859741210938
+    ],
+    "imageSha256": "52352f4b1534c5c055f98c3001e67ff2110908eacfad9c0089d751408cd09d13",
+    "ocrPath": "sources/e2fb6c75fa034f5b5ed0112c8c6b1d163596a32ce415638a7de4571d63c6b0d3.txt",
+    "ocrSha256": "e2fb6c75fa034f5b5ed0112c8c6b1d163596a32ce415638a7de4571d63c6b0d3",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Dover - Ward 4(PDF, 889KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-dover-ward-4.pdf",
+    "sourcePdf": "sources/5ba1092d95817df93705f0fc93a4bfe4945e1608c1de709a7522fe8d7bb53059.source",
+    "page": 1,
+    "imageXref": 32,
+    "imageRect": [
+      558.3740234375,
+      583.8170166015625,
+      1737.7420654296875,
+      763.2100219726562
+    ],
+    "imageSha256": "554b8d1401515d9b8aa5c57eea3c666f7c00b62a2f966134df47f7f6f127891d",
+    "ocrPath": "sources/95887abe3066524fc43343b25291af8f1e280214ff9ff607fce1384f0db976ba.txt",
+    "ocrSha256": "95887abe3066524fc43343b25291af8f1e280214ff9ff607fce1384f0db976ba",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "East Hanover Township(PDF, 721KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-east-hanover.pdf",
+    "sourcePdf": "sources/675977ef7d588997930761b6534d0488228e20f2355fc024426035f66536dade.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      42.87799835205078,
+      455.697998046875,
+      1752.95703125,
+      1018.1950073242188
+    ],
+    "imageSha256": "1962c1b403ffb6b5d462c82be6ca22da52469844a7ec6cf4fcca0fae5b45f828",
+    "ocrPath": "sources/08907ee5df4f6fda3644a46bde69d2cfa5e58d427a01b4460322669e165c0bff.txt",
+    "ocrSha256": "08907ee5df4f6fda3644a46bde69d2cfa5e58d427a01b4460322669e165c0bff",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Florham Park Borough(PDF, 623KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/elections/sample-ballots/2026-general-sample-florham-park.pdf",
+    "sourcePdf": "sources/27b8d62db7a42f97250ce0c9c2cd393796649e07f82574ea5ca7b55c64a0beee.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      44.21799850463867,
+      455.697021484375,
+      1754.2969970703125,
+      763.905029296875
+    ],
+    "imageSha256": "c8395bdf2c514f83353fc46a151dd541c5fa355b08e0251e84156cb42663beb4",
+    "ocrPath": "sources/0ea91ef9d592f281c9d1228c8cc0f5d4127650aacd5a967d612a7746c9073be9.txt",
+    "ocrSha256": "0ea91ef9d592f281c9d1228c8cc0f5d4127650aacd5a967d612a7746c9073be9",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Hanover Township(PDF, 700KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/4/elections/sample-ballots/2026-general-sample-hanover.pdf",
+    "sourcePdf": "sources/103b5f14a00a97290c27210b2632ff2040470198c89c938937289dec95d7fc8f.source",
+    "page": 1,
+    "imageXref": 26,
+    "imageRect": [
+      43.54800033569336,
+      455.697021484375,
+      1755.0849609375,
+      924.9310302734375
+    ],
+    "imageSha256": "88da02b3e4cf091bedc9b7a54d4f89748a75d4a64c16bfebb64865febeb1f0da",
+    "ocrPath": "sources/b03657765bb809b611734139ca2f1b6e2d27547de423228d1bfb62c40a69c6bb.txt",
+    "ocrSha256": "b03657765bb809b611734139ca2f1b6e2d27547de423228d1bfb62c40a69c6bb",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Harding Township(PDF, 626KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-harding.pdf",
+    "sourcePdf": "sources/710d3c03174beef5e4ad5bc9dd12b25f3d21fed052e28b971c3a08df8b3130ad.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      51.74100112915039,
+      456.739990234375,
+      1760.3629150390625,
+      764.947998046875
+    ],
+    "imageSha256": "ebc4abafb8ede720d33079884939cd06bdb5b566071631e4db0a60c2875904c7",
+    "ocrPath": "sources/7ca9d3425b2005079d15408ac5a206717f1645092de9757033a0ba024de06f12.txt",
+    "ocrSha256": "7ca9d3425b2005079d15408ac5a206717f1645092de9757033a0ba024de06f12",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Jefferson Township(PDF, 685KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-jefferson.pdf",
+    "sourcePdf": "sources/9aca523c8e84502322edb5166c64b2fbddf58de96717a75091dd0d4159286b63.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      44.88800048828125,
+      455.697021484375,
+      1753.510009765625,
+      857.1690063476562
+    ],
+    "imageSha256": "7efdaf9fd396d4af8409ba985812cfa7efa4a5e680c48eb02796d0899de8e870",
+    "ocrPath": "sources/f3aec7582e74ef2b9d9c9311ccbd909208bca8b7ee0aaef074f43accfca5d58a.txt",
+    "ocrSha256": "f3aec7582e74ef2b9d9c9311ccbd909208bca8b7ee0aaef074f43accfca5d58a",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Kinnelon Borough(PDF, 663KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-kinnelon.pdf",
+    "sourcePdf": "sources/3fa8fa77b17d095d1efc94cf159a2b5ece3e72540127e98eaf5fc6836865fa1a.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      44.88800048828125,
+      455.697021484375,
+      1754.239013671875,
+      811.9940185546875
+    ],
+    "imageSha256": "9ab874ff3d6b8b5509da8bfb3cad2df2e02a7e87ca4c20bfce2315facb1333e9",
+    "ocrPath": "sources/a2bc373f1d586e45839ef56e30a850f4666d4f01b4905b02d31b2376ddbedfaf.txt",
+    "ocrSha256": "a2bc373f1d586e45839ef56e30a850f4666d4f01b4905b02d31b2376ddbedfaf",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Lincoln Park Borough(PDF, 689KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-lincoln-park.pdf",
+    "sourcePdf": "sources/c9ee7ffefe04f3dcd59431095078387bee077f1e2cd2e6176a158c9a5ae3ea59.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      46.99399948120117,
+      455.697998046875,
+      1754.8880615234375,
+      857.8980102539062
+    ],
+    "imageSha256": "99cf6fd09cd0d91beecd04871196936ef78fd28cf3cd1004926c3e0976346fcb",
+    "ocrPath": "sources/3a8decdf34ad86a3c2745ba39f8a1c8da12d7cf91f70d9aeec90716030bd217d.txt",
+    "ocrSha256": "3a8decdf34ad86a3c2745ba39f8a1c8da12d7cf91f70d9aeec90716030bd217d",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Long Hill Township(PDF, 733KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-long-hill.pdf",
+    "sourcePdf": "sources/9d2151f848b28aa75d1978f15207d6769f9cffa8543f483c4b09e07a35370d05.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      49.22600173950195,
+      455.69696044921875,
+      1757.847900390625,
+      970.833984375
+    ],
+    "imageSha256": "af73063111d8ff745d2b5aaab7c55765c7620310cbe2d7880051c71cb7cbf948",
+    "ocrPath": "sources/57e7f2b8ef3b7a680194f13c1d6235d76317e913c22086ad03f5580047f16c9a.txt",
+    "ocrSha256": "57e7f2b8ef3b7a680194f13c1d6235d76317e913c22086ad03f5580047f16c9a",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Madison Borough(PDF, 636KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-madison.pdf",
+    "sourcePdf": "sources/30868d1d655b37f70fe88e5cfcd3452716b696ec68b86d6c43db07cedaa2859f.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      46.22800064086914,
+      455.6969909667969,
+      1757.7650146484375,
+      762.447998046875
+    ],
+    "imageSha256": "a5f44730054a6b76cd51a7a08c230ac7ef8a88cced1eac548d743b672c4b154b",
+    "ocrPath": "sources/1b414f87bb47cbf1717b99eb3de9b4508bd7ab07ce1ba110b1be86725840124d.txt",
+    "ocrSha256": "1b414f87bb47cbf1717b99eb3de9b4508bd7ab07ce1ba110b1be86725840124d",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Mendham Borough(PDF, 652KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mendham-borough.pdf",
+    "sourcePdf": "sources/9334bbd599d2d3b37967d76e9b0193b8f747f19442b6175739a978edc9922117.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      49.22600173950195,
+      455.6969909667969,
+      1757.1199951171875,
+      810.5369873046875
+    ],
+    "imageSha256": "f1f0f830f9ad641be21d050e9fc6d05b8af475d6928cbbf63a3cf8c0238c9654",
+    "ocrPath": "sources/bcbab1224ade42653d5fae53347f07aa0d0fc820d8b5187265713f247cf7e693.txt",
+    "ocrSha256": "bcbab1224ade42653d5fae53347f07aa0d0fc820d8b5187265713f247cf7e693",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Mendham Township - 7th Congressional(PDF, 691KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mendham-township-7th-cong.pdf",
+    "sourcePdf": "sources/89fb247560fa4b50c73bda1cebc9041bf060d0c1606fc3d9bae733e9963c2be3.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      47.88600158691406,
+      455.697998046875,
+      1756.5079345703125,
+      875.385009765625
+    ],
+    "imageSha256": "0be82a0a53f4d18bac49ea5a0101f26bd7f97d2cb24fa8ba97c90f8d9edb58e7",
+    "ocrPath": "sources/fca79eb435b2cd195f1a99f7399fb1650363ceb559237fc52b8a1197d876824f.txt",
+    "ocrSha256": "fca79eb435b2cd195f1a99f7399fb1650363ceb559237fc52b8a1197d876824f",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Mendham Township  - 11th Congressional(PDF, 689KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mendham-township-11th-cong.pdf",
+    "sourcePdf": "sources/cd4064cd1d8288c74fdd839e6a302549dd8a22ac0ca6718d9000e316080a2c2d.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      46.22800064086914,
+      455.6980285644531,
+      1754.8499755859375,
+      876.842041015625
+    ],
+    "imageSha256": "59a5f0aa6353042a52e816efe2996eb504c441bdb2180b888f30535de3843b43",
+    "ocrPath": "sources/401f89d91a98f806fcd33e89848e1f7b7111c0b003f7d133cafce50114a4afa4.txt",
+    "ocrSha256": "401f89d91a98f806fcd33e89848e1f7b7111c0b003f7d133cafce50114a4afa4",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Mine Hill Township(PDF, 589KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mine-hill.pdf",
+    "sourcePdf": "sources/9476989bed477f3738ad34d7aa386e3801a39b2c5e1264ab53f26e349bb6d572.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      45.875999450683594,
+      525.3770141601562,
+      1755.9549560546875,
+      738.864013671875
+    ],
+    "imageSha256": "8ab31c104986832817e0c276d746d213ce5a5629888b380a2159aa8e569b5bac",
+    "ocrPath": "sources/242549b3c76dba1efe3a8347f3196e0ab731202a6c187d35e7900fdf71ae1b96.txt",
+    "ocrSha256": "242549b3c76dba1efe3a8347f3196e0ab731202a6c187d35e7900fdf71ae1b96",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Montville Township(PDF, 666KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-montville.pdf",
+    "sourcePdf": "sources/41f78780f75b896c286dcf0b6dbb9d246703a8e9ed3497ed7cbfe805da68968a.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      46.89799880981445,
+      455.6969909667969,
+      1755.5198974609375,
+      841.8679809570312
+    ],
+    "imageSha256": "944c6e24d3c5ad2fecc6b75af4e49cc0a39345f2f75e479ac0041d79dd29ea49",
+    "ocrPath": "sources/97d99c661581e20f6cc7f7cda8ce8dbf8005ba12d8b4eb934496a2004e0f4fa7.txt",
+    "ocrSha256": "97d99c661581e20f6cc7f7cda8ce8dbf8005ba12d8b4eb934496a2004e0f4fa7",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Morris Plains Borough(PDF, 669KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-morris-plains.pdf",
+    "sourcePdf": "sources/ec8ebfa7d46ecc9ad06c9bcae343da8387baf85e80982c0f8f35224f61a1c9dd.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      44.21799850463867,
+      455.6969909667969,
+      1755.0260009765625,
+      809.8079833984375
+    ],
+    "imageSha256": "5d7d0fc15040ffbde3831bb33a32069d643bc0bc09c9ccafb9ac1f4e2f212dda",
+    "ocrPath": "sources/56c20e759faa3fbf0fb3d863f19d69d192cc09fca0f83b8c13e8f571d8a78d4f.txt",
+    "ocrSha256": "56c20e759faa3fbf0fb3d863f19d69d192cc09fca0f83b8c13e8f571d8a78d4f",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Morris Township(PDF, 646KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-morris-township.pdf",
+    "sourcePdf": "sources/991aff1997d2471d88931269a7f9285a488e5c7175ced49744930c3220bec2be.source",
+    "page": 1,
+    "imageXref": 27,
+    "imageRect": [
+      45.55799865722656,
+      455.6969909667969,
+      1754.179931640625,
+      810.5369873046875
+    ],
+    "imageSha256": "7f94c8b5444c9be54245412691c06190052ba5e2eb62550e5595c0a4a2dfa22b",
+    "ocrPath": "sources/4597225e9e60188d351197038ff5b74eff66f2f7f3d80b05818330da78ea453e.txt",
+    "ocrSha256": "4597225e9e60188d351197038ff5b74eff66f2f7f3d80b05818330da78ea453e",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Morristown(PDF, 819KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-morristown.pdf",
+    "sourcePdf": "sources/47c21df34d6f41e1290b7e784f0fed8042eafeae5eb0563c6102e17536702ce8.source",
+    "page": 1,
+    "imageXref": 32,
+    "imageRect": [
+      562.1199951171875,
+      581.738037109375,
+      1741.488037109375,
+      728.9710693359375
+    ],
+    "imageSha256": "df3afa44ccf1b4ce6cf49cd16fe993804f0041ac1519acc7ba7ea2f541c4df43",
+    "ocrPath": "sources/68562883c413e1991354e0eae7f11a715e4c4a5cea805fd12aa042d31eb6a9dc.txt",
+    "ocrSha256": "68562883c413e1991354e0eae7f11a715e4c4a5cea805fd12aa042d31eb6a9dc",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Mount Arlington Borough(PDF, 653KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-arlington.pdf",
+    "sourcePdf": "sources/e5c3ba90a4c59338f9152464f2f1fd522c02ab94907eda4d50c7293bbac71d9a.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      47.215999603271484,
+      455.6969909667969,
+      1757.294921875,
+      810.5369873046875
+    ],
+    "imageSha256": "a6231ddb62e0c5e91393065ee8dbc2039ac4a2d74ec597b11f25ee5b5506987b",
+    "ocrPath": "sources/e1210cdff506fbfd981a86b5d4a3aaba26bf3c542bc9e39f5df8d2a87108686f.txt",
+    "ocrSha256": "e1210cdff506fbfd981a86b5d4a3aaba26bf3c542bc9e39f5df8d2a87108686f",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Mount Olive Township(PDF, 732KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+    "sourcePdf": "sources/8cc684d8a51ed087af67c2b478c1db288d7a6fcd8fae711a1bb4fca4287264c8.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      48.555999755859375,
+      455.69696044921875,
+      1756.4500732421875,
+      984.677978515625
+    ],
+    "imageSha256": "7fd5a870bf5fb424e7d4a1ce226c23c061d20af8e95ce5c66e16817fb60390ba",
+    "ocrPath": "sources/14ab8678e6b6ab44556c3a69ee80496869e166d21822c241e28e880ad4672d8b.txt",
+    "ocrSha256": "14ab8678e6b6ab44556c3a69ee80496869e166d21822c241e28e880ad4672d8b",
+    "keywordLines": [
+      "BOND PROPOSAL QUESTION",
+      "Do you approve this Bond Proposal Question?"
+    ],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Mountain Lakes Borough(PDF, 663KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mountain-lakes.pdf",
+    "sourcePdf": "sources/242a8f07d1f1491cd549a1e644742db60e3b9e506a26c63035084615c24fc7e9.source",
+    "page": 1,
+    "imageXref": 28,
+    "imageRect": [
+      47.56800079345703,
+      455.6969909667969,
+      1756.9189453125,
+      841.1389770507812
+    ],
+    "imageSha256": "cee3ceda570b8e8c92c25ed08edd3f3a14a7f6d8b6f66ba21537f46a60e5c990",
+    "ocrPath": "sources/182486be3312f8bf61f185a0aa797b6e591a11bd2481f677c9969fabe9b27a20.txt",
+    "ocrSha256": "182486be3312f8bf61f185a0aa797b6e591a11bd2481f677c9969fabe9b27a20",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Netcong Borough(PDF, 644KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-netcong.pdf",
+    "sourcePdf": "sources/949509b072f426e6d1d5fca72f3c79d3073283a50bb9bc689ad129f7fbe364e3.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      45.875999450683594,
+      492.5479736328125,
+      1754.4979248046875,
+      800.0269775390625
+    ],
+    "imageSha256": "e4c9b6f72696b7d111e36bbdbc4969e4a8a3d2b1ef87ff0c8c90d81158faf497",
+    "ocrPath": "sources/116f0ae707382b5293f04affea312c76314a6964bd013def8c49f47a882a904b.txt",
+    "ocrSha256": "116f0ae707382b5293f04affea312c76314a6964bd013def8c49f47a882a904b",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Parsippany – Troy Hills Township(PDF, 651KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-parsippany.pdf",
+    "sourcePdf": "sources/86ccbfd9e24b76a33e79855ed8c722b2277e221824c8e51aa65dc03810667808.source",
+    "page": 1,
+    "imageXref": 28,
+    "imageRect": [
+      44.88800048828125,
+      455.697021484375,
+      1755.696044921875,
+      889.95703125
+    ],
+    "imageSha256": "5fb1471391179c69c0c4df1a7d51a9b1ad031194880a24e21d1c2dc55005f4e1",
+    "ocrPath": "sources/db549c7ec8b152d792f31dcfa4c7b83334abf60bb1f1bbe9a99bcdfb53237e8d.txt",
+    "ocrSha256": "db549c7ec8b152d792f31dcfa4c7b83334abf60bb1f1bbe9a99bcdfb53237e8d",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Pequannock Township(PDF, 836KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+    "sourcePdf": "sources/63a21dc1514e553418223122aa9ecae56a3ddb1a357274e81ccbf2d83edbf679.source",
+    "page": 1,
+    "imageXref": 28,
+    "imageRect": [
+      128.67799377441406,
+      455.697021484375,
+      1661.18798828125,
+      1087.384033203125
+    ],
+    "imageSha256": "b0756b0e15e1bd0551ff216ca5ddf1f515a27e859e7afc63e764084ce78629ad",
+    "ocrPath": "sources/8630d946d59fdbc07899dd523a0de963459f44ab88138c2e5031bfb965c2f8b9.txt",
+    "ocrSha256": "8630d946d59fdbc07899dd523a0de963459f44ab88138c2e5031bfb965c2f8b9",
+    "keywordLines": [
+      "OPEN SPACE TRUST FUND REFERENDUM:",
+      "Shall the Pequannock Township Council adopt an Ordinance revising the permitted uses of the Open",
+      "Space, Recreation, Farmland and Historic Preservation Trust Fund, currently codified as Section 5-112",
+      "Preservation Trust Fund to broaden the purposes for which it may be used to include all purposes",
+      "INTERPRETIVE STATEMENT:",
+      "Space, Recreation, Farmland and Historic Preservation Trust Fund. A “Yes” vote will mean the voters"
+    ],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Randolph Township(PDF, 685KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-randolph.pdf",
+    "sourcePdf": "sources/f8e78163fd0c7cbcd2b97ae8f048584b19cd7e0bd233a954e00f2ea87de97ebf.source",
+    "page": 1,
+    "imageXref": 28,
+    "imageRect": [
+      47.56800079345703,
+      455.6969909667969,
+      1756.9189453125,
+      858.6259765625
+    ],
+    "imageSha256": "b14c1d2fc6e49b5153f06a62b787ccc9f0274365f3d57c70582ddb7c2ab707ab",
+    "ocrPath": "sources/2a2128b75b57d15439d52b099a909d27b613ab83c1f52cd3f5095fd32d60b959.txt",
+    "ocrSha256": "2a2128b75b57d15439d52b099a909d27b613ab83c1f52cd3f5095fd32d60b959",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Riverdale Borough(PDF, 624KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-riverdale.pdf",
+    "sourcePdf": "sources/36966dc35a1a3fb44b887d6d11ae5a17a3fd47c2ee49a7414f963257dbc8269b.source",
+    "page": 1,
+    "imageXref": 28,
+    "imageRect": [
+      44.88800048828125,
+      455.6969909667969,
+      1757.153076171875,
+      762.447998046875
+    ],
+    "imageSha256": "ea45295054ffbe68ed4abe3035db58b064ac0b8cf781344fe8a9da7b254d87ad",
+    "ocrPath": "sources/db8ed80d8faaad4a7b0e66b20ce7c7a6725ea2aed9bfb524f835e9bd714a942f.txt",
+    "ocrSha256": "db8ed80d8faaad4a7b0e66b20ce7c7a6725ea2aed9bfb524f835e9bd714a942f",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Rockaway Borough(PDF, 624KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-rockaway-borough.pdf",
+    "sourcePdf": "sources/abeb4a2db1b61b75bbde153cc721336b2a44291d5020189690273fa8affd7e45.source",
+    "page": 1,
+    "imageXref": 28,
+    "imageRect": [
+      47.56800079345703,
+      455.6969909667969,
+      1755.4620361328125,
+      762.447998046875
+    ],
+    "imageSha256": "3f4ee35f853552851817101e51a52ebc687440e1eb3b21b529f42a6489f75c90",
+    "ocrPath": "sources/ca3c59e0ca991c2575047e099c9f760d557f2cf0838cba6b81eb264bcd3297ea.txt",
+    "ocrSha256": "ca3c59e0ca991c2575047e099c9f760d557f2cf0838cba6b81eb264bcd3297ea",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Rockaway Township(PDF, 718KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-rockaway-township.pdf",
+    "sourcePdf": "sources/c9baf0fe1843b397cb50b4b2eb1a1edd07a1df2ffd2e3317dcb2c2e268986d3f.source",
+    "page": 1,
+    "imageXref": 28,
+    "imageRect": [
+      48.237998962402344,
+      455.697998046875,
+      1757.5889892578125,
+      1018.1950073242188
+    ],
+    "imageSha256": "431fb3a939cf2786f6350aa0a1274aff800d06778497701f971410c9fe889148",
+    "ocrPath": "sources/8e9900a7f0e7cdcfb7c8750d9cd98f891cfe459b6cea8de386aee490bac9d64f.txt",
+    "ocrSha256": "8e9900a7f0e7cdcfb7c8750d9cd98f891cfe459b6cea8de386aee490bac9d64f",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Roxbury Township(PDF, 607KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-roxbury.pdf",
+    "sourcePdf": "sources/36bb3fd25d708d27efe7d381a5a8913d509c4e6c728021c4c471d6dd62b7e313.source",
+    "page": 1,
+    "imageXref": 25,
+    "imageRect": [
+      47.215999603271484,
+      548.8280029296875,
+      1758.02392578125,
+      794.3740234375
+    ],
+    "imageSha256": "9e39c7dcf61663c49267dde6c542dba1ddb9303bf083399f6ca102fefd409f8e",
+    "ocrPath": "sources/a9f5c4d56b13ea0bf58a9f941698d77cf23efb170fa43eac0afca7e181e22cab.txt",
+    "ocrSha256": "a9f5c4d56b13ea0bf58a9f941698d77cf23efb170fa43eac0afca7e181e22cab",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Victory Gardens Borough(PDF, 919KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-victory-gardens.pdf",
+    "sourcePdf": "sources/d0e8c27c403fe5e452065e3e9f1ab69ef6d5a31cb2779c08742b79ddd4f03d3f.source",
+    "page": 1,
+    "imageXref": 31,
+    "imageRect": [
+      556.3319702148438,
+      582.7300415039062,
+      1736.705078125,
+      794.2830200195312
+    ],
+    "imageSha256": "c0c906ae5b28b7efb38f6569eccf46083d35fe3e0a94fb6537c0c114db27b053",
+    "ocrPath": "sources/9c83b3a01c7b6a641943a022e177b49c7faf503fe4d7c8c3ce94b9227e2478e1.txt",
+    "ocrSha256": "9c83b3a01c7b6a641943a022e177b49c7faf503fe4d7c8c3ce94b9227e2478e1",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Washington Township(PDF, 728KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-washington.pdf",
+    "sourcePdf": "sources/c41e45fe7a38e339a00455b403efc58e590b8bda119f48d6eb5e78c6c81100dc.source",
+    "page": 1,
+    "imageXref": 30,
+    "imageRect": [
+      47.215999603271484,
+      455.697998046875,
+      1755.837890625,
+      1064.8270263671875
+    ],
+    "imageSha256": "49b04afc2286a45322ccfdcaa6ea77b52a802d374a9b8fe82c7e667af23e9de0",
+    "ocrPath": "sources/b3fc25a0677b8c5a6bd316dce0f052a1068a742322faac79e1c33a0f4aff17c8.txt",
+    "ocrSha256": "b3fc25a0677b8c5a6bd316dce0f052a1068a742322faac79e1c33a0f4aff17c8",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  },
+  {
+    "publishedLabel": "Wharton Borough(PDF, 684KB)",
+    "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-wharton.pdf",
+    "sourcePdf": "sources/c6210dc21e6fe032a42cdb59470461ce4e40c964e919d05c40c233aece0a8851.source",
+    "page": 1,
+    "imageXref": 31,
+    "imageRect": [
+      46.89799880981445,
+      455.6980285644531,
+      1754.06298828125,
+      809.0800170898438
+    ],
+    "imageSha256": "120676bf28460f06b5885d2c229c29f93dd7f85c7c9c31493cf94ab3c2682e94",
+    "ocrPath": "sources/2df73fb2a6cc67366148d2282aaef2eb937ecbc8865221c983d2da923e2b4767.txt",
+    "ocrSha256": "2df73fb2a6cc67366148d2282aaef2eb937ecbc8865221c983d2da923e2b4767",
+    "keywordLines": [],
+    "nativeEmbeddedImageStoredSeparately": false,
+    "imageEvidence": "Exact originalPDF/imageXref/imageRect retained; derivedimageSHA records localextraction, no separateimagearchive claim. Verifiedquestioncloseviews preserved for3questionrecords."
+  }
+]

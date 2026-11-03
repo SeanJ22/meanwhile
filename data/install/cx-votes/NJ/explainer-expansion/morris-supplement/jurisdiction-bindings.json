@@ -1,0 +1,71 @@
+[
+  {
+    "contestId": "nj-morris-2026:boonton-township-school-bond",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:boonton_township_school_district",
+    "registeredDivisionIndex": 1327,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:boonton_township_school_district",
+      "unsd",
+      "3401980",
+      "Boonton Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "117714",
+      "nj:school:boonton-twp-sch-dist",
+      "BOONTON TWP SCH DIST",
+      "SCHOOL DISTRICT",
+      1327,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-morris-2026:mount-olive-school-bond",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:mount_olive_township_school_district",
+    "registeredDivisionIndex": 1611,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:mount_olive_township_school_district",
+      "unsd",
+      "3410980",
+      "Mount Olive Township School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "117721",
+      "nj:school:mount-olive-twp-sch-dist",
+      "MOUNT OLIVE TWP SCH DIST",
+      "SCHOOL DISTRICT",
+      1611,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-morris-2026:pequannock-trust-uses",
+    "ocdId": "ocd-division/country:us/state:nj/county:morris/place:pequannock_township",
+    "registeredDivisionIndex": 418,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:morris/place:pequannock_township",
+      "cousub",
+      "3402758110",
+      "Pequannock township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "190905",
+      "nj:city:township-of-pequannock",
+      "TOWNSHIP OF PEQUANNOCK",
+      "TOWNSHIP",
+      418,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  }
+]

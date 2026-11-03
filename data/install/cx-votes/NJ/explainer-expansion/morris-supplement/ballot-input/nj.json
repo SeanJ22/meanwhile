@@ -1,0 +1,192 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-morris-2026:boonton-township-school-bond",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:boonton_township_school_district",
+          "divisionVintage": "2023",
+          "title": "Boonton Township School District — Rockaway Valley School bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+            "sourceOrg": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+            "collectedAt": "2026-11-03T09:48:24.368407+00:00",
+            "verifiedAt": "2026-11-03T10:07:49.720449+00:00",
+            "quote": "The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and upgrades at Rockaway Valley School, including but not limited to the construction of an addition and corridor expansion and renovations, reconfiguration and renovations of various existing classrooms, renovation and expansion of the science lab, renovations and ADA improvements to the art room and to the school nurse's facilities, upgrades and improvements to the HVAC system, replacement of the existing security system and fire alarm system, various electrical upgrades, replacement of windows in the Lower Gym, replacement of various portions of roofing, abatement of hazardous materials and related renovations, and lighting upgrades and new ceilings, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $28,458,812 for such improvements; and (c) issue bonds in an amount not to exceed $28,458,812, and such bonds may only be utilized to fund the projects described in this Bond Proposal Question. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $21,185,538. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-morris-2026:mount-olive-school-bond",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:mount_olive_township_school_district",
+          "divisionVintage": "2023",
+          "title": "Mount Olive Township School District — Mountain View roof bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+            "sourceOrg": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+            "collectedAt": "2026-11-03T09:48:28.133252+00:00",
+            "verifiedAt": "2026-11-03T10:07:49.720449+00:00",
+            "quote": "The Board of Education of the Township of Mount Olive in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake the replacement of the roof at Mountain View Elementary School, including any related work and costs; (b) appropriate $2,317,496 for such improvements; and (c) issue bonds in an amount not to exceed $2,317,496. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,317,496. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-morris-2026:pequannock-trust-uses",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:morris/place:pequannock_township",
+          "divisionVintage": "2023",
+          "title": "Pequannock Township — open-space trust fund uses",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+            "sourceOrg": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+            "collectedAt": "2026-11-03T09:48:28.230423+00:00",
+            "verifiedAt": "2026-11-03T10:07:49.720449+00:00",
+            "quote": "Shall the Pequannock Township Council adopt an Ordinance revising the permitted uses of the Open Space, Recreation, Farmland and Historic Preservation Trust Fund, currently codified as Section 5-112 of the Pequannock Township Code, to allow the Open Space, Recreation, Farmland and Historic Preservation Trust Fund to broaden the purposes for which it may be used to include all purposes authorized by N.J.S.A. 40:12-15.7 specifically including the purpose of stewardship of permanently preserved land acquired for recreation and conservation purposes that are designed to restore or enhance its utilization for those purposes, and allow the use of previously collected funds for these purposes."
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-morris-2026:boonton-township-school-bond#question",
+          "contestId": "nj-morris-2026:boonton-township-school-bond",
+          "questionText": "The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and upgrades at Rockaway Valley School, including but not limited to the construction of an addition and corridor expansion and renovations, reconfiguration and renovations of various existing classrooms, renovation and expansion of the science lab, renovations and ADA improvements to the art room and to the school nurse's facilities, upgrades and improvements to the HVAC system, replacement of the existing security system and fire alarm system, various electrical upgrades, replacement of windows in the Lower Gym, replacement of various portions of roofing, abatement of hazardous materials and related renovations, and lighting upgrades and new ceilings, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $28,458,812 for such improvements; and (c) issue bonds in an amount not to exceed $28,458,812, and such bonds may only be utilized to fund the projects described in this Bond Proposal Question. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $21,185,538. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+            "sourceOrg": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+            "collectedAt": "2026-11-03T09:48:24.368407+00:00",
+            "verifiedAt": "2026-11-03T10:07:49.720449+00:00",
+            "quote": "The Board of Education of the Township of Boonton in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake various improvements, alterations, renovations, and upgrades at Rockaway Valley School, including but not limited to the construction of an addition and corridor expansion and renovations, reconfiguration and renovations of various existing classrooms, renovation and expansion of the science lab, renovations and ADA improvements to the art room and to the school nurse's facilities, upgrades and improvements to the HVAC system, replacement of the existing security system and fire alarm system, various electrical upgrades, replacement of windows in the Lower Gym, replacement of various portions of roofing, abatement of hazardous materials and related renovations, and lighting upgrades and new ceilings, including acquisition and installation of fixtures, furniture, equipment, and any site work; (b) appropriate $28,458,812 for such improvements; and (c) issue bonds in an amount not to exceed $28,458,812, and such bonds may only be utilized to fund the projects described in this Bond Proposal Question. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $21,185,538. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage will equal 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-morris-2026:mount-olive-school-bond#question",
+          "contestId": "nj-morris-2026:mount-olive-school-bond",
+          "questionText": "The Board of Education of the Township of Mount Olive in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake the replacement of the roof at Mountain View Elementary School, including any related work and costs; (b) appropriate $2,317,496 for such improvements; and (c) issue bonds in an amount not to exceed $2,317,496. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,317,496. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. Do you approve this Bond Proposal Question?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+            "sourceOrg": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+            "collectedAt": "2026-11-03T09:48:28.133252+00:00",
+            "verifiedAt": "2026-11-03T10:07:49.720449+00:00",
+            "quote": "The Board of Education of the Township of Mount Olive in the County of Morris, New Jersey (the “Board”) is authorized to (a) undertake the replacement of the roof at Mountain View Elementary School, including any related work and costs; (b) appropriate $2,317,496 for such improvements; and (c) issue bonds in an amount not to exceed $2,317,496. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $2,317,496. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is 40% of the annual debt service due with respect to the final eligible costs of the projects. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-morris-2026:pequannock-trust-uses#question",
+          "contestId": "nj-morris-2026:pequannock-trust-uses",
+          "questionText": "Shall the Pequannock Township Council adopt an Ordinance revising the permitted uses of the Open Space, Recreation, Farmland and Historic Preservation Trust Fund, currently codified as Section 5-112 of the Pequannock Township Code, to allow the Open Space, Recreation, Farmland and Historic Preservation Trust Fund to broaden the purposes for which it may be used to include all purposes authorized by N.J.S.A. 40:12-15.7 specifically including the purpose of stewardship of permanently preserved land acquired for recreation and conservation purposes that are designed to restore or enhance its utilization for those purposes, and allow the use of previously collected funds for these purposes.",
+          "officialStatement": "This proposal will give Pequannock Township greater flexibility in its use of the funds in its Open Space, Recreation, Farmland and Historic Preservation Trust Fund. A “Yes” vote will mean the voters want to maximize the purposes for which the fund can be used to include natural resource management, habitat restoration and wildlife stewardship as eligible activities on permanently preserved land acquired for recreation and conservation purposes in addition to other purposes within the limits allowed by state law. THIS IS NOT A REQUEST TO RAISE ADDITIONAL TAXES.",
+          "provenance": {
+            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+            "sourceOrg": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+            "collectedAt": "2026-11-03T09:48:28.230423+00:00",
+            "verifiedAt": "2026-11-03T10:07:49.720449+00:00",
+            "quote": "Shall the Pequannock Township Council adopt an Ordinance revising the permitted uses of the Open Space, Recreation, Farmland and Historic Preservation Trust Fund, currently codified as Section 5-112 of the Pequannock Township Code, to allow the Open Space, Recreation, Farmland and Historic Preservation Trust Fund to broaden the purposes for which it may be used to include all purposes authorized by N.J.S.A. 40:12-15.7 specifically including the purpose of stewardship of permanently preserved land acquired for recreation and conservation purposes that are designed to restore or enhance its utilization for those purposes, and allow the use of previously collected funds for these purposes."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-morris-2026:boonton-township-school-bond",
+          "whatItDoes": "Authorizes the Boonton Township school board to spend $28,458,812 and borrow up to that amount in bonds for improvements at Rockaway Valley School. The work includes an addition and corridor expansion, classroom changes, science-lab expansion and renovation, and art-room and school-nurse accessibility improvements. It also includes heating, ventilation and air-conditioning work; replacement of security and fire-alarm systems; electrical upgrades; Lower Gym windows; roof replacements; hazardous-material removal and related renovations; lighting, ceilings, equipment, furniture and site work. The state approved $21,185,538 of project costs as eligible for aid; the stated aid calculation is 40% of annual debt payments associated with those eligible costs. Bonds could fund only the listed projects, and the board could transfer funds among projects approved at this election.",
+          "yesMeans": "Approve the school projects and up to $28,458,812 in bonds.",
+          "noMeans": "Reject this school project and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+          "sourceHash": "ca7a54c6d9235ffcbb342ed662aab14a1059ab7580594fe2cd12de7a308b1871",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:07:49.720449+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-morris-2026:mount-olive-school-bond",
+          "whatItDoes": "Authorizes the Mount Olive school board to spend $2,317,496 and borrow up to that amount in bonds to replace the roof at Mountain View Elementary School, including related work and costs. The state approved all $2,317,496 as eligible project costs; the stated aid calculation is 40% of annual debt payments associated with those costs.",
+          "yesMeans": "Approve the roof project and up to $2,317,496 in bonds.",
+          "noMeans": "Reject this roof project and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+          "sourceHash": "8cc684d8a51ed087af67c2b478c1db288d7a6fcd8fae711a1bb4fca4287264c8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:07:49.720449+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-morris-2026:pequannock-trust-uses",
+          "whatItDoes": "Expands the permitted uses of Pequannock’s Open Space, Recreation, Farmland and Historic Preservation Trust Fund to all purposes allowed by New Jersey’s municipal trust-fund law. It specifically adds natural-resource management, habitat restoration and wildlife stewardship on permanently preserved land acquired for recreation and conservation, to restore or improve that land’s use for those purposes. Money already collected could be used for these expanded purposes. The ballot states that this proposal does not request additional taxes.",
+          "yesMeans": "Approve the expanded uses, including stewardship work and use of previously collected money.",
+          "noMeans": "Keep the trust fund’s existing permitted uses.",
+          "parts": [],
+          "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+          "sourceHash": "63a21dc1514e553418223122aa9ecae56a3ddb1a357274e81ccbf2d83edbf679",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:07:49.720449+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:07:49.720449+00:00",
+    "reviewedBy": "CX-VOTES exactofficial morris current2026 questions, fullstatements, neutral effects and nativePDFvisual/sourcechecks",
+    "sources": [
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+        "finalUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-boonton-township.pdf",
+        "httpStatus": 200,
+        "rawHash": "ca7a54c6d9235ffcbb342ed662aab14a1059ab7580594fe2cd12de7a308b1871",
+        "retrievedAt": "2026-11-03T09:48:24.368407+00:00",
+        "publisher": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete nativecurrentNov3,2026samplePDF. Operativeballotpanel image separatelyextracted and fullquestion/statement/YesNo visuallychecked. Entirecurrent46style39municipalitycounty inventory separatelychecked usingnativepanels, not instruction-only selectabletext."
+      },
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+        "finalUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-mount-olive.pdf",
+        "httpStatus": 200,
+        "rawHash": "8cc684d8a51ed087af67c2b478c1db288d7a6fcd8fae711a1bb4fca4287264c8",
+        "retrievedAt": "2026-11-03T09:48:28.133252+00:00",
+        "publisher": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete nativecurrentNov3,2026samplePDF. Operativeballotpanel image separatelyextracted and fullquestion/statement/YesNo visuallychecked. Entirecurrent46style39municipalitycounty inventory separatelychecked usingnativepanels, not instruction-only selectabletext."
+      },
+      {
+        "requestedUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+        "finalUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/1/elections/sample-ballots/2026-general-sample-pequannock.pdf",
+        "httpStatus": 200,
+        "rawHash": "63a21dc1514e553418223122aa9ecae56a3ddb1a357274e81ccbf2d83edbf679",
+        "retrievedAt": "2026-11-03T09:48:28.230423+00:00",
+        "publisher": "Morris County Clerk — officialcurrent2026 General Election municipal sample ballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete nativecurrentNov3,2026samplePDF. Operativeballotpanel image separatelyextracted and fullquestion/statement/YesNo visuallychecked. Entirecurrent46style39municipalitycounty inventory separatelychecked usingnativepanels, not instruction-only selectabletext."
+      }
+    ]
+  }
+}

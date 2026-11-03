@@ -1,0 +1,15 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "98b17fa947db21961c0b8847b181fc1359330e083ff9f7fbfda0075223c9df41",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Current46publishednativePDFstyles cover39municipalities (Boonton4,Dover4,MendhamTownship2styles); all46single operativeballotpanelimages extracted and locallyOCRed, eachPDFverifiedhasexactlyone qualifyingfullballotpanel. Nativeinstructions-onlytextnotusedasno-measureproof. Threeactualquestionpanels found and visuallyread in full.",
+    "BoontonTownship (notBoontonTown) RockawayValleySchool28458812project/bondcap, fullprojectlist, onlylistedprojectsbondrestriction, eligible21185538/40%eligibleannualdebtservicebasis/transferauthority preserved. No40%-of-totalcostclaim.",
+    "MountOlive MountainViewroof2317496project/bondcap, fullcosteligible/40%eligibleannualdebtservicebasis preserved. Tesseractverb/digits correctedonlyaftervisualinspection ofnativeprintedquestion.",
+    "Pequannockstatelawpermittedusesexpansion, preservedrecreation/conservationlandstewardship/restoration/habitat/wildlife activities, priorcollectedfunds andnoadditionaltaxrequest allsupported byfullquestion/statement. No permanent futuretaxrate guarantee.",
+    "OriginalPDFs and boundedverifiedtranscript/SHA/quotes preserved. ExactheldNJkey/election/existingactualschoolandtownshipdivisions retained. Normaladmission/authority/readerPASS. Rootowns actualcurrentfullballot merge/publication replay."
+  ]
+}

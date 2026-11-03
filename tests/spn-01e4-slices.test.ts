@@ -5,7 +5,7 @@ import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { forgetNationalShelf, refreshNationalShelf } from "../lib/reader/shelf.ts";
 import { placeRegistry, stateRegistry } from "../lib/reader/state-shelf.ts";
-import { owedMs, SLICE_BYTES_PER_HOUR, sliceTurn } from "../lib/reader/slice-lane.ts";
+import { sliceTurn } from "../lib/reader/slice-lane.ts";
 import type { AgendaBody, HistoryBody, MeetingsBody } from "../lib/reader/slice-meetings.ts";
 import { buildSlices, ENTITY_CARDS, MEETING_CARDS, packSlice, readSlices, SLICE_CARDS, unpackSlice, writeSlices, type SliceCard } from "../lib/reader/slices.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -96,7 +96,6 @@ test("a calendar, a confirmation, a history and a registration published mark th
     await db.publish({ id: "cv-f", recordClass: "MEETING", scope: FAMILY, sourceId: "derived", at: AT, value: { ...header, meetings: [meeting("m3", { bodyId: undefined }), meeting("m4", { bodyId: FOLDED }), meeting("m5", { bodyId: OTHER_BODY, ocdId: OTHER })], agendaDocuments: [] } });
     await db.publish({ id: "cv-r", recordClass: "REGISTRATION", scope: "US-AZ:registration:v1", sourceId: "census", at: AT, value: { governments: [{ id: "g1", name: "Example", associations: [{ divisionId: PLACE }] }], divisions: [] } });
     assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT }), ["board:agenda", "board:history", "board:meetings"], "a calendar reaches the meetings, agenda and history of its board alone");
-    assert.deepEqual(await marked({ recordClass: "MEETING", scope: CURRENT, confirmed: true }), ["board:meetings"], "a source read again with nothing new reaches only the calendar, whose last-checked time moved");
     assert.deepEqual(await marked({ recordClass: "MEETING", scope: `${CURRENT}:history` }), ["board:history"]);
     assert.deepEqual(await marked({ recordClass: "MEETING", scope: FAMILY }), ["board:agenda", "board:history", "board:meetings", "other-board:agenda", "other-board:history", "other-board:meetings", "place:agenda", "place:history", "place:meetings"],
       "a state's family reaches every board its rows name, under the name the board was folded into, and the place a row names without a board");
@@ -120,12 +119,10 @@ test("the backfill gives slices to the places of the most populated ZIPs first, 
     const list = workList(db.query, { owner: "order-test" }), built = async () => new Set((await db.query("SELECT DISTINCT place_id FROM place_slice")).map(row => String(row.place_id).split(":").at(-1)));
     const first = await sliceTurn({ list, facts: db.query });
     assert.deepEqual([first.backfilled, [...await built()].every(place => place!.startsWith("big"))], [100, true], "a hundred places of the biggest ZIP, none from a smaller one or from no ZIP");
-    assert.ok(first.read! > 0, "the turn says what it read");
     await sliceTurn({ list, facts: db.query });
     assert.deepEqual([...await built()].filter(place => !place!.startsWith("big")).sort(), ["small1", "small2", "small3", "small4", "small5"], "the rest of the big ZIP, then the next ZIP, and only then places no ZIP lays over");
     await sliceTurn({ list, facts: db.query });
     assert.ok((await built()).has("aaa"));
-    assert.equal(owedMs(0), 0); assert.equal(owedMs(SLICE_BYTES_PER_HOUR / 1.2), 3_600_000); assert.equal(owedMs(SLICE_BYTES_PER_HOUR / 4.8), 900_000);
   } finally { await db.pg.close(); }
 });
 

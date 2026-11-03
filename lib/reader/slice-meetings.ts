@@ -1,6 +1,6 @@
 import type { Query } from "../facts/publish.ts";
 import { ARCHIVED_MEETINGS_SQL, MEETING_PARTITIONS_SQL } from "./canonical.ts";
-import { groupedBy, intern, type MeetingCard } from "./slices.ts";
+import { fingerprint as hash, groupedBy, intern, type MeetingCard } from "./slices.ts";
 
 type Row = Record<string, unknown>;
 type Meeting = Row & { readonly id: string; readonly bodyId?: string | null; readonly ocdId?: string | null };
@@ -42,15 +42,26 @@ const ownBody = (scope: string): string | null => {
   try { return match ? decodeURIComponent(match[1]!) : null; } catch { return match![1]!; }
 };
 
-const ROWS_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,reader_payload_value(r.value) AS value FROM civic_data_rows r
-  WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($5::text[]) AND r.collection=$2 AND (r.body_id=ANY($3::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($4::text[]))
-  ORDER BY r.promotion_key,r.ordinal`;
+const ROWS_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,reader_payload_value(r.value) AS value FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($5::text[]) AND r.collection=$2 AND (r.body_id=ANY($3::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($4::text[])) ORDER BY r.promotion_key,r.ordinal`;
+const SITTINGS_DIGEST_SQL = `SELECT m.parent_id AS body,md5(string_agg(concat_ws('|',m.id,f.field,f.value::text,f.quote,floor(extract(epoch FROM f.checked_at)/$2),f.status,f.source_copy_id),',' ORDER BY m.id,f.field)) AS digest
+  FROM entity m JOIN checked_fact f ON f.entity_id=m.id WHERE m.kind='meeting' AND m.parent_id=ANY($1::text[]) AND f.status IN ('live','pulled') GROUP BY 1`;
 
 const SITTINGS_SQL = `SELECT m.parent_id AS board,m.id AS entity,f.field,f.value,CASE WHEN f.quote IS NOT DISTINCT FROM (f.value#>>'{}') THEN NULL ELSE f.quote END AS quote,
     f.quote IS NOT DISTINCT FROM (f.value#>>'{}') AS same,f.checked_at,f.status,f.source_copy_id AS copy
   FROM entity m JOIN checked_fact f ON f.entity_id=m.id
   WHERE m.kind='meeting' AND m.parent_id=ANY($1::text[]) AND (f.status='live' OR f.field='map_pin' AND f.status='pulled' AND f.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED')
   ORDER BY m.id,f.field`;
+
+/** The calendar partitions of these boards and places, and the names the boards are known by. `headers` asks for each partition's header and members too. */
+async function calendarsOf(query: Query, subjects: readonly string[], headers: boolean) {
+  const boardRows = await query("SELECT id,kind,state FROM entity WHERE id=ANY($1::text[])", [subjects]);
+  const canonical = boardRows.filter(row => row.kind === "body").map(row => String(row.id)), places = boardRows.filter(row => row.kind === "place").map(row => String(row.id));
+  const canonicalOf = new Map((canonical.length ? await query("SELECT entity_id,value FROM entity_external_id WHERE scheme='body-alias' AND entity_id=ANY($1::text[])", [canonical]) : []).map(row => [String(row.value), String(row.entity_id)]));
+  const names = [...new Set([...canonical, ...canonicalOf.keys()])];
+  const familyKeys = [...new Set(boardRows.map(row => String(row.state).toUpperCase()))].flatMap(state => [`MEETING:${FAMILY}US-${state}`, `MEETING:${FAMILY}US-${state}${HISTORY}`]);
+  const partitions = names.length || places.length ? await query(MEETING_PARTITIONS_SQL, [familyKeys, names.map(encoded), headers]) : [];
+  return { boardRows, canonical, places, canonicalOf, names, partitions };
+}
 
 /**
  * The meetings cards of these boards and places. A board's card holds its own calendar partitions with only its meetings (and, from a
@@ -62,25 +73,17 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
   const built = new Map<string, Map<MeetingCard, unknown>>();
   if (!wanted.size) return built;
   const cards = new Set([...wanted.values()].flatMap(set => [...set]));
-  const boardRows = await query("SELECT id,kind,state FROM entity WHERE id=ANY($1::text[])", [[...wanted.keys()]]);
-  const canonical = boardRows.filter(row => row.kind === "body").map(row => String(row.id)), places = boardRows.filter(row => row.kind === "place").map(row => String(row.id));
-  const aliasRows = canonical.length ? await query("SELECT entity_id,value FROM entity_external_id WHERE scheme='body-alias' AND entity_id=ANY($1::text[])", [canonical]) : [];
-  const canonicalOf = new Map(aliasRows.map(row => [String(row.value), String(row.entity_id)]));
-  const names = [...new Set([...canonical, ...canonicalOf.keys()])];
-  const states = [...new Set(boardRows.map(row => String(row.state).toUpperCase()))];
-  const familyKeys = states.flatMap(state => [`MEETING:${FAMILY}US-${state}`, `MEETING:${FAMILY}US-${state}${HISTORY}`]);
-  const partitions = names.length || places.length ? await query(MEETING_PARTITIONS_SQL, [familyKeys, names.map(encoded)]) : [];
+  const { boardRows, canonical, places, canonicalOf, names, partitions } = await calendarsOf(query, [...wanted.keys()], cards.has("meetings") || cards.has("history"));
   const rowsOf = async (from: readonly Row[], collection: string, ocdIds: readonly string[]) =>
     from.length ? groupedBy(await query(ROWS_SQL, [from.map(row => String(row.key)), collection, names, ocdIds, from.map(row => String(row.version))]), "key") : new Map<string, Row[]>();
   const current = partitions.filter(row => !String(row.scope).endsWith(HISTORY)), past = partitions.filter(row => String(row.scope).endsWith(HISTORY));
-  const wantsOf = (card: MeetingCard) => cards.has(card);
   const [calendar, held, papers, sittings, oldMeetings, oldPapers] = await Promise.all([
-    wantsOf("meetings") ? rowsOf(current, "meetings", places) : new Map<string, Row[]>(),
-    wantsOf("history") ? rowsOf(past, "meetings", places) : new Map<string, Row[]>(),
-    wantsOf("agenda") ? rowsOf(current, "agendaDocuments", places) : new Map<string, Row[]>(),
-    wantsOf("meetings") && canonical.length ? query(SITTINGS_SQL, [names]) : [],
-    wantsOf("history") && current.length ? query(ARCHIVED_MEETINGS_SQL("meetings"), [current.map(row => String(row.key)), names]) : [],
-    wantsOf("agenda") && current.length ? query(ARCHIVED_MEETINGS_SQL("agendaDocuments"), [current.map(row => String(row.key)), names]) : [],
+    cards.has("meetings") ? rowsOf(current, "meetings", places) : new Map<string, Row[]>(),
+    cards.has("history") ? rowsOf(past, "meetings", places) : new Map<string, Row[]>(),
+    cards.has("agenda") && canonical.length ? rowsOf(current, "agendaDocuments", places) : new Map<string, Row[]>(),
+    cards.has("meetings") && canonical.length ? query(SITTINGS_SQL, [names]) : [],
+    cards.has("history") && current.length ? query(ARCHIVED_MEETINGS_SQL("meetings"), [current.map(row => String(row.key)), names]) : [],
+    cards.has("agenda") && canonical.length && current.length ? query(ARCHIVED_MEETINGS_SQL("agendaDocuments"), [current.map(row => String(row.key)), names]) : [],
   ]);
   const copyIds = [...new Set(sittings.flatMap(row => row.copy === null ? [] : [String(row.copy)]))];
   const urls = new Map((copyIds.length ? await query("SELECT id,url FROM source_copy WHERE id=ANY($1::bigint[])", [copyIds]) : []).map(row => [String(row.id), String(row.url)]));
@@ -128,4 +131,23 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
     built.set(place, out);
   }
   return built;
+}
+
+/** A card shows when its sources were last checked; that moving on by itself alone rebuilds it no more often than this. */
+const CHECKED_EVERY_MS = 6 * 3_600_000;
+const checkedIn = (detail: unknown) => Math.floor(Date.parse(/"checkedAt":"([^"]+)"/.exec(String(detail))?.[1] ?? "") / CHECKED_EVERY_MS);
+
+/** What each card of these boards and places is built from, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back: the calendar versions a card holds (the history also those a current version replaced) and, for meetings, the sittings. */
+export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
+  if (!subjects.length) return new Map();
+  const { boardRows, canonicalOf, names, partitions } = await calendarsOf(query, subjects, false);
+  const sittings = names.length ? await query(SITTINGS_DIGEST_SQL, [names, CHECKED_EVERY_MS / 1000]) : [];
+  const canon = (board: unknown) => canonicalOf.get(String(board)) ?? String(board), state = new Map(boardRows.map(row => [String(row.id), String(row.state).toUpperCase()])), out = new Map<string, string>();
+  for (const subject of subjects) {
+    const held = (old: boolean) => partitions.filter(row => String(row.scope).endsWith(HISTORY) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope)))).map(row => [row.scope, row.version, checkedIn(row.confirmation)]);
+    out.set(`${subject}\tmeetings`, hash([held(false), sittings.filter(row => canon(row.body) === subject).map(row => row.digest)]));
+    out.set(`${subject}\thistory`, hash([held(true), held(false)]));
+    out.set(`${subject}\tagenda`, hash(held(false)));
+  }
+  return out;
 }

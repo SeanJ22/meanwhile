@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "nm-sos:nm-2026-11-03:bond-question-1",
+    "state": "NM",
+    "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+    "sourceHash": "1f9a6fbb8728af348dd473e8275999505faf460d32a77d295321959a26bf5ed5",
+    "sourceHashKind": "HELD_TEXT",
+    "excerptSha256": "1f9a6fbb8728af348dd473e8275999505faf460d32a77d295321959a26bf5ed5",
+    "fields": {
+      "whatItDoes": [
+        "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of senior citizen facility improvement, construction and equipment acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed twenty-one million five hundred eighty-two thousand two hundred thirteen dollars ($21,582,213) to make capital expenditures for certain senior citizen facility improvement, construction and equipment acquisition projects and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?\n"
+      ],
+      "yesMeans": [
+        "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of senior citizen facility improvement, construction and equipment acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed twenty-one million five hundred eighty-two thousand two hundred thirteen dollars ($21,582,213) to make capital expenditures for certain senior citizen facility improvement, construction and equipment acquisition projects and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?\n"
+      ],
+      "noMeans": [
+        "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of senior citizen facility improvement, construction and equipment acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed twenty-one million five hundred eighty-two thousand two hundred thirteen dollars ($21,582,213) to make capital expenditures for certain senior citizen facility improvement, construction and equipment acquisition projects and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?\n"
+      ]
+    },
+    "basis": "Exact already-held official questionText + newline + officialStatement; current reacquisition failure is recorded separately.",
+    "reviewNotes": [
+      "Question1 is specifically senior facilities and$21,582,213; libraries and higher education belong to separate questions."
+    ],
+    "excerptFile": "sources/1f9a6fbb8728af348dd473e8275999505faf460d32a77d295321959a26bf5ed5.txt"
+  }
+]

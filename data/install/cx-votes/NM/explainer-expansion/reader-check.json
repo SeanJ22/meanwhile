@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T04:16:58.910Z",
+  "records": [
+    {
+      "state": "NM",
+      "contestId": "nm-sos:nm-2026-11-03:bond-question-1",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    }
+  ],
+  "productionWrites": 0
+}

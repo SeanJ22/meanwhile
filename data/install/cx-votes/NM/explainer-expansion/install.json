@@ -1,0 +1,31 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "NM",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NM",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "nm-sos:nm-2026-11-03:bond-question-1",
+      "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state NM and this absolute ballot-input directory. Preserve unrelated candidates, contests and explanations. No app release.",
+  "coverage": {
+    "repairedExistingExplanations": 1,
+    "newLocalMeasuresWithExplanations": 0,
+    "localCompleteness": "Additional official local inventories remain under acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderWithHeldTranslations": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS"
+  },
+  "nextOwner": "River: install as data and check these explanations and official source links live."
+}

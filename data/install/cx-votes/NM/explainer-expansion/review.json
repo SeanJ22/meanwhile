@@ -1,0 +1,22 @@
+{
+  "state": "NM",
+  "status": "PREPARED_FOR_ROOT_REVIEW",
+  "records": 1,
+  "productionWrites": 0,
+  "appCodeChanges": false,
+  "paidCalls": 0,
+  "semanticReview": {
+    "correctJurisdictionAndMeasure": "PASS",
+    "fullQuestionConditionsRepresented": "PASS",
+    "neutralNoVoteConsequences": "PASS",
+    "sourceLimitationsReplacedByUsefulExplanation": "PASS"
+  },
+  "mechanicalChecks": {
+    "measureRecordContract": "PASS",
+    "exactSupportingQuotes": "PASS",
+    "heldTextAndRawSourceHashes": "PASS"
+  },
+  "nonbinaryChoices": {},
+  "operation": "Merge the partial ballot input using the existing ballot publication path; preserve every unrelated contest,candidate,measure and explanation. Root owns final READY commit. River installs as data and verifies live.",
+  "liveStatus": "Not installed or live-checked by this agent."
+}

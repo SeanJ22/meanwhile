@@ -1,0 +1,170 @@
+{
+  "ballots": {
+    "NM:nm-2026-11-03": {
+      "election": {
+        "id": "nm-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 New Mexico General Election",
+        "state": "NM"
+      },
+      "contests": [
+        {
+          "id": "nm-sos:nm-2026-11-03:bond-question-1",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:nm",
+          "title": "Bond Question 1",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "nm-2026-11-03",
+          "provenance": {
+            "quote": "Bond Question 1",
+            "sourceOrg": "New Mexico Secretary of State",
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+            "verifiedAt": "2026-10-14T05:03:48.355503Z",
+            "collectedAt": "2026-10-14T05:03:48.355503Z"
+          },
+          "measureTextUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nm-sos:nm-2026-11-03:bond-question-1:question",
+          "contestId": "nm-sos:nm-2026-11-03:bond-question-1",
+          "provenance": {
+            "quote": "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of senior citizen facility improvement, construction and equipment acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed twenty-one million five hundred eighty-two thousand two hundred thirteen dollars ($21,582,213) to make capital expenditures for certain senior citizen facility improvement, construction and equipment acquisition projects and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?",
+            "sourceOrg": "New Mexico Secretary of State",
+            "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+            "verifiedAt": "2026-10-14T05:03:48.355503Z",
+            "collectedAt": "2026-10-14T05:03:48.355503Z"
+          },
+          "questionText": "The 2026 Capital Projects General Obligation Bond Act authorizes the issuance and sale of senior citizen facility improvement, construction and equipment acquisition bonds. Shall the state be authorized to issue general obligation bonds in an amount not to exceed twenty-one million five hundred eighty-two thousand two hundred thirteen dollars ($21,582,213) to make capital expenditures for certain senior citizen facility improvement, construction and equipment acquisition projects and provide for a general property tax imposition and levy for the payment of principal of, interest on and expenses incurred in connection with the issuance of the bonds and the collection of the tax as permitted by law?",
+          "officialNumber": "Bond Question 1",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nm-sos:nm-2026-11-03:bond-question-1",
+          "whatItDoes": "Would authorize New Mexico to borrow up to $21,582,213 through general obligation bonds for senior citizen facility improvements, construction and equipment. A general property tax would pay the bonds’ principal, interest and issuance-related expenses.",
+          "yesMeans": "A FOR vote would authorize these senior-facility bonds and the property tax to repay them.",
+          "noMeans": "An AGAINST vote would reject authorization for these bonds and their repayment tax through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+          "sourceHash": "1f9a6fbb8728af348dd473e8275999505faf460d32a77d295321959a26bf5ed5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:58:52.482031+00:00",
+    "reviewedBy": "CX-VOTES explainer-only source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+        "finalUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+        "httpStatus": 200,
+        "rawHash": "545e29bc0685cf0134e50abb79d82ec178913c02dfe3272e91129d2a45b2b292",
+        "retrievedAt": "2026-10-14T05:03:51.582324Z",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete unpaginated 524-row 2026 General Election Contest/Candidate List; script retains every Qualified candidate in the requested office families and excludes Disqualified and Withdrawn filings. Hidden First Name, Middle Name, Last Name, Party and Website fields read directly; Confidential Public Official is not treated as incumbency.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+        "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+        "httpStatus": 200,
+        "rawHash": "a38ab903e8f0c21bf4115a28f24bff764189cad322f1b9e19da954de3c133619",
+        "retrievedAt": "2026-10-14T05:03:48.355503Z",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official 2026 statewide question publication contains Constitutional Amendments 1–4 and Bond Questions 1–3; all seven English question texts extracted directly from PDF bytes.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+        "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+        "httpStatus": 200,
+        "rawHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+        "retrievedAt": "2026-10-14T05:03:48.298147Z",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official English voter guide identifies questions on all November 3, 2026 ballots and includes full legislation for constitutional amendments.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/04/2026-General-Election-Proclamation-English.pdf",
+        "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/04/2026-General-Election-Proclamation-English.pdf",
+        "httpStatus": 200,
+        "rawHash": "a0efc2d279ebb3414ab92afee77e8e583c2cc3302026fbfc8ed5ea65ae492cc4",
+        "retrievedAt": "2026-10-14T05:05:29.961107Z",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Secretary of State proclamation calls the November 3, 2026 general election and specifies every federal, statewide, legislative and public education commission contest scheduled.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+        "finalUrl": "https://www.nmlegis.gov/Sessions/26%20Regular/final/HB0248.pdf",
+        "httpStatus": 200,
+        "rawHash": "7195df2e5a95e460cb3392fcedd23cf8ebfc68bf720ed6403a06de9e4cf5ff34",
+        "retrievedAt": "2026-10-14T05:09:45.385057Z",
+        "publisher": "New Mexico Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official full text of the 2026 Capital Projects General Obligation Bond Act authorizes the three statewide bond questions.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+        "finalUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+        "rawHash": "1c7e1464f185f9404b6f93eedb0f06492b9503bfef1f1660b8dd409378d81398",
+        "retrievedAt": "2026-10-20T22:52:26.564940+00:00",
+        "httpStatus": 200,
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Qualified general roster:103countywide offices/140names acrossall33counties, including explicit AtLarge commissioner classifications; 45district judicial contests/46names acrossall13judicialdistricts. ExistingBernalillo26contests/28names preserved. Excluded commissioner-by-district and all magistrate divisions until their exact election electorates are verified; no blank write-ins invented.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://nmcourts.gov/courts-by-district/",
+        "finalUrl": "https://nmcourts.gov/courts-by-district/",
+        "rawHash": "4dbfd9e3773bae1eddeb3ee2c11e99cce0ef308e0c9fffaace800bbb8db71fd5",
+        "retrievedAt": "2026-10-21T00:12:45.086Z",
+        "httpStatus": 200,
+        "publisher": "New Mexico Courts",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official CourtsByDistrict directory explicitly lists every whole county in all13 judicial districts. Residence/chambers county in candidate list is not used as an electoral boundary.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://selfrepresentation.nmcourts.gov/self-representation/self-representation-by-court-district/",
+        "finalUrl": "https://selfrepresentation.nmcourts.gov/self-representation/self-representation-by-court-district/",
+        "rawHash": "a8b89a654ac2f62daaab7ecf6a5cba900d84f6c09bc7c0486f092969ed55d674",
+        "retrievedAt": "2026-10-21T00:12:46.662Z",
+        "httpStatus": 200,
+        "publisher": "New Mexico Courts",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official court directory explicitly assigns MetropolitanCourt to BernalilloCounty.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/01/NM_Constitution_-2025-for-SOS.pdf",
+        "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/01/NM_Constitution_-2025-for-SOS.pdf",
+        "rawHash": "50690f40faf8be5faca51c9436e69cdf46cefbebeef8fc068ea5948e44cca0ff",
+        "retrievedAt": "2026-10-21T00:49:26.945Z",
+        "httpStatus": 200,
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official2025Constitution incorporates amendments through2024; ArticleVI12 establishes district judges for each judicial district; VI33 explicitly identifies district-judge nonpartisan retention. Qualified roster independently labels each retention.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

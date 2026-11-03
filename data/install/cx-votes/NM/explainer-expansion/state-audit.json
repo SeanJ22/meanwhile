@@ -1,0 +1,51 @@
+{
+  "state": "NM",
+  "checkedAt": "2026-11-03T04:13:31.026707+00:00",
+  "freshReaderAuditAt": "2026-11-03T03:42:49.042Z",
+  "officialNovemberStatewideMeasureCount": 7,
+  "officialNovemberStatewideMeasureLabels": [
+    "ConstitutionalAmendment1",
+    "ConstitutionalAmendment2",
+    "ConstitutionalAmendment3",
+    "ConstitutionalAmendment4",
+    "Bond1",
+    "Bond2",
+    "Bond3"
+  ],
+  "statewideSource": {
+    "url": "https://www.sos.nm.gov/wp-content/uploads/2026/09/IT-0976-1A06E285BD1-1EA01218E0D402F2F5-2026-CA-and-GOB-Questions-final.pdf",
+    "retrievedAt": "2026-11-03T03:42:42.542629+00:00",
+    "documentSha256": "a38ab903e8f0c21bf4115a28f24bff764189cad322f1b9e19da954de3c133619",
+    "capturedBytes": 236807,
+    "evidenceFile": "/workspace/work/election-day/explainers-only/west/sources/nm-9a68268e5ef3.pdf",
+    "kind": "DOCUMENT_BYTES"
+  },
+  "heldMeasures": 7,
+  "heldStatewideMeasureCount": 7,
+  "heldStatewideContestIds": [
+    "nm-sos:nm-2026-11-03:constitutional-amendment-1",
+    "nm-sos:nm-2026-11-03:constitutional-amendment-2",
+    "nm-sos:nm-2026-11-03:constitutional-amendment-3",
+    "nm-sos:nm-2026-11-03:constitutional-amendment-4",
+    "nm-sos:nm-2026-11-03:bond-question-1",
+    "nm-sos:nm-2026-11-03:bond-question-2",
+    "nm-sos:nm-2026-11-03:bond-question-3"
+  ],
+  "statewidePresenceComparison": "MATCH",
+  "heldNotInCurrentOfficialInventory": [],
+  "preparedUsefulExplanationRecords": 1,
+  "preparedRecordIds": [
+    "nm-sos:nm-2026-11-03:bond-question-1"
+  ],
+  "localInventory": {
+    "heldLocalMeasures": 0,
+    "checkedInventory": "The official statewide certification lists four amendments and three bond questions. Bond 1’s missing senior-facility purpose and amount are now explained.",
+    "remaining": "Local-measure inventories for 33 counties remain open. Candidate exports do not establish local-question coverage."
+  },
+  "allLocalMeasureCoverageComplete": false,
+  "qualityMethod": "Targeted substance checks and source recovery for actual placeholders or identified material omissions. Nonempty text does not prove usefulness. This is not a full semantic review of every held record.",
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "nextOwner": "Root reviews the prepared data and marks READY. River installs as data and checks live readers. Unmeasured local inventories remain standing work."
+}

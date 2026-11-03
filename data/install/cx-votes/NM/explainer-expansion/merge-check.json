@@ -1,0 +1,12 @@
+{
+  "state": "NM",
+  "records": 1,
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 255,
+  "heldInputCandidatesPreserved": 333,
+  "priorBasis": "Saved repository official-source state input; no production read or write",
+  "newContests": 0
+}

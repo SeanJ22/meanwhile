@@ -1,0 +1,1244 @@
+{
+  "electionDate": "2026-11-03",
+  "candidateContests": [
+    {
+      "title": "Chief Justice, 15th Court of Appeals District",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Scott Brister",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Jerry Zimmerer",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Chief Justice, 15th Court of Appeals District\nVote for One\nScott Brister Rep\nJerry Zimmerer Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice, 15th Court of Appeals District, Place 2",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Scott K. Field",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Tom Baker",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice, 15th Court of Appeals District, Place 2\nVote for One\nScott K. Field Rep\nTom Baker Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice, 15th Court of Appeals District, Place 3",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "April Farris",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Marc M. Meyer",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice, 15th Court of Appeals District, Place 3\nVote for One\nApril Farris Rep\nMarc M. Meyer Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice, 5th Court of Appeals District, Place 3",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Matthew Kolodoski",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Amanda Reichek",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice, 5th Court of Appeals District, Place 3\nVote for One\nMatthew Kolodoski Rep\nAmanda Reichek Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice, 5th Court of Appeals District, Place 6",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Ben Smith",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Monica Purdy",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice, 5th Court of Appeals District, Place 6\nVote for One\nBen Smith Rep\nMonica Purdy Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice, 5th Court of Appeals District, Place 8",
+      "page": 2,
+      "candidates": [
+        {
+          "name": "Ashley Wysocki",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Andrea D. Plumlee",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice, 5th Court of Appeals District, Place 8\nVote for One\nAshley Wysocki Rep\nAndrea D. Plumlee Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "District Judge, 298th Judicial District",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Clark B. Will",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Ashley Smith",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "District Judge, 298th Judicial District\nVote for One\nClark B. Will Rep\nAshley Smith Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Criminal District Attorney",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Amber Givens",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Criminal District Attorney\nVote for One\nAmber Givens Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "County Judge",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Mike Immler",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Clay Jenkins",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "County Judge\nVote for One\nMike Immler Rep\nClay Jenkins Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "District Clerk",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Dave Muehlhaeusler",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Felicia Pitre",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "District Clerk\nVote for One\nDave Muehlhaeusler Rep\nFelicia Pitre Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "County Clerk",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Skye Garcia",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Damarcus L Offord",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "County Clerk\nVote for One\nSkye Garcia Rep\nDamarcus L Offord Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "County Treasurer",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Corsandra Brigham Phelps",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Pauline Medrano",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "County Treasurer\nVote for One\nCorsandra Brigham Phelps Rep\nPauline Medrano Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "County Commissioner, Precinct No. 2",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Barry Wernick",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Andy Sommerman",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "County Commissioner, Precinct No. 2\nVote for One\nBarry Wernick Rep\nAndy Sommerman Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "County Commissioner, Precinct No. 4",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Elba Garcia",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "County Commissioner, Precinct No. 4\nVote for One\nElba Garcia Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 1, Place 1",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Lizbeth Diaz",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Thomas G. Jones",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 1, Place 1\nVote for One\nLizbeth Diaz Rep\nThomas G. Jones Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 1, Place 2",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Valencia Nash",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 1, Place 2\nVote for One\nValencia Nash Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 2, Place 1",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Vickie Whiteside",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Margaret O'Brien",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 2, Place 1\nVote for One\nVickie Whiteside Rep\nMargaret O'Brien Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 2, Place 2",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Antoinette N Harris",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 2, Place 2\nVote for One\nAntoinette N Harris Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 3, Place 1",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Lynn A. Benedetto",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Adam M. Swartz",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 3, Place 1\nVote for One\nLynn A. Benedetto Rep\nAdam M. Swartz Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 3, Place 2",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Michael L. Geller",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Paula M Rosales",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 3, Place 2\nVote for One\nMichael L. Geller Rep\nPaula M Rosales Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 4, Place 1",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Fred Van Liew",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Mike Jones",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 4, Place 1\nVote for One\nFred Van Liew Rep\nMike Jones Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 4, Place 2",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Sasha Moreno",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 4, Place 2\nVote for One\nSasha Moreno Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 5, Place 1",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Sara Martinez",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 5, Place 1\nVote for One\nSara Martinez Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Justice of the Peace, Precinct No. 5, Place 2",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Omar Narvaez",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Justice of the Peace, Precinct No. 5, Place 2\nVote for One\nOmar Narvaez Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Constable, Precinct No. 1",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Tracey Gulley",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Constable, Precinct No. 1\nVote for One\nTracey Gulley Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Constable, Precinct No. 2",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Chad Calvert",
+          "partyLabel": "Rep"
+        },
+        {
+          "name": "Deanna Hammond",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Constable, Precinct No. 2\nVote for One\nChad Calvert Rep\nDeanna Hammond Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Constable, Precinct No. 3",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Henry Curry",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Constable, Precinct No. 3\nVote for One\nHenry Curry Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Constable, Precinct No. 4",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Eddie Brown, Jr",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Constable, Precinct No. 4\nVote for One\nEddie Brown, Jr Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "Constable, Precinct No. 5",
+      "page": 3,
+      "candidates": [
+        {
+          "name": "Michael Orozco",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": false,
+      "exactText": "Constable, Precinct No. 5\nVote for One\nMichael Orozco Dem",
+      "voteFor": 1
+    },
+    {
+      "title": "District Judge, 44th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Veretta Frazier",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 68th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Martin Hoffman",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 101st Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Staci Williams",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 116th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Tonya Parker",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 134th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Dale Tillery",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 160th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Aiesha Redmond",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 191st Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Elizabeth Ginsberg",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 192nd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Maria Aceves",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 193rd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Bridgett Whitmore",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 194th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Kim Cooks",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 195th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Etta Jeanette Mullin",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 203rd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Raquel \"Rocky\" Jones",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 204th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Tammy Kemp",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 254th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Kim Brown",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 255th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Vonda Bailey",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 256th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Heather Nicole Johnson",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 265th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Jennifer Bennett",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 282nd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Alison Grinter Allen",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 283rd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Lela Lawrence Mays",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 291st Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Stephanie N Mitchell Huff",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 292nd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Brandon Birmingham",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "District Judge, 363rd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Cynthia Garza",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Family District Judge, 301st Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Danielle Clark",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Family District Judge, 302nd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Sandra Jackson",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Family District Judge, 303rd Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "LaDeitra Adkins",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Family District Judge, 304th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Andrea Martin",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Family District Judge, 305th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Cheryl Lee Shannon",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Family District Judge, 330th Judicial District",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Tamika Jones",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Criminal District Judge No. 1",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Stephanie Hudson",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Criminal District Judge No. 5",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Lakesha Smith",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Criminal District Judge No. 6",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Nancy Mulder",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Criminal District Judge No. 7",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Chika Anyiam",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Court at Law No. 1",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Erin Nowell",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Court at Law No. 2",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Melissa J. Bellan",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Court at Law No. 3",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Sally Montgomery",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Court at Law No. 4",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Dianne Jones",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Court at Law No. 5",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Nicole Taylor",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court of Appeals No. 1",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Alexandra Guio",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court of Appeals No. 2",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Cheryl Williams",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 1",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Tifanee Baker",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 2",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Julia Hayes",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 3",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Audrey Faye Moorehead",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 4",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Dominique Torres Williams",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 5",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Lisa Green",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 6",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Angela M King",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 7",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Remeko Tranisha Edwards",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 8",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Carmen White",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 9",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Carrie Singleton",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 10",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Monique J Bracey Huff",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Criminal Court No. 11",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Shequitta D Kelly",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Probate Court No. 1",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Julia Malveaux",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Probate Court No. 2",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Ingrid Michelle Warren",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    },
+    {
+      "title": "Judge, County Probate Court No. 3",
+      "page": 4,
+      "candidates": [
+        {
+          "name": "Margaret Jones-Johnson",
+          "partyLabel": "Dem"
+        }
+      ],
+      "uncontestedBloc": true,
+      "exactText": "Uncontested Races\nThe following candidates are uncontested. You may vote for all uncontested candidates by choosing \"Vote for All\" or vote for none of the uncontested candidates by choosing \"Vote for None.\"\nDistrict Judge\n44th Veretta Frazier Dem\n68th Martin Hoffman Dem\n101st Staci Williams Dem\n116th Tonya Parker Dem\n134th Dale Tillery Dem\n160th Aiesha Redmond Dem\n191st Elizabeth Ginsberg Dem\n192nd Maria Aceves Dem\n193rd Bridgett Whitmore Dem\n194th Kim Cooks Dem\n195th Etta Jeanette Mullin Dem\n203rd Raquel \"Rocky\" Jones Dem\n204th Tammy Kemp Dem\n254th Kim Brown Dem\n255th Vonda Bailey Dem\n256th Heather Nicole Johnson Dem\n265th Jennifer Bennett Dem\n282nd Alison Grinter Allen Dem\n283rd Lela Lawrence Mays Dem\n291st Stephanie N Mitchell Huff Dem\n292nd Brandon Birmingham Dem\n363rd Cynthia Garza Dem\nFamily District Judge\n301st Danielle Clark Dem\n302nd Sandra Jackson Dem\n303rd LaDeitra Adkins Dem\n304th Andrea Martin Dem\n305th Cheryl Lee Shannon Dem\n330th Tamika Jones Dem\nCriminal District Judge\nNo. 1 Stephanie Hudson Dem\nNo. 5 Lakesha Smith Dem\nNo. 6 Nancy Mulder Dem\nNo. 7 Chika Anyiam Dem\nJudge, County Court at Law\nNo. 1 Erin Nowell Dem\nNo. 2 Melissa J. Bellan Dem\nNo. 3 Sally Montgomery Dem\nNo. 4 Dianne Jones Dem\nNo. 5 Nicole Taylor Dem\nJudge, County Criminal Court of Appeals\nNo. 1 Alexandra Guio Dem\nNo. 2 Cheryl Williams Dem\nJudge, County Criminal Court\nNo. 1 Tifanee Baker Dem\nNo. 2 Julia Hayes Dem\nNo. 3 Audrey Faye Moorehead Dem\nNo. 4 Dominique Torres Williams Dem\nNo. 5 Lisa Green Dem\nNo. 6 Angela M King Dem\nNo. 7 Remeko Tranisha Edwards Dem\nNo. 8 Carmen White Dem\nNo. 9 Carrie Singleton Dem\nNo. 10 Monique J Bracey Huff Dem\nNo. 11 Shequitta D Kelly Dem\nJudge, County Probate Court\nNo. 1 Julia Malveaux Dem\nNo. 2 Ingrid Michelle Warren Dem\nNo. 3 Margaret Jones-Johnson Dem\nVote for All\nVote for None",
+      "voteFor": null
+    }
+  ],
+  "measures": [
+    {
+      "title": "DALLAS COUNTY PROPOSITION A",
+      "question": "THIS IS A TAX INCREASE\n\"Approving the ad valorem tax rate of $0.248650 per $100 valuation in County of Dallas for the current year, a rate that is $0.02400 higher per $100 valuation than the voter-approval tax rate of the County of Dallas, for the purpose of funding programs that measurably reduce homelessness and resolve encampments to improve neighborhood vibrancy, support homeless people to achieve self-sufficiency, increase access to mental health treatment and support programs that provide stable housing. Last year, the ad valorem tax rate in Dallas County was $0.215500 per $100 valuation.\"",
+      "page": 3,
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "exactText": "DALLAS COUNTY PROPOSITION A\nTHIS IS A TAX INCREASE\n\"Approving the ad valorem tax rate of $0.248650 per $100 valuation in County of Dallas for the current year, a rate that is $0.02400 higher per $100 valuation than the voter-approval tax rate of the County of Dallas, for the purpose of funding programs that measurably reduce homelessness and resolve encampments to improve neighborhood vibrancy, support homeless people to achieve self-sufficiency, increase access to mental health treatment and support programs that provide stable housing. Last year, the ad valorem tax rate in Dallas County was $0.215500 per $100 valuation.\"\nFor\nAgainst"
+    },
+    {
+      "title": "CITY OF DALLAS PROPOSITION A",
+      "question": "THIS IS A TAX INCREASE.\nThe issuance of $443,000,000 general obligation bonds for public safety improvements and facilities, including fire, police and emergency services; the levying of a tax sufficient to pay principal and interest thereon; the estimated amount of repayment, including principal and interest based on current market conditions being $629,618,180.",
+      "page": 4,
+      "ocdId": "ocd-division/country:us/state:tx/place:dallas",
+      "exactText": "CITY OF DALLAS PROPOSITION A\nTHIS IS A TAX INCREASE.\nThe issuance of $443,000,000 general obligation bonds for public safety improvements and facilities, including fire, police and emergency services; the levying of a tax sufficient to pay principal and interest thereon; the estimated amount of repayment, including principal and interest based on current market conditions being $629,618,180.\nFor\nAgainst"
+    },
+    {
+      "title": "City of Garland Proposition A",
+      "question": "THIS IS A TAX INCREASE\nApproving the ad valorem tax rate of $0.679900 per $100 valuation in the City of Garland, Texas for the current year, a rate that is $0.036646 higher per $100 of valuation than the voter-approval tax rate of the City of Garland, Texas, for the purpose of increasing staff for the police department, fire department, 9-1-1 dispatch department and parks department, increasing funding for roadway construction and maintenance, maintaining and enhancing levels of city-wide services and competitive pay for public safety and city personnel. Last year, the ad valorem tax rate in the City of Garland, Texas was $0.689746 per $100 valuation.",
+      "page": 4,
+      "ocdId": "ocd-division/country:us/state:tx/place:garland",
+      "exactText": "City of Garland Proposition A\nTHIS IS A TAX INCREASE\nApproving the ad valorem tax rate of $0.679900 per $100 valuation in the City of Garland, Texas for the current year, a rate that is $0.036646 higher per $100 of valuation than the voter-approval tax rate of the City of Garland, Texas, for the purpose of increasing staff for the police department, fire department, 9-1-1 dispatch department and parks department, increasing funding for roadway construction and maintenance, maintaining and enhancing levels of city-wide services and competitive pay for public safety and city personnel. Last year, the ad valorem tax rate in the City of Garland, Texas was $0.689746 per $100 valuation.\nFor\nAgainst"
+    },
+    {
+      "title": "CITY OF UNIVERSITY PARK PROPOSITION A",
+      "question": "THIS IS A TAX INCREASE\nApproving the ad valorem tax rate of $0.220055 per $100 valuation in the City of University Park, Texas for the current year, a rate that is $0.009665 higher per $100 valuation than the voter-approval tax rate of the City of University Park, Texas, for the purpose of increasing staff for the police department and the fire department, providing a pension adjustment for the Firemen's Relief and Retirement Fund (FRRF), and implementing technology for residential parking districts. Last year, the ad valorem tax rate in the City of University Park, Texas was $0.218565 per $100 valuation.",
+      "page": 4,
+      "ocdId": "ocd-division/country:us/state:tx/place:university_park",
+      "exactText": "CITY OF UNIVERSITY PARK PROPOSITION A\nTHIS IS A TAX INCREASE\nApproving the ad valorem tax rate of $0.220055 per $100 valuation in the City of University Park, Texas for the current year, a rate that is $0.009665 higher per $100 valuation than the voter-approval tax rate of the City of University Park, Texas, for the purpose of increasing staff for the police department and the fire department, providing a pension adjustment for the Firemen's Relief and Retirement Fund (FRRF), and implementing technology for residential parking districts. Last year, the ad valorem tax rate in the City of University Park, Texas was $0.218565 per $100 valuation.\nFor\nAgainst"
+    },
+    {
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION A",
+      "question": "THIS IS A TAX INCREASE\nThe issuance of $25,500,000 general obligation bonds for street improvements in the Wylie Downtown Historic District and Ballard/Sachse Road and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+      "page": 4,
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "exactText": "CITY OF WYLIE, TEXAS PROPOSITION A\nTHIS IS A TAX INCREASE\nThe issuance of $25,500,000 general obligation bonds for street improvements in the Wylie Downtown Historic District and Ballard/Sachse Road and the imposition of a tax sufficient to pay the principal of and interest on the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION B",
+      "question": "THIS IS A TAX INCREASE\nThe issuance of $22,500,000 general obligation bonds for park and recreation facilities at Founders Park, Community Park, East Fork Park and Avalon Lake Park, the acquisition of land for future park facilities, the renovation of an existing city building for a parks building and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+      "page": 4,
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "exactText": "CITY OF WYLIE, TEXAS PROPOSITION B\nTHIS IS A TAX INCREASE\nThe issuance of $22,500,000 general obligation bonds for park and recreation facilities at Founders Park, Community Park, East Fork Park and Avalon Lake Park, the acquisition of land for future park facilities, the renovation of an existing city building for a parks building and the imposition of a tax sufficient to pay the principal of and interest on the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION C",
+      "question": "THIS IS A TAX INCREASE\nThe issuance of $25,000,000 general obligation bonds for public safety facilities and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "exactText": "CITY OF WYLIE, TEXAS PROPOSITION C\nTHIS IS A TAX INCREASE\nThe issuance of $25,000,000 general obligation bonds for public safety facilities and the imposition of a tax sufficient to pay the principal of and interest on the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION D",
+      "question": "THIS IS A TAX INCREASE\nThe issuance of $5,500,000 general obligation bonds for a public works complex, the renovation of an existing city building for a public works building and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "exactText": "CITY OF WYLIE, TEXAS PROPOSITION D\nTHIS IS A TAX INCREASE\nThe issuance of $5,500,000 general obligation bonds for a public works complex, the renovation of an existing city building for a public works building and the imposition of a tax sufficient to pay the principal of and interest on the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION E",
+      "question": "THIS IS A TAX INCREASE\nThe issuance of $12,000,000 general obligation bonds for an animal shelter and the imposition of a tax sufficient to pay the principal of and interest on the bonds.",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "exactText": "CITY OF WYLIE, TEXAS PROPOSITION E\nTHIS IS A TAX INCREASE\nThe issuance of $12,000,000 general obligation bonds for an animal shelter and the imposition of a tax sufficient to pay the principal of and interest on the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "IRVING ISD - PROPOSITION A",
+      "question": "THIS IS A PROPERTY TAX INCREASE\nThe issuance of $552,173,783 of bonds for the construction, acquisition, renovation and equipment of school buildings in the District, including equipment used for school safety and security purposes, a new Lively Elementary School, a new T. Haley Elementary School, a new J.O. Davis Elementary School, and a new Travis Middle School, and for the purchase of the necessary sites for school buildings, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "exactText": "IRVING ISD - PROPOSITION A\nTHIS IS A PROPERTY TAX INCREASE\nThe issuance of $552,173,783 of bonds for the construction, acquisition, renovation and equipment of school buildings in the District, including equipment used for school safety and security purposes, a new Lively Elementary School, a new T. Haley Elementary School, a new J.O. Davis Elementary School, and a new Travis Middle School, and for the purchase of the necessary sites for school buildings, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "IRVING ISD - PROPOSITION B",
+      "question": "THIS IS A PROPERTY TAX INCREASE\nThe issuance of $300,000,000 of bonds for the construction, acquisition, and equipment of a new Irving High School, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "exactText": "IRVING ISD - PROPOSITION B\nTHIS IS A PROPERTY TAX INCREASE\nThe issuance of $300,000,000 of bonds for the construction, acquisition, and equipment of a new Irving High School, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "IRVING ISD - PROPOSITION C",
+      "question": "THIS IS A PROPERTY TAX INCREASE\nThe issuance of $40,000,000 of bonds for the acquisition or update of technology equipment, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "exactText": "IRVING ISD - PROPOSITION C\nTHIS IS A PROPERTY TAX INCREASE\nThe issuance of $40,000,000 of bonds for the acquisition or update of technology equipment, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "IRVING ISD - PROPOSITION D",
+      "question": "THIS IS A PROPERTY TAX INCREASE\nThe issuance of $60,162,278 of bonds for the construction, acquisition and equipment of three multi-purpose indoor facilities at Irving High School, MacArthur High School and Nimitz High School for ROTC, athletics and marching band, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "exactText": "IRVING ISD - PROPOSITION D\nTHIS IS A PROPERTY TAX INCREASE\nThe issuance of $60,162,278 of bonds for the construction, acquisition and equipment of three multi-purpose indoor facilities at Irving High School, MacArthur High School and Nimitz High School for ROTC, athletics and marching band, and the levying of a tax sufficient to pay the principal of and interest on the bonds and the costs of any credit agreements executed in connection with the bonds.\nFor\nAgainst"
+    },
+    {
+      "title": "MESQUITE INDEPENDENT SCHOOL DISTRICT PROPOSITION A",
+      "question": "THIS IS A TAX INCREASE\n\u201cRatifying the ad valorem tax rate of $1.1762 per $100 valuation in the Mesquite Independent School District for the current year, a rate that will result in an increase of 16.3 percent in maintenance and operations tax revenue for the District for the current year as compared to the preceding year, which is an additional $16,009,008.\u201d",
+      "page": 5,
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mesquite_independent_school_district",
+      "exactText": "MESQUITE INDEPENDENT SCHOOL DISTRICT PROPOSITION A\nTHIS IS A TAX INCREASE\n\u201cRatifying the ad valorem tax rate of $1.1762 per $100 valuation in the Mesquite Independent School District for the current year, a rate that will result in an increase of 16.3 percent in maintenance and operations tax revenue for the District for the current year as compared to the preceding year, which is an additional $16,009,008.\u201d\nFor\nAgainst"
+    }
+  ],
+  "rawSource": "sources/8bc2b8dcf3cde416638c0c0a069c6b67092ba6703d9f2d32b9bbcfcb51ad444b.source"
+}

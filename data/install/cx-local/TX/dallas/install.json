@@ -1,0 +1,832 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Dallas",
+  "countyFips": "48113",
+  "populationRank": 8,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+      "title": "Chief Justice, 15th Court of Appeals District",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 2
+    },
+    {
+      "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+      "title": "Justice, 15th Court of Appeals District, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 2
+    },
+    {
+      "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+      "title": "Justice, 15th Court of Appeals District, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-3",
+      "title": "Justice, 5th Court of Appeals District, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-6",
+      "title": "Justice, 5th Court of Appeals District, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 2
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-8",
+      "title": "Justice, 5th Court of Appeals District, Place 8",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 2
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-298",
+      "title": "District Judge, 298th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:298",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county",
+      "title": "Criminal District Attorney",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-county_judge",
+      "title": "County Judge",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-district_clerk",
+      "title": "District Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-county_clerk",
+      "title": "County Clerk",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-county_treasurer",
+      "title": "County Treasurer",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-county-commissioner-precinct-no-2",
+      "title": "County Commissioner, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:2",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-county-commissioner-precinct-no-4",
+      "title": "County Commissioner, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-1-place-1",
+      "title": "Justice of the Peace, Precinct No. 1, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-1-place-2",
+      "title": "Justice of the Peace, Precinct No. 1, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-2-place-1",
+      "title": "Justice of the Peace, Precinct No. 2, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-2-place-2",
+      "title": "Justice of the Peace, Precinct No. 2, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-3-place-1",
+      "title": "Justice of the Peace, Precinct No. 3, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-3-place-2",
+      "title": "Justice of the Peace, Precinct No. 3, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-4-place-1",
+      "title": "Justice of the Peace, Precinct No. 4, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-4-place-2",
+      "title": "Justice of the Peace, Precinct No. 4, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-5-place-1",
+      "title": "Justice of the Peace, Precinct No. 5, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-5-place-2",
+      "title": "Justice of the Peace, Precinct No. 5, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-constable-precinct-no-1",
+      "title": "Constable, Precinct No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:1",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-constable-precinct-no-2",
+      "title": "Constable, Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:2",
+      "candidates": 2,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-constable-precinct-no-3",
+      "title": "Constable, Precinct No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:3",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-constable-precinct-no-4",
+      "title": "Constable, Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-constable-precinct-no-5",
+      "title": "Constable, Precinct No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:5",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-44",
+      "title": "District Judge, 44th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:44",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-68",
+      "title": "District Judge, 68th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:68",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-101",
+      "title": "District Judge, 101st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:101",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-116",
+      "title": "District Judge, 116th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:116",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-134",
+      "title": "District Judge, 134th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:134",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-160",
+      "title": "District Judge, 160th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:160",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-191",
+      "title": "District Judge, 191st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:191",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-192",
+      "title": "District Judge, 192nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:192",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-193",
+      "title": "District Judge, 193rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:193",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-194",
+      "title": "District Judge, 194th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:194",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-195",
+      "title": "District Judge, 195th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:195",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-203",
+      "title": "District Judge, 203rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:203",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-204",
+      "title": "District Judge, 204th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:204",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-254",
+      "title": "District Judge, 254th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:254",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-255",
+      "title": "District Judge, 255th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:255",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-256",
+      "title": "District Judge, 256th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:256",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-265",
+      "title": "District Judge, 265th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:265",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-282",
+      "title": "District Judge, 282nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:282",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-283",
+      "title": "District Judge, 283rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:283",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-291",
+      "title": "District Judge, 291st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:291",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-292",
+      "title": "District Judge, 292nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:292",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-363",
+      "title": "District Judge, 363rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:363",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-301",
+      "title": "Family District Judge, 301st Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:301",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-302",
+      "title": "Family District Judge, 302nd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:302",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-303",
+      "title": "Family District Judge, 303rd Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:303",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-304",
+      "title": "Family District Judge, 304th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:304",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-305",
+      "title": "Family District Judge, 305th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:305",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-330",
+      "title": "Family District Judge, 330th Judicial District",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:330",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-1",
+      "title": "Criminal District Judge No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-5",
+      "title": "Criminal District Judge No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-6",
+      "title": "Criminal District Judge No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-7",
+      "title": "Criminal District Judge No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_1",
+      "title": "Judge, County Court at Law No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_2",
+      "title": "Judge, County Court at Law No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_3",
+      "title": "Judge, County Court at Law No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_4",
+      "title": "Judge, County Court at Law No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_5",
+      "title": "Judge, County Court at Law No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-of-appeals-no-1",
+      "title": "Judge, County Criminal Court of Appeals No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-of-appeals-no-2",
+      "title": "Judge, County Criminal Court of Appeals No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-1",
+      "title": "Judge, County Criminal Court No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-2",
+      "title": "Judge, County Criminal Court No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-3",
+      "title": "Judge, County Criminal Court No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-4",
+      "title": "Judge, County Criminal Court No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-5",
+      "title": "Judge, County Criminal Court No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-6",
+      "title": "Judge, County Criminal Court No. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-7",
+      "title": "Judge, County Criminal Court No. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-8",
+      "title": "Judge, County Criminal Court No. 8",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-9",
+      "title": "Judge, County Criminal Court No. 9",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-10",
+      "title": "Judge, County Criminal Court No. 10",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-11",
+      "title": "Judge, County Criminal Court No. 11",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_probate_court_no_1",
+      "title": "Judge, County Probate Court No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_probate_court_no_2",
+      "title": "Judge, County Probate Court No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-ba01-2026-county-48113-judge_probate_court_no_3",
+      "title": "Judge, County Probate Court No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 1,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-dallas-county-proposition-a",
+      "title": "DALLAS COUNTY PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 3
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-dallas-proposition-a",
+      "title": "CITY OF DALLAS PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/place:dallas",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-garland-proposition-a",
+      "title": "City of Garland Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/place:garland",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-university-park-proposition-a",
+      "title": "CITY OF UNIVERSITY PARK PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/place:university_park",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-a",
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-b",
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 4
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-c",
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION C",
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-d",
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION D",
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-city-of-wylie-texas-proposition-e",
+      "title": "CITY OF WYLIE, TEXAS PROPOSITION E",
+      "ocdId": "ocd-division/country:us/state:tx/place:wylie",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-irving-isd-proposition-a",
+      "title": "IRVING ISD - PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-irving-isd-proposition-b",
+      "title": "IRVING ISD - PROPOSITION B",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-irving-isd-proposition-c",
+      "title": "IRVING ISD - PROPOSITION C",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-irving-isd-proposition-d",
+      "title": "IRVING ISD - PROPOSITION D",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:irving_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    },
+    {
+      "id": "tx-cx-local-2026-dallas-mesquite-independent-school-district-proposition-a",
+      "title": "MESQUITE INDEPENDENT SCHOOL DISTRICT PROPOSITION A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:mesquite_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "sourcePage": 5
+    }
+  ],
+  "operation": "River may merge this partial data through the existing ballot publication path with latest held TX, preserving unrelated candidates, contests, explanations and whole-county district memberships. Preparation makes no production writes.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_EVERY_LOCAL_FIELD_VISUALLY_CHECKED",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "allPrintedCandidatesMatchLaterOfficialCertification": "PASS_82_OFFICES_100_NAMES_AND_PARTIES",
+    "unrelatedContestsAndCandidateCoreFields": "PRESERVED_BY_EXISTING_PARTIAL_MERGE",
+    "sourceHashesAndQuotes": "PASS: 3 captured sources and 211 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": [
+    "All six pages of the dated county sample are saved. This local packet includes 82 judicial/county office fields and all 100 printed named candidates, plus the separately certified held Dallas District Attorney write-in Eric Reed (101 candidate rows), and every one of the 14 printed local propositions. Federal, statewide executive/Supreme/Criminal Appeals, State Board of Education and legislative fields remain outside this local install.",
+    "Page4 has53uncontested offices in one Vote for All/Vote for None bloc. Each office and its named candidate are retained separately, with the source voting instruction; no independent vote selection rule is invented for a new bloc office.",
+    "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified.",
+    "Composite coverage concerns only the elections printed by Dallas County; it does not prove every independent jurisdiction touching the county contracted with the county or held an election. Precinct contests and the Fifth Court of Appeals retain their precise electorates. No commissioner, justice or constable precinct is widened to all Dallas County."
+  ],
+  "sourceFreshnessLimit": "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified. All82complete local fields and100printed names/parties independently match the later official Texas Secretary of State final certification captured October20,2026. Changes after that official certification remain standing acquisition work.",
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:dallas/constable_precinct:1",
+    "ocd-division/country:us/state:tx/county:dallas/constable_precinct:2",
+    "ocd-division/country:us/state:tx/county:dallas/constable_precinct:3",
+    "ocd-division/country:us/state:tx/county:dallas/constable_precinct:4",
+    "ocd-division/country:us/state:tx/county:dallas/constable_precinct:5",
+    "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:5"
+  ],
+  "counts": {
+    "samplePages": 6,
+    "candidateContests": 82,
+    "printedNamedCandidates": 100,
+    "retainedHeldDeclaredWriteIns": 1,
+    "candidateRows": 101,
+    "uncontestedBlocOffices": 53,
+    "measureContests": 14,
+    "existingContestsCompared": 45,
+    "newCandidateContests": 37,
+    "unresolvedReaderDivisionsAfterHeldMemberships": 13,
+    "officialCertificationFieldsCompared": 82,
+    "officialCertificationNamesCompared": 100
+  },
+  "nextOwner": "River: assess explicit archived-source freshness limit, merge partial data against latest TX, resolve exact reader electorates and verify correct reader delivery. Current native sample remains a source-access blank."
+}

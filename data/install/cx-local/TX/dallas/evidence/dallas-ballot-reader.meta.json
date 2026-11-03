@@ -1,0 +1,9 @@
+{
+  "url": "https://r.jina.ai/https://www.dallascountyvotes.org/voters/ballot/",
+  "finalUrl": "https://r.jina.ai/https://www.dallascountyvotes.org/voters/ballot/",
+  "status": 200,
+  "fetchedAt": "2026-11-03T03:51:16.865419+00:00",
+  "sha256": "ecb1e373c6cf4f9f51b2a29de74a111120cb600d0842a9580f4cf7e9f637cc54",
+  "bytes": 26084,
+  "contentType": "text/plain; charset=utf-8"
+}

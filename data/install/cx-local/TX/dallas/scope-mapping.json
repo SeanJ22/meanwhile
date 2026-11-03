@@ -1,0 +1,813 @@
+[
+  {
+    "contestId": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-3",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-6",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-8",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-298",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:298",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-298",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:298",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-county_judge",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-district_clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-county_clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-county_treasurer",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-county-commissioner-precinct-no-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-county-commissioner-precinct-no-4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-1-place-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-1-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-2-place-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-2-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-3-place-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-3-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-4-place-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-4-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-5-place-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-5-place-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-constable-precinct-no-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:1",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-constable-precinct-no-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:2",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-constable-precinct-no-3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:3",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-constable-precinct-no-4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:4",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-constable-precinct-no-5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:5",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-44",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:44",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-44",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:44",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-68",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:68",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-68",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:68",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-101",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:101",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-101",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:101",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-116",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:116",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-116",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:116",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-134",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:134",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-134",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:134",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-160",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:160",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-160",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:160",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-191",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:191",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-191",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:191",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-192",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:192",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-192",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:192",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-193",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:193",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-193",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:193",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-194",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:194",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-194",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:194",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-195",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:195",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-195",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:195",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-203",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:203",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-203",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:203",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-204",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:204",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-204",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:204",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-254",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:254",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-254",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:254",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-255",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:255",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-255",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:255",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-256",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:256",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-256",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:256",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-265",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:265",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-265",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:265",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-282",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:282",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-282",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:282",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-283",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:283",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-283",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:283",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-291",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:291",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-291",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:291",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-292",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:292",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-292",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:292",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-363",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:363",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-363",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:363",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n330, 363"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-301",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:301",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-301",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:301",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-302",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:302",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-302",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:302",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-303",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:303",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-303",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:303",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-304",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:304",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-304",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:304",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-305",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:305",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-305",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:305",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+      }
+    }
+  },
+  {
+    "contestId": "tx-ba01-2026-district-judge-330",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:330",
+    "presentInCheckedInRegistry": false,
+    "resolvedByHeldWholeDivisionMembership": {
+      "id": "tx-ba01-county-judicial-dallas-330",
+      "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+      "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:330",
+      "provenance": {
+        "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+        "sourceOrg": "Texas Office of Court Administration",
+        "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+        "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+        "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n330, 363"
+      }
+    }
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-criminal-district-judge-no-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-criminal-district-judge-no-5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-criminal-district-judge-no-6",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-criminal-district-judge-no-7",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-of-appeals-no-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-of-appeals-no-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-6",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-7",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-8",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-9",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-10",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-11",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_probate_court_no_1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_probate_court_no_2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  },
+  {
+    "contestId": "tx-ba01-2026-county-48113-judge_probate_court_no_3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "presentInCheckedInRegistry": true,
+    "resolvedByHeldWholeDivisionMembership": null
+  }
+]

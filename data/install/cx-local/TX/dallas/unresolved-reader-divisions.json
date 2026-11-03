@@ -1,0 +1,15 @@
+[
+  "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:2",
+  "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:4",
+  "ocd-division/country:us/state:tx/county:dallas/constable_precinct:1",
+  "ocd-division/country:us/state:tx/county:dallas/constable_precinct:2",
+  "ocd-division/country:us/state:tx/county:dallas/constable_precinct:3",
+  "ocd-division/country:us/state:tx/county:dallas/constable_precinct:4",
+  "ocd-division/country:us/state:tx/county:dallas/constable_precinct:5",
+  "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+  "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+  "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+  "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+  "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+  "ocd-division/country:us/state:tx/court_of_appeals_district:5"
+]

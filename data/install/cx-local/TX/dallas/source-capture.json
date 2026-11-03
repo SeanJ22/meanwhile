@@ -1,0 +1,18 @@
+{
+  "provider": "Internet Archive original-byte replay",
+  "archiveCaptureAt": "2026-10-01T20:01:48Z",
+  "officialSourceUrl": "https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+  "archiveUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+  "nativeGovernmentHttpStatus": 403,
+  "originalDocumentSha1Base32": "5AXFFSTRVBTAQQWFNK4WCLOX5SCQUDTW",
+  "digestVerification": "Original PDF SHA1 equals the CDX original-resource digest",
+  "currentOfficialLinkingPages": [
+    "https://www.dallascountyvotes.org/voters/ballot/",
+    "https://www.dallascountyvotes.org/voters/election/november-3-2026-general-and-joint-election/",
+    "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx"
+  ],
+  "pageCount": 6,
+  "nativeTextLayer": false,
+  "extractionMethod": "Tesseract OCR followed by direct visual checking of every included English office, candidate name, party label, complete field and measure question on the original saved page images; corrected English transcript retained separately from raw OCR.",
+  "scopeLimit": "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified."
+}

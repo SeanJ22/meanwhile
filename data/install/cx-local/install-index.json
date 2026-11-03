@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:00:25.253436+00:00",
+  "preparedAt": "2026-11-03T04:19:43.661377+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -153,14 +153,123 @@
           "finding": "These current official discovery pages link the composite and the August 28 candidate listing; neither displayed a separate declared-write-in link in this capture. Additional current declared-write-in acquisition remains with CX-LOCAL."
         }
       }
+    },
+    {
+      "state": "CA",
+      "county": "Orange",
+      "populationRank": 6,
+      "manifest": "CA/orange/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 138,
+      "measureContests": 0,
+      "candidacies": 368,
+      "newContests": 138,
+      "refreshedContests": 0,
+      "sourceInputSha256": "d5b4fe05c314bb114d2e437b00d3049c2ea839d112dfce2950a4283fad86877c",
+      "coverage": {
+        "status": "COUNTY_COMPLETE_NAMED_CANDIDATE_CONTESTS",
+        "verifiedLocalContests": 138,
+        "verifiedNamedCandidacies": 368,
+        "countyQualifiedLocalContests": 138,
+        "missingSampleBallotBlocks": [],
+        "judicialCoverage": "Statewide Supreme Court and Fourth Appellate District retention contests already held in ca.json; exact existing IDs preserved by omission from this local packet. County qualified-contest list has no Superior Court general-election contest.",
+        "declaredWriteIns": "County current election page lists Maryann Verghese for Rancho Santa Margarita District 4. Saved separately; not mixed into the complete printed sample-ballot list.",
+        "completenessBasis": "Complete named candidate blocks from actual official sample-ballot pages; official county qualified roster is a crosscheck and gap inventory, never a substitute for missing sample pages.",
+        "printedNamedCandidateCount": 368,
+        "declaredWriteInCount": 1,
+        "scope": "All 138 local named-candidate contests qualified by the county for November 3 2026: 47 school/community-college, 2 county supervisor, 77 municipal and 12 special district contests. Statewide/legislative/judicial races were already held and preserved. Local measures are outside this candidate packet."
+      }
+    },
+    {
+      "state": "FL",
+      "county": "Miami-Dade",
+      "populationRank": 7,
+      "manifest": "FL/miami-dade/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 46,
+      "measureContests": 0,
+      "candidacies": 110,
+      "newContests": 3,
+      "refreshedContests": 43,
+      "sourceInputSha256": "e8384431286a3c47bc2989fedde21da6f2bd4b1eb63b0dcfbeb2bbdae8071493",
+      "coverage": "PARTIAL. Actual8-page general SAMPLE and complete73-page master acquired/current. All45 local candidate contests/116 printed choices parsed. Four ElPortal council races/11 choices remain pending. Existing55 local measure questions untouched."
+    },
+    {
+      "state": "TX",
+      "county": "Dallas",
+      "populationRank": 8,
+      "manifest": "TX/dallas/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 82,
+      "measureContests": 14,
+      "candidacies": 101,
+      "newContests": 51,
+      "refreshedContests": 45,
+      "sourceInputSha256": "726bfeecedbcfcd5c3a15305240fed3ee7adf295164215c86aef2baa8dcb02f4",
+      "coverage": [
+        "All six pages of the dated county sample are saved. This local packet includes 82 judicial/county office fields and all 100 printed named candidates, plus the separately certified held Dallas District Attorney write-in Eric Reed (101 candidate rows), and every one of the 14 printed local propositions. Federal, statewide executive/Supreme/Criminal Appeals, State Board of Education and legislative fields remain outside this local install.",
+        "Page4 has53uncontested offices in one Vote for All/Vote for None bloc. Each office and its named candidate are retained separately, with the source voting instruction; no independent vote selection rule is invented for a new bloc office.",
+        "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified.",
+        "Composite coverage concerns only the elections printed by Dallas County; it does not prove every independent jurisdiction touching the county contracted with the county or held an election. Precinct contests and the Fifth Court of Appeals retain their precise electorates. No commissioner, justice or constable precinct is widened to all Dallas County."
+      ]
+    },
+    {
+      "state": "NY",
+      "county": "Kings",
+      "populationRank": 9,
+      "manifest": "NY/kings/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 8,
+      "measureContests": 0,
+      "candidacies": 19,
+      "newContests": 6,
+      "refreshedContests": 2,
+      "sourceInputSha256": "add6ea390497bf7a39bc320c060a41b9ddfea964d8a1c322bbb52e3b6ae63eba",
+      "coverage": [
+        "Kings County official specimen judicial candidate coverage contains8 local races: Supreme Court District2, county Civil Court and municipal court districts2/3/4/6/7/8. Six municipal court races were missing from held New York data. The2 countywide judicial contest identities are reused. Five held citywide charter proposals were also checked against the specimens and remain unchanged outside this candidate installation.",
+        "No Kings mayoral, borough-president, county prosecutor, city-council, school or special-district candidate contest appears in the current BOE Kings general-election inventory checked. The full public source manifest lists922 English sample styles; selected specimens cover every local judicial candidate field enumerated by that current inventory, but every style has not been independently compared for late additions.",
+        "Blank write-in slots are not people. Separate declared write-in certification remains coverage work. Exact municipal court district and Supreme Court territory joins need held registry/reader geography; no municipal court district is widened to Kings County."
+      ]
+    },
+    {
+      "state": "CA",
+      "county": "Riverside",
+      "populationRank": 10,
+      "manifest": "CA/riverside/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 7,
+      "measureContests": 0,
+      "candidacies": 18,
+      "newContests": 7,
+      "refreshedContests": 0,
+      "sourceInputSha256": "35f2415ce2ce16c892673c0f057d65b4cadab1991e9a842c919252a219c77fe3",
+      "coverage": {
+        "type": "PARTIAL_OFFICIAL_SAMPLE_STYLE_COVERAGE",
+        "sampleBallotTypes": [
+          "387"
+        ],
+        "sampleGuidePages": 60,
+        "sampleBallotPages": "16\u201323",
+        "localContests": 7,
+        "candidacies": 18,
+        "printedNamedChoices": 18,
+        "statement": "Seven complete local candidate contests and all18 printed named local choices on official sample style387 are installable. BeaumontTreasurer prints no candidates and is held. The later certified write-in list supplies SteveCooley only in declared-write-ins.json. This one sample covers Beaumont plus listed school/water/recreation electorates and countywide SuperiorCourtOffice10; it does not establish all RiversideCounty contests. Statewide/legislative and already-held judicial-retention races remain unchanged.",
+        "remaining": "Other official ballot styles and their distinct city, school trustee-area and special district office blocks remain open with CX-LOCAL. The final144-page county candidate roster is acquired in scratch as a coverage lead, not substituted for sample-ballot evidence.",
+        "certifiedWriteInsRetainedSeparately": 1,
+        "heldEmptyPrintedOffices": 1
+      }
     }
   ],
   "totals": {
-    "countiesPrepared": 5,
-    "candidateAndRetentionContests": 666,
-    "measureContests": 38,
-    "candidacyEntries": 1560,
-    "newContests": 558
+    "countiesPrepared": 10,
+    "packetsPrepared": 10,
+    "candidateAndRetentionContests": 947,
+    "measureContests": 52,
+    "candidacyEntries": 2176,
+    "newContestEntriesAgainstCheckedInBaseline": 763,
+    "distinctPreparedContestIds": 993,
+    "distinctPreparedCandidateIds": 2164,
+    "distinctNewContestsAgainstCheckedInBaseline": 760
   },
   "remainingWork": [
     {

@@ -1,0 +1,1185 @@
+[
+  {
+    "id": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+    "title": "Chief Justice, 15th Court of Appeals District",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourcePage": 2,
+    "heldContest": true,
+    "printedNames": [
+      "Scott Brister",
+      "Jerry Zimmerer"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-sos-2026-chief-justice-15th-court-of-appeals-district-06fafee156b18590",
+      "tx-sos-2026-chief-justice-15th-court-of-appeals-district-4310ef83b86221b7"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+    "title": "Justice, 15th Court of Appeals District, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourcePage": 2,
+    "heldContest": true,
+    "printedNames": [
+      "Scott K. Field",
+      "Tom Baker"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-2131bb5fe87bbd88",
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-7f28261b02fdeb12"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+    "title": "Justice, 15th Court of Appeals District, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx",
+    "sourcePage": 2,
+    "heldContest": true,
+    "printedNames": [
+      "April Farris",
+      "Marc M. Meyer"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-b6279ba07fd6c7d2",
+      "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-bd0ccb1334c491ae"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-3",
+    "title": "Justice, 5th Court of Appeals District, Place 3",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "sourcePage": 2,
+    "heldContest": false,
+    "printedNames": [
+      "Matthew Kolodoski",
+      "Amanda Reichek"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-6",
+    "title": "Justice, 5th Court of Appeals District, Place 6",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "sourcePage": 2,
+    "heldContest": false,
+    "printedNames": [
+      "Ben Smith",
+      "Monica Purdy"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-5th-court-of-appeals-district-place-8",
+    "title": "Justice, 5th Court of Appeals District, Place 8",
+    "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:5",
+    "sourcePage": 2,
+    "heldContest": false,
+    "printedNames": [
+      "Ashley Wysocki",
+      "Andrea D. Plumlee"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-298",
+    "title": "District Judge, 298th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:298",
+    "sourcePage": 3,
+    "heldContest": true,
+    "printedNames": [
+      "Clark B. Will",
+      "Ashley Smith"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-298:ashley_smith",
+      "tx-ba01-2026-district-judge-298:clark_b_will"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county",
+    "title": "Criminal District Attorney",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 3,
+    "heldContest": true,
+    "printedNames": [
+      "Amber Givens"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county:amber_givens",
+      "tx-ba01-2026-county-48113-criminal_district_attorney_dallas_county:write-in:eric_reed"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-county_judge",
+    "title": "County Judge",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 3,
+    "heldContest": true,
+    "printedNames": [
+      "Mike Immler",
+      "Clay Jenkins"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-county_judge:clay_jenkins",
+      "tx-ba01-2026-county-48113-county_judge:mike_immler"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-district_clerk",
+    "title": "District Clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 3,
+    "heldContest": true,
+    "printedNames": [
+      "Dave Muehlhaeusler",
+      "Felicia Pitre"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-district_clerk:dave_muehlhaeusler",
+      "tx-ba01-2026-county-48113-district_clerk:felicia_pitre"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-county_clerk",
+    "title": "County Clerk",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 3,
+    "heldContest": true,
+    "printedNames": [
+      "Skye Garcia",
+      "Damarcus L Offord"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-county_clerk:damarcus_l_offord",
+      "tx-ba01-2026-county-48113-county_clerk:skye_garcia"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-county_treasurer",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 3,
+    "heldContest": true,
+    "printedNames": [
+      "Corsandra Brigham Phelps",
+      "Pauline Medrano"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-county_treasurer:corsandra_brigham_phelps",
+      "tx-ba01-2026-county-48113-county_treasurer:pauline_medrano"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-county-commissioner-precinct-no-2",
+    "title": "County Commissioner, Precinct No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:2",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Barry Wernick",
+      "Andy Sommerman"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-county-commissioner-precinct-no-4",
+    "title": "County Commissioner, Precinct No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/commissioner_precinct:4",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Elba Garcia"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-1-place-1",
+    "title": "Justice of the Peace, Precinct No. 1, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Lizbeth Diaz",
+      "Thomas G. Jones"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-1-place-2",
+    "title": "Justice of the Peace, Precinct No. 1, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:1",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Valencia Nash"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-2-place-1",
+    "title": "Justice of the Peace, Precinct No. 2, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Vickie Whiteside",
+      "Margaret O'Brien"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-2-place-2",
+    "title": "Justice of the Peace, Precinct No. 2, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:2",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Antoinette N Harris"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-3-place-1",
+    "title": "Justice of the Peace, Precinct No. 3, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Lynn A. Benedetto",
+      "Adam M. Swartz"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-3-place-2",
+    "title": "Justice of the Peace, Precinct No. 3, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:3",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Michael L. Geller",
+      "Paula M Rosales"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-4-place-1",
+    "title": "Justice of the Peace, Precinct No. 4, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Fred Van Liew",
+      "Mike Jones"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-4-place-2",
+    "title": "Justice of the Peace, Precinct No. 4, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:4",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Sasha Moreno"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-5-place-1",
+    "title": "Justice of the Peace, Precinct No. 5, Place 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Sara Martinez"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-justice-of-the-peace-precinct-no-5-place-2",
+    "title": "Justice of the Peace, Precinct No. 5, Place 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/justice_precinct:5",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Omar Narvaez"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-constable-precinct-no-1",
+    "title": "Constable, Precinct No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:1",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Tracey Gulley"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-constable-precinct-no-2",
+    "title": "Constable, Precinct No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:2",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Chad Calvert",
+      "Deanna Hammond"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-constable-precinct-no-3",
+    "title": "Constable, Precinct No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:3",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Henry Curry"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-constable-precinct-no-4",
+    "title": "Constable, Precinct No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:4",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Eddie Brown, Jr"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-constable-precinct-no-5",
+    "title": "Constable, Precinct No. 5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas/constable_precinct:5",
+    "sourcePage": 3,
+    "heldContest": false,
+    "printedNames": [
+      "Michael Orozco"
+    ],
+    "uncontestedBloc": false,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-44",
+    "title": "District Judge, 44th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:44",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Veretta Frazier"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-44:veretta_frazier"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-68",
+    "title": "District Judge, 68th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:68",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Martin Hoffman"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-68:martin_hoffman"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-101",
+    "title": "District Judge, 101st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:101",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Staci Williams"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-101:staci_williams"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-116",
+    "title": "District Judge, 116th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:116",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Tonya Parker"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-116:tonya_parker"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-134",
+    "title": "District Judge, 134th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:134",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Dale Tillery"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-134:dale_tillery"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-160",
+    "title": "District Judge, 160th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:160",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Aiesha Redmond"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-160:aiesha_redmond"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-191",
+    "title": "District Judge, 191st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:191",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Elizabeth Ginsberg"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-191:elizabeth_ginsberg"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-192",
+    "title": "District Judge, 192nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:192",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Maria Aceves"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-192:maria_aceves"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-193",
+    "title": "District Judge, 193rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:193",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Bridgett Whitmore"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-193:bridgett_whitmore"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-194",
+    "title": "District Judge, 194th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:194",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Kim Cooks"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-194:kim_cooks"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-195",
+    "title": "District Judge, 195th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:195",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Etta Jeanette Mullin"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-195:etta_jeanette_mullin"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-203",
+    "title": "District Judge, 203rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:203",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Raquel \"Rocky\" Jones"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-203:raquel_rocky_jones"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-204",
+    "title": "District Judge, 204th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:204",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Tammy Kemp"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-204:tammy_kemp"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-254",
+    "title": "District Judge, 254th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:254",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Kim Brown"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-254:kim_brown"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-255",
+    "title": "District Judge, 255th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:255",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Vonda Bailey"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-255:vonda_bailey"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-256",
+    "title": "District Judge, 256th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:256",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Heather Nicole Johnson"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-256:heather_nicole_johnson"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-265",
+    "title": "District Judge, 265th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:265",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Jennifer Bennett"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-265:jennifer_bennett"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-282",
+    "title": "District Judge, 282nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:282",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Alison Grinter Allen"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-282:alison_grinter_allen"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-283",
+    "title": "District Judge, 283rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:283",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Lela Lawrence Mays"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-283:lela_lawrence_mays"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-291",
+    "title": "District Judge, 291st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:291",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Stephanie N Mitchell Huff"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-291:stephanie_n_mitchell_huff"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-292",
+    "title": "District Judge, 292nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:292",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Brandon Birmingham"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-292:brandon_birmingham"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-363",
+    "title": "District Judge, 363rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:363",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Cynthia Garza"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-363:cynthia_garza"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-301",
+    "title": "Family District Judge, 301st Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:301",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Danielle Clark"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-301:danielle_clark"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-302",
+    "title": "Family District Judge, 302nd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:302",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Sandra Jackson"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-302:sandra_jackson"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-303",
+    "title": "Family District Judge, 303rd Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:303",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "LaDeitra Adkins"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-303:ladeitra_adkins"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-304",
+    "title": "Family District Judge, 304th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:304",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Andrea Martin"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-304:andrea_martin"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-305",
+    "title": "Family District Judge, 305th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:305",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Cheryl Lee Shannon"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-305:cheryl_lee_shannon"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-330",
+    "title": "Family District Judge, 330th Judicial District",
+    "ocdId": "ocd-division/country:us/state:tx/judicial_district:330",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Tamika Jones"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-district-judge-330:tamika_jones"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-1",
+    "title": "Criminal District Judge No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Stephanie Hudson"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-5",
+    "title": "Criminal District Judge No. 5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Lakesha Smith"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-6",
+    "title": "Criminal District Judge No. 6",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Nancy Mulder"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-criminal-district-judge-no-7",
+    "title": "Criminal District Judge No. 7",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Chika Anyiam"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_1",
+    "title": "Judge, County Court at Law No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Erin Nowell"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_county_court_at_law_no_1:erin_nowell"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_2",
+    "title": "Judge, County Court at Law No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Melissa J. Bellan"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_county_court_at_law_no_2:melissa_j_bellan"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_3",
+    "title": "Judge, County Court at Law No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Sally Montgomery"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_county_court_at_law_no_3:sally_montgomery"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_4",
+    "title": "Judge, County Court at Law No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Dianne Jones"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_county_court_at_law_no_4:dianne_jones"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_county_court_at_law_no_5",
+    "title": "Judge, County Court at Law No. 5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Nicole Taylor"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_county_court_at_law_no_5:nicole_taylor"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-of-appeals-no-1",
+    "title": "Judge, County Criminal Court of Appeals No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Alexandra Guio"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-of-appeals-no-2",
+    "title": "Judge, County Criminal Court of Appeals No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Cheryl Williams"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-1",
+    "title": "Judge, County Criminal Court No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Tifanee Baker"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-2",
+    "title": "Judge, County Criminal Court No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Julia Hayes"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-3",
+    "title": "Judge, County Criminal Court No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Audrey Faye Moorehead"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-4",
+    "title": "Judge, County Criminal Court No. 4",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Dominique Torres Williams"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-5",
+    "title": "Judge, County Criminal Court No. 5",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Lisa Green"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-6",
+    "title": "Judge, County Criminal Court No. 6",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Angela M King"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-7",
+    "title": "Judge, County Criminal Court No. 7",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Remeko Tranisha Edwards"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-8",
+    "title": "Judge, County Criminal Court No. 8",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Carmen White"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-9",
+    "title": "Judge, County Criminal Court No. 9",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Carrie Singleton"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-10",
+    "title": "Judge, County Criminal Court No. 10",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Monique J Bracey Huff"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-cx-local-2026-dallas-judge-county-criminal-court-no-11",
+    "title": "Judge, County Criminal Court No. 11",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": false,
+    "printedNames": [
+      "Shequitta D Kelly"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_probate_court_no_1",
+    "title": "Judge, County Probate Court No. 1",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Julia Malveaux"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_probate_court_no_1:julia_malveaux"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_probate_court_no_2",
+    "title": "Judge, County Probate Court No. 2",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Ingrid Michelle Warren"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_probate_court_no_2:ingrid_michelle_warren"
+    ],
+    "unmatchedOldCandidateIds": []
+  },
+  {
+    "id": "tx-ba01-2026-county-48113-judge_probate_court_no_3",
+    "title": "Judge, County Probate Court No. 3",
+    "ocdId": "ocd-division/country:us/state:tx/county:dallas",
+    "sourcePage": 4,
+    "heldContest": true,
+    "printedNames": [
+      "Margaret Jones-Johnson"
+    ],
+    "uncontestedBloc": true,
+    "preservedCandidateIds": [
+      "tx-ba01-2026-county-48113-judge_probate_court_no_3:margaret_jones_johnson"
+    ],
+    "unmatchedOldCandidateIds": []
+  }
+]

@@ -1,0 +1,350 @@
+[
+  {
+    "id": "tx-ba01-county-judicial-dallas-101",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:101",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-116",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:116",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-134",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:134",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-160",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:160",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-191",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:191",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-192",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:192",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-193",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:193",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n134, 160, 162, 191, 192, 193,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-194",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:194",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-195",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:195",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-203",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:203",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-204",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:204",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-254",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:254",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-255",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:255",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n194, 195, 203, 204, 254, 255,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-256",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:256",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-265",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:265",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-282",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:282",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-283",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:283",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-291",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:291",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-292",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:292",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n256, 265, 282, 283, 291, 292,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-298",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:298",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-301",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:301",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-302",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:302",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-303",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:303",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-304",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:304",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-305",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:305",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n298, 301, 302, 303, 304, 305,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-330",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:330",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n330, 363"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-363",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:363",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n330, 363"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-44",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:44",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+    }
+  },
+  {
+    "id": "tx-ba01-county-judicial-dallas-68",
+    "memberOcdId": "ocd-division/country:us/state:tx/county:dallas",
+    "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:68",
+    "provenance": {
+      "sourceUrl": "https://www.txcourts.gov/media/1463438/district_courts_october-2026.pdf",
+      "sourceOrg": "Texas Office of Court Administration",
+      "collectedAt": "2026-10-21T00:17:59.902777+00:00",
+      "verifiedAt": "2026-10-21T00:17:59.902777+00:00",
+      "quote": "State District Courts by County (October 2026)\nDALLAS (2,613,539)\n014, 044, 068, 095, 101, 116,"
+    }
+  }
+]

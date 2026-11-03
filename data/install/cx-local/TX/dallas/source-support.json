@@ -1,0 +1,56 @@
+[
+  {
+    "sourceUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+    "finalUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+    "sourceCheckedAt": "2026-11-03T03:59:12.447795+00:00",
+    "sha256": "8bc2b8dcf3cde416638c0c0a069c6b67092ba6703d9f2d32b9bbcfcb51ad444b",
+    "sourceFile": "sources/8bc2b8dcf3cde416638c0c0a069c6b67092ba6703d9f2d32b9bbcfcb51ad444b.source",
+    "excerptFile": "sources/b3d7600fe1472f9b75164ee67f0b26b5fd5a9411faf8ff91dd2d4a6b250a2fb0.txt",
+    "excerptSha256": "b3d7600fe1472f9b75164ee67f0b26b5fd5a9411faf8ff91dd2d4a6b250a2fb0",
+    "captureFormat": "ARCHIVED_NATIVE_PDF",
+    "hashScope": "Original PDF bytes, checked against archive original-resource digest; transcript is a separate fingerprinted image transcription.",
+    "captureMetadata": {
+      "provider": "Internet Archive original-byte replay",
+      "archiveCaptureAt": "2026-10-01T20:01:48Z",
+      "officialSourceUrl": "https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "archiveUrl": "https://web.archive.org/web/20261001200148id_/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+      "nativeGovernmentHttpStatus": 403,
+      "originalDocumentSha1Base32": "5AXFFSTRVBTAQQWFNK4WCLOX5SCQUDTW",
+      "digestVerification": "Original PDF SHA1 equals the CDX original-resource digest",
+      "currentOfficialLinkingPages": [
+        "https://www.dallascountyvotes.org/voters/ballot/",
+        "https://www.dallascountyvotes.org/voters/election/november-3-2026-general-and-joint-election/",
+        "https://dallascityhall.com/government/citysecretary/elections/Pages/Nov2026.aspx"
+      ],
+      "pageCount": 6,
+      "nativeTextLayer": false,
+      "extractionMethod": "Tesseract OCR followed by direct visual checking of every included English office, candidate name, party label, complete field and measure question on the original saved page images; corrected English transcript retained separately from raw OCR.",
+      "scopeLimit": "Current official county and city pages still link the same exact sample URL. The original PDF was acquired from an October1 archive capture; a current deterministic screenshot confirms the first page, not all six current page bytes. Post-archive replacement of the same official URL remains unverified."
+    },
+    "evidence": "Official six-page Dallas County November3,2026 General and Joint Election sample; complete local/judicial fields and local questions checked against saved original page images. 53 one-candidate unopposed offices appear in a single VoteAll/None bloc; that voting instruction is retained, with no fake VoteAll/None candidate. Exact archived PDF SHA1 matches the original-resource CDX digest. Current county/city pages still link this exact official sample URL, but direct native retrieval returns403. The archive capture date and unresolved same-URL freshness limit are explicit."
+  },
+  {
+    "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+    "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-write-In-ballot-cert.pdf",
+    "sourceCheckedAt": "2026-10-20T23:31:05.471162+00:00",
+    "sha256": "eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24",
+    "sourceFile": "sources/eece7f9fa38c65eef150d62ba0a142672dc187b7feb2f90bc330f9c5a226aa24.source",
+    "excerptFile": "sources/e0a58363394806349fc76b334f56b772a6195ae55ce14b7b7a5ea5278b6b7eb2.txt",
+    "excerptSha256": "e0a58363394806349fc76b334f56b772a6195ae55ce14b7b7a5ea5278b6b7eb2",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original held official PDF bytes",
+    "evidence": "Preserves Eric Reed, the already held Texas Secretary of State certified declared write-in for Dallas Criminal District Attorney. No new identity is minted; existing ID, name, party null and provenance remain unchanged."
+  },
+  {
+    "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "sourceCheckedAt": "2026-10-20T22:52:30.537Z",
+    "sha256": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+    "sourceFile": "sources/c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c.source",
+    "excerptFile": "sources/8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde.txt",
+    "excerptSha256": "8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Original held Texas Secretary of State full certification PDF bytes",
+    "evidence": "Independent later certification comparison: all82judicial/local office fields and100printed names/partylabels agree exactly with the archived official sample, after case/whitespace/punctuation normalization only. Exact complete office blocks replayed from the native final certification captured October20,2026; each included row carries this corroborating source. No addresses are projected."
+  }
+]

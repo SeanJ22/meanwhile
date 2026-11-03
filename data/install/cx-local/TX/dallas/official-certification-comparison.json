@@ -1,0 +1,904 @@
+[
+  {
+    "sampleTitle": "Chief Justice, 15th Court of Appeals District",
+    "certifiedTitle": "CHIEF JUSTICE, 15TH COURT OF APPEALS DISTRICT",
+    "sourcePage": 2,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice, 15th Court of Appeals District, Place 2",
+    "certifiedTitle": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 2",
+    "sourcePage": 2,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice, 15th Court of Appeals District, Place 3",
+    "certifiedTitle": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 3",
+    "sourcePage": 2,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice, 5th Court of Appeals District, Place 3",
+    "certifiedTitle": "JUSTICE, 5TH COURT OF APPEALS DISTRICT, PLACE 3",
+    "sourcePage": 2,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice, 5th Court of Appeals District, Place 6",
+    "certifiedTitle": "JUSTICE, 5TH COURT OF APPEALS DISTRICT, PLACE 6",
+    "sourcePage": 2,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice, 5th Court of Appeals District, Place 8",
+    "certifiedTitle": "JUSTICE, 5TH COURT OF APPEALS DISTRICT, PLACE 8",
+    "sourcePage": 2,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 298th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 298TH JUDICIAL DISTRICT",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Criminal District Attorney",
+    "certifiedTitle": "CRIMINAL DISTRICT ATTORNEY DALLAS COUNTY",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "County Judge",
+    "certifiedTitle": "COUNTY JUDGE",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Clerk",
+    "certifiedTitle": "DISTRICT CLERK",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "County Clerk",
+    "certifiedTitle": "COUNTY CLERK",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "County Treasurer",
+    "certifiedTitle": "COUNTY TREASURER",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "County Commissioner, Precinct No. 2",
+    "certifiedTitle": "COUNTY COMMISSIONER PRECINCT 2",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "County Commissioner, Precinct No. 4",
+    "certifiedTitle": "COUNTY COMMISSIONER PRECINCT 4",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 1, Place 1",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 1, PLACE 1",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 1, Place 2",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 1, PLACE 2",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 2, Place 1",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 2, PLACE 1",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 2, Place 2",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 2, PLACE 2",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 3, Place 1",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 3, PLACE 1",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 3, Place 2",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 3, PLACE 2",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 4, Place 1",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 4, PLACE 1",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 4, Place 2",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 4, PLACE 2",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 5, Place 1",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 5, PLACE 1",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Justice of the Peace, Precinct No. 5, Place 2",
+    "certifiedTitle": "JUSTICE OF THE PEACE PRECINCT 5, PLACE 2",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Constable, Precinct No. 1",
+    "certifiedTitle": "COUNTY CONSTABLE PRECINCT 1",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Constable, Precinct No. 2",
+    "certifiedTitle": "COUNTY CONSTABLE PRECINCT 2",
+    "sourcePage": 3,
+    "candidatesCompared": 2,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Constable, Precinct No. 3",
+    "certifiedTitle": "COUNTY CONSTABLE PRECINCT 3",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Constable, Precinct No. 4",
+    "certifiedTitle": "COUNTY CONSTABLE PRECINCT 4",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Constable, Precinct No. 5",
+    "certifiedTitle": "COUNTY CONSTABLE PRECINCT 5",
+    "sourcePage": 3,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 44th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 44TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 68th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 68TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 101st Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 101ST JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 116th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 116TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 134th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 134TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 160th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 160TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 191st Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 191ST JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 192nd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 192ND JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 193rd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 193RD JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 194th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 194TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 195th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 195TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 203rd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 203RD JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 204th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 204TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 254th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 254TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 255th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 255TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 256th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 256TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 265th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 265TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 282nd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 282ND JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 283rd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 283RD JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 291st Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 291ST JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 292nd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 292ND JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "District Judge, 363rd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 363RD JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Family District Judge, 301st Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 301ST JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Family District Judge, 302nd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 302ND JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Family District Judge, 303rd Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 303RD JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Family District Judge, 304th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 304TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Family District Judge, 305th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 305TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Family District Judge, 330th Judicial District",
+    "certifiedTitle": "DISTRICT JUDGE, 330TH JUDICIAL DISTRICT",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Criminal District Judge No. 1",
+    "certifiedTitle": "CRIMINAL DISTRICT JUDGE DALLAS COUNTY NUMBER 1",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Criminal District Judge No. 5",
+    "certifiedTitle": "CRIMINAL DISTRICT JUDGE, DALLAS COUNTY NUMBER 5",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Criminal District Judge No. 6",
+    "certifiedTitle": "CRIMINAL DISTRICT JUDGE, DALLAS COUNTY NUMBER 6",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Criminal District Judge No. 7",
+    "certifiedTitle": "CRIMINAL DISTRICT JUDGE, DALLAS COUNTY NUMBER 7",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Court at Law No. 1",
+    "certifiedTitle": "JUDGE, COUNTY COURT AT LAW NO. 1",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Court at Law No. 2",
+    "certifiedTitle": "JUDGE, COUNTY COURT AT LAW NO. 2",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Court at Law No. 3",
+    "certifiedTitle": "JUDGE, COUNTY COURT AT LAW NO. 3",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Court at Law No. 4",
+    "certifiedTitle": "JUDGE, COUNTY COURT AT LAW NO. 4",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Court at Law No. 5",
+    "certifiedTitle": "JUDGE, COUNTY COURT AT LAW NO. 5",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court of Appeals No. 1",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT OF APPEALS NO. 1",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court of Appeals No. 2",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT OF APPEALS NO. 2",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 1",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 1",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 2",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 2",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 3",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 3",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 4",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 4",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 5",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 5",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 6",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 6",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 7",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 7",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 8",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 8",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 9",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 9",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 10",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 10",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Criminal Court No. 11",
+    "certifiedTitle": "JUDGE, COUNTY CRIMINAL COURT AT LAW NO. 11",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Probate Court No. 1",
+    "certifiedTitle": "JUDGE, PROBATE COURT NO. 1",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Probate Court No. 2",
+    "certifiedTitle": "JUDGE, PROBATE COURT NO. 2",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  },
+  {
+    "sampleTitle": "Judge, County Probate Court No. 3",
+    "certifiedTitle": "JUDGE, PROBATE COURT NO. 3",
+    "sourcePage": 4,
+    "candidatesCompared": 1,
+    "result": "PASS",
+    "differences": {
+      "sampleOnly": [],
+      "certificateOnly": []
+    }
+  }
+]

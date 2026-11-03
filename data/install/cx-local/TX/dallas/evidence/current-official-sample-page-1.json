@@ -1,0 +1,10 @@
+{
+  "officialSourceUrl": "https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+  "provider": "Jina Reader PDF screenshot",
+  "readerUrl": "https://r.jina.ai/https://www.dallascountyvotes.org/wp-content/uploads/2026/09/Full-Sample-Ballot-Watermark-8.5x14-Legal_110326.pdf",
+  "readerHttpStatus": 200,
+  "originalGovernmentHttpStatus": 403,
+  "sha256": "3b99cfb9239f5b01ba0b5de8a05162d8a8d135d9ed31acb8ae673be13039b415",
+  "fetchedAt": "2026-11-03T03:58:14.961870+00:00",
+  "scope": "First page only, live screenshot; archived PDF contains all six original pages."
+}
